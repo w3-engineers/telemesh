@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Functionality added
         TextView helloTextView = findViewById(R.id.hello_text);
 
         InfoParser infoParser = new InfoParser();

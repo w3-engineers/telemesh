@@ -2,6 +2,8 @@ package com.w3engineers.unicef.telemesh;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -11,11 +13,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button helloButton = findViewById(R.id.show);
+
         // Functionality added
-        TextView helloTextView = findViewById(R.id.hello_text);
+        final TextView helloTextView = findViewById(R.id.hello_text);
+        final InfoParser infoParser = new InfoParser();
 
-        InfoParser infoParser = new InfoParser();
 
-        helloTextView.setText(infoParser.getHelloText());
+
+        helloButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                helloTextView.setText(infoParser.getHelloText());
+            }
+        });
     }
 }

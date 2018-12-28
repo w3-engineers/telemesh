@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">telemesh</string>
+    <string name="show_hello">Show Hello</string>
 </resources>

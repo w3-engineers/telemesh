@@ -27,6 +27,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.e("MainActivity","Simple commit to check everythings works well");
+        Log.e("MainActivity","Simple commit to check every things works well..");
     }
 }

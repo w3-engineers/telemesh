@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
+}
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {
@@ -44,3 +47,37 @@ tasks.coveralls {
     dependsOn 'connectedAndroidTest'
     onlyIf { System.env.'CI' }
 }
+
+//right-mesh config start
+//to load rm username and password from gradle properties file
+rightmesh {
+    appKey = project.getProperty('org.w3.telemesh')
+    username = rightmesh_build_username
+    password = rightmesh_build_password
+}
+
+preBuild.dependsOn("rightmesh")
+
+repositories {
+    maven {
+        url "http://artifactory.rightmesh.io/artifactory/maven"
+        credentials {
+            username rightmesh_build_username
+            password rightmesh_build_password
+        }
+    }
+    maven{
+        url "https://dl.bintray.com/ethereum/maven/"
+    }
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+//right-mesh config end

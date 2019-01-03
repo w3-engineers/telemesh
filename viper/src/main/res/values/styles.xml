@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DefaultAlertDialogStyle" parent="Theme.AppCompat.Dialog">
+        <!--<item name="colorAccent">#009688</item>-->
+        <!-- Used for the buttons -->
+        <item name="colorAccent">#33d9df</item>
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/accent</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+
+    </style>
+</resources>

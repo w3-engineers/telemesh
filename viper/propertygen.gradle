@@ -1,0 +1,20 @@
+ext {
+
+    Properties localProperties = new Properties()
+    localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    rm_ssid = localProperties.getProperty('rm_ssid', '')
+    rm_super_peer = localProperties.getProperty('rm_super_peer', '')
+
+    //Optionally to generate rm_compatible keys, this should be generated from global
+    //gradle.properties file.
+    //Optional field and can be ignored
+    rightmesh_build_username = localProperties.getProperty('rm_username', '')
+    rightmesh_build_password = localProperties.getProperty('rm_password', '')
+
+
+    Properties globalProperties = new Properties()
+    globalProperties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
+    port_number = globalProperties.getProperty("port_number")
+}

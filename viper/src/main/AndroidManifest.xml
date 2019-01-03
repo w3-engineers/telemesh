@@ -1,0 +1,27 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.w3engineers.ext.viper">
+
+    <application
+        android:name=".App">
+
+        <!--Added to replace the value, although dependency library might also use crashlytics. As rightmesh already use that-->
+        <meta-data
+            tools:replace="android:value"
+            android:name="io.fabric.ApiKey"
+            android:value="cc51aa4b9109d3abd82876628e9b9e1692d7728f"
+            />
+
+        <!--The process name is always prefixed by App's Id. So fixed name not going to be a issue and
+        separate App would generate separate unique process name-->
+        <service
+            android:name="com.w3engineers.ext.viper.application.data.remote.service.BaseRmService"
+            android:stopWithTask="false"
+            android:enabled="true"
+            android:exported="true"
+            android:description="@string/app_local_service_description"
+            android:process="@string/base_rm_process_name">
+        </service>
+    </application>
+
+</manifest>

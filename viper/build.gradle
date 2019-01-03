@@ -1,0 +1,149 @@
+plugins {
+    id 'com.android.library'
+    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
+}
+
+def isCrashLyticsEnabled = project.hasProperty('org.w3.crashlytics') &&
+        project.getProperty('org.w3.crashlytics').toBoolean()
+def isDebugDatabaseEnabled = !project.hasProperty('org.w3.debugdb') ||//If not specified then assume true
+        project.getProperty('org.w3.debugdb').toBoolean()
+def isToastyEnabled = !project.hasProperty('org.w3.toasty') ||//If not specified then assume true
+        project.getProperty('org.w3.toasty').toBoolean()
+
+if(isCrashLyticsEnabled) {
+    apply plugin: 'io.fabric'
+}
+
+
+//right-mesh config start
+
+//to load rm username and password from gradle properties file
+repositories {
+    maven {
+        url "http://artifactory.rightmesh.io/artifactory/maven"
+        credentials {
+            username rightmesh_build_username
+            password rightmesh_build_password
+        }
+    }
+    maven{
+        url "https://dl.bintray.com/ethereum/maven/"
+    }
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+//right-mesh config end
+
+android {
+
+    compileSdkVersion build_versions.target_sdk
+    defaultConfig {
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        resValue "integer", "rm_port_number", getRootProject().ext.port_number
+        resValue "string", "rm_ssid", getRootProject().ext.rm_ssid
+        resValue "string", "rm_super_peer", getRootProject().ext.rm_super_peer
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/release/java'
+    }
+
+    lintOptions {//to check interoperability with Kotlin so that it can be easily converted to Kotlin
+        check 'Interoperability'
+    }
+}
+
+
+//ui, native
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //Support
+    implementation deps.support.app_compat
+    implementation deps.support.design
+
+    //multidex
+    api deps.multidex
+
+    //Added by Aziz for BaseEditText
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation deps.lifecycle.extensions
+
+    //android-framework
+    api deps.framework_remote
+}
+
+//Utility
+dependencies {
+
+    if(isCrashLyticsEnabled) {
+        api('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
+            transitive = true
+        }
+    }
+
+    //Timber to log
+    api deps.timber
+
+    //Leakcanary to track memory leak
+    debugApi deps.leak_canary
+
+    //debug database to manipulate
+    if(isDebugDatabaseEnabled) {
+        debugImplementation 'com.awesomedroidapps:inappstoragereader:1.0.2'
+    }
+
+    if(isToastyEnabled) {
+        implementation 'com.github.GrenderG:Toasty:1.3.0'
+
+    }
+
+
+    //RightMesh
+    implementation deps.right_mesh
+
+    //Image Picker, Glide
+    implementation deps.glide
+
+    //RxLint
+    debugImplementation deps.rxlint_checker
+}
+
+//Room
+dependencies {
+    //room with Rx
+    implementation deps.room.runtime
+    implementation deps.room.rxjava2
+    annotationProcessor deps.room.compiler
+}
+
+//Will port to a separate file, may be in plugin
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}

@@ -3,6 +3,8 @@
 buildscript {
     
     repositories {
+        apply from: 'versions.gradle'
+        apply from: 'viper/propertygen.gradle'
         google()
         jcenter()
     }
@@ -19,6 +21,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 

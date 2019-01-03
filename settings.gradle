@@ -1,1 +1,14 @@
-include ':app'
+include ':app', ':viper'
+
+pluginManagement.repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven {
+        url 'https://artifactory.rightmesh.io/artifactory/maven'
+        credentials {
+            username 'MimoSaha'
+            password '042eda63694c7dd87096e23fd7b72856'
+        }
+    }
+}

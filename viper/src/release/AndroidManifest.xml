@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.w3engineers.ext.viper">
+
+    <!--to use separate Application class for separate build-->
+    <application
+        tools:replace="android:name"
+        android:name=".App">
+    </application>
+
+</manifest>

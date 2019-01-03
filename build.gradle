@@ -3,6 +3,8 @@
 buildscript {
     
     repositories {
+        apply from: 'versions.gradle'
+        apply from: 'viper/propertygen.gradle'
         google()
         jcenter()
     }

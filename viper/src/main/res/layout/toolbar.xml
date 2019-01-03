@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.w3engineers.ext.viper.application.ui.base.BaseToolBar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:contentInsetStartWithNavigation="0dp"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+</com.w3engineers.ext.viper.application.ui.base.BaseToolBar>

@@ -1,4 +1,4 @@
-include ':app', ':viper'
+include ':viper', ':app'
 
 pluginManagement.repositories {
     google()
@@ -7,8 +7,8 @@ pluginManagement.repositories {
     maven {
         url 'https://artifactory.rightmesh.io/artifactory/maven'
         credentials {
-            username 'MimoSaha'
-            password '042eda63694c7dd87096e23fd7b72856'
+            username rightmesh_build_username
+            password rightmesh_build_password
         }
     }
 }

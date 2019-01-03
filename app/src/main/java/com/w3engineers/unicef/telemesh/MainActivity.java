@@ -17,13 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Functionality added
         final TextView helloTextView = findViewById(R.id.hello_text);
-        final InfoParser infoParser = new InfoParser();
-
-
 
         helloButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InfoParser infoParser = new InfoParser();
                 helloTextView.setText(infoParser.getHelloText());
             }
         });

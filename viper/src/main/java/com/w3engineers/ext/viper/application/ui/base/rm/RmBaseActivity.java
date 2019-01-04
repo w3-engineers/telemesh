@@ -8,7 +8,6 @@ package com.w3engineers.ext.viper.application.ui.base.rm;
  * Proprietary and confidential
  * <br>----------------------------------------------------------------------------
  * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-17 at 10:17 AM].
- * <br>Email: azim@w3engineers.com
  * <br>----------------------------------------------------------------------------
  * <br>Project: android-framework.
  * <br>Code Responsibility: <Purpose of code>

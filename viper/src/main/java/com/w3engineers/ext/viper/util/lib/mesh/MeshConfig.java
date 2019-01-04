@@ -7,7 +7,6 @@ package com.w3engineers.ext.viper.util.lib.mesh;
  * Proprietary and confidential
  * <br>----------------------------------------------------------------------------
  * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-08 at 11:38 AM].
- * <br>Email: azim@w3engineers.com
  * <br>----------------------------------------------------------------------------
  * <br>Project: android-framework.
  * <br>Code Responsibility: <Purpose of code>

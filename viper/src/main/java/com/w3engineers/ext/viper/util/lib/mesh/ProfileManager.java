@@ -11,7 +11,6 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
  * Proprietary and confidential
  * <br>----------------------------------------------------------------------------
  * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-09 at 12:16 PM].
- * <br>Email: azim@w3engineers.com
  * <br>----------------------------------------------------------------------------
  * <br>Project: android-framework.
  * <br>Code Responsibility: <Purpose of code>

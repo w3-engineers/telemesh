@@ -1,3 +1,5 @@
+[strom]:https://www.github.com/w3-engineers/android-framework
+
 # Telemesh
 
 [![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
@@ -34,10 +36,26 @@ Mesh networking technology.
 * Message broadcast, multicast
 * App sharing
 
+### Description
+
+* **[Strom](https://www.github.com/w3-engineers/android-framework)**: It is just a wrapper on native android to reduce some repeated works. This has been used as an dependency into this project.
+
+* **Viper**: This is also a wrapper on Rightmesh and has been used as an dependency.
 
 ### Installing
 
-TBD
+We can use global **_gradle.properties_** file for **RM keys**. In general it could be found in the following location:
+> **Linux:**  _home/\<usr>/.gradle_ 
+
+> **Windows:** _C:/Users\<username>/.gradle/gradle.properties_.
+
+In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
+
+> User name key is: _rightmesh_build_username_ 
+> 
+> User password is: _rightmesh_build_password_ 
+> 
+> App key is: _org.w3.telemesh_ 
 
 ## Deployment
 

@@ -154,7 +154,7 @@ protobuf {
 // protobuf-end
 
 rightmesh {
-    appKey = artifactory_app_key
+    appKey = project.getProperty('org.w3.telemesh')
     username = rightmesh_build_username
     password = rightmesh_build_password
 }

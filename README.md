@@ -53,11 +53,11 @@ We can use global **_gradle.properties_** file for **RM keys**. In general it co
 
 In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
 
-> User name key is: _rightmesh_build_username_ 
+> rightmesh_build_username=[your rightmesh user name] 
 > 
-> User password is: _rightmesh_build_password_ 
+> rightmesh_build_password=[your rightmesh password]
 > 
-> App key is: _org.w3.telemesh_ 
+> org.w3.telemesh=[your rightmesh app key] 
 
 ## Deployment
 

@@ -10,7 +10,6 @@ import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Mimo Saha on [10-Sep-2018 at 3:55 PM].
- * * Email: mimosaha@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: TeleMesh.
  * * Code Responsibility: <Purpose of code>

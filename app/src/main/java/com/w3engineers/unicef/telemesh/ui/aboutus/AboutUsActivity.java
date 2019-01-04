@@ -18,7 +18,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [03-Oct-2018 at 12:24 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [18-Oct-2018 at 12:20 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

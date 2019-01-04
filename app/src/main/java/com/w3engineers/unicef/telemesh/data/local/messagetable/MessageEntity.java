@@ -14,7 +14,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/2/2018 at 12:36 PM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: Message table creation for room db
  *  *

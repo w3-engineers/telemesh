@@ -14,7 +14,6 @@ import java.util.Locale;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [06-Nov-2018 at 3:06 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

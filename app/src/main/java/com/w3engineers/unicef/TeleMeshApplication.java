@@ -15,7 +15,6 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [02-Nov-2018 at 6:21 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

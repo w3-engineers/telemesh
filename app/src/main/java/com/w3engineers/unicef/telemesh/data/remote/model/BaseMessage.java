@@ -8,7 +8,6 @@ import android.databinding.BaseObservable;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/2/2018 at 10:34 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: Base class for message model. Hole all common property
  *  *

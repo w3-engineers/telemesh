@@ -30,7 +30,6 @@ import io.reactivex.schedulers.Schedulers;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Mimo Saha on [22-Oct-2018 at 6:33 PM].
- * * Email: mimosaha@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

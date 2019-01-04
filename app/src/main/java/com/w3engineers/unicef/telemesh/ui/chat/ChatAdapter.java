@@ -20,7 +20,6 @@ import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/11/2018 at 10:43 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: Render message data
  *  *

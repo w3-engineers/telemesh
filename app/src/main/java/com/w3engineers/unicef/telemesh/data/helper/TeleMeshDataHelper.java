@@ -12,7 +12,6 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Mimo Saha on [08-Oct-2018 at 5:46 PM].
- * * Email: mimosaha@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

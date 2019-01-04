@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.local.usertable;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/9/2018 at 12:49 PM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: To retrieve data from both user and message table
  *  *

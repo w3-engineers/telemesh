@@ -35,14 +35,6 @@ import android.widget.Checkable;
 
 import com.w3engineers.unicef.telemesh.R;
 
-/**
- * Author : andy
- * Date   : 16/1/21 11:28
- * Email  : andyxialm@gmail.com
- * Github : github.com/andyxialm
- * Description : A custom CheckBox with animation for Android
- */
-
 public class SmoothCheckBox extends View implements Checkable {
     private static final String KEY_INSTANCE_STATE = "InstanceState";
 

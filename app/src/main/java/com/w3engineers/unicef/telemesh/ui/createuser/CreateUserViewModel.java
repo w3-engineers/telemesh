@@ -19,7 +19,6 @@ import junit.framework.Test;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [17-Sep-2018 at 3:54 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

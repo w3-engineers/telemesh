@@ -18,7 +18,6 @@ import com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [14-Sep-2018 at 11:58 AM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

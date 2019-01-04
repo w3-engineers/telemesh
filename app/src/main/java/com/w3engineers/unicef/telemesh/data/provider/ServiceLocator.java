@@ -27,7 +27,6 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Mimo Saha on [17-Sep-2018 at 4:54 PM].
- * * Email: mimosaha@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

@@ -3,7 +3,6 @@ package io.left.core.util.lib;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 9/5/2018 at 5:19 PM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose:
  *  *

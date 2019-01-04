@@ -28,7 +28,6 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 1/23/2018 at 11:24 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Last edited by : Mohd. Asfaq-E-Azam Rifat on 29-Jan-18.
  *  *

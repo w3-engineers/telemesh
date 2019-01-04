@@ -26,7 +26,6 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: One to one messaging page
  *  *

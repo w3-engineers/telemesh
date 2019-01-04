@@ -15,7 +15,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/4/2018 at 10:49 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: prepare survey table
  *  *

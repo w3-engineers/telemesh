@@ -22,7 +22,6 @@ import java.util.List;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Mimo Saha on [14-Sep-2018 at 4:39 PM].
- * * Email: mimosaha@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

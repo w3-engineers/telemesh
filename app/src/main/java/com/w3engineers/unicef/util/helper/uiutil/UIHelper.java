@@ -23,7 +23,6 @@ import io.reactivex.subjects.PublishSubject;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [08-Oct-2018 at 1:09 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.se
  * * Code Responsibility: <Purpose of code>

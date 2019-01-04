@@ -8,7 +8,6 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/15/2018 at 4:38 PM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: Message page date separator
  *  *

@@ -13,7 +13,6 @@ import io.reactivex.Flowable;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/4/2018 at 11:28 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose: to access survey table
  *  *

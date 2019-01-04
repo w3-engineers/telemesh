@@ -10,7 +10,6 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
  * * Proprietary and confidential
  * * ----------------------------------------------------------------------------
  * * Created by: Sikder Faysal Ahmed on [11-Oct-2018 at 12:28 PM].
- * * Email: sikderfaysal@w3engineers.com
  * * ----------------------------------------------------------------------------
  * * Project: telemesh.
  * * Code Responsibility: <Purpose of code>

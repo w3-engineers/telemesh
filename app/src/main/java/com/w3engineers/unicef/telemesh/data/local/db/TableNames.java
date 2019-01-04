@@ -7,7 +7,6 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 * * Created by:
 * * Name : Ahmed Mohmmad Ullah (Azim)
 * * Date : 2/15/18
-* * Email : azim@w3engineers.com
 * *
 * * Purpose: Sample of ROOM model
 * *

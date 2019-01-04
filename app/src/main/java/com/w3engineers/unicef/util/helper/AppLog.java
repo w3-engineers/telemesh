@@ -3,7 +3,6 @@ package com.w3engineers.unicef.util.helper;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/11/2018 at 1:01 PM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose:
  *  *

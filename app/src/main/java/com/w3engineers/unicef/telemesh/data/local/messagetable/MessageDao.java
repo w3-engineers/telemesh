@@ -16,7 +16,6 @@ import io.reactivex.Flowable;
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/3/2018 at 11:25 AM.
- *  * Email : azizul@w3engineers.com
  *  *
  *  * Purpose:Access message table
  *  *

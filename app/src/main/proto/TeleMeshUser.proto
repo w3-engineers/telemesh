@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.w3engineers.unicef.telemesh;
+
+message RMUserModel {
+    string userFirstName = 1;
+    string userLastName = 2;
+    int32 imageIndex = 3;
+    string userId = 4;
+}
+
+message RMDataModel {
+    string userMeshId = 1;
+    bytes rawData = 2;
+    int32 dataType = 3;
+    int32 recDataId = 4;
+}
+
+message TeleMeshProto {
+    RMUserModel rmUserModel = 1;
+    RMDataModel rmDataModel = 2;
+}

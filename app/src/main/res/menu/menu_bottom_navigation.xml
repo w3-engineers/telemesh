@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_contact"
+        android:checked="true"
+        android:icon="@drawable/contact_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_message_feed"
+        android:icon="@drawable/message_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_survey"
+        android:icon="@drawable/survey_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_setting"
+        android:icon="@drawable/setting_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package com.w3engineers.unicef.telemesh;
+
+enum MessageType{
+    TYPE_USER = 0;
+    TYPE_TEXT_MESSAGE = 1;
+    TYPE_SURVEY_MESSAGE = 2;
+    TYPE_BROADCAST_MSG = 3;
+}
+
+message ProtoMessages{
+    MessageType messageType = 1;
+    //Atleast one property need to be set
+    oneof data{
+        User user = 2;
+        ProtoTextMessage textMessage= 3;
+        ProtoSurveyMessage surveyMessage = 4;
+    }
+}
+
+//User related property which need to send through network
+
+message User{
+    string userName = 1;
+    int32 avatarIndex = 2;
+}
+
+//Text message one to one
+
+message ProtoTextMessage{
+    string messageId = 1;
+    string message = 2;
+}
+
+message ProtoSurveyMessage{
+    string surveyId = 1;
+    string surveyTitle = 2;
+    string surveyForm =3;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint_layout_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_view_badge_count"
+            android:layout_width="@dimen/width_25"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circular_badge"
+            android:gravity="center"
+            android:maxLines="@integer/max_line_1"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_12"
+            android:layout_marginRight="@dimen/margin_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="99" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

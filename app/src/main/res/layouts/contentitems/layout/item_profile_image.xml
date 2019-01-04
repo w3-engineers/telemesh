@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="itemIndex"
+            type="int" />
+
+        <variable
+            name="checkedValue"
+            type="boolean" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/image_view_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:imageResource="@{itemIndex}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--<io.left.core.util.lib.CircleCheckBox-->
+        <!--android:id="@+id/checkbox"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:background="@drawable/custom_checkbox"-->
+        <!--android:focusable="false"-->
+        <!--android:scaleX="1.20"-->
+        <!--android:scaleY="1.20"-->
+        <!--app:cb_color="#CC33b5e5"-->
+        <!--app:cb_pressed_ring_width="2dp"/>-->
+
+        <com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="@dimen/height_25"
+            android:layout_height="@dimen/width_25"
+            android:layout_margin="5dp"
+            android:paddingTop="10dp"
+            android:checked="@{checkedValue}"
+            android:clickable="false"
+            android:focusable="false"
+            app:color_checked="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <!--<CheckBox-->
+        <!--android:id="@+id/checkbox"-->
+        <!--android:layout_width="25dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:checked="@{checkedValue}"-->
+        <!--android:clickable="false"-->
+        <!--android:focusable="false"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent" />-->
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <variable
+            name="textMessage"
+            type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_15">
+
+        <TextView
+            android:id="@+id/text_view_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@drawable/bg_message_item_rounded_box"
+            android:fontFamily="@font/poppins_regular"
+            android:paddingStart="@dimen/padding_10"
+            android:paddingLeft="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_2"
+            android:paddingEnd="@dimen/padding_10"
+            android:paddingRight="@dimen/padding_10"
+            android:paddingBottom="@dimen/padding_2"
+            android:text="@{textMessage.message}"
+            android:textColor="@color/select_photo_text_color"
+            android:textSize="@dimen/text_small_body_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/text_view_date_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginLeft="@dimen/margin_3"
+            android:layout_marginStart="@dimen/margin_3"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
+            android:textColor="@color/grey_400"
+            android:textSize="@dimen/text_size_10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_message" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

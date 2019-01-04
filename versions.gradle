@@ -39,7 +39,7 @@ versions.apache_commons = "2.5"
 versions.mockito = "2.8.0"
 versions.mockito_all = "1.10.19"
 versions.dexmaker = "2.2.0"
-versions.constraint_layout = "1.1.2"
+versions.constraint_layout = "1.1.3"
 versions.glide = "4.7.1"
 versions.timber = "4.5.1"
 versions.android_gradle_plugin = "3.1.2"
@@ -60,6 +60,7 @@ versions.leak_canary = "1.6.1"
 versions.framework_remote = "0.0.11"
 versions.right_mesh = "0.10.0"
 versions.rm_plugin = '1.8.4'
+versions.circularimage = "2.2.0"
 ext.versions = versions
 
 def deps = [:]
@@ -179,6 +180,10 @@ navigation.fragment_ktx = "android.arch.navigation:navigation-fragment-ktx:$vers
 navigation.safe_args_plugin = "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
 navigation.testing_ktx = "android.arch.navigation:navigation-testing-ktx:$versions.navigation"
 deps.navigation = navigation
+
+def circularimage = [:]
+circularimage.runtime = "de.hdodenhof:circleimageview:$versions.circularimage"
+deps.circularimage  = circularimage
 
 ext.deps = deps
 

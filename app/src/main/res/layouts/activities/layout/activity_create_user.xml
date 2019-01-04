@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.createuser.CreateUserActivity">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ScrollView
+            android:id="@+id/scrollview"
+            style="@style/ScrollStyle"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_30"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/image_profile_background"
+                    android:layout_width="@dimen/width_140"
+                    android:layout_height="@dimen/height_140"
+                    android:layout_marginTop="@dimen/margin_85"
+                    android:background="@mipmap/ic_user_bg"
+                    android:padding="@dimen/margin_15"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_profile"
+                    android:layout_width="@dimen/width_120"
+                    android:layout_height="@dimen/height_120"
+                    android:layout_marginTop="@dimen/margin_95"
+                    android:padding="@dimen/margin_15"
+                    android:src="@mipmap/ic_avatar_grey"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/image_view_camera"
+                    android:layout_width="@dimen/width_55"
+                    android:layout_height="@dimen/height_55"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/ic_cam_bg"
+                    android:padding="@dimen/margin_15"
+                    android:src="@mipmap/ic_camera"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_profile_background"
+                    app:layout_constraintEnd_toEndOf="@+id/image_profile_background" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/first_name_layout"
+                    style="@style/signup_editext_style"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_profile">
+
+                    <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+                        android:id="@+id/edit_text_first_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_15"
+                        android:layout_marginRight="@dimen/margin_15"
+                        android:background="@color/transparent_color"
+                        android:digits="@string/myDigits"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="@string/enter_first_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:singleLine="true"
+                        android:textSize="@dimen/text_body"
+                        app:bet_baseColor="@color/colorPrimary"
+                        app:bet_textColor="@color/select_photo_color"
+                        app:bet_underlineColor="@color/grey">
+
+                        <requestFocus />
+                    </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/last_name_layout"
+                    style="@style/signup_editext_style"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:background="@color/transparent_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/first_name_layout">
+
+                    <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+                        android:id="@+id/edit_text_last_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_15"
+                        android:layout_marginRight="@dimen/margin_15"
+                        android:background="@color/transparent_color"
+                        android:digits="@string/myDigits"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="@string/enter_last_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:singleLine="true"
+                        android:textSize="@dimen/text_body"
+                        app:bet_baseColor="@color/colorPrimary"
+                        app:bet_textColor="@color/select_photo_color"
+                        app:bet_underlineColor="@color/grey" />
+                </android.support.design.widget.TextInputLayout>
+
+                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                    android:id="@+id/button_signup"
+                    style="@style/CustomButton"
+                    android:text="@string/signup"
+                    app:bb_drawable="@drawable/bg_button_gradient_rounded_box"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/last_name_layout" />
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
+

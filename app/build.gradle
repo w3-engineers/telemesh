@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
     id 'com.github.kt3k.coveralls'
+    id 'com.google.protobuf'
 }
 
 android {
@@ -32,19 +33,92 @@ android {
     lintOptions {
         abortOnError false
     }
+    dataBinding {
+        enabled = true
+    }
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/layouts/activities',
+                            'src/main/res/layouts/contentitems',
+                            'src/main/res/layouts/fragments',
+                            'src/main/res/layouts/others',
+                            'src/main/res/layouts',
+                            'src/main/res'
+                    ]
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Support
     implementation deps.support.app_compat
     implementation deps.constraint_layout
+    implementation deps.support.recyclerview
+    implementation deps.support.cardview
 
+    //lifecycle
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.extensions
+    annotationProcessor deps.lifecycle.compiler
+
+    //LiveDataReactStream
+    implementation deps.livedata_reactive
+
+    //room with Rx
+    implementation deps.room.runtime
+    implementation deps.room.rxjava2
+    annotationProcessor deps.room.compiler
+
+    // RxJava
+    implementation deps.rx_android
+    implementation deps.rxjava2
+
+    //Circular Image
+    implementation deps.circularimage.runtime
+
+    //Retrofit
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.okhttp_logging_interceptor
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+
+    // Dependencies for local unit tests
     testImplementation deps.junit
-    androidTestImplementation deps.atsl.rules
+    testImplementation deps.hamcrest
+    testImplementation deps.arch_core.testing
+    testImplementation deps.mockito.all
+    testImplementation deps.truth
+    testImplementation deps.atsl.rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.espresso.contrib
+    testImplementation deps.espresso.intents
 
-    api project(':viper')
+    androidTestImplementation deps.room.testing
+    androidTestImplementation deps.arch_core.testing
+    androidTestImplementation deps.retrofit.mock
+
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+
+    //RightMesh
+    implementation deps.right_mesh
+
+    api deps.framework
+
+    // Glide
+    implementation deps.glide
+
+    //this bottom bar library is used as experiment.
+    //Too much dependency on this library must be avoided
+    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    // shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+
+//    api project(':viper')
 }
 
 coveralls {
@@ -55,6 +129,29 @@ tasks.coveralls {
     dependsOn 'connectedAndroidTest'
     onlyIf { System.env.'CI' }
 }
+
+// protobuf-start
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
+}
+// protobuf-end
 
 rightmesh {
     appKey = artifactory_app_key

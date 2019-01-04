@@ -1,4 +1,67 @@
 <resources>
-    <string name="app_name">telemesh</string>
-    <string name="show_hello">Show Hello</string>
+    <string name="app_name">TeleMesh</string>
+    <string name="activity_view_profile">View Profile</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_first_name">First name</string>
+    <string name="enter_last_name">Last name</string>
+    <string name="select_avater_text">Select an avater</string>
+    <string name="signup">Sign Up</string>
+    <string name="no_item_found">No item found</string>
+    <string name="done">Done</string>
+    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
+    <string name="create_user">Create User</string>
+    <string name="select_avatar">Please select an avatar</string>
+    <string name="select_photo">Select photo</string>
+    <string name="title_contacts_fragment">Contacts</string>
+    <string name="title_message_feed_fragment">Message Feed</string>
+    <string name="title_survey_fragment">Survey</string>
+    <string name="title_settings_fragment">Settings</string>
+    <!-- notification badge count more than 9 -->
+    <string name="badge_count_more_than_9">9+</string>
+    <string name="power_by_rightmesh">Powered by</string>
+    <string name="logo_image">logo image</string>
+    <string name="double_press_exit">Please click BACK again to exit.</string>
+
+
+
+    <string name="demo_language">English</string>
+    <string name="activity_about_us">About Us</string>
+    <string name="app_version">Version:</string>
+
+    <string name="no_contact_available">No Contact Available</string>
+    <string name="no_message_available">No Message Available</string>
+    <string name="no_survey_available">No Survey Available</string>
+
+    <string name="search">Search</string>
+    <string name="type_message">Type your message…</string>
+    <string name="no_conversation">No conversation yet!</string>
+
+    // Fixed value for getting cursor drawable from Edit text or search view
+    <string name="cursordrawable">mCursorDrawableRes</string>
+
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+
+    // Settings title
+    <string name="settings_view_profile">View Profile</string>
+    <string name="settings_notification_sound">Notifications Sound</string>
+    <string name="settings_choose_language">Choose Language</string>
+    <string name="settings_share_app">Share App</string>
+    <string name="settings_about_us">About Us</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+
+    <string name="choose_language">Choose a Language</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string-array name="language_list">
+        <item>English</item>
+        <item>বাংলা</item>
+    </string-array>
+
+    <string-array name="language_code_list">
+        <item>en</item>
+        <item>bn</item>
+    </string-array>
+
 </resources>

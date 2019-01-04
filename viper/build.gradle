@@ -93,7 +93,7 @@ dependencies {
     implementation deps.lifecycle.extensions
 
     //android-framework
-    api deps.framework_remote
+    api deps.strom_remote
 }
 
 //Utility

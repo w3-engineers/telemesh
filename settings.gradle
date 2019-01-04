@@ -1,5 +1,4 @@
-include ':viper', ':app'
-
+include ':app', ':viper'
 pluginManagement.repositories {
     google()
     jcenter()
@@ -12,3 +11,4 @@ pluginManagement.repositories {
         }
     }
 }
+

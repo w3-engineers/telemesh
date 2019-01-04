@@ -18,7 +18,6 @@ import com.w3engineers.ext.viper.R;
  * Proprietary and confidential
  * <br>----------------------------------------------------------------------------
  * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-16 at 6:06 PM].
- * <br>Email: azim@w3engineers.com
  * <br>----------------------------------------------------------------------------
  * <br>Project: android-framework.
  * <br>Code Responsibility: <Purpose of code>

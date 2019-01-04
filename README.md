@@ -49,6 +49,8 @@ We can use global **_gradle.properties_** file for **RM keys**. In general it co
 
 > **Windows:** _C:/Users\<username>/.gradle/gradle.properties_.
 
+> **Mac:**  _Users/\<usr>/.gradle_ 
+
 In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
 
 > User name key is: _rightmesh_build_username_ 

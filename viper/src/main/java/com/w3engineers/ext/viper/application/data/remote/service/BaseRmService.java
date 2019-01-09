@@ -172,6 +172,10 @@ public class BaseRmService extends Service implements IMeshCallBack {
         public void resetCommunicator(IRmCommunicator iRmCommunicator) throws RemoteException {
             mIRmCommunicator = null;
         }
+        @Override
+        public void openRmSettings(){
+            mMeshProvider.openRmSettings();
+        }
     };
 
     @Override

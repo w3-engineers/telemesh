@@ -54,6 +54,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutShareApp.setOnClickListener(this);
         mBinding.layoutAboutUs.setOnClickListener(this);
         mBinding.layoutPrivacyPolicy.setOnClickListener(this);
+        mBinding.layoutOpenWallet.setOnClickListener(this);
 
     }
 
@@ -87,6 +88,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_privacy_policy:
                 // Show privacy policy
+                break;
+
+            case R.id.layout_open_wallet:
+                settingsViewModel.openWallet();
                 break;
             default:
                 break;

@@ -9,11 +9,13 @@ import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
+import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
+import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
@@ -100,5 +102,13 @@ public class ServiceLocator extends BaseServiceLocator {
     @Override
     public BaseRmDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
+    }
+
+    public MyWalletViewModel getMyWalletViewModel(Application application) {
+        return new MyWalletViewModel(application);
+    }
+
+    public BuyDataViewModel getBuyDataViewModel(Application application) {
+        return new BuyDataViewModel(application);
     }
 }

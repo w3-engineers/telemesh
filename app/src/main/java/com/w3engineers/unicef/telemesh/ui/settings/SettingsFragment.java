@@ -18,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -56,6 +57,18 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutPrivacyPolicy.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
 
+        // Add sample mesh token 1000
+
+        int token = SharedPref.getSharedPref(getContext()).readInt("cr_token");
+        int spentToken =  SharedPref.getSharedPref(getContext()).readInt("sp_token");
+
+        if (token == 0 && spentToken == 0)
+        {
+            SharedPref.getSharedPref(getContext()).write("cr_token", 1000);
+            SharedPref.getSharedPref(getContext()).write("sp_token", 0);
+        }
+
+
     }
 
     @Override
@@ -91,7 +104,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
 
             case R.id.layout_open_wallet:
-                settingsViewModel.openWallet();
+                startActivity(new Intent(mActivity, MyWalletActivity.class));
+//                settingsViewModel.openWallet();
                 break;
             default:
                 break;

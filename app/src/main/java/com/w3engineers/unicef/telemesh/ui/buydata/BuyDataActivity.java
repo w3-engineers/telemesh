@@ -60,7 +60,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void startUI() {
 
-        setTitle("Buy Data");
+        setTitle("Buy Data ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewModel = getViewModel();

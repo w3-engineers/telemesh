@@ -139,6 +139,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
         if (userIds.contains(userId)) {
             RmDataHelper.getInstance().userLeave(meshPeer);
+            userIds.remove(userId);
         }
     }
 

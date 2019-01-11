@@ -278,4 +278,14 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
      */
     protected void onAttachedToService() { }
 
+    public void openRmSettings(){
+        if(mIRmServiceConnection != null){
+            try {
+                mIRmServiceConnection.openRmSettings();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

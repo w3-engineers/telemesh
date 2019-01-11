@@ -99,7 +99,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_about_us"
+                android:id="@+id/layout_open_wallet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_10"
@@ -107,6 +107,24 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_share_app">
+
+                <include
+                    layout="@layout/item_settings_default"
+                    app:isShowSeparator="@{true}"
+                    app:itemName="@{@string/settings_open_wallet}"
+                    app:rawImage="@{R.mipmap.ic_wallet}" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_about_us"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_open_wallet">
 
                 <include
                     layout="@layout/item_settings_default"

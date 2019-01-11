@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/main_toolbar"
+            layout="@layout/app_toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="170dp"
+            android:background="@color/grey_100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_toolbar">
+
+            <TextView
+                android:id="@+id/wallet_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="wallet Id:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/wallet_id_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_12"
+                android:text="0x4d4ee38da7b2df1e103930db4c69d33f0ebc409b"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_5"
+                app:layout_constraintTop_toBottomOf="@id/wallet_id"
+                />
+
+            <TextView
+                android:id="@+id/balance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Balance"
+                android:textSize="@dimen/text_size_18"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                app:layout_constraintTop_toBottomOf="@id/wallet_id_value"
+                />
+
+
+            <TextView
+                android:id="@+id/current_balance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="1000 RMESH"
+                android:textSize="@dimen/text_size_25"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                app:layout_constraintTop_toBottomOf="@id/balance"
+                />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintVertical_bias="0.655"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/button_buy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Buy Data"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="@dimen/margin_20"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:textAllCaps="false"
+                />
+
+            <Button
+                android:id="@+id/button_sell"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Sell Data"
+                android:textAllCaps="false"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginRight="@dimen/margin_20"
+                app:layout_constraintTop_toBottomOf="@id/button_buy"
+                />
+
+
+
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

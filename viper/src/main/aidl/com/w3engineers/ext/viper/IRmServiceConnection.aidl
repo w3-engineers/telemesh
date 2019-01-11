@@ -22,4 +22,6 @@ interface IRmServiceConnection {
     void resetCommunicator(IRmCommunicator iRmCommunicator);
 
     List<BaseMeshData> getLivePeers();
+
+    void openRmSettings();
 }

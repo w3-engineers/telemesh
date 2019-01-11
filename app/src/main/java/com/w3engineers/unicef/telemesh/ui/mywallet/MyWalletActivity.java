@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataActivity;
+import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 
 
@@ -82,6 +83,8 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 startActivity(new Intent(MyWalletActivity.this, BuyDataActivity.class));
                  break;
             case R.id.button_sell:
+                startActivity(new Intent(MyWalletActivity.this, SellDataActivity.class));
+
                 break;
         }
         super.onClick(view);

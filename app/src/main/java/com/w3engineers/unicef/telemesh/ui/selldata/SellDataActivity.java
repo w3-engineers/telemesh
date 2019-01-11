@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.buydata;
+package com.w3engineers.unicef.telemesh.ui.selldata;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
@@ -14,8 +14,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.ActivityBuyDataBinding;
-import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
+import com.w3engineers.unicef.telemesh.databinding.ActivitySellDataBinding;
 
 
 /**
@@ -39,17 +38,17 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
  * * --> <Second Reviewer> on [10-Jan-2019 at 10:37 AM].
  * * ============================================================================
  **/
-public class BuyDataActivity extends BaseActivity implements View.OnClickListener {
+public class SellDataActivity extends BaseActivity implements View.OnClickListener {
 
-    private BuyDataViewModel viewModel;
-    private ActivityBuyDataBinding mBinding;
+    private SellDataViewModel viewModel;
+    private ActivitySellDataBinding mBinding;
     private int currentBalance;
-    private int spentBalance;
+    private int earnedBalance;
 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_buy_data;
+        return R.layout.activity_sell_data;
     }
 
     @Override
@@ -60,19 +59,19 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void startUI() {
 
-        setTitle("Buy Data ");
+        setTitle("Sell Data ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewModel = getViewModel();
-        mBinding = (ActivityBuyDataBinding) getViewDataBinding();
+        mBinding = (ActivitySellDataBinding) getViewDataBinding();
         mBinding.buttonBuy.setOnClickListener(this);
 
         currentBalance = SharedPref.getSharedPref(this).readInt("cr_token");
-        spentBalance = SharedPref.getSharedPref(this).readInt("sp_token");
+        earnedBalance = SharedPref.getSharedPref(this).readInt("er_token");
         mBinding.currentToken.setText(currentBalance + " RMESH");
-        mBinding.spentToken.setText(spentBalance + " RMESH");
+        mBinding.spentToken.setText(earnedBalance + " RMESH");
 
-        if (spentBalance > 0)
+        if (earnedBalance > 0)
             mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
 
     }
@@ -101,33 +100,34 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
         int id = view.getId();
         switch (id) {
             case R.id.button_buy:
-                String buyTokenTxt = mBinding.editTextBuyToken.getText().toString();
-                if (!buyTokenTxt.equals("")) {
+
+//                String buyTokenTxt = mBinding.editTextBuyToken.getText().toString();
+//                if (!buyTokenTxt.equals("")) {
 
                     int buyToken = 100;//Integer.parseInt(mBinding.editTextBuyToken.getText().toString());
-                    SharedPref.getSharedPref(BuyDataActivity.this).write("sp_token", (spentBalance + buyToken));
-                    SharedPref.getSharedPref(BuyDataActivity.this).write("cr_token", (currentBalance - buyToken));
+                    SharedPref.getSharedPref(SellDataActivity.this).write("cr_token", (currentBalance + buyToken));
+                    SharedPref.getSharedPref(SellDataActivity.this).write("er_token", (earnedBalance + buyToken));
 
-                    currentBalance = currentBalance - buyToken;
-                    spentBalance = spentBalance + buyToken;
+                    currentBalance = currentBalance + buyToken;
+                    earnedBalance = earnedBalance + buyToken;
 
-                    mBinding.spentToken.setText(spentBalance + " RMESH");
+                    mBinding.spentToken.setText(earnedBalance + " RMESH");
                     mBinding.currentToken.setText(currentBalance + " RMESH");
                     mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
-                    showDialog("Buy data Successfully done!");
-                }
+                    showDialog("Sell data Successfully done!");
+//                }
                 break;
         }
         super.onClick(view);
     }
 
-    private BuyDataViewModel getViewModel() {
+    private SellDataViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getBuyDataViewModel(getApplication());
+                return (T) ServiceLocator.getInstance().getSellDataViewModel(getApplication());
             }
-        }).get(BuyDataViewModel.class);
+        }).get(SellDataViewModel.class);
     }
 }

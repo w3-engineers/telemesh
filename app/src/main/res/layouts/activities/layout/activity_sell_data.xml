@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:gravity="center"
-                    android:text="Spent Balance"
+                    android:text="Earned Balance"
                     android:textSize="@dimen/text_size_16"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -106,7 +106,6 @@
                 android:text="100 RM/GB"
                 android:editable="false"
                 android:focusable="false"
-                android:inputType="number"
                 />
 
             <Button
@@ -115,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_20"
                 android:layout_marginRight="@dimen/margin_20"
-                android:text="Buy Data"
+                android:text="Sell Data"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

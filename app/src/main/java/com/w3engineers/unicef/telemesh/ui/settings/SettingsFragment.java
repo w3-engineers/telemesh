@@ -57,18 +57,16 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutPrivacyPolicy.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
 
-        // Add sample mesh token 1000
+        // Add sample mesh token 10000
 
         int token = SharedPref.getSharedPref(getContext()).readInt("cr_token");
         int spentToken =  SharedPref.getSharedPref(getContext()).readInt("sp_token");
 
         if (token == 0 && spentToken == 0)
         {
-            SharedPref.getSharedPref(getContext()).write("cr_token", 1000);
+            SharedPref.getSharedPref(getContext()).write("cr_token", 10000);
             SharedPref.getSharedPref(getContext()).write("sp_token", 0);
         }
-
-
     }
 
     @Override
@@ -105,8 +103,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
             case R.id.layout_open_wallet:
                 startActivity(new Intent(mActivity, MyWalletActivity.class));
-//                settingsViewModel.openWallet();
-                break;
+                 break;
             default:
                 break;
 

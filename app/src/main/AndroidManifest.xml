@@ -60,6 +60,7 @@
         <activity android:name=".ui.aboutus.AboutUsActivity" />
         <activity android:name=".ui.mywallet.MyWalletActivity" />
         <activity android:name=".ui.buydata.BuyDataActivity" />
+        <activity android:name=".ui.selldata.SellDataActivity" />
         <activity
             android:name=".ui.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

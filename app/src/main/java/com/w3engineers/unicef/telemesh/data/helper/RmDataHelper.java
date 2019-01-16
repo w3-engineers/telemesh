@@ -67,13 +67,13 @@ public class RmDataHelper {
 
         this.dataSource = dataSource;
 
-        RMUserModel rmUserModel = RMUserModel.newBuilder()
+       /* RMUserModel rmUserModel = RMUserModel.newBuilder()
                 .setUserFirstName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.FIRST_NAME))
                 .setUserLastName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.LAST_NAME))
                 .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
-                .build();
+                .build();*/
 
-        rightMeshDataSource = RightMeshDataSource.getRmDataSource(rmUserModel);
+        rightMeshDataSource = RightMeshDataSource.getRmDataSource();
 
         return rightMeshDataSource;
     }

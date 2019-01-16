@@ -2,14 +2,10 @@ package com.w3engineers.unicef.telemesh.ui.createuser;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-
-import junit.framework.Test;
 
 
 /**

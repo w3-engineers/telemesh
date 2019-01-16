@@ -22,8 +22,8 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username rightmesh_build_username
-            password rightmesh_build_password
+            username hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
+            password hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
         }
     }
     maven{
@@ -49,6 +49,7 @@ android {
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
 
         resValue "integer", "rm_port_number", getRootProject().ext.port_number
         resValue "string", "rm_ssid", getRootProject().ext.rm_ssid
@@ -86,7 +87,7 @@ dependencies {
     implementation deps.support.design
 
     //multidex
-    api deps.multidex
+    implementation deps.multidex
 
     //Added by Aziz for BaseEditText
     implementation 'com.nineoldandroids:library:2.4.0'

@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
@@ -66,4 +67,7 @@ public class SettingsViewModel extends AndroidViewModel {
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
     }
 
+    public void openWallet() {
+        RightMeshDataSource.getRmDataSource().openRmSettings();
+    }
 }

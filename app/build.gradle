@@ -56,6 +56,7 @@ dependencies {
 
     //Support
     implementation deps.support.app_compat
+    implementation deps.support.design
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
@@ -111,6 +112,7 @@ dependencies {
 
     // Glide
     implementation deps.glide
+    implementation deps.multidex
 
     //this bottom bar library is used as experiment.
     //Too much dependency on this library must be avoided
@@ -154,9 +156,9 @@ protobuf {
 // protobuf-end
 
 rightmesh {
-    appKey = project.getProperty('org.w3.telemesh')
-    username = rightmesh_build_username
-    password = rightmesh_build_password
+    appKey = project.hasProperty('telemesh') ? project.getProperty('telemesh') : System.getenv('telemesh')
+    username = hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
+    password = hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
 }
 
 preBuild.dependsOn("rightmesh")
@@ -165,8 +167,8 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username rightmesh_build_username
-            password rightmesh_build_password
+            username hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
+            password hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
         }
     }
     maven{

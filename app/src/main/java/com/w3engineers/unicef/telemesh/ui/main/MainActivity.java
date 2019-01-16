@@ -92,12 +92,12 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                 (BottomNavigationMenuView) binding.bottomNavigation
                         .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
 
-        binding.bottomNavigation
+        /*binding.bottomNavigation
                 .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
                         , Constants.MenuItemPosition.MENU_ITEM_HEIGHT);
         binding.bottomNavigation.enableShiftingMode(false);
         binding.bottomNavigation.enableItemShiftingMode(false);
-        binding.bottomNavigation.enableAnimation(false);
+        binding.bottomNavigation.enableAnimation(false);*/
 
 /*
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);

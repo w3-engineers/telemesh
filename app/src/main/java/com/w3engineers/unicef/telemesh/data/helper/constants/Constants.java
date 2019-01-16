@@ -44,8 +44,8 @@ public class Constants {
     }
 
     public interface MessageStatus {
-        int STATUS_UNREAD = 0;
-        int STATUS_READ = 1;
+        int STATUS_UNREAD = 1;
+        int STATUS_READ = 2;
         int STATUS_SENDING = 3;
         int STATUS_DELIVERED = 4;
         int STATUS_FAILED = 5;

@@ -376,4 +376,12 @@ public class MeshProvider implements MeshStateListener {
         return false;
     }
 
+
+    public void openRmSettings(){
+        try {
+            mAndroidMeshManager.showSettingsActivity();
+        } catch (RightMeshException ignored) {
+        }
+    }
+
 }

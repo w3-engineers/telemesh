@@ -1,17 +1,21 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.RemoteException;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +52,17 @@ public class RightMeshDataSource extends BaseRmDataSource {
         userIds = new ArrayList<>();
     }
 
-    public static RightMeshDataSource getRmDataSource(RMUserModel rmUserMe) {
+    public static RightMeshDataSource getRmDataSource() {
         if (rightMeshDataSource == null) {
+            Context context = TeleMeshApplication.getContext();
+
+            RMUserModel rmUserMe = RMUserModel.newBuilder()
+                    .setUserFirstName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.FIRST_NAME))
+                    .setUserLastName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.LAST_NAME))
+                    .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
+                    .build();
+
+
             byte[] bytes = rmUserMe.toByteArray();
             rightMeshDataSource = new RightMeshDataSource(bytes);
         }
@@ -126,6 +139,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
         if (userIds.contains(userId)) {
             RmDataHelper.getInstance().userLeave(meshPeer);
+            userIds.remove(userId);
         }
     }
 

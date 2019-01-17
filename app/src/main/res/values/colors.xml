@@ -9,6 +9,7 @@
     <color name="accent">#aae2e4</color>
     <color name="dark_gray">#585858</color>
     <color name="gray_disabled">#D8D8D8</color>
+    <color name="splash_text_color">#00B883</color>
 
     <color name="gray_half">#D6D4D4</color>
     <color name="title_color">#3C3C3C</color>

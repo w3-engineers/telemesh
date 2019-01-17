@@ -28,16 +28,15 @@
         <ImageView
             android:id="@+id/image_view_logo"
             android:layout_width="@dimen/width_250"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/logo_telemesh" />
+            android:layout_height="@dimen/height_200"
+            android:src="@mipmap/splash_logo" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_25"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shimmer_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -46,8 +45,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_5"
-            android:text="@string/power_by_rightmesh"
-            android:textSize="@dimen/text_body_15"
+            android:textColor="@color/splash_text_color"
+            android:text="@string/communication_tool_to_connect"
+            android:textSize="17dp"
             app:layout_constraintEnd_toStartOf="@+id/image_rightmesh"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -56,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_rm_logo"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_view_rightmesh_text"
             android:contentDescription="@string/power_by_rightmesh" />

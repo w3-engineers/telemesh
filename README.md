@@ -18,6 +18,10 @@ We intend to make use of mesh network. It allows for multi-hop, peer-to-peer con
 
 For UNICEF, we plan to develop an open source messaging app to be tested in refugee camps, specifically, Cox’s Bazar, Bangladesh. A broadcast channel would allow UNICEF to push vital information to smartphone users about services like vaccination clinics, maternity clinics and schools. The app would also allow refugees to message one another even if they do not have a SIM card or cellular data.
 
+
+<kbd><img src="http://gdurl.com/5ujQ" align="center"></kbd>
+
+
 ## Project's Structure
 
 .

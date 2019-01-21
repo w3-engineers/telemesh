@@ -11,7 +11,7 @@ A mesh network based off-grid messaging application supported by blockchain tech
 
 ## Project Overview
 ### Background
-Globally, 65 million people are forcibly displaced, and over 22 million are refugees. In Bangladesh, there are over 650,000 Rohingya refugees who have fled violence, mass killings and sexual abuse from neighboring Myanmar.2 Of those, nearly 60% are children, many of whom are orphaned Distributing information about humanitarian services to large numbers of refugees poses significant challenges for NGOs like UNICEF. While 40% of rural refugee households have smartphones, many are unconnected due to a lack of or poor telecommunications infrastructure or unaffordable cellular costs. The UNHCR believes that connecting refugees would ultimately transform humanitarian operations.
+Globally, 68.5 million people are forcibly displaced at the time of writing this readme, and over 25.4 million are refugees. In Bangladesh, there are over 650,000 Rohingya refugees who have fled violence, mass killings and sexual abuse from neighboring Myanmar.2 Of those, nearly 60% are children, many of whom are orphaned Distributing information about humanitarian services to large numbers of refugees poses significant challenges for NGOs like UNICEF. While 40% of rural refugee households have smartphones, many are unconnected due to a lack of or poor telecommunications infrastructure or unaffordable cellular costs. The UNHCR believes that connecting refugees would ultimately transform humanitarian operations.
 
 ### Project's Goal
 We intend to make use of mesh network. It allows for multi-hop, peer-to-peer connectivity directly between smartphones, instead of relying on internet and cell networks. Blockchain is used in the network to uniquely identify each node (smartphone) providing a trust layer to users without centralized signup. It also provides the infrastructure for users to connect multiple separate meshes by sharing an internet connection in exchange for ERC20 tokens. This offers an entirely new and unique method of information distribution not possible with existing technology.
@@ -57,7 +57,7 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
 ├── gradle.properties
 
 
-## Mobile App Wirefarme
+## Demo UI 
 <kbd><img src="http://gdurl.com/eghW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Tjfb" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/mHBU0" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/vxRe" width="175" height="300"></kbd> 
 
 <kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
@@ -78,9 +78,9 @@ N/A
 * Android device with Wifi, WifiDirect, Bluetooth or Bluetooth Low Energy (BLE) support.
 
 ## Project Dependencies
-* **[Strom][strom]**: It is just a wrapper on native android to reduce some repeated works. This has been used as an dependency into this project.
+* **[Strom][strom]**: It is just a wrapper on native android to reduce some repeated works. This has been used as a dependency into this project.
 
-* **Viper**: This is also a wrapper on Rightmesh and has been used as an dependency.
+* **Viper**: This is also a wrapper of a mesh library and has been used as a dependency.
 
 ## Development environments
 We are using the below environment for android mobile app development:

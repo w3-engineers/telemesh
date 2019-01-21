@@ -4,8 +4,8 @@
 
 # Telemesh
 
-[![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
-[![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
+[![Build Status](https://travis-ci.com/MimoSaha/telemesh.svg?branch=master)](https://travis-ci.com/MimoSaha/telemesh)
+[![Coverage Status](https://coveralls.io/repos/github/MimoSaha/telemesh/badge.svg?branch=master)](https://coveralls.io/github/MimoSaha/telemesh?branch=master)
 
 A mesh network based off-grid messaging application supported by blockchain technology.
 

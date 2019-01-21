@@ -122,6 +122,7 @@ deps.atsl = atsl
 
 def mockito = [:]
 mockito.core = "org.mockito:mockito-core:$versions.mockito"
+mockito.android = "org.mockito:mockito-android:$versions.mockito"
 mockito.all = "org.mockito:mockito-all:$versions.mockito_all"
 deps.mockito = mockito
 

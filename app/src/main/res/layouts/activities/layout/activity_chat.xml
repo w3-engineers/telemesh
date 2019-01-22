@@ -14,6 +14,7 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -32,6 +33,7 @@
             app:titleTextColor="@color/title_color">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/chat_action_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

@@ -178,6 +178,12 @@ public class SplashActivityTest {
                         isDisplayed()));
         bottomNavigationMessageFeed.perform(click());
 
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction bottomNavigationSurvey = onView(
                 allOf(withId(R.id.action_survey),
                         childAtPosition(
@@ -348,6 +354,80 @@ public class SplashActivityTest {
                                                 0)),
                                 5)));
         constraintLayout3.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction bottomNavigationContacts = onView(
+                allOf(withId(R.id.action_contact),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                0),
+                        isDisplayed()));
+        bottomNavigationContacts.perform(click());
+
+        try {
+            Thread.sleep(8000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction constraintLayout2 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.contact_recycler_view),
+                                childAtPosition(
+                                        withId(R.id.mesh_contact_layout),
+                                        0)),
+                        0),
+                        isDisplayed()));
+        constraintLayout2.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction baseEditText5 = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.input_field),
+                                        childAtPosition(
+                                                withId(R.id.message_layout),
+                                                5)),
+                                0),
+                        isDisplayed()));
+        baseEditText5.perform(replaceText("hi"), closeSoftKeyboard());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatImageView2 = onView(
+                allOf(withId(R.id.image_view_send),
+                        childAtPosition(
+                                allOf(withId(R.id.input_field),
+                                        childAtPosition(
+                                                withId(R.id.message_layout),
+                                                5)),
+                                1),
+                        isDisplayed()));
+        appCompatImageView2.perform(click());
 
         try {
             Thread.sleep(700);

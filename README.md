@@ -1,6 +1,7 @@
 [strom]:https://www.github.com/w3-engineers/android-framework
 [travis]:https://travis-ci.com/w3-engineers/
 [coverall]:https://coveralls.io/github/w3-engineers/telemesh
+[Apache License 2.0]:https://choosealicense.com/licenses/apache-2.0/
 
 # Telemesh
 
@@ -20,6 +21,12 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
 
 
 <kbd><img src="http://gdurl.com/5ujQ" align="center"></kbd>
+
+## Feature list
+* One to one messaging
+* Message broadcast, multicast
+* App sharing
+* More to come ...
 
 
 ## Project's Structure
@@ -118,14 +125,7 @@ If everything is ok then sync and build should work as it should be. If not plea
 
 **NOTE:** You must have a connected device or emulator as it runs instrumentation tests. You will find the coverage report at *telemesh/app/build/reports/coverage*
 
-## Feature list
-* One to one messaging
-* Message broadcast, multicast
-* App sharing
-* More to come ...
-
-
-## Demo UI 
+## User Interface (UI)
 <kbd><img src="http://gdurl.com/eghW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Tjfb" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/mHBU0" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/vxRe" width="175" height="300"></kbd> 
 
 <kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
@@ -135,17 +135,7 @@ If everything is ok then sync and build should work as it should be. If not plea
 <kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
 
 
-## Description
-TBD
-
-## Deployment
-
-TBD
-
 ## License
+**[Apache License 2.0]**
 
-TBD
 
-## Acknowledgments
-
-TBD

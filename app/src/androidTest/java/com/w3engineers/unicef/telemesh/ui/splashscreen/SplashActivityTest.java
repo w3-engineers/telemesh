@@ -167,16 +167,35 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        /*ViewInteraction textView = onView(
-                allOf(withText("No Contact Available"),
+        ViewInteraction bottomNavigationMessageFeed = onView(
+                allOf(withId(R.id.action_message_feed),
                         childAtPosition(
-                                allOf(withId(R.id.empty_layout),
-                                        childAtPosition(
-                                                IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
-                                                0)),
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
                                 1),
                         isDisplayed()));
-        textView.check(matches(withText("No Contact Available")));*/
+        bottomNavigationMessageFeed.perform(click());
+
+        ViewInteraction bottomNavigationSurvey = onView(
+                allOf(withId(R.id.action_survey),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationSurvey.perform(click());
+
+        ViewInteraction bottomNavigationSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                3),
+                        isDisplayed()));
+        bottomNavigationSettings.perform(click());
     }
 
     private static Matcher<View> childAtPosition(

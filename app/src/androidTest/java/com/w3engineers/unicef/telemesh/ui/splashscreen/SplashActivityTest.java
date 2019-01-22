@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -196,6 +197,33 @@ public class SplashActivityTest {
                                 3),
                         isDisplayed()));
         bottomNavigationSettings.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction viewProfile = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                0)));
+        viewProfile.perform(scrollTo(), click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
     }
 
     private static Matcher<View> childAtPosition(

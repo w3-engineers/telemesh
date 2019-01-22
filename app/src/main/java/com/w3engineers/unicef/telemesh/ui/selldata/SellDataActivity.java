@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
@@ -114,7 +116,10 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
                     mBinding.spentToken.setText(earnedBalance + " RMESH");
                     mBinding.currentToken.setText(currentBalance + " RMESH");
                     mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
-                    showDialog("Sell data Successfully done!");
+
+                    Toaster.showLong("Sell data Successfully done!");
+
+//                    showDialog("Sell data Successfully done!");
 //                }
                 break;
         }

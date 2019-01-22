@@ -224,6 +224,138 @@ public class SplashActivityTest {
         }
 
         pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction actionOnWallet = onView(
+                allOf(withId(R.id.layout_open_wallet),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                4)));
+        actionOnWallet.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.button_buy), withText("Buy Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                0),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.button_buy), withText("Buy Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.transaction_layout),
+                                        childAtPosition(
+                                                withId(R.id.buy_data_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.button_sell), withText("Sell Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.button_buy), withText("Sell Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.sell_transaction_layout),
+                                        childAtPosition(
+                                                withId(R.id.sell_data_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction constraintLayout3 = onView(
+                allOf(withId(R.id.layout_about_us),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                5)));
+        constraintLayout3.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
     }
 
     private static Matcher<View> childAtPosition(

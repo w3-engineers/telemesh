@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/sell_data_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -86,6 +87,7 @@
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/sell_transaction_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -99,14 +101,13 @@
                 android:id="@+id/edit_text_buy_token"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 android:layout_margin="@dimen/margin_20"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="100 RM/GB"
                 android:editable="false"
                 android:focusable="false"
-                />
+                android:text="100 RM/GB"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/button_buy"
@@ -118,7 +119,7 @@
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_text_buy_token"/>
+                app:layout_constraintTop_toBottomOf="@id/edit_text_buy_token" />
 
 
         </android.support.constraint.ConstraintLayout>

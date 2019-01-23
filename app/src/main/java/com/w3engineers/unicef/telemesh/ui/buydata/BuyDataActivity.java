@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
@@ -114,7 +115,10 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
                     mBinding.spentToken.setText(spentBalance + " RMESH");
                     mBinding.currentToken.setText(currentBalance + " RMESH");
                     mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
-                    showDialog("Buy data Successfully done!");
+
+                    Toaster.showLong("Buy data Successfully done!");
+
+//                    showDialog("Buy data Successfully done!");
                 }
                 break;
         }

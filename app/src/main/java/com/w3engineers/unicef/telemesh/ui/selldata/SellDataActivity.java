@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
@@ -104,17 +105,20 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
 //                String buyTokenTxt = mBinding.editTextBuyToken.getText().toString();
 //                if (!buyTokenTxt.equals("")) {
 
-                    int buyToken = 100;//Integer.parseInt(mBinding.editTextBuyToken.getText().toString());
-                    SharedPref.getSharedPref(SellDataActivity.this).write("cr_token", (currentBalance + buyToken));
-                    SharedPref.getSharedPref(SellDataActivity.this).write("er_token", (earnedBalance + buyToken));
+                int buyToken = 100;//Integer.parseInt(mBinding.editTextBuyToken.getText().toString());
+                SharedPref.getSharedPref(SellDataActivity.this).write("cr_token", (currentBalance + buyToken));
+                SharedPref.getSharedPref(SellDataActivity.this).write("er_token", (earnedBalance + buyToken));
 
-                    currentBalance = currentBalance + buyToken;
-                    earnedBalance = earnedBalance + buyToken;
+                currentBalance = currentBalance + buyToken;
+                earnedBalance = earnedBalance + buyToken;
 
-                    mBinding.spentToken.setText(earnedBalance + " RMESH");
-                    mBinding.currentToken.setText(currentBalance + " RMESH");
-                    mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
-                    showDialog("Sell data Successfully done!");
+                mBinding.spentToken.setText(earnedBalance + " RMESH");
+                mBinding.currentToken.setText(currentBalance + " RMESH");
+                mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
+
+                Toaster.showLong("Sell data Successfully done!");
+
+//                showDialog("Sell data Successfully done!");
 //                }
                 break;
         }

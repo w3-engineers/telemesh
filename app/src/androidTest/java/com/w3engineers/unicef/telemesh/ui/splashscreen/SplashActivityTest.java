@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
 
+import android.content.Intent;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -38,6 +41,9 @@ public class SplashActivityTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
+
+    @Rule
+    public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -237,6 +243,46 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
+        ViewInteraction switchCompat = onView(
+                allOf(withId(R.id.notification_switch),
+                        childAtPosition(
+                                allOf(withId(R.id.item_notification_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_notification_sound),
+                                                0)),
+                                2)));
+        switchCompat.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction constraintLayout2 = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                2)));
+        constraintLayout2.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction actionOnWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
                         childAtPosition(
@@ -385,7 +431,19 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        ViewInteraction constraintLayout2 = onView(
+        UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnline(true)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserFirstName("Daniel")
+                .setUserLastName("Alvez");
+        userEntity.setId(0);
+
+        Intent intent = new Intent();
+        intent.putExtra(UserEntity.class.getName(), userEntity);
+        mChatTestRule.launchActivity(intent);
+
+        /*ViewInteraction constraintLayout2 = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.contact_recycler_view),
                                 childAtPosition(
@@ -393,7 +451,7 @@ public class SplashActivityTest {
                                         0)),
                         0),
                         isDisplayed()));
-        constraintLayout2.perform(click());
+        constraintLayout2.perform(click());*/
 
         try {
             Thread.sleep(700);
@@ -401,7 +459,7 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        ViewInteraction baseEditText5 = onView(
+        /*ViewInteraction baseEditText5 = onView(
                 allOf(withId(R.id.edit_text_message),
                         childAtPosition(
                                 allOf(withId(R.id.input_field),
@@ -416,7 +474,7 @@ public class SplashActivityTest {
             Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
         ViewInteraction appCompatImageView2 = onView(
                 allOf(withId(R.id.image_view_send),

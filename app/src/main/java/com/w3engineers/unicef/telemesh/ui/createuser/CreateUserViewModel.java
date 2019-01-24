@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.createuser;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -57,7 +58,8 @@ public class CreateUserViewModel extends AndroidViewModel {
     }
 
     public boolean isNameValid(String name) {
-        return name.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
+        return !TextUtils.isEmpty(name) &&
+                name.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
     }
 }

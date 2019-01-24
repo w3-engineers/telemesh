@@ -33,7 +33,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.test.TestActivity" />
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize" />

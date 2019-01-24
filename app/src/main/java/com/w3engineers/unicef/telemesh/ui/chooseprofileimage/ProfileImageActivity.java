@@ -11,6 +11,7 @@ import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileImageBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.helper.ImageUtil;
 
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 
@@ -49,7 +50,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
         mAdapter.setItemClickListener(this);
         mProfileImageBinding.recyclerView.setAdapter(mAdapter);
         mProfileImageBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, ITEM_IN_ROW));
-
+        mAdapter.addItem(ImageUtil.getAllImages());
     }
 
 
@@ -63,20 +64,18 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_done) {
-            Intent intent = getIntent();
-            intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
-            setResult(RESULT_OK, intent);
-            finish();
-            return true;
+        switch (id) {
+            case R.id.menu_done:
+                Intent intent = getIntent();
+                intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
+                setResult(RESULT_OK, intent);
+                finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onItemClick(View view, Integer item) {
-       selectedItem = item;
+        selectedItem = item;
     }
 }

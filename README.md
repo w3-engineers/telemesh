@@ -91,7 +91,6 @@ We are using the below environment for android mobile app development:
 Navigate to directory where you want to keep source code. Open command prompt. Execute below command:
 > git clone https://github.com/w3-engineers/telemesh.git
 
-or if you want to download zip then [click here](https://github.com/w3-engineers/telemesh/archive/master.zip)
 
 **Step 2: Prepare gradle.properties file:**
 We can use global **_gradle.properties_** file for **RM keys**. In general it could be found in the following location:

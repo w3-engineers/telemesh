@@ -95,13 +95,11 @@ or if you want to download zip then [click here](https://github.com/w3-engineers
 
 **Step 2: Prepare gradle.properties file:**
 We can use global **_gradle.properties_** file for **RM keys**. In general it could be found in the following location:
-> **Linux:**  _home/\<usr>/.gradle_ 
+> **Linux/Ubuntu:**  _home/\<usr>/.gradle_ 
 
 > **Windows:** _C:/Users\<usr>/.gradle/gradle.properties_.
 
 > **MAC:** _~/Users/\<usr>/.gradle (By default this file is hidden in Mac. Press Command+Shift+. to see the hidden files)._
-
-> **Ubuntu:** _home/\<usr>/.gradle._
 
 In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
 

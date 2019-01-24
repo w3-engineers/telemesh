@@ -84,7 +84,7 @@ We are using the below environment for android mobile app development:
 * Minimum API: 16 (Jelly Bean - 4.1.x)
 * Java: 1.8.0_121
 * Android Studio: 3.3 Stable
-* Machine Used: Wnodws 10, macOS 10.14: Mojave (Liberty)
+* Machine Used: Linux/Ubuntu, MacOS 10.14: Mojave (Liberty)
 
 ## How to get started
 **Step 1: Clone repository:**

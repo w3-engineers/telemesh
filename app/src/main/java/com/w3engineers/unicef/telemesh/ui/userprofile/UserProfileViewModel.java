@@ -35,17 +35,17 @@ public class UserProfileViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public String getUserName() {
-        return SharedPref.getSharedPref(getApplication().getApplicationContext())
-                .read(Constants.preferenceKey.FIRST_NAME) + " " +
-                SharedPref.getSharedPref(getApplication().getApplicationContext())
-                        .read(Constants.preferenceKey.LAST_NAME);
-    }
-
-    public int getProfileImage() {
-        return getApplication().getApplicationContext().getResources().getIdentifier(
-                Constants.drawables.AVATER_IMAGE + SharedPref.getSharedPref(
-                        getApplication().getApplicationContext()).readInt(Constants.preferenceKey.IMAGE_INDEX),
-                Constants.drawables.AVATER_DRAWABLE_DIRECTORY, getApplication().getApplicationContext().getPackageName());
-    }
+//    public String getUserName() {
+//        return SharedPref.getSharedPref(getApplication().getApplicationContext())
+//                .read(Constants.preferenceKey.FIRST_NAME) + " " +
+//                SharedPref.getSharedPref(getApplication().getApplicationContext())
+//                        .read(Constants.preferenceKey.LAST_NAME);
+//    }
+//
+//    public int getProfileImage() {
+//        return getApplication().getApplicationContext().getResources().getIdentifier(
+//                Constants.drawables.AVATER_IMAGE + SharedPref.getSharedPref(
+//                        getApplication().getApplicationContext()).readInt(Constants.preferenceKey.IMAGE_INDEX),
+//                Constants.drawables.AVATER_DRAWABLE_DIRECTORY, getApplication().getApplicationContext().getPackageName());
+//    }
 }

@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.splashscreen;
+package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -49,7 +49,6 @@
             android:layout_height="@dimen/width_25"
             android:layout_margin="5dp"
             android:paddingTop="10dp"
-            android:checked="@{checkedValue}"
             android:clickable="false"
             android:focusable="false"
             app:color_checked="@color/colorPrimary"

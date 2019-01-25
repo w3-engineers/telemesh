@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -43,7 +44,7 @@ public class SplashViewModel extends AndroidViewModel {
     }
 
     public void getUserRegistrationStatus() {
-        Handler handler = new Handler();
+        Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> isUserRegistered.postValue(SharedPref.getSharedPref(getApplication()
                 .getApplicationContext()).readBoolean(Constants.preferenceKey.IS_USER_REGISTERED)),
                 Constants.DefaultValue.DELAY_INTERVAL);

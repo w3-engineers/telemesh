@@ -36,7 +36,6 @@ public class ProfileImageAdapter extends BaseAdapter<Integer> {
     private Context mContext;
     private SmoothCheckBox previousSelectedItem;
     public int selectedPosition;
-    private int totalImageCount = 21;
 
 
     public ProfileImageAdapter(Context context, int selectedPosition) {
@@ -46,12 +45,7 @@ public class ProfileImageAdapter extends BaseAdapter<Integer> {
 
     @Override
     public boolean isEqual(Integer left, Integer right) {
-        return false;
-    }
-
-    @Override
-    public int getItemCount() {
-        return totalImageCount;
+        return left.equals(right);
     }
 
     @Override
@@ -81,6 +75,7 @@ public class ProfileImageAdapter extends BaseAdapter<Integer> {
 
             if (item == selectedPosition){
                 previousSelectedItem = mProfileImageBinding.checkbox;
+                previousSelectedItem.setChecked(true, false);
             }
         }
 

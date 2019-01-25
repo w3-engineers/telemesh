@@ -27,7 +27,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -57,6 +59,14 @@ public class ImageUtil {
         imageIndexMap.put(18, R.mipmap.avatar18);
         imageIndexMap.put(19, R.mipmap.avatar19);
         imageIndexMap.put(20, R.mipmap.avatar20);
+    }
+
+    public static List<Integer> getAllImages() {
+        List<Integer> imageIds = new ArrayList<>();
+        for (int i = 0; i < imageIndexMap.size(); i++) {
+            imageIds.add(i);
+        }
+        return imageIds;
     }
 
     private static Uri getUserImageUri(int imageIndex) {

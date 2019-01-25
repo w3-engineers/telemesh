@@ -42,6 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:itemIconSize="50dp"
             app:menu="@menu/menu_bottom_navigation" />
 
 

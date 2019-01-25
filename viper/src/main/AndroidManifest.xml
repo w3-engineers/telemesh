@@ -3,7 +3,7 @@
     package="com.w3engineers.ext.viper">
 
     <application
-        android:name=".App">
+        android:name="com.w3engineers.ext.strom.App">
 
         <!--Added to replace the value, although dependency library might also use crashlytics. As rightmesh already use that-->
         <meta-data

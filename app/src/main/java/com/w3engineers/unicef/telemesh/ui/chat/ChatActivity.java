@@ -119,7 +119,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         mChatAdapter.setItemClickListener(this);*/
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        // to load messages from reverse order as in chat view
         linearLayoutManager.setStackFromEnd(true);
         mViewBinging.chatRv.setLayoutManager(linearLayoutManager);
 
@@ -167,7 +168,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
                     mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
                         @Override
                         public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
-
+                            mChatPagedAdapter.submitList(chatEntities);
                         }
                     });
 

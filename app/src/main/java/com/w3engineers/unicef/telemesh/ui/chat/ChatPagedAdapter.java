@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
@@ -25,6 +27,9 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
     private final int TEXT_MESSAGE_OUT = 1;
     private final int MESSAGE_SEPARATOR = 2;
     private Context mContext;
+
+    private final int NO_ITEM = 0;
+    private final int HAS_ITEM = 1;
 
 
     private static final DiffUtil.ItemCallback<ChatEntity> DIFF_CALLBACK =
@@ -53,6 +58,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
     @Override
     public int getItemCount() {
         return super.getItemCount();
+
     }
 
 
@@ -73,19 +79,18 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         BaseViewHolder baseViewHolder = null;
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         switch (viewType) {
             case TEXT_MESSAGE_IN:
-                ItemTextMessageInBinding textMessageInBinding = ItemTextMessageInBinding.inflate(inflater, viewGroup, false);
-                baseViewHolder = new TextMessageInHolder(textMessageInBinding);
+                ViewDataBinding view_in = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_in, viewGroup, false);
+                baseViewHolder = new TextMessageInHolder(view_in);
                 break;
             case TEXT_MESSAGE_OUT:
-                ItemTextMessageOutBinding textMessageOutBinding = ItemTextMessageOutBinding.inflate(inflater, viewGroup, false);
-                baseViewHolder = new TextMessageOutHolder(textMessageOutBinding);
+                ViewDataBinding view_out = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_out, viewGroup, false);
+                baseViewHolder = new TextMessageOutHolder(view_out);
                 break;
             case MESSAGE_SEPARATOR:
-                ItemMessageSeparatorBinding messageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
-                baseViewHolder = new SeparatorViewHolder(messageSeparatorBinding);
+                ViewDataBinding view_date_separator = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_message_separator, viewGroup, false);
+                baseViewHolder = new SeparatorViewHolder(view_date_separator);
                 break;
         }
         return baseViewHolder;
@@ -100,7 +105,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
     }
 
 
-    private class TextMessageInHolder extends BaseViewHolder<ChatEntity> {
+    private class TextMessageInHolder extends BaseViewHolder<MessageEntity> {
         private ItemTextMessageInBinding binding;
 
         public TextMessageInHolder(ViewDataBinding viewDataBinding) {
@@ -111,7 +116,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
         }
 
         @Override
-        public void bind(ChatEntity item) {
+        public void bind(MessageEntity item) {
             binding.setTextMessage(item);
         }
 
@@ -123,7 +128,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
         }
     }
 
-    private class TextMessageOutHolder extends BaseViewHolder<ChatEntity> {
+    private class TextMessageOutHolder extends BaseViewHolder<MessageEntity> {
         private ItemTextMessageOutBinding binding;
 
         public TextMessageOutHolder(ViewDataBinding viewDataBinding) {
@@ -134,7 +139,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
         }
 
         @Override
-        public void bind(ChatEntity item) {
+        public void bind(MessageEntity item) {
             binding.setTextMessage(item);
         }
 
@@ -144,7 +149,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
         }
     }
 
-    private class SeparatorViewHolder extends BaseViewHolder<ChatEntity> {
+    private class SeparatorViewHolder extends BaseViewHolder<MessageEntity> {
         private ItemMessageSeparatorBinding binding;
 
         public SeparatorViewHolder(ViewDataBinding viewDataBinding) {
@@ -153,7 +158,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
         }
 
         @Override
-        public void bind(ChatEntity item) {
+        public void bind(MessageEntity item) {
             binding.setSeparatorMessage(item);
         }
 

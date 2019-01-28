@@ -11,7 +11,7 @@
 
         <variable
             name="separatorMessage"
-            type="com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity" />
+            type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
 
     </data>
 

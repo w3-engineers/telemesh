@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /*
@@ -158,7 +159,10 @@ public class ChatViewModel extends BaseRxViewModel {
             }
         });*/
 
-        insertMessageData((MessageEntity) chatEntity);
+        getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
 
     }
 
@@ -284,17 +288,17 @@ public class ChatViewModel extends BaseRxViewModel {
 
         for (long millisec : groupedHashMap.keySet()) {
 
-            String millisecFormated = Long.toString(millisec);
-            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecFormated);
+
+            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisec);
 
             if(!TimeUtil.getInstance().isSameDay(date1, date2)){
 
                 date1 = date2;
 
-                ChatEntity chatEntity = new ChatEntity();
-                chatEntity.setMessageType(Constants.MessageType.DATE_MESSAGE);
-                chatEntity.setTime(millisec);
-                consolidatedList.add(chatEntity);
+                MessageEntity messageEntity = new MessageEntity();
+                messageEntity.setMessageType(Constants.MessageType.DATE_MESSAGE);
+                messageEntity.setTime(millisec);
+                consolidatedList.add(messageEntity);
 
             }
 

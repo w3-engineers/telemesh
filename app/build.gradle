@@ -77,7 +77,8 @@ dependencies {
     implementation deps.rx_android
     implementation deps.rxjava2
 
-    implementation deps.paging
+    //Paging
+    implementation deps.paging.runtime
 
     //Circular Image
     implementation deps.circularimage.runtime

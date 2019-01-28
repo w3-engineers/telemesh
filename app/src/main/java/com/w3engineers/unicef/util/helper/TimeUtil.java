@@ -46,7 +46,7 @@ public class TimeUtil {
     private static String dateFormat12 = "dd MMM yyyy";
     private static String dateFormat13 = "dd-MM-yyyy";
 
-    public static final String DEFAULT_MILLISEC = "31546800000";  //Thu Jan 1 1971 09:00:00
+    public static long DEFAULT_MILLISEC = 1322018752992l; // Nov 22, 2011 9:25:52 PM
 
     public static TimeUtil timeUtil;
 
@@ -200,21 +200,24 @@ public class TimeUtil {
     }
 
 
-    public synchronized Date getDateFromMillisecond(String timeMili){
+    public synchronized Date getDateFromMillisecond(long timeMillis){
 
         DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
-        Date date = null;
+        Date formattedDate = null;
+
+        df.setTimeZone(TimeZone.getDefault());
+
+        Date date =new Date(timeMillis);
+        String stringDate = df.format(date);
 
         try {
-
-            df.setTimeZone(TimeZone.getDefault());
-            date = df.parse(timeMili);
-
+              formattedDate = df.parse(stringDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return date;
+
+        return formattedDate;
 
     }
 

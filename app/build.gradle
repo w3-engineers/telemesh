@@ -31,7 +31,11 @@ android {
         }
     }
     lintOptions {
+
         abortOnError false
+        htmlReport true
+        warningsAsErrors true
+//        check ext.lintchecks
     }
     dataBinding {
         enabled = true

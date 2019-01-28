@@ -1,0 +1,7 @@
+ext.lintchecks = [
+        'ExportedReceiver',
+        'UnusedResources',
+        'GradleDeprecated',
+        'OldTargetApi',
+        'ShowToast'
+] as String[]

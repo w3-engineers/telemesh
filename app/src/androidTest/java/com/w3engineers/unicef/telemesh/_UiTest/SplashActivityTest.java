@@ -427,32 +427,26 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        pressBack();
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        pressBack();
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.button_sell), withText("Sell Data"),
+                allOf(withId(R.id.confirmation_ok), withText("OK"),
                         childAtPosition(
-                                allOf(withId(R.id.button_view),
+                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
                                         childAtPosition(
-                                                withId(R.id.my_wallet_layout),
-                                                2)),
+                                                withId(android.R.id.custom),
+                                                0)),
                                 1),
                         isDisplayed()));
         appCompatButton3.perform(click());
+
+//        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
 
         try {
             Thread.sleep(700);
@@ -461,6 +455,48 @@ public class SplashActivityTest {
         }
 
         ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.button_buy), withText("Buy Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                0),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButtonSellData = onView(
+                allOf(withId(R.id.button_sell), withText("Sell Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButtonSellData.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButtonAgain = onView(
                 allOf(withId(R.id.button_buy), withText("Sell Data"),
                         childAtPosition(
                                 allOf(withId(R.id.sell_transaction_layout),
@@ -469,7 +505,7 @@ public class SplashActivityTest {
                                                 2)),
                                 1),
                         isDisplayed()));
-        appCompatButton4.perform(click());
+        appCompatButtonAgain.perform(click());
 
         try {
             Thread.sleep(2000);
@@ -477,7 +513,43 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
+        ViewInteraction appCompatButton6 = onView(
+                allOf(withId(R.id.confirmation_ok), withText("OK"),
+                        childAtPosition(
+                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.custom),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatButton6.perform(click());
+
+//        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton8 = onView(
+                allOf(withId(R.id.button_sell), withText("Sell Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButton8.perform(click());
 
         try {
             Thread.sleep(700);

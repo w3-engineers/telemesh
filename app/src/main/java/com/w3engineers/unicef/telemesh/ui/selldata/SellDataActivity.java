@@ -7,7 +7,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
@@ -78,22 +81,22 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
     }
 
     void showDialog(String message) {
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
-        builder.setTitle("")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setCancelable(true)
-                .show();
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_buy_sell_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        TextView alertTitle = dialogView.findViewById(R.id.confirmation_title);
+        alertTitle.setText(message);
+
+        Button alertButton = dialogView.findViewById(R.id.confirmation_ok);
+
+        alertButton.setOnClickListener(v -> alertDialog.dismiss());
+
+        alertDialog.show();
     }
 
 

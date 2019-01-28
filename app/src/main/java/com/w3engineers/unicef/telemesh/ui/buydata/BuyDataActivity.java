@@ -93,6 +93,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
+                .setCancelable(true)
                 .show();
     }
 
@@ -116,9 +117,9 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
                     mBinding.currentToken.setText(currentBalance + " RMESH");
                     mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
 
-                    Toaster.showLong("Buy data Successfully done!");
-
-//                    showDialog("Buy data Successfully done!");
+//                    Toaster.showLong("Buy data Successfully done!");
+//
+                    showDialog("Buy data Successfully done!");
                 }
                 break;
         }

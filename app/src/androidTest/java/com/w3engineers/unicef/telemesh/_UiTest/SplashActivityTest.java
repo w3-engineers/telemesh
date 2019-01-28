@@ -435,6 +435,14 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.button_sell), withText("Sell Data"),
                         childAtPosition(
@@ -465,6 +473,14 @@ public class SplashActivityTest {
 
         try {
             Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

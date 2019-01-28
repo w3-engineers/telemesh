@@ -73,6 +73,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
     protected void onRmOn() {
         super.onRmOn();
 
+        //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
     }
 

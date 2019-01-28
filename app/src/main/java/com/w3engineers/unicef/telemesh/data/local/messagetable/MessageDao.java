@@ -42,7 +42,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      * @return : Flowable list of messaged
      */
 
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId")
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME+" ASC")
     Flowable<List<MessageEntity>> getAllMessages(String friendsId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

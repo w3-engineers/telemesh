@@ -123,6 +123,13 @@ public class RmDataHelper {
     }
 
     @SuppressLint("CheckResult")
+    /**
+     * after inserting the message to the db
+     * here we will fetch the last inserted message that will be
+     * sent via RM.
+     *
+     * Only for outgoing message this method will be responsible
+     */
     public void prepareDataObserver() {
         dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
@@ -199,7 +206,7 @@ public class RmDataHelper {
 
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
-                prepareDateSeparator(chatEntity);
+                //prepareDateSeparator(chatEntity);
 
                 if (TextUtils.isEmpty(dataSource.getCurrentUser())
                         || !userId.equals(dataSource.getCurrentUser())) {

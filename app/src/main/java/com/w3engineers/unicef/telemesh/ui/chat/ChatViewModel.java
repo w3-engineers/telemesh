@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -13,15 +15,22 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
+import com.w3engineers.unicef.telemesh.pager.DataSourceFactory;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /*
@@ -44,6 +53,10 @@ public class ChatViewModel extends BaseRxViewModel {
     private MessageSourceData messageSourceData;
     private UserDataSource userDataSource;
     private DataSource dataSource;
+
+    private static final int PAGE_SIZE = 10;
+    private static final int PREFETCH_DISTANCE = 5;
+    private LiveData<PagedList<ChatEntity>> pagedChatEntityList;
 
 
     /**
@@ -93,25 +106,24 @@ public class ChatViewModel extends BaseRxViewModel {
             MessageEntity messageEntity = new MessageEntity()
                     .setMessage(message);
 
-            setChatEntity(meshId, messageEntity);
 
-            messageInsertionProcess(messageEntity);
+            ChatEntity chatEntity = prepareChatEntityForText(meshId, messageEntity);
+
+            messageInsertionProcess(chatEntity);
         }
     }
 
     /**
-     * At first this API will check the date entity is already exist or not
-     * If this is the new message for today then at first insert a date message
-     * then insert the actual message
+     * This method will take steps to insert chat entity to local db.
      * we didn't call to ui for update a message because
-     * we use live data for continous integrating chat messages
+     * we use live data for continuous integrating chat messages
      * @param chatEntity : prepared chat data
      */
 
     @SuppressLint("CheckResult")
     private void messageInsertionProcess(ChatEntity chatEntity) {
 
-        String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
+        /*String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
 
         Single<Boolean> dateEntitySingle = Single.fromCallable(() ->
                 messageSourceData.hasChatEntityExist(chatEntity.getFriendsId(), dateFormat));
@@ -144,7 +156,10 @@ public class ChatViewModel extends BaseRxViewModel {
             public void onError(Throwable e) {
 
             }
-        });
+        });*/
+
+        insertMessageData((MessageEntity) chatEntity);
+
     }
 
     private Single<Long> insertMessageData(MessageEntity messageEntity) {
@@ -153,21 +168,25 @@ public class ChatViewModel extends BaseRxViewModel {
     }
 
     /**
-     * Prepare a common chat entity for all (Text and File)
+     * Prepare a chat entity from text message.
      * @param meshId
-     * @param chatEntity
+     * @param messageEntity
      */
-    private void setChatEntity(String meshId, ChatEntity chatEntity) {
+    private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity) {
+
+
+        ChatEntity chatEntity;
+        chatEntity = messageEntity;
 
         chatEntity.setMessageId(UUID.randomUUID().toString())
                 .setFriendsId(meshId)
                 .setIncoming(false)
                 .setTime(System.currentTimeMillis())
-                .setStatus(Constants.MessageStatus.STATUS_SENDING);
+                .setStatus(Constants.MessageStatus.STATUS_SENDING)
+                .setMessageType(Constants.MessageType.TEXT_MESSAGE);
 
-        if (MessageEntity.class.isInstance(chatEntity)) {
-            chatEntity.setMessageType(Constants.MessageType.TEXT_MESSAGE);
-        }
+
+        return chatEntity;
     }
 
     /**
@@ -193,5 +212,103 @@ public class ChatViewModel extends BaseRxViewModel {
     LiveData<UserEntity> getUserById(String meshId){
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }
+
+    public LiveData<PagedList<ChatEntity>> prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
+
+        List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
+
+        ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+
+        DataSourceFactory mDataSourceFactory = new DataSourceFactory(chatEntityListDataSource);
+
+
+        PagedList.Config myConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(PREFETCH_DISTANCE)
+                .setPageSize(PAGE_SIZE)
+                .build();
+
+
+
+        pagedChatEntityList = new LivePagedListBuilder<>(mDataSourceFactory, myConfig).build();
+
+        return pagedChatEntityList;
+
+
+    }
+
+
+    private List<ChatEntity> groupDataIntoHashMap(List<ChatEntity> chatEntities) {
+
+        LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap = new LinkedHashMap<>();
+        Set<ChatEntity> chatEntitySet = null;
+
+        for (ChatEntity chatEntity : chatEntities) {
+
+            if(chatEntity!= null){
+
+                long hashMapKey = chatEntity.getTime();
+
+                if (groupedHashMap.containsKey(hashMapKey)) {
+                    // The key is already in the HashMap; add the pojo object
+                    // against the existing key.
+                    groupedHashMap.get(hashMapKey).add(chatEntity);
+                } else {
+                    // The key is not there in the HashMap; create a new key-value pair
+                    chatEntitySet = new LinkedHashSet<>();
+                    chatEntitySet.add(chatEntity);
+                    groupedHashMap.put(hashMapKey, chatEntitySet);
+                }
+            }
+
+
+        }
+
+        //Generate list from map
+        return generateListFromMap(groupedHashMap);
+
+    }
+
+
+    private List<ChatEntity> generateListFromMap(LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap) {
+        // We linearly add every item into the consolidatedList.
+        Date date1 = null;
+        Date date2 = null;
+
+
+        date1 = TimeUtil.getInstance().getDateFromMillisecond(TimeUtil.DEFAULT_MILLISEC);
+
+
+
+        List<ChatEntity> consolidatedList = new ArrayList<>();
+
+        for (long millisec : groupedHashMap.keySet()) {
+
+            String millisecFormated = Long.toString(millisec);
+            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecFormated);
+
+            if(!TimeUtil.getInstance().isSameDay(date1, date2)){
+
+                date1 = date2;
+
+                ChatEntity chatEntity = new ChatEntity();
+                chatEntity.setMessageType(Constants.MessageType.DATE_MESSAGE);
+                chatEntity.setTime(millisec);
+                consolidatedList.add(chatEntity);
+
+            }
+
+            for (ChatEntity chatEntity : groupedHashMap.get(millisec)) {
+
+                consolidatedList.add(chatEntity);
+            }
+
+        }
+
+        return consolidatedList;
+    }
+
+
+
 
 }

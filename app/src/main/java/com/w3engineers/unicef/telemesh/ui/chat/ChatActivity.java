@@ -1,12 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.app.NotificationManager;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -22,6 +25,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+
+import java.util.List;
 
 /*
  *  ****************************************************************************
@@ -41,7 +46,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      */
     private ChatViewModel mChatViewModel;
     private UserEntity mUserEntity;
-    private ChatAdapter mChatAdapter;
+    //private ChatAdapter mChatAdapter;
+    private  ChatPagedAdapter mChatPagedAdapter;
     private ActivityChatBinding mViewBinging;
 
     @Override
@@ -103,14 +109,24 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      * <p>Init adapter and listener</p>
      */
     private void initComponent() {
-        mChatAdapter = new ChatAdapter(this);
+
+        mChatPagedAdapter = new ChatPagedAdapter(this);
+        mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
+
+
+       /* mChatAdapter = new ChatAdapter(this);
         mViewBinging.chatRv.setAdapter(mChatAdapter);
+        mChatAdapter.setItemClickListener(this);*/
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setStackFromEnd(true);
         mViewBinging.chatRv.setLayoutManager(linearLayoutManager);
+
+
       //  mViewBinging.emptyViewId.setOnClickListener(this);
         mViewBinging.imageViewSend.setOnClickListener(this);
-        mChatAdapter.setItemClickListener(this);
+
         mChatViewModel = getViewModel();
 
         clearNotification();
@@ -125,9 +141,15 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         manager.cancel(notificationId);
     }
 
+    /**
+     * Using LiveData observer here we will observe the messages
+     * from local db.
+     * if any new message get inserted into db with the help of LifeData
+     * here we can listen that message
+     */
     private void subscribeForMessages() {
         if (mUserEntity != null) {
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
+            /*mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
 
                 if (chatEntities == null)
                     return;
@@ -135,6 +157,21 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 //                Collections.reverse(chatEntities);
                 mChatAdapter.addItems(chatEntities);
                 mViewBinging.chatRv.scrollToPosition(mChatAdapter.getItemCount() - 1);
+            });*/
+
+
+            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
+                @Override
+                public void onChanged(@Nullable List<ChatEntity> chatEntities) {
+
+                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
+                        @Override
+                        public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
+
+                        }
+                    });
+
+                }
             });
         }
     }

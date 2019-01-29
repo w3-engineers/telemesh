@@ -5,4 +5,7 @@
     <issue id="InvalidPackage" severity="ignore">
         <!--<ignore path="**/sentry*.jar"/>-->
     </issue>
+    <issue id="IconMissingDensityFolder" severity="ignore" />
+    <issue id="IconExpectedSize" severity="ignore" />
+    <issue id="IconDipSize" severity="ignore" />
 </lint>

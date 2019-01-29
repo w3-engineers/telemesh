@@ -38,6 +38,7 @@ android {
         warningsAsErrors true
         checkAllWarnings true
 //        check getProject().ext.lintchecks
+        lintConfig file("lint.xml")
         baseline file("lint-baseline.xml")
     }
     dataBinding {

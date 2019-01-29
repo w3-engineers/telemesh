@@ -259,6 +259,7 @@ public class RmDataHelper {
         if (rmDataMap.containsKey(dataSendId)) {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
+
             long ackDataUpdate = dataReceive(prevRMDataModel, false);
 
             rmDataMap.remove(dataSendId);

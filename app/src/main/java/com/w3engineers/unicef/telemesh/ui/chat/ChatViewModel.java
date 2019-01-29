@@ -58,7 +58,7 @@ public class ChatViewModel extends BaseRxViewModel {
     private UserDataSource userDataSource;
     private DataSource dataSource;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 15;
     private static final int PREFETCH_DISTANCE = 5;
     private LiveData<PagedList<ChatEntity>> pagedChatEntityList;
 
@@ -204,6 +204,7 @@ public class ChatViewModel extends BaseRxViewModel {
      * @param friendsId : mesh id
      */
     void updateAllMessageStatus(String friendsId) {
+
 
         getCompositeDisposable().add(updateMessageSatus(friendsId)
                 .subscribeOn(Schedulers.io()).subscribe());

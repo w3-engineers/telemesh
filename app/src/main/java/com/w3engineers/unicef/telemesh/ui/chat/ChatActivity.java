@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatBinding;
+import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
@@ -50,13 +52,15 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private ChatViewModel mChatViewModel;
     private UserEntity mUserEntity;
     //private ChatAdapter mChatAdapter;
-    private  ChatPagedAdapter mChatPagedAdapter;
-    private ActivityChatBinding mViewBinging;
+    //private  ChatPagedAdapter mChatPagedAdapter;
+    private ChatPagedAdapterRevised mChatPagedAdapter;
+    //private ActivityChatBinding mViewBinging;
+    private ActivityChatRevisedBinding mViewBinging;
     private LayoutManagerWithSmoothScroller mLinearLayoutManager;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_chat;
+        return R.layout.activity_chat_revised;
     }
 
     @Override
@@ -74,12 +78,16 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         Intent intent = getIntent();
         mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
 
-        mViewBinging = (ActivityChatBinding) getViewDataBinding();
+
+
+        mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
         initComponent();
         subscribeForMessages();
         subscribeForUserEvent();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         mViewBinging.imageProfile.setOnClickListener(this);
         mViewBinging.textViewLastName.setOnClickListener(this);
 
@@ -115,7 +123,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private void initComponent() {
 
 
-        mChatPagedAdapter = new ChatPagedAdapter(this);
+        mChatPagedAdapter = new ChatPagedAdapterRevised(this);
         mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
@@ -183,6 +191,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     private void subscribeForUserEvent() {
         if (mUserEntity != null) {
+
             mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
                 if (userEntity != null)
@@ -220,6 +229,11 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         }
         finish();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public void loadMainActivity() {

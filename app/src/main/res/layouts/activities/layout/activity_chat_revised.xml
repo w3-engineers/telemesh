@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.chat.ChatActivity">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
         <import type="com.w3engineers.unicef.telemesh.R" />
@@ -11,15 +8,17 @@
         <variable
             name="userEntity"
             type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
+
         <variable
             name="model"
             type="com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel" />
     </data>
-
     <android.support.constraint.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/overlay_light_60"
+        tools:context="io.left.meshim.activities.ChatActivity" >
 
         <com.w3engineers.ext.strom.application.ui.base.BaseToolBar
             android:id="@+id/toolbar_chat"
@@ -90,97 +89,103 @@
             android:paddingBottom="@dimen/padding_3"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />
 
-
-        <!--<com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
-            android:id="@+id/chat_rv"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:brv_emptyLayoutId="@+id/empty_view_id"
-            app:layout_constraintBottom_toTopOf="@+id/shadow_view_bottom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shadow_view"
-            app:layout_constraintVertical_bias="1.0" />-->
-
+        <!-- android:visibility="@{model.messageViewVisible}"-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_rv"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/shadow_view_bottom"
+            android:paddingBottom="@dimen/margin_8"
+            android:layout_marginTop="@dimen/margin_1"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shadow_view"
-             />
-
-        <!--<include
-            android:id="@+id/empty_view_id"
-            layout="@layout/list_empty_layout"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />
+<!--
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/chat_no_message_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_20"
-            android:layout_marginRight="@dimen/margin_20"
-            android:visibility="visible"
-            app:emptyImage="@{R.drawable.img_conversation}"
-            app:emptyMessage="@{@string/no_conversation}"
-            app:layout_constraintTop_toBottomOf="@+id/shadow_view" />-->
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
+            android:visibility="@{model.emptyViewVisible}">
 
-        <View
-            android:id="@+id/shadow_view_bottom"
-            style="@style/shadow_style_settings_page"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_margin="0dp"
-            android:paddingTop="@dimen/padding_3"
-            app:layout_constraintBottom_toTopOf="@+id/input_field" />
+            <ImageView
+                android:id="@+id/im_no_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.326"
+                app:srcCompat="@drawable/img_survey_empty" />
+
+            <TextView
+                android:id="@+id/tv_loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:text="No messages yet"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/im_no_message" />
+
+            <TextView
+                android:id="@+id/tv_empty_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_8"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:text="@{model.emptyMessage}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.506"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_loading_text" />
+        </android.support.constraint.ConstraintLayout>-->
 
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/input_field"
+            android:id="@+id/chat_message_bar"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_60"
             android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            android:paddingBottom="@dimen/margin_8"
+            android:paddingLeft="@dimen/margin_16"
+            android:paddingRight="@dimen/margin_16"
+            android:paddingStart="@dimen/margin_16"
+            android:paddingTop="@dimen/margin_8"
+            app:layout_constraintBottom_toBottomOf="parent" >
 
-            <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+            <EditText
                 android:id="@+id/edit_text_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_15"
-                android:layout_marginLeft="@dimen/margin_15"
-                android:background="@drawable/bg_border_cyan_round_box"
-                android:fontFamily="@font/poppins_regular"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginRight="@dimen/margin_16"
+                android:ems="10"
                 android:hint="@string/type_message"
-                android:maxLines="@integer/max_line_1"
-                android:paddingStart="@dimen/margin_10"
-                android:paddingLeft="@dimen/margin_10"
-                android:paddingEnd="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10"
-                android:textColor="@color/select_photo_text_color"
-                android:textColorHint="@color/text_color_light"
-                android:textSize="@dimen/text_small_body_14"
-                app:bet_hideUnderline="true"
+                android:inputType="textCapSentences|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_send"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/image_view_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/padding_5"
-                android:layout_marginRight="@dimen/padding_5"
-                android:padding="@dimen/padding_10"
+                android:layout_width="@dimen/margin_40"
+                android:layout_height="@dimen/margin_40"
+                android:background="@color/white"
                 android:src="@mipmap/ic_send_cyan"
+                android:scaleType="fitCenter"
+                android:autoMirrored="true"
+                android:onClick="sendMessage"
+                android:contentDescription="@string/chat_send_button_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintVertical_bias="0.5" />
         </android.support.constraint.ConstraintLayout>
-
-
     </android.support.constraint.ConstraintLayout>
-
 </layout>

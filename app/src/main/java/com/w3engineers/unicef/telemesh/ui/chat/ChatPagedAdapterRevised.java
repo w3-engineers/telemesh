@@ -21,12 +21,12 @@ import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 
-public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdapter.GenericViewHolder> {
+public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPagedAdapterRevised.GenericViewHolder> {
 
     private final int TEXT_MESSAGE_IN = 0;
     private final int TEXT_MESSAGE_OUT = 1;
     private final int MESSAGE_SEPARATOR = 2;
-    private final int MESSAGE_PREVIEW_NULL = 3;
+
 
     private Context mContext;
 
@@ -48,7 +48,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
                 }
             };
 
-    public ChatPagedAdapter(Context context) {
+    public ChatPagedAdapterRevised(Context context) {
         super(DIFF_CALLBACK);
         mContext = context;
     }
@@ -75,8 +75,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
         }
 
 
-
-        return MESSAGE_PREVIEW_NULL;
+        return -1;
     }
 
 
@@ -84,33 +83,18 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
     @Override
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        GenericViewHolder baseViewHolder = null;
-        switch (viewType) {
-            case TEXT_MESSAGE_IN:
-                ViewDataBinding view_in = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_in, viewGroup, false);
-                baseViewHolder = new TextMessageInHolder(view_in);
-                break;
 
-            case TEXT_MESSAGE_OUT:
-                ViewDataBinding view_out = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_out, viewGroup, false);
-                baseViewHolder = new TextMessageOutHolder(view_out);
-                break;
-
-            case MESSAGE_SEPARATOR:
-                ViewDataBinding view_date_separator = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_message_separator, viewGroup, false);
-                baseViewHolder = new SeparatorViewHolder(view_date_separator);
-                break;
-            case MESSAGE_PREVIEW_NULL:
-                ViewDataBinding view_preview_null = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_message_preview_null, viewGroup, false);
-                baseViewHolder = new PreviewNullHolder(view_preview_null);
-                break;
-
-            default:
-                break;
-
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        if (viewType == TEXT_MESSAGE_IN) {
+            ItemTextMessageInBinding itemTextMessageInBinding = ItemTextMessageInBinding.inflate(inflater, viewGroup, false);
+            return new TextMessageInHolder(itemTextMessageInBinding);
+        } else if(viewType == TEXT_MESSAGE_OUT){
+            ItemTextMessageOutBinding itemTextMessageOutBinding = ItemTextMessageOutBinding.inflate(inflater, viewGroup, false);
+            return new TextMessageOutHolder(itemTextMessageOutBinding);
+        } else {
+            ItemMessageSeparatorBinding itemMessageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
+            return new SeparatorViewHolder(itemMessageSeparatorBinding);
         }
-
-        return baseViewHolder;
 
     }
 
@@ -125,7 +109,6 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
                 baseViewHolder.clearView();
             }
 
-
     }
 
 
@@ -139,24 +122,6 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
         public abstract  void bindView(MessageEntity item);
          public abstract void clearView();
-    }
-
-
-    private class PreviewNullHolder extends GenericViewHolder{
-
-        public PreviewNullHolder(ViewDataBinding viewDataBinding) {
-            super(viewDataBinding.getRoot());
-        }
-
-        @Override
-        public void bindView(MessageEntity item) {
-
-        }
-
-        @Override
-        public void clearView() {
-
-        }
     }
 
 
@@ -178,7 +143,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
         @Override
         public void clearView() {
-            binding.invalidateAll();
+            binding.textViewMessage.invalidate();
         }
     }
 
@@ -199,7 +164,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
         @Override
         public void clearView() {
-            binding.invalidateAll();
+            binding.textViewMessage.invalidate();
         }
     }
 
@@ -218,7 +183,7 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
         @Override
         public void clearView() {
-            binding.invalidateAll();
+            binding.textViewSeprator.invalidate();
         }
     }
 

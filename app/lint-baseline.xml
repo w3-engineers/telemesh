@@ -14851,4 +14851,132 @@
             column="13"/>
     </issue>
 
+    <issue
+        id="RxDefaultScheduler"
+        severity="Error"
+        message="debounce() is using its default scheduler"
+        category="Correctness"
+        priority="8"
+        summary="Using a default scheduler"
+        explanation="Some operators use their own scheduler which can lead to unexpected threading issues. Prefer to use an overload of the operator that takes a Scheduler as a parameter to prevent these issues."
+        errorLine1="        getCompositeDisposable().add(UIHelper.fromSearchView(searchView)"
+        errorLine2="                                     ^">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactsFragment.java"
+            line="119"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="RxLeakedSubscription"
+        severity="Error"
+        message="No reference to the disposable is kept"
+        category="Correctness"
+        priority="8"
+        summary="Subscription is leaked"
+        explanation="Generally you should keep a reference to a subscription so that you can unsubscribe or dispose at the appropriate time. Not unsubscribing from the Observable might result memory leaks or other bugs."
+        errorLine1="        dataSource.getLastChatData()"
+        errorLine2="        ^">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
+            line="127"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="                getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)"
+        errorLine2="                                             ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
+            line="139"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="        getCompositeDisposable().add(updateMessageSatus(friendsId)"
+        errorLine2="                                     ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
+            line="180"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="        getCompositeDisposable().add(combineResult.subscribe(aBoolean ->"
+        errorLine2="                                     ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\ui\createuser\CreateUserActivity.java"
+            line="81"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="        getCompositeDisposable().add(updateUserToOffline()"
+        errorLine2="                                     ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivityViewModel.java"
+            line="23"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="        getCompositeDisposable().add(updateMessageStatus()"
+        errorLine2="                                     ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivityViewModel.java"
+            line="50"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="RxSubscribeOnError"
+        severity="Error"
+        message="Subscriber is missing onError"
+        category="Correctness"
+        priority="8"
+        summary="Subscriber is missing onError handling"
+        explanation="Every Observable stream can report errors that should be handled using onError. Not implementing onError will throw an exception at runtime which can be hard to debug when the error is thrown on a Scheduler that is not the invoking thread."
+        errorLine1="        dataSource.getLastChatData()"
+        errorLine2="        ^">
+        <location
+            file="main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
+            line="127"
+            column="9"/>
+    </issue>
+
 </issues>

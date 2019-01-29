@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <issue id="InvalidPackage">
-        <ignore path="**/sentry*.jar"/>
+
+    <!-- Disable the given check in this project -->
+    <issue id="InvalidPackage" severity="ignore">
+        <!--<ignore path="**/sentry*.jar"/>-->
     </issue>
 </lint>

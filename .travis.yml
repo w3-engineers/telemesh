@@ -25,7 +25,7 @@ before_install:
 
 script:
 #   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
-   - ./gradlew clean build lintDebug
+   - ./gradlew :app:lintDebug
 
 after_failure:
   # Customize this line, 'android' is the specific app module name of this project. Shows log.

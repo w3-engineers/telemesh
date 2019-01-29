@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,6 +25,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatBinding;
+import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
@@ -49,6 +52,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     //private ChatAdapter mChatAdapter;
     private  ChatPagedAdapter mChatPagedAdapter;
     private ActivityChatBinding mViewBinging;
+    private LayoutManagerWithSmoothScroller mLinearLayoutManager;
 
     @Override
     protected int getLayoutId() {
@@ -110,19 +114,18 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      */
     private void initComponent() {
 
+
         mChatPagedAdapter = new ChatPagedAdapter(this);
-        mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
+        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
-       /* mChatAdapter = new ChatAdapter(this);
-        mViewBinging.chatRv.setAdapter(mChatAdapter);
-        mChatAdapter.setItemClickListener(this);*/
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        //linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
         // to load messages from reverse order as in chat view
-        linearLayoutManager.setStackFromEnd(true);
-        mViewBinging.chatRv.setLayoutManager(linearLayoutManager);
+        mLinearLayoutManager.setStackFromEnd(true);
+        mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
+
+
+        mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
 
       //  mViewBinging.emptyViewId.setOnClickListener(this);
@@ -238,5 +241,27 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
                 return (T) ServiceLocator.getInstance().getChatViewModel();
             }
         }).get(ChatViewModel.class);
+    }
+
+    class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
+
+        @Override
+        public void onChanged() {
+            Log.e("Observer", "onChanged");
+        }
+
+        // Scroll to bottom on new messages
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+        }
     }
 }

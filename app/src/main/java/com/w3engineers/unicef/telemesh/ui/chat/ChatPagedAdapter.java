@@ -8,11 +8,11 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -21,11 +21,13 @@ import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 
-public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolder> {
+public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdapter.GenericViewHolder> {
 
     private final int TEXT_MESSAGE_IN = 0;
     private final int TEXT_MESSAGE_OUT = 1;
     private final int MESSAGE_SEPARATOR = 2;
+    private final int MESSAGE_PREVIEW_NULL = 3;
+
     private Context mContext;
 
     private final int NO_ITEM = 0;
@@ -65,106 +67,161 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, BaseViewHolde
     @Override
     public int getItemViewType(int position) {
         ChatEntity chatEntity = getItem(position);
-        if (chatEntity.getMessageType() == Constants.MessageType.DATE_MESSAGE) {
-            return MESSAGE_SEPARATOR;
-        } else if (chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-            return chatEntity.isIncoming ? TEXT_MESSAGE_IN : TEXT_MESSAGE_OUT;
+
+        if(chatEntity!= null){
+
+            if (chatEntity.getMessageType() == Constants.MessageType.DATE_MESSAGE) {
+                return MESSAGE_SEPARATOR;
+            } else if (chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                return chatEntity.isIncoming ? TEXT_MESSAGE_IN : TEXT_MESSAGE_OUT;
+            }
         }
-        return -1;
+
+
+
+        return MESSAGE_PREVIEW_NULL;
     }
 
 
 
-    @NonNull
+
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        BaseViewHolder baseViewHolder = null;
+    public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        GenericViewHolder baseViewHolder = null;
         switch (viewType) {
             case TEXT_MESSAGE_IN:
                 ViewDataBinding view_in = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_in, viewGroup, false);
                 baseViewHolder = new TextMessageInHolder(view_in);
                 break;
+
             case TEXT_MESSAGE_OUT:
                 ViewDataBinding view_out = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_text_message_out, viewGroup, false);
                 baseViewHolder = new TextMessageOutHolder(view_out);
                 break;
+
             case MESSAGE_SEPARATOR:
                 ViewDataBinding view_date_separator = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_message_separator, viewGroup, false);
                 baseViewHolder = new SeparatorViewHolder(view_date_separator);
                 break;
+            case MESSAGE_PREVIEW_NULL:
+                ViewDataBinding view_preview_null = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_message_preview_null, viewGroup, false);
+                baseViewHolder = new PreviewNullHolder(view_preview_null);
+                break;
+
+            default:
+                break;
+
         }
+
         return baseViewHolder;
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int position) {
+    public void onBindViewHolder(@NonNull GenericViewHolder baseViewHolder, int position) {
 
-        ChatEntity chatEntity = getItem(position);
-        baseViewHolder.bind(chatEntity);
+
+            MessageEntity messageEntity = (MessageEntity) getItem(position);
+            if(messageEntity != null){
+                baseViewHolder.bindView(messageEntity);
+            } else {
+                baseViewHolder.clearView();
+            }
+
+
     }
 
 
-    private class TextMessageInHolder extends BaseViewHolder<MessageEntity> {
+
+
+    public abstract class GenericViewHolder extends RecyclerView.ViewHolder
+    {
+        public GenericViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public abstract  void bindView(MessageEntity item);
+         public abstract void clearView();
+    }
+
+
+    private class PreviewNullHolder extends GenericViewHolder{
+
+        public PreviewNullHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+        }
+
+        @Override
+        public void bindView(MessageEntity item) {
+
+        }
+
+        @Override
+        public void clearView() {
+
+        }
+    }
+
+
+
+    private class TextMessageInHolder extends GenericViewHolder {
         private ItemTextMessageInBinding binding;
 
         public TextMessageInHolder(ViewDataBinding viewDataBinding) {
-            super(viewDataBinding);
+            super(viewDataBinding.getRoot());
             binding = (ItemTextMessageInBinding) viewDataBinding;
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.incoming_message_color));
         }
 
         @Override
-        public void bind(MessageEntity item) {
+        public void bindView(MessageEntity item) {
             binding.setTextMessage(item);
         }
 
-
-
         @Override
-        public void onClick(View view) {
-
+        public void clearView() {
+            binding.invalidateAll();
         }
     }
 
-    private class TextMessageOutHolder extends BaseViewHolder<MessageEntity> {
+    private class TextMessageOutHolder extends GenericViewHolder {
         private ItemTextMessageOutBinding binding;
 
         public TextMessageOutHolder(ViewDataBinding viewDataBinding) {
-            super(viewDataBinding);
+            super(viewDataBinding.getRoot());
             binding = (ItemTextMessageOutBinding) viewDataBinding;
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.outcoming_message_color));
         }
 
         @Override
-        public void bind(MessageEntity item) {
+        public void bindView(MessageEntity item) {
             binding.setTextMessage(item);
         }
 
         @Override
-        public void onClick(View view) {
-
+        public void clearView() {
+            binding.invalidateAll();
         }
     }
 
-    private class SeparatorViewHolder extends BaseViewHolder<MessageEntity> {
+    private class SeparatorViewHolder extends GenericViewHolder {
         private ItemMessageSeparatorBinding binding;
 
         public SeparatorViewHolder(ViewDataBinding viewDataBinding) {
-            super(viewDataBinding);
+            super(viewDataBinding.getRoot());
             binding = (ItemMessageSeparatorBinding) viewDataBinding;
         }
 
         @Override
-        public void bind(MessageEntity item) {
+        public void bindView(MessageEntity item) {
             binding.setSeparatorMessage(item);
         }
 
         @Override
-        public void onClick(View view) {
-
+        public void clearView() {
+            binding.invalidateAll();
         }
     }
 

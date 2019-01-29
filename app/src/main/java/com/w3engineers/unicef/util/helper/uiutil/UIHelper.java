@@ -124,17 +124,21 @@ public class UIHelper {
 
     public static String getSeparatorDate(MessageEntity messageEntity){
 
-        Calendar smsTime = Calendar.getInstance();
-        smsTime.setTimeInMillis(messageEntity.time);
+        if(messageEntity != null){
+            Calendar smsTime = Calendar.getInstance();
+            smsTime.setTimeInMillis(messageEntity.time);
 
-        Calendar now = Calendar.getInstance();
-        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
-            return App.getContext().getResources().getString(R.string.today);
-        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
-            return App.getContext().getResources().getString(R.string.yesterday);
-        } else {
-            return messageEntity.message;
+            Calendar now = Calendar.getInstance();
+            if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
+                return App.getContext().getResources().getString(R.string.today);
+            } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
+                return App.getContext().getResources().getString(R.string.yesterday);
+            } else {
+                return messageEntity.message;
+            }
         }
+
+        return null;
     }
 
 

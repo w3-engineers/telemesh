@@ -11,6 +11,9 @@
         <variable
             name="userEntity"
             type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
+        <variable
+            name="model"
+            type="com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -88,7 +91,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />
 
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+        <!--<com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
             android:id="@+id/chat_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -97,9 +100,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shadow_view"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0" />-->
 
-        <include
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/shadow_view_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shadow_view"
+            app:layout_constraintVertical_bias="1.0"  />
+
+        <!--<include
             android:id="@+id/empty_view_id"
             layout="@layout/list_empty_layout"
             android:layout_width="match_parent"
@@ -109,7 +122,7 @@
             android:visibility="visible"
             app:emptyImage="@{R.drawable.img_conversation}"
             app:emptyMessage="@{@string/no_conversation}"
-            app:layout_constraintTop_toBottomOf="@+id/shadow_view" />
+            app:layout_constraintTop_toBottomOf="@+id/shadow_view" />-->
 
         <View
             android:id="@+id/shadow_view_bottom"

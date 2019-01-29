@@ -5,6 +5,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
+import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
+import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -58,6 +61,8 @@ public class ChatViewModel extends BaseRxViewModel {
     private static final int PAGE_SIZE = 10;
     private static final int PREFETCH_DISTANCE = 5;
     private LiveData<PagedList<ChatEntity>> pagedChatEntityList;
+
+
 
 
     /**
@@ -218,6 +223,8 @@ public class ChatViewModel extends BaseRxViewModel {
     }
 
     public LiveData<PagedList<ChatEntity>> prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
+
+
 
         List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 

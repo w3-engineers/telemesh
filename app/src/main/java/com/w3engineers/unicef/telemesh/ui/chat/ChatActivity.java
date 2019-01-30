@@ -92,16 +92,20 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         mViewBinging.textViewLastName.setOnClickListener(this);
 
         mViewBinging.setUserEntity(mUserEntity);
+
+
+        if (mUserEntity != null) {
+            mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         if (mUserEntity != null) {
-            mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
             mChatViewModel.setCurrentUser(mUserEntity.meshId);
         }
+
     }
 
     @Override
@@ -175,6 +179,15 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
                 @Override
                 public void onChanged(@Nullable List<ChatEntity> chatEntities) {
+
+                    /**
+                     * Note: PagedList is content-immutable. This means that,
+                     * although new content can be loaded into an instance of PagedList,
+                     * the loaded items themselves cannot change once loaded. As such,
+                     * if content in a PagedList updates, the PagedListAdapter object receives
+                     * a completely new PagedList that contains the updated information.
+                     * Ref : https://developer.android.com/topic/libraries/architecture/paging/ui#java
+                     */
 
                     mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
                         @Override

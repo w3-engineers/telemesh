@@ -53,7 +53,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     private Single<Long> updateMessageStatus() {
         return Single.fromCallable(() -> messageSourceData
-                .updateMessageStatus(Constants.MessageStatus.STATUS_SENDING,
+                .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
                         Constants.MessageStatus.STATUS_FAILED));
     }
 }

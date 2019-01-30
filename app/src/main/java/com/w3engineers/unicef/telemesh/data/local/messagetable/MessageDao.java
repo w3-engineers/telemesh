@@ -91,7 +91,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
-    long updateMessageStatus(int fromStatus, int toStatus);
+    long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     Flowable<MessageEntity> getLastInsertedMessage();

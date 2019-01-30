@@ -2,12 +2,10 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,8 @@ import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 
+import static com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity.DIFF_CALLBACK;
+
 public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPagedAdapterRevised.GenericViewHolder> {
 
     private final int TEXT_MESSAGE_IN = 0;
@@ -30,23 +30,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private Context mContext;
 
-
-    private static final DiffUtil.ItemCallback<ChatEntity> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<ChatEntity>() {
-                @Override
-                public boolean areItemsTheSame(
-                        @NonNull ChatEntity oldItem, @NonNull ChatEntity newItem) {
-                    // User properties may have changed if reloaded from the DB, but ID is fixed
-                    return oldItem.messageId == newItem.messageId;
-                }
-                @Override
-                public boolean areContentsTheSame(
-                        @NonNull ChatEntity oldItem, @NonNull ChatEntity newItem) {
-                    // NOTE: if you use equals, your object must properly override Object#equals()
-                    // Incorrectly returning false here will result in too many animations.
-                    return oldItem.equals(newItem);
-                }
-            };
 
     public ChatPagedAdapterRevised(Context context) {
         super(DIFF_CALLBACK);

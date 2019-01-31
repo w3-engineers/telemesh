@@ -1,8 +1,11 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 import android.databinding.ObservableField;
@@ -20,6 +23,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.pager.DataSourceFactory;
+import com.w3engineers.unicef.telemesh.pager.MainThreadExecutor;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.text.ParseException;
@@ -32,9 +36,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /*
@@ -49,18 +55,22 @@ import io.reactivex.schedulers.Schedulers;
  *  ****************************************************************************
  */
 
-public class ChatViewModel extends BaseRxViewModel {
+public class ChatViewModel extends AndroidViewModel {
     /**
      * <h1>Instance variable scope</h1>
      */
-//    private MessageDataSource messageDataSource;
+
     private MessageSourceData messageSourceData;
     private UserDataSource userDataSource;
     private DataSource dataSource;
 
+    private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 10;
     private static final int PREFETCH_DISTANCE = 2;
-    private LiveData<PagedList<ChatEntity>> pagedChatEntityList;
+
+
+    private CompositeDisposable compositeDisposable;
+    private  MutableLiveData mutableMovieList;
 
 
 
@@ -68,12 +78,20 @@ public class ChatViewModel extends BaseRxViewModel {
     /**
      * <h1>View model constructor</h1>
      *
-     * @param messageSourceData : MessageDataSource obj
+     *
      */
-    public ChatViewModel(MessageSourceData messageSourceData) {
-        this.messageSourceData = messageSourceData;
+    public ChatViewModel(Application application) {
+        super(application);
+        this.messageSourceData =  new MessageSourceData();
+
+        compositeDisposable = new CompositeDisposable();
         userDataSource  = UserDataSource.getInstance();
         dataSource = Source.getDbSource();
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
     }
 
     /**
@@ -164,7 +182,7 @@ public class ChatViewModel extends BaseRxViewModel {
             }
         });*/
 
-        getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)
+        compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe());
@@ -206,7 +224,7 @@ public class ChatViewModel extends BaseRxViewModel {
     void updateAllMessageStatus(String friendsId) {
 
 
-        getCompositeDisposable().add(updateMessageSatus(friendsId)
+        compositeDisposable.add(updateMessageSatus(friendsId)
                 .subscribeOn(Schedulers.io()).subscribe());
     }
 
@@ -225,13 +243,12 @@ public class ChatViewModel extends BaseRxViewModel {
 
     public LiveData<PagedList<ChatEntity>> prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
 
-
+        mutableMovieList = new MutableLiveData<>();
 
         List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 
         ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
 
-        DataSourceFactory mDataSourceFactory = new DataSourceFactory(chatEntityListDataSource);
 
 
         PagedList.Config myConfig = new PagedList.Config.Builder()
@@ -241,10 +258,16 @@ public class ChatViewModel extends BaseRxViewModel {
                 .build();
 
 
+        PagedList<ChatEntity> pagedStrings = new PagedList.Builder<Integer, ChatEntity>(chatEntityListDataSource, myConfig)
+                .setInitialKey(INITIAL_LOAD_KEY)
+                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .build();
 
-        pagedChatEntityList = new LivePagedListBuilder<>(mDataSourceFactory, myConfig).build();
+        mutableMovieList.setValue(pagedStrings);
 
-        return pagedChatEntityList;
+        return mutableMovieList;
+
 
 
     }

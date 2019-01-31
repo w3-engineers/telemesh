@@ -11,6 +11,7 @@ import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.Calendar;
 import io.reactivex.Observable;
@@ -134,7 +135,8 @@ public class UIHelper {
             } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
-                return messageEntity.message;
+                return TimeUtil.getInstance().getDateStirng(messageEntity.time);
+                //return messageEntity.message;
             }
         }
 

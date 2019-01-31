@@ -58,6 +58,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private ActivityChatRevisedBinding mViewBinging;
     private LayoutManagerWithSmoothScroller mLinearLayoutManager;
 
+    private int getItemCount = 0;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_chat_revised;
@@ -132,6 +134,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
 
         mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
+
         // to load messages from reverse order as in chat view
         mLinearLayoutManager.setStackFromEnd(true);
         mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
@@ -176,28 +179,9 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             });*/
 
 
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
-                @Override
-                public void onChanged(@Nullable List<ChatEntity> chatEntities) {
-
-                    /**
-                     * Note: PagedList is content-immutable. This means that,
-                     * although new content can be loaded into an instance of PagedList,
-                     * the loaded items themselves cannot change once loaded. As such,
-                     * if content in a PagedList updates, the PagedListAdapter object receives
-                     * a completely new PagedList that contains the updated information.
-                     * Ref : https://developer.android.com/topic/libraries/architecture/paging/ui#java
-                     */
-
-                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
-                        @Override
-                        public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
-                            mChatPagedAdapter.submitList(chatEntities);
-                        }
-                    });
-
-                }
-            });
+            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this,
+                    chatEntities -> mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this,
+                            chatEntities1 -> mChatPagedAdapter.submitList(chatEntities1)));
         }
     }
 
@@ -265,7 +249,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
 
-                return (T) ServiceLocator.getInstance().getChatViewModel();
+                return (T) ServiceLocator.getInstance().getChatViewModel(getApplication());
             }
         }).get(ChatViewModel.class);
     }
@@ -280,6 +264,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
+            Log.e("Observer", "onItemRangeInserted");
+
             mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
         }
 

@@ -24,7 +24,9 @@ public class MainActivityViewModel extends BaseRxViewModel {
                 .subscribeOn(Schedulers.io()).subscribe());
     }
 
-    public LiveData<Integer> getMessageCount() {
+    // Again this apis will be enable when its functionality will be added
+
+    /*public LiveData<Integer> getMessageCount() {
         return messageCount;
     }
 
@@ -38,7 +40,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     private void calculateTotalSurveyCount() {
         //new broadcast Survey and total unread survey counting which will be assigned to surveyCount;
-    }
+    }*/
 
     private Single<Integer> updateUserToOffline() {
         return Single.fromCallable(() ->

@@ -67,7 +67,8 @@ public class SettingsViewModel extends AndroidViewModel {
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
     }
 
-    public void openWallet() {
-        RightMeshDataSource.getRmDataSource().openRmSettings();
-    }
+//     This api is unused
+//    public void openWallet() {
+//        RightMeshDataSource.getRmDataSource().openRmSettings();
+//    }
 }

@@ -111,14 +111,15 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     }
 
-    private void addBadgeToBottomBar(int menuItemPosition) {
+    // Again this api will be enable when its functionality will be added
+    /*private void addBadgeToBottomBar(int menuItemPosition) {
         NotificationBadgeBinding notificationBadgeBinding = NotificationBadgeBinding.inflate(getLayoutInflater());
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
         if (itemView != null) {
             itemView.addView(notificationBadgeBinding.getRoot());
         }
-    }
+    }*/
 
 
     @Override
@@ -168,7 +169,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         setTitle(title);
     }
 
-    public void createBadgeCount(int latestCount, int menuItemPosition) {
+    // Again this api will be enable when its functionality will be added
+    /*public void createBadgeCount(int latestCount, int menuItemPosition) {
 
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
@@ -188,7 +190,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         } else {
             constraintLayoutContainer.setVisibility(View.GONE);
         }
-    }
+    }*/
 
     @Override
     protected void onDestroy() {

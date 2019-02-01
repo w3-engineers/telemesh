@@ -36,7 +36,7 @@
             android:layout_height="@dimen/height_50"
             android:layout_margin="@dimen/margin_10"
             android:padding="@dimen/padding_5"
-            android:src="@{contactViewModel.setUserAvatar(user.avatarIndex)}"
+            android:src="@{contactViewModel.getUserAvatarByIndex(user.avatarIndex)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

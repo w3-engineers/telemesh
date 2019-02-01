@@ -7,9 +7,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
-import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

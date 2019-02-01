@@ -84,24 +84,21 @@ We are using the below environment for android mobile app development:
 * Minimum API: 16 (Jelly Bean - 4.1.x)
 * Java: 1.8.0_121
 * Android Studio: 3.3 Stable
-* Machine Used: Wnodws 10, macOS 10.14: Mojave (Liberty)
+* Machine Used: Linux/Ubuntu, MacOS 10.14: Mojave (Liberty)
 
 ## How to get started
 **Step 1: Clone repository:**
 Navigate to directory where you want to keep source code. Open command prompt. Execute below command:
 > git clone https://github.com/w3-engineers/telemesh.git
 
-or if you want to download zip then [click here](https://github.com/w3-engineers/telemesh/archive/master.zip)
 
 **Step 2: Prepare gradle.properties file:**
 We can use global **_gradle.properties_** file for **RM keys**. In general it could be found in the following location:
-> **Linux:**  _home/\<usr>/.gradle_ 
+> **Linux/Ubuntu:**  _home/\<usr>/.gradle_ 
 
 > **Windows:** _C:/Users\<usr>/.gradle/gradle.properties_.
 
 > **MAC:** _~/Users/\<usr>/.gradle (By default this file is hidden in Mac. Press Command+Shift+. to see the hidden files)._
-
-> **Ubuntu:** _home/\<usr>/.gradle._
 
 In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
 

@@ -66,13 +66,12 @@ public class ChatEntity extends DbBaseEntity {
                         @NonNull ChatEntity oldItem, @NonNull ChatEntity newItem) {
                     // NOTE: if you use equals, your object must properly override Object#equals()
                     // Incorrectly returning false here will result in too many animations.
-                    return TextUtils.equals(oldItem.messageId, newItem.messageId)
-                            && TextUtils.equals(oldItem.friendsId, newItem.friendsId);
+                    return oldItem.equals(newItem);
 
                 }
             };
 
-    @Override
+    /*@Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -80,7 +79,7 @@ public class ChatEntity extends DbBaseEntity {
         ChatEntity chatEntity = (ChatEntity) obj;
 
         return chatEntity.time == this.time && chatEntity.messageId.equals(this.messageId);
-    }
+    }*/
 
     public String getMessageId() {
         return messageId;
@@ -143,5 +142,6 @@ public class ChatEntity extends DbBaseEntity {
     public ChatEntity toChatEntity(TeleMeshChat teleMeshChat) {
         throw new IllegalStateException();
     }
+
 
 }

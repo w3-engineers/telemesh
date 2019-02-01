@@ -179,9 +179,18 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             });*/
 
 
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this,
-                    chatEntities -> mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this,
-                            chatEntities1 -> mChatPagedAdapter.submitList(chatEntities1)));
+            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
+                @Override
+                public void onChanged(@Nullable List<ChatEntity> chatEntities) {
+                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
+                        @Override
+                        public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
+                            mChatPagedAdapter.submitList(chatEntities);
+                        }
+                    });
+                }
+            });
+
         }
     }
 
@@ -259,14 +268,15 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         @Override
         public void onChanged() {
             Log.e("Observer", "onChanged");
+
         }
 
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             Log.e("Observer", "onItemRangeInserted");
-
-            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
+            //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
+            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount() -1);
         }
 
         @Override

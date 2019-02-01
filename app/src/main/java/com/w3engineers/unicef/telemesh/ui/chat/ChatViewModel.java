@@ -65,8 +65,8 @@ public class ChatViewModel extends AndroidViewModel {
     private DataSource dataSource;
 
     private static final int INITIAL_LOAD_KEY = 0;
-    private static final int PAGE_SIZE = 10;
-    private static final int PREFETCH_DISTANCE = 2;
+    private static final int PAGE_SIZE = 30;
+    private static final int PREFETCH_DISTANCE = 10;
 
 
     private CompositeDisposable compositeDisposable;

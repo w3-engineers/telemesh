@@ -8,10 +8,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,7 +23,6 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.ActivityChatBinding;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -58,7 +55,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private ActivityChatRevisedBinding mViewBinging;
     private LayoutManagerWithSmoothScroller mLinearLayoutManager;
 
-    private int getItemCount = 0;
+
 
     @Override
     protected int getLayoutId() {

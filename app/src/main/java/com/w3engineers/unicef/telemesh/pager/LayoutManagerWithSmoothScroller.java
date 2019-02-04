@@ -10,6 +10,10 @@ import android.support.v7.widget.RecyclerView;
  * Created by Anjan Debnath on 12/4/2018.
  * Copyright (c) 2018, W3 Engineers Ltd. All rights reserved.
  */
+
+/**
+ * This will scroll to the RecyclerView item of specified position.
+ */
 public class LayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
     public LayoutManagerWithSmoothScroller(Context context) {

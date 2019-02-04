@@ -6,13 +6,8 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
-import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
-import android.view.View;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -22,14 +17,10 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
-import com.w3engineers.unicef.telemesh.pager.DataSourceFactory;
 import com.w3engineers.unicef.telemesh.pager.MainThreadExecutor;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

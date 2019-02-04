@@ -8,6 +8,11 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PositionalDataSource To be used when you have defined set of data i.e.
+ * the number of items in the data is fixed (say a large data set)
+ * and you want to paginate on that data.
+ */
 public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
 
     private List<ChatEntity> chatList;
@@ -35,6 +40,13 @@ public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
     }
 
 
+    /**
+     * Load initial list data.
+     *
+     * This method is called to load the initial page(s) from the DataSource.
+     * @param params
+     * @param callback
+     */
     @Override
     public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<ChatEntity> callback) {
         // return info back to PagedList
@@ -43,6 +55,15 @@ public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
         int loadSize = computeInitialLoadSize(params, position, totalCount);
         callback.onResult(loadRangeInternal(position, loadSize), position, totalCount);
     }
+
+    /**
+     * Called to load a range of data from the DataSource.
+     *
+     * This method is called to load additional pages from the DataSource
+     * after the LoadInitialCallback passed to dispatchLoadInitial has initialized a PagedList.
+     * @param params
+     * @param callback
+     */
 
     @Override
     public void loadRange(@NonNull LoadRangeParams params, @NonNull LoadRangeCallback<ChatEntity> callback) {

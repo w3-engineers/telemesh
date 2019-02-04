@@ -92,7 +92,7 @@ public class CreateUserViewModelTest {
         checkValues(firstName, lastName, imageIndex);
     }
 
-    /*@Test
+    @Test
     public void isNameValid_true_setValidString() {
         String firstName = "Daniel";
         assertTrue(SUT.isNameValid(firstName));
@@ -120,7 +120,7 @@ public class CreateUserViewModelTest {
     public void isNameValid_false_setNullString() {
         String firstName = null;
         assertFalse(SUT.isNameValid(firstName));
-    }*/
+    }
 
     private void checkValues(String firstName, String lastName, int imageIndex) {
         assertEquals(firstName, sharedPreferences.getString(Constants.preferenceKey.FIRST_NAME, null));

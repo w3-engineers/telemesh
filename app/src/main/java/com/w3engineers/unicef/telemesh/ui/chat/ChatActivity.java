@@ -273,7 +273,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         public void onItemRangeInserted(int positionStart, int itemCount) {
             Log.e("Observer", "onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
-            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount() -1);
+            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
         }
 
         @Override

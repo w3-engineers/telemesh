@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 
 /**
@@ -37,14 +38,14 @@ public class AboutUsViewModel extends AndroidViewModel {
 
     public String getAppVersion() {
 
-        try {
-            PackageInfo pInfo = getApplication().getApplicationContext().getPackageManager().getPackageInfo(App.getContext().getPackageName(), 0);
-            return getApplication().getApplicationContext().getString(R.string.app_version) + pInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            PackageInfo pInfo = getApplication().getApplicationContext().getPackageManager().getPackageInfo(App.getContext().getPackageName(), 0);
+//            return getApplication().getApplicationContext().getString(R.string.app_version) + pInfo.versionName;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
-        return "";
+        return getApplication().getApplicationContext().getString(R.string.app_version) + BuildConfig.VERSION_NAME;
     }
 
 }

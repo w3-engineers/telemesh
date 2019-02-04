@@ -7,9 +7,13 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
@@ -77,21 +81,22 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
     }
 
     void showDialog(String message) {
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
-        builder.setTitle("")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_buy_sell_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        TextView alertTitle = dialogView.findViewById(R.id.confirmation_title);
+        alertTitle.setText(message);
+
+        Button alertButton = dialogView.findViewById(R.id.confirmation_ok);
+
+        alertButton.setOnClickListener(v -> alertDialog.dismiss());
+
+        alertDialog.show();
     }
 
 
@@ -104,17 +109,20 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
 //                String buyTokenTxt = mBinding.editTextBuyToken.getText().toString();
 //                if (!buyTokenTxt.equals("")) {
 
-                    int buyToken = 100;//Integer.parseInt(mBinding.editTextBuyToken.getText().toString());
-                    SharedPref.getSharedPref(SellDataActivity.this).write("cr_token", (currentBalance + buyToken));
-                    SharedPref.getSharedPref(SellDataActivity.this).write("er_token", (earnedBalance + buyToken));
+                int buyToken = 100;//Integer.parseInt(mBinding.editTextBuyToken.getText().toString());
+                SharedPref.getSharedPref(SellDataActivity.this).write("cr_token", (currentBalance + buyToken));
+                SharedPref.getSharedPref(SellDataActivity.this).write("er_token", (earnedBalance + buyToken));
 
-                    currentBalance = currentBalance + buyToken;
-                    earnedBalance = earnedBalance + buyToken;
+                currentBalance = currentBalance + buyToken;
+                earnedBalance = earnedBalance + buyToken;
 
-                    mBinding.spentToken.setText(earnedBalance + " RMESH");
-                    mBinding.currentToken.setText(currentBalance + " RMESH");
-                    mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
-                    showDialog("Sell data Successfully done!");
+                mBinding.spentToken.setText(earnedBalance + " RMESH");
+                mBinding.currentToken.setText(currentBalance + " RMESH");
+                mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
+
+//                Toaster.showLong("Sell data Successfully done!");
+//
+                showDialog("Sell data Successfully done!");
 //                }
                 break;
         }

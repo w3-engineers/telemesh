@@ -20,7 +20,6 @@ import com.w3engineers.unicef.telemesh.ui.selldata.SellDataViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
-import com.w3engineers.unicef.telemesh.ui.test.TestViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 
 /**
@@ -52,10 +51,6 @@ public class ServiceLocator extends BaseServiceLocator {
             serviceLocator = new ServiceLocator();
         }
         return serviceLocator;
-    }
-
-    public TestViewModel getTestViewModel() {
-        return new TestViewModel(UserDataSource.getInstance());
     }
 
 

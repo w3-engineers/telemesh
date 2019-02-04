@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -103,7 +106,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
             case R.id.layout_open_wallet:
                 startActivity(new Intent(mActivity, MyWalletActivity.class));
-                 break;
+                break;
             default:
                 break;
 
@@ -113,41 +116,53 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     }
 
-
     private void showLanguageChangeDialog() {
 
-        // add a radio button list
-        AlertDialog dialog;
-        final String[] languageList = mActivity.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
-        final String[] languageCodeList = mActivity.getResources().getStringArray(R.array.language_code_list);//{"en", "bn"};
-
+        String[] languageList = mActivity.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
+        String[] languageCodeList = mActivity.getResources().getStringArray(R.array.language_code_list);
         String currentLanguage =  settingsViewModel.getAppLanguage();
-        selectedLanguageDisplay = currentLanguage;
-        // setup the alert builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setTitle(R.string.choose_language);
 
-        int selectedIndex = ArrayUtils.indexOf(languageList, currentLanguage);
-        builder.setSingleChoiceItems(languageList, selectedIndex, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // user checked an item
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_language_dialog, null);
+        dialogBuilder.setView(dialogView);
 
-                if (!currentLanguage.equals(languageList[which])) {
-                    settingsViewModel.setLocale(languageCodeList[which], languageList[which]);
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        RadioGroup languageGroup = dialogView.findViewById(R.id.radio_group_language);
+
+        for (int i = 0; i < languageGroup.getChildCount(); i++) {
+            RadioButton radioButton = (RadioButton) languageGroup.getChildAt(i);
+            radioButton.setText(languageList[i]);
+            if (currentLanguage.equals(languageList[i])){
+                radioButton.setChecked(true);
+            }
+        }
+
+        languageGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.radio_english:
+
+                    settingsViewModel.setLocale(languageCodeList[0], languageList[0]);
+                    alertDialog.dismiss();
                     if (getActivity() != null){
                         getActivity().finish();
                         startActivity(getActivity().getIntent());
                     }
-                }else{
-                    dialog.dismiss();
-                }
+                    break;
+                case R.id.radio_bangla:
+
+                    settingsViewModel.setLocale(languageCodeList[1], languageList[1]);
+                    alertDialog.dismiss();
+                    if (getActivity() != null){
+                        getActivity().finish();
+                        startActivity(getActivity().getIntent());
+                    }
+                    break;
             }
         });
 
-        // create and show the alert dialog
-        dialog = builder.create();
-        dialog.show();
+        alertDialog.show();
     }
 
     private SettingsViewModel getViewModel() {

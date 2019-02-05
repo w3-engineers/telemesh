@@ -232,6 +232,16 @@ public class ChatViewModel extends AndroidViewModel {
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }
 
+
+    /**
+     * chunk by chunk data load will be applicable.
+     * From db all the chat entity will be fetched
+     * but we will not display all messages at a time.
+     * Custom Paging will load chunk data and update view.
+     *
+     * @param chatEntityList
+     * @return
+     */
     public LiveData<PagedList<ChatEntity>> prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
 
         mutableMovieList = new MutableLiveData<>();
@@ -255,6 +265,7 @@ public class ChatViewModel extends AndroidViewModel {
                 .setFetchExecutor(Executors.newSingleThreadExecutor())
                 .build();
 
+        // here mutable live data is used to pass the updated value
         mutableMovieList.setValue(pagedStrings);
 
         return mutableMovieList;
@@ -264,6 +275,12 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * group chat entities according to date.
+     *  Set is used to ensure the list contain unique contents.
+     * @param chatEntities
+     * @return
+     */
     private List<ChatEntity> groupDataIntoHashMap(List<ChatEntity> chatEntities) {
 
         LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap = new LinkedHashMap<>();

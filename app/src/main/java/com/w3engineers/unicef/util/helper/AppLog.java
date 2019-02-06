@@ -1,5 +1,7 @@
+/*
 package com.w3engineers.unicef.util.helper;
 
+*/
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/11/2018 at 1:01 PM.
@@ -10,7 +12,8 @@ package com.w3engineers.unicef.util.helper;
  *  *
  *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
  *  ****************************************************************************
- */
+ *//*
+
 
 import android.util.Log;
 
@@ -42,3 +45,4 @@ public class AppLog {
     }
 
 }
+*/

@@ -71,8 +71,8 @@ public class MessageSourceData {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
-    public long updateMessageStatus(int fromStatus, int toStatus) {
-        return messageDao.updateMessageStatus(fromStatus, toStatus);
+    public long changeMessageStatusFrom(int fromStatus, int toStatus) {
+        return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
     public Boolean hasChatEntityExist(String friendsId, String messageId) {

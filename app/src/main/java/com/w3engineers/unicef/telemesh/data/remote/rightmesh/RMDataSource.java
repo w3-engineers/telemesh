@@ -262,7 +262,7 @@
 //    }
 //
 //    @Override
-//    public Single<Long> updateMessageStatus(String meshId, int oldStatus, int currentStatus) {
-//        return Single.create(e -> MessageService.on().updateMessageStatus(meshId, oldStatus, currentStatus));
+//    public Single<Long> changeMessageStatusFrom(String meshId, int oldStatus, int currentStatus) {
+//        return Single.create(e -> MessageService.on().changeMessageStatusFrom(meshId, oldStatus, currentStatus));
 //    }
 //}

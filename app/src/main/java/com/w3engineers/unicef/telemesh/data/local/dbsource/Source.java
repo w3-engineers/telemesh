@@ -92,4 +92,9 @@ public class Source implements DataSource {
     public void setCurrentUser(String currentUser) {
         this.chatCurrentUser = currentUser;
     }
+
+    @Override
+    public void updateMessageStatus(String messageId, int messageStatus) {
+           messageDao.updateMessageStatus(messageId, messageStatus);
+    }
 }

@@ -1,14 +1,18 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.app.NotificationManager;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,9 +23,12 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.ActivityChatBinding;
+import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
+import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+
+import java.util.List;
 
 /*
  *  ****************************************************************************
@@ -41,12 +48,18 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      */
     private ChatViewModel mChatViewModel;
     private UserEntity mUserEntity;
-    private ChatAdapter mChatAdapter;
-    private ActivityChatBinding mViewBinging;
+    //private ChatAdapter mChatAdapter;
+    //private  ChatPagedAdapter mChatPagedAdapter;
+    private ChatPagedAdapterRevised mChatPagedAdapter;
+    //private ActivityChatBinding mViewBinging;
+    private ActivityChatRevisedBinding mViewBinging;
+    private LayoutManagerWithSmoothScroller mLinearLayoutManager;
+
+
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_chat;
+        return R.layout.activity_chat_revised;
     }
 
     @Override
@@ -64,26 +77,34 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         Intent intent = getIntent();
         mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
 
-        mViewBinging = (ActivityChatBinding) getViewDataBinding();
+
+
+        mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
         initComponent();
         subscribeForMessages();
         subscribeForUserEvent();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         mViewBinging.imageProfile.setOnClickListener(this);
         mViewBinging.textViewLastName.setOnClickListener(this);
 
         mViewBinging.setUserEntity(mUserEntity);
+
+
+        if (mUserEntity != null) {
+            mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         if (mUserEntity != null) {
-            mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
             mChatViewModel.setCurrentUser(mUserEntity.meshId);
         }
+
     }
 
     @Override
@@ -103,14 +124,25 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      * <p>Init adapter and listener</p>
      */
     private void initComponent() {
-        mChatAdapter = new ChatAdapter(this);
-        mViewBinging.chatRv.setAdapter(mChatAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mViewBinging.chatRv.setLayoutManager(linearLayoutManager);
+
+
+        mChatPagedAdapter = new ChatPagedAdapterRevised(this);
+        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
+
+
+        mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
+
+        // to load messages from reverse order as in chat view
+        mLinearLayoutManager.setStackFromEnd(true);
+        mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
+
+
+        mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
+
+
       //  mViewBinging.emptyViewId.setOnClickListener(this);
         mViewBinging.imageViewSend.setOnClickListener(this);
-        mChatAdapter.setItemClickListener(this);
+
         mChatViewModel = getViewModel();
 
         clearNotification();
@@ -125,9 +157,15 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         manager.cancel(notificationId);
     }
 
+    /**
+     * Using LiveData observer here we will observe the messages
+     * from local db.
+     * if any new message get inserted into db with the help of LifeData
+     * here we can listen that message
+     */
     private void subscribeForMessages() {
         if (mUserEntity != null) {
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
+            /*mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
 
                 if (chatEntities == null)
                     return;
@@ -135,13 +173,28 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 //                Collections.reverse(chatEntities);
                 mChatAdapter.addItems(chatEntities);
                 mViewBinging.chatRv.scrollToPosition(mChatAdapter.getItemCount() - 1);
+            });*/
+
+
+            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
+                @Override
+                public void onChanged(@Nullable List<ChatEntity> chatEntities) {
+                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
+                        @Override
+                        public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
+                            mChatPagedAdapter.submitList(chatEntities);
+                        }
+                    });
+                }
             });
+
         }
     }
 
 
     private void subscribeForUserEvent() {
         if (mUserEntity != null) {
+
             mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
                 if (userEntity != null)
@@ -181,6 +234,11 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     public void loadMainActivity() {
         Intent newTask = new Intent(this, MainActivity.class);
         newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -197,8 +255,33 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
 
-                return (T) ServiceLocator.getInstance().getChatViewModel();
+                return (T) ServiceLocator.getInstance().getChatViewModel(getApplication());
             }
         }).get(ChatViewModel.class);
+    }
+
+    class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
+
+        @Override
+        public void onChanged() {
+            Log.e("Observer", "onChanged");
+
+        }
+
+        // Scroll to bottom on new messages
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            Log.e("Observer", "onItemRangeInserted");
+            //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
+            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+        }
     }
 }

@@ -51,7 +51,7 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
     }
 
-    public int setUserAvatar(int imageIndex) {
+    public int getUserAvatarByIndex(int imageIndex) {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);
     }
 

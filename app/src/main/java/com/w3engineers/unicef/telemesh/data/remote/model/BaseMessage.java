@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.data.remote.model;
 
 
@@ -5,6 +6,7 @@ import android.databinding.BaseObservable;
 
 
 
+*/
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/2/2018 at 10:34 AM.
@@ -15,12 +17,15 @@ import android.databinding.BaseObservable;
  *  *
  *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
  *  ****************************************************************************
- */
+ *//*
 
 
+
+*/
 /**
  * MessageBase hole common property of message
- */
+ *//*
+
 
 public class BaseMessage extends BaseObservable {
 
@@ -107,3 +112,4 @@ public class BaseMessage extends BaseObservable {
 
 
 }
+*/

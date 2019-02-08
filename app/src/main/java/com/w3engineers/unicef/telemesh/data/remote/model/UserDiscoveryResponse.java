@@ -1,8 +1,10 @@
+/*
 package com.w3engineers.unicef.telemesh.data.remote.model;
 
 import com.w3engineers.ext.strom.application.data.BaseResponse;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
 
+*/
 /**
  * * ============================================================================
  * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
@@ -22,7 +24,8 @@ import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
  * * --> <First Reviewer> on [10-Sep-2018 at 3:55 PM].
  * * --> <Second Reviewer> on [10-Sep-2018 at 3:55 PM].
  * * ============================================================================
- **/
+ **//*
+
 public class UserDiscoveryResponse extends BaseResponse {
 
     public static final int ADDED = 1;
@@ -36,3 +39,4 @@ public class UserDiscoveryResponse extends BaseResponse {
     }
 
 }
+*/

@@ -764,7 +764,7 @@ public class TeleMeshTest {
             e.printStackTrace();
         }*/
 
-        ViewInteraction appCompatImageView2 = onView(
+        /*ViewInteraction appCompatImageView2 = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(
                                 allOf(withId(R.id.input_field),
@@ -773,7 +773,7 @@ public class TeleMeshTest {
                                                 5)),
                                 1),
                         isDisplayed()));
-        appCompatImageView2.perform(click());
+        appCompatImageView2.perform(click());*/
 
         try {
             Thread.sleep(700);

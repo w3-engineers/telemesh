@@ -1,5 +1,7 @@
+/*
 package com.w3engineers.unicef.telemesh.data.remote.model;
 
+*/
 /**
  * * ============================================================================
  * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
@@ -19,7 +21,8 @@ package com.w3engineers.unicef.telemesh.data.remote.model;
  * * --> <First Reviewer> on [23-Oct-2018 at 6:06 PM].
  * * --> <Second Reviewer> on [23-Oct-2018 at 6:06 PM].
  * * ============================================================================
- **/
+ **//*
+
 public class MessageText extends BaseMessage {
 
     private String textMessage;
@@ -34,3 +37,4 @@ public class MessageText extends BaseMessage {
     }
 
 }
+*/

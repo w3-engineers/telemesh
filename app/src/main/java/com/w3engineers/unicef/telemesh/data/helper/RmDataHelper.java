@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -123,6 +124,13 @@ public class RmDataHelper {
     }
 
     @SuppressLint("CheckResult")
+    /**
+     * after inserting the message to the db
+     * here we will fetch the last inserted message that will be
+     * sent via RM.
+     *
+     * Only for outgoing message this method will be responsible
+     */
     public void prepareDataObserver() {
         dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
@@ -199,19 +207,30 @@ public class RmDataHelper {
 
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
-                prepareDateSeparator(chatEntity);
+                Log.e("Status update", "Read :: " + chatEntity.getMessageId());
+                //prepareDateSeparator(chatEntity);
 
                 if (TextUtils.isEmpty(dataSource.getCurrentUser())
                         || !userId.equals(dataSource.getCurrentUser())) {
+                    Log.e("Status update", "Un Read :: " + chatEntity.getMessageId());
                     NotifyUtil.showNotification(chatEntity);
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
                 }
 
+                return dataSource.insertOrUpdateData(chatEntity);
+
             } else {
+
+                /**
+                 * for delivery status update we don't need to replace the message and insert again.
+                 * If we do so then paging library Diff Callback can't properly work
+                 */
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_DELIVERED).setIncoming(false);
+                Log.e("Status update", "Delivered :: " + chatEntity.getMessageId());
+                dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
             }
 
-            return dataSource.insertOrUpdateData(chatEntity);
+
 
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
@@ -252,6 +271,7 @@ public class RmDataHelper {
         if (rmDataMap.containsKey(dataSendId)) {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
+
             long ackDataUpdate = dataReceive(prevRMDataModel, false);
 
             rmDataMap.remove(dataSendId);

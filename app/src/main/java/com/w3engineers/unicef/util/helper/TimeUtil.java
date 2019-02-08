@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class TimeUtil {
+
     private static String dateFormat1 = "yyyy-MM-dd HH:mm:ss";
     private static String dateFormat2 = "yyyy-MM-dd HH:mm:ss.SSS";
     private static String dateFormat4 = "MMM dd";
@@ -45,8 +46,22 @@ public class TimeUtil {
     private static String dateFormat12 = "dd MMM yyyy";
     private static String dateFormat13 = "dd-MM-yyyy";
 
+    public static long DEFAULT_MILLISEC = 1322018752992l; // Nov 22, 2011 9:25:52 PM
+
+    public static TimeUtil timeUtil;
+
     private TimeUtil() {
     }
+
+    public static TimeUtil getInstance(){
+
+        if(timeUtil == null){
+            timeUtil = new TimeUtil();
+        }
+        return timeUtil;
+    }
+
+
 
     public static long toCurrentTime() {
         return System.currentTimeMillis();
@@ -170,6 +185,40 @@ public class TimeUtil {
         format.setTimeZone(TimeZone.getDefault());
 
         return format.format(new Date(milliSeconds));
+    }
+
+    public boolean isSameDay(Date date1, Date date2){
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+
+        return sameDay;
+    }
+
+
+    public synchronized Date getDateFromMillisecond(long timeMillis){
+
+        DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
+        Date formattedDate = null;
+
+        df.setTimeZone(TimeZone.getDefault());
+
+        Date date =new Date(timeMillis);
+        String stringDate = df.format(date);
+
+        try {
+              formattedDate = df.parse(stringDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return formattedDate;
+
     }
 
 

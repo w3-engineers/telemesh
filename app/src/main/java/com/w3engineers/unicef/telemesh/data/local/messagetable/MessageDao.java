@@ -54,8 +54,9 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      *
      * @return : Long
      */
-    @Query("SELECT " + ColumnNames.ID + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
-    long getLastRowId();
+    // This api is not used in app layer
+    /*@Query("SELECT " + ColumnNames.ID + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
+    long getLastRowId();*/
 
     /**
      * <h1>Update message status</h1>
@@ -96,12 +97,14 @@ public interface MessageDao extends BaseDao<MessageEntity> {
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     Flowable<MessageEntity> getLastInsertedMessage();
 
-    @Query("DELETE FROM " + TableNames.MESSAGE)
-    void deleteAllUsers();
+    // This api is not used in app layer
+    /*@Query("DELETE FROM " + TableNames.MESSAGE)
+    void deleteAllUsers();*/
 
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
+    // This api is not used in app layer
+    /*@Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);
+    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);*/
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")

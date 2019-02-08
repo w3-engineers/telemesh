@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.survey;
 
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.unicef.telemesh.data.local.survey.SurveyDataSource;
 
 /**
  * * ============================================================================
@@ -25,5 +26,10 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
  **/
 public class SurveyViewModel extends BaseRxViewModel {
 
+    public SurveyViewModel() {
+        super();
+
+        SurveyDataSource surveyDataSource = SurveyDataSource.getInstance();
+    }
 
 }

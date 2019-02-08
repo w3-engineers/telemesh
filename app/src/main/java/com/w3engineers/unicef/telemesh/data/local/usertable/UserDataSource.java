@@ -57,10 +57,6 @@ public class UserDataSource{
         return mUserDao.writeUser(userEntity);
     }
 
-    public void deleteAllData() {
-        mUserDao.deleteAllUsers();
-    }
-
     public Flowable<List<UserEntity>> getAllUsers() {
         return mUserDao.getAllUsers();
     }

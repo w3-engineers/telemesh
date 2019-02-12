@@ -22,8 +22,8 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
-            password hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
+            username rightmesh_build_username
+            password rightmesh_build_password
         }
     }
     maven{

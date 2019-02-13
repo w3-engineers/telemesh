@@ -42,7 +42,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      * @return : Flowable list of messaged
      */
 
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId")
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME+" ASC")
     Flowable<List<MessageEntity>> getAllMessages(String friendsId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -54,8 +54,9 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      *
      * @return : Long
      */
-    @Query("SELECT " + ColumnNames.ID + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
-    long getLastRowId();
+    // This api is not used in app layer
+    /*@Query("SELECT " + ColumnNames.ID + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
+    long getLastRowId();*/
 
     /**
      * <h1>Update message status</h1>
@@ -91,17 +92,19 @@ public interface MessageDao extends BaseDao<MessageEntity> {
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
-    long updateMessageStatus(int fromStatus, int toStatus);
+    long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     Flowable<MessageEntity> getLastInsertedMessage();
 
-    @Query("DELETE FROM " + TableNames.MESSAGE)
-    void deleteAllUsers();
+    // This api is not used in app layer
+    /*@Query("DELETE FROM " + TableNames.MESSAGE)
+    void deleteAllUsers();*/
 
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
+    // This api is not used in app layer
+    /*@Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);
+    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);*/
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")

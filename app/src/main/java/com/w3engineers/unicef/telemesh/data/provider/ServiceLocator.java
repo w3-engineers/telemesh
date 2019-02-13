@@ -91,8 +91,8 @@ public class ServiceLocator extends BaseServiceLocator {
         return new SurveyViewModel();
     }
 
-    public ChatViewModel getChatViewModel(){
-        return new ChatViewModel(new MessageSourceData());
+    public ChatViewModel getChatViewModel(Application application){
+        return new ChatViewModel(application);
     }
 
     @Override

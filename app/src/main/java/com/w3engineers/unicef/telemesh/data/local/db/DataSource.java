@@ -44,4 +44,6 @@ public interface DataSource {
 
     void setCurrentUser(String currentUser);
 
+    void updateMessageStatus(String messageId, int messageStatus);
+
 }

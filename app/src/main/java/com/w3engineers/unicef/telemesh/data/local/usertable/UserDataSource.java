@@ -30,8 +30,16 @@ public class UserDataSource{
     private static UserDataSource userDataSource;
     private final UserDao mUserDao;
 
-    public UserDataSource() {
+    private UserDataSource() {
         mUserDao = AppDatabase.getInstance().userDao();
+    }
+
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param userDao -> provide dao from unit test class
+     */
+    public UserDataSource(UserDao userDao) {
+        mUserDao = userDao;
     }
 
     public static UserDataSource getInstance() {
@@ -47,10 +55,6 @@ public class UserDataSource{
 
     public long insertOrUpdateData(UserEntity userEntity) {
         return mUserDao.writeUser(userEntity);
-    }
-
-    public void deleteAllData() {
-        mUserDao.deleteAllUsers();
     }
 
     public Flowable<List<UserEntity>> getAllUsers() {

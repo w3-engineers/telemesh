@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,14 @@ public class MessageSourceData {
         messageDao = AppDatabase.getInstance().messageDao();
     }
 
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param messageDao -> provide dao from unit test class
+     */
+    public MessageSourceData(MessageDao messageDao) {
+        this.messageDao = messageDao;
+    }
+
     public static MessageSourceData getInstance() {
         return messageSourceData;
     }
@@ -49,9 +58,10 @@ public class MessageSourceData {
         return messageDao.writeMessage((MessageEntity) baseEntity);
     }
 
-    public void deleteAllData() {
+    // This api is not used in app layer
+    /*public void deleteAllData() {
         messageDao.deleteAllUsers();
-    }
+    }*/
 
     public Flowable<List<ChatEntity>> getAllMessages(String friendsId) {
 
@@ -63,19 +73,21 @@ public class MessageSourceData {
         return messageDao.getMessageById(messageId);
     }
 
-    public long updateMessageEntityStatus(String messageId, int messageStatus) {
+    // This api is not used in app layer
+    /*public long updateMessageEntityStatus(String messageId, int messageStatus) {
         return messageDao.updateMessageStatus(messageId, messageStatus);
-    }
+    }*/
 
     public long updateUnreadToRead(String friendsId) {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
-    public long updateMessageStatus(int fromStatus, int toStatus) {
-        return messageDao.updateMessageStatus(fromStatus, toStatus);
+    public long changeMessageStatusFrom(int fromStatus, int toStatus) {
+        return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
-    public Boolean hasChatEntityExist(String friendsId, String messageId) {
+    // This api is not used in app layer
+    /*public Boolean hasChatEntityExist(String friendsId, String messageId) {
         return messageDao.hasChatEntityExist(friendsId, messageId);
-    }
+    }*/
 }

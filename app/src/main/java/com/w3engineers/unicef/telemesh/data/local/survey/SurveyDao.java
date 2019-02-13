@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.local.survey;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
@@ -23,6 +25,9 @@ import io.reactivex.Flowable;
  */
 @Dao
 public interface SurveyDao extends BaseDao<SurveyEntity> {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long writeSurvey(SurveyEntity surveyEntity);
     /**
      * <h1>Retrieve all survey</h1>
      * <p>All types of survey submitted and non submitted</p>
@@ -38,6 +43,6 @@ public interface SurveyDao extends BaseDao<SurveyEntity> {
      * @param surveyId: String
      * @return: SurveyEntity
      */
-    @Query("SELECT * FROM " + TableNames.SURVEY + " WHERE " + ColumnNames.COLUMN_SENDER_ID + " LIKE :surveyId")
+    @Query("SELECT * FROM " + TableNames.SURVEY + " WHERE " + ColumnNames.COLUMN_SURVEY_ID + " LIKE :surveyId")
     SurveyEntity getSurveyById(String surveyId);
 }

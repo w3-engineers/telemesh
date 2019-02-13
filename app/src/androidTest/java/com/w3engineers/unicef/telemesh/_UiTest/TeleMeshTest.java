@@ -2,10 +2,10 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 
 import android.content.Intent;
+import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class SplashActivityTest {
+public class TeleMeshTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
@@ -45,14 +45,14 @@ public class SplashActivityTest {
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
-    @Rule
+    /*@Rule
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.ACCESS_COARSE_LOCATION",
-                    "android.permission.WRITE_EXTERNAL_STORAGE");
+                    "android.permission.WRITE_EXTERNAL_STORAGE");*/
 
     @Test
-    public void splashActivityTest() {
+    public void teleMeshTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -369,7 +369,81 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        pressBack();
+        ViewInteraction appCompatRadioButton = onView(
+                allOf(withId(R.id.radio_bangla), withText("বাংলা"),
+                        childAtPosition(
+                                allOf(withId(R.id.radio_group_language),
+                                        childAtPosition(
+                                                withId(R.id.alert_buy_sell_dialog_layout),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatRadioButton.perform(click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction bottomNavigationItemView2 = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                3),
+                        isDisplayed()));
+        bottomNavigationItemView2.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction constraintLayoutCooseLanguage = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                2)));
+        constraintLayoutCooseLanguage.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatRadioButton2 = onView(
+                allOf(withId(R.id.radio_english), withText("English"),
+                        childAtPosition(
+                                allOf(withId(R.id.radio_group_language),
+                                        childAtPosition(
+                                                withId(R.id.alert_buy_sell_dialog_layout),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatRadioButton2.perform(click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction bottomNavigationItemViewSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                3),
+                        isDisplayed()));
+        bottomNavigationItemViewSettings.perform(click());
 
         try {
             Thread.sleep(700);
@@ -427,6 +501,25 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.confirmation_ok), withText("OK"),
+                        childAtPosition(
+                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.custom),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
+
+//        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         pressBack();
 
         try {
@@ -435,7 +528,32 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton3 = onView(
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.button_buy), withText("Buy Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                0),
+                        isDisplayed()));
+        appCompatButton4.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButtonSellData = onView(
                 allOf(withId(R.id.button_sell), withText("Sell Data"),
                         childAtPosition(
                                 allOf(withId(R.id.button_view),
@@ -444,7 +562,7 @@ public class SplashActivityTest {
                                                 2)),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButtonSellData.perform(click());
 
         try {
             Thread.sleep(700);
@@ -452,7 +570,7 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton4 = onView(
+        ViewInteraction appCompatButtonAgain = onView(
                 allOf(withId(R.id.button_buy), withText("Sell Data"),
                         childAtPosition(
                                 allOf(withId(R.id.sell_transaction_layout),
@@ -461,10 +579,54 @@ public class SplashActivityTest {
                                                 2)),
                                 1),
                         isDisplayed()));
-        appCompatButton4.perform(click());
+        appCompatButtonAgain.perform(click());
 
         try {
             Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton6 = onView(
+                allOf(withId(R.id.confirmation_ok), withText("OK"),
+                        childAtPosition(
+                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
+                                        childAtPosition(
+                                                withId(android.R.id.custom),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatButton6.perform(click());
+
+//        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatButton8 = onView(
+                allOf(withId(R.id.button_sell), withText("Sell Data"),
+                        childAtPosition(
+                                allOf(withId(R.id.button_view),
+                                        childAtPosition(
+                                                withId(R.id.my_wallet_layout),
+                                                2)),
+                                1),
+                        isDisplayed()));
+        appCompatButton8.perform(click());
+
+        try {
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -509,6 +671,38 @@ public class SplashActivityTest {
             e.printStackTrace();
         }
 
+        ViewInteraction constraintLayoutShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                3)));
+        constraintLayoutShareApp.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction constraintLayoutPrivacyPolicy = onView(
+                allOf(withId(R.id.layout_privacy_policy),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                6)));
+        constraintLayoutPrivacyPolicy.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction bottomNavigationContacts = onView(
                 allOf(withId(R.id.action_contact),
                         childAtPosition(
@@ -520,7 +714,7 @@ public class SplashActivityTest {
         bottomNavigationContacts.perform(click());
 
         try {
-            Thread.sleep(8000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -570,7 +764,7 @@ public class SplashActivityTest {
             e.printStackTrace();
         }*/
 
-        ViewInteraction appCompatImageView2 = onView(
+        /*ViewInteraction appCompatImageView2 = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(
                                 allOf(withId(R.id.input_field),
@@ -579,7 +773,7 @@ public class SplashActivityTest {
                                                 5)),
                                 1),
                         isDisplayed()));
-        appCompatImageView2.perform(click());
+        appCompatImageView2.perform(click());*/
 
         try {
             Thread.sleep(700);
@@ -588,6 +782,37 @@ public class SplashActivityTest {
         }
 
         pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Matcher<View> childAtPosition(

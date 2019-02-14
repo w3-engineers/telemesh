@@ -161,8 +161,17 @@ protobuf {
 
 rightmesh {
     appKey = project.hasProperty('telemesh') ? project.getProperty('telemesh') : System.getenv('telemesh')
+
     username = rightmesh_build_username
+    if (username == null)
+        username = System.getenv('rightmesh_build_username')
+
     password = rightmesh_build_password
+    if (password == null)
+        password = System.getenv('rightmesh_build_password')
+
+//    username = rightmesh_build_username
+//    password = rightmesh_build_password
 }
 
 preBuild.dependsOn("rightmesh")
@@ -172,7 +181,12 @@ repositories {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
             username rightmesh_build_username
+            if (username == null)
+                username System.getenv('rightmesh_build_username')
+
             password rightmesh_build_password
+            if (password == null)
+                password System.getenv('rightmesh_build_password')
         }
     }
     maven{

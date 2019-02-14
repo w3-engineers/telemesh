@@ -1,4 +1,10 @@
 include ':app', ':viper'
+
+def hasRightMeshUsername = hasProperty('rightmesh_build_username') &&
+        getProperty('rightmesh_build_username').toBoolean()
+def hasRightMeshPassword = hasProperty('rightmesh_build_password') &&
+        getProperty('rightmesh_build_password').toBoolean()
+
 pluginManagement.repositories {
     jcenter()
     google()
@@ -6,13 +12,24 @@ pluginManagement.repositories {
     maven {
         url 'https://artifactory.rightmesh.io/artifactory/maven'
         credentials {
-            username System.getenv('rightmesh_build_username')
+
+            if (!hasRightMeshUsername)
+                username System.getenv('rightmesh_build_username')
+            else
+                username rightmesh_build_username
+
+            if (!hasRightMeshPassword)
+                password System.getenv('rightmesh_build_password')
+            else
+                password rightmesh_build_password
+
+            /*username System.getenv('rightmesh_build_username')
             if (username == null)
                 username rightmesh_build_username
 
             password System.getenv('rightmesh_build_password')
             if (password == null)
-                password rightmesh_build_password
+                password rightmesh_build_password*/
         }
     }
 }

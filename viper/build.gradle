@@ -10,6 +10,11 @@ def isDebugDatabaseEnabled = !project.hasProperty('org.w3.debugdb') ||//If not s
 def isToastyEnabled = !project.hasProperty('org.w3.toasty') ||//If not specified then assume true
         project.getProperty('org.w3.toasty').toBoolean()
 
+def hasRightMeshUsername = hasProperty('rightmesh_build_username') &&
+        getProperty('rightmesh_build_username').toBoolean()
+def hasRightMeshPassword = hasProperty('rightmesh_build_password') &&
+        getProperty('rightmesh_build_password').toBoolean()
+
 if(isCrashLyticsEnabled) {
     apply plugin: 'io.fabric'
 }
@@ -22,13 +27,24 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username rightmesh_build_username
+
+            if (!hasRightMeshUsername)
+                username System.getenv('rightmesh_build_username')
+            else
+                username rightmesh_build_username
+
+            if (!hasRightMeshPassword)
+                password System.getenv('rightmesh_build_password')
+            else
+                password rightmesh_build_password
+
+            /*username rightmesh_build_username
             if (username == null)
                 username System.getenv('rightmesh_build_username')
 
             password rightmesh_build_password
             if (password == null)
-                password System.getenv('rightmesh_build_password')
+                password System.getenv('rightmesh_build_password')*/
         }
     }
     maven{

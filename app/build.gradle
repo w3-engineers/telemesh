@@ -161,8 +161,18 @@ protobuf {
 
 rightmesh {
     appKey = project.hasProperty('telemesh') ? project.getProperty('telemesh') : System.getenv('telemesh')
-    username = hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
-    password = hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
+
+    username = System.getenv('rightmesh_build_username')
+
+    if (username.equals("") || username.equals(null)) {
+        username = rightmesh_build_username
+    }
+
+    password = System.getenv('rightmesh_build_password')
+
+    if (password.equals("") || password.equals(null)) {
+        password = rightmesh_build_password
+    }
 }
 
 preBuild.dependsOn("rightmesh")
@@ -171,8 +181,17 @@ repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
-            username hasProperty('rightmesh_build_username') ? rightmesh_build_username : System.getenv('rightmesh_build_username')
-            password hasProperty('rightmesh_build_password') ? rightmesh_build_password : System.getenv('rightmesh_build_password')
+            username = System.getenv('rightmesh_build_username')
+
+            if (username.equals("") || username.equals(null)) {
+                username = rightmesh_build_username
+            }
+
+            password = System.getenv('rightmesh_build_password')
+
+            if (password.equals("") || password.equals(null)) {
+                password = rightmesh_build_password
+            }
         }
     }
     maven{

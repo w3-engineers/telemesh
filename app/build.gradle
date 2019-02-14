@@ -5,6 +5,14 @@ plugins {
     id 'com.google.protobuf'
 }
 
+def hasRightMeshUsername = hasProperty('rightmesh_build_username') &&
+        getProperty('rightmesh_build_username').toBoolean()
+def hasRightMeshPassword = hasProperty('rightmesh_build_password') &&
+        getProperty('rightmesh_build_password').toBoolean()
+
+//def hasRightMeshUsername = System.getenv('rightmesh_build_username').toBoolean()
+//def hasRightMeshPassword = System.getenv('rightmesh_build_password').toBoolean()
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion '28.0.3'
@@ -162,13 +170,15 @@ protobuf {
 rightmesh {
     appKey = project.hasProperty('telemesh') ? project.getProperty('telemesh') : System.getenv('telemesh')
 
-    username = rightmesh_build_username
-    if (username == null)
+    if (!hasRightMeshUsername)
         username = System.getenv('rightmesh_build_username')
+    else
+        username = rightmesh_build_username
 
-    password = rightmesh_build_password
-    if (password == null)
+    if (!hasRightMeshPassword)
         password = System.getenv('rightmesh_build_password')
+    else
+        password = rightmesh_build_password
 
 //    username = rightmesh_build_username
 //    password = rightmesh_build_password

@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -259,7 +260,7 @@ public class RightMeshDataSourceTest {
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
-        assertThat(retrieveChatEntity.getStatus(), is(Constants.MessageStatus.STATUS_DELIVERED));
+        assertThat(retrieveChatEntity.getStatus(), greaterThanOrEqualTo(Constants.MessageStatus.STATUS_SENDING));
     }
 
     @After

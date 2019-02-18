@@ -161,7 +161,7 @@ public class UserEntity extends DbBaseEntity implements Matchable<String>, Clone
      * <h1>Build user proto data</h1>
      *
      * @return : byte[]
-     */
+     *//*
     public static byte[] toProtoUser() {
         Context context = TeleMeshApplication.getContext();
         SharedPref sharedPref = SharedPref.getSharedPref(context);
@@ -171,7 +171,7 @@ public class UserEntity extends DbBaseEntity implements Matchable<String>, Clone
                 .setImageIndex(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .build().toByteArray();
 
-    }
+    }*/
 
     public RMUserModel getProtoUser() {
         return RMUserModel.newBuilder()

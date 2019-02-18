@@ -92,7 +92,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
             meshData.mMeshPeer = new MeshPeer(rmDataModel.getUserMeshId());
 
             return sendMeshData(meshData);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -123,7 +123,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
                     RmDataHelper.getInstance().userAdd(rmUserModel.build());
                 }
             }
-        }catch (InvalidProtocolBufferException e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -151,13 +151,18 @@ public class RightMeshDataSource extends BaseRmDataSource {
     @Override
     protected void onData(MeshData meshData) {
 
-        RMDataModel rmDataModel = RMDataModel.newBuilder()
-                .setUserMeshId(meshData.mMeshPeer.getPeerId())
-                .setRawData(ByteString.copyFrom(meshData.mData))
-                .setDataType(meshData.mType)
-                .build();
+        try {
+            RMDataModel rmDataModel = RMDataModel.newBuilder()
+                    .setUserMeshId(meshData.mMeshPeer.getPeerId())
+                    .setRawData(ByteString.copyFrom(meshData.mData))
+                    .setDataType(meshData.mType)
+                    .build();
 
-        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+            RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

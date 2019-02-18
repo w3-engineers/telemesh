@@ -47,6 +47,15 @@ public class Source implements DataSource {
         userDao = AppDatabase.getInstance().userDao();
     }
 
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param appDatabase -> provide mock database from unit test class
+     */
+    public Source(AppDatabase appDatabase) {
+        messageDao = appDatabase.messageDao();
+        userDao = appDatabase.userDao();
+    }
+
     public static Source getDbSource() {
         return dbSource;
     }
@@ -95,6 +104,6 @@ public class Source implements DataSource {
 
     @Override
     public void updateMessageStatus(String messageId, int messageStatus) {
-           messageDao.updateMessageStatus(messageId, messageStatus);
+        messageDao.updateMessageStatus(messageId, messageStatus);
     }
 }

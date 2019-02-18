@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import io.reactivex.Flowable;
  **/
 public class MessageSourceData {
 
-    private static MessageSourceData messageSourceData = new MessageSourceData();
+    private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
 
     public MessageSourceData() {
@@ -46,6 +47,20 @@ public class MessageSourceData {
     }
 
     public static MessageSourceData getInstance() {
+        if (messageSourceData == null) {
+            messageSourceData = new MessageSourceData();
+        }
+        return messageSourceData;
+    }
+
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param messageDao -> provide dao from unit test class
+     */
+    public static MessageSourceData getInstance(MessageDao messageDao) {
+        if (messageSourceData == null) {
+            messageSourceData = new MessageSourceData(messageDao);
+        }
         return messageSourceData;
     }
 
@@ -54,7 +69,7 @@ public class MessageSourceData {
                 Flowable.just((ChatEntity) messageEntity));
     }
 
-    public long insertOrUpdateData(ChatEntity baseEntity) {
+    public long insertOrUpdateData(ChatEntity baseEntity) throws Exception {
         return messageDao.writeMessage((MessageEntity) baseEntity);
     }
 

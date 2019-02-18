@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.local.messagetable;
+package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
@@ -6,9 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
@@ -66,7 +63,7 @@ public class MessageSourceDataTest {
     }
 
     @Test
-    public void basicMessageTest() {
+    public void basicMessageTest() throws Exception{
 
         String userId = UUID.randomUUID().toString();
 

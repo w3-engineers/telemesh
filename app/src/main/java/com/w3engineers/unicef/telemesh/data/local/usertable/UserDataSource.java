@@ -49,11 +49,22 @@ public class UserDataSource{
         return userDataSource;
     }
 
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param userDao -> provide dao from unit test class
+     */
+    public static UserDataSource getInstance(UserDao userDao) {
+        if (userDataSource == null) {
+            userDataSource = new UserDataSource(userDao);
+        }
+        return userDataSource;
+    }
+
     public Flowable<UserEntity> getLastData() {
         return mUserDao.getLastInsertedUser();
     }
 
-    public long insertOrUpdateData(UserEntity userEntity) {
+    public long insertOrUpdateData(UserEntity userEntity) throws Exception {
         return mUserDao.writeUser(userEntity);
     }
 

@@ -65,7 +65,7 @@ public class MainActivityViewModelTest {
     }
 
     @Test
-    public void testUserOfflineProcess_getOfflineState_afterOnlineState() {
+    public void testUserOfflineProcess_getOfflineState_afterOnlineState() throws Exception {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);
@@ -87,7 +87,7 @@ public class MainActivityViewModelTest {
     }
 
     @Test
-    public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() {
+    public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() throws Exception {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);
@@ -113,7 +113,7 @@ public class MainActivityViewModelTest {
     }
 
     @Test
-    public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() {
+    public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() throws Exception {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);

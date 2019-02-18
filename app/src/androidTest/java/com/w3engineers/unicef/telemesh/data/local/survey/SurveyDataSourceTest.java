@@ -1,12 +1,10 @@
-package com.w3engineers.unicef.telemesh.local.survey;
+package com.w3engineers.unicef.telemesh.data.local.survey;
 
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyDataSource;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
@@ -63,7 +61,7 @@ public class SurveyDataSourceTest {
     }
 
     @Test
-    public void basicSurveyTest() {
+    public void basicSurveyTest() throws Exception {
 
         String userId = UUID.randomUUID().toString();
 

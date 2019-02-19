@@ -265,6 +265,6 @@ public class RightMeshDataSourceTest {
 
     @After
     public void tearDown() throws Exception {
-        SUT.onRmOff();
+//        SUT.onRmOff();
     }
 }

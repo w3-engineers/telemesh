@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -12,6 +11,8 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 /**
@@ -60,7 +61,7 @@ public class MeshContactViewModel extends BaseRxViewModel {
     }
 
     LiveData<List<UserEntity>> getAllUsers() {
-        Log.e("AppLog", "Get all user called");
+        Timber.e("Get all user called");
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getAllUsers());
     }
 

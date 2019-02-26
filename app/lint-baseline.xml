@@ -2,6 +2,17 @@
 <issues format="5" by="lint 3.3.0" client="gradle" variant="debug" version="3.3.0">
 
     <issue
+        id="OnClick"
+        message="Corresponding method handler &apos;`public void sendMessage(android.view.View)`&apos; not found"
+        errorLine1="                android:onClick=&quot;sendMessage&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\res\layout\activity_chat_revised.xml"
+            line="196"
+            column="17"/>
+    </issue>
+
+    <issue
         id="GradleCompatible"
         message="All com.android.support libraries must use the exact same version specification (mixing versions can lead to runtime crashes). Found versions 28.0.0, 27.1.1. Examples include `com.android.support:animated-vector-drawable:28.0.0` and `com.android.support:support-media-compat:27.1.1`">
         <location
@@ -26,30 +37,30 @@
         errorLine2="        ^">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="127"
+            line="136"
             column="9"/>
     </issue>
 
     <issue
         id="RxSubscribeOnError"
         message="Subscriber is missing onError"
-        errorLine1="                getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)"
-        errorLine2="                                             ^">
+        errorLine1="        compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)"
+        errorLine2="                                ^">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
-            line="139"
-            column="46"/>
+            line="176"
+            column="33"/>
     </issue>
 
     <issue
         id="RxSubscribeOnError"
         message="Subscriber is missing onError"
-        errorLine1="        getCompositeDisposable().add(updateMessageSatus(friendsId)"
-        errorLine2="                                     ^">
+        errorLine1="        compositeDisposable.add(updateMessageSatus(friendsId)"
+        errorLine2="                                ^">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
-            line="180"
-            column="38"/>
+            line="218"
+            column="33"/>
     </issue>
 
     <issue
@@ -81,7 +92,7 @@
         errorLine2="                                     ^">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivityViewModel.java"
-            line="50"
+            line="52"
             column="38"/>
     </issue>
 
@@ -92,7 +103,7 @@
         errorLine2="        ^">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="127"
+            line="136"
             column="9"/>
     </issue>
 
@@ -103,7 +114,7 @@
         errorLine2="                                   ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="77"
+            line="78"
             column="36"/>
     </issue>
 
@@ -113,7 +124,7 @@
         errorLine1="        &lt;TextView"
         errorLine2="         ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="43"
             column="10"/>
     </issue>
@@ -124,7 +135,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="54"
             column="10"/>
     </issue>
@@ -135,7 +146,7 @@
         errorLine1="    &lt;com.w3engineers.ext.strom.application.ui.base.BaseToolBar"
         errorLine2="     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\others\layout\app_toolbar.xml"
+            file="src\main\res\layout\app_toolbar.xml"
             line="8"
             column="6"/>
     </issue>
@@ -168,7 +179,7 @@
         errorLine1="            android:elevation=&quot;@dimen/elevation_6&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_main.xml"
+            file="src\main\res\layout\activity_main.xml"
             line="38"
             column="13"/>
     </issue>
@@ -180,7 +191,7 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="build.gradle"
-            line="114"
+            line="104"
             column="5"/>
     </issue>
 
@@ -191,7 +202,7 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="build.gradle"
-            line="129"
+            line="119"
             column="5"/>
     </issue>
 
@@ -201,7 +212,7 @@
         errorLine1="            android:textSize=&quot;17dp&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="50"
             column="13"/>
     </issue>
@@ -212,7 +223,7 @@
         errorLine1="                android:editable=&quot;false&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="109"
             column="17"/>
     </issue>
@@ -223,7 +234,7 @@
         errorLine1="                android:editable=&quot;false&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="108"
             column="17"/>
     </issue>
@@ -235,7 +246,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\res\values\strings.xml"
-            line="53"
+            line="54"
             column="13"/>
     </issue>
 
@@ -264,45 +275,12 @@
     <issue
         id="LogNotTimber"
         message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
-        errorLine1="        Log.v(tag, msg);"
-        errorLine2="        ~~~~~~~~~~~~~~~">
+        errorLine1="            Log.e(&quot;Observer&quot;, &quot;onChanged&quot;);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="33"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="LogNotTimber"
-        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
-        errorLine1="        Log.e(tag, msg);"
-        errorLine2="        ~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="37"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="LogNotTimber"
-        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
-        errorLine1="        Log.d(tag, msg);"
-        errorLine2="        ~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="41"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="LogNotTimber"
-        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
-        errorLine1="        Log.e(&quot;AppLog&quot;, &quot;Get all user called&quot;);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="63"
-            column="9"/>
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="269"
+            column="13"/>
     </issue>
 
     <issue
@@ -378,7 +356,7 @@
         errorLine2="                    ~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="57"
+            line="59"
             column="21"/>
     </issue>
 
@@ -388,7 +366,7 @@
         errorLine1="    android:background=&quot;@color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="7"
             column="5"/>
     </issue>
@@ -399,9 +377,20 @@
         errorLine1="    android:background=&quot;@color/contact_back_ground&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\fragments\layout\fragment_contacts.xml"
+            file="src\main\res\layout\fragment_contacts.xml"
             line="5"
             column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.activity_chat` appears to be unused"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src\main\res\layout\activity_chat.xml"
+            line="2"
+            column="1"/>
     </issue>
 
     <issue
@@ -409,6 +398,17 @@
         message="The resource `R.mipmap.avatar10` appears to be unused">
         <location
             file="src\main\res\mipmap-hdpi\avatar10.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_border_cyan_round_box` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src\main\res\drawable\bg_border_cyan_round_box.xml"
+            line="2"
+            column="1"/>
     </issue>
 
     <issue
@@ -428,7 +428,7 @@
         errorLine1="&lt;android.support.constraint.ConstraintLayout"
         errorLine2="^">
         <location
-            file="src\main\res\layouts\others\layout\blank_dialog.xml"
+            file="src\main\res\layout\blank_dialog.xml"
             line="2"
             column="1"/>
     </issue>
@@ -439,7 +439,7 @@
         errorLine1="&lt;android.support.constraint.ConstraintLayout"
         errorLine2="^">
         <location
-            file="src\main\res\layouts\fragments\layout\blank_fragment.xml"
+            file="src\main\res\layout\blank_fragment.xml"
             line="2"
             column="1"/>
     </issue>
@@ -450,7 +450,7 @@
         errorLine1="&lt;android.support.constraint.ConstraintLayout"
         errorLine2="^">
         <location
-            file="src\main\res\layouts\contentitems\layout\blank_item.xml"
+            file="src\main\res\layout\blank_item.xml"
             line="2"
             column="1"/>
     </issue>
@@ -462,6 +462,17 @@
         errorLine2="^">
         <location
             file="src\main\res\drawable\bottombar_shadow.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.circular_badge` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src\main\res\drawable\circular_badge.xml"
             line="2"
             column="1"/>
     </issue>
@@ -848,17 +859,6 @@
         <location
             file="src\main\res\values\colors.xml"
             line="54"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.color.overlay_light_60` appears to be unused"
-        errorLine1="    &lt;color name=&quot;overlay_light_60&quot;>#99FFFFFF&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\res\values\colors.xml"
-            line="55"
             column="12"/>
     </issue>
 
@@ -1508,17 +1508,6 @@
         <location
             file="src\main\res\values\colors.xml"
             line="123"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.color.blue_grey_600` appears to be unused"
-        errorLine1="    &lt;color name=&quot;blue_grey_600&quot;>#546E7A&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\res\values\colors.xml"
-            line="124"
             column="12"/>
     </issue>
 
@@ -2877,6 +2866,17 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.color.text_color_light` appears to be unused"
+        errorLine1="    &lt;color name=&quot;text_color_light&quot;>#A4B0B6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\res\values\colors.xml"
+            line="268"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.color.red_gradient_light` appears to be unused"
         errorLine1="    &lt;color name=&quot;red_gradient_light&quot;>#FE9C48&lt;/color>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -3394,6 +3394,17 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.dimen.height_60` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;height_60&quot;>60dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\res\values\dimen.xml"
+            line="56"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.dimen.height_65` appears to be unused"
         errorLine1="    &lt;dimen name=&quot;height_65&quot;>65dp&lt;/dimen>"
         errorLine2="           ~~~~~~~~~~~~~~~~">
@@ -3614,17 +3625,6 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.dimen.margin_16` appears to be unused"
-        errorLine1="    &lt;dimen name=&quot;margin_16&quot;>16dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\res\values\dimen.xml"
-            line="87"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
         message="The resource `R.dimen.margin_13` appears to be unused"
         errorLine1="    &lt;dimen name=&quot;margin_13&quot;>13dp&lt;/dimen>"
         errorLine2="           ~~~~~~~~~~~~~~~~">
@@ -3642,17 +3642,6 @@
         <location
             file="src\main\res\values\dimen.xml"
             line="92"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.dimen.margin_40` appears to be unused"
-        errorLine1="    &lt;dimen name=&quot;margin_40&quot;>40dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\res\values\dimen.xml"
-            line="93"
             column="12"/>
     </issue>
 
@@ -4641,7 +4630,7 @@
         errorLine1="&lt;android.support.constraint.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
-            file="src\main\res\layouts\fragments\layout\fragment_contacts.xml"
+            file="src\main\res\layout\fragment_contacts.xml"
             line="2"
             column="1"/>
     </issue>
@@ -4961,6 +4950,28 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.integer.max_line_1` appears to be unused"
+        errorLine1="    &lt;integer name=&quot;max_line_1&quot;>1&lt;/integer>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\res\values\integer.xml"
+            line="6"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.notification_badge` appears to be unused"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src\main\res\layout\notification_badge.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.anim.scale_transition_anim` appears to be unused"
         errorLine1="&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
         errorLine2="^">
@@ -5009,6 +5020,21 @@
 
     <issue
         id="UnusedResources"
+        message="The resource `R.string.badge_count_more_than_9` appears to be unused"
+        errorLine1="    &lt;string name=&quot;badge_count_more_than_9&quot;>9+&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\res\values\strings.xml"
+            line="20"
+            column="13"/>
+        <location
+            file="src\main\res\values-bn\strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
         message="The resource `R.string.logo_image` appears to be unused"
         errorLine1="    &lt;string name=&quot;logo_image&quot;>logo image&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~">
@@ -5024,16 +5050,16 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.string.ok` appears to be unused"
-        errorLine1="    &lt;string name=&quot;ok&quot;>OK&lt;/string>"
-        errorLine2="            ~~~~~~~~~">
+        message="The resource `R.string.no_conversation` appears to be unused"
+        errorLine1="    &lt;string name=&quot;no_conversation&quot;>No conversation yet!&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\res\values\strings.xml"
-            line="56"
+            line="39"
             column="13"/>
         <location
             file="src\main\res\values-bn\strings.xml"
-            line="54"
+            line="29"
             column="13"/>
     </issue>
 
@@ -5044,7 +5070,7 @@
         errorLine2="            ~~~~~~~~~~~~~">
         <location
             file="src\main\res\values\strings.xml"
-            line="57"
+            line="58"
             column="13"/>
         <location
             file="src\main\res\values-bn\strings.xml"
@@ -5120,6 +5146,61 @@
 
     <issue
         id="SyntheticAccessor"
+        message="Access to `private` field `mChatViewModel` of class `ChatActivity` requires synthetic accessor"
+        errorLine1="                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer&lt;PagedList&lt;ChatEntity>>() {"
+        errorLine2="                    ~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="184"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mChatPagedAdapter` of class `ChatActivity` requires synthetic accessor"
+        errorLine1="                            mChatPagedAdapter.submitList(chatEntities);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="187"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mChatPagedAdapter` of class `ChatActivity` requires synthetic accessor"
+        errorLine1="            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());"
+        errorLine2="                                                                                   ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="278"
+            column="84"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mLinearLayoutManager` of class `ChatActivity` requires synthetic accessor"
+        errorLine1="            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="278"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mViewBinging` of class `ChatActivity` requires synthetic accessor"
+        errorLine1="            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());"
+        errorLine2="                                                        ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
+            line="278"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
         message="Access to `private` field `mContext` of class `ChatAdapter` requires synthetic accessor"
         errorLine1="                    ContextCompat.getColor(mContext, R.color.incoming_message_color));"
         errorLine2="                                           ~~~~~~~~">
@@ -5142,24 +5223,46 @@
 
     <issue
         id="SyntheticAccessor"
-        message="Access to `private` field `messageSourceData` of class `ChatViewModel` requires synthetic accessor"
-        errorLine1="                    messageSourceData.insertOrUpdateData(separatorMessage);"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~">
+        message="Access to `private` field `mContext` of class `ChatPagedAdapter` requires synthetic accessor"
+        errorLine1="                    ContextCompat.getColor(mContext, R.color.incoming_message_color));"
+        errorLine2="                                           ~~~~~~~~">
         <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
-            line="136"
-            column="21"/>
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="171"
+            column="44"/>
     </issue>
 
     <issue
         id="SyntheticAccessor"
-        message="Access to `private` method `insertMessageData` of class `ChatViewModel` requires synthetic accessor"
-        errorLine1="                getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)"
-        errorLine2="                                             ~~~~~~~~~~~~~~~~~">
+        message="Access to `private` field `mContext` of class `ChatPagedAdapter` requires synthetic accessor"
+        errorLine1="                    ContextCompat.getColor(mContext, R.color.outcoming_message_color));"
+        errorLine2="                                           ~~~~~~~~">
         <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
-            line="139"
-            column="46"/>
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="192"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mContext` of class `ChatPagedAdapterRevised` requires synthetic accessor"
+        errorLine1="                    ContextCompat.getColor(mContext, R.color.incoming_message_color));"
+        errorLine2="                                           ~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="119"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="SyntheticAccessor"
+        message="Access to `private` field `mContext` of class `ChatPagedAdapterRevised` requires synthetic accessor"
+        errorLine1="                    ContextCompat.getColor(mContext, R.color.outcoming_message_color));"
+        errorLine2="                                           ~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="140"
+            column="44"/>
     </issue>
 
     <issue
@@ -5351,23 +5454,12 @@
 
     <issue
         id="SyntheticAccessor"
-        message="Access to `private` field `settingsViewModel` of class `SettingsFragment` requires synthetic accessor"
-        errorLine1="                    settingsViewModel.setLocale(languageCodeList[which], languageList[which]);"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\settings\SettingsFragment.java"
-            line="137"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SyntheticAccessor"
         message="Access to `private` field `serviceLocator` of class `SettingsFragment` requires synthetic accessor"
         errorLine1="                serviceLocator = ServiceLocator.getInstance();"
         errorLine2="                ~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\settings\SettingsFragment.java"
-            line="158"
+            line="173"
             column="17"/>
     </issue>
 
@@ -5378,7 +5470,7 @@
         errorLine2="                           ~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\settings\SettingsFragment.java"
-            line="159"
+            line="174"
             column="28"/>
     </issue>
 
@@ -5619,7 +5711,7 @@
         errorLine1="            android:id=&quot;@+id/image_view_logo&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="29"
             column="13"/>
     </issue>
@@ -5630,7 +5722,7 @@
         errorLine1="        android:id=&quot;@+id/empty_text&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\others\layout\empty_layout.xml"
+            file="src\main\res\layout\empty_layout.xml"
             line="8"
             column="9"/>
     </issue>
@@ -5646,7 +5738,7 @@
             column="5"/>
         <location
             file="src\main\res\values\strings.xml"
-            line="47"
+            line="48"
             column="5"/>
     </issue>
 
@@ -5672,11 +5764,11 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\res\values\strings.xml"
-            line="29"
+            line="30"
             column="5"/>
         <location
             file="src\main\res\values\strings.xml"
-            line="51"
+            line="52"
             column="5"/>
     </issue>
 
@@ -5825,7 +5917,7 @@
         errorLine1="        &lt;TextView"
         errorLine2="         ~~~~~~~~">
         <location
-            file="src\main\res\layouts\others\layout\notification_badge.xml"
+            file="src\main\res\layout\notification_badge.xml"
             line="11"
             column="10"/>
     </issue>
@@ -5836,7 +5928,7 @@
         errorLine1="            &lt;EditText"
         errorLine2="             ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="99"
             column="14"/>
     </issue>
@@ -5847,7 +5939,7 @@
         errorLine1="            &lt;EditText"
         errorLine2="             ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="100"
             column="14"/>
     </issue>
@@ -5858,7 +5950,18 @@
         errorLine1="            &lt;EditText"
         errorLine2="             ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_chat_revised.xml"
+            line="174"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src\main\res\layout\activity_sell_data.xml"
             line="99"
             column="14"/>
     </issue>
@@ -5869,8 +5972,8 @@
         errorLine1="                &lt;ImageView"
         errorLine2="                 ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_chat.xml"
-            line="68"
+            file="src\main\res\layout\activity_chat.xml"
+            line="71"
             column="18"/>
     </issue>
 
@@ -5880,8 +5983,8 @@
         errorLine1="            &lt;ImageView"
         errorLine2="             ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_chat.xml"
-            line="157"
+            file="src\main\res\layout\activity_chat.xml"
+            line="170"
             column="14"/>
     </issue>
 
@@ -5891,7 +5994,18 @@
         errorLine1="                &lt;ImageView"
         errorLine2="                 ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_create_user.xml"
+            file="src\main\res\layout\activity_chat_revised.xml"
+            line="69"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src\main\res\layout\activity_create_user.xml"
             line="36"
             column="18"/>
     </issue>
@@ -5902,7 +6016,7 @@
         errorLine1="                &lt;ImageView"
         errorLine2="                 ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_create_user.xml"
+            file="src\main\res\layout\activity_create_user.xml"
             line="59"
             column="18"/>
     </issue>
@@ -5913,7 +6027,7 @@
         errorLine1="    &lt;ImageView"
         errorLine2="     ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="10"
             column="6"/>
     </issue>
@@ -5924,7 +6038,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_splash.xml"
+            file="src\main\res\layout\activity_splash.xml"
             line="28"
             column="10"/>
     </issue>
@@ -5935,7 +6049,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_user_profile.xml"
+            file="src\main\res\layout\activity_user_profile.xml"
             line="38"
             column="10"/>
     </issue>
@@ -5946,7 +6060,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_mesh_contact.xml"
+            file="src\main\res\layout\item_mesh_contact.xml"
             line="43"
             column="10"/>
     </issue>
@@ -5957,7 +6071,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_profile_image.xml"
+            file="src\main\res\layout\item_profile_image.xml"
             line="23"
             column="10"/>
     </issue>
@@ -5968,7 +6082,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_settings_default.xml"
+            file="src\main\res\layout\item_settings_default.xml"
             line="29"
             column="10"/>
     </issue>
@@ -5979,7 +6093,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_settings_language.xml"
+            file="src\main\res\layout\item_settings_language.xml"
             line="33"
             column="10"/>
     </issue>
@@ -5990,7 +6104,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_settings_notification.xml"
+            file="src\main\res\layout\item_settings_notification.xml"
             line="34"
             column="10"/>
     </issue>
@@ -6001,7 +6115,7 @@
         errorLine1="        &lt;ImageView"
         errorLine2="         ~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_text_message_out.xml"
+            file="src\main\res\layout\item_text_message_out.xml"
             line="39"
             column="10"/>
     </issue>
@@ -6012,7 +6126,7 @@
         errorLine1="            &lt;EditText"
         errorLine2="             ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="100"
             column="14"/>
     </issue>
@@ -6023,7 +6137,7 @@
         errorLine1="            &lt;EditText"
         errorLine2="             ~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="99"
             column="14"/>
     </issue>
@@ -6035,7 +6149,7 @@
         errorLine2="                                      ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="73"
+            line="76"
             column="39"/>
     </issue>
 
@@ -6046,7 +6160,7 @@
         errorLine2="                                                       ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="73"
+            line="76"
             column="56"/>
     </issue>
 
@@ -6057,7 +6171,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="74"
+            line="77"
             column="37"/>
     </issue>
 
@@ -6068,7 +6182,7 @@
         errorLine2="                                                   ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="74"
+            line="77"
             column="52"/>
     </issue>
 
@@ -6079,7 +6193,7 @@
         errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="115"
+            line="119"
             column="49"/>
     </issue>
 
@@ -6090,7 +6204,7 @@
         errorLine2="                                                               ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="115"
+            line="119"
             column="64"/>
     </issue>
 
@@ -6101,7 +6215,7 @@
         errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="116"
+            line="120"
             column="51"/>
     </issue>
 
@@ -6112,7 +6226,7 @@
         errorLine2="                                                                   ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="116"
+            line="120"
             column="68"/>
     </issue>
 
@@ -6123,7 +6237,7 @@
         errorLine2="                                      ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="72"
+            line="75"
             column="39"/>
     </issue>
 
@@ -6134,7 +6248,7 @@
         errorLine2="                                                       ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="72"
+            line="75"
             column="56"/>
     </issue>
 
@@ -6145,7 +6259,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="73"
+            line="76"
             column="37"/>
     </issue>
 
@@ -6156,7 +6270,7 @@
         errorLine2="                                                    ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="73"
+            line="76"
             column="53"/>
     </issue>
 
@@ -6167,7 +6281,7 @@
         errorLine2="                                            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="115"
+            line="119"
             column="45"/>
     </issue>
 
@@ -6178,7 +6292,7 @@
         errorLine2="                                                            ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="115"
+            line="119"
             column="61"/>
     </issue>
 
@@ -6189,7 +6303,7 @@
         errorLine2="                                              ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="116"
+            line="120"
             column="47"/>
     </issue>
 
@@ -6200,7 +6314,7 @@
         errorLine2="                                                               ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="116"
+            line="120"
             column="64"/>
     </issue>
 
@@ -6210,7 +6324,7 @@
         errorLine1="                android:text=&quot;Current Balance&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="33"
             column="17"/>
     </issue>
@@ -6221,7 +6335,7 @@
         errorLine1="                android:text=&quot;1000 RMESH&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="45"
             column="17"/>
     </issue>
@@ -6232,7 +6346,7 @@
         errorLine1="                    android:text=&quot;Spent Balance&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="66"
             column="21"/>
     </issue>
@@ -6243,7 +6357,7 @@
         errorLine1="                    android:text=&quot;0 RMESH&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="78"
             column="21"/>
     </issue>
@@ -6254,7 +6368,7 @@
         errorLine1="                android:text=&quot;100 RM/GB&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="108"
             column="17"/>
     </issue>
@@ -6265,7 +6379,7 @@
         errorLine1="                android:text=&quot;Buy Data&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_buy_data.xml"
+            file="src\main\res\layout\activity_buy_data.xml"
             line="120"
             column="17"/>
     </issue>
@@ -6276,7 +6390,7 @@
         errorLine1="                android:text=&quot;wallet Id:&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="30"
             column="17"/>
     </issue>
@@ -6287,7 +6401,7 @@
         errorLine1="                android:text=&quot;0x4d4ee38da7b2df1e103930db4c69d33f0ebc409b&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="42"
             column="17"/>
     </issue>
@@ -6298,7 +6412,7 @@
         errorLine1="                android:text=&quot;Balance&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="54"
             column="17"/>
     </issue>
@@ -6309,7 +6423,7 @@
         errorLine1="                android:text=&quot;1000 RMESH&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="68"
             column="17"/>
     </issue>
@@ -6320,7 +6434,7 @@
         errorLine1="                android:text=&quot;Buy Data&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="94"
             column="17"/>
     </issue>
@@ -6331,7 +6445,7 @@
         errorLine1="                android:text=&quot;Sell Data&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_my_wallet.xml"
+            file="src\main\res\layout\activity_my_wallet.xml"
             line="107"
             column="17"/>
     </issue>
@@ -6342,7 +6456,7 @@
         errorLine1="                android:text=&quot;Current Balance&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="32"
             column="17"/>
     </issue>
@@ -6353,7 +6467,7 @@
         errorLine1="                android:text=&quot;1000 RMESH&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="44"
             column="17"/>
     </issue>
@@ -6364,7 +6478,7 @@
         errorLine1="                    android:text=&quot;Earned Balance&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="65"
             column="21"/>
     </issue>
@@ -6375,7 +6489,7 @@
         errorLine1="                    android:text=&quot;0 RMESH&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="77"
             column="21"/>
     </issue>
@@ -6386,7 +6500,7 @@
         errorLine1="                android:text=&quot;100 RM/GB&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="107"
             column="17"/>
     </issue>
@@ -6397,7 +6511,7 @@
         errorLine1="                android:text=&quot;Sell Data&quot;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\activities\layout\activity_sell_data.xml"
+            file="src\main\res\layout\activity_sell_data.xml"
             line="118"
             column="17"/>
     </issue>
@@ -6408,7 +6522,7 @@
         errorLine1="            android:text=&quot;12.05pm&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_mesh_contact.xml"
+            file="src\main\res\layout\item_mesh_contact.xml"
             line="73"
             column="13"/>
     </issue>
@@ -6420,7 +6534,7 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\aboutus\AboutUsViewModel.java"
-            line="38"
+            line="39"
             column="12"/>
     </issue>
 
@@ -6431,7 +6545,7 @@
         errorLine2="                    ~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\db\AppDatabase.java"
-            line="49"
+            line="51"
             column="21"/>
     </issue>
 
@@ -6442,7 +6556,18 @@
         errorLine2="                    ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\db\AppDatabase.java"
-            line="50"
+            line="52"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public abstract SurveyDao surveyDao();"
+        errorLine2="                    ~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\db\AppDatabase.java"
+            line="53"
             column="21"/>
     </issue>
 
@@ -6453,217 +6578,8 @@
         errorLine2="                  ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\db\AppDatabase.java"
-            line="52"
+            line="55"
             column="19"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void v(String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="20"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void e(String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="23"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void d(String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="26"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void v(String tag, String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="31"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void v(String tag, String msg){"
-        errorLine2="                                     ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="31"
-            column="38"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void e(String tag, String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="35"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void e(String tag, String msg){"
-        errorLine2="                                     ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="35"
-            column="38"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void d(String tag, String msg){"
-        errorLine2="                         ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="39"
-            column="26"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public static void d(String tag, String msg){"
-        errorLine2="                                     ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\util\helper\AppLog.java"
-            line="39"
-            column="38"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String getMessageId() {"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="34"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setMessageId(String messageId) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="38"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setMessageId(String messageId) {"
-        errorLine2="                                    ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="38"
-            column="37"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String getFriendsId() {"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="43"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setFriendsId(String friendsId) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="47"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setFriendsId(String friendsId) {"
-        errorLine2="                                    ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="47"
-            column="37"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setIncoming(boolean incoming) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="56"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setMessageTime(long messageTime) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="65"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setMessageStatus(int messageStatus) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="74"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public BaseMessage setMessageType(int messageType) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\BaseMessage.java"
-            line="83"
-            column="12"/>
     </issue>
 
     <issue
@@ -6673,7 +6589,7 @@
         errorLine2="                        ~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\buydata\BuyDataActivity.java"
-            line="101"
+            line="105"
             column="25"/>
     </issue>
 
@@ -6684,7 +6600,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
-            line="90"
+            line="113"
             column="15"/>
     </issue>
 
@@ -6695,7 +6611,7 @@
         errorLine2="                        ~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
-            line="154"
+            line="209"
             column="25"/>
     </issue>
 
@@ -6706,7 +6622,7 @@
         errorLine2="                                         ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
-            line="174"
+            line="229"
             column="42"/>
     </issue>
 
@@ -6717,7 +6633,7 @@
         errorLine2="                            ~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
-            line="191"
+            line="251"
             column="29"/>
     </issue>
 
@@ -6728,7 +6644,7 @@
         errorLine2="                                       ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatActivity.java"
-            line="191"
+            line="251"
             column="40"/>
     </issue>
 
@@ -6794,7 +6710,7 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="54"
+            line="84"
             column="12"/>
     </issue>
 
@@ -6805,7 +6721,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="58"
+            line="88"
             column="12"/>
     </issue>
 
@@ -6816,7 +6732,7 @@
         errorLine2="                                   ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="58"
+            line="88"
             column="36"/>
     </issue>
 
@@ -6827,7 +6743,7 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="63"
+            line="93"
             column="12"/>
     </issue>
 
@@ -6838,7 +6754,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="67"
+            line="97"
             column="12"/>
     </issue>
 
@@ -6849,7 +6765,7 @@
         errorLine2="                                   ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="67"
+            line="97"
             column="36"/>
     </issue>
 
@@ -6860,7 +6776,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="76"
+            line="106"
             column="12"/>
     </issue>
 
@@ -6871,7 +6787,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="85"
+            line="115"
             column="12"/>
     </issue>
 
@@ -6882,7 +6798,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="94"
+            line="124"
             column="12"/>
     </issue>
 
@@ -6893,7 +6809,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="103"
+            line="133"
             column="12"/>
     </issue>
 
@@ -6904,7 +6820,7 @@
         errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="108"
+            line="138"
             column="12"/>
     </issue>
 
@@ -6915,7 +6831,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="112"
+            line="142"
             column="12"/>
     </issue>
 
@@ -6926,19 +6842,173 @@
         errorLine2="                                   ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\ChatEntity.java"
-            line="112"
+            line="142"
             column="36"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public ChatViewModel(MessageSourceData messageSourceData) {"
-        errorLine2="                         ~~~~~~~~~~~~~~~~~">
+        errorLine1="    public ChatEntityListDataSource(List&lt;ChatEntity> list){"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\ChatEntityListDataSource.java"
+            line="20"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public ChatPagedAdapter(Context context) {"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="51"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="86"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="        public GenericViewHolder(View itemView) {"
+        errorLine2="                                 ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="136"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="        public abstract  void bindView(MessageEntity item);"
+        errorLine2="                                       ~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapter.java"
+            line="140"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public ChatPagedAdapterRevised(Context context) {"
+        errorLine2="                                   ~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="34"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="68"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="        public GenericViewHolder(View itemView) {"
+        errorLine2="                                 ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="102"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="        public abstract  void bindView(MessageEntity item);"
+        errorLine2="                                       ~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatPagedAdapterRevised.java"
+            line="106"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public ChatViewHolder(ViewDataBinding viewDataBinding) {"
+        errorLine2="                          ~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewHolder.java"
+            line="12"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public void bind(ChatEntity item) {"
+        errorLine2="                     ~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewHolder.java"
+            line="17"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public void onClick(View view) {"
+        errorLine2="                        ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewHolder.java"
+            line="22"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public ChatViewModel(Application application) {"
+        errorLine2="                         ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
-            line="54"
+            line="74"
             column="26"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public LiveData&lt;PagedList&lt;ChatEntity>> prepareDateSpecificChat(List&lt;ChatEntity> chatEntityList) {"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
+            line="245"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public LiveData&lt;PagedList&lt;ChatEntity>> prepareDateSpecificChat(List&lt;ChatEntity> chatEntityList) {"
+        errorLine2="                                                                   ~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\ui\chat\ChatViewModel.java"
+            line="245"
+            column="68"/>
     </issue>
 
     <issue
@@ -7087,6 +7157,17 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    void updateMessageStatus(String messageId, int messageStatus);"
+        errorLine2="                             ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\db\DataSource.java"
+            line="47"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    protected DbBaseEntity(Parcel in) {"
         errorLine2="                           ~~~~~~">
         <location
@@ -7186,6 +7267,50 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public LayoutManagerWithSmoothScroller(Context context) {"
+        errorLine2="                                           ~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\LayoutManagerWithSmoothScroller.java"
+            line="19"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public LayoutManagerWithSmoothScroller(Context context, int orientation, boolean reverseLayout) {"
+        errorLine2="                                           ~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\LayoutManagerWithSmoothScroller.java"
+            line="23"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,"
+        errorLine2="                                       ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\LayoutManagerWithSmoothScroller.java"
+            line="28"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,"
+        errorLine2="                                                                  ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\LayoutManagerWithSmoothScroller.java"
+            line="28"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    public static MainActivity mainActivity;"
         errorLine2="                  ~~~~~~~~~~~~">
         <location
@@ -7201,7 +7326,7 @@
         errorLine2="                                       ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivity.java"
-            line="133"
+            line="134"
             column="40"/>
     </issue>
 
@@ -7212,30 +7337,19 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivity.java"
-            line="200"
+            line="202"
             column="15"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public LiveData&lt;Integer> getMessageCount() {"
-        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        errorLine1="    public void execute(Runnable r) {"
+        errorLine2="                        ~~~~~~~~">
         <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivityViewModel.java"
+            file="src\main\java\com\w3engineers\unicef\telemesh\pager\MainThreadExecutor.java"
             line="27"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public LiveData&lt;Integer> getSurveyCount() {"
-        errorLine2="           ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\main\MainActivityViewModel.java"
-            line="31"
-            column="12"/>
+            column="25"/>
     </issue>
 
     <issue
@@ -7311,7 +7425,7 @@
         errorLine2="                                ~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="45"
+            line="46"
             column="33"/>
     </issue>
 
@@ -7322,7 +7436,7 @@
         errorLine2="                            ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="49"
+            line="50"
             column="29"/>
     </issue>
 
@@ -7333,7 +7447,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="67"
+            line="68"
             column="12"/>
     </issue>
 
@@ -7344,7 +7458,7 @@
         errorLine2="                            ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="72"
+            line="73"
             column="29"/>
     </issue>
 
@@ -7355,7 +7469,7 @@
         errorLine2="                                               ~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\meshcontact\MeshContactViewModel.java"
-            line="72"
+            line="73"
             column="48"/>
     </issue>
 
@@ -7421,7 +7535,7 @@
         errorLine2="                             ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="70"
+            line="71"
             column="30"/>
     </issue>
 
@@ -7432,7 +7546,7 @@
         errorLine2="    ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="79"
+            line="80"
             column="5"/>
     </issue>
 
@@ -7443,7 +7557,7 @@
         errorLine2="                              ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="79"
+            line="80"
             column="31"/>
     </issue>
 
@@ -7454,7 +7568,7 @@
         errorLine2="                             ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="90"
+            line="91"
             column="30"/>
     </issue>
 
@@ -7465,41 +7579,8 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="97"
+            line="98"
             column="5"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);"
-        errorLine2="    ~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="104"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);"
-        errorLine2="                                                 ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="104"
-            column="50"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);"
-        errorLine2="                                                                   ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="104"
-            column="68"/>
     </issue>
 
     <issue
@@ -7509,7 +7590,7 @@
         errorLine2="                               ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="108"
+            line="111"
             column="32"/>
     </issue>
 
@@ -7520,7 +7601,7 @@
         errorLine2="                                                 ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageDao.java"
-            line="108"
+            line="111"
             column="50"/>
     </issue>
 
@@ -7604,11 +7685,22 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public MessageSourceData(MessageDao messageDao) {"
+        errorLine2="                             ~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
+            line="44"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    public static MessageSourceData getInstance() {"
         errorLine2="                  ~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="39"
+            line="48"
             column="19"/>
     </issue>
 
@@ -7619,7 +7711,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="43"
+            line="52"
             column="12"/>
     </issue>
 
@@ -7630,7 +7722,7 @@
         errorLine2="                                   ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="48"
+            line="57"
             column="36"/>
     </issue>
 
@@ -7641,7 +7733,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="56"
+            line="66"
             column="12"/>
     </issue>
 
@@ -7652,7 +7744,7 @@
         errorLine2="                                                     ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="56"
+            line="66"
             column="54"/>
     </issue>
 
@@ -7663,7 +7755,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="62"
+            line="72"
             column="12"/>
     </issue>
 
@@ -7674,19 +7766,8 @@
         errorLine2="                                           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="62"
+            line="72"
             column="44"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public long updateMessageEntityStatus(String messageId, int messageStatus) {"
-        errorLine2="                                          ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="66"
-            column="43"/>
     </issue>
 
     <issue
@@ -7696,74 +7777,8 @@
         errorLine2="                                   ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="70"
+            line="81"
             column="36"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public Boolean hasChatEntityExist(String friendsId, String messageId) {"
-        errorLine2="           ~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="78"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public Boolean hasChatEntityExist(String friendsId, String messageId) {"
-        errorLine2="                                      ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="78"
-            column="39"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public Boolean hasChatEntityExist(String friendsId, String messageId) {"
-        errorLine2="                                                        ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\messagetable\MessageSourceData.java"
-            line="78"
-            column="57"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String getTextMessage() {"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\MessageText.java"
-            line="27"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public MessageText setTextMessage(String textMessage) {"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\MessageText.java"
-            line="31"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public MessageText setTextMessage(String textMessage) {"
-        errorLine2="                                      ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\MessageText.java"
-            line="31"
-            column="39"/>
     </issue>
 
     <issue
@@ -7927,7 +7942,7 @@
         errorLine2="                        ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RightMeshDataSource.java"
-            line="84"
+            line="85"
             column="25"/>
     </issue>
 
@@ -7938,7 +7953,7 @@
         errorLine2="                          ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RightMeshDataSource.java"
-            line="107"
+            line="108"
             column="27"/>
     </issue>
 
@@ -7949,7 +7964,7 @@
         errorLine2="                              ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RightMeshDataSource.java"
-            line="136"
+            line="137"
             column="31"/>
     </issue>
 
@@ -7960,7 +7975,7 @@
         errorLine2="                          ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RightMeshDataSource.java"
-            line="151"
+            line="152"
             column="27"/>
     </issue>
 
@@ -7971,7 +7986,7 @@
         errorLine2="                                     ~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RightMeshDataSource.java"
-            line="167"
+            line="168"
             column="38"/>
     </issue>
 
@@ -7982,7 +7997,7 @@
         errorLine2="                  ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="61"
+            line="63"
             column="19"/>
     </issue>
 
@@ -7993,7 +8008,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="65"
+            line="67"
             column="12"/>
     </issue>
 
@@ -8004,7 +8019,7 @@
         errorLine2="                                      ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="65"
+            line="67"
             column="39"/>
     </issue>
 
@@ -8015,7 +8030,7 @@
         errorLine2="                        ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="87"
+            line="89"
             column="25"/>
     </issue>
 
@@ -8026,7 +8041,7 @@
         errorLine2="                          ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="107"
+            line="109"
             column="27"/>
     </issue>
 
@@ -8037,7 +8052,7 @@
         errorLine2="                            ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="166"
+            line="175"
             column="29"/>
     </issue>
 
@@ -8048,7 +8063,7 @@
         errorLine2="                           ~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\helper\RmDataHelper.java"
-            line="248"
+            line="268"
             column="28"/>
     </issue>
 
@@ -8059,52 +8074,8 @@
         errorLine2="                        ~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\selldata\SellDataActivity.java"
-            line="100"
+            line="104"
             column="25"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String date;"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\message\SeparatorMessage.java"
-            line="24"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String getDate() {"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\message\SeparatorMessage.java"
-            line="26"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public SeparatorMessage setDate(String date) {"
-        errorLine2="           ~~~~~~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\message\SeparatorMessage.java"
-            line="30"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public SeparatorMessage setDate(String date) {"
-        errorLine2="                                    ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\message\SeparatorMessage.java"
-            line="30"
-            column="37"/>
     </issue>
 
     <issue
@@ -8275,12 +8246,23 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public ChatViewModel getChatViewModel(){"
+        errorLine1="    public ChatViewModel getChatViewModel(Application application){"
         errorLine2="           ~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\provider\ServiceLocator.java"
             line="94"
             column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public ChatViewModel getChatViewModel(Application application){"
+        errorLine2="                                          ~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\provider\ServiceLocator.java"
+            line="94"
+            column="43"/>
     </issue>
 
     <issue
@@ -8367,7 +8349,7 @@
         errorLine2="                        ~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\ui\settings\SettingsFragment.java"
-            line="73"
+            line="76"
             column="25"/>
     </issue>
 
@@ -8616,6 +8598,17 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public void updateMessageStatus(String messageId, int messageStatus) {"
+        errorLine2="                                    ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\dbsource\Source.java"
+            line="97"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    public MutableLiveData&lt;Boolean> getIsUserRegistered() {"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -8627,11 +8620,22 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    long writeSurvey(SurveyEntity surveyEntity);"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDao.java"
+            line="30"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    Flowable&lt;List&lt;SurveyEntity>> getAllSurvey();"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDao.java"
-            line="33"
+            line="38"
             column="5"/>
     </issue>
 
@@ -8642,7 +8646,7 @@
         errorLine2="    ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDao.java"
-            line="42"
+            line="47"
             column="5"/>
     </issue>
 
@@ -8653,8 +8657,162 @@
         errorLine2="                               ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDao.java"
-            line="42"
+            line="47"
             column="32"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyDataSource(SurveyDao surveyDao) {"
+        errorLine2="                            ~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="40"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public static SurveyDataSource getInstance() {"
+        errorLine2="                  ~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="44"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public long insertOrUpdateData(SurveyEntity surveyEntity) {"
+        errorLine2="                                   ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="48"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public Flowable&lt;List&lt;SurveyEntity>> getAllSurvey() {"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="52"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity getSurveyById(String surveyId) {"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="56"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity getSurveyById(String surveyId) {"
+        errorLine2="                                      ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyDataSource.java"
+            line="56"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyTitle;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="41"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyId;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="44"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyForm;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="47"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String senderId;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="50"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyStartTime;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="53"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyEndTime;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="56"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String surveyAnswer;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="62"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public String vendorName;"
+        errorLine2="           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="65"
+            column="12"/>
     </issue>
 
     <issue
@@ -8664,19 +8822,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="68"
+            line="67"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyTitle(String surveyTitle) {"
-        errorLine2="                               ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyTitle(String surveyTitle) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="72"
-            column="32"/>
+            line="71"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyTitle(String surveyTitle) {"
+        errorLine2="                                       ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="71"
+            column="40"/>
     </issue>
 
     <issue
@@ -8693,12 +8862,23 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyId(String surveyId) {"
-        errorLine2="                            ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyId(String surveyId) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
             line="80"
-            column="29"/>
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyId(String surveyId) {"
+        errorLine2="                                    ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="80"
+            column="37"/>
     </issue>
 
     <issue
@@ -8708,19 +8888,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="84"
+            line="85"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyForm(String surveyForm) {"
-        errorLine2="                              ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyForm(String surveyForm) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="88"
-            column="31"/>
+            line="89"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyForm(String surveyForm) {"
+        errorLine2="                                      ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="89"
+            column="39"/>
     </issue>
 
     <issue
@@ -8730,19 +8921,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="92"
+            line="94"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSenderId(String senderId) {"
-        errorLine2="                            ~~~~~~">
+        errorLine1="    public SurveyEntity setSenderId(String senderId) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="96"
-            column="29"/>
+            line="98"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSenderId(String senderId) {"
+        errorLine2="                                    ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="98"
+            column="37"/>
     </issue>
 
     <issue
@@ -8752,19 +8954,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="100"
+            line="103"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyStartTime(String surveyStartTime) {"
-        errorLine2="                                   ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyStartTime(String surveyStartTime) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="104"
-            column="36"/>
+            line="107"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyStartTime(String surveyStartTime) {"
+        errorLine2="                                           ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="107"
+            column="44"/>
     </issue>
 
     <issue
@@ -8774,19 +8987,41 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="108"
+            line="112"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyEndTime(String surveyEndTime) {"
-        errorLine2="                                 ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyEndTime(String surveyEndTime) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="112"
-            column="34"/>
+            line="116"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyEndTime(String surveyEndTime) {"
+        errorLine2="                                         ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="116"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSubmitted(boolean submitted) {"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="125"
+            column="12"/>
     </issue>
 
     <issue
@@ -8796,19 +9031,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="124"
+            line="130"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setSurveyAnswer(String surveyAnswer) {"
-        errorLine2="                                ~~~~~~">
+        errorLine1="    public SurveyEntity setSurveyAnswer(String surveyAnswer) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="128"
-            column="33"/>
+            line="134"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public SurveyEntity setSurveyAnswer(String surveyAnswer) {"
+        errorLine2="                                        ~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
+            line="134"
+            column="41"/>
     </issue>
 
     <issue
@@ -8818,41 +9064,30 @@
         errorLine2="           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="132"
+            line="139"
             column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void setVendorName(String vendorName) {"
-        errorLine2="                              ~~~~~~">
+        errorLine1="    public SurveyEntity setVendorName(String vendorName) {"
+        errorLine2="           ~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="136"
-            column="31"/>
+            line="143"
+            column="12"/>
     </issue>
 
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public SurveyEntity(Parcel parcel) {"
-        errorLine2="                        ~~~~~~">
+        errorLine1="    public SurveyEntity setVendorName(String vendorName) {"
+        errorLine2="                                      ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="140"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public void writeToParcel(Parcel dest, int flags) {"
-        errorLine2="                              ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\survey\SurveyEntity.java"
-            line="145"
-            column="31"/>
+            line="143"
+            column="39"/>
     </issue>
 
     <issue
@@ -8880,11 +9115,33 @@
     <issue
         id="UnknownNullness"
         message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public static TimeUtil timeUtil;"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
+            line="51"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public static TimeUtil getInstance(){"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
+            line="56"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
         errorLine1="    public static String parseToLocalFromNS(long timeInNS) {"
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="55"
+            line="70"
             column="19"/>
     </issue>
 
@@ -8895,7 +9152,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="60"
+            line="75"
             column="19"/>
     </issue>
 
@@ -8906,7 +9163,7 @@
         errorLine2="                                           ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="67"
+            line="82"
             column="44"/>
     </issue>
 
@@ -8917,7 +9174,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="94"
+            line="109"
             column="19"/>
     </issue>
 
@@ -8928,7 +9185,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="101"
+            line="116"
             column="19"/>
     </issue>
 
@@ -8939,7 +9196,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="108"
+            line="123"
             column="19"/>
     </issue>
 
@@ -8950,7 +9207,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="117"
+            line="132"
             column="19"/>
     </issue>
 
@@ -8961,7 +9218,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="124"
+            line="139"
             column="19"/>
     </issue>
 
@@ -8972,7 +9229,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="131"
+            line="146"
             column="19"/>
     </issue>
 
@@ -8983,7 +9240,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="138"
+            line="153"
             column="19"/>
     </issue>
 
@@ -8994,7 +9251,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="151"
+            line="166"
             column="19"/>
     </issue>
 
@@ -9005,7 +9262,7 @@
         errorLine2="                   ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="159"
+            line="174"
             column="20"/>
     </issue>
 
@@ -9016,8 +9273,41 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
-            line="167"
+            line="182"
             column="19"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public boolean isSameDay(Date date1, Date date2){"
+        errorLine2="                             ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
+            line="190"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public boolean isSameDay(Date date1, Date date2){"
+        errorLine2="                                         ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
+            line="190"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public synchronized Date getDateFromMillisecond(long timeMillis){"
+        errorLine2="                        ~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\util\helper\TimeUtil.java"
+            line="203"
+            column="25"/>
     </issue>
 
     <issue
@@ -9027,7 +9317,7 @@
         errorLine2="                                        ~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="47"
+            line="48"
             column="41"/>
     </issue>
 
@@ -9038,7 +9328,7 @@
         errorLine2="                                            ~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="57"
+            line="58"
             column="45"/>
     </issue>
 
@@ -9049,7 +9339,7 @@
         errorLine2="                                        ~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="65"
+            line="66"
             column="41"/>
     </issue>
 
@@ -9060,7 +9350,7 @@
         errorLine2="                                                             ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="65"
+            line="66"
             column="62"/>
     </issue>
 
@@ -9071,7 +9361,7 @@
         errorLine2="                                              ~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="75"
+            line="76"
             column="47"/>
     </issue>
 
@@ -9082,7 +9372,7 @@
         errorLine2="                  ~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="92"
+            line="93"
             column="19"/>
     </issue>
 
@@ -9093,7 +9383,7 @@
         errorLine2="                                                    ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="92"
+            line="93"
             column="53"/>
     </issue>
 
@@ -9104,7 +9394,7 @@
         errorLine2="                                   ~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="114"
+            line="115"
             column="36"/>
     </issue>
 
@@ -9115,7 +9405,7 @@
         errorLine2="                                               ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="114"
+            line="115"
             column="48"/>
     </issue>
 
@@ -9126,7 +9416,7 @@
         errorLine2="                  ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="125"
+            line="126"
             column="19"/>
     </issue>
 
@@ -9137,7 +9427,7 @@
         errorLine2="                                          ~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\util\helper\uiutil\UIHelper.java"
-            line="125"
+            line="126"
             column="43"/>
     </issue>
 
@@ -9148,8 +9438,19 @@
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDao.java"
-            line="42"
+            line="39"
             column="21"/>
+    </issue>
+
+    <issue
+        id="UnknownNullness"
+        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
+        errorLine1="    public UserDataSource(UserDao userDao) {"
+        errorLine2="                          ~~~~~~~">
+        <location
+            file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
+            line="41"
+            column="27"/>
     </issue>
 
     <issue
@@ -9159,7 +9460,7 @@
         errorLine2="                  ~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="37"
+            line="45"
             column="19"/>
     </issue>
 
@@ -9170,7 +9471,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="44"
+            line="52"
             column="12"/>
     </issue>
 
@@ -9181,7 +9482,7 @@
         errorLine2="                                   ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="48"
+            line="56"
             column="36"/>
     </issue>
 
@@ -9192,7 +9493,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="56"
+            line="60"
             column="12"/>
     </issue>
 
@@ -9203,7 +9504,7 @@
         errorLine2="           ~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="59"
+            line="63"
             column="12"/>
     </issue>
 
@@ -9214,7 +9515,7 @@
         errorLine2="                                        ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="59"
+            line="63"
             column="41"/>
     </issue>
 
@@ -9225,7 +9526,7 @@
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="63"
+            line="67"
             column="12"/>
     </issue>
 
@@ -9236,7 +9537,7 @@
         errorLine2="                                            ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="63"
+            line="67"
             column="45"/>
     </issue>
 
@@ -9247,30 +9548,8 @@
         errorLine2="                          ~~~~~~">
         <location
             file="src\main\java\com\w3engineers\unicef\telemesh\data\local\usertable\UserDataSource.java"
-            line="72"
+            line="76"
             column="27"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public RMUserModel rmUserModel;"
-        errorLine2="           ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\UserDiscoveryResponse.java"
-            line="31"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public UserDiscoveryResponse(RMUserModel rmUserModel) {"
-        errorLine2="                                 ~~~~~~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\data\remote\model\UserDiscoveryResponse.java"
-            line="34"
-            column="34"/>
     </issue>
 
     <issue
@@ -9538,23 +9817,12 @@
     </issue>
 
     <issue
-        id="UnknownNullness"
-        message="Unknown nullability; explicitly declare as `@Nullable` or `@NonNull` to improve Kotlin interoperability; see https://android.github.io/kotlin-guides/interop.html#nullability-annotations"
-        errorLine1="    public String getUserName() {"
-        errorLine2="           ~~~~~~">
-        <location
-            file="src\main\java\com\w3engineers\unicef\telemesh\ui\userprofile\UserProfileViewModel.java"
-            line="38"
-            column="12"/>
-    </issue>
-
-    <issue
         id="RtlHardcoded"
         message="Consider adding `android:layout_marginEnd=&quot;@dimen/margin_10&quot;` to better support right-to-left layouts"
         errorLine1="            android:layout_marginRight=&quot;@dimen/margin_10&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_mesh_contact.xml"
+            file="src\main\res\layout\item_mesh_contact.xml"
             line="47"
             column="13"/>
     </issue>
@@ -9565,7 +9833,7 @@
         errorLine1="            android:layout_marginLeft=&quot;@dimen/margin_10&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_mesh_contact.xml"
+            file="src\main\res\layout\item_mesh_contact.xml"
             line="57"
             column="13"/>
     </issue>
@@ -9576,7 +9844,7 @@
         errorLine1="            android:layout_marginLeft=&quot;@dimen/margin_10&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_mesh_contact.xml"
+            file="src\main\res\layout\item_mesh_contact.xml"
             line="72"
             column="13"/>
     </issue>
@@ -9587,7 +9855,7 @@
         errorLine1="            android:layout_marginRight=&quot;@dimen/margin_10&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src\main\res\layouts\contentitems\layout\item_settings_language.xml"
+            file="src\main\res\layout\item_settings_language.xml"
             line="59"
             column="13"/>
     </issue>

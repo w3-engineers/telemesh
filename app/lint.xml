@@ -2,8 +2,9 @@
 <lint>
 
     <!-- Disable the given check in this project -->
-    <issue id="InvalidPackage" severity="ignore">
-        <!--<ignore path="**/sentry*.jar"/>-->
+    <issue id="InvalidPackage" severity="error">
+        <ignore path="**/ethereumj-core*.jar"/>
+        <ignore path="**/prov*.jar"/>
     </issue>
     <issue id="IconMissingDensityFolder" severity="ignore" />
     <issue id="IconExpectedSize" severity="ignore" />

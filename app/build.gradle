@@ -4,7 +4,7 @@ plugins {
     id 'com.github.kt3k.coveralls'
     id 'com.google.protobuf'
 }
-apply from: 'lint-checks.gradle'
+//MMH apply from: 'lint-checks.gradle'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -45,7 +45,8 @@ android {
         enabled = true
     }
 }
-apply from: 'lint-checks.gradle'
+
+//MMH apply from: 'lint-checks.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

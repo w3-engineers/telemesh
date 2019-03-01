@@ -36,19 +36,6 @@ android {
     dataBinding {
         enabled = true
     }
-    sourceSets {
-        main {
-            res.srcDirs =
-                    [
-                            'src/main/res/layouts/activities',
-                            'src/main/res/layouts/contentitems',
-                            'src/main/res/layouts/fragments',
-                            'src/main/res/layouts/others',
-                            'src/main/res/layouts',
-                            'src/main/res'
-                    ]
-        }
-    }
 }
 
 dependencies {

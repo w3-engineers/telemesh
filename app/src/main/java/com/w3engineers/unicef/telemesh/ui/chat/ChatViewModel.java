@@ -8,6 +8,7 @@ import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -30,8 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
-
-import javax.annotation.Nullable;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -202,6 +201,7 @@ public class ChatViewModel extends AndroidViewModel {
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }
 
+    @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
         return mutableMovieList;
     }
@@ -215,7 +215,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param chatEntityList
      * @return
      */
-    public void prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
+    public void prepareDateSpecificChat(@NonNull List<ChatEntity> chatEntityList) {
 
         List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 

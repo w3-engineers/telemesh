@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -84,7 +86,8 @@ public class MessageSourceData {
                 Flowable.just(new ArrayList<>(messageEntities)));
     }
 
-    public ChatEntity getMessageEntityById(String messageId) {
+    @NonNull
+    public ChatEntity getMessageEntityById(@NonNull String messageId) {
         return messageDao.getMessageById(messageId);
     }
 
@@ -92,8 +95,7 @@ public class MessageSourceData {
     /*public long updateMessageEntityStatus(String messageId, int messageStatus) {
         return messageDao.updateMessageStatus(messageId, messageStatus);
     }*/
-
-    public long updateUnreadToRead(String friendsId) {
+    public long updateUnreadToRead(@NonNull String friendsId) {
         return messageDao.updateMessageAsRead(friendsId);
     }
 

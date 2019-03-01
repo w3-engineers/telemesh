@@ -197,6 +197,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId
      * @return
      */
+    @NonNull
     public LiveData<UserEntity> getUserById(@NonNull String meshId){
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }

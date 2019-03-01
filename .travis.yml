@@ -22,7 +22,6 @@ licenses:
 before_install:
   - "chmod +x gradlew"
   - yes | sdkmanager "platforms;android-28"
-
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
@@ -31,7 +30,8 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-   - ./gradlew clean build connectedCheck coveralls -PdisablePreDex --stacktrace
+   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+#   - ./gradlew :app:lintDebug
 
 after_failure:
   # Customize this line, 'android' is the specific app module name of this project. Shows log.

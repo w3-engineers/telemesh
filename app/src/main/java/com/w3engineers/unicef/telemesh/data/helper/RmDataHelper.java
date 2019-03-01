@@ -3,15 +3,14 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
+import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -23,7 +22,9 @@ import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.HashMap;
+
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * * ============================================================================
@@ -217,12 +218,12 @@ public class RmDataHelper {
 
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
-                Log.e("Status update", "Read :: " + chatEntity.getMessageId());
+                Timber.e(  "Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
                 if (TextUtils.isEmpty(dataSource.getCurrentUser())
                         || !userId.equals(dataSource.getCurrentUser())) {
-                    Log.e("Status update", "Un Read :: " + chatEntity.getMessageId());
+                    Timber.e(  "Un Read :: %s", chatEntity.getMessageId());
                     NotifyUtil.showNotification(chatEntity);
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
                 }
@@ -236,7 +237,7 @@ public class RmDataHelper {
                  * If we do so then paging library Diff Callback can't properly work
                  */
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_DELIVERED).setIncoming(false);
-                Log.e("Status update", "Delivered :: " + chatEntity.getMessageId());
+                Timber.e("Delivered :: %s", chatEntity.getMessageId());
                 dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
             }
 

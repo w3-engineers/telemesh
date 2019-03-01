@@ -30,6 +30,8 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
@@ -268,7 +270,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            Log.e("Observer", "onItemRangeInserted");
+            Timber.e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
             mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
         }

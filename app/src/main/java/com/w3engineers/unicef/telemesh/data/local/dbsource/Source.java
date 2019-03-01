@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
@@ -103,7 +105,7 @@ public class Source implements DataSource {
     }
 
     @Override
-    public void updateMessageStatus(String messageId, int messageStatus) {
+    public void updateMessageStatus(@NonNull String messageId, int messageStatus) {
         messageDao.updateMessageStatus(messageId, messageStatus);
     }
 }

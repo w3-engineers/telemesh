@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.protobuf.ByteString;
@@ -182,7 +183,7 @@ public class RmDataHelper {
      * @param rmDataModel -> contains all of info about receive data
      */
 
-    public long dataReceive(RMDataModel rmDataModel, boolean isNewMessage) {
+    public long dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
 
         int dataType = rmDataModel.getDataType();
         byte[] rawData = rmDataModel.getRawData().toByteArray();
@@ -275,7 +276,7 @@ public class RmDataHelper {
      *
      * @param rmDataModel -> Contains received message id
      */
-    public long ackReceive(RMDataModel rmDataModel) {
+    public long ackReceive(@NonNull RMDataModel rmDataModel) {
 
         int dataSendId = rmDataModel.getRecDataId();
 

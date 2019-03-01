@@ -162,12 +162,14 @@ public class ChatViewModelTest {
             e.printStackTrace();
         }
 
-        LiveData<PagedList<ChatEntity>> pagedListLiveData = SUT.getChatEntityWithDate();
+//        LiveData<PagedList<ChatEntity>> pagedListLiveData = SUT.getChatEntityWithDate();
 
         SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
 
-        PagedList<ChatEntity> pagedListTestObserver = LiveDataTestUtil
-                .getValue(pagedListLiveData);
+//        PagedList<ChatEntity> pagedListTestObserver = LiveDataTestUtil
+//                .getValue(pagedListLiveData);
+
+        TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
 
         try {
             Thread.sleep(500);
@@ -175,7 +177,7 @@ public class ChatViewModelTest {
             e.printStackTrace();
         }
 
-        assertThat(pagedListTestObserver.size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
+        assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
 
 //        assertNotNull(pagedListTestObserver.get(0));
     }

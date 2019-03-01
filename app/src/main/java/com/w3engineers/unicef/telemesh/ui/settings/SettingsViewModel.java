@@ -1,20 +1,38 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
+import android.webkit.MimeTypeMap;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.Utils;
 
+import java.io.File;
+import java.util.List;
 import java.util.Locale;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * * ============================================================================
@@ -37,6 +55,9 @@ import java.util.Locale;
  * * ============================================================================
  **/
 public class SettingsViewModel extends AndroidViewModel {
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    AlertDialog alertDialog;
 
 
     public SettingsViewModel(@NonNull Application application) {
@@ -65,6 +86,51 @@ public class SettingsViewModel extends AndroidViewModel {
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
 
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
+    }
+
+    public void startInAppShare(Context context) {
+        alertDialog = Utils.getInstance().getProgressDialog(context);
+
+        compositeDisposable.add(backupApkAndGetPath()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::inAppShareProcess, Throwable::printStackTrace));
+    }
+
+    private Single<String> backupApkAndGetPath() {
+        return Single.fromCallable(() -> Utils.getInstance().backupApkAndGetPath());
+    }
+
+    private void inAppShareProcess(String filePath) {
+
+        Context context = App.getContext();
+
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk");
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType(mimeType);
+
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(sharingIntent, 0);
+
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String packageName = resolveInfo.activityInfo.packageName;
+
+            if (packageName.contains("android.bluetooth")) {
+                sharingIntent.setPackage(packageName);
+                sharingIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID
+                        + ".provider", new File(filePath));
+
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                context.startActivity(sharingIntent);
+                return;
+            }
+        }
     }
 
 //     This api is unused

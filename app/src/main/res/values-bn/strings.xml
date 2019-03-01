@@ -53,5 +53,6 @@
     <string name="choose_language">Choose a Language</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="processing">Processing</string>
 
 </resources>

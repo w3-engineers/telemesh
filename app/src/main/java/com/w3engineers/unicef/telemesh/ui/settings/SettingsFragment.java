@@ -94,6 +94,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
+                settingsViewModel.startInAppShare(getActivity());
                 // Open Share app page
                 break;
             case R.id.layout_about_us:
@@ -164,6 +165,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         alertDialog.show();
     }
+
+
 
     private SettingsViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {

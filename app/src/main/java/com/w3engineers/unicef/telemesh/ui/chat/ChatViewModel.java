@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Nullable;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -104,7 +106,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      * @param userId : UserEntity obj
      */
-    public void setCurrentUser(String userId) {
+    public void setCurrentUser(@Nullable String userId) {
         dataSource.setCurrentUser(userId);
     }
 
@@ -143,11 +145,7 @@ public class ChatViewModel extends AndroidViewModel {
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    Timber.v("Id: " + aLong);
-                }, throwable -> {
-                    Timber.v("Id: " + throwable.getMessage());
-                }));
+                .subscribe());
 
     }
 

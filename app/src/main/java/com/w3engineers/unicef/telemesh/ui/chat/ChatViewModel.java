@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -117,7 +118,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param message       : Message need to send
      * @param isTextMessage : is text or file
      */
-    public void sendMessage(String meshId, String message, boolean isTextMessage) {
+    public void sendMessage(@NonNull String meshId, @NonNull String message, boolean isTextMessage) {
 
 
         if (isTextMessage) {
@@ -181,7 +182,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      * @param friendsId : mesh id
      */
-    public void updateAllMessageStatus(String friendsId) {
+    public void updateAllMessageStatus(@NonNull String friendsId) {
 
 
         compositeDisposable.add(updateMessageSatus(friendsId)
@@ -197,7 +198,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId
      * @return
      */
-    public LiveData<UserEntity> getUserById(String meshId){
+    public LiveData<UserEntity> getUserById(@NonNull String meshId){
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }
 

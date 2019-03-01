@@ -34,6 +34,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /*
  *  ****************************************************************************
@@ -143,9 +144,9 @@ public class ChatViewModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    Log.v("MIMO_SAHA:", "Id: " + aLong);
+                    Timber.v("Id: " + aLong);
                 }, throwable -> {
-                    Log.v("MIMO_SAHA:", "Id: " + throwable.getMessage());
+                    Timber.v("Id: " + throwable.getMessage());
                 }));
 
     }

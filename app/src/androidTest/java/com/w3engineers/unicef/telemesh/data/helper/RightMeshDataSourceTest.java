@@ -4,7 +4,6 @@ import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.github.javafaker.Faker;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
@@ -59,6 +58,7 @@ public class RightMeshDataSourceTest {
 
     RightMeshDataSource SUT;
     RandomEntityGenerator randomEntityGenerator;
+    private int transferKey = 2381;
 
     @Before
     public void setUp() throws Exception {
@@ -242,7 +242,7 @@ public class RightMeshDataSourceTest {
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
 
-        int transferKey = Faker.instance().random().nextInt(100);
+        int transferKey = this.transferKey++;
         TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator
                 .createChatEntityRmDataModel(userEntity.getMeshId(), (MessageEntity) chatEntity);
 

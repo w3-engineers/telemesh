@@ -1,23 +1,28 @@
 language: android
 sudo: required
 jdk: oraclejdk8
+
+env:
+  - TEST_SUITE=units
+  - TEST_SUITE=integration
+
 android:
   components:
-    - tools
-    - platform-tools
-    - tools
-    - build-tools-28.0.3
-    - android-28
-    - android-22
-    - extra-google-google_play_services
-    - extra-google-m2repository #Google Play Services
-    - extra-android-m2repository #Design Support Library
-    - extra-android-support
-    - addon-google_apis-google-25
-    - sys-img-armeabi-v7a-android-22
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-28.0.3
+  - android-28
+  - android-22
+  - extra-google-google_play_services
+  - extra-google-m2repository #Google Play Services
+  - extra-android-m2repository #Design Support Library
+  - extra-android-support
+  - addon-google_apis-google-25
+  - sys-img-armeabi-v7a-android-22
 
 licenses:
-    - 'android-sdk-license-.+'
+  - 'android-sdk-license-.+'
 
 before_install:
   - "chmod +x gradlew"
@@ -30,11 +35,13 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+  - "bundle exec rake test:$TEST_SUITE"
+  - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+
 #   - ./gradlew :app:lintDebug
 
 after_failure:
-  # Customize this line, 'android' is the specific app module name of this project. Shows log.
+# Customize this line, 'android' is the specific app module name of this project. Shows log.
   - export MY_MOD="app"
   - export MY_LOG_DIR="$(pwd)/${MY_MOD}/build/outputs/reports/androidTests/connected/"
   - pwd && cd "${MY_LOG_DIR:-.}" && pwd && ls -al

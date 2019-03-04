@@ -16,6 +16,8 @@
 
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
@@ -75,7 +77,7 @@ public class UserDataSource{
         return mUserDao.getSingleUserById(userId);
     }
 
-    public Flowable<UserEntity> getUserById(String userId) {
+    public Flowable<UserEntity> getUserById(@NonNull String userId) {
         return mUserDao.getUserById(userId);
     }
 
@@ -84,7 +86,7 @@ public class UserDataSource{
         return mUserDao.updateUserOffline();
     }
 
-    public int deleteUser(String userId) {
+    public int deleteUser(@NonNull String userId) {
         return mUserDao.deleteUser(userId);
     }
 }

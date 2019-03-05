@@ -96,7 +96,7 @@ public class SettingsViewModel extends AndroidViewModel {
      * @param context - for preparing a alert dialog need to send ui context
      *                so we getting this context from settings fragment
      */
-    public void startInAppShare(Context context) {
+    public void startInAppShare(@NonNull Context context) {
         alertDialog = Utils.getInstance().getProgressDialog(context);
 
         compositeDisposable.add(backupApkAndGetPath()

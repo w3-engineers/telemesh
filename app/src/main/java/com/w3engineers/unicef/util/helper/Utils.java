@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,6 +51,7 @@ public class Utils {
     private String appFilePath = null;
     private String backupFolder = ".backup";
 
+    @NonNull
     public static Utils getInstance() {
         return utils;
     }
@@ -71,6 +74,7 @@ public class Utils {
      * @return the backup apk path
      */
 
+    @Nullable
     public String backupApkAndGetPath() {
 
         Context context = App.getContext();
@@ -131,7 +135,8 @@ public class Utils {
      * @return - Return alert dialog instance for manually stopping purpose
      */
 
-    public AlertDialog getProgressDialog(Context context) {
+    @NonNull
+    public AlertDialog getProgressDialog(@NonNull Context context) {
 
         int llPadding = 30;
         LinearLayout ll = new LinearLayout(context);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--https://crowdfire.engineering/rtl-support-on-android-heres-all-you-need-to-know-761ec131a53a
+    to mirror resources below API 19-->
+    <integer name="locale_mirror_flip">180</integer>
+
+</resources>

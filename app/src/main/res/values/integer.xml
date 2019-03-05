@@ -6,4 +6,8 @@
     <integer name="max_line_1">1</integer>
     <integer name="three_dot_ems">3</integer>
 
+    <!--https://crowdfire.engineering/rtl-support-on-android-heres-all-you-need-to-know-761ec131a53a
+    to mirror resources below API 19-->
+    <integer name="locale_mirror_flip">0</integer>
+
 </resources>

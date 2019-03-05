@@ -44,10 +44,10 @@ public class TeleMeshTest {
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
-    UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
+
+    UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     /*@Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -455,30 +455,6 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
-        ViewInteraction constraintLayoutShareApp = onView(
-                allOf(withId(R.id.layout_share_app),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                3)));
-        constraintLayoutShareApp.perform(scrollTo(), click());
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        uiDevice.pressBack();
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction actionOnWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
                         childAtPosition(
@@ -699,6 +675,30 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
+        ViewInteraction constraintLayoutShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                3)));
+        constraintLayoutShareApp.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        uiDevice.pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction constraintLayoutPrivacyPolicy = onView(
                 allOf(withId(R.id.layout_privacy_policy),
                         childAtPosition(
@@ -769,7 +769,6 @@ public class TeleMeshTest {
                                 0),
                         isDisplayed()));
         baseEditText5.perform(replaceText("hi"), closeSoftKeyboard());
-
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {

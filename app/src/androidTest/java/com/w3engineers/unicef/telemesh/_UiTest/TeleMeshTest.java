@@ -451,7 +451,7 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
-        ViewInteraction actionShareApp = onView(
+        ViewInteraction constraintLayoutShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
                         childAtPosition(
                                 allOf(withId(R.id.layout_settings),
@@ -459,10 +459,10 @@ public class TeleMeshTest {
                                                 withId(R.id.layout_scroll),
                                                 0)),
                                 3)));
-        actionShareApp.perform(scrollTo(), click());
+        constraintLayoutShareApp.perform(scrollTo(), click());
 
         try {
-            Thread.sleep(7000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

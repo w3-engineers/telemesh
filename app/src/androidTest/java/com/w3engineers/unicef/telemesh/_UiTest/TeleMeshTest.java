@@ -451,6 +451,30 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
+        ViewInteraction actionShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                3)));
+        actionShareApp.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction actionOnWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
                         childAtPosition(
@@ -664,22 +688,6 @@ public class TeleMeshTest {
         }
 
         pressBack();
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction constraintLayoutShareApp = onView(
-                allOf(withId(R.id.layout_share_app),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                3)));
-        constraintLayoutShareApp.perform(scrollTo(), click());
 
         try {
             Thread.sleep(700);

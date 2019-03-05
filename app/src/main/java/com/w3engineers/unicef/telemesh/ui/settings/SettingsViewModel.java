@@ -88,22 +88,33 @@ public class SettingsViewModel extends AndroidViewModel {
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
     }
 
+    /**
+     * Call this method during in-app-share and
+     * this api mainly work on in background thread for preparing a backup apk
+     * then share in bluetooth in foreground
+     *
+     * @param context - for preparing a alert dialog need to send ui context
+     *                so we getting this context from settings fragment
+     */
     public void startInAppShare(Context context) {
         alertDialog = Utils.getInstance().getProgressDialog(context);
 
         compositeDisposable.add(backupApkAndGetPath()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::inAppShareProcess, Throwable::printStackTrace));
+                .subscribe(s -> inAppShareProcess(s, context), Throwable::printStackTrace));
     }
 
     private Single<String> backupApkAndGetPath() {
         return Single.fromCallable(() -> Utils.getInstance().backupApkAndGetPath());
     }
 
-    private void inAppShareProcess(String filePath) {
-
-        Context context = App.getContext();
+    /**
+     * In-App share via intent sharing
+     * After sharing delete the sharing apk from backup folder
+     * @param filePath - file path getting from storage backup folder
+     */
+    private void inAppShareProcess(String filePath, Context context) {
 
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();

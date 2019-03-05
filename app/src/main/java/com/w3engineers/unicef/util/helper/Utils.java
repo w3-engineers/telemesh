@@ -47,10 +47,16 @@ public class Utils {
 
     private static Utils utils = new Utils();
     private String appFilePath = null;
+    private String backupFolder = ".backup";
 
     public static Utils getInstance() {
         return utils;
     }
+
+    /**
+     * After sharing apk our system will remove the backup apk
+     * from backup apk foldre
+     */
 
     public void deleteBackUpApk() {
         if (!TextUtils.isEmpty(appFilePath)) {
@@ -58,6 +64,12 @@ public class Utils {
             file.delete();
         }
     }
+
+    /**
+     * During In-App share need to create a backup apk
+     * So this api is responsible for backup apk in local storage
+     * @return the backup apk path
+     */
 
     public String backupApkAndGetPath() {
 
@@ -82,13 +94,17 @@ public class Utils {
                 if (file_name.equalsIgnoreCase(myApplicationName) &&
                         appFile.toString().contains(myApplicationPackageName)) {
 
-                    File file = new File(Environment.getExternalStorageDirectory().toString());
+                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                            context.getString(R.string.app_name));
                     file.mkdirs();
-                    file = new File(file.getPath() + "/" + file_name + ".apk");
-                    file.createNewFile();
+                    // Preparing a backup apk folder and it is hidden
+                    File backUpFolder = new File(file.getAbsolutePath() + "/" + backupFolder);
+                    backUpFolder.mkdirs();
+                    backUpFolder = new File(backUpFolder.getPath() + "/" + file_name + ".apk");
+                    backUpFolder.createNewFile();
 
                     InputStream in = new FileInputStream(appFile);
-                    OutputStream out = new FileOutputStream(file);
+                    OutputStream out = new FileOutputStream(backUpFolder);
 
                     byte[] buf = new byte[1024];
                     int len;
@@ -98,7 +114,7 @@ public class Utils {
                     in.close();
                     out.close();
 
-                    return file.getAbsolutePath();
+                    return backUpFolder.getAbsolutePath();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -107,6 +123,13 @@ public class Utils {
         }
         return null;
     }
+
+    /**
+     * This api will prepare a circular progress alert dialog
+     * And it is not cancelable
+     * @param context - Getting UI context from activity or fragment
+     * @return - Return alert dialog instance for manually stopping purpose
+     */
 
     public AlertDialog getProgressDialog(Context context) {
 

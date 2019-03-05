@@ -27,7 +27,7 @@ import com.w3engineers.unicef.util.helper.Utils;
  **/
 public class BluetoothInAppShareBroadcast extends BroadcastReceiver {
 
-    String connectedBleUsersAddress = null;
+    static int connectedDevice = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,13 +36,12 @@ public class BluetoothInAppShareBroadcast extends BroadcastReceiver {
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
         if (TextUtils.equals(action, BluetoothDevice.ACTION_ACL_CONNECTED)) {
-            connectedBleUsersAddress = device.getAddress();
+            connectedDevice = connectedDevice + 1;
         } else if (TextUtils.equals(action, BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
-
-            if (TextUtils.equals(connectedBleUsersAddress, device.getAddress())) {
+            connectedDevice = connectedDevice - 1;
+            if (connectedDevice <= 0) {
                 Utils.getInstance().deleteBackUpApk();
             }
-
         }
     }
 }

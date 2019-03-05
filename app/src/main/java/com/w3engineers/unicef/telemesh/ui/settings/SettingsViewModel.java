@@ -97,7 +97,7 @@ public class SettingsViewModel extends AndroidViewModel {
      *                so we getting this context from settings fragment
      */
     public void startInAppShare(@NonNull Context context) {
-        alertDialog = Utils.getInstance().getProgressDialog(context);
+//        alertDialog = Utils.getInstance().getProgressDialog(context);
 
         compositeDisposable.add(backupApkAndGetPath()
                 .subscribeOn(Schedulers.newThread())
@@ -116,9 +116,9 @@ public class SettingsViewModel extends AndroidViewModel {
      */
     private void inAppShareProcess(String filePath, Context context) {
 
-        if (alertDialog != null && alertDialog.isShowing()) {
-            alertDialog.dismiss();
-        }
+//        if (alertDialog != null && alertDialog.isShowing()) {
+//            alertDialog.dismiss();
+//        }
 
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk");
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);

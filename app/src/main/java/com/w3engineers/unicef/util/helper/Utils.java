@@ -135,7 +135,7 @@ public class Utils {
      * @return - Return alert dialog instance for manually stopping purpose
      */
 
-    @NonNull
+    /*@NonNull
     public AlertDialog getProgressDialog(@NonNull Context context) {
 
         int llPadding = 30;
@@ -182,6 +182,6 @@ public class Utils {
         }
 
         return alertDialog;
-    }
+    }*/
 
 }

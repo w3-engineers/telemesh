@@ -7,6 +7,9 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -33,6 +36,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /*
  *  ****************************************************************************
@@ -61,7 +65,7 @@ public class ChatViewModel extends AndroidViewModel {
 
 
     private CompositeDisposable compositeDisposable;
-    private  MutableLiveData mutableMovieList;
+    private  MutableLiveData<PagedList<ChatEntity>> mutableMovieList = new MutableLiveData<>();
 
 
 
@@ -73,7 +77,7 @@ public class ChatViewModel extends AndroidViewModel {
      */
     public ChatViewModel(Application application) {
         super(application);
-        this.messageSourceData =  new MessageSourceData();
+        this.messageSourceData =  MessageSourceData.getInstance();
 
         compositeDisposable = new CompositeDisposable();
         userDataSource  = UserDataSource.getInstance();
@@ -91,7 +95,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId : friends user id
      * @return : list of message
      */
-    LiveData<List<ChatEntity>> getAllMessage(String meshId) {
+    public LiveData<List<ChatEntity>> getAllMessage(String meshId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllMessages(meshId));
     }
 
@@ -102,7 +106,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      * @param userId : UserEntity obj
      */
-    void setCurrentUser(String userId) {
+    public void setCurrentUser(@Nullable String userId) {
         dataSource.setCurrentUser(userId);
     }
 
@@ -113,7 +117,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param message       : Message need to send
      * @param isTextMessage : is text or file
      */
-    void sendMessage(String meshId, String message, boolean isTextMessage) {
+    public void sendMessage(@NonNull String meshId, @NonNull String message, boolean isTextMessage) {
 
 
         if (isTextMessage) {
@@ -137,41 +141,6 @@ public class ChatViewModel extends AndroidViewModel {
 
     @SuppressLint("CheckResult")
     private void messageInsertionProcess(ChatEntity chatEntity) {
-
-        /*String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
-
-        Single<Boolean> dateEntitySingle = Single.fromCallable(() ->
-                messageSourceData.hasChatEntityExist(chatEntity.getFriendsId(), dateFormat));
-
-        dateEntitySingle.subscribeOn(Schedulers.io())
-                .subscribe(new SingleObserver<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onSuccess(Boolean dateEntity) {
-                if (!dateEntity) {
-
-                    ChatEntity separatorMessage = new MessageEntity().setMessage(dateFormat)
-                            .setTime(chatEntity.getTime())
-                            .setMessageType(Constants.MessageType.DATE_MESSAGE)
-                            .setFriendsId(chatEntity.getFriendsId())
-                            .setMessageId(dateFormat);
-
-                    messageSourceData.insertOrUpdateData(separatorMessage);
-                }
-
-                getCompositeDisposable().add(insertMessageData((MessageEntity) chatEntity)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });*/
 
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
@@ -212,7 +181,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      * @param friendsId : mesh id
      */
-    void updateAllMessageStatus(String friendsId) {
+    public void updateAllMessageStatus(@NonNull String friendsId) {
 
 
         compositeDisposable.add(updateMessageSatus(friendsId)
@@ -228,10 +197,15 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId
      * @return
      */
-    LiveData<UserEntity> getUserById(String meshId){
+    @NonNull
+    public LiveData<UserEntity> getUserById(@NonNull String meshId){
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
     }
 
+    @NonNull
+    public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
+        return mutableMovieList;
+    }
 
     /**
      * chunk by chunk data load will be applicable.
@@ -242,15 +216,11 @@ public class ChatViewModel extends AndroidViewModel {
      * @param chatEntityList
      * @return
      */
-    public LiveData<PagedList<ChatEntity>> prepareDateSpecificChat(List<ChatEntity> chatEntityList) {
-
-        mutableMovieList = new MutableLiveData<>();
+    public void prepareDateSpecificChat(@NonNull List<ChatEntity> chatEntityList) {
 
         List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 
         ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
-
-
 
         PagedList.Config myConfig = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
@@ -266,12 +236,7 @@ public class ChatViewModel extends AndroidViewModel {
                 .build();
 
         // here mutable live data is used to pass the updated value
-        mutableMovieList.setValue(pagedStrings);
-
-        return mutableMovieList;
-
-
-
+        mutableMovieList.postValue(pagedStrings);
     }
 
 

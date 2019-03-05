@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.protobuf.ByteString;
@@ -15,6 +16,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
@@ -53,7 +55,7 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
-    private HashMap<Integer, RMDataModel> rmDataMap;
+    public HashMap<Integer, RMDataModel> rmDataMap;
 
     private RmDataHelper() {
         rmDataMap = new HashMap<>();
@@ -65,19 +67,18 @@ public class RmDataHelper {
     }
 
     public RightMeshDataSource initRM(DataSource dataSource) {
-        Context context = TeleMeshApplication.getContext();
 
         this.dataSource = dataSource;
-
-       /* RMUserModel rmUserModel = RMUserModel.newBuilder()
-                .setUserFirstName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.FIRST_NAME))
-                .setUserLastName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.LAST_NAME))
-                .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
-                .build();*/
-
         rightMeshDataSource = RightMeshDataSource.getRmDataSource();
-
         return rightMeshDataSource;
+    }
+
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param dataSource -> provide mock dataSource from unit test class
+     */
+    public void initSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     /**
@@ -87,16 +88,21 @@ public class RmDataHelper {
      */
 
     public long userAdd(RMUserModel rmUserModel) {
-        String userId = rmUserModel.getUserId();
-        if (rmUserMap.containsKey(userId))
-            return -1L;
+        try {
+            String userId = rmUserModel.getUserId();
+            if (rmUserMap.containsKey(userId))
+                return -1L;
 
-        rmUserMap.put(userId, rmUserModel);
+            rmUserMap.put(userId, rmUserModel);
 
-        UserEntity userEntity = new UserEntity()
-                .toUserEntity(rmUserModel)
-                .setOnline(true);
-        return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            UserEntity userEntity = new UserEntity()
+                    .toUserEntity(rmUserModel)
+                    .setOnline(true);
+            return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1L;
     }
 
     /**
@@ -107,19 +113,24 @@ public class RmDataHelper {
      */
 
     public long userLeave(MeshPeer meshPeer) {
-        String userId = meshPeer.getPeerId();
+        try {
 
-        if (rmUserMap.containsKey(userId)) {
+            String userId = meshPeer.getPeerId();
 
-            RMUserModel rmUserModel = rmUserMap.get(userId);
-            rmUserMap.remove(userId);
+            if (rmUserMap.containsKey(userId)) {
 
-            UserEntity userEntity = new UserEntity()
-                    .toUserEntity(rmUserModel)
-                    .setLastOnlineTime(System.currentTimeMillis())
-                    .setOnline(false);
+                RMUserModel rmUserModel = rmUserMap.get(userId);
+                rmUserMap.remove(userId);
 
-            return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+                UserEntity userEntity = new UserEntity()
+                        .toUserEntity(rmUserModel)
+                        .setLastOnlineTime(System.currentTimeMillis())
+                        .setOnline(false);
+
+                return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return -1L;
     }
@@ -172,7 +183,7 @@ public class RmDataHelper {
      * @param rmDataModel -> contains all of info about receive data
      */
 
-    public long dataReceive(RMDataModel rmDataModel, boolean isNewMessage) {
+    public long dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
 
         int dataType = rmDataModel.getDataType();
         byte[] rawData = rmDataModel.getRawData().toByteArray();
@@ -218,7 +229,7 @@ public class RmDataHelper {
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
                 }
 
-                return dataSource.insertOrUpdateData(chatEntity);
+                return MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
 
             } else {
 
@@ -233,14 +244,14 @@ public class RmDataHelper {
 
 
 
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return -1L;
     }
 
-    private void prepareDateSeparator(ChatEntity chatEntity) {
+    /*private void prepareDateSeparator(ChatEntity chatEntity) {
 
         String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
 
@@ -256,7 +267,7 @@ public class RmDataHelper {
 
             dataSource.insertOrUpdateData(separatorMessage);
         }
-    }
+    }*/
 
 
     /**
@@ -265,7 +276,7 @@ public class RmDataHelper {
      *
      * @param rmDataModel -> Contains received message id
      */
-    public long ackReceive(RMDataModel rmDataModel) {
+    public long ackReceive(@NonNull RMDataModel rmDataModel) {
 
         int dataSendId = rmDataModel.getRecDataId();
 

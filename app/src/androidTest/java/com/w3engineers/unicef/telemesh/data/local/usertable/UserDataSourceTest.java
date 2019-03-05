@@ -1,12 +1,10 @@
-package com.w3engineers.unicef.telemesh.local.usertable;
+package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -60,7 +58,7 @@ public class UserDataSourceTest {
     }
 
     @Test
-    public void basicUserDataTest() {
+    public void basicUserDataTest() throws Exception {
 
         String meshId1 = getRandomString();
         String customId1 = getRandomString();

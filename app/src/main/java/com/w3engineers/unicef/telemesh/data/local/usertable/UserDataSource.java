@@ -16,6 +16,8 @@
 
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
@@ -49,11 +51,22 @@ public class UserDataSource{
         return userDataSource;
     }
 
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param userDao -> provide dao from unit test class
+     */
+    public static UserDataSource getInstance(UserDao userDao) {
+        if (userDataSource == null) {
+            userDataSource = new UserDataSource(userDao);
+        }
+        return userDataSource;
+    }
+
     public Flowable<UserEntity> getLastData() {
         return mUserDao.getLastInsertedUser();
     }
 
-    public long insertOrUpdateData(UserEntity userEntity) {
+    public long insertOrUpdateData(UserEntity userEntity) throws Exception {
         return mUserDao.writeUser(userEntity);
     }
 
@@ -64,7 +77,7 @@ public class UserDataSource{
         return mUserDao.getSingleUserById(userId);
     }
 
-    public Flowable<UserEntity> getUserById(String userId) {
+    public Flowable<UserEntity> getUserById(@NonNull String userId) {
         return mUserDao.getUserById(userId);
     }
 
@@ -73,7 +86,7 @@ public class UserDataSource{
         return mUserDao.updateUserOffline();
     }
 
-    public int deleteUser(String userId) {
+    public int deleteUser(@NonNull String userId) {
         return mUserDao.deleteUser(userId);
     }
 }

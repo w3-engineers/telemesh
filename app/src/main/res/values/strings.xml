@@ -56,7 +56,7 @@
     <string name="choose_language">Choose a Language</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="processing">Processing</string>
+    <!--<string name="processing">Processing</string>-->
 
     <string-array name="language_list">
         <item>English</item>

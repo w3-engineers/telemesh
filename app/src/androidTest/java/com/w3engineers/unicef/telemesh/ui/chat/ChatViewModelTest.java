@@ -99,6 +99,24 @@ public class ChatViewModelTest {
                 e.printStackTrace();
             }
 
+            SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
+
+            TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             assertThat(((MessageEntity)listTestObserver.observedvalues.get(0).get(0)).getMessage(), is(message));
 
             ChatEntity receiverChat = randomEntityGenerator.createReceiverChatEntity(userEntity.getMeshId());
@@ -139,7 +157,7 @@ public class ChatViewModelTest {
         }
     }
 
-    @Test
+    /*@Test
     public void testPrepareDateSpecificChat_checkListSize_setListOfMessage() throws Exception {
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
@@ -162,12 +180,7 @@ public class ChatViewModelTest {
             e.printStackTrace();
         }
 
-//        LiveData<PagedList<ChatEntity>> pagedListLiveData = SUT.getChatEntityWithDate();
-
         SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
-
-//        PagedList<ChatEntity> pagedListTestObserver = LiveDataTestUtil
-//                .getValue(pagedListLiveData);
 
         TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
 
@@ -178,9 +191,7 @@ public class ChatViewModelTest {
         }
 
         assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
-
-//        assertNotNull(pagedListTestObserver.get(0));
-    }
+    }*/
 
     @After
     public void tearDown() throws Exception {

@@ -686,7 +686,7 @@ public class TeleMeshTest {
         constraintLayoutShareApp.perform(scrollTo(), click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(12000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -67,7 +67,7 @@ public class Source implements DataSource {
         return MessageSourceData.getInstance().getLastData();
     }
 
-    @Override
+    /*@Override
     public long insertOrUpdateData(DbBaseEntity baseEntity) {
 
         try {
@@ -92,7 +92,7 @@ public class Source implements DataSource {
     @Override
     public boolean getMessage(String friendsId, String messageId) {
         return messageDao.hasChatEntityExist(friendsId, messageId);
-    }
+    }*/
 
     @Override
     public String getCurrentUser() {

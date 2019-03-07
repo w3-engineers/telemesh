@@ -19,6 +19,8 @@ import java.util.UUID;
 import io.reactivex.subscribers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * ============================================================================
@@ -81,6 +83,27 @@ public class SurveyDataSourceTest {
 
         SurveyEntity surveyEntity = SUT.getSurveyById(surveyId_1);
         assertEquals(surveyEntity.getSenderId(), userId);
+
+        String surveyForm = surveyEntity.getSurveyForm();
+        String surveyStart = surveyEntity.getSurveyStartTime();
+        String surveyEnd = surveyEntity.getSurveyEndTime();
+        String surveyAnswer = surveyEntity.getSurveyAnswer();
+        String surveyVendor = surveyEntity.getVendorName();
+
+        String surveyTitle = surveyEntity.getSurveyTitle();
+        String surveyId = surveyEntity.getSurveyId();
+
+        boolean isSubmitted = surveyEntity.isSubmitted();
+
+        assertNotNull(surveyForm);
+        assertNotNull(surveyStart);
+        assertNotNull(surveyEnd);
+        assertNotNull(surveyAnswer);
+        assertNotNull(surveyVendor);
+        assertNotNull(surveyTitle);
+        assertNotNull(surveyId);
+
+        assertFalse(isSubmitted);
 
         TestSubscriber<List<SurveyEntity>> getAllSurveySubscriber = SUT.getAllSurvey().test();
 

@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
@@ -12,6 +14,9 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
@@ -19,6 +24,7 @@ import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,14 +51,29 @@ public class TeleMeshTest {
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
+    private AppDatabase appDatabase;
+    private UserDataSource userDataSource;
+    private MessageSourceData messageSourceData;
+
     /*@Rule
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.ACCESS_COARSE_LOCATION",
                     "android.permission.WRITE_EXTERNAL_STORAGE");*/
 
+    @Before
+    public void setUp() throws Exception {
+
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+                AppDatabase.class).allowMainThreadQueries().build();
+
+        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+
+        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+    }
+
     @Test
-    public void teleMeshTest() {
+    public void teleMeshTest() throws Exception {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -727,19 +748,11 @@ public class TeleMeshTest {
                 .setUserLastName("Alvez");
         userEntity.setId(0);
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.putExtra(UserEntity.class.getName(), userEntity);
-        mChatTestRule.launchActivity(intent);
+        mChatTestRule.launchActivity(intent);*/
 
-        /*ViewInteraction constraintLayout2 = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.contact_recycler_view),
-                                childAtPosition(
-                                        withId(R.id.mesh_contact_layout),
-                                        0)),
-                        0),
-                        isDisplayed()));
-        constraintLayout2.perform(click());*/
+        userDataSource.insertOrUpdateData(userEntity);
 
         try {
             Thread.sleep(700);
@@ -747,33 +760,42 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
-        /*ViewInteraction baseEditText5 = onView(
-                allOf(withId(R.id.edit_text_message),
-                        childAtPosition(
-                                allOf(withId(R.id.input_field),
-                                        childAtPosition(
-                                                withId(R.id.message_layout),
-                                                5)),
-                                0),
+        ViewInteraction contactLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.contact_recycler_view),
+                                childAtPosition(withId(R.id.mesh_contact_layout),
+                                        0)),
+                        0),
                         isDisplayed()));
-        baseEditText5.perform(replaceText("hi"), closeSoftKeyboard());
+        contactLayout.perform(click());
 
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        /*ViewInteraction appCompatImageView2 = onView(
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                3)),
+                                0),
+                        isDisplayed()));
+        appCompatEditText.perform(replaceText("Hi"), closeSoftKeyboard());
+
+        ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(
-                                allOf(withId(R.id.input_field),
+                                allOf(withId(R.id.chat_message_bar),
                                         childAtPosition(
-                                                withId(R.id.message_layout),
-                                                5)),
+                                                withId(R.id.chat_layout),
+                                                3)),
                                 1),
                         isDisplayed()));
-        appCompatImageView2.perform(click());*/
+        appCompatImageButton.perform(click());
 
         try {
             Thread.sleep(700);

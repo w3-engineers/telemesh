@@ -46,7 +46,7 @@ public class NotifyUtil {
         Context context = TeleMeshApplication.getContext();
 
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.setAction(Long.toString(System.currentTimeMillis()));
+        intent.setAction(Long.toString(TimeUtil.toCurrentTime()));
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
 
@@ -91,7 +91,7 @@ public class NotifyUtil {
 
         }
 
-        builder.setWhen(System.currentTimeMillis())
+        builder.setWhen(TimeUtil.toCurrentTime())
                 .setContentText(message)
                 .setContentTitle(userEntity.getFullName())
                 .setAutoCancel(true)

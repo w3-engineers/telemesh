@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="io.left.meshim.activities.ChatActivity">
     <data>
 
         <import type="com.w3engineers.unicef.telemesh.R" />
@@ -14,11 +16,10 @@
             type="com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel" />
     </data>
     <android.support.constraint.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/chat_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/overlay_light_60"
-        tools:context="io.left.meshim.activities.ChatActivity" >
+        android:background="@color/overlay_light_60" >
 
         <com.w3engineers.ext.strom.application.ui.base.BaseToolBar
             android:id="@+id/toolbar_chat"
@@ -34,6 +35,7 @@
             app:titleTextColor="@color/title_color">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/chat_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -192,11 +194,13 @@
                 android:src="@mipmap/ic_send_cyan"
                 android:scaleType="fitCenter"
                 android:autoMirrored="true"
+                android:rotationY="@integer/locale_mirror_flip"
                 android:onClick="sendMessage"
                 android:contentDescription="@string/chat_send_button_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintVertical_bias="0.5"
+                tools:targetApi="kitkat" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

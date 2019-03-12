@@ -30,6 +30,8 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
@@ -140,7 +142,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
 
-      //  mViewBinging.emptyViewId.setOnClickListener(this);
+        //  mViewBinging.emptyViewId.setOnClickListener(this);
         mViewBinging.imageViewSend.setOnClickListener(this);
 
         mChatViewModel = getViewModel();
@@ -175,16 +177,13 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
                 mViewBinging.chatRv.scrollToPosition(mChatAdapter.getItemCount() - 1);
             });*/
 
+            mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
+                    mChatPagedAdapter.submitList(chatEntities));
 
             mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
                 @Override
                 public void onChanged(@Nullable List<ChatEntity> chatEntities) {
-                    mChatViewModel.prepareDateSpecificChat(chatEntities).observe(ChatActivity.this, new Observer<PagedList<ChatEntity>>() {
-                        @Override
-                        public void onChanged(@Nullable PagedList<ChatEntity> chatEntities) {
-                            mChatPagedAdapter.submitList(chatEntities);
-                        }
-                    });
+                    mChatViewModel.prepareDateSpecificChat(chatEntities);
                 }
             });
 
@@ -271,7 +270,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            Log.e("Observer", "onItemRangeInserted");
+            Timber.e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
             mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
         }

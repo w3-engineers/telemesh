@@ -2,6 +2,7 @@
 [travis]:https://travis-ci.com/w3-engineers/
 [coverall]:https://coveralls.io/github/w3-engineers/telemesh
 [Apache License 2.0]:https://choosealicense.com/licenses/apache-2.0/
+[Project Architecture]:https://docs.google.com/document/d/1nNWNfHxftL_qd6flrjceo7LTNNgfszdgMXk9TCxHHko/edit?usp=sharing
 
 # Telemesh
 
@@ -131,6 +132,8 @@ If everything is ok then sync and build should work as it should be. If not plea
 
 <kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
 
+### Project Architectur
+For the project architecture and sequence diagram please check this [link][Project Architecture].
 
 ## License
 **[Apache License 2.0]**

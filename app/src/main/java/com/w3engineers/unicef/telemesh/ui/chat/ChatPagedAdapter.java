@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.arch.paging.PagedListAdapter;
@@ -224,3 +225,4 @@ public class ChatPagedAdapter extends PagedListAdapter<ChatEntity, ChatPagedAdap
 
 
 }
+*/

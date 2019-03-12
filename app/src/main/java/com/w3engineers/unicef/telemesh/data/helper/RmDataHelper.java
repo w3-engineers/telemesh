@@ -2,27 +2,30 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
+import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.HashMap;
+
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * * ============================================================================
@@ -52,7 +55,7 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
-    private HashMap<Integer, RMDataModel> rmDataMap;
+    public HashMap<Integer, RMDataModel> rmDataMap;
 
     private RmDataHelper() {
         rmDataMap = new HashMap<>();
@@ -64,19 +67,19 @@ public class RmDataHelper {
     }
 
     public RightMeshDataSource initRM(DataSource dataSource) {
-        Context context = TeleMeshApplication.getContext();
 
         this.dataSource = dataSource;
-
-       /* RMUserModel rmUserModel = RMUserModel.newBuilder()
-                .setUserFirstName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.FIRST_NAME))
-                .setUserLastName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.LAST_NAME))
-                .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
-                .build();*/
-
         rightMeshDataSource = RightMeshDataSource.getRmDataSource();
-
         return rightMeshDataSource;
+    }
+
+    /**
+     * This constructor is restricted and only used in unit test class
+     *
+     * @param dataSource -> provide mock dataSource from unit test class
+     */
+    public void initSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     /**
@@ -85,17 +88,18 @@ public class RmDataHelper {
      * @param rmUserModel -> contains all of info about users
      */
 
-    public long userAdd(RMUserModel rmUserModel) {
+    public void userAdd(RMUserModel rmUserModel) {
+
         String userId = rmUserModel.getUserId();
         if (rmUserMap.containsKey(userId))
-            return -1L;
+            return;
 
         rmUserMap.put(userId, rmUserModel);
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(rmUserModel)
                 .setOnline(true);
-        return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        UserDataSource.getInstance().insertOrUpdateData(userEntity);
     }
 
     /**
@@ -105,7 +109,8 @@ public class RmDataHelper {
      * @param meshPeer -> contains peer id
      */
 
-    public long userLeave(MeshPeer meshPeer) {
+    public void userLeave(MeshPeer meshPeer) {
+
         String userId = meshPeer.getPeerId();
 
         if (rmUserMap.containsKey(userId)) {
@@ -115,12 +120,11 @@ public class RmDataHelper {
 
             UserEntity userEntity = new UserEntity()
                     .toUserEntity(rmUserModel)
-                    .setLastOnlineTime(System.currentTimeMillis())
+                    .setLastOnlineTime(TimeUtil.toCurrentTime())
                     .setOnline(false);
 
-            return UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
         }
-        return -1L;
     }
 
     @SuppressLint("CheckResult")
@@ -171,7 +175,7 @@ public class RmDataHelper {
      * @param rmDataModel -> contains all of info about receive data
      */
 
-    public long dataReceive(RMDataModel rmDataModel, boolean isNewMessage) {
+    public void dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
 
         int dataType = rmDataModel.getDataType();
         byte[] rawData = rmDataModel.getRawData().toByteArray();
@@ -182,7 +186,8 @@ public class RmDataHelper {
                 break;
 
             case Constants.DataType.MESSAGE:
-                return setChatMessage(rawData, userId, isNewMessage);
+                setChatMessage(rawData, userId, isNewMessage);
+                break;
 
             case Constants.DataType.SURVEY:
                 // TODO include survey data operation module. i.e. DB operation and process and return a single insertion observer
@@ -192,10 +197,9 @@ public class RmDataHelper {
                 // TODO include feed data operation module. i.e. DB operation and return a single insertion observer
                 break;
         }
-        return -1L;
     }
 
-    private long setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {
+    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {
         try {
             TeleMeshChat teleMeshChat = TeleMeshChat.newBuilder()
                     .mergeFrom(rawChatData).build();
@@ -207,17 +211,16 @@ public class RmDataHelper {
 
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
-                Log.e("Status update", "Read :: " + chatEntity.getMessageId());
+                Timber.e("Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
-                if (TextUtils.isEmpty(dataSource.getCurrentUser())
-                        || !userId.equals(dataSource.getCurrentUser())) {
-                    Log.e("Status update", "Un Read :: " + chatEntity.getMessageId());
+                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())) {
+                    Timber.e("Un Read :: %s", chatEntity.getMessageId());
                     NotifyUtil.showNotification(chatEntity);
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
                 }
 
-                return dataSource.insertOrUpdateData(chatEntity);
+                MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
 
             } else {
 
@@ -226,20 +229,17 @@ public class RmDataHelper {
                  * If we do so then paging library Diff Callback can't properly work
                  */
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_DELIVERED).setIncoming(false);
-                Log.e("Status update", "Delivered :: " + chatEntity.getMessageId());
+                Timber.e("Delivered :: %s", chatEntity.getMessageId());
                 dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
             }
 
 
-
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return -1L;
     }
 
-    private void prepareDateSeparator(ChatEntity chatEntity) {
+    /*private void prepareDateSeparator(ChatEntity chatEntity) {
 
         String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
 
@@ -255,7 +255,7 @@ public class RmDataHelper {
 
             dataSource.insertOrUpdateData(separatorMessage);
         }
-    }
+    }*/
 
 
     /**
@@ -264,7 +264,7 @@ public class RmDataHelper {
      *
      * @param rmDataModel -> Contains received message id
      */
-    public long ackReceive(RMDataModel rmDataModel) {
+    public void ackReceive(@NonNull RMDataModel rmDataModel) {
 
         int dataSendId = rmDataModel.getRecDataId();
 
@@ -272,11 +272,10 @@ public class RmDataHelper {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
 
-            long ackDataUpdate = dataReceive(prevRMDataModel, false);
-
-            rmDataMap.remove(dataSendId);
-            return ackDataUpdate;
+            if (prevRMDataModel != null) {
+                dataReceive(prevRMDataModel, false);
+                rmDataMap.remove(dataSendId);
+            }
         }
-        return -1L;
     }
 }

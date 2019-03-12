@@ -34,11 +34,11 @@ public interface DataSource {
      */
     Flowable<ChatEntity> getLastChatData();
 
-    long insertOrUpdateData(DbBaseEntity baseEntity);
+//    long insertOrUpdateData(DbBaseEntity baseEntity);
 
-    void deleteAllData();
+//    void deleteAllData();
 
-    boolean getMessage(String friendsId, String messageId);
+//    boolean getMessage(String friendsId, String messageId);
 
     String getCurrentUser();
 

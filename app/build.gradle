@@ -4,6 +4,7 @@ plugins {
     id 'com.github.kt3k.coveralls'
     id 'com.google.protobuf'
 }
+//MMH apply from: 'lint-checks.gradle'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -31,12 +32,21 @@ android {
         }
     }
     lintOptions {
-        abortOnError false
+
+        abortOnError true
+//        absolutePaths false causing error
+        warningsAsErrors true
+        checkAllWarnings true
+//        check getProject().ext.lintchecks
+        lintConfig file("lint.xml")
+        baseline file("lint-baseline.xml")
     }
     dataBinding {
         enabled = true
     }
 }
+
+//MMH apply from: 'lint-checks.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -110,6 +120,10 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     // shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
+    androidTestImplementation ('com.github.javafaker:javafaker:0.17.2') {
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    }
+    /*androidTestImplementation group: 'com.github.javafaker', name: 'javafaker', version: '0.16'*/
 
 //    api project(':viper')
 }

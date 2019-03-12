@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
@@ -47,6 +49,15 @@ public class Source implements DataSource {
         userDao = AppDatabase.getInstance().userDao();
     }
 
+    /**
+     * This constructor is restricted and only used in unit test class
+     * @param appDatabase -> provide mock database from unit test class
+     */
+    public Source(AppDatabase appDatabase) {
+        messageDao = appDatabase.messageDao();
+        userDao = appDatabase.userDao();
+    }
+
     public static Source getDbSource() {
         return dbSource;
     }
@@ -56,7 +67,7 @@ public class Source implements DataSource {
         return MessageSourceData.getInstance().getLastData();
     }
 
-    @Override
+    /*@Override
     public long insertOrUpdateData(DbBaseEntity baseEntity) {
 
         try {
@@ -81,7 +92,7 @@ public class Source implements DataSource {
     @Override
     public boolean getMessage(String friendsId, String messageId) {
         return messageDao.hasChatEntityExist(friendsId, messageId);
-    }
+    }*/
 
     @Override
     public String getCurrentUser() {
@@ -94,7 +105,7 @@ public class Source implements DataSource {
     }
 
     @Override
-    public void updateMessageStatus(String messageId, int messageStatus) {
-           messageDao.updateMessageStatus(messageId, messageStatus);
+    public void updateMessageStatus(@NonNull String messageId, int messageStatus) {
+        messageDao.updateMessageStatus(messageId, messageStatus);
     }
 }

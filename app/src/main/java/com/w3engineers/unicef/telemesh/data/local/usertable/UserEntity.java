@@ -18,7 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 
 
 @Entity(tableName = TableNames.USERS, indices = {@Index(value = {ColumnNames.COLUMN_USER_MESH_ID}, unique = true)})
-public class UserEntity extends DbBaseEntity implements Matchable<String>, Cloneable {
+public class UserEntity extends DbBaseEntity {
 
     /************************************************************/
     /*************** User table property ************************/
@@ -161,7 +161,7 @@ public class UserEntity extends DbBaseEntity implements Matchable<String>, Clone
      * <h1>Build user proto data</h1>
      *
      * @return : byte[]
-     */
+     *//*
     public static byte[] toProtoUser() {
         Context context = TeleMeshApplication.getContext();
         SharedPref sharedPref = SharedPref.getSharedPref(context);
@@ -171,7 +171,7 @@ public class UserEntity extends DbBaseEntity implements Matchable<String>, Clone
                 .setImageIndex(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .build().toByteArray();
 
-    }
+    }*/
 
     public RMUserModel getProtoUser() {
         return RMUserModel.newBuilder()
@@ -191,10 +191,5 @@ public class UserEntity extends DbBaseEntity implements Matchable<String>, Clone
                 .setUserLastName(rmUserModel.getUserLastName())
                 .setAvatarIndex(rmUserModel.getImageIndex())
                 .setMeshId(rmUserModel.getUserId());
-    }
-
-    @Override
-    public String getMatcher() {
-        return meshId;
     }
 }

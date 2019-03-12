@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.databinding.ViewDataBinding;
@@ -27,3 +28,4 @@ public class ChatViewHolder extends BaseViewHolder<ChatEntity> {
 
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 
@@ -17,6 +18,7 @@ import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 
+*/
 /*
  *  ****************************************************************************
  *  * Created by : Md. Azizul Islam on 10/11/2018 at 10:43 AM.
@@ -27,21 +29,26 @@ import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
  *  *
  *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
  *  ****************************************************************************
- */
+ *//*
+
 public class ChatAdapter extends BaseAdapter<ChatEntity> {
-    /**
+    */
+/**
      * <h1>Instance variable scope</h1>
-     */
+     *//*
+
     private Context mContext;
     private final int TEXT_MESSAGE_IN = 0;
     private final int TEXT_MESSAGE_OUT = 1;
     private final int MESSAGE_SEPARATOR = 2;
 
-    /**
+    */
+/**
      * <p>Constructor</p>
      *
      * @param context
-     */
+     *//*
+
     public ChatAdapter(Context context) {
         this.mContext = context;
     }
@@ -129,3 +136,4 @@ public class ChatAdapter extends BaseAdapter<ChatEntity> {
     }
 
 }
+*/

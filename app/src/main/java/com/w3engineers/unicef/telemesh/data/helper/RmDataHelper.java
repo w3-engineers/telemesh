@@ -75,6 +75,7 @@ public class RmDataHelper {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param dataSource -> provide mock dataSource from unit test class
      */
     public void initSource(DataSource dataSource) {
@@ -87,22 +88,18 @@ public class RmDataHelper {
      * @param rmUserModel -> contains all of info about users
      */
 
-    public long userAdd(RMUserModel rmUserModel) {
-        try {
-            String userId = rmUserModel.getUserId();
-            if (rmUserMap.containsKey(userId))
-                return -1L;
+    public void userAdd(RMUserModel rmUserModel) {
 
-            rmUserMap.put(userId, rmUserModel);
+        String userId = rmUserModel.getUserId();
+        if (rmUserMap.containsKey(userId))
+            return;
 
-            UserEntity userEntity = new UserEntity()
-                    .toUserEntity(rmUserModel)
-                    .setOnline(true);
-            return UserDataSource.getInstance().insertOrUpdateData(userEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1L;
+        rmUserMap.put(userId, rmUserModel);
+
+        UserEntity userEntity = new UserEntity()
+                .toUserEntity(rmUserModel)
+                .setOnline(true);
+        UserDataSource.getInstance().insertOrUpdateData(userEntity);
     }
 
     /**
@@ -112,27 +109,22 @@ public class RmDataHelper {
      * @param meshPeer -> contains peer id
      */
 
-    public long userLeave(MeshPeer meshPeer) {
-        try {
+    public void userLeave(MeshPeer meshPeer) {
 
-            String userId = meshPeer.getPeerId();
+        String userId = meshPeer.getPeerId();
 
-            if (rmUserMap.containsKey(userId)) {
+        if (rmUserMap.containsKey(userId)) {
 
-                RMUserModel rmUserModel = rmUserMap.get(userId);
-                rmUserMap.remove(userId);
+            RMUserModel rmUserModel = rmUserMap.get(userId);
+            rmUserMap.remove(userId);
 
-                UserEntity userEntity = new UserEntity()
-                        .toUserEntity(rmUserModel)
-                        .setLastOnlineTime(System.currentTimeMillis())
-                        .setOnline(false);
+            UserEntity userEntity = new UserEntity()
+                    .toUserEntity(rmUserModel)
+                    .setLastOnlineTime(TimeUtil.toCurrentTime())
+                    .setOnline(false);
 
-                return UserDataSource.getInstance().insertOrUpdateData(userEntity);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
         }
-        return -1L;
     }
 
     @SuppressLint("CheckResult")
@@ -183,7 +175,7 @@ public class RmDataHelper {
      * @param rmDataModel -> contains all of info about receive data
      */
 
-    public long dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
+    public void dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
 
         int dataType = rmDataModel.getDataType();
         byte[] rawData = rmDataModel.getRawData().toByteArray();
@@ -194,7 +186,8 @@ public class RmDataHelper {
                 break;
 
             case Constants.DataType.MESSAGE:
-                return setChatMessage(rawData, userId, isNewMessage);
+                setChatMessage(rawData, userId, isNewMessage);
+                break;
 
             case Constants.DataType.SURVEY:
                 // TODO include survey data operation module. i.e. DB operation and process and return a single insertion observer
@@ -204,10 +197,9 @@ public class RmDataHelper {
                 // TODO include feed data operation module. i.e. DB operation and return a single insertion observer
                 break;
         }
-        return -1L;
     }
 
-    private long setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {
+    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {
         try {
             TeleMeshChat teleMeshChat = TeleMeshChat.newBuilder()
                     .mergeFrom(rawChatData).build();
@@ -219,17 +211,16 @@ public class RmDataHelper {
 
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
-                Timber.e(  "Read :: %s", chatEntity.getMessageId());
+                Timber.e("Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
-                if (TextUtils.isEmpty(dataSource.getCurrentUser())
-                        || !userId.equals(dataSource.getCurrentUser())) {
-                    Timber.e(  "Un Read :: %s", chatEntity.getMessageId());
+                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())) {
+                    Timber.e("Un Read :: %s", chatEntity.getMessageId());
                     NotifyUtil.showNotification(chatEntity);
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
                 }
 
-                return MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+                MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
 
             } else {
 
@@ -243,12 +234,9 @@ public class RmDataHelper {
             }
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return -1L;
     }
 
     /*private void prepareDateSeparator(ChatEntity chatEntity) {
@@ -276,7 +264,7 @@ public class RmDataHelper {
      *
      * @param rmDataModel -> Contains received message id
      */
-    public long ackReceive(@NonNull RMDataModel rmDataModel) {
+    public void ackReceive(@NonNull RMDataModel rmDataModel) {
 
         int dataSendId = rmDataModel.getRecDataId();
 
@@ -284,11 +272,10 @@ public class RmDataHelper {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
 
-            long ackDataUpdate = dataReceive(prevRMDataModel, false);
-
-            rmDataMap.remove(dataSendId);
-            return ackDataUpdate;
+            if (prevRMDataModel != null) {
+                dataReceive(prevRMDataModel, false);
+                rmDataMap.remove(dataSendId);
+            }
         }
-        return -1L;
     }
 }

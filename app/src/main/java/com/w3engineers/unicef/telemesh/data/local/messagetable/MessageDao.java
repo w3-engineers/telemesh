@@ -46,7 +46,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
     Flowable<List<MessageEntity>> getAllMessages(String friendsId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long writeMessage(MessageEntity messageEntity) throws Exception;
+    long writeMessage(MessageEntity messageEntity);
 
     /**
      * <h1>Provide last row id</h1>

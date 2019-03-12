@@ -79,6 +79,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
     /**
      * During send data to peer
+     *
      * @param rmDataModel -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
@@ -101,6 +102,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
     /**
      * During receive a peer this time onPeer api is execute
+     *
      * @param profileInfo -> Got a peer data (profile information and meshId)
      */
     @SuppressLint("TimberArgCount")
@@ -123,7 +125,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
                     RmDataHelper.getInstance().userAdd(rmUserModel.build());
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -131,6 +133,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
     /**
      * When a peer is gone or switched the another network
      * this time onPeerGone api is executed
+     *
      * @param meshPeer - > It contains the peer id which is currently inactive in mesh
      */
     @Override
@@ -146,27 +149,23 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
     /**
      * This api execute during we receive data from network
+     *
      * @param meshData -> Contains data and peer info also
      */
     @Override
     protected void onData(MeshData meshData) {
+        RMDataModel rmDataModel = RMDataModel.newBuilder()
+                .setUserMeshId(meshData.mMeshPeer.getPeerId())
+                .setRawData(ByteString.copyFrom(meshData.mData))
+                .setDataType(meshData.mType)
+                .build();
 
-        try {
-            RMDataModel rmDataModel = RMDataModel.newBuilder()
-                    .setUserMeshId(meshData.mMeshPeer.getPeerId())
-                    .setRawData(ByteString.copyFrom(meshData.mData))
-                    .setDataType(meshData.mType)
-                    .build();
-
-            RmDataHelper.getInstance().dataReceive(rmDataModel, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
     }
 
     /**
      * The sending data status is success this time we got a success ack using this api
+     *
      * @param meshAcknowledgement -> Contains the success data id and user id
      */
     @Override

@@ -169,6 +169,7 @@ public class MeshContactsFragment extends BaseFragment {
             mCursorDrawableRes.setAccessible(true);
             mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         initSearchView(mSearchView);

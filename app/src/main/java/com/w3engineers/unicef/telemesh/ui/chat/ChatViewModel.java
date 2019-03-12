@@ -168,7 +168,7 @@ public class ChatViewModel extends AndroidViewModel {
         chatEntity.setMessageId(UUID.randomUUID().toString())
                 .setFriendsId(meshId)
                 .setIncoming(false)
-                .setTime(System.currentTimeMillis())
+                .setTime(TimeUtil.toCurrentTime())
                 .setStatus(Constants.MessageStatus.STATUS_SENDING)
                 .setMessageType(Constants.MessageType.TEXT_MESSAGE);
 

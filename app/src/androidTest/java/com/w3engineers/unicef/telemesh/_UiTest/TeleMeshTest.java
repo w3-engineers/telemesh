@@ -37,6 +37,7 @@ import static android.support.test.espresso.action.ViewActions.pressImeActionBut
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -807,6 +808,39 @@ public class TeleMeshTest {
 
         try {
             Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction contactSearch = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.toolbar),
+                                        1),
+                                0),
+                        isDisplayed()));
+        contactSearch.perform(click());
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction searchAutoComplete = onView(
+                allOf(withId(R.id.search_src_text),
+                        childAtPosition(
+                                allOf(withId(R.id.search_plate),
+                                        childAtPosition(
+                                                withId(R.id.search_edit_frame),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
+
+        try {
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

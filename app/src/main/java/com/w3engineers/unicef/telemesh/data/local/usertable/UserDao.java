@@ -17,7 +17,7 @@ import io.reactivex.Flowable;
 public abstract class UserDao implements BaseDao<UserEntity> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract long writeUser(UserEntity userEntity) throws Exception;
+    abstract long writeUser(UserEntity userEntity);
 
     @Query("DELETE FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")
     abstract int deleteUser(String meshId);

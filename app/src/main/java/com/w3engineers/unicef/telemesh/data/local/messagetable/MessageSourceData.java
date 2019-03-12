@@ -36,9 +36,9 @@ public class MessageSourceData {
     private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
 
-    public MessageSourceData() {
-        messageDao = AppDatabase.getInstance().messageDao();
-    }
+//    public MessageSourceData() {
+//        messageDao = AppDatabase.getInstance().messageDao();
+//    }
 
     /**
      * This constructor is restricted and only used in unit test class
@@ -50,7 +50,7 @@ public class MessageSourceData {
 
     public static MessageSourceData getInstance() {
         if (messageSourceData == null) {
-            messageSourceData = new MessageSourceData();
+            messageSourceData = getInstance(AppDatabase.getInstance().messageDao());
         }
         return messageSourceData;
     }
@@ -71,7 +71,7 @@ public class MessageSourceData {
                 Flowable.just((ChatEntity) messageEntity));
     }
 
-    public long insertOrUpdateData(ChatEntity baseEntity) throws Exception {
+    public long insertOrUpdateData(ChatEntity baseEntity) {
         return messageDao.writeMessage((MessageEntity) baseEntity);
     }
 

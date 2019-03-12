@@ -32,9 +32,9 @@ public class UserDataSource{
     private static UserDataSource userDataSource;
     private final UserDao mUserDao;
 
-    private UserDataSource() {
-        mUserDao = AppDatabase.getInstance().userDao();
-    }
+//    private UserDataSource() {
+//        mUserDao = AppDatabase.getInstance().userDao();
+//    }
 
     /**
      * This constructor is restricted and only used in unit test class
@@ -46,7 +46,7 @@ public class UserDataSource{
 
     public static UserDataSource getInstance() {
         if (userDataSource == null) {
-            userDataSource = new UserDataSource();
+            userDataSource = getInstance(AppDatabase.getInstance().userDao());
         }
         return userDataSource;
     }
@@ -66,7 +66,7 @@ public class UserDataSource{
         return mUserDao.getLastInsertedUser();
     }
 
-    public long insertOrUpdateData(UserEntity userEntity) throws Exception {
+    public long insertOrUpdateData(UserEntity userEntity) {
         return mUserDao.writeUser(userEntity);
     }
 

@@ -114,16 +114,13 @@ public class ImageUtil {
                     .apply(getRequestOptions())
                     .submit(width, height)
                     .get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
     private static RequestOptions getRequestOptions() {
-      return RequestOptions.skipMemoryCacheOf(true).diskCacheStrategy(DiskCacheStrategy.NONE);
+        return RequestOptions.skipMemoryCacheOf(true).diskCacheStrategy(DiskCacheStrategy.NONE);
     }
 }

@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
@@ -12,13 +14,19 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +39,7 @@ import static android.support.test.espresso.action.ViewActions.pressImeActionBut
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -45,14 +54,32 @@ public class TeleMeshTest {
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
+    private AppDatabase appDatabase;
+    private UserDataSource userDataSource;
+    private MessageSourceData messageSourceData;
+    private RandomEntityGenerator randomEntityGenerator;
+
     /*@Rule
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.ACCESS_COARSE_LOCATION",
                     "android.permission.WRITE_EXTERNAL_STORAGE");*/
 
+    @Before
+    public void setUp() throws Exception {
+
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+                AppDatabase.class).allowMainThreadQueries().build();
+
+        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+
+        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+
+        randomEntityGenerator = new RandomEntityGenerator();
+    }
+
     @Test
-    public void teleMeshTest() {
+    public void teleMeshTest() throws Exception {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -727,19 +754,11 @@ public class TeleMeshTest {
                 .setUserLastName("Alvez");
         userEntity.setId(0);
 
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.putExtra(UserEntity.class.getName(), userEntity);
-        mChatTestRule.launchActivity(intent);
+        mChatTestRule.launchActivity(intent);*/
 
-        /*ViewInteraction constraintLayout2 = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.contact_recycler_view),
-                                childAtPosition(
-                                        withId(R.id.mesh_contact_layout),
-                                        0)),
-                        0),
-                        isDisplayed()));
-        constraintLayout2.perform(click());*/
+        userDataSource.insertOrUpdateData(userEntity);
 
         try {
             Thread.sleep(700);
@@ -747,33 +766,68 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
 
-        /*ViewInteraction baseEditText5 = onView(
-                allOf(withId(R.id.edit_text_message),
-                        childAtPosition(
-                                allOf(withId(R.id.input_field),
-                                        childAtPosition(
-                                                withId(R.id.message_layout),
-                                                5)),
-                                0),
+        ViewInteraction contactLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.contact_recycler_view),
+                                childAtPosition(withId(R.id.mesh_contact_layout),
+                                        0)),
+                        0),
                         isDisplayed()));
-        baseEditText5.perform(replaceText("hi"), closeSoftKeyboard());
+        contactLayout.perform(click());
 
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        /*ViewInteraction appCompatImageView2 = onView(
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                3)),
+                                0),
+                        isDisplayed()));
+        appCompatEditText.perform(replaceText("Hi"), closeSoftKeyboard());
+
+        ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(
-                                allOf(withId(R.id.input_field),
+                                allOf(withId(R.id.chat_message_bar),
                                         childAtPosition(
-                                                withId(R.id.message_layout),
-                                                5)),
+                                                withId(R.id.chat_layout),
+                                                3)),
                                 1),
                         isDisplayed()));
-        appCompatImageView2.perform(click());*/
+        appCompatImageButton.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+        messageSourceData.insertOrUpdateData(chatEntity);
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.text_view_last_name),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_toolbar_layout),
+                                        childAtPosition(
+                                                withId(R.id.toolbar_chat),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
 
         try {
             Thread.sleep(700);
@@ -785,6 +839,47 @@ public class TeleMeshTest {
 
         try {
             Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction contactSearch = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.toolbar),
+                                        1),
+                                0),
+                        isDisplayed()));
+        contactSearch.perform(click());
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction searchAutoComplete = onView(
+                allOf(withId(R.id.search_src_text),
+                        childAtPosition(
+                                allOf(withId(R.id.search_plate),
+                                        childAtPosition(
+                                                withId(R.id.search_edit_frame),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
+
+        try {
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

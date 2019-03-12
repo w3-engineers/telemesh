@@ -62,15 +62,6 @@ public class UIHelper {
                 .into(imageView);
     }
 
-    @BindingAdapter("imageResource")
-    public static void setImageResource(ImageView imageView, String resourceId) {
-
-        Glide.with(App.getContext())
-                .load(App.getContext().getResources().getIdentifier(resourceId,
-                        Constants.drawables.AVATER_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
-                .into(imageView);
-    }
-
 
     @BindingAdapter("imageStatusResource")
     public static void setImageStatusResource(ImageView imageView, int resourceId){

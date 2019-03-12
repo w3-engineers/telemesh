@@ -1,12 +1,10 @@
-package com.w3engineers.unicef.telemesh.local.survey;
+package com.w3engineers.unicef.telemesh.data.local.survey;
 
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyDataSource;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
@@ -21,6 +19,8 @@ import java.util.UUID;
 import io.reactivex.subscribers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * ============================================================================
@@ -63,7 +63,7 @@ public class SurveyDataSourceTest {
     }
 
     @Test
-    public void basicSurveyTest() {
+    public void basicSurveyTest() throws Exception {
 
         String userId = UUID.randomUUID().toString();
 
@@ -83,6 +83,27 @@ public class SurveyDataSourceTest {
 
         SurveyEntity surveyEntity = SUT.getSurveyById(surveyId_1);
         assertEquals(surveyEntity.getSenderId(), userId);
+
+        String surveyForm = surveyEntity.getSurveyForm();
+        String surveyStart = surveyEntity.getSurveyStartTime();
+        String surveyEnd = surveyEntity.getSurveyEndTime();
+        String surveyAnswer = surveyEntity.getSurveyAnswer();
+        String surveyVendor = surveyEntity.getVendorName();
+
+        String surveyTitle = surveyEntity.getSurveyTitle();
+        String surveyId = surveyEntity.getSurveyId();
+
+        boolean isSubmitted = surveyEntity.isSubmitted();
+
+        assertNotNull(surveyForm);
+        assertNotNull(surveyStart);
+        assertNotNull(surveyEnd);
+        assertNotNull(surveyAnswer);
+        assertNotNull(surveyVendor);
+        assertNotNull(surveyTitle);
+        assertNotNull(surveyId);
+
+        assertFalse(isSubmitted);
 
         TestSubscriber<List<SurveyEntity>> getAllSurveySubscriber = SUT.getAllSurvey().test();
 

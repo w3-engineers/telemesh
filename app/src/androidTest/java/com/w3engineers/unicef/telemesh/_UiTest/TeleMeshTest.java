@@ -15,11 +15,13 @@ import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -55,6 +57,7 @@ public class TeleMeshTest {
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
+    private RandomEntityGenerator randomEntityGenerator;
 
     /*@Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -71,6 +74,8 @@ public class TeleMeshTest {
         userDataSource = UserDataSource.getInstance(appDatabase.userDao());
 
         messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+
+        randomEntityGenerator = new RandomEntityGenerator();
     }
 
     @Test
@@ -797,6 +802,40 @@ public class TeleMeshTest {
                                 1),
                         isDisplayed()));
         appCompatImageButton.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+        messageSourceData.insertOrUpdateData(chatEntity);
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.text_view_last_name),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_toolbar_layout),
+                                        childAtPosition(
+                                                withId(R.id.toolbar_chat),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
 
         try {
             Thread.sleep(700);

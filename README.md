@@ -32,38 +32,24 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
 
 ## Project's Structure
 
-.
-
-├── app 
-
-│   └── src 
-
-│       ├── main
-
-│       │───└── com.w3engineers.unicef
-
-│       │──────└── telemesh
-
-│       │─────────└── data 				#*local database, file, shared preferences etc.*
-
-│       │─────────└── ui            	#*ui components*
-
-│       │──────└── util
-
-│       │─────────└── helper        	#*Generic tasks like TimeUtil, NetworkUtil etc.*
-
-│       │─────────└── lib           	#*third party library, component etc.*
-
-│       │──────└── Application.java 	#*Android Application class*
-
-├── viper                          		#*RightMesh wrapper module*
-
-├── build.gradle
-
-├── settings.gradle
-
-├── gradle.properties
-
+```
+    .
+    |-- app
+    |-- src
+    |-- main
+        |-- com.w3engineers.unicef
+            |-- telemesh
+                |-- data #local database, file, shared preferences etc.
+                |-- ui #ui components
+            |-- util
+                |-- helper #Generic tasks like TimeUtil, NetworkUtil etc.
+                |-- lib #third party library, component etc.
+            |-- Application.java #Android Application class    
+    |-- viper #RightMesh wrapper module
+    |-- build.gradle
+    |-- settings.gradle
+    |-- gradle.properties
+```
 
 * **Alias**
 N/A
@@ -132,7 +118,7 @@ If everything is ok then sync and build should work as it should be. If not plea
 
 <kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
 
-### Project Architectur
+### Project Architecture
 For the project architecture and sequence diagram please check this [link][Project Architecture].
 
 ## License

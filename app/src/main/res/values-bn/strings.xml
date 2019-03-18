@@ -54,4 +54,11 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="text_1">1</string>
+    <string name="text_2">2</string>
+    <string name="text_or">OR</string>
+    <string name="turn_on_hotspot">To get the app, connect to my Hotspot</string>
+    <string name="qr_code_text">Scan the QR code to get the app</string>
+    <string name="enter_url_text">Enter the following URL into the browser</string>
+
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.ui.inappshare.WebUpdater;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 
@@ -42,7 +43,7 @@ public class TeleMeshApplication extends App {
             language = DEFAULT_LANGUAGE;
         }
         LanguageUtil.setAppLanguage(base, language);
-
+        WebUpdater.getWebUpdater().initContext(base);
     }
 
 }

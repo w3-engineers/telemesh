@@ -1,20 +1,20 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.helper.InAppShareUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
-import java.util.Locale;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * * ============================================================================
@@ -36,7 +36,7 @@ import java.util.Locale;
  * * --> <Second Reviewer> on [08-Oct-2018 at 3:14 PM].
  * * ============================================================================
  **/
-public class SettingsViewModel extends AndroidViewModel {
+public class SettingsViewModel extends BaseRxAndroidViewModel {
 
 
     public SettingsViewModel(@NonNull Application application) {
@@ -65,6 +65,23 @@ public class SettingsViewModel extends AndroidViewModel {
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
 
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
+    }
+
+    public void initServerProcess() {
+        getCompositeDisposable().add(serverInitSingleCallable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(address -> InAppShareUtil.getInstance().qrGenerator(address),
+                        Throwable::printStackTrace));
+    }
+
+    private Single<String> serverInitSingleCallable() {
+        return Single.fromCallable(this::serverInit);
+    }
+
+    @Nullable
+    private String serverInit() {
+        return InAppShareUtil.getInstance().serverInit();
     }
 
 //     This api is unused

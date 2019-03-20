@@ -72,6 +72,39 @@
                 app:layout_constraintTop_toBottomOf="@+id/wifi_qr" />
 
             <View
+                android:id="@+id/progress_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/margin_10"
+                android:background="@color/white"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/div_shadow"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="@dimen/height_50"
+                android:layout_height="@dimen/height_50"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/progress_view"
+                app:layout_constraintLeft_toLeftOf="@+id/progress_view"
+                app:layout_constraintRight_toRightOf="@+id/progress_view"
+                app:layout_constraintTop_toTopOf="@+id/progress_view" />
+
+            <TextView
+                android:id="@+id/progress_connecting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_30"
+                android:gravity="center"
+                android:text="@string/connecting"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/progress" />
+
+            <View
                 android:id="@+id/div_shadow"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
@@ -85,10 +118,10 @@
                 android:layout_height="@dimen/height_35"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginBottom="@dimen/margin_10"
-                android:background="@drawable/bg_button_gradient_rounded_box"
+                android:background="@drawable/in_app_share_bg_button"
                 android:gravity="center"
                 android:text="@string/ok"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_small_body_14"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

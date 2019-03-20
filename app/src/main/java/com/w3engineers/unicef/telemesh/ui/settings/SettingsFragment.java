@@ -11,14 +11,13 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.common.BitMatrix;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
@@ -32,7 +31,6 @@ import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.inappshare.InAppShareActivity;
 import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
-import com.w3engineers.unicef.util.helper.InAppShareUtil;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
@@ -101,10 +99,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
-                settingsViewModel.initServerProcess();
-                openDialog();
-//                startActivity(new Intent(getActivity(), InAppShareActivity.class));
-                // Open Share app page
+                openInAppShareDialog();
+                settingsViewModel.startInAppShareServer();
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -186,13 +182,17 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }).get(SettingsViewModel.class);
     }
 
-    private void openDialog() {
+    private AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder;
+
+    private void openInAppShareDialog() {
 
         View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
                 null, false);
 
+        alertWifiShareViewHolderHolder = new AlertWifiShareViewHolderHolder(layoutView);
+
         DialogPlus dialog = DialogPlus.newDialog(getActivity())
-                .setContentHolder(new AlertWifiShareViewHolderHolder(layoutView))
+                .setContentHolder(alertWifiShareViewHolderHolder)
                 .setContentBackgroundResource(android.R.color.transparent)
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setOnClickListener((dialog1, view) -> {
@@ -207,53 +207,50 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private class AlertWifiShareViewHolderHolder extends ViewHolder {
-        private TextView shareWifiPass;
+        private TextView shareWifiPass, connecting;
         private ImageView imageView;
+
+        private View backWhiteView;
+        private ProgressBar loadingProgress;
+        private Button ok;
 
         public AlertWifiShareViewHolderHolder(View view) {
             super(view);
             shareWifiPass = view.findViewById(R.id.share_wifi_id_pass);
             imageView = view.findViewById(R.id.wifi_qr);
 
-            String wifiName = InAppShareUtil.getInstance().getWifiName();
-            String wifiPass = "m3sht3st";
+            connecting = view.findViewById(R.id.progress_connecting);
+            backWhiteView = view.findViewById(R.id.progress_view);
+            loadingProgress = view.findViewById(R.id.progress);
 
-            String wifiInfo = String.format(getString(R.string.hotspot_id_pass), wifiName, wifiPass);
-            String QrText = "WIFI:T:WPA;P:\"" + wifiPass + "\";S:" + wifiName + ";";
+            ok = view.findViewById(R.id.share_ok);
 
-            shareWifiPass.setText(wifiInfo);
-            qrGenerator(QrText, imageView);
+            backWhiteView.setVisibility(View.VISIBLE);
+            loadingProgress.setVisibility(View.VISIBLE);
+            connecting.setVisibility(View.VISIBLE);
+
+            ok.setEnabled(false);
+            ok.setTextColor(getResources().getColor(R.color.black));
+
+            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, SettingsFragment.this::activeView);
         }
     }
 
-    private void qrGenerator(String Value, ImageView imageView) {
-        try {
-            Context context = imageView.getContext();
+    private void activeView(Bitmap bitmap) {
+        getActivity().runOnUiThread(() -> {
 
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(Value, BarcodeFormat.DATA_MATRIX.QR_CODE,
-                    150, 150, null
-            );
+            if (alertWifiShareViewHolderHolder != null) {
 
-            int bitMatrixWidth = bitMatrix.getWidth();
-            int bitMatrixHeight = bitMatrix.getHeight();
-            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
+                alertWifiShareViewHolderHolder.shareWifiPass.setText(settingsViewModel.wifiInfo);
+                alertWifiShareViewHolderHolder.imageView.setImageBitmap(bitmap);
 
-            for (int y = 0; y < bitMatrixHeight; y++) {
-                int offset = y * bitMatrixWidth;
+                alertWifiShareViewHolderHolder.backWhiteView.setVisibility(View.GONE);
+                alertWifiShareViewHolderHolder.loadingProgress.setVisibility(View.GONE);
+                alertWifiShareViewHolderHolder.connecting.setVisibility(View.GONE);
 
-                for (int x = 0; x < bitMatrixWidth; x++) {
-                    pixels[offset + x] = bitMatrix.get(x, y) ?
-                            context.getResources().getColor(R.color.colorPrimaryDark) :
-                            context.getResources().getColor(R.color.white);
-                }
+                alertWifiShareViewHolderHolder.ok.setEnabled(true);
+                alertWifiShareViewHolderHolder.ok.setTextColor(getResources().getColor(R.color.white));
             }
-            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
-            bitmap.setPixels(pixels, 0, 150, 0, 0, bitMatrixWidth, bitMatrixHeight);
-
-            imageView.setImageBitmap(bitmap);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

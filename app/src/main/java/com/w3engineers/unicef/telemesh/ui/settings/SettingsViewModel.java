@@ -1,9 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.app.Application;
+import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -11,6 +17,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.InAppShareUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.NetworkConfigureUtil;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -36,12 +43,18 @@ import io.reactivex.schedulers.Schedulers;
  * * --> <Second Reviewer> on [08-Oct-2018 at 3:14 PM].
  * * ============================================================================
  **/
-public class SettingsViewModel extends BaseRxAndroidViewModel {
+public class SettingsViewModel extends BaseRxAndroidViewModel implements NetworkConfigureUtil.NetworkCallback {
 
 
     public SettingsViewModel(@NonNull Application application) {
         super(application);
     }
+
+    public String SSID_Name = null;
+    public String wifiInfo = null;
+
+    public MutableLiveData<Bitmap> bitmapMutableLiveData = new MutableLiveData<>();
+
 
     public boolean getCheckedStatus() {
         return SharedPref.getSharedPref(getApplication().getApplicationContext())
@@ -67,7 +80,39 @@ public class SettingsViewModel extends BaseRxAndroidViewModel {
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
     }
 
-    public void initServerProcess() {
+    public void startInAppShareServer() {
+        this.SSID_Name = null;
+
+        getCompositeDisposable().add(Single.fromCallable(this::getRouterConfigure)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe());
+    }
+
+    private Boolean getRouterConfigure() {
+        return NetworkConfigureUtil.getInstance()
+                .setNetworkCallback(SettingsViewModel.this).startRouterConfigureProcess();
+    }
+
+    @Override
+    public void networkName(String SSID) {
+
+        Context context = getApplication().getApplicationContext();
+
+        this.SSID_Name = SSID;
+
+        String wifiName = SSID_Name;
+        String wifiPass = NetworkConfigureUtil.getInstance().SSID_Key;
+
+        wifiInfo = String.format(context.getString(R.string.hotspot_id_pass), wifiName, wifiPass);
+        String QrText = "WIFI:T:WPA;P:\"" + wifiPass + "\";S:" + wifiName + ";";
+
+        qrGenerator(context, QrText);
+
+        initServerProcess();
+    }
+
+    private void initServerProcess() {
         getCompositeDisposable().add(serverInitSingleCallable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -84,8 +129,34 @@ public class SettingsViewModel extends BaseRxAndroidViewModel {
         return InAppShareUtil.getInstance().serverInit();
     }
 
-//     This api is unused
-//    public void openWallet() {
-//        RightMeshDataSource.getRmDataSource().openRmSettings();
-//    }
+    private void qrGenerator(Context context, String Value) {
+        try {
+
+
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(Value, BarcodeFormat.DATA_MATRIX.QR_CODE,
+                    150, 150, null
+            );
+
+            int bitMatrixWidth = bitMatrix.getWidth();
+            int bitMatrixHeight = bitMatrix.getHeight();
+            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
+
+            for (int y = 0; y < bitMatrixHeight; y++) {
+                int offset = y * bitMatrixWidth;
+
+                for (int x = 0; x < bitMatrixWidth; x++) {
+                    pixels[offset + x] = bitMatrix.get(x, y) ?
+                            context.getResources().getColor(R.color.colorPrimaryDark) :
+                            context.getResources().getColor(R.color.white);
+                }
+            }
+            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
+            bitmap.setPixels(pixels, 0, 150, 0, 0, bitMatrixWidth, bitMatrixHeight);
+
+            bitmapMutableLiveData.postValue(bitmap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

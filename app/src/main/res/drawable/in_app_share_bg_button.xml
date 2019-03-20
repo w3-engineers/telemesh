@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/bg_message_item_rounded_box" android:state_enabled="false"/>
+    <item android:drawable="@drawable/bg_button_gradient_rounded_box" android:state_enabled="true"/>
+
+</selector>

@@ -50,48 +50,12 @@ public class InAppShareUtil {
 
     private static InAppShareUtil inAppShareUtil = new InAppShareUtil();
 
-    public static int AP_STATE_DISABLING = 10;
-    public static int AP_STATE_DISABLED = 11;
-    public static int AP_STATE_ENABLING = 12;
-    public static int AP_STATE_ENABLED = 13;
-    public static int AP_STATE_FAILED = 14;
-
     private Bitmap urlQrBitmap = null;
     private String serverAddress = "";
     private Random random = new Random();
 
     public static InAppShareUtil getInstance() {
         return inAppShareUtil;
-    }
-
-    public String getWifiName() {
-
-        Context context = App.getContext();
-        String SSID = null;
-        try {
-            WifiManager wifiManager = (WifiManager) context.
-                    getApplicationContext().getSystemService (Context.WIFI_SERVICE);
-
-            if (wifiManager.isWifiEnabled()) {
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                SSID = wifiInfo.getSSID();
-            } else {
-                Method stateMethod = wifiManager.getClass().getMethod("getWifiApState");
-                stateMethod.setAccessible(true);
-                int actualState = (Integer) stateMethod.invoke(wifiManager, (Object[]) null);
-
-                if (actualState == AP_STATE_ENABLED || actualState == AP_STATE_ENABLING) {
-                    Method getConfigMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
-                    WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
-
-                    SSID  = wifiConfig.SSID;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return SSID;
     }
 
     public Bitmap getUrlQR() {

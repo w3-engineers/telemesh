@@ -89,7 +89,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
     public void startInAppShareProcess() {
         this.SSID_Name = null;
 
-        getCompositeDisposable().add(Single.fromCallable(this::getRouterConfigure)
+        getCompositeDisposable().add(getSingleRouterConfiguration()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe());
@@ -145,6 +145,14 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
      */
     private Single<String> serverInitSingleCallable() {
         return Single.fromCallable(this::serverInit);
+    }
+
+    /**
+     * Preparing a single instance for configuring router configuration
+     * @return - Get Rx single object
+     */
+    private Single<Boolean> getSingleRouterConfiguration() {
+        return Single.fromCallable(this::getRouterConfigure);
     }
 
     /**

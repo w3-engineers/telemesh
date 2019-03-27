@@ -351,7 +351,7 @@ public class InstantServer {
                 while (line != null && line.trim().length() > 0) {
                     int p = line.indexOf(':');
                     if (p >= 0)
-                        header.put(line.substring(0, p).trim().toLowerCase(),
+                        header.put(line.substring(0, p).trim().toLowerCase(Locale.getDefault()),
                                 line.substring(p + 1).trim());
                     line = bufferedReader.readLine();
                 }

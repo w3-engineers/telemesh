@@ -153,6 +153,7 @@ public class MeshContactsFragment extends BaseFragment {
         getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
         mSearchItem = menu.findItem(R.id.action_search);
+        // Resolve search option visibility problem when contact is appeared from starting point
         mSearchItem.setVisible(userEntityList != null && userEntityList.size() > 0);
 
         SearchView mSearchView = (SearchView) mSearchItem.getActionView();

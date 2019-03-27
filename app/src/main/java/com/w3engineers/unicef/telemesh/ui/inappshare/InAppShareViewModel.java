@@ -4,6 +4,8 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.util.helper.NetworkConfigureUtil;
 
 /**
  * ============================================================================
@@ -24,14 +26,26 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
  **/
 public class InAppShareViewModel extends BaseRxAndroidViewModel {
 
-    private InstantServer.PercentCallback paPercentCallback;
-
-    public InAppShareViewModel(@NonNull Application application, InstantServer.PercentCallback percentCallback) {
+    public InAppShareViewModel(@NonNull Application application) {
         super(application);
-        this.paPercentCallback = percentCallback;
     }
 
+    /**
+     * Stop the InApp share server
+     * when In app share process is fully done
+     */
     public void stopServerProcess() {
         InstantServer.getInstance().stopServer();
+    }
+
+    /**
+     * Reset RM data source instance null
+     * for configuring the RM service restart
+     */
+    public void resetRM() {
+        if (NetworkConfigureUtil.getInstance().isRmOff()) {
+            NetworkConfigureUtil.getInstance().setRmOff(false);
+            ServiceLocator.getInstance().resetRmDataSourceInstance();
+        }
     }
 }

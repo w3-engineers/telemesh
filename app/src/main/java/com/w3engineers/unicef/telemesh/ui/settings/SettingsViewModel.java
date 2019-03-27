@@ -15,6 +15,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.util.helper.InAppShareUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.NetworkConfigureUtil;
@@ -80,7 +81,12 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
         LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
     }
 
-    public void startInAppShareServer() {
+    /**
+     * Start background process for starting in app share
+     * At first it responsible to configure a network for sharing app
+     * Then start in app share server
+     */
+    public void startInAppShareProcess() {
         this.SSID_Name = null;
 
         getCompositeDisposable().add(Single.fromCallable(this::getRouterConfigure)
@@ -89,11 +95,21 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
                 .subscribe());
     }
 
+    /**
+     * This api used for calling startRouterConfigureProcess.
+     * In disposable can't operate directly any api's from another class
+     * @return - Get the completion state
+     */
     private Boolean getRouterConfigure() {
         return NetworkConfigureUtil.getInstance()
                 .setNetworkCallback(SettingsViewModel.this).startRouterConfigureProcess();
     }
 
+    /**
+     * When a network is established
+     * we get this callback with network name
+     * @param SSID - Configured network name
+     */
     @Override
     public void networkName(String SSID) {
 
@@ -107,56 +123,48 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
         wifiInfo = String.format(context.getString(R.string.hotspot_id_pass), wifiName, wifiPass);
         String QrText = "WIFI:T:WPA;P:\"" + wifiPass + "\";S:" + wifiName + ";";
 
-        qrGenerator(context, QrText);
+        bitmapMutableLiveData.postValue(InAppShareUtil.getInstance().getQrBitmap(QrText));
 
         initServerProcess();
     }
 
+    /**
+     * When network is ready then we start our In-App share server
+     */
     private void initServerProcess() {
         getCompositeDisposable().add(serverInitSingleCallable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(address -> InAppShareUtil.getInstance().qrGenerator(address),
+                .subscribe(address -> InAppShareUtil.getInstance().urlQrGenerator(address),
                         Throwable::printStackTrace));
     }
 
+    /**
+     * Preparing a single instance for calling in app share server
+     * @return - Get Rx single object
+     */
     private Single<String> serverInitSingleCallable() {
         return Single.fromCallable(this::serverInit);
     }
 
+    /**
+     * Trigger in app share server to start
+     * @return - Get the server url
+     */
     @Nullable
     private String serverInit() {
         return InAppShareUtil.getInstance().serverInit();
     }
 
-    private void qrGenerator(Context context, String Value) {
-        try {
-
-
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(Value, BarcodeFormat.DATA_MATRIX.QR_CODE,
-                    150, 150, null
-            );
-
-            int bitMatrixWidth = bitMatrix.getWidth();
-            int bitMatrixHeight = bitMatrix.getHeight();
-            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
-
-            for (int y = 0; y < bitMatrixHeight; y++) {
-                int offset = y * bitMatrixWidth;
-
-                for (int x = 0; x < bitMatrixWidth; x++) {
-                    pixels[offset + x] = bitMatrix.get(x, y) ?
-                            context.getResources().getColor(R.color.colorPrimaryDark) :
-                            context.getResources().getColor(R.color.white);
-                }
-            }
-            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
-            bitmap.setPixels(pixels, 0, 150, 0, 0, bitMatrixWidth, bitMatrixHeight);
-
-            bitmapMutableLiveData.postValue(bitmap);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * Reset RM data source instance null for configuring the RM service restart
+     * and restart the RM service
+     */
+    public void resetRM() {
+        if (NetworkConfigureUtil.getInstance().isRmOff()) {
+            NetworkConfigureUtil.getInstance().setRmOff(false);
+            ServiceLocator.getInstance().resetRmDataSourceInstance();
+            ServiceLocator.getInstance().restartRmService();
         }
     }
 }

@@ -97,9 +97,9 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
         //Normally this should not be required but found in some devices service restarts upon
         // calling start service. e.g: Symphony ZVi
-        if(!Utility.isServiceRunning(context, BaseRmService.class)) {
+//        if(!Utility.isServiceRunning(context, BaseRmService.class)) {
             context.startService(intent);
-        }
+//        }
         context.bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);//check flag
 
     }
@@ -122,9 +122,9 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
                 //through resume and pause.
                 //This one might be cached inside RmBaseActivity but avoiding for now as that might
                 //need extra wiring.
-                mIRmServiceConnection.setServiceForeground(false);
+//                mIRmServiceConnection.setServiceForeground(false);
 
-                onAttachedToService();
+//                onAttachedToService();
 
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -133,6 +133,17 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+
+            try {
+
+                if(mIRmServiceConnection != null) {
+                    mIRmServiceConnection.resetCommunicator(BaseRmDataSource.this);
+                }
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            mIRmServiceConnection = null;
 
             Timber.d("Service disconnected:%s", name.toShortString());
 
@@ -178,14 +189,14 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         try {
             mIRmServiceConnection.setServiceForeground(isForeGround);
 
-            if(mContext != null) {
+            /*if(mContext != null) {
 
                 if (isForeGround) {
                     mContext.unbindService(mServiceConnection);
                 } else {
                     initService(mContext);
                 }
-            }
+            }*/
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -248,11 +259,11 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         //remote AIDL service is destroyed, do some work if application needs to do anything
 
         //To kill RM library service, current app's local service and current app's process
-        List<Integer> myProcessIdList = RmUtility.getMyProcessIdList(App.getContext());
+        /*List<Integer> myProcessIdList = RmUtility.getMyProcessIdList(App.getContext());
         for(int pid : myProcessIdList) {
             Process.killProcess(pid);
         }
-        Process.killProcess(Process.myPid());
+        Process.killProcess(Process.myPid());*/
 
         onRmOff();
     }
@@ -282,6 +293,36 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         if(mIRmServiceConnection != null){
             try {
                 mIRmServiceConnection.openRmSettings();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void stopRMService() {
+        if(mIRmServiceConnection != null){
+            try {
+
+                mIRmServiceConnection.setServiceForeground(false);
+                mContext.unbindService(mServiceConnection);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            mIRmServiceConnection.stopRmService();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+//                mIRmServiceConnection.stopRmService();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

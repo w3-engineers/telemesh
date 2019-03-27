@@ -99,8 +99,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
+                // open a bottom dialog for sharing wifi network info
                 openInAppShareDialog();
-                settingsViewModel.startInAppShareServer();
+                // In app share process trigger to start
+                settingsViewModel.startInAppShareProcess();
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -182,8 +184,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }).get(SettingsViewModel.class);
     }
 
+    // For UI need to add a view holder for DialogPlus library
     private AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder;
 
+    /**
+     * Bottom dialog for sharing wifi network info
+     */
     private void openInAppShareDialog() {
 
         View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
@@ -195,6 +201,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 .setContentHolder(alertWifiShareViewHolderHolder)
                 .setContentBackgroundResource(android.R.color.transparent)
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setOnDismissListener(dialog1 -> {
+                    settingsViewModel.resetRM();
+                })
                 .setOnClickListener((dialog1, view) -> {
                     switch (view.getId()) {
                         case R.id.share_ok:
@@ -206,6 +215,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         dialog.show();
     }
 
+    /**
+     * Wifi share view holder and
+     * observe network state using LiveData
+     */
     private class AlertWifiShareViewHolderHolder extends ViewHolder {
         private TextView shareWifiPass, connecting;
         private ImageView imageView;
@@ -236,6 +249,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    /**
+     * When network state is active
+     * then we will prepare a bitmap for exposing my network as a QR code
+     * @param bitmap- Qr code bitmap
+     */
     private void activeView(Bitmap bitmap) {
         getActivity().runOnUiThread(() -> {
 

@@ -2,12 +2,15 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.zxing.BarcodeFormat;
@@ -58,17 +61,40 @@ public class InAppShareUtil {
         return inAppShareUtil;
     }
 
+    /**
+     * Get In app share server url or code bitmap
+     * @return - QR code bitmap
+     */
     public Bitmap getUrlQR() {
         return urlQrBitmap;
     }
 
+    /**
+     * Get in app share server address
+     * @return - server url link
+     */
     public String getServerAddress() {
         return serverAddress;
     }
 
-    public void qrGenerator(String Value) {
-        try {
+    /**
+     * Get in app share url address and prepared a bitmap
+     * @param Value - In app share qr code url
+     */
+    public void urlQrGenerator(@NonNull String Value) {
+        urlQrBitmap = getQrBitmap(Value);
+    }
 
+    /**
+     * Prepared a Qr bitmap and its resolution is 150 x 150
+     * @param Value - Qr code string
+     * @return - Qr bitmap
+     */
+    @Nullable
+    public Bitmap getQrBitmap(@NonNull String Value) {
+        Bitmap bitmap = null;
+
+        try {
             Context context = App.getContext();
 
             BitMatrix bitMatrix = new MultiFormatWriter().encode(Value, BarcodeFormat.DATA_MATRIX.QR_CODE,
@@ -88,14 +114,22 @@ public class InAppShareUtil {
                             context.getResources().getColor(R.color.white);
                 }
             }
-            urlQrBitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
-            urlQrBitmap.setPixels(pixels, 0, 150, 0, 0, bitMatrixWidth, bitMatrixHeight);
+
+            bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
+            bitmap.setPixels(pixels, 0, 150, 0, 0, bitMatrixWidth, bitMatrixHeight);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return bitmap;
     }
 
+    /**
+     * This api is responsible for app share server initialization
+     * random port generating and preparing a server url address
+     * @return - server address
+     */
     @Nullable
     public String serverInit() {
 
@@ -104,17 +138,60 @@ public class InAppShareUtil {
 
         serverAddress = "http://" + myAddress + ":" + httpPort;
 
-        String backApkPath = backupApkAndGetPath();
+        String backApkPath = getBackUpApkPath();
 
         InstantServer.getInstance().setPort(httpPort).setFilePath(backApkPath);
 
         return serverAddress;
     }
 
-    @Nullable
-    public String backupApkAndGetPath() {
-
+    /**
+     * Responsible for getting telemesh apk path
+     * At first it will check apk is exist or not
+     * If exist then check the same version code
+     * If all conditions will not satisfy then create a apk and store it in sd card
+     * @return - Get the back up apk path
+     */
+    public String getBackUpApkPath() {
         Context context = App.getContext();
+
+        try {
+            String myApplicationName = context.getResources().getString(R.string.app_name) + ".apk";
+            String backupFolder = ".backup";
+
+            File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                    context.getString(R.string.app_name) + "/" + backupFolder + "/" + myApplicationName);
+
+            if (file.exists()) {
+
+                PackageInfo myPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+
+                PackageManager packageManager = context.getPackageManager();
+                PackageInfo packageInfo = packageManager.getPackageArchiveInfo(file.getAbsolutePath(), 0);
+                int versionCode = packageInfo.versionCode;
+
+                if (versionCode != myPackageInfo.versionCode) {
+                    return backupApkAndGetPath(context);
+                } else {
+                    return file.getAbsolutePath();
+                }
+            } else {
+                return backupApkAndGetPath(context);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return backupApkAndGetPath(context);
+    }
+
+    /**
+     * get application info and preparing a apk and save it in local storage
+     * @param context - Need an application context for getting package name
+     * @return - saved apk path
+     */
+    @Nullable
+    public String backupApkAndGetPath(@NonNull Context context) {
+
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -166,6 +243,10 @@ public class InAppShareUtil {
         return null;
     }
 
+    /**
+     * Responsible for this api is getting my device local ip address
+     * @return - my local ip address
+     */
     private String getMyIpAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();

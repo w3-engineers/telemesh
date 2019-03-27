@@ -59,9 +59,6 @@ public class InstantServer {
     /**
      * Response mime type
      */
-    /*private String MIME_DEFAULT_BINARY = "application/octet-stream",
-            MIME_PLAINTEXT = "text/plain",
-            MIME_HTML = "text/html";*/
 
     private static final String
             MIME_PLAINTEXT = "text/plain",
@@ -75,6 +72,9 @@ public class InstantServer {
             MIME_APK = "application/vnd.android.package-archive",
             MIME_XML = "text/xml";
 
+    /**
+     * Response file type
+     */
     private static final String
             FILE_TYPE_JAVASCRIPT = ".js",
             FILE_TYPE_CSS = ".css",
@@ -516,17 +516,17 @@ public class InstantServer {
                 response = prepareFile(header);
             } else {
                 if (uri.contains(FILE_TYPE_CSS)) {
-                    response = new Response(HTTP_OK, MIME_CSS, WebUpdater.getWebUpdater().getWebSupportFile(uri));
+                    response = new Response(HTTP_OK, MIME_CSS, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
                 } else if (uri.contains(FILE_TYPE_PNG)) {
-                    response = new Response(HTTP_OK, MIME_PNG, WebUpdater.getWebUpdater().getWebSupportFile(uri));
+                    response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
                 } else if (uri.contains(FILE_TYPE_JPG)) {
-                    response = new Response(HTTP_OK, FILE_TYPE_JPG, WebUpdater.getWebUpdater().getWebSupportFile(uri));
+                    response = new Response(HTTP_OK, FILE_TYPE_JPG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
                 } else if (uri.contains(FILE_TYPE_ICO)) {
-                    response = new Response(HTTP_OK, MIME_ICO, WebUpdater.getWebUpdater().getWebSupportFile(uri));
+                    response = new Response(HTTP_OK, MIME_ICO, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
                 } else if (uri.contains(TYPE_STRING)) {
-                    response = new Response(HTTP_OK, MIME_PNG, WebUpdater.getWebUpdater().getWebSupportFile(uri));
+                    response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
                 } else {
-                    InputStream inputStream = WebUpdater.getWebUpdater().getWebFile(filePath);
+                    InputStream inputStream = InAppShareWebController.getInAppShareWebController().getWebFile();
                     response = new Response(HTTP_OK, MIME_HTML, inputStream);
                 }
             }

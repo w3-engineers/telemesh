@@ -114,7 +114,15 @@ public class ServiceLocator extends BaseServiceLocator {
         return new SellDataViewModel(application);
     }
 
-    public InAppShareViewModel getInAppShareViewModel(Application application, InstantServer.PercentCallback paPercentCallback) {
-        return new InAppShareViewModel(application, paPercentCallback);
+    public InAppShareViewModel getInAppShareViewModel(Application application) {
+        return new InAppShareViewModel(application);
+    }
+
+    public void resetRmDataSourceInstance() {
+        RmDataHelper.getInstance().resetRmDataSourceInstance();
+    }
+
+    public void restartRmService() {
+        RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 }

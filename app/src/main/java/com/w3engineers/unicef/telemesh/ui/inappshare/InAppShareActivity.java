@@ -28,7 +28,7 @@ import com.w3engineers.unicef.util.helper.InAppShareUtil;
  * --> <Second Reviewer> on [13-Mar-2019 at 11:35 AM].
  * ============================================================================
  **/
-public class InAppShareActivity extends BaseActivity implements InstantServer.PercentCallback {
+public class InAppShareActivity extends BaseActivity {
 
     private InAppShareViewModel inAppShareViewModel;
     private ActivityInAppShareBinding activityInAppShareBinding;
@@ -57,16 +57,13 @@ public class InAppShareActivity extends BaseActivity implements InstantServer.Pe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         inAppShareViewModel = getViewModel();
+        // Start in app share server
         InstantServer.getInstance().startServer();
         uiOperationServerAddress();
     }
 
-    @Override
-    public void showPercent(int percent) {
-
-    }
-
     private void uiOperationServerAddress() {
+        // Expose all server side info
         activityInAppShareBinding.textViewUrl.setText(InAppShareUtil.getInstance().getServerAddress());
         activityInAppShareBinding.imageViewQrCode.setImageBitmap(InAppShareUtil.getInstance().getUrlQR());
     }
@@ -74,7 +71,15 @@ public class InAppShareActivity extends BaseActivity implements InstantServer.Pe
     @Override
     protected void stopUI() {
         super.stopUI();
+        // Stop In app share server
         inAppShareViewModel.stopServerProcess();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Reset and restart RM service if RM is stopped
+        inAppShareViewModel.resetRM();
     }
 
     private InAppShareViewModel getViewModel() {
@@ -82,7 +87,7 @@ public class InAppShareActivity extends BaseActivity implements InstantServer.Pe
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getInAppShareViewModel(getApplication(), InAppShareActivity.this);
+                return (T) ServiceLocator.getInstance().getInAppShareViewModel(getApplication());
             }
         }).get(InAppShareViewModel.class);
     }

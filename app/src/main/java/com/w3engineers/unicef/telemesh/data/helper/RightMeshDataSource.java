@@ -2,10 +2,8 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.RemoteException;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
@@ -14,7 +12,8 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgeme
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
@@ -179,8 +178,10 @@ public class RightMeshDataSource extends BaseRmDataSource {
         RmDataHelper.getInstance().ackReceive(rmDataModel);
     }
 
-    @Override
-    public void onRmOff() {
-        super.onRmOff();
+    /**
+     * For ReInitiating RM service need to reset rightmesh data source instance
+     */
+    protected void resetInstance() {
+        rightMeshDataSource = null;
     }
 }

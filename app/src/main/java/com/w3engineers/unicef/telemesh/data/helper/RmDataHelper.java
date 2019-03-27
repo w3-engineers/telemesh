@@ -278,4 +278,18 @@ public class RmDataHelper {
             }
         }
     }
+
+    /**
+     * Concern for this api stopping RM service from app layer
+     */
+    public void stopRmService() {
+        rightMeshDataSource.stopRMService();
+    }
+
+    /**
+     * For ReInitiating RM service need to reset rightmesh data source instance
+     */
+    public void resetRmDataSourceInstance() {
+        rightMeshDataSource.resetInstance();
+    }
 }

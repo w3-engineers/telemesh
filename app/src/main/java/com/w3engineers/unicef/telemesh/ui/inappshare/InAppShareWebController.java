@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.inappshare;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -29,62 +31,56 @@ import java.io.InputStreamReader;
  * * --> <Second Reviewer> on [13-Jul-2018 at 11:53 AM].
  * * ============================================================================
  **/
-public class WebUpdater {
+public class InAppShareWebController {
 
-    private static WebUpdater webUpdater;
+    private static InAppShareWebController inAppShareWebController = new InAppShareWebController();
     private Context context;
     private String HTML_DIRECTORY_ROOT = "html/";
 
-    public static WebUpdater getWebUpdater() {
-        if (webUpdater == null)
-            webUpdater = new WebUpdater();
-        return webUpdater;
+    /**
+     * get web controller instance
+     * @return - singleton instance
+     */
+    public static InAppShareWebController getInAppShareWebController() {
+        return inAppShareWebController;
     }
 
+    /**
+     * Access html assets required a context
+     * @param context - view context or application context
+     */
     public void initContext(Context context) {
         this.context = context;
     }
 
-    public InputStream getWebFile(String contentPath) {
+    /**
+     * Send a html page input stream
+     * @return - download option html view as input stream
+     */
+    @Nullable
+    public InputStream getWebFile() {
 
         try {
             String HTML_INDEX_FILE_NAME = "index.html";
-            InputStream fileInputStream = context.getAssets().open(HTML_DIRECTORY_ROOT + HTML_INDEX_FILE_NAME);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
-
-            String aDataRow = "", aBuffer = "";
-
-            while ((aDataRow = bufferedReader.readLine()) != null) {
-                aBuffer += aDataRow + "\n";
-            }
-            bufferedReader.close();
-
-            String newExtension = "." + getMime(contentPath);
-            String oldExtension = ".apk";
-            String newInfo = aBuffer.replace(oldExtension, newExtension);
-
-            return new ByteArrayInputStream(newInfo.getBytes());
-
+            return context.getAssets().open(HTML_DIRECTORY_ROOT + HTML_INDEX_FILE_NAME);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public InputStream getWebSupportFile(String uri) {
+    /**
+     * Send design and style related files as a input stream
+     * @param uri - input a uri type. e.g. css, png, icon
+     * @return - convert css and design file to input stream format
+     */
+    @Nullable
+    public InputStream getWebSupportFile(@NonNull String uri) {
         try {
             return context.getAssets().open(HTML_DIRECTORY_ROOT + uri.substring(1));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    private String getMime(String url) {
-        int dot = url.lastIndexOf('.');
-        if (dot >= 0)
-            return url.substring(dot + 1).toLowerCase();
-
         return null;
     }
 }

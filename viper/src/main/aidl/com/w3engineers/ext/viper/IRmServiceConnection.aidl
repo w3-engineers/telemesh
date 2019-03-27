@@ -24,4 +24,6 @@ interface IRmServiceConnection {
     List<BaseMeshData> getLivePeers();
 
     void openRmSettings();
+
+    void stopRmService();
 }

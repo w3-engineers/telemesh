@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -46,6 +47,7 @@ public class NetworkConfigureUtil {
     private Context context;
     private NetworkCallback networkCallback;
 
+    @SuppressLint("StaticFieldLeak")
     private static NetworkConfigureUtil networkConfigureUtil = new NetworkConfigureUtil();
 
     private NetworkConfigureUtil() {

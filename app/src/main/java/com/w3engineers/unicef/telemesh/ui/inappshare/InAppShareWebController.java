@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.inappshare;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import java.io.InputStreamReader;
  **/
 public class InAppShareWebController {
 
+    @SuppressLint("StaticFieldLeak")
     private static InAppShareWebController inAppShareWebController = new InAppShareWebController();
     private Context context;
     private String HTML_DIRECTORY_ROOT = "html/";

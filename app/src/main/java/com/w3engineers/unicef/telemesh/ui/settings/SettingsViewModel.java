@@ -92,7 +92,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
         getCompositeDisposable().add(getSingleRouterConfiguration()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+                .subscribe(aBoolean -> {}, Throwable::printStackTrace));
     }
 
     /**

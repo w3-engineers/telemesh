@@ -61,4 +61,9 @@
     <string name="qr_code_text">Scan the QR code to get the app</string>
     <string name="enter_url_text">Enter the following URL into the browser</string>
 
+    <string name="hotspot_id_pass">ID: %s\nPassword: %s</string>
+    <string name="connect_qr_scan">To connect, scan the QR code.</string>
+    <string name="connecting">Connecting</string>
+    <string name="settings_open_wallet">My wallet</string>
+
 </resources>

@@ -104,13 +104,14 @@ public class InstantServer {
     public void startServer(){
         try {
             ServerSocket serverSocket = new ServerSocket(port);
+            String fileLocation = filePath;
             thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         while (true) {
                             Socket socket = serverSocket.accept();
-                            new HTTPRequestSession(socket, filePath);
+                            new HTTPRequestSession(socket, fileLocation);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

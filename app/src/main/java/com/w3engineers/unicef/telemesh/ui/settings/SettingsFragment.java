@@ -185,7 +185,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     // For UI need to add a view holder for DialogPlus library
-    private AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder;
+//    private AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder;
 
     /**
      * Bottom dialog for sharing wifi network info
@@ -195,10 +195,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
                 null, false);
 
-        alertWifiShareViewHolderHolder = new AlertWifiShareViewHolderHolder(layoutView);
+//        alertWifiShareViewHolderHolder = new AlertWifiShareViewHolderHolder(layoutView, settingsViewModel);
 
         DialogPlus dialog = DialogPlus.newDialog(getActivity())
-                .setContentHolder(alertWifiShareViewHolderHolder)
+                .setContentHolder(new AlertWifiShareViewHolderHolder(layoutView, settingsViewModel))
                 .setContentBackgroundResource(android.R.color.transparent)
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setOnDismissListener(dialog1 -> {
@@ -227,7 +227,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         private ProgressBar loadingProgress;
         private Button ok;
 
-        public AlertWifiShareViewHolderHolder(View view) {
+        public AlertWifiShareViewHolderHolder(View view, SettingsViewModel settingsViewModel) {
             super(view);
             shareWifiPass = view.findViewById(R.id.share_wifi_id_pass);
             imageView = view.findViewById(R.id.wifi_qr);
@@ -245,30 +245,30 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             ok.setEnabled(false);
             ok.setTextColor(getResources().getColor(R.color.black));
 
-            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, SettingsFragment.this::activeView);
+            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, bitmap -> {activeView(bitmap, this);});
         }
-    }
 
-    /**
-     * When network state is active
-     * then we will prepare a bitmap for exposing my network as a QR code
-     * @param bitmap- Qr code bitmap
-     */
-    private void activeView(Bitmap bitmap) {
-        getActivity().runOnUiThread(() -> {
+        /**
+         * When network state is active
+         * then we will prepare a bitmap for exposing my network as a QR code
+         * @param bitmap- Qr code bitmap
+         */
+        private void activeView(Bitmap bitmap, AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder) {
+            getActivity().runOnUiThread(() -> {
 
-            if (alertWifiShareViewHolderHolder != null) {
+                if (alertWifiShareViewHolderHolder != null) {
 
-                alertWifiShareViewHolderHolder.shareWifiPass.setText(settingsViewModel.wifiInfo);
-                alertWifiShareViewHolderHolder.imageView.setImageBitmap(bitmap);
+                    alertWifiShareViewHolderHolder.shareWifiPass.setText(settingsViewModel.wifiInfo);
+                    alertWifiShareViewHolderHolder.imageView.setImageBitmap(bitmap);
 
-                alertWifiShareViewHolderHolder.backWhiteView.setVisibility(View.GONE);
-                alertWifiShareViewHolderHolder.loadingProgress.setVisibility(View.GONE);
-                alertWifiShareViewHolderHolder.connecting.setVisibility(View.GONE);
+                    alertWifiShareViewHolderHolder.backWhiteView.setVisibility(View.GONE);
+                    alertWifiShareViewHolderHolder.loadingProgress.setVisibility(View.GONE);
+                    alertWifiShareViewHolderHolder.connecting.setVisibility(View.GONE);
 
-                alertWifiShareViewHolderHolder.ok.setEnabled(true);
-                alertWifiShareViewHolderHolder.ok.setTextColor(getResources().getColor(R.color.white));
-            }
-        });
+                    alertWifiShareViewHolderHolder.ok.setEnabled(true);
+                    alertWifiShareViewHolderHolder.ok.setTextColor(getResources().getColor(R.color.white));
+                }
+            });
+        }
     }
 }

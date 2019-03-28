@@ -48,11 +48,7 @@ public class InstantServer {
     /**
      * Response status type
      */
-    private String HTTP_OK = "200 OK",
-            HTTP_PARTIALCONTENT = "206 Partial Content",
-            HTTP_RANGE_NOT_SATISFIABLE = "416 Requested Range Not Satisfiable",
-            HTTP_NOTMODIFIED = "304 Not Modified",
-            filePath;
+    private String filePath;
 
     /**
      * Response mime type
@@ -114,7 +110,7 @@ public class InstantServer {
                     try {
                         while (true) {
                             Socket socket = serverSocket.accept();
-                            new HTTPRequestSession(socket);
+                            new HTTPRequestSession(socket, filePath);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -158,7 +154,9 @@ public class InstantServer {
         /**
          * Response status type
          */
-        private String HTTP_OK = "200 OK";
+        private String HTTP_OK = "200 OK", HTTP_RANGE_NOT_SATISFIABLE = "416 Requested Range Not Satisfiable",
+                HTTP_PARTIALCONTENT = "206 Partial Content",
+                HTTP_NOTMODIFIED = "304 Not Modified", filePath;
 
         /**
          * Response mime type
@@ -184,7 +182,8 @@ public class InstantServer {
          * When server got any type of information
          * then it starts its session
          */
-        HTTPRequestSession(Socket socket) {
+        HTTPRequestSession(Socket socket, String filePath) {
+            this.filePath = filePath;
             this.socket = socket;
             Thread thread = new Thread(this);
             thread.setDaemon(true);

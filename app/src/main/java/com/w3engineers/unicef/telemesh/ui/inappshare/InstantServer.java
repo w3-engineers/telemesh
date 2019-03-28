@@ -54,7 +54,10 @@ public class InstantServer {
             HTTP_NOTMODIFIED = "304 Not Modified",
             filePath;
 
-    private String METHOD = "method", URI = "uri";
+    /** Method value*/
+    private String METHOD = "method";
+    /** URI for retrieve response property */
+    private String URI = "uri";
 
     /**
      * Response mime type
@@ -130,6 +133,7 @@ public class InstantServer {
         void showPercent(int percent);
     }
 
+    /** A server socket for network communication */
     private ServerSocket serverSocket;
     private Thread thread;
 
@@ -251,7 +255,7 @@ public class InstantServer {
 
                 decodeHeaderData(bufferedReader);
 
-                Response response = serveData(methods.getProperty(URI), header);
+                Response response = serveFile(methods.getProperty(URI), header);
 
                 if (response != null) {
                     sendResponse(response);
@@ -411,13 +415,6 @@ public class InstantServer {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Prepare and serve data after getting any request from client side
-     */
-    private Response serveData(String uri, Properties method) {
-        return serveFile(uri, method);
     }
 
     /**

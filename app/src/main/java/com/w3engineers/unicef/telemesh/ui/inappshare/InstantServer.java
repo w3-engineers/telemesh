@@ -54,38 +54,13 @@ public class InstantServer {
             HTTP_NOTMODIFIED = "304 Not Modified",
             filePath;
 
-    /** Method value*/
-    private String METHOD = "method";
-    /** URI for retrieve response property */
-    private String URI = "uri";
-
     /**
      * Response mime type
      */
 
     private static final String
             MIME_PLAINTEXT = "text/plain",
-            MIME_HTML = "text/html",
-            MIME_JS = "application/javascript",
-            MIME_CSS = "text/css",
-            MIME_PNG = "image/png",
-            MIME_JPG = "image/jpg",
-            MIME_ICO = "image/x-icon",
-            MIME_DEFAULT_BINARY = "application/octet-stream",
-            MIME_APK = "application/vnd.android.package-archive",
-            MIME_XML = "text/xml";
-
-    /**
-     * Response file type
-     */
-    private static final String
-            FILE_TYPE_JAVASCRIPT = ".js",
-            FILE_TYPE_CSS = ".css",
-            FILE_TYPE_PNG = ".png",
-            FILE_TYPE_JPG = ".jpg",
-            FILE_TYPE_ICO = ".ico",
-            FILE_TYPE_APK = ".apk",
-            TYPE_STRING = ".str";
+            MIME_DEFAULT_BINARY = "application/octet-stream";
 
     public synchronized static InstantServer getInstance() {
         return instantServer;
@@ -96,8 +71,6 @@ public class InstantServer {
     }
 
     private PercentCallback percentCallback;
-
-
 
     /**
      * Initiating and starting server after calling this constructor
@@ -194,6 +167,30 @@ public class InstantServer {
         private SimpleDateFormat simpleDateFormat;
 
         /**
+         * Response status type
+         */
+        private String HTTP_OK = "200 OK";
+
+        /**
+         * Response mime type
+         */
+        private static final String
+                MIME_HTML = "text/html",
+                MIME_CSS = "text/css",
+                MIME_PNG = "image/png",
+                MIME_ICO = "image/x-icon";
+
+        /**
+         * Response file type
+         */
+        private static final String
+                FILE_TYPE_CSS = ".css",
+                FILE_TYPE_PNG = ".png",
+                FILE_TYPE_JPG = ".jpg",
+                FILE_TYPE_ICO = ".ico",
+                TYPE_STRING = ".str";
+
+        /**
          * @param socket
          * When server got any type of information
          * then it starts its session
@@ -248,6 +245,8 @@ public class InstantServer {
                 int reqLength = inputStream.read(buffer, 0, bufferSize);
                 if (reqLength <= 0) return;
 
+                String URI = "uri";
+
                 reset();
                 init();
 
@@ -266,6 +265,43 @@ public class InstantServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        /**
+         * Prepare and serve any type of response after getting any request
+         * @param uri -> serve any response based on requested uri
+         * @param header -> header is needed when serve a media or apk content
+         * @return -> the desire response based on client request
+         */
+        private Response serveFile(String uri, Properties header) {
+
+            Response response = null;
+            try {
+
+                if (uri.contains("TeleMesh")) {
+                    response = prepareFile(header);
+                } else {
+                    if (uri.contains(FILE_TYPE_CSS)) {
+                        response = new Response(HTTP_OK, MIME_CSS, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
+                    } else if (uri.contains(FILE_TYPE_PNG)) {
+                        response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
+                    } else if (uri.contains(FILE_TYPE_JPG)) {
+                        response = new Response(HTTP_OK, FILE_TYPE_JPG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
+                    } else if (uri.contains(FILE_TYPE_ICO)) {
+                        response = new Response(HTTP_OK, MIME_ICO, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
+                    } else if (uri.contains(TYPE_STRING)) {
+                        response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
+                    } else {
+                        InputStream inputStream = InAppShareWebController.getInAppShareWebController().getWebFile();
+                        response = new Response(HTTP_OK, MIME_HTML, inputStream);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return response;
         }
 
         /**
@@ -336,6 +372,16 @@ public class InstantServer {
         }
 
         /**
+         * Send a response progress
+         * @param responsePercentage -> show a percentage in UI
+         */
+        private void getResponseProgress(int responsePercentage) {
+            if (percentCallback != null) {
+                percentCallback.showPercent(responsePercentage);
+            }
+        }
+
+        /**
          * Decodes the sent headers and loads the data into
          * java Properties' key - value pairs
          **/
@@ -347,6 +393,9 @@ public class InstantServer {
 
                 if (!stringTokenizer.hasMoreTokens())
                     return;
+
+                String URI = "uri";
+                String METHOD = "method";
 
                 // Parse method and uri from request
                 methods.setProperty(METHOD, stringTokenizer.nextToken());
@@ -365,16 +414,6 @@ public class InstantServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * Send a response progress
-     * @param responsePercentage -> show a percentage in UI
-     */
-    private void getResponseProgress(int responsePercentage) {
-        if (percentCallback != null) {
-            percentCallback.showPercent(responsePercentage);
         }
     }
 
@@ -495,43 +534,6 @@ public class InstantServer {
 
         if (response != null) {
             response.addHeader("Accept-Ranges", "bytes");
-        }
-
-        return response;
-    }
-
-    /**
-     * Prepare and serve any type of response after getting any request
-     * @param uri -> serve any response based on requested uri
-     * @param header -> header is needed when serve a media or apk content
-     * @return -> the desire response based on client request
-     */
-    private Response serveFile(String uri, Properties header) {
-
-        Response response = null;
-        try {
-
-            if (uri.contains("TeleMesh")) {
-                response = prepareFile(header);
-            } else {
-                if (uri.contains(FILE_TYPE_CSS)) {
-                    response = new Response(HTTP_OK, MIME_CSS, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
-                } else if (uri.contains(FILE_TYPE_PNG)) {
-                    response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
-                } else if (uri.contains(FILE_TYPE_JPG)) {
-                    response = new Response(HTTP_OK, FILE_TYPE_JPG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
-                } else if (uri.contains(FILE_TYPE_ICO)) {
-                    response = new Response(HTTP_OK, MIME_ICO, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
-                } else if (uri.contains(TYPE_STRING)) {
-                    response = new Response(HTTP_OK, MIME_PNG, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
-                } else {
-                    InputStream inputStream = InAppShareWebController.getInAppShareWebController().getWebFile();
-                    response = new Response(HTTP_OK, MIME_HTML, inputStream);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return response;

@@ -57,8 +57,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
-    <string name="text_1">1</string>
-    <string name="text_2">2</string>
+    <!--<string name="text_1">1</string>
+    <string name="text_2">2</string>-->
     <string name="text_or">OR</string>
     <string name="turn_on_hotspot">To get the app, connect to my Hotspot</string>
     <string name="hotspot_id_pass">ID: %s\nPassword: %s</string>

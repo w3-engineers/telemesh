@@ -70,8 +70,6 @@ public class InstantServer {
 
     }
 
-    private PercentCallback percentCallback;
-
     /**
      * Initiating and starting server after calling this constructor
      */
@@ -86,15 +84,6 @@ public class InstantServer {
 
     public InstantServer setFilePath(String filePath) {
         this.filePath = filePath;
-        return this;
-    }
-
-    /**
-     * Set a callback for showing a percent in UI,
-     * how amount of data has been sent by socket
-     */
-    public InstantServer setPercentCallback(PercentCallback percentCallback) {
-        this.percentCallback = percentCallback;
         return this;
     }
 
@@ -305,6 +294,87 @@ public class InstantServer {
         }
 
         /**
+         * Prepare a file response when client request to download a file
+         * @param header -> Adding header params for preparing response file
+         * @return a response which contains the input stream of selected file,
+         * status and mime type also
+         */
+        private Response prepareFile(Properties header) {
+            Response response = null;
+            String mime = MIME_DEFAULT_BINARY;
+
+            try {
+                File f = new File(filePath);
+
+                // Calculate etag
+                String etag = Integer.toHexString((f.getAbsolutePath() + f.lastModified() + "" + f.length()).hashCode());
+
+                // Support (simple) skipping:
+                long startFrom = 0;
+                long endAt = -1;
+                String range = header.getProperty("range");
+                if (range != null) {
+                    if (range.startsWith("bytes=")) {
+                        range = range.substring("bytes=".length());
+                        int minus = range.indexOf('-');
+                        try {
+                            if (minus > 0) {
+                                startFrom = Long.parseLong(range.substring(0, minus));
+                                endAt = Long.parseLong(range.substring(minus + 1));
+                            }
+                        } catch (NumberFormatException nfe) {
+                            nfe.printStackTrace();
+                        }
+                    }
+                }
+
+                // Change return code and add Content-Range header when skipping is requested
+                long fileLen = f.length();
+                if (range != null && startFrom >= 0) {
+                    if (startFrom >= fileLen) {
+                        response = new Response(HTTP_RANGE_NOT_SATISFIABLE, MIME_PLAINTEXT, "");
+                        response.addHeader("Content-Range", "bytes 0-0/" + fileLen);
+                        response.addHeader("ETag", etag);
+                    } else {
+                        if (endAt < 0)
+                            endAt = fileLen - 1;
+                        long newLen = endAt - startFrom + 1;
+                        if (newLen < 0) newLen = 0;
+
+                        final long dataLen = newLen;
+                        FileInputStream fis = new FileInputStream(f) {
+                            public int available() throws IOException {
+                                return (int) dataLen;
+                            }
+                        };
+                        fis.skip(startFrom);
+
+                        response = new Response(HTTP_PARTIALCONTENT, mime, fis);
+                        response.addHeader("Content-Length", "" + dataLen);
+                        response.addHeader("Content-Range", "bytes " + startFrom + "-" + endAt + "/" + fileLen);
+                        response.addHeader("ETag", etag);
+                    }
+                } else {
+                    if (etag.equals(header.getProperty("if-none-match")))
+                        response = new Response(HTTP_NOTMODIFIED, mime, "");
+                    else {
+                        response = new Response(HTTP_OK, mime, new FileInputStream(f));
+                        response.addHeader("Content-Length", "" + fileLen);
+                        response.addHeader("ETag", etag);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (response != null) {
+                response.addHeader("Accept-Ranges", "bytes");
+            }
+
+            return response;
+        }
+
+        /**
          * Purpose of this api send a response which already prepared by URI and property
          * @param response -> Sends given local Response to the socket.
          */
@@ -354,7 +424,7 @@ public class InstantServer {
 
                         total += read;
                         int responsePercentage = (int) ((total * 100) / lengthOfFile);
-                        getResponseProgress(responsePercentage);
+                        // show percent using a callback
                     }
                 }
                 out.flush();
@@ -368,16 +438,6 @@ public class InstantServer {
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
-            }
-        }
-
-        /**
-         * Send a response progress
-         * @param responsePercentage -> show a percentage in UI
-         */
-        private void getResponseProgress(int responsePercentage) {
-            if (percentCallback != null) {
-                percentCallback.showPercent(responsePercentage);
             }
         }
 
@@ -458,85 +518,6 @@ public class InstantServer {
         }
     }
 
-    /**
-     * Prepare a file response when client request to download a file
-     * @param header -> Adding header params for preparing response file
-     * @return a response which contains the input stream of selected file,
-     * status and mime type also
-     */
-    private Response prepareFile(Properties header) {
-        Response response = null;
-        String mime = MIME_DEFAULT_BINARY;
 
-        try {
-            File f = new File(filePath);
-
-            // Calculate etag
-            String etag = Integer.toHexString((f.getAbsolutePath() + f.lastModified() + "" + f.length()).hashCode());
-
-            // Support (simple) skipping:
-            long startFrom = 0;
-            long endAt = -1;
-            String range = header.getProperty("range");
-            if (range != null) {
-                if (range.startsWith("bytes=")) {
-                    range = range.substring("bytes=".length());
-                    int minus = range.indexOf('-');
-                    try {
-                        if (minus > 0) {
-                            startFrom = Long.parseLong(range.substring(0, minus));
-                            endAt = Long.parseLong(range.substring(minus + 1));
-                        }
-                    } catch (NumberFormatException nfe) {
-                        nfe.printStackTrace();
-                    }
-                }
-            }
-
-            // Change return code and add Content-Range header when skipping is requested
-            long fileLen = f.length();
-            if (range != null && startFrom >= 0) {
-                if (startFrom >= fileLen) {
-                    response = new Response(HTTP_RANGE_NOT_SATISFIABLE, MIME_PLAINTEXT, "");
-                    response.addHeader("Content-Range", "bytes 0-0/" + fileLen);
-                    response.addHeader("ETag", etag);
-                } else {
-                    if (endAt < 0)
-                        endAt = fileLen - 1;
-                    long newLen = endAt - startFrom + 1;
-                    if (newLen < 0) newLen = 0;
-
-                    final long dataLen = newLen;
-                    FileInputStream fis = new FileInputStream(f) {
-                        public int available() throws IOException {
-                            return (int) dataLen;
-                        }
-                    };
-                    fis.skip(startFrom);
-
-                    response = new Response(HTTP_PARTIALCONTENT, mime, fis);
-                    response.addHeader("Content-Length", "" + dataLen);
-                    response.addHeader("Content-Range", "bytes " + startFrom + "-" + endAt + "/" + fileLen);
-                    response.addHeader("ETag", etag);
-                }
-            } else {
-                if (etag.equals(header.getProperty("if-none-match")))
-                    response = new Response(HTTP_NOTMODIFIED, mime, "");
-                else {
-                    response = new Response(HTTP_OK, mime, new FileInputStream(f));
-                    response.addHeader("Content-Length", "" + fileLen);
-                    response.addHeader("ETag", etag);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (response != null) {
-            response.addHeader("Accept-Ranges", "bytes");
-        }
-
-        return response;
-    }
 
 }

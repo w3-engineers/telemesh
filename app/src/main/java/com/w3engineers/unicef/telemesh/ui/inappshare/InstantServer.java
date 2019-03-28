@@ -145,7 +145,7 @@ public class InstantServer {
      */
     public void startServer(){
         try {
-            serverSocket = new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(port);
             thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -162,6 +162,8 @@ public class InstantServer {
 
             thread.setDaemon(true);
             thread.start();
+
+            this.serverSocket = serverSocket;
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -67,6 +67,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
                 .write(Constants.preferenceKey.IS_NOTIFICATION_ENABLED, checked);
     }
 
+    @NonNull
     public String getAppLanguage() {
 
         String language = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.APP_LANGUAGE_DISPLAY);
@@ -100,6 +101,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
      * In disposable can't operate directly any api's from another class
      * @return - Get the completion state
      */
+    @NonNull
     private Boolean getRouterConfigure() {
         return NetworkConfigureUtil.getInstance()
                 .setNetworkCallback(SettingsViewModel.this).startRouterConfigureProcess();

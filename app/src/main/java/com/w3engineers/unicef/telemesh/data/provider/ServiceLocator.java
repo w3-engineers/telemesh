@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
@@ -114,7 +115,8 @@ public class ServiceLocator extends BaseServiceLocator {
         return new SellDataViewModel(application);
     }
 
-    public InAppShareViewModel getInAppShareViewModel(Application application) {
+    @NonNull
+    public InAppShareViewModel getInAppShareViewModel(@NonNull Application application) {
         return new InAppShareViewModel(application);
     }
 

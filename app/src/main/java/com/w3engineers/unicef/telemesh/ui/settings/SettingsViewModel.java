@@ -74,7 +74,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
         return !language.equals("") ? language : App.getContext().getString(R.string.demo_language);
     }
 
-    public void setLocale(String lang, String landDisplay) {
+    public void setLocale(@Nullable String lang, @Nullable String landDisplay) {
 
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);

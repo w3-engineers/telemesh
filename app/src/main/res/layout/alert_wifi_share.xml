@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_alert_wifi"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <!--android:id="@+id/layout_alert_wifi"-->
 
+    <!--android:id="@+id/layout_alert_wifi_share"-->
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/layout_alert_wifi_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"

@@ -245,7 +245,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             ok.setEnabled(false);
             ok.setTextColor(getResources().getColor(R.color.black));
 
-            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, bitmap -> {activeView(bitmap, this);});
+            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, bitmap -> {activeView(bitmap, this, settingsViewModel);});
         }
 
         /**
@@ -253,10 +253,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
          * then we will prepare a bitmap for exposing my network as a QR code
          * @param bitmap- Qr code bitmap
          */
-        private void activeView(Bitmap bitmap, AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder) {
+        private void activeView(Bitmap bitmap, AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder, SettingsViewModel settingsViewModel) {
+
             getActivity().runOnUiThread(() -> {
 
                 if (alertWifiShareViewHolderHolder != null) {
+
+
 
                     alertWifiShareViewHolderHolder.shareWifiPass.setText(settingsViewModel.wifiInfo);
                     alertWifiShareViewHolderHolder.imageView.setImageBitmap(bitmap);

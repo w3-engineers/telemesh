@@ -66,4 +66,7 @@
     <string name="connecting">Connecting</string>
     <string name="settings_open_wallet">My wallet</string>
 
+    <string name="qr_content_description">QR Code</string>
+    <string name="url_loading">Your URl is loading....</string>
+
 </resources>

@@ -69,6 +69,7 @@
                     android:layout_width="@dimen/width_150"
                     android:layout_height="@dimen/height_150"
                     android:layout_marginTop="@dimen/margin_30"
+                    android:contentDescription="@string/qr_content_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_second_text" />
@@ -131,7 +132,7 @@
                     android:layout_marginBottom="@dimen/padding_15"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
-                    android:text="Your URl is loading...."
+                    android:text="@string/url_loading"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"

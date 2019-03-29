@@ -67,6 +67,9 @@
     <string name="enter_url_text">Enter the following URL into the browser</string>
     <string name="connecting">Connecting</string>
 
+    <string name="qr_content_description">QR Code</string>
+    <string name="url_loading">Your URl is loading....</string>
+
     <string-array name="language_list">
         <item>English</item>
         <item>বাংলা</item>

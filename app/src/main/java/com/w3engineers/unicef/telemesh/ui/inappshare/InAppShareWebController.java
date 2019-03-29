@@ -43,6 +43,7 @@ public class InAppShareWebController {
      * get web controller instance
      * @return - singleton instance
      */
+    @NonNull
     public static InAppShareWebController getInAppShareWebController() {
         return inAppShareWebController;
     }
@@ -51,7 +52,7 @@ public class InAppShareWebController {
      * Access html assets required a context
      * @param context - view context or application context
      */
-    public void initContext(Context context) {
+    public void initContext(@NonNull Context context) {
         this.context = context;
     }
 

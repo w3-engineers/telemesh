@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.inappshare;
 
+import android.support.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -58,6 +60,7 @@ public class InstantServer {
             MIME_PLAINTEXT = "text/plain",
             MIME_DEFAULT_BINARY = "application/octet-stream";
 
+    @NonNull
     public synchronized static InstantServer getInstance() {
         return instantServer;
     }
@@ -73,12 +76,14 @@ public class InstantServer {
 //        startServer();
 //    }
 
+    @NonNull
     public InstantServer setPort(int port) {
         this.port = port;
         return this;
     }
 
-    public InstantServer setFilePath(String filePath) {
+    @NonNull
+    public InstantServer setFilePath(@NonNull String filePath) {
         this.filePath = filePath;
         return this;
     }

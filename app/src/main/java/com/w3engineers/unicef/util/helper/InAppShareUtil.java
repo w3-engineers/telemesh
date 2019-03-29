@@ -57,6 +57,7 @@ public class InAppShareUtil {
     private String serverAddress = "";
     private Random random = new Random();
 
+    @NonNull
     public static InAppShareUtil getInstance() {
         return inAppShareUtil;
     }
@@ -65,6 +66,7 @@ public class InAppShareUtil {
      * Get In app share server url or code bitmap
      * @return - QR code bitmap
      */
+    @Nullable
     public Bitmap getUrlQR() {
         return urlQrBitmap;
     }
@@ -73,6 +75,7 @@ public class InAppShareUtil {
      * Get in app share server address
      * @return - server url link
      */
+    @NonNull
     public String getServerAddress() {
         return serverAddress;
     }
@@ -152,6 +155,7 @@ public class InAppShareUtil {
      * If all conditions will not satisfy then create a apk and store it in sd card
      * @return - Get the back up apk path
      */
+    @Nullable
     public String getBackUpApkPath() {
         Context context = App.getContext();
 
@@ -247,6 +251,7 @@ public class InAppShareUtil {
      * Responsible for this api is getting my device local ip address
      * @return - my local ip address
      */
+    @Nullable
     private String getMyIpAddress() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();

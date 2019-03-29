@@ -111,7 +111,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
      * @param SSID - Configured network name
      */
     @Override
-    public void networkName(String SSID) {
+    public void networkName(@NonNull String SSID) {
 
         Context context = getApplication().getApplicationContext();
 

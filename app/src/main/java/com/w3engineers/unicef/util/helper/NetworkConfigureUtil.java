@@ -40,6 +40,7 @@ public class NetworkConfigureUtil {
     private static int AP_STATE_ENABLED = 13;
 
     private String networkNamePrefix = "RM-";
+    @NonNull
     public String SSID_Key = "m3sht3st";
     private WifiManager wifiManager;
     private boolean isRmOff = false;
@@ -55,12 +56,13 @@ public class NetworkConfigureUtil {
         wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
+    @NonNull
     public static NetworkConfigureUtil getInstance() {
         return networkConfigureUtil;
     }
 
     public interface NetworkCallback {
-        void networkName(String SSID);
+        void networkName(@NonNull String SSID);
     }
 
     /**
@@ -68,7 +70,8 @@ public class NetworkConfigureUtil {
      * @param networkCallback - get instance from implemented class
      * @return - this class for using cyclic api
      */
-    public NetworkConfigureUtil setNetworkCallback(NetworkCallback networkCallback) {
+    @NonNull
+    public NetworkConfigureUtil setNetworkCallback(@NonNull NetworkCallback networkCallback) {
         this.networkCallback = networkCallback;
         return this;
     }

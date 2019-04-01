@@ -25,10 +25,9 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -117,10 +116,10 @@ public class MeshContactsFragment extends BaseFragment {
     private void initSearchView(SearchView searchView) {
 
         getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
                 .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()/*.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())*/
                 .subscribeWith(searchContacts()));
 
     }
@@ -129,14 +128,14 @@ public class MeshContactsFragment extends BaseFragment {
         return new DisposableObserver<String>() {
             @Override
             public void onNext(String string) {
-                Timber.d("Search query: " + string);
+                Timber.d("Search query: %s", string);
                 meshContactViewModel.startSearch(string, userEntityList);
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Timber.e("onError: " + e.getMessage());
+                Timber.e("onError: %s", e.getMessage());
             }
 
             @Override

@@ -1,14 +1,15 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:background">@color/white</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fitsSystemWindows">true</item>
         <!--<item name="android:windowLightStatusBar">true</item>-->
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>
 
     </style>
@@ -24,20 +25,20 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="CustomEditBox">
+    <!--<style name="CustomEditBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">@dimen/margin_8</item>
         <item name="android:layout_marginRight">@dimen/margin_8</item>
         <item name="android:background">@drawable/bg_white_rounded_box</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:elevation">@dimen/elevation_2</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/elevation_2</item>
         <item name="android:paddingTop">@dimen/padding_3</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
         <item name="android:textColor">@color/text_color_deep</item>
         <item name="android:textColorHint">@color/text_color_light</item>
         <item name="android:textSize">@dimen/text_large_body</item>
-    </style>
+    </style>-->
 
     <style name="CustomButton">
         <item name="android:layout_width">match_parent</item>
@@ -77,14 +78,14 @@
         <item name="android:layout_marginLeft">@dimen/margin_2</item>
     </style>
 
-    <style name="text_style_settings_page">
+    <!--<style name="text_style_settings_page">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">@dimen/margin_15</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
         <item name="android:textColor">@color/font_color</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-    </style>
+    </style>-->
 
     <style name="shadow_style_settings_page">
         <item name="android:layout_width">match_parent</item>

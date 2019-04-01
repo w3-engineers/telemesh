@@ -11,6 +11,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -75,7 +76,7 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
         for (UserEntity user : userEntities) {
 
-            if (user.getFullName().toLowerCase().contains(searchText))
+            if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
                 filteredItemList.add(user);
         }
 

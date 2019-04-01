@@ -21,7 +21,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     public void userOfflineProcess() {
         getCompositeDisposable().add(updateUserToOffline()
-                .subscribeOn(Schedulers.io()).subscribe());
+                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
     }
 
     // Again this apis will be enable when its functionality will be added
@@ -50,7 +50,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
     public void makeSendingMessageAsFailed() {
 
         getCompositeDisposable().add(updateMessageStatus()
-                .subscribeOn(Schedulers.io()).subscribe());
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
     }
 
     private Single<Long> updateMessageStatus() {

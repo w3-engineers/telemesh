@@ -5,14 +5,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
@@ -21,7 +17,6 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
-import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
@@ -33,7 +28,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private MainActivityViewModel mViewModel;
     private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
-    public static MainActivity mainActivity;
 
     @Override
     protected int getLayoutId() {
@@ -52,7 +46,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     protected void startUI() {
-        mainActivity = this;
         binding = (ActivityMainBinding) getViewDataBinding();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);

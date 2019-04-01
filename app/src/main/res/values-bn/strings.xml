@@ -54,4 +54,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="settings_open_wallet">My wallet</string>
+
 </resources>

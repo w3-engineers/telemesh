@@ -263,8 +263,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
         @Override
         public void onChanged() {
-            Log.e("Observer", "onChanged");
-
+            Timber.e("onChanged");
         }
 
         // Scroll to bottom on new messages

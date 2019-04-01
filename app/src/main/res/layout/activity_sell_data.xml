@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -105,9 +106,9 @@
                 android:layout_margin="@dimen/margin_20"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="100 RM/GB"
-                android:editable="false"
                 android:focusable="false"
-                />
+                android:inputType="none"
+                tools:ignore="Autofill,LabelFor" />
 
             <Button
                 android:id="@+id/button_buy"

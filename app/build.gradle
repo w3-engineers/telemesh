@@ -39,7 +39,7 @@ android {
         checkAllWarnings true
 //        check getProject().ext.lintchecks
         lintConfig file("lint.xml")
-        baseline file("lint-baseline.xml")
+//        baseline file("lint-baseline.xml")
     }
     dataBinding {
         enabled = true
@@ -57,6 +57,9 @@ dependencies {
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
+    implementation deps.support.animated_vector_drawable
+    implementation deps.support.v4
+    implementation deps.support.media_compact
 
     //lifecycle
     implementation deps.lifecycle.runtime
@@ -104,7 +107,7 @@ dependencies {
     androidTestImplementation deps.arch_core.testing
     androidTestImplementation deps.retrofit.mock
 
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
     //RightMesh
     implementation deps.right_mesh
@@ -119,7 +122,7 @@ dependencies {
     //Too much dependency on this library must be avoided
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     // shimmer effect
-    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
     androidTestImplementation ('com.github.javafaker:javafaker:0.17.2') {
         exclude group: 'org.apache.commons', module: 'commons-lang3'
     }

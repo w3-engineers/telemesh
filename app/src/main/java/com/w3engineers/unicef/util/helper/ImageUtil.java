@@ -20,6 +20,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.util.SparseIntArray;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,17 +29,14 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class ImageUtil {
     private static final String LOCAL_RESOURCE_SCHEME = "res";
-    private static Map<Integer, Integer> imageIndexMap;
+    private static SparseIntArray imageIndexMap;
 
     static {
-        imageIndexMap = new HashMap<>();
+        imageIndexMap = new SparseIntArray();
         imageIndexMap.put(0, R.mipmap.avatar0);
         imageIndexMap.put(1, R.mipmap.avatar1);
         imageIndexMap.put(2, R.mipmap.avatar2);
@@ -49,6 +47,7 @@ public class ImageUtil {
         imageIndexMap.put(7, R.mipmap.avatar7);
         imageIndexMap.put(8, R.mipmap.avatar8);
         imageIndexMap.put(9, R.mipmap.avatar9);
+        imageIndexMap.put(10, R.mipmap.avatar10);
         imageIndexMap.put(11, R.mipmap.avatar11);
         imageIndexMap.put(12, R.mipmap.avatar12);
         imageIndexMap.put(13, R.mipmap.avatar13);

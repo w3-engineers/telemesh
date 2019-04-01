@@ -42,6 +42,7 @@ import java.util.List;
  **/
 public class RightMeshDataSource extends BaseRmDataSource {
 
+    @SuppressLint("StaticFieldLeak")
     private static RightMeshDataSource rightMeshDataSource;
 
     private List<String> userIds;

@@ -145,7 +145,7 @@ public class ChatViewModel extends AndroidViewModel {
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+                .subscribe(aLong -> {}, Throwable::printStackTrace));
 
     }
 
@@ -185,7 +185,7 @@ public class ChatViewModel extends AndroidViewModel {
 
 
         compositeDisposable.add(updateMessageSatus(friendsId)
-                .subscribeOn(Schedulers.io()).subscribe());
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
     }
 
     private Single<Long> updateMessageSatus(String friendsId) {

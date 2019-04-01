@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -24,6 +25,7 @@ import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.HashMap;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -55,10 +57,12 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
-    public HashMap<Integer, RMDataModel> rmDataMap;
+    public SparseArray<RMDataModel> rmDataMap;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmDataMap = new HashMap<>();
+        rmDataMap = new SparseArray<>();
         rmUserMap = new HashMap<>();
     }
 
@@ -136,7 +140,7 @@ public class RmDataHelper {
      * Only for outgoing message this method will be responsible
      */
     public void prepareDataObserver() {
-        dataSource.getLastChatData()
+        compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
 
@@ -147,8 +151,7 @@ public class RmDataHelper {
                         dataSend(messageEntity.toProtoChat().toByteArray(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId());
                     }
-
-                });
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -268,7 +271,7 @@ public class RmDataHelper {
 
         int dataSendId = rmDataModel.getRecDataId();
 
-        if (rmDataMap.containsKey(dataSendId)) {
+        if (rmDataMap.get(dataSendId) != null) {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
 

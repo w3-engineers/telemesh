@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.w3engineers.ext.strom.App;
@@ -27,6 +28,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
  **/
 public class TeleMeshDataHelper {
 
+    @SuppressLint("StaticFieldLeak")
     private static TeleMeshDataHelper teleMeshDataHelper = null;
     private Context context;
 

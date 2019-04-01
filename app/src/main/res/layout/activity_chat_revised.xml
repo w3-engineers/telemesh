@@ -195,7 +195,6 @@
                 android:scaleType="fitCenter"
                 android:autoMirrored="true"
                 android:rotationY="@integer/locale_mirror_flip"
-                android:onClick="sendMessage"
                 android:contentDescription="@string/chat_send_button_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -78,16 +78,14 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 (aBoolean, aBoolean2) -> aBoolean && aBoolean2
         );
 
-        getCompositeDisposable().add(combineResult.subscribe(aBoolean ->
-                {
+        getCompositeDisposable().add(combineResult.subscribe(aBoolean -> {
                     mBinding.buttonSignup.setEnabled(aBoolean);
                     if (aBoolean) {
                         mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.ENABLE_EFFECT);
                     } else {
                         mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.DISABLE_EFFECT);
                     }
-                }
-
+                }, Throwable::printStackTrace
         ));
 
     }

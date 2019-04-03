@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -122,6 +123,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.alert_language_dialog, null);
         dialogBuilder.setView(dialogView);
 

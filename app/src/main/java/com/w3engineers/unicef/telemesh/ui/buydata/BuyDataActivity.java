@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.buydata;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -87,6 +88,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.alert_buy_sell_dialog, null);
         dialogBuilder.setView(dialogView);
 

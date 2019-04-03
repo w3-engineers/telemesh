@@ -36,6 +36,7 @@ public class AboutUsViewModel extends AndroidViewModel {
         super(application);
     }
 
+    @NonNull
     public String getAppVersion() {
 
 //        try {

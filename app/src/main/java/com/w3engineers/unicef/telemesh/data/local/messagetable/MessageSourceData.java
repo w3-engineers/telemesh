@@ -44,10 +44,11 @@ public class MessageSourceData {
      * This constructor is restricted and only used in unit test class
      * @param messageDao -> provide dao from unit test class
      */
-    public MessageSourceData(MessageDao messageDao) {
+    public MessageSourceData(@NonNull MessageDao messageDao) {
         this.messageDao = messageDao;
     }
 
+    @NonNull
     public static MessageSourceData getInstance() {
         if (messageSourceData == null) {
             messageSourceData = getInstance(AppDatabase.getInstance().messageDao());
@@ -59,19 +60,21 @@ public class MessageSourceData {
      * This constructor is restricted and only used in unit test class
      * @param messageDao -> provide dao from unit test class
      */
-    public static MessageSourceData getInstance(MessageDao messageDao) {
+    @NonNull
+    public static MessageSourceData getInstance(@NonNull MessageDao messageDao) {
         if (messageSourceData == null) {
             messageSourceData = new MessageSourceData(messageDao);
         }
         return messageSourceData;
     }
 
+    @NonNull
     public Flowable<ChatEntity> getLastData() {
         return messageDao.getLastInsertedMessage().flatMap(messageEntity ->
                 Flowable.just((ChatEntity) messageEntity));
     }
 
-    public long insertOrUpdateData(ChatEntity baseEntity) {
+    public long insertOrUpdateData(@NonNull ChatEntity baseEntity) {
         return messageDao.writeMessage((MessageEntity) baseEntity);
     }
 
@@ -80,7 +83,8 @@ public class MessageSourceData {
         messageDao.deleteAllUsers();
     }*/
 
-    public Flowable<List<ChatEntity>> getAllMessages(String friendsId) {
+    @NonNull
+    public Flowable<List<ChatEntity>> getAllMessages(@NonNull String friendsId) {
 
         return messageDao.getAllMessages(friendsId).flatMap(messageEntities ->
                 Flowable.just(new ArrayList<>(messageEntities)));

@@ -74,6 +74,7 @@
                     android:layout_height="@dimen/height_40"
                     android:layout_marginEnd="@dimen/margin_10"
                     android:layout_marginRight="@dimen/margin_10"
+                    android:contentDescription="@string/logo_image"
                     android:src="@{userEntity.isOnline ? @drawable/drawable_in_renge: @drawable/drawable_out_renge}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -184,7 +185,8 @@
                 android:inputType="textCapSentences|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_send"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="Autofill" />
 
             <ImageButton
                 android:id="@+id/image_view_send"

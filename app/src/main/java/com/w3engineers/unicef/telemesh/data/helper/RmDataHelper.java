@@ -57,20 +57,22 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
-    public SparseArray<RMDataModel> rmDataMap;
+    @NonNull
+    public SparseArray<RMDataModel> rmDataMap = new SparseArray<>();;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmDataMap = new SparseArray<>();
         rmUserMap = new HashMap<>();
     }
 
+    @NonNull
     public static RmDataHelper getInstance() {
         return rmDataHelper;
     }
 
-    public RightMeshDataSource initRM(DataSource dataSource) {
+    @NonNull
+    public RightMeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
         rightMeshDataSource = RightMeshDataSource.getRmDataSource();
@@ -82,7 +84,7 @@ public class RmDataHelper {
      *
      * @param dataSource -> provide mock dataSource from unit test class
      */
-    public void initSource(DataSource dataSource) {
+    public void initSource(@NonNull DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -92,7 +94,7 @@ public class RmDataHelper {
      * @param rmUserModel -> contains all of info about users
      */
 
-    public void userAdd(RMUserModel rmUserModel) {
+    public void userAdd(@NonNull RMUserModel rmUserModel) {
 
         String userId = rmUserModel.getUserId();
         if (rmUserMap.containsKey(userId))
@@ -113,7 +115,7 @@ public class RmDataHelper {
      * @param meshPeer -> contains peer id
      */
 
-    public void userLeave(MeshPeer meshPeer) {
+    public void userLeave(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
 
@@ -131,7 +133,6 @@ public class RmDataHelper {
         }
     }
 
-    @SuppressLint("CheckResult")
     /**
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
@@ -139,6 +140,7 @@ public class RmDataHelper {
      *
      * Only for outgoing message this method will be responsible
      */
+    @SuppressLint("CheckResult")
     public void prepareDataObserver() {
         compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
@@ -160,7 +162,7 @@ public class RmDataHelper {
      * @param data -> raw data
      * @param type -> data type
      */
-    private void dataSend(byte[] data, byte type, String userId) {
+    private void dataSend(@NonNull byte[] data, byte type, String userId) {
 
         RMDataModel rmDataModel = RMDataModel.newBuilder()
                 .setRawData(ByteString.copyFrom(data))

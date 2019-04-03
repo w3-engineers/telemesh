@@ -18,7 +18,7 @@ import timber.log.Timber;
 public class SplashActivity extends BaseActivity {
 
     private SplashViewModel splashViewModel;
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
 
     @Override
     protected int getLayoutId() {
@@ -56,8 +56,7 @@ public class SplashActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getSplashViewModel(getApplication());
+                return (T) ServiceLocator.getInstance().getSplashViewModel(getApplication());
             }
         }).get(SplashViewModel.class);
     }

@@ -9,7 +9,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/bg"
+        android:src="@mipmap/bg"
+        android:contentDescription="@string/logo_image"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -24,8 +25,8 @@
         app:shimmer_base_alpha="1.0"
         app:shimmer_highlight_alpha="0.1">
 
+        <!--android:id="@+id/image_view_logo"-->
         <ImageView
-            android:id="@+id/image_view_logo"
             android:layout_width="@dimen/width_250"
             android:layout_height="@dimen/height_200"
             android:contentDescription="@string/logo_image"
@@ -40,8 +41,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shimmer_container">
 
+        <!--android:id="@+id/text_view_rightmesh_text"-->
         <TextView
-            android:id="@+id/text_view_rightmesh_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_5"

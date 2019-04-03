@@ -45,9 +45,11 @@
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
             android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_10"
             android:src="@{user.isOnline ? @drawable/drawable_in_renge : @drawable/drawable_out_renge}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:contentDescription="@string/image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -63,6 +65,7 @@
             android:textSize="@dimen/text_size_18"
             app:layout_constraintLeft_toRightOf="@id/user_avatar"
             app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+            android:layout_marginStart="@dimen/margin_10"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -70,10 +73,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
-            android:text="12.05pm"
             android:visibility="gone"
             app:layout_constraintLeft_toRightOf="@id/user_avatar"
             app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+            android:layout_marginStart="@dimen/margin_10"
             app:layout_constraintTop_toBottomOf="@id/user_name" />
 
         <View

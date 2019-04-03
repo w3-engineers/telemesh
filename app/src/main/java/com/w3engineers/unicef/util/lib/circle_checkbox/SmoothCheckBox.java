@@ -28,6 +28,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -61,21 +63,21 @@ public class SmoothCheckBox extends View implements Checkable {
     private boolean mTickDrawing;
     private OnCheckedChangeListener mListener;
 
-    public SmoothCheckBox(Context context) {
+    public SmoothCheckBox(@NonNull Context context) {
         this(context, null);
     }
 
-    public SmoothCheckBox(Context context, AttributeSet attrs) {
+    public SmoothCheckBox(@NonNull Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SmoothCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SmoothCheckBox(@NonNull Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public SmoothCheckBox(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SmoothCheckBox(@NonNull Context context, @NonNull AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
@@ -127,6 +129,7 @@ public class SmoothCheckBox extends View implements Checkable {
 //        });
     }
 
+    @NonNull
     @Override
     protected Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
@@ -136,7 +139,7 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    protected void onRestoreInstanceState(@NonNull Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             boolean isChecked = bundle.getBoolean(KEY_INSTANCE_STATE);
@@ -247,7 +250,7 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         drawBorder(canvas);
         drawCenter(canvas);
         drawTick(canvas);
@@ -315,12 +318,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
         // invalidate
         if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    postInvalidate();
-                }
-            }, 10);
+            postDelayed(this::postInvalidate, 10);
         }
     }
 
@@ -328,25 +326,19 @@ public class SmoothCheckBox extends View implements Checkable {
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f, 0f);
         animator.setDuration(mAnimDuration / 3 * 2);
         animator.setInterpolator(new LinearInterpolator());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mScaleVal = (float) animation.getAnimatedValue();
-                mFloorColor = getGradientColor(mUnCheckedColor, mCheckedColor, 1 - mScaleVal);
-                postInvalidate();
-            }
+        animator.addUpdateListener(animation -> {
+            mScaleVal = (float) animation.getAnimatedValue();
+            mFloorColor = getGradientColor(mUnCheckedColor, mCheckedColor, 1 - mScaleVal);
+            postInvalidate();
         });
         animator.start();
 
         ValueAnimator floorAnimator = ValueAnimator.ofFloat(1.0f, 0.8f, 1.0f);
         floorAnimator.setDuration(mAnimDuration);
         floorAnimator.setInterpolator(new LinearInterpolator());
-        floorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mFloorScale = (float) animation.getAnimatedValue();
-                postInvalidate();
-            }
+        floorAnimator.addUpdateListener(animation -> {
+            mFloorScale = (float) animation.getAnimatedValue();
+            postInvalidate();
         });
         floorAnimator.start();
 
@@ -357,36 +349,27 @@ public class SmoothCheckBox extends View implements Checkable {
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1.0f);
         animator.setDuration(mAnimDuration);
         animator.setInterpolator(new LinearInterpolator());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mScaleVal = (float) animation.getAnimatedValue();
-                mFloorColor = getGradientColor(mCheckedColor, mFloorUnCheckedColor, mScaleVal);
-                postInvalidate();
-            }
+        animator.addUpdateListener(animation -> {
+            mScaleVal = (float) animation.getAnimatedValue();
+            mFloorColor = getGradientColor(mCheckedColor, mFloorUnCheckedColor, mScaleVal);
+            postInvalidate();
         });
         animator.start();
 
         ValueAnimator floorAnimator = ValueAnimator.ofFloat(1.0f, 0.8f, 1.0f);
         floorAnimator.setDuration(mAnimDuration);
         floorAnimator.setInterpolator(new LinearInterpolator());
-        floorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mFloorScale = (float) animation.getAnimatedValue();
-                postInvalidate();
-            }
+        floorAnimator.addUpdateListener(animation -> {
+            mFloorScale = (float) animation.getAnimatedValue();
+            postInvalidate();
         });
         floorAnimator.start();
     }
 
     private void drawTickDelayed() {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mTickDrawing = true;
-                postInvalidate();
-            }
+        postDelayed(() -> {
+            mTickDrawing = true;
+            postInvalidate();
         }, mAnimDuration);
     }
 
@@ -408,11 +391,11 @@ public class SmoothCheckBox extends View implements Checkable {
         return Color.argb(currentA, currentR, currentG, currentB);
     }
 
-    public void setOnCheckedChangeListener(OnCheckedChangeListener l) {
+    public void setOnCheckedChangeListener(@Nullable OnCheckedChangeListener l) {
         this.mListener = l;
     }
 
     public interface OnCheckedChangeListener {
-        void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked);
+        void onCheckedChanged(@NonNull SmoothCheckBox checkBox, boolean isChecked);
     }
 }

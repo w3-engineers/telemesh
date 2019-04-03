@@ -109,6 +109,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     }
 
+    @NonNull
     @Override
     protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
@@ -129,7 +130,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
 
         mChatPagedAdapter = new ChatPagedAdapterRevised(this);
-        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
+        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver(mLinearLayoutManager, mViewBinging, mChatPagedAdapter));
 
 
         mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
@@ -180,12 +181,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
                     mChatPagedAdapter.submitList(chatEntities));
 
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, new Observer<List<ChatEntity>>() {
-                @Override
-                public void onChanged(@Nullable List<ChatEntity> chatEntities) {
-                    mChatViewModel.prepareDateSpecificChat(chatEntities);
-                }
-            });
+            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities ->
+                    mChatViewModel.prepareDateSpecificChat(chatEntities));
 
         }
     }
@@ -203,7 +200,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.image_view_send:
@@ -223,7 +220,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
@@ -245,7 +242,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     }
 
     @Override
-    public void onItemClick(View view, ChatEntity item) {
+    public void onItemClick(@NonNull View view, @Nullable ChatEntity item) {
     }
 
     private ChatViewModel getViewModel() {
@@ -261,6 +258,17 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
 
+        private LayoutManagerWithSmoothScroller layoutManagerWithSmoothScroller;
+        private ActivityChatRevisedBinding activityChatRevisedBinding;
+        private ChatPagedAdapterRevised chatPagedAdapterRevised;
+
+        AdapterDataSetObserver(LayoutManagerWithSmoothScroller layoutManagerWithSmoothScroller,
+                               ActivityChatRevisedBinding activityChatRevisedBinding, ChatPagedAdapterRevised chatPagedAdapterRevised) {
+            this.layoutManagerWithSmoothScroller = layoutManagerWithSmoothScroller;
+            this.activityChatRevisedBinding = activityChatRevisedBinding;
+            this.chatPagedAdapterRevised = chatPagedAdapterRevised;
+        }
+
         @Override
         public void onChanged() {
             Timber.e("onChanged");
@@ -271,7 +279,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         public void onItemRangeInserted(int positionStart, int itemCount) {
             Timber.e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
-            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv, null, mChatPagedAdapter.getItemCount());
+            layoutManagerWithSmoothScroller.smoothScrollToPosition(activityChatRevisedBinding.chatRv,
+                    null, chatPagedAdapterRevised.getItemCount());
         }
 
         @Override

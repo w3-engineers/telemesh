@@ -37,8 +37,11 @@ android {
 //        absolutePaths false causing error
         warningsAsErrors true
         checkAllWarnings true
+
+        disable 'InvalidPackage'
+
 //        check getProject().ext.lintchecks
-        lintConfig file("lint.xml")
+//        lintConfig file("lint.xml")
 //        baseline file("lint-baseline.xml")
     }
     dataBinding {

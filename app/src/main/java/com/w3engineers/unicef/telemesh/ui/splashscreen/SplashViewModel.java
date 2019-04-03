@@ -39,6 +39,7 @@ public class SplashViewModel extends AndroidViewModel {
         super(application);
     }
 
+    @NonNull
     public MutableLiveData<Boolean> getIsUserRegistered() {
         return isUserRegistered;
     }

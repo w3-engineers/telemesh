@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -42,11 +43,12 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      * @return : Flowable list of messaged
      */
 
+    @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME+" ASC")
-    Flowable<List<MessageEntity>> getAllMessages(String friendsId);
+    Flowable<List<MessageEntity>> getAllMessages(@NonNull String friendsId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long writeMessage(MessageEntity messageEntity);
+    long writeMessage(@NonNull MessageEntity messageEntity);
 
     /**
      * <h1>Provide last row id</h1>
@@ -68,7 +70,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      */
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS + " = :messageStatus WHERE "
             + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId")
-    long updateMessageStatus(String messageId, int messageStatus);
+    long updateMessageStatus(@NonNull String messageId, int messageStatus);
 
     /**
      * <h>Get specific message by id</h1>
@@ -76,8 +78,9 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      * @param messageId : String (Required)
      * @return : MessageEntity
      */
+    @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
-    ChatEntity getMessageById(String messageId);
+    ChatEntity getMessageById(@NonNull String messageId);
 
     /**
      * Mark all message as read
@@ -88,12 +91,13 @@ public interface MessageDao extends BaseDao<MessageEntity> {
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
             " = " + Constants.MessageStatus.STATUS_READ + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID +
             " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
-    long updateMessageAsRead(String friendsId);
+    long updateMessageAsRead(@NonNull String friendsId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
     long changeMessageStatusFrom(int fromStatus, int toStatus);
 
+    @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     Flowable<MessageEntity> getLastInsertedMessage();
 
@@ -108,5 +112,5 @@ public interface MessageDao extends BaseDao<MessageEntity> {
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    boolean hasChatEntityExist(String friendsId, String messageId);
+    boolean hasChatEntityExist(@NonNull String friendsId, @NonNull String messageId);
 }

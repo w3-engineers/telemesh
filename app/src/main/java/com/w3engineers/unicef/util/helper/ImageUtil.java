@@ -20,6 +20,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.SparseIntArray;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +62,7 @@ public class ImageUtil {
         imageIndexMap.put(20, R.mipmap.avatar20);
     }
 
+    @NonNull
     public static List<Integer> getAllImages() {
         List<Integer> imageIds = new ArrayList<>();
         for (int i = 0; i < imageIndexMap.size(); i++) {
@@ -74,6 +77,7 @@ public class ImageUtil {
         return builder.build();
     }
 
+    @Nullable
     public static Bitmap getUserImageBitmap(int userImageIndex) {
         Uri uri = getUserImageUri(userImageIndex);
         Bitmap bitmap = getCenterCropBitmap(uri, 400, 400);
@@ -83,7 +87,8 @@ public class ImageUtil {
         return getCroppedBitmap(bitmap);
     }
 
-    public static Bitmap getCroppedBitmap(Bitmap bitmap) {
+    @Nullable
+    public static Bitmap getCroppedBitmap(@Nullable Bitmap bitmap) {
 
         if (bitmap == null) return null;
 
@@ -105,7 +110,8 @@ public class ImageUtil {
         return output;
     }
 
-    public static Bitmap getCenterCropBitmap(Uri imageUri, int width, int height) {
+    @Nullable
+    public static Bitmap getCenterCropBitmap(@NonNull Uri imageUri, int width, int height) {
         try {
             return Glide.with(TeleMeshApplication.getContext())
                     .asBitmap()

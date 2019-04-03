@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.local.survey;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
@@ -37,23 +40,26 @@ public class SurveyDataSource {
      * This constructor is restricted and only used in unit test class
      * @param surveyDao -> provide dao from unit test class
      */
-    public SurveyDataSource(SurveyDao surveyDao) {
+    public SurveyDataSource(@NonNull SurveyDao surveyDao) {
         this.surveyDao = surveyDao;
     }
 
+    @NonNull
     public static SurveyDataSource getInstance() {
         return surveyDataSource;
     }
 
-    public long insertOrUpdateData(SurveyEntity surveyEntity) {
+    public long insertOrUpdateData(@NonNull SurveyEntity surveyEntity) {
         return surveyDao.writeSurvey(surveyEntity);
     }
 
+    @NonNull
     public Flowable<List<SurveyEntity>> getAllSurvey() {
         return surveyDao.getAllSurvey();
     }
 
-    public SurveyEntity getSurveyById(String surveyId) {
+    @Nullable
+    public SurveyEntity getSurveyById(@NonNull String surveyId) {
         return surveyDao.getSurveyById(surveyId);
     }
 }

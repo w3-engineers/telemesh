@@ -13,7 +13,7 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentSurveyBinding;
 public class SurveyFragment extends BaseFragment {
 
     private FragmentSurveyBinding mSurveyBinding;
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
     private SurveyViewModel mSurveyViewModel;
 
 
@@ -38,8 +38,8 @@ public class SurveyFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getSurveyViewModel();
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getSurveyViewModel();
             }
         }).get(SurveyViewModel.class);
     }

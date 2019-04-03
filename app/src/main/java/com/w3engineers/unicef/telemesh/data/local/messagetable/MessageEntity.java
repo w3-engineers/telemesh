@@ -5,6 +5,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
@@ -31,18 +33,22 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
                 childColumns = ColumnNames.COLUMN_FRIENDS_ID))
 public class MessageEntity extends ChatEntity {
 
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE)
     public String message;
 
+    @Nullable
     public String getMessage() {
         return message;
     }
 
-    public MessageEntity setMessage(String message) {
+    @NonNull
+    public MessageEntity setMessage(@NonNull String message) {
         this.message = message;
         return this;
     }
 
+    @NonNull
     @Override
     public TeleMeshChat toProtoChat() {
 
@@ -59,8 +65,9 @@ public class MessageEntity extends ChatEntity {
                 .build();
     }
 
+    @NonNull
     @Override
-    public ChatEntity toChatEntity(TeleMeshChat teleMeshChat) {
+    public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
 
         MessageEntity messageEntity = setMessage(teleMeshChat.getTeleMeshMessage()
                 .getMessageText());

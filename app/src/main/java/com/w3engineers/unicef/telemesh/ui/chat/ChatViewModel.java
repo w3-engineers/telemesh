@@ -75,7 +75,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      *
      */
-    public ChatViewModel(Application application) {
+    public ChatViewModel(@NonNull Application application) {
         super(application);
         this.messageSourceData =  MessageSourceData.getInstance();
 
@@ -95,7 +95,8 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId : friends user id
      * @return : list of message
      */
-    public LiveData<List<ChatEntity>> getAllMessage(String meshId) {
+    @Nullable
+    public LiveData<List<ChatEntity>> getAllMessage(@NonNull String meshId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllMessages(meshId));
     }
 

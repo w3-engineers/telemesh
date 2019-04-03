@@ -2,7 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseEntity;
 
@@ -35,7 +35,7 @@ public class DbBaseEntity extends BaseEntity {
 
     }
 
-    protected DbBaseEntity(Parcel in) {
+    protected DbBaseEntity(@NonNull Parcel in) {
         super(in);
     }
 

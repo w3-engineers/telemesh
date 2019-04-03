@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
 import com.w3engineers.ext.strom.App;
@@ -53,13 +54,14 @@ public class SettingsViewModel extends AndroidViewModel {
                 .write(Constants.preferenceKey.IS_NOTIFICATION_ENABLED, checked);
     }
 
+    @NonNull
     public String getAppLanguage() {
 
         String language = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.APP_LANGUAGE_DISPLAY);
         return !language.equals("") ? language : App.getContext().getString(R.string.demo_language);
     }
 
-    public void setLocale(String lang, String landDisplay) {
+    public void setLocale(@NonNull String lang, @Nullable String landDisplay) {
 
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);

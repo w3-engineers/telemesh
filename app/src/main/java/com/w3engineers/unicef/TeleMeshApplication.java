@@ -1,6 +1,7 @@
 package com.w3engineers.unicef;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -33,7 +34,7 @@ public class TeleMeshApplication extends App {
     private static String DEFAULT_LANGUAGE = "en";
 
     @Override
-    protected void attachBaseContext(Context base) {
+    protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
 
         // Set app language based on user

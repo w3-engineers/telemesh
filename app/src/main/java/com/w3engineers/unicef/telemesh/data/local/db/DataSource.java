@@ -1,8 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
+import android.support.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import io.reactivex.Flowable;
 
@@ -32,6 +36,7 @@ public interface DataSource {
      * Commonly used getLastData which is now inserted in DB
      * @return
      */
+    @NonNull
     Flowable<ChatEntity> getLastChatData();
 
 //    long insertOrUpdateData(DbBaseEntity baseEntity);
@@ -40,10 +45,11 @@ public interface DataSource {
 
 //    boolean getMessage(String friendsId, String messageId);
 
+    @Nullable
     String getCurrentUser();
 
-    void setCurrentUser(String currentUser);
+    void setCurrentUser(@Nullable String currentUser);
 
-    void updateMessageStatus(String messageId, int messageStatus);
+    void updateMessageStatus(@NonNull String messageId, int messageStatus);
 
 }

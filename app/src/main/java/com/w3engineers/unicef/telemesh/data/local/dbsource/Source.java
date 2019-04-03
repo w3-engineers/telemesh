@@ -1,16 +1,14 @@
 package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
-import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,15 +51,17 @@ public class Source implements DataSource {
      * This constructor is restricted and only used in unit test class
      * @param appDatabase -> provide mock database from unit test class
      */
-    public Source(AppDatabase appDatabase) {
+    public Source(@NonNull AppDatabase appDatabase) {
         messageDao = appDatabase.messageDao();
         userDao = appDatabase.userDao();
     }
 
+    @NonNull
     public static Source getDbSource() {
         return dbSource;
     }
 
+    @NonNull
     @Override
     public Flowable<ChatEntity> getLastChatData() {
         return MessageSourceData.getInstance().getLastData();
@@ -94,13 +94,14 @@ public class Source implements DataSource {
         return messageDao.hasChatEntityExist(friendsId, messageId);
     }*/
 
+    @Nullable
     @Override
     public String getCurrentUser() {
         return chatCurrentUser;
     }
 
     @Override
-    public void setCurrentUser(String currentUser) {
+    public void setCurrentUser(@Nullable String currentUser) {
         this.chatCurrentUser = currentUser;
     }
 

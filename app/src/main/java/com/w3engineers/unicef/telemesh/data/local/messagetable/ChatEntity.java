@@ -81,20 +81,24 @@ public class ChatEntity extends DbBaseEntity {
         return chatEntity.time == this.time && chatEntity.messageId.equals(this.messageId);
     }*/
 
+    @NonNull
     public String getMessageId() {
         return messageId;
     }
 
-    public ChatEntity setMessageId(String messageId) {
+    @NonNull
+    public ChatEntity setMessageId(@NonNull String messageId) {
         this.messageId = messageId;
         return this;
     }
 
+    @NonNull
     public String getFriendsId() {
         return friendsId;
     }
 
-    public ChatEntity setFriendsId(String friendsId) {
+    @NonNull
+    public ChatEntity setFriendsId(@NonNull String friendsId) {
         this.friendsId = friendsId;
         return this;
     }
@@ -103,6 +107,7 @@ public class ChatEntity extends DbBaseEntity {
         return isIncoming;
     }
 
+    @NonNull
     public ChatEntity setIncoming(boolean incoming) {
         isIncoming = incoming;
         return this;
@@ -112,6 +117,7 @@ public class ChatEntity extends DbBaseEntity {
         return messageType;
     }
 
+    @NonNull
     public ChatEntity setMessageType(int messageType) {
         this.messageType = messageType;
         return this;
@@ -121,6 +127,7 @@ public class ChatEntity extends DbBaseEntity {
         return time;
     }
 
+    @NonNull
     public ChatEntity setTime(long time) {
         this.time = time;
         return this;
@@ -130,16 +137,19 @@ public class ChatEntity extends DbBaseEntity {
         return status;
     }
 
+    @NonNull
     public ChatEntity setStatus(int status) {
         this.status = status;
         return this;
     }
 
+    @NonNull
     public TeleMeshChat toProtoChat() {
         throw new IllegalStateException();
     }
 
-    public ChatEntity toChatEntity(TeleMeshChat teleMeshChat) {
+    @NonNull
+    public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
         throw new IllegalStateException();
     }
 

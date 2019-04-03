@@ -57,10 +57,13 @@ import timber.log.Timber;
 public class MeshContactsFragment extends BaseFragment {
 
     private FragmentMeshcontactBinding fragmentMeshcontactBinding;
-    private ServiceLocator serviceLocator;
-    private MeshContactViewModel meshContactViewModel;
-    private List<UserEntity> userEntityList;
-    private MenuItem mSearchItem;
+//    private ServiceLocator serviceLocator;
+    @Nullable
+    public MeshContactViewModel meshContactViewModel;
+    @Nullable
+    public List<UserEntity> userEntityList;
+    @Nullable
+    public MenuItem mSearchItem;
     private List<UserEntity> prevUserList = null;
 
     @Override
@@ -147,7 +150,7 @@ public class MeshContactsFragment extends BaseFragment {
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
         getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
@@ -199,8 +202,8 @@ public class MeshContactsFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getMeshContactViewModel();
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getMeshContactViewModel();
             }
         }).get(MeshContactViewModel.class);
     }

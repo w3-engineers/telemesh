@@ -73,8 +73,10 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
 
         currentBalance = SharedPref.getSharedPref(this).readInt("cr_token");
         spentBalance = SharedPref.getSharedPref(this).readInt("sp_token");
-        mBinding.currentToken.setText(currentBalance + " RMESH");
-        mBinding.spentToken.setText(spentBalance + " RMESH");
+        String cBalance = currentBalance + " " + getString(R.string.rmesh);
+        mBinding.currentToken.setText(cBalance);
+        String sBalance = spentBalance + " " + getString(R.string.rmesh);
+        mBinding.spentToken.setText(sBalance);
 
         if (spentBalance > 0)
             mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
@@ -102,7 +104,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
 
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         int id = view.getId();
         switch (id) {
             case R.id.button_buy:
@@ -116,8 +118,11 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
                     currentBalance = currentBalance - buyToken;
                     spentBalance = spentBalance + buyToken;
 
-                    mBinding.spentToken.setText(spentBalance + " RMESH");
-                    mBinding.currentToken.setText(currentBalance + " RMESH");
+                    String cBalance = currentBalance + " " + getString(R.string.rmesh);
+                    String sBalance = spentBalance + " " + getString(R.string.rmesh);
+
+                    mBinding.spentToken.setText(sBalance);
+                    mBinding.currentToken.setText(cBalance);
                     mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
 
 //                    Toaster.showLong("Buy data Successfully done!");

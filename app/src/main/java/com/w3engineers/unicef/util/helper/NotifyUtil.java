@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -42,7 +43,7 @@ public class NotifyUtil {
     private final String LOCAL_RESOURCE_SCHEME = "res";
 
 
-    public static void showNotification(ChatEntity chatEntity) {
+    public static void showNotification(@NonNull ChatEntity chatEntity) {
         Context context = TeleMeshApplication.getContext();
 
         Intent intent = new Intent(context, ChatActivity.class);

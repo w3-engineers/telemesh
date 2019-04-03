@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,11 +42,13 @@ public class TimeUtil {
 
     public static long DEFAULT_MILLISEC = 1322018752992l; // Nov 22, 2011 9:25:52 PM
 
+    @Nullable
     public static TimeUtil timeUtil;
 
     private TimeUtil() {
     }
 
+    @NonNull
     public static TimeUtil getInstance(){
         if(timeUtil == null){
             timeUtil = new TimeUtil();
@@ -55,6 +60,7 @@ public class TimeUtil {
         return System.currentTimeMillis();
     }
 
+    @Nullable
     public static String getOnlyTime(long milliSeconds) {
         Date date = new Date(milliSeconds);
         DateFormat format = new SimpleDateFormat(dateFormat9, Locale.getDefault());
@@ -62,6 +68,7 @@ public class TimeUtil {
         return format.format(date);
     }
 
+    @Nullable
     public static String getDateStirng(long milliSeconds) {
         DateFormat format = new SimpleDateFormat(dateFormat13, Locale.getDefault());
 
@@ -70,7 +77,7 @@ public class TimeUtil {
         return format.format(new Date(milliSeconds));
     }
 
-    public boolean isSameDay(Date date1, Date date2){
+    public boolean isSameDay(@NonNull Date date1, @NonNull Date date2){
 
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -82,7 +89,7 @@ public class TimeUtil {
         return sameDay;
     }
 
-
+    @Nullable
     public synchronized Date getDateFromMillisecond(long timeMillis){
 
         DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
@@ -101,10 +108,4 @@ public class TimeUtil {
 
         return formattedDate;
     }
-
-
-
-
-
-
 }

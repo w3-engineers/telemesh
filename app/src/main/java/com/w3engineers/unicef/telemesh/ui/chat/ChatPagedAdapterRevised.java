@@ -27,11 +27,11 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     private final int TEXT_MESSAGE_OUT = 1;
     private final int MESSAGE_SEPARATOR = 2;
 
+    @NonNull
+    public Context mContext;
 
-    private Context mContext;
 
-
-    public ChatPagedAdapterRevised(Context context) {
+    public ChatPagedAdapterRevised(@NonNull Context context) {
         super(DIFF_CALLBACK);
         mContext = context;
     }
@@ -61,9 +61,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         return -1;
     }
 
-
-
-
+    @NonNull
     @Override
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
@@ -99,11 +97,11 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder
     {
-        public GenericViewHolder(View itemView) {
+        public GenericViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
-        public abstract  void bindView(MessageEntity item);
+        public abstract  void bindView(@NonNull MessageEntity item);
          public abstract void clearView();
     }
 

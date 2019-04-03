@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +39,15 @@ import java.util.List;
  **/
 public class MeshContactAdapter extends BaseAdapter<UserEntity> {
 
-    private MeshContactViewModel meshContactViewModel;
+    @NonNull
+    public MeshContactViewModel meshContactViewModel;
 
-    MeshContactAdapter(MeshContactViewModel meshContactViewModel) {
+    MeshContactAdapter(@NonNull MeshContactViewModel meshContactViewModel) {
         this.meshContactViewModel = meshContactViewModel;
     }
 
     @Override
-    public boolean isEqual(UserEntity left, UserEntity right) {
+    public boolean isEqual(@NonNull UserEntity left, @NonNull UserEntity right) {
         String leftUserId = left.getMeshId();
         String rightUserId = right.getMeshId();
 
@@ -56,17 +58,18 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
 
     }
 
+    @NonNull
     @Override
-    public BaseViewHolder<UserEntity> newViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder<UserEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MeshContactViewHolder(inflate(parent, R.layout.item_mesh_contact));
     }
 
     @BindingAdapter({"android:src"})
-    public static void setImageViewResource(ImageView imageView, int imageResourceId) {
+    public static void setImageViewResource(@NonNull ImageView imageView, int imageResourceId) {
         imageView.setImageResource(imageResourceId);
     }
 
-    public void resetWithList(List<UserEntity> items) {
+    public void resetWithList(@NonNull List<UserEntity> items) {
 
         List<UserEntity> userEntities = getItems();
         userEntities.clear();
@@ -77,19 +80,19 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
     private class MeshContactViewHolder extends BaseViewHolder<UserEntity> {
         private ItemMeshContactBinding itemMeshContactBinding;
 
-        MeshContactViewHolder(ViewDataBinding viewDataBinding) {
+        MeshContactViewHolder(@NonNull ViewDataBinding viewDataBinding) {
             super(viewDataBinding);
             this.itemMeshContactBinding = (ItemMeshContactBinding) viewDataBinding;
         }
 
         @Override
-        public void bind(UserEntity item) {
+        public void bind(@NonNull UserEntity item) {
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(@NonNull View view) {
         }
     }
 }

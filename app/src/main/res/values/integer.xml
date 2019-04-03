@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="max_user_name_limit">20</integer>
+    <!--<integer name="max_user_name_limit">20</integer>
     <integer name="min_user_name_limit">2</integer>
-    <integer name="max_line_1">1</integer>
+    <integer name="max_line_1">1</integer>-->
     <integer name="three_dot_ems">3</integer>
 
     <!--https://crowdfire.engineering/rtl-support-on-android-heres-all-you-need-to-know-761ec131a53a

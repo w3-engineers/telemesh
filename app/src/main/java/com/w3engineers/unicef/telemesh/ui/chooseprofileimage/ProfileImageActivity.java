@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,13 +56,13 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile_image, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
@@ -75,7 +76,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     @Override
-    public void onItemClick(View view, Integer item) {
+    public void onItemClick(@NonNull View view, @NonNull Integer item) {
         selectedItem = item;
     }
 }

@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -44,11 +46,11 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
     private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
 
-    public MeshContactViewModel(UserDataSource userDataSource) {
+    public MeshContactViewModel(@NonNull UserDataSource userDataSource) {
         this.userDataSource = userDataSource;
     }
 
-    public void openMessage(UserEntity userEntity) {
+    public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
 
     }
@@ -66,21 +68,24 @@ public class MeshContactViewModel extends BaseRxViewModel {
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getAllUsers());
     }
 
+    @NonNull
     public MutableLiveData<List<UserEntity>> getGetFilteredList() {
         return getFilteredList;
     }
 
 
-    public void startSearch(String searchText, List<UserEntity> userEntities) {
-        List<UserEntity> filteredItemList = new ArrayList<>();
+    public void startSearch(@NonNull String searchText, @Nullable List<UserEntity> userEntities) {
+        if (userEntities != null) {
+            List<UserEntity> filteredItemList = new ArrayList<>();
 
-        for (UserEntity user : userEntities) {
+            for (UserEntity user : userEntities) {
 
-            if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
-                filteredItemList.add(user);
+                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+                    filteredItemList.add(user);
+            }
+
+            getFilteredList.postValue(filteredItemList);
         }
-
-        getFilteredList.postValue(filteredItemList);
     }
 
 }

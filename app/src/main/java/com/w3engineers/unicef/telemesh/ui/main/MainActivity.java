@@ -26,7 +26,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private ActivityMainBinding binding;
     private BottomNavigationMenuView bottomNavigationMenuView;
     private MainActivityViewModel mViewModel;
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -72,8 +72,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getMainActivityViewModel();
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getMainActivityViewModel();
             }
         }).get(MainActivityViewModel.class);
     }
@@ -124,7 +124,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         return true;
     }
 
-    public void setFragmentsOnPosition(MenuItem item) {
+    public void setFragmentsOnPosition(@NonNull MenuItem item) {
         Fragment mFragment = null;
         String toolbarTitle = "";
         switch (item.getItemId()) {
@@ -191,9 +191,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         mViewModel.userOfflineProcess();
     }
 
+    @NonNull
     @Override
     protected BaseServiceLocator getServiceLocator() {
-        return serviceLocator;
+        return ServiceLocator.getInstance();
     }
 
 

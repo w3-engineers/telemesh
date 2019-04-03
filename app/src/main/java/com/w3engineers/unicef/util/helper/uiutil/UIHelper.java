@@ -2,6 +2,8 @@ package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,7 +47,7 @@ public class UIHelper {
 
 
     @BindingAdapter("imageResource")
-    public static void setImageResource(ImageView imageView, int resourceId) {
+    public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
 
         String avatarName = Constants.drawables.AVATER_IMAGE + resourceId;
         Glide.with(App.getContext())
@@ -55,7 +57,7 @@ public class UIHelper {
     }
 
     @BindingAdapter("src")
-    public static void setImageFromResource(ImageView imageView, int resourceId) {
+    public static void setImageFromResource(@NonNull ImageView imageView, int resourceId) {
 
         Glide.with(App.getContext())
                 .load(resourceId)
@@ -64,24 +66,21 @@ public class UIHelper {
 
 
     @BindingAdapter("imageStatusResource")
-    public static void setImageStatusResource(ImageView imageView, int resourceId){
+    public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId){
         //AppLog.v("Image status resource id ="+resourceId);
-        String resourceName = "" ;
+        int statusId;
         if (resourceId == Constants.MessageStatus.STATUS_SENDING) {
-            resourceName = drawable_status_sending;
+            statusId = R.mipmap.ic_sending_grey;
         }else if (resourceId == Constants.MessageStatus.STATUS_DELIVERED) {
-            resourceName = drawable_status_delivered;
+            statusId = R.mipmap.ic_deliverd;
         }else {
-            resourceName = drawable_status_failed;
+            statusId = R.mipmap.ic_alert;
         }
-        Glide.with(App.getContext())
-                .load(App.getContext().getResources().getIdentifier(resourceName,
-                        Constants.drawables.AVATER_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
-                .into(imageView);
+        Glide.with(App.getContext()).load(statusId).into(imageView);
     }
 
-
-    public static Observable<String> fromSearchView(SearchView searchView) {
+    @NonNull
+    public static Observable<String> fromSearchView(@NonNull SearchView searchView) {
 
         final PublishSubject<String> subject = PublishSubject.create();
 
@@ -103,7 +102,7 @@ public class UIHelper {
     }
 
     @BindingAdapter("android:typeface")
-    public static void setTypeface(TextView v, String style) {
+    public static void setTypeface(@NonNull TextView v, @NonNull String style) {
         switch (style) {
             case "bold":
                 v.setTypeface(null, Typeface.BOLD);
@@ -114,7 +113,8 @@ public class UIHelper {
         }
     }
 
-    public static String getSeparatorDate(MessageEntity messageEntity){
+    @Nullable
+    public static String getSeparatorDate(@Nullable MessageEntity messageEntity){
 
         if(messageEntity != null){
             Calendar smsTime = Calendar.getInstance();

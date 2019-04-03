@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.createuser;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -45,7 +46,7 @@ public class CreateUserViewModel extends AndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    public boolean storeData(String firstName, String lastName) {
+    public boolean storeData(@Nullable String firstName, @Nullable String lastName) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
@@ -57,7 +58,7 @@ public class CreateUserViewModel extends AndroidViewModel {
         return true;
     }
 
-    public boolean isNameValid(String name) {
+    public boolean isNameValid(@Nullable String name) {
         return !TextUtils.isEmpty(name) &&
                 name.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;

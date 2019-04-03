@@ -3,15 +3,11 @@ package com.w3engineers.unicef.telemesh.data.local.usertable;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
-import android.content.Context;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.w3engineers.ext.strom.util.collections.Matchable;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
@@ -24,16 +20,19 @@ public class UserEntity extends DbBaseEntity {
     /*************** User table property ************************/
     /************************************************************/
 
-    @NonNull
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_USER_MESH_ID)
     public String meshId;
 
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_USER_CUSTOM_ID)
     public String customId;
 
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_USER_FIRST_NAME)
     public String userFirstName;
 
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_USER_LAST_NAME)
     public String userLastName;
 
@@ -56,39 +55,46 @@ public class UserEntity extends DbBaseEntity {
     public UserEntity() {
     }
 
-    @NonNull
+    @Nullable
     public String getMeshId() {
         return meshId;
     }
 
+    @NonNull
     public UserEntity setMeshId(@NonNull String meshId) {
         this.meshId = meshId;
         return this;
     }
 
+    @Nullable
     public String getCustomId() {
         return customId;
     }
 
-    public UserEntity setCustomId(String customId) {
+    @NonNull
+    public UserEntity setCustomId(@NonNull String customId) {
         this.customId = customId;
         return this;
     }
 
+    @Nullable
     public String getUserFirstName() {
         return userFirstName;
     }
 
-    public UserEntity setUserFirstName(String userName) {
+    @NonNull
+    public UserEntity setUserFirstName(@NonNull String userName) {
         this.userFirstName = userName;
         return this;
     }
 
+    @Nullable
     public String getUserLastName() {
         return userLastName;
     }
 
-    public UserEntity setUserLastName(String userName) {
+    @NonNull
+    public UserEntity setUserLastName(@NonNull String userName) {
         this.userLastName = userName;
         return this;
     }
@@ -97,6 +103,7 @@ public class UserEntity extends DbBaseEntity {
         return avatarIndex;
     }
 
+    @NonNull
     public UserEntity setAvatarIndex(int avatarIndex) {
         this.avatarIndex = avatarIndex;
         return this;
@@ -106,6 +113,7 @@ public class UserEntity extends DbBaseEntity {
         return lastOnlineTime;
     }
 
+    @NonNull
     public UserEntity setLastOnlineTime(long lastOnlineTime) {
         this.lastOnlineTime = lastOnlineTime;
         return this;
@@ -115,13 +123,14 @@ public class UserEntity extends DbBaseEntity {
         return isOnline;
     }
 
+    @NonNull
     public UserEntity setOnline(boolean online) {
         isOnline = online;
         return this;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(this.userFirstName);
         dest.writeString(this.userLastName);
@@ -133,7 +142,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeInt(this.hasUnreadMessage);
     }
 
-    protected UserEntity(Parcel in) {
+    protected UserEntity(@NonNull Parcel in) {
         super(in);
         this.userFirstName = in.readString();
         this.userLastName = in.readString();
@@ -173,6 +182,7 @@ public class UserEntity extends DbBaseEntity {
 
     }*/
 
+    @NonNull
     public RMUserModel getProtoUser() {
         return RMUserModel.newBuilder()
                 .setUserFirstName(getUserFirstName())
@@ -182,11 +192,13 @@ public class UserEntity extends DbBaseEntity {
     }
 
     // if lots of similar task holds in entity then ti should be used in util class
+    @NonNull
     public String getFullName() {
         return userFirstName + " " + userLastName;
     }
 
-    public UserEntity toUserEntity(RMUserModel rmUserModel) {
+    @NonNull
+    public UserEntity toUserEntity(@NonNull RMUserModel rmUserModel) {
         return setUserFirstName(rmUserModel.getUserFirstName())
                 .setUserLastName(rmUserModel.getUserLastName())
                 .setAvatarIndex(rmUserModel.getImageIndex())

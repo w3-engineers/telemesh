@@ -70,13 +70,13 @@
         <item name="android:layout_marginTop">@dimen/margin_30</item>
     </style>
 
-    <style name="image_style_settings_page">
+    <!--<style name="image_style_settings_page">
         <item name="android:layout_width">@dimen/width_50</item>
         <item name="android:layout_height">@dimen/height_50</item>
         <item name="android:layout_marginTop">@dimen/margin_20</item>
         <item name="android:layout_marginBottom">@dimen/margin_20</item>
         <item name="android:layout_marginLeft">@dimen/margin_2</item>
-    </style>
+    </style>-->
 
     <!--<style name="text_style_settings_page">
         <item name="android:layout_width">0dp</item>
@@ -96,8 +96,8 @@
         <item name="android:background">@drawable/shadow</item>
     </style>
 
-    <style name="style_EditText">
+    <!--<style name="style_EditText">
         <item name="android:background">@drawable/edt_bg_selector</item>
-    </style>
+    </style>-->
 
 </resources>

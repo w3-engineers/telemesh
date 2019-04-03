@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.arch.persistence.room.Database;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
@@ -48,10 +49,14 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {
 
+    @NonNull
     public abstract UserDao userDao();
+    @NonNull
     public abstract MessageDao messageDao();
+    @NonNull
     public abstract SurveyDao surveyDao();
 
+    @NonNull
     public static AppDatabase getInstance() {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {

@@ -3,6 +3,7 @@ package com.w3engineers.unicef.util.helper;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import java.util.Locale;
@@ -29,7 +30,7 @@ import java.util.Locale;
  **/
 public class LanguageUtil {
 
-    public static void setAppLanguage(Context context, String language){
+    public static void setAppLanguage(@NonNull Context context, @NonNull String language){
 
         Locale myLocale = new Locale(language);
         Resources res = context.getResources();

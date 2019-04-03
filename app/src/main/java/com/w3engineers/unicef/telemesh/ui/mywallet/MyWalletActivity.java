@@ -76,7 +76,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         int id = view.getId();
         switch (id) {
             case R.id.button_buy:

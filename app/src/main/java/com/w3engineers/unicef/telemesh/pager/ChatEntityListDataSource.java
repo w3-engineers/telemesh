@@ -17,7 +17,7 @@ public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
 
     private List<ChatEntity> chatList;
 
-    public ChatEntityListDataSource(List<ChatEntity> list){
+    public ChatEntityListDataSource(@NonNull List<ChatEntity> list){
         this.chatList = list;
 
     }

@@ -13,7 +13,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 
 public class UserProfileActivity extends BaseActivity {
 
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
     private UserProfileViewModel userProfileViewModel;
     private ActivityUserProfileBinding mBinding;
 
@@ -52,8 +52,8 @@ public class UserProfileActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getUserProfileViewModel(getApplication());
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getUserProfileViewModel(getApplication());
             }
         }).get(UserProfileViewModel.class);
     }

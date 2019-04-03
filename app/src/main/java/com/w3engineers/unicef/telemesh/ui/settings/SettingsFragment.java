@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -19,19 +18,18 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsBinding;
+import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
-    private FragmentSettingsBinding mBinding;
+//    private FragmentSettingsBinding mBinding;
+    private FragmentSettingsNewBinding mBinding;
     private Context mActivity;
     private SettingsViewModel settingsViewModel;
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
     private String selectedLanguage, selectedLanguageDisplay;
 
     public SettingsFragment() {
@@ -40,7 +38,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_settings;
+        return R.layout.fragment_settings_new;
     }
 
     @Override
@@ -49,7 +47,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mActivity = getContext();
         settingsViewModel = getViewModel();
 
-        mBinding = (FragmentSettingsBinding) getViewDataBinding();
+        mBinding = (FragmentSettingsNewBinding) getViewDataBinding();
 
         mBinding.setSettingsVM(settingsViewModel);
 
@@ -73,7 +71,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
 
         int id = view.getId();
 
@@ -170,8 +168,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getSettingsViewModel(getActivity().getApplication());
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getSettingsViewModel(getActivity().getApplication());
             }
         }).get(SettingsViewModel.class);
     }

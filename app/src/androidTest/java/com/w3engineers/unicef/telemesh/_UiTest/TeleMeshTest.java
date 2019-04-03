@@ -367,10 +367,10 @@ public class TeleMeshTest {
         ViewInteraction switchCompat = onView(
                 allOf(withId(R.id.notification_switch),
                         childAtPosition(
-                                allOf(withId(R.id.item_notification_settings),
+                                allOf(withId(R.id.layout_notification_sound),
                                         childAtPosition(
-                                                withId(R.id.layout_notification_sound),
-                                                0)),
+                                                withId(R.id.layout_settings),
+                                                1)),
                                 2)));
         switchCompat.perform(scrollTo(), click());
 

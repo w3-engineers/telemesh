@@ -48,10 +48,13 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private UserEntity mUserEntity;
     //private ChatAdapter mChatAdapter;
     //private  ChatPagedAdapter mChatPagedAdapter;
-    private ChatPagedAdapterRevised mChatPagedAdapter;
+    @Nullable
+    public ChatPagedAdapterRevised mChatPagedAdapter;
     //private ActivityChatBinding mViewBinging;
-    private ActivityChatRevisedBinding mViewBinging;
-    private LayoutManagerWithSmoothScroller mLinearLayoutManager;
+    @Nullable
+    public ActivityChatRevisedBinding mViewBinging;
+    @Nullable
+    public LayoutManagerWithSmoothScroller mLinearLayoutManager;
 
 
 
@@ -126,7 +129,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
 
         mChatPagedAdapter = new ChatPagedAdapterRevised(this);
-        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver(mLinearLayoutManager, mViewBinging, mChatPagedAdapter));
+        mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
         mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
@@ -254,17 +257,6 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
 
-        private LayoutManagerWithSmoothScroller layoutManagerWithSmoothScroller;
-        private ActivityChatRevisedBinding activityChatRevisedBinding;
-        private ChatPagedAdapterRevised chatPagedAdapterRevised;
-
-        AdapterDataSetObserver(LayoutManagerWithSmoothScroller layoutManagerWithSmoothScroller,
-                               ActivityChatRevisedBinding activityChatRevisedBinding, ChatPagedAdapterRevised chatPagedAdapterRevised) {
-            this.layoutManagerWithSmoothScroller = layoutManagerWithSmoothScroller;
-            this.activityChatRevisedBinding = activityChatRevisedBinding;
-            this.chatPagedAdapterRevised = chatPagedAdapterRevised;
-        }
-
         @Override
         public void onChanged() {
             Timber.e("onChanged");
@@ -275,8 +267,8 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         public void onItemRangeInserted(int positionStart, int itemCount) {
             Timber.e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
-            layoutManagerWithSmoothScroller.smoothScrollToPosition(activityChatRevisedBinding.chatRv,
-                    null, chatPagedAdapterRevised.getItemCount());
+            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,
+                    null, mChatPagedAdapter.getItemCount());
         }
 
         @Override

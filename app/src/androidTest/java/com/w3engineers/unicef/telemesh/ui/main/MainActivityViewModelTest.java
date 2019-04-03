@@ -18,23 +18,13 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [31-Jan-2019 at 3:53 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [31-Jan-2019 at 3:53 PM].
- * --> <Second Editor> on [31-Jan-2019 at 3:53 PM].
- * Reviewed by :
- * --> <First Reviewer> on [31-Jan-2019 at 3:53 PM].
- * --> <Second Reviewer> on [31-Jan-2019 at 3:53 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityViewModelTest {
 

@@ -129,7 +129,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
-            int id = getResources().getIdentifier(Constants.drawables.AVATER_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATER_DRAWABLE_DIRECTORY, getPackageName());
+            int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
         }
     }

@@ -9,26 +9,13 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [02-Nov-2018 at 6:21 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [02-Nov-2018 at 6:21 PM].
- * * --> <Second Editor> on [02-Nov-2018 at 6:21 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [02-Nov-2018 at 6:21 PM].
- * * --> <Second Reviewer> on [02-Nov-2018 at 6:21 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class TeleMeshApplication extends App {
 
     private static String DEFAULT_LANGUAGE = "en";

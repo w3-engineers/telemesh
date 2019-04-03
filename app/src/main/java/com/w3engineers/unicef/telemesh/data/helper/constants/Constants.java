@@ -39,8 +39,8 @@ public class Constants {
     }
 
     public interface drawables {
-        String AVATER_IMAGE = "avatar";
-        String AVATER_DRAWABLE_DIRECTORY = "mipmap";
+        String AVATAR_IMAGE = "avatar";
+        String AVATAR_DRAWABLE_DIRECTORY = "mipmap";
     }
 
     public interface MessageStatus {

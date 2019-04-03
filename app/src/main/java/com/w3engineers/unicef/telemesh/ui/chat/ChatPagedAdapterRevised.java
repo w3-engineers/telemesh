@@ -135,7 +135,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageOutBinding) viewDataBinding;
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.outcoming_message_color));
+                    ContextCompat.getColor(mContext, R.color.out_coming_message_color));
         }
 
         @Override

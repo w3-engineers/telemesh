@@ -18,27 +18,13 @@ import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [10-Jan-2019 at 10:37 AM].
- * * Email: sikderfaysal@w3engineers.com
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Editor> on [10-Jan-2019 at 10:37 AM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener{
 
     private MyWalletViewModel viewModel;

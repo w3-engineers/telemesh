@@ -34,26 +34,13 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [04-Oct-2018 at 4:07 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [04-Oct-2018 at 4:07 PM].
- * * --> <Second Editor> on [04-Oct-2018 at 4:07 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [04-Oct-2018 at 4:07 PM].
- * * --> <Second Reviewer> on [04-Oct-2018 at 4:07 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class MeshContactsFragment extends BaseFragment {
 
     private FragmentMeshcontactBinding fragmentMeshcontactBinding;
@@ -163,7 +150,7 @@ public class MeshContactsFragment extends BaseFragment {
         ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
         searchClose.setImageResource(R.mipmap.ic_cross_grey);
 
-        // Getting EditText view from searchview and change cursor color
+        // Getting EditText view from search view and change cursor color
         AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         try {
             // Fixed value for getting cursor drawable from Edit text or search view

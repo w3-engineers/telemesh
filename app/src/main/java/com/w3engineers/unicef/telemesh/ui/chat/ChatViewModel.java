@@ -9,7 +9,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -36,18 +35,13 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
- *  *
- *  * Purpose: Perform message related operations
- *  *
- *  * Last edited by : Md. Azizul Islam on 10/10/2018.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 public class ChatViewModel extends AndroidViewModel {
@@ -185,11 +179,11 @@ public class ChatViewModel extends AndroidViewModel {
     public void updateAllMessageStatus(@NonNull String friendsId) {
 
 
-        compositeDisposable.add(updateMessageSatus(friendsId)
+        compositeDisposable.add(updateMessageStatus(friendsId)
                 .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
     }
 
-    private Single<Long> updateMessageSatus(String friendsId) {
+    private Single<Long> updateMessageStatus(String friendsId) {
         return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
     }
 
@@ -291,10 +285,10 @@ public class ChatViewModel extends AndroidViewModel {
 
         List<ChatEntity> consolidatedList = new ArrayList<>();
 
-        for (long millisec : groupedHashMap.keySet()) {
+        for (long millisecond : groupedHashMap.keySet()) {
 
 
-            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisec);
+            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecond);
 
             if(!TimeUtil.getInstance().isSameDay(date1, date2)){
 
@@ -302,12 +296,12 @@ public class ChatViewModel extends AndroidViewModel {
 
                 MessageEntity messageEntity = new MessageEntity();
                 messageEntity.setMessageType(Constants.MessageType.DATE_MESSAGE);
-                messageEntity.setTime(millisec);
+                messageEntity.setTime(millisecond);
                 consolidatedList.add(messageEntity);
 
             }
 
-            for (ChatEntity chatEntity : groupedHashMap.get(millisec)) {
+            for (ChatEntity chatEntity : groupedHashMap.get(millisecond)) {
 
                 consolidatedList.add(chatEntity);
             }

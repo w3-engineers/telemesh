@@ -33,15 +33,11 @@ import java.util.List;
 import timber.log.Timber;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
- *  *
- *  * Purpose: One to one messaging page
- *  *
- *  * Last edited by : Md. Azizul Islam on 10/10/2018.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 public class ChatActivity extends RmBaseActivity implements ItemClickListener<ChatEntity> {

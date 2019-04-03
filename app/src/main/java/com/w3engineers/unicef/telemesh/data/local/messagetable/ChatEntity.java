@@ -10,26 +10,13 @@ import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [24-Oct-2018 at 12:30 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [24-Oct-2018 at 12:30 PM].
- * * --> <Second Editor> on [24-Oct-2018 at 12:30 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [24-Oct-2018 at 12:30 PM].
- * * --> <Second Reviewer> on [24-Oct-2018 at 12:30 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 @SuppressLint("ParcelCreator")
 public class ChatEntity extends DbBaseEntity {
 

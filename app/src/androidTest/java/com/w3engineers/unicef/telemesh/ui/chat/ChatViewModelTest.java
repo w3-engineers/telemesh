@@ -32,23 +32,13 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [13-Feb-2019 at 1:47 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [13-Feb-2019 at 1:47 PM].
- * --> <Second Editor> on [13-Feb-2019 at 1:47 PM].
- * Reviewed by :
- * --> <First Reviewer> on [13-Feb-2019 at 1:47 PM].
- * --> <Second Reviewer> on [13-Feb-2019 at 1:47 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 

@@ -22,26 +22,13 @@ import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [17-Sep-2018 at 4:54 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [17-Sep-2018 at 4:54 PM].
- * * --> <Second Editor> on [17-Sep-2018 at 4:54 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [17-Sep-2018 at 4:54 PM].
- * * --> <Second Reviewer> on [17-Sep-2018 at 4:54 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class ServiceLocator extends BaseServiceLocator {
 
     private static ServiceLocator serviceLocator;

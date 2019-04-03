@@ -6,9 +6,12 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
 
-/**
- * Created by Anjan Debnath on 1/4/2019.
- * Copyright (c) 2019, W3 Engineers Ltd. All rights reserved.
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 public class MainThreadExecutor implements Executor {
 

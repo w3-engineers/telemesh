@@ -9,26 +9,13 @@ import java.util.List;
 import com.w3engineers.ext.viper.R;
 import timber.log.Timber;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * <br>----------------------------------------------------------------------------
- * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-07-18 at 10:41 AM].
- * <br>----------------------------------------------------------------------------
- * <br>Project: android-framework.
- * <br>Code Responsibility: <Purpose of code>
- * <br>----------------------------------------------------------------------------
- * <br>Edited by :
- * <br>1. <First Editor> on [2018-07-18 at 10:41 AM].
- * <br>2. <Second Editor>
- * <br>----------------------------------------------------------------------------
- * <br>Reviewed by :
- * <br>1. <First Reviewer> on [2018-07-18 at 10:41 AM].
- * <br>2. <Second Reviewer>
- * <br>============================================================================
- **/
+ * ============================================================================
+ */
 public class RmUtility {
 
     /**

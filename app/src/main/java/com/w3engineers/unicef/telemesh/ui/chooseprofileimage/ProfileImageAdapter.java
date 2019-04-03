@@ -13,26 +13,13 @@ import com.w3engineers.unicef.telemesh.databinding.ItemProfileImageBinding;
 import com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [14-Sep-2018 at 11:58 AM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [14-Sep-2018 at 11:58 AM].
- * * --> <Second Editor> on [14-Sep-2018 at 11:58 AM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [14-Sep-2018 at 11:58 AM].
- * * --> <Second Reviewer> on [14-Sep-2018 at 11:58 AM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class ProfileImageAdapter extends BaseAdapter<Integer> {
 
     private Context mContext;

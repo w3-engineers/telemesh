@@ -19,40 +19,23 @@ import java.util.Calendar;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [08-Oct-2018 at 1:09 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.se
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [08-Oct-2018 at 1:09 PM].
- * * --> <Second Editor> on [08-Oct-2018 at 1:09 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [08-Oct-2018 at 1:09 PM].
- * * --> <Second Reviewer> on [08-Oct-2018 at 1:09 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class UIHelper {
-
-    private static String drawable_status_sending = "ic_sending_grey";
-    private static String drawable_status_delivered = "ic_deliverd";
-    private static String drawable_status_failed = "ic_alert";
 
 
     @BindingAdapter("imageResource")
     public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
 
-        String avatarName = Constants.drawables.AVATER_IMAGE + resourceId;
+        String avatarName = Constants.drawables.AVATAR_IMAGE + resourceId;
         Glide.with(App.getContext())
                 .load(App.getContext().getResources().getIdentifier(avatarName,
-                        Constants.drawables.AVATER_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
+                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
                 .into(imageView);
     }
 
@@ -126,7 +109,7 @@ public class UIHelper {
             } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
-                return TimeUtil.getInstance().getDateStirng(messageEntity.time);
+                return TimeUtil.getInstance().getDateString(messageEntity.time);
                 //return messageEntity.message;
             }
         }

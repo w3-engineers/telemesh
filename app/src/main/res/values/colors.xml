@@ -8,7 +8,7 @@
     <color name="colorAccent">#17AC82</color>
 
     <color name="tab_disable">#979797</color>
-    <color name="outcoming_message_color">#F0F0F0</color>
+    <color name="out_coming_message_color">#F0F0F0</color>
     <color name="white">#FFFFFF</color>
     <color name="incoming_message_color">#D6FDEE</color>
     <color name="grey_message_separator">#DDDDDD</color>

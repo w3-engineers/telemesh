@@ -1,23 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
 /*
-* ****************************************************************************
-* * Copyright © 2018 W3 Engineers Ltd., All rights reserved.
-* *
-* * Created by:
-* * Name : Ahmed Mohmmad Ullah (Azim)
-* * Date : 2/15/18
-* *
-* * Purpose: Sample of ROOM model
-* *
-* * Last Edited by : SUDIPTA KUMAR PAIK on 12/21/17.
-* * History: Comment Added
-* * 1:
-* * 2:
-* *
-* * Last Reviewed by : SUDIPTA KUMAR PAIK on 3/19/18.
-* ****************************************************************************
-*/
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public interface TableNames {
     //Users

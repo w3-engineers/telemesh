@@ -17,9 +17,7 @@ import com.w3engineers.unicef.util.helper.ImageUtil;
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 
     private ActivityProfileImageBinding mProfileImageBinding;
-    private ProfileImageAdapter mAdapter;
     private int selectedItem = -1;
-    private int ITEM_IN_ROW = 3;
 
     @Override
     protected int getLayoutId() {
@@ -47,9 +45,10 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     private void initRecyclerView() {
-        mAdapter = new ProfileImageAdapter(this, selectedItem);
+        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem);
         mAdapter.setItemClickListener(this);
         mProfileImageBinding.recyclerView.setAdapter(mAdapter);
+        int ITEM_IN_ROW = 3;
         mProfileImageBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, ITEM_IN_ROW));
         mAdapter.addItem(ImageUtil.getAllImages());
     }

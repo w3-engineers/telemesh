@@ -84,7 +84,7 @@ public class ImageUtil {
     }
 
     @Nullable
-    public static Bitmap getCroppedBitmap(@Nullable Bitmap bitmap) {
+    private static Bitmap getCroppedBitmap(@Nullable Bitmap bitmap) {
 
         if (bitmap == null) return null;
 
@@ -107,7 +107,7 @@ public class ImageUtil {
     }
 
     @Nullable
-    public static Bitmap getCenterCropBitmap(@NonNull Uri imageUri, int width, int height) {
+    private static Bitmap getCenterCropBitmap(@NonNull Uri imageUri, int width, int height) {
         try {
             return Glide.with(TeleMeshApplication.getContext())
                     .asBitmap()

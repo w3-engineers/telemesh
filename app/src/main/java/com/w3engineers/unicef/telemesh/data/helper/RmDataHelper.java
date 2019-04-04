@@ -1,15 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
@@ -45,7 +42,7 @@ public class RmDataHelper {
 
     private HashMap<String, RMUserModel> rmUserMap;
     @NonNull
-    public SparseArray<RMDataModel> rmDataMap = new SparseArray<>();;
+    public SparseArray<RMDataModel> rmDataMap = new SparseArray<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -111,12 +108,14 @@ public class RmDataHelper {
             RMUserModel rmUserModel = rmUserMap.get(userId);
             rmUserMap.remove(userId);
 
-            UserEntity userEntity = new UserEntity()
-                    .toUserEntity(rmUserModel)
-                    .setLastOnlineTime(TimeUtil.toCurrentTime())
-                    .setOnline(false);
+            if (rmUserModel != null) {
+                UserEntity userEntity = new UserEntity()
+                        .toUserEntity(rmUserModel)
+                        .setLastOnlineTime(TimeUtil.toCurrentTime())
+                        .setOnline(false);
 
-            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+                UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            }
         }
     }
 
@@ -216,7 +215,7 @@ public class RmDataHelper {
 
             } else {
 
-                /**
+                /*
                  * for delivery status update we don't need to replace the message and insert again.
                  * If we do so then paging library Diff Callback can't properly work
                  */

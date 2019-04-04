@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBuyDataBinding;
-import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
 
 
 /*
@@ -32,7 +27,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
  */
 public class BuyDataActivity extends BaseActivity implements View.OnClickListener {
 
-    private BuyDataViewModel viewModel;
     private ActivityBuyDataBinding mBinding;
     private int currentBalance;
     private int spentBalance;
@@ -52,9 +46,11 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
     protected void startUI() {
 
         setTitle("Buy Data ");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        viewModel = getViewModel();
+        BuyDataViewModel viewModel = getViewModel();
         mBinding = (ActivityBuyDataBinding) getViewDataBinding();
         mBinding.buttonBuy.setOnClickListener(this);
 
@@ -70,7 +66,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    void showDialog(String message) {
+    private void showDialog() {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -81,7 +77,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
         AlertDialog alertDialog = dialogBuilder.create();
 
         TextView alertTitle = dialogView.findViewById(R.id.confirmation_title);
-        alertTitle.setText(message);
+        alertTitle.setText(getString(R.string.buy_data_success));
 
         Button alertButton = dialogView.findViewById(R.id.confirmation_ok);
 
@@ -115,7 +111,7 @@ public class BuyDataActivity extends BaseActivity implements View.OnClickListene
 
 //                    Toaster.showLong("Buy data Successfully done!");
 //
-                    showDialog("Buy data Successfully done!");
+                    showDialog();
                 }
                 break;
         }

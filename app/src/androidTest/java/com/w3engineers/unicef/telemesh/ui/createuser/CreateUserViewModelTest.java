@@ -30,20 +30,20 @@ import static org.junit.Assert.assertTrue;
 public class CreateUserViewModelTest {
 
     private SharedPreferences sharedPreferences;
-    CreateUserViewModel SUT;
+    private CreateUserViewModel SUT;
 
     @Rule
     public ActivityTestRule<CreateUserActivity> rule  = new ActivityTestRule<>(CreateUserActivity.class);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         Context context = InstrumentationRegistry.getTargetContext();
         SUT = new CreateUserViewModel(rule.getActivity().getApplication());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test

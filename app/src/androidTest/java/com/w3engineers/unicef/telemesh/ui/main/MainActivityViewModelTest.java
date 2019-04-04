@@ -28,11 +28,6 @@ import static org.junit.Assert.assertFalse;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityViewModelTest {
 
-    // Region constant
-    private static String FIRST_NAME = "Danial";
-    private static String LAST_NAME = "Alvez";
-    private static int AVATAR_INDEX = 2;
-
     private UserEntity userEntity;
 
     private MainActivityViewModel SUT;
@@ -40,13 +35,18 @@ public class MainActivityViewModelTest {
     private MessageSourceData messageSourceData;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         userDataSource = UserDataSource.getInstance();
 
         messageSourceData = MessageSourceData.getInstance();
 
         SUT = new MainActivityViewModel();
+
+        // Region constant
+        String FIRST_NAME = "Danial";
+        String LAST_NAME = "Alvez";
+        int AVATAR_INDEX = 2;
 
         userEntity = new UserEntity()
                 .setUserFirstName(FIRST_NAME)
@@ -55,7 +55,7 @@ public class MainActivityViewModelTest {
     }
 
     @Test
-    public void testUserOfflineProcess_getOfflineState_afterOnlineState() throws Exception {
+    public void testUserOfflineProcess_getOfflineState_afterOnlineState() {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);
@@ -65,19 +65,24 @@ public class MainActivityViewModelTest {
         SUT.userOfflineProcess();
 
         // Adding a time sleep for processing offline status
+        addDelay();
+
+        UserEntity userEntity = userDataSource.getSingleUserById(userMeshId);
+        boolean isOnline = userEntity !=null && userEntity.isOnline();
+
+        assertFalse(isOnline);
+    }
+
+    private void addDelay() {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        boolean isOnline = userDataSource.getSingleUserById(userMeshId).isOnline();
-
-        assertFalse(isOnline);
     }
 
     @Test
-    public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() throws Exception {
+    public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);
@@ -92,18 +97,14 @@ public class MainActivityViewModelTest {
         SUT.makeSendingMessageAsFailed();
 
         // Adding a time sleep for processing offline status
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         assertEquals(messageSourceData.getMessageEntityById(messageEntity.getMessageId()).getStatus(),
                 Constants.MessageStatus.STATUS_FAILED);
     }
 
     @Test
-    public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() throws Exception {
+    public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() {
 
         String userMeshId = UUID.randomUUID().toString();
         userEntity.setMeshId(userMeshId).setOnline(true);
@@ -118,11 +119,7 @@ public class MainActivityViewModelTest {
         SUT.makeSendingMessageAsFailed();
 
         // Adding a time sleep for processing offline status
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         assertEquals(messageSourceData.getMessageEntityById(messageEntity.getMessageId()).getStatus(), messageStatus);
     }
@@ -142,7 +139,7 @@ public class MainActivityViewModelTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 }

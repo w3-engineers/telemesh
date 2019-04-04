@@ -1,7 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.aboutus;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -26,19 +24,18 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(AndroidJUnit4.class)
 public class AboutUsViewModelTest {
 
-    AboutUsViewModel SUT;
+    private AboutUsViewModel SUT;
 
     @Rule
     public ActivityTestRule<AboutUsActivity> rule  = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
-    public void setUp() throws Exception {
-        Context context = InstrumentationRegistry.getTargetContext();
+    public void setUp() {
         SUT = new AboutUsViewModel(rule.getActivity().getApplication());
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test

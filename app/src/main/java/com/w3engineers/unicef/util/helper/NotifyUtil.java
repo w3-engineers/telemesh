@@ -35,10 +35,10 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
  */
 
 public class NotifyUtil {
-    public static final String CHANNEL_NAME = "tele_mesh";
-    public static final String CHANNEL_ID = "notification_channel";
+    private static final String CHANNEL_NAME = "tele_mesh";
+    private static final String CHANNEL_ID = "notification_channel";
     private static final UserDataSource userDataSource = UserDataSource.getInstance();
-    private final String LOCAL_RESOURCE_SCHEME = "res";
+//    private final String LOCAL_RESOURCE_SCHEME = "res";
 
 
     public static void showNotification(@NonNull ChatEntity chatEntity) {
@@ -64,19 +64,19 @@ public class NotifyUtil {
 
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context) {
-        NotificationCompat.Builder builder;
+        String channelId;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             if (mNotificationManager != null) {
                 mNotificationManager.createNotificationChannel(channel);
             }
-            builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+            channelId = channel.getId();
         } else {
-            builder = new NotificationCompat.Builder(context);
+            channelId = CHANNEL_ID;
         }
 
-        return builder;
+        return new NotificationCompat.Builder(context, channelId);
     }
 
     private static void prepareNotification(NotificationCompat.Builder builder,

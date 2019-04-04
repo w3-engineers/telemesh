@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import io.reactivex.Flowable;
@@ -21,7 +19,7 @@ public interface DataSource {
 
     /**
      * Commonly used getLastData which is now inserted in DB
-     * @return
+     * @return -
      */
     @NonNull
     Flowable<ChatEntity> getLastChatData();

@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import com.w3engineers.unicef.telemesh.ui.survey.SurveyFragment;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
-    private BottomNavigationMenuView bottomNavigationMenuView;
     private MainActivityViewModel mViewModel;
 //    private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
@@ -48,8 +46,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     protected void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+        }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         initBottomBar();
@@ -81,9 +81,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private void initBottomBar() {
         loadFragment(new MeshContactsFragment(), getString(R.string.title_contacts_fragment));
 
-        bottomNavigationMenuView =
-                (BottomNavigationMenuView) binding.bottomNavigation
-                        .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+//        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
+//                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
 
         /*binding.bottomNavigation
                 .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
@@ -124,7 +123,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         return true;
     }
 
-    public void setFragmentsOnPosition(@NonNull MenuItem item) {
+    private void setFragmentsOnPosition(@NonNull MenuItem item) {
         Fragment mFragment = null;
         String toolbarTitle = "";
         switch (item.getItemId()) {

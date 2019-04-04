@@ -2,20 +2,14 @@ package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
-
-import java.util.Locale;
 
 /*
  * ============================================================================

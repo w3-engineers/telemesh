@@ -39,29 +39,27 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class RightMeshDataSourceTest {
 
-    private AppDatabase appDatabase;
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
 
-    private Source source;
     private RmDataHelper rmDataHelper;
 
-    RightMeshDataSource SUT;
-    RandomEntityGenerator randomEntityGenerator;
+    private RightMeshDataSource SUT;
+    private RandomEntityGenerator randomEntityGenerator;
     private int transferKey = 2381;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         randomEntityGenerator = new RandomEntityGenerator();
 
-        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
         userDataSource = UserDataSource.getInstance(appDatabase.userDao());
         messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
 
-        source = new Source(appDatabase);
+        Source source = new Source(appDatabase);
 
         rmDataHelper = RmDataHelper.getInstance();
         rmDataHelper.initSource(source);
@@ -93,7 +91,7 @@ public class RightMeshDataSourceTest {
     }*/
 
     @Test
-    public void testOnPeerAdd_checkUserFullName_setValidUser() throws Exception {
+    public void testOnPeerAdd_checkUserFullName_setValidUser() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
@@ -101,15 +99,13 @@ public class RightMeshDataSourceTest {
 
         SUT.onPeer(baseMeshData);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
 
-        assertEquals(userEntity.getFullName(), retrieveUser.getFullName());
+        String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
+
+        assertEquals(userEntity.getFullName(), retrieveFullName);
     }
 
     /*@Test
@@ -133,36 +129,36 @@ public class RightMeshDataSourceTest {
     }*/
 
     @Test
-    public void testOnPeerGone_getOnlineStatus_setExistingUser() throws Exception {
+    public void testOnPeerGone_getOnlineStatus_setExistingUser() {
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
         BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
         SUT.onPeer(baseMeshData);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         MeshPeer meshPeer = baseMeshData.mMeshPeer;
         SUT.onPeerGone(meshPeer);
 
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        assertFalse(retrieveUser.isOnline());
+        assertFalse(retrieveUser !=null && retrieveUser.isOnline());
     }
 
     @Test
-    public void testDataSend() throws Exception {
+    public void testDataSend() {
 
+        addDelay();
+
+        TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator.createRMDataModel();
+        SUT.DataSend(rmDataModel);
+    }
+
+    private void addDelay() {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel);
     }
 
     /*@Test
@@ -192,26 +188,18 @@ public class RightMeshDataSourceTest {
     }*/
 
     @Test
-    public void testOnData_checkMessageProperties_forValidMessage() throws Exception {
+    public void testOnData_checkMessageProperties_forValidMessage() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
 
         SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
@@ -219,15 +207,11 @@ public class RightMeshDataSourceTest {
     }
 
     @Test
-    public void testOnAcknowledgement() throws Exception {
+    public void testOnAcknowledgement() {
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
@@ -242,11 +226,7 @@ public class RightMeshDataSourceTest {
 
         SUT.onAcknowledgement(meshAcknowledgement);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
@@ -254,7 +234,7 @@ public class RightMeshDataSourceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 //        SUT.onRmOff();
     }
 }

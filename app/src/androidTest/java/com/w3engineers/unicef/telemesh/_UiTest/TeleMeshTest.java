@@ -2,7 +2,6 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 
 import android.arch.persistence.room.Room;
-import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
@@ -39,7 +38,6 @@ import static android.support.test.espresso.action.ViewActions.pressImeActionBut
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -54,7 +52,6 @@ public class TeleMeshTest {
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
-    private AppDatabase appDatabase;
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
@@ -66,9 +63,9 @@ public class TeleMeshTest {
                     "android.permission.WRITE_EXTERNAL_STORAGE");*/
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
-        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
         userDataSource = UserDataSource.getInstance(appDatabase.userDao());
@@ -79,15 +76,11 @@ public class TeleMeshTest {
     }
 
     @Test
-    public void teleMeshTest() throws Exception {
+    public void teleMeshTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(3000);
 
         ViewInteraction baseEditText = onView(
                 allOf(withId(R.id.edit_text_first_name),
@@ -107,11 +100,7 @@ public class TeleMeshTest {
                                 0)));
         baseEditText2.perform(pressImeActionButton());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction baseEditText3 = onView(
                 allOf(withId(R.id.edit_text_last_name),
@@ -131,11 +120,7 @@ public class TeleMeshTest {
                                 0)));
         baseEditText4.perform(pressImeActionButton());
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1000);
 
         ViewInteraction appCompatImageView = onView(
                 allOf(withId(R.id.image_view_camera),
@@ -150,11 +135,7 @@ public class TeleMeshTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayout = onView(
                 allOf(childAtPosition(
@@ -166,11 +147,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         constraintLayout.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction profileImageLayout = onView(
                 allOf(childAtPosition(
@@ -185,11 +162,7 @@ public class TeleMeshTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction actionMenuItemView = onView(
                 allOf(withId(R.id.menu_done), withText("Done"),
@@ -204,11 +177,7 @@ public class TeleMeshTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatImageView1 = onView(
                 allOf(withId(R.id.image_view_camera),
@@ -220,11 +189,7 @@ public class TeleMeshTest {
                                 2)));
         appCompatImageView1.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction reSelectImage = onView(
                 allOf(childAtPosition(
@@ -236,11 +201,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         reSelectImage.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction actionMenuItemView2 = onView(
                 allOf(withId(R.id.menu_done), withText("Done"),
@@ -252,11 +213,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         actionMenuItemView2.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction baseButton = onView(
                 allOf(withId(R.id.button_signup), withText("Sign Up"),
@@ -271,29 +228,17 @@ public class TeleMeshTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction bottomNavigationMessageFeed = onView(
                 allOf(withId(R.id.action_message_feed),
@@ -305,11 +250,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         bottomNavigationMessageFeed.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction bottomNavigationSurvey = onView(
                 allOf(withId(R.id.action_survey),
@@ -331,11 +272,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         bottomNavigationSettings.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction viewProfile = onView(
                 allOf(withId(R.id.layout_view_profile),
@@ -350,19 +287,11 @@ public class TeleMeshTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction switchCompat = onView(
                 allOf(withId(R.id.notification_switch),
@@ -374,11 +303,7 @@ public class TeleMeshTest {
                                 2)));
         switchCompat.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayout2 = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -390,11 +315,7 @@ public class TeleMeshTest {
                                 2)));
         constraintLayout2.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatRadioButton = onView(
                 allOf(withId(R.id.radio_bangla), withText("বাংলা"),
@@ -407,11 +328,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatRadioButton.perform(click());
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         ViewInteraction bottomNavigationItemView2 = onView(
                 allOf(withId(R.id.action_setting),
@@ -423,11 +340,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         bottomNavigationItemView2.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayoutCooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -439,11 +352,7 @@ public class TeleMeshTest {
                                 2)));
         constraintLayoutCooseLanguage.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatRadioButton2 = onView(
                 allOf(withId(R.id.radio_english), withText("English"),
@@ -456,11 +365,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatRadioButton2.perform(click());
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         ViewInteraction bottomNavigationItemViewSettings = onView(
                 allOf(withId(R.id.action_setting),
@@ -472,11 +377,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         bottomNavigationItemViewSettings.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction actionOnWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
@@ -488,11 +389,7 @@ public class TeleMeshTest {
                                 4)));
         actionOnWallet.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.button_buy), withText("Buy Data"),
@@ -505,11 +402,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.button_buy), withText("Buy Data"),
@@ -522,11 +415,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.confirmation_ok), withText("OK"),
@@ -541,19 +430,11 @@ public class TeleMeshTest {
 
 //        pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.button_buy), withText("Buy Data"),
@@ -566,19 +447,11 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButtonSellData = onView(
                 allOf(withId(R.id.button_sell), withText("Sell Data"),
@@ -591,11 +464,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButtonSellData.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButtonAgain = onView(
                 allOf(withId(R.id.button_buy), withText("Sell Data"),
@@ -608,11 +477,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButtonAgain.perform(click());
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         ViewInteraction appCompatButton6 = onView(
                 allOf(withId(R.id.confirmation_ok), withText("OK"),
@@ -627,19 +492,11 @@ public class TeleMeshTest {
 
 //        pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatButton8 = onView(
                 allOf(withId(R.id.button_sell), withText("Sell Data"),
@@ -652,27 +509,15 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButton8.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayout3 = onView(
                 allOf(withId(R.id.layout_about_us),
@@ -684,19 +529,11 @@ public class TeleMeshTest {
                                 5)));
         constraintLayout3.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayoutShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
@@ -708,11 +545,7 @@ public class TeleMeshTest {
                                 3)));
         constraintLayoutShareApp.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction constraintLayoutPrivacyPolicy = onView(
                 allOf(withId(R.id.layout_privacy_policy),
@@ -724,11 +557,7 @@ public class TeleMeshTest {
                                 6)));
         constraintLayoutPrivacyPolicy.perform(scrollTo(), click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction bottomNavigationContacts = onView(
                 allOf(withId(R.id.action_contact),
@@ -740,11 +569,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         bottomNavigationContacts.perform(click());
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
@@ -760,11 +585,7 @@ public class TeleMeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction contactLayout = onView(
                 allOf(childAtPosition(
@@ -775,11 +596,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         contactLayout.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edit_text_message),
@@ -803,20 +620,12 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.text_view_last_name),
@@ -829,27 +638,15 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         pressBack();
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(700);
 
         ViewInteraction contactSearch = onView(
                 allOf(withId(R.id.action_search),
@@ -861,11 +658,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         contactSearch.perform(click());
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(500);
 
         ViewInteraction searchAutoComplete = onView(
                 allOf(withId(R.id.search_src_text),
@@ -878,34 +671,30 @@ public class TeleMeshTest {
                         isDisplayed()));
         searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(500);
 
         pressBack();
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2500);
 
         pressBack();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1000);
 
         try {
             pressBack();
         } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addDelay(int i) {
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

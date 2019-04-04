@@ -126,7 +126,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (data != null && requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
@@ -136,7 +136,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            if (mViewModel.storeData(mBinding.editTextFirstName.getText().toString(), mBinding.editTextLastName.getText().toString())) {
+            if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "", mBinding.editTextLastName.getText() + "")) {
                 Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

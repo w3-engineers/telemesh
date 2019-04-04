@@ -17,8 +17,7 @@ import timber.log.Timber;
 
 public class SplashActivity extends BaseActivity {
 
-    private SplashViewModel splashViewModel;
-//    private ServiceLocator serviceLocator;
+    //    private ServiceLocator serviceLocator;
 
     @Override
     protected int getLayoutId() {
@@ -29,7 +28,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void startUI() {
 
-        splashViewModel = getViewModel();
+        SplashViewModel splashViewModel = getViewModel();
         splashViewModel.getUserRegistrationStatus();
         ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
         shimmerFrameLayout.startShimmer();
@@ -37,7 +36,7 @@ public class SplashActivity extends BaseActivity {
 
         splashViewModel.getIsUserRegistered().observe(this, aBoolean -> {
             Intent intent;
-            if (aBoolean) {
+            if (aBoolean != null && aBoolean) {
                 // Go to contact page
                 Timber.d("User already created. Go next page");
                 intent = new Intent(SplashActivity.this, MainActivity.class);

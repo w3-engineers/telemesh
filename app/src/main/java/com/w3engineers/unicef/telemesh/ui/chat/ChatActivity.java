@@ -1,18 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.app.NotificationManager;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -27,8 +24,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
-
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -85,16 +80,19 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         initComponent();
         subscribeForMessages();
         subscribeForUserEvent();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (mViewBinging != null) {
+            mViewBinging.imageProfile.setOnClickListener(this);
+            mViewBinging.textViewLastName.setOnClickListener(this);
+
+            mViewBinging.setUserEntity(mUserEntity);
+        }
 
 
-        mViewBinging.imageProfile.setOnClickListener(this);
-        mViewBinging.textViewLastName.setOnClickListener(this);
-
-        mViewBinging.setUserEntity(mUserEntity);
-
-
-        if (mUserEntity != null) {
+        if (mUserEntity != null && mUserEntity.meshId != null) {
             mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
         }
     }
@@ -136,14 +134,13 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
         // to load messages from reverse order as in chat view
         mLinearLayoutManager.setStackFromEnd(true);
-        mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
 
-
-        mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
-
-
-        //  mViewBinging.emptyViewId.setOnClickListener(this);
-        mViewBinging.imageViewSend.setOnClickListener(this);
+        if (mViewBinging != null) {
+            mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
+            mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
+            //  mViewBinging.emptyViewId.setOnClickListener(this);
+            mViewBinging.imageViewSend.setOnClickListener(this);
+        }
 
         mChatViewModel = getViewModel();
 
@@ -154,9 +151,11 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
      * Remove current user notification
      */
     private void clearNotification() {
-        int notificationId = Math.abs(mUserEntity.meshId.hashCode());
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.cancel(notificationId);
+        if (mUserEntity.meshId != null) {
+            int notificationId = Math.abs(mUserEntity.meshId.hashCode());
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(notificationId);
+        }
     }
 
     /**
@@ -177,22 +176,26 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
                 mViewBinging.chatRv.scrollToPosition(mChatAdapter.getItemCount() - 1);
             });*/
 
-            mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
-                    mChatPagedAdapter.submitList(chatEntities));
+            if (mChatPagedAdapter != null) {
+                mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
+                        mChatPagedAdapter.submitList(chatEntities));
+            }
 
-            mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities ->
-                    mChatViewModel.prepareDateSpecificChat(chatEntities));
+            if (mUserEntity.meshId != null) {
+                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities ->
+                        mChatViewModel.prepareDateSpecificChat(chatEntities));
+            }
 
         }
     }
 
 
     private void subscribeForUserEvent() {
-        if (mUserEntity != null) {
+        if (mUserEntity != null && mUserEntity.meshId != null) {
 
             mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
-                if (userEntity != null)
+                if (userEntity != null && mViewBinging != null)
                     mViewBinging.setUserEntity(userEntity);
             });
         }
@@ -203,10 +206,13 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         super.onClick(view);
         switch (view.getId()) {
             case R.id.image_view_send:
-                String value = mViewBinging.editTextMessage.getText().toString().trim();
-                if (TextUtils.isEmpty(value)) return;
-                mChatViewModel.sendMessage(mUserEntity.meshId, value, true);
-                mViewBinging.editTextMessage.setText("");
+                if (mViewBinging != null) {
+                    String value = mViewBinging.editTextMessage.getText().toString().trim();
+                    if (!TextUtils.isEmpty(value) && mUserEntity.meshId != null) {
+                        mChatViewModel.sendMessage(mUserEntity.meshId, value, true);
+                        mViewBinging.editTextMessage.setText("");
+                    }
+                }
                 break;
             case R.id.image_profile:
             case R.id.text_view_last_name:
@@ -234,7 +240,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         finish();
     }
 
-    public void loadMainActivity() {
+    private void loadMainActivity() {
         Intent newTask = new Intent(this, MainActivity.class);
         newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(newTask);
@@ -267,8 +273,10 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         public void onItemRangeInserted(int positionStart, int itemCount) {
             Timber.e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
-            mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,
-                    null, mChatPagedAdapter.getItemCount());
+            if (mLinearLayoutManager != null && mViewBinging != null && mChatPagedAdapter != null) {
+                mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,
+                        null, mChatPagedAdapter.getItemCount());
+            }
         }
 
         @Override

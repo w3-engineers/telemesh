@@ -1,4 +1,4 @@
-/**
+/*
  * * Copyright 2016 andy
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,11 +67,11 @@ public class SmoothCheckBox extends View implements Checkable {
         this(context, null);
     }
 
-    public SmoothCheckBox(@NonNull Context context, @NonNull AttributeSet attrs) {
+    public SmoothCheckBox(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SmoothCheckBox(@NonNull Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
+    public SmoothCheckBox(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -83,6 +83,8 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private void init(AttributeSet attrs) {
+
+        if (attrs == null) return;
 
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.SmoothCheckBox);
         int tickColor = ta.getColor(R.styleable.SmoothCheckBox_color_tick, COLOR_TICK);

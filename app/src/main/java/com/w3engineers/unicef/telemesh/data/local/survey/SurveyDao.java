@@ -30,7 +30,7 @@ public interface SurveyDao extends BaseDao<SurveyEntity> {
      * <h1>Retrieve all survey</h1>
      * <p>All types of survey submitted and non submitted</p>
      *
-     * @return: SurveyEntity list
+     * @return - SurveyEntity list
      */
     @NonNull
     @Query("SELECT * FROM " + TableNames.SURVEY)
@@ -40,7 +40,7 @@ public interface SurveyDao extends BaseDao<SurveyEntity> {
      * <h1>Get specific survey by id</h1>
      *
      * @param surveyId: String
-     * @return: SurveyEntity
+     * @return - SurveyEntity
      */
     @Nullable
     @Query("SELECT * FROM " + TableNames.SURVEY + " WHERE " + ColumnNames.COLUMN_SURVEY_ID + " LIKE :surveyId")

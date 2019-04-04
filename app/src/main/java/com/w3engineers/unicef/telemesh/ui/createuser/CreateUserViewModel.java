@@ -19,21 +19,21 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
  */
 public class CreateUserViewModel extends AndroidViewModel {
 
-    public int imageIndex = CreateUserActivity.INITIAL_IMAGE_INDEX;
+    private int imageIndex = CreateUserActivity.INITIAL_IMAGE_INDEX;
 
     public CreateUserViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public int getImageIndex() {
+    int getImageIndex() {
         return imageIndex;
     }
 
-    public void setImageIndex(int imageIndex) {
+    void setImageIndex(int imageIndex) {
         this.imageIndex = imageIndex;
     }
 
-    public boolean storeData(@Nullable String firstName, @Nullable String lastName) {
+    boolean storeData(@Nullable String firstName, @Nullable String lastName) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
@@ -45,8 +45,8 @@ public class CreateUserViewModel extends AndroidViewModel {
         return true;
     }
 
-    public boolean isNameValid(@Nullable String name) {
-        return !TextUtils.isEmpty(name) &&
+    boolean isNameValid(@Nullable String name) {
+        return !TextUtils.isEmpty(name) && name != null &&
                 name.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
     }

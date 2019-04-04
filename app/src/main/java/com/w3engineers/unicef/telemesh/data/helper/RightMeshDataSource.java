@@ -2,11 +2,9 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.RemoteException;
 import android.support.annotation.NonNull;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
@@ -15,7 +13,8 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgeme
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.*;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
@@ -35,14 +34,14 @@ public class RightMeshDataSource extends BaseRmDataSource {
 
     private List<String> userIds;
 
-    protected RightMeshDataSource(@NonNull byte[] profileInfo) {
+    RightMeshDataSource(@NonNull byte[] profileInfo) {
         super(App.getContext(), profileInfo);
 
         userIds = new ArrayList<>();
     }
 
     @NonNull
-    public static RightMeshDataSource getRmDataSource() {
+    static RightMeshDataSource getRmDataSource() {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 

@@ -20,10 +20,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  */
 public class AboutUsActivity extends BaseActivity {
 
-//    private ServiceLocator serviceLocator;
-    private AboutUsViewModel aboutUsViewModel;
-    private ActivityAboutUsBinding mBinding;
-
 
     @Override
     protected int getLayoutId() {
@@ -44,10 +40,13 @@ public class AboutUsActivity extends BaseActivity {
     @Override
     protected void startUI() {
 
-        aboutUsViewModel = getViewModel();
-        mBinding = (ActivityAboutUsBinding) getViewDataBinding();
+        //    private ServiceLocator serviceLocator;
+        AboutUsViewModel aboutUsViewModel = getViewModel();
+        ActivityAboutUsBinding mBinding = (ActivityAboutUsBinding) getViewDataBinding();
         setTitle(getString(R.string.activity_about_us));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mBinding.setAboutViewModel(aboutUsViewModel);
 
@@ -59,7 +58,6 @@ public class AboutUsActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                serviceLocator = ServiceLocator.getInstance();
                 return (T) ServiceLocator.getInstance().getAboutUsViewModel(getApplication());
             }
         }).get(AboutUsViewModel.class);

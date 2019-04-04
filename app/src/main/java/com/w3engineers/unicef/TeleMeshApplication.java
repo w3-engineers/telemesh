@@ -18,8 +18,6 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  */
 public class TeleMeshApplication extends App {
 
-    private static String DEFAULT_LANGUAGE = "en";
-
     @Override
     protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
@@ -27,7 +25,7 @@ public class TeleMeshApplication extends App {
         // Set app language based on user
         String language = SharedPref.getSharedPref(base).read(Constants.preferenceKey.APP_LANGUAGE);
         if (language.equals("")){
-            language = DEFAULT_LANGUAGE;
+            language = "en";
         }
         LanguageUtil.setAppLanguage(base, language);
 

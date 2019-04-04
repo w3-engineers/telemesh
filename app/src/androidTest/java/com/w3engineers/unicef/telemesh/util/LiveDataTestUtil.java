@@ -35,7 +35,7 @@ public class LiveDataTestUtil {
 
     public static <T> TestObserver<T> testObserve(LiveData<T> liveData) {
         if(liveData != null) {
-            TestObserver<T> testObserver = new TestObserver<T>();
+            TestObserver<T> testObserver = new TestObserver<>();
             liveData.observeForever(testObserver);
             return testObserver;
         }

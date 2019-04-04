@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -51,7 +50,7 @@ public class MeshContactsFragment extends BaseFragment {
     public List<UserEntity> userEntityList;
     @Nullable
     public MenuItem mSearchItem;
-    private List<UserEntity> prevUserList = null;
+//    private List<UserEntity> prevUserList = null;
 
     @Override
     protected int getLayoutId() {
@@ -73,34 +72,42 @@ public class MeshContactsFragment extends BaseFragment {
 
     private void userDataOperation() {
 
+        if (meshContactViewModel != null) {
 
-        meshContactViewModel.getAllUsers().observe(this, userEntities -> {
-            getAdapter().resetWithList(userEntities);
-            userEntityList = userEntities;
-            if (mSearchItem != null)
-                mSearchItem.setVisible(userEntities != null && userEntities.size() > 0);
-        });
+            meshContactViewModel.getAllUsers().observe(this, userEntities -> {
+                if (userEntities != null) {
+                    getAdapter().resetWithList(userEntities);
+                    userEntityList = userEntities;
+                }
+                if (mSearchItem != null)
+                    mSearchItem.setVisible(userEntities != null && userEntities.size() > 0);
+            });
 
-        meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
-            getAdapter().clear();
-            getAdapter().addItem(userEntities);
-        });
+            meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
+                if (userEntities != null) {
+                    getAdapter().clear();
+                    getAdapter().addItem(userEntities);
+                }
+            });
+        }
 
 
     }
 
     private void openUserMessage() {
-        meshContactViewModel.openUserMessage().observe(this, new Observer<UserEntity>() {
-            @Override
-            public void onChanged(@Nullable UserEntity userEntity) {
+        if (meshContactViewModel != null) {
+            meshContactViewModel.openUserMessage().observe(this, userEntity -> {
 
-                mSearchItem.getActionView().clearFocus();
+                if (mSearchItem != null) {
+                    mSearchItem.getActionView().clearFocus();
 
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra(UserEntity.class.getName(), userEntity);
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), userEntity);
+                    startActivity(intent);
+                }
+
+            });
+        }
     }
 
     private void initSearchView(SearchView searchView) {
@@ -118,9 +125,10 @@ public class MeshContactsFragment extends BaseFragment {
         return new DisposableObserver<String>() {
             @Override
             public void onNext(String string) {
-                Timber.d("Search query: %s", string);
-                meshContactViewModel.startSearch(string, userEntityList);
-
+                if (meshContactViewModel != null) {
+                    Timber.d("Search query: %s", string);
+                    meshContactViewModel.startSearch(string, userEntityList);
+                }
             }
 
             @Override
@@ -139,30 +147,31 @@ public class MeshContactsFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
+        if (getActivity() != null) {
+            getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
-        mSearchItem = menu.findItem(R.id.action_search);
-        mSearchItem.setVisible(false);
+            mSearchItem = menu.findItem(R.id.action_search);
+            mSearchItem.setVisible(false);
 
-        SearchView mSearchView = (SearchView) mSearchItem.getActionView();
-        mSearchView.setQueryHint(getString(R.string.search));
+            SearchView mSearchView = (SearchView) mSearchItem.getActionView();
+            mSearchView.setQueryHint(getString(R.string.search));
 
-        ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-        searchClose.setImageResource(R.mipmap.ic_cross_grey);
+            ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+            searchClose.setImageResource(R.mipmap.ic_cross_grey);
 
-        // Getting EditText view from search view and change cursor color
-        AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        try {
-            // Fixed value for getting cursor drawable from Edit text or search view
-            Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
-            mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-        } catch (Exception e) {
-            e.printStackTrace();
+            // Getting EditText view from search view and change cursor color
+            AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            try {
+                // Fixed value for getting cursor drawable from Edit text or search view
+                Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
+                mCursorDrawableRes.setAccessible(true);
+                mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            initSearchView(mSearchView);
         }
-
-        initSearchView(mSearchView);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 

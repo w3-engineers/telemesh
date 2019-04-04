@@ -44,8 +44,8 @@ public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
      * Load initial list data.
      *
      * This method is called to load the initial page(s) from the DataSource.
-     * @param params
-     * @param callback
+     * @param params -
+     * @param callback -
      */
     @Override
     public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<ChatEntity> callback) {
@@ -61,8 +61,8 @@ public class ChatEntityListDataSource extends PositionalDataSource<ChatEntity> {
      *
      * This method is called to load additional pages from the DataSource
      * after the LoadInitialCallback passed to dispatchLoadInitial has initialized a PagedList.
-     * @param params
-     * @param callback
+     * @param params -
+     * @param callback -
      */
 
     @Override

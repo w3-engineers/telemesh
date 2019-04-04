@@ -39,13 +39,13 @@ public class UIHelper {
                 .into(imageView);
     }
 
-    @BindingAdapter("src")
+    /*@BindingAdapter("src")
     public static void setImageFromResource(@NonNull ImageView imageView, int resourceId) {
 
         Glide.with(App.getContext())
                 .load(resourceId)
                 .into(imageView);
-    }
+    }*/
 
 
     @BindingAdapter("imageStatusResource")
@@ -109,7 +109,7 @@ public class UIHelper {
             } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
-                return TimeUtil.getInstance().getDateString(messageEntity.time);
+                return TimeUtil.getDateString(messageEntity.time);
                 //return messageEntity.message;
             }
         }

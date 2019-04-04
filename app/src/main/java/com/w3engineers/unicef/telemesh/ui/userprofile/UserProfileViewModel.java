@@ -4,9 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-
 
 /*
  * ============================================================================

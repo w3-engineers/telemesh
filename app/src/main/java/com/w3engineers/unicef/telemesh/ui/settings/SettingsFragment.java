@@ -26,12 +26,10 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
-//    private FragmentSettingsBinding mBinding;
-    private FragmentSettingsNewBinding mBinding;
     private Context mActivity;
     private SettingsViewModel settingsViewModel;
 //    private ServiceLocator serviceLocator;
-    private String selectedLanguage, selectedLanguageDisplay;
+//    private String selectedLanguage, selectedLanguageDisplay;
 
     public SettingsFragment() {
 
@@ -48,7 +46,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mActivity = getContext();
         settingsViewModel = getViewModel();
 
-        mBinding = (FragmentSettingsNewBinding) getViewDataBinding();
+        //    private FragmentSettingsBinding mBinding;
+        FragmentSettingsNewBinding mBinding = (FragmentSettingsNewBinding) getViewDataBinding();
 
         mBinding.setSettingsVM(settingsViewModel);
 
@@ -61,13 +60,14 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         // Add sample mesh token 10000
 
-        int token = SharedPref.getSharedPref(getContext()).readInt("cr_token");
-        int spentToken =  SharedPref.getSharedPref(getContext()).readInt("sp_token");
+        if (getContext() != null) {
+            int token = SharedPref.getSharedPref(getContext()).readInt("cr_token");
+            int spentToken = SharedPref.getSharedPref(getContext()).readInt("sp_token");
 
-        if (token == 0 && spentToken == 0)
-        {
-            SharedPref.getSharedPref(getContext()).write("cr_token", 10000);
-            SharedPref.getSharedPref(getContext()).write("sp_token", 0);
+            if (token == 0 && spentToken == 0) {
+                SharedPref.getSharedPref(getContext()).write("cr_token", 10000);
+                SharedPref.getSharedPref(getContext()).write("sp_token", 0);
+            }
         }
     }
 

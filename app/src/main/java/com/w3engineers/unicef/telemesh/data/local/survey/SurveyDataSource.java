@@ -22,7 +22,7 @@ public class SurveyDataSource {
     private SurveyDao surveyDao;
     private static SurveyDataSource surveyDataSource = new SurveyDataSource();
 
-    public SurveyDataSource() {
+    private SurveyDataSource() {
         surveyDao = AppDatabase.getInstance().surveyDao();
     }
 

@@ -68,6 +68,8 @@
     <string name="buy_data">Buy Data</string>
     <string name="balance">Balance</string>
     <string name="wallet_id">wallet Id:</string>
+    <string name="buy_data_success">Buy data Successfully done!</string>
+    <string name="sell_data_success">Sell data Successfully done!</string>
 
     <string-array name="language_list">
         <item>English</item>

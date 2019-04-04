@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -89,7 +90,7 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId : friends user id
      * @return : list of message
      */
-    @Nullable
+    @NonNull
     public LiveData<List<ChatEntity>> getAllMessage(@NonNull String meshId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllMessages(meshId));
     }
@@ -151,8 +152,8 @@ public class ChatViewModel extends AndroidViewModel {
 
     /**
      * Prepare a chat entity from text message.
-     * @param meshId
-     * @param messageEntity
+     * @param meshId -
+     * @param messageEntity -
      */
     private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity) {
 
@@ -189,8 +190,8 @@ public class ChatViewModel extends AndroidViewModel {
 
     /**
      * This API concerned for tracking offline and online the chat current chat user
-     * @param meshId
-     * @return
+     * @param meshId -
+     * @return -
      */
     @NonNull
     public LiveData<UserEntity> getUserById(@NonNull String meshId){
@@ -208,43 +209,45 @@ public class ChatViewModel extends AndroidViewModel {
      * but we will not display all messages at a time.
      * Custom Paging will load chunk data and update view.
      *
-     * @param chatEntityList
-     * @return
+     * @param chatEntityList -
      */
-    public void prepareDateSpecificChat(@NonNull List<ChatEntity> chatEntityList) {
+    public void prepareDateSpecificChat(@Nullable List<ChatEntity> chatEntityList) {
 
-        List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
+        if (chatEntityList != null) {
 
-        ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+            List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 
-        PagedList.Config myConfig = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setPrefetchDistance(PREFETCH_DISTANCE)
-                .setPageSize(PAGE_SIZE)
-                .build();
+            ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
 
 
-        PagedList<ChatEntity> pagedStrings = new PagedList.Builder<Integer, ChatEntity>(chatEntityListDataSource, myConfig)
-                .setInitialKey(INITIAL_LOAD_KEY)
-                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
-                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                .build();
+            PagedList<ChatEntity> pagedStrings = new PagedList.Builder<>(chatEntityListDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
 
-        // here mutable live data is used to pass the updated value
-        mutableMovieList.postValue(pagedStrings);
+            // here mutable live data is used to pass the updated value
+            mutableMovieList.postValue(pagedStrings);
+        }
     }
 
 
     /**
      * group chat entities according to date.
      *  Set is used to ensure the list contain unique contents.
-     * @param chatEntities
-     * @return
+     * @param chatEntities -
+     * @return -
      */
     private List<ChatEntity> groupDataIntoHashMap(List<ChatEntity> chatEntities) {
 
         LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap = new LinkedHashMap<>();
-        Set<ChatEntity> chatEntitySet = null;
+        Set<ChatEntity> chatEntitySet;
 
         for (ChatEntity chatEntity : chatEntities) {
 
@@ -255,7 +258,11 @@ public class ChatViewModel extends AndroidViewModel {
                 if (groupedHashMap.containsKey(hashMapKey)) {
                     // The key is already in the HashMap; add the pojo object
                     // against the existing key.
-                    groupedHashMap.get(hashMapKey).add(chatEntity);
+                    chatEntitySet = groupedHashMap.get(hashMapKey);
+                    if (chatEntitySet != null) {
+                        chatEntitySet.add(chatEntity);
+                        groupedHashMap.put(hashMapKey, chatEntitySet);
+                    }
                 } else {
                     // The key is not there in the HashMap; create a new key-value pair
                     chatEntitySet = new LinkedHashSet<>();
@@ -275,8 +282,8 @@ public class ChatViewModel extends AndroidViewModel {
 
     private List<ChatEntity> generateListFromMap(LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap) {
         // We linearly add every item into the consolidatedList.
-        Date date1 = null;
-        Date date2 = null;
+        Date date1;
+        Date date2;
 
 
         date1 = TimeUtil.getInstance().getDateFromMillisecond(TimeUtil.DEFAULT_MILLISEC);
@@ -290,7 +297,7 @@ public class ChatViewModel extends AndroidViewModel {
 
             date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecond);
 
-            if(!TimeUtil.getInstance().isSameDay(date1, date2)){
+            if(date1 != null && date2 != null && !TimeUtil.getInstance().isSameDay(date1, date2)){
 
                 date1 = date2;
 
@@ -301,10 +308,7 @@ public class ChatViewModel extends AndroidViewModel {
 
             }
 
-            for (ChatEntity chatEntity : groupedHashMap.get(millisecond)) {
-
-                consolidatedList.add(chatEntity);
-            }
+            consolidatedList.addAll(Objects.requireNonNull(groupedHashMap.get(millisecond)));
 
         }
 

@@ -12,10 +12,6 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentSurveyBinding;
 
 public class SurveyFragment extends BaseFragment {
 
-    private FragmentSurveyBinding mSurveyBinding;
-//    private ServiceLocator serviceLocator;
-    private SurveyViewModel mSurveyViewModel;
-
 
     public SurveyFragment() {
     }
@@ -28,8 +24,9 @@ public class SurveyFragment extends BaseFragment {
     @Override
     protected void startUI() {
 
-        mSurveyViewModel = getViewModel();
-        mSurveyBinding = (FragmentSurveyBinding) getViewDataBinding();
+        //    private ServiceLocator serviceLocator;
+        SurveyViewModel mSurveyViewModel = getViewModel();
+        FragmentSurveyBinding mSurveyBinding = (FragmentSurveyBinding) getViewDataBinding();
 
     }
 

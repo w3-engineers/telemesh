@@ -16,10 +16,6 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 @Entity(tableName = TableNames.USERS, indices = {@Index(value = {ColumnNames.COLUMN_USER_MESH_ID}, unique = true)})
 public class UserEntity extends DbBaseEntity {
 
-    /************************************************************/
-    /*************** User table property ************************/
-    /************************************************************/
-
     @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_USER_MESH_ID)
     public String meshId;
@@ -47,9 +43,6 @@ public class UserEntity extends DbBaseEntity {
 
     public int hasUnreadMessage;
 
-    /**************************************************************/
-    /****************** Only user model property ******************/
-    /**************************************************************/
     //@Ignore
     //private String userLastName;
     public UserEntity() {

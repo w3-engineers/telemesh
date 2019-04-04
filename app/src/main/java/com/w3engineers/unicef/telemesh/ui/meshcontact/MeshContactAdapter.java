@@ -4,12 +4,10 @@ import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
-import com.w3engineers.ext.strom.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
@@ -39,7 +37,7 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         String rightUserId = right.getMeshId();
 
 
-        return !TextUtils.isEmpty(leftUserId)
+        return !TextUtils.isEmpty(leftUserId) && leftUserId != null
                 && !TextUtils.isEmpty(rightUserId)
                 && leftUserId.equals(rightUserId);
 
@@ -47,7 +45,7 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
 
     @NonNull
     @Override
-    public BaseViewHolder<UserEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseAdapterViewHolder<UserEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MeshContactViewHolder(inflate(parent, R.layout.item_mesh_contact));
     }
 
@@ -64,7 +62,7 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         addItem(items);
     }
 
-    private class MeshContactViewHolder extends BaseViewHolder<UserEntity> {
+    private class MeshContactViewHolder extends BaseAdapterViewHolder<UserEntity> {
         private ItemMeshContactBinding itemMeshContactBinding;
 
         MeshContactViewHolder(@NonNull ViewDataBinding viewDataBinding) {
@@ -76,10 +74,6 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         public void bind(@NonNull UserEntity item) {
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
-        }
-
-        @Override
-        public void onClick(@NonNull View view) {
         }
     }
 }

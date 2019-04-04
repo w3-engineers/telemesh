@@ -46,7 +46,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long writeMessage(@NonNull MessageEntity messageEntity);
 
-    /**
+    /*
      * <h1>Provide last row id</h1>
      * <p>Sometime we need last row id for different purpose</p>
      *
@@ -106,7 +106,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
     MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);*/
 
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
+    /*@Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
             + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    boolean hasChatEntityExist(@NonNull String friendsId, @NonNull String messageId);
+    boolean hasChatEntityExist(@NonNull String friendsId, @NonNull String messageId);*/
 }

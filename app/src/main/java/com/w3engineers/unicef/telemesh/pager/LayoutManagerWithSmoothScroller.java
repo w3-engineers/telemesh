@@ -30,7 +30,7 @@ public class LayoutManagerWithSmoothScroller extends LinearLayoutManager {
     }*/
 
     @Override
-    public void smoothScrollToPosition(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.State state,
+    public void smoothScrollToPosition(@NonNull RecyclerView recyclerView, @Nullable RecyclerView.State state,
                                        int position) {
         RecyclerView.SmoothScroller smoothScroller = new TopSnappedSmoothScroller(recyclerView.getContext());
         smoothScroller.setTargetPosition(position);
@@ -39,7 +39,7 @@ public class LayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
 
     private class TopSnappedSmoothScroller extends LinearSmoothScroller {
-        public TopSnappedSmoothScroller(@NonNull Context context) {
+        TopSnappedSmoothScroller(@NonNull Context context) {
             super(context);
         }
 

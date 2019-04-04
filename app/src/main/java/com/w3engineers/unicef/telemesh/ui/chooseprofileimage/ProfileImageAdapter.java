@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
-import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,16 +19,14 @@ import com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox;
  * Proprietary and confidential
  * ============================================================================
  */
-public class ProfileImageAdapter extends BaseAdapter<Integer> {
+class ProfileImageAdapter extends BaseAdapter<Integer> {
 
-    private Context mContext;
     @Nullable
     public SmoothCheckBox previousSelectedItem;
     public int selectedPosition;
 
 
-    public ProfileImageAdapter(@NonNull Context context, int selectedPosition) {
-        this.mContext = context;
+    public ProfileImageAdapter(int selectedPosition) {
         this.selectedPosition = selectedPosition;
     }
 

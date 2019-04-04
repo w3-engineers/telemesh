@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /*
  * ============================================================================
@@ -23,14 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeUtil {
 
-    private static String dateFormat1 = "yyyy-MM-dd HH:mm:ss";
-    private static String dateFormat9 = "hh:mm aa";
-    private static String dateFormat13 = "dd-MM-yyyy";
-
-    public static long DEFAULT_MILLISEC = 1322018752992l; // Nov 22, 2011 9:25:52 PM
+    public static long DEFAULT_MILLISEC = 1322018752992L; // Nov 22, 2011 9:25:52 PM
 
     @Nullable
-    public static TimeUtil timeUtil;
+    private static TimeUtil timeUtil;
 
     private TimeUtil() {
     }
@@ -50,6 +45,7 @@ public class TimeUtil {
     @Nullable
     public static String getOnlyTime(long milliSeconds) {
         Date date = new Date(milliSeconds);
+        String dateFormat9 = "hh:mm aa";
         DateFormat format = new SimpleDateFormat(dateFormat9, Locale.getDefault());
         format.setTimeZone(TimeZone.getDefault());
         return format.format(date);
@@ -57,6 +53,7 @@ public class TimeUtil {
 
     @Nullable
     public static String getDateString(long milliSeconds) {
+        String dateFormat13 = "dd-MM-yyyy";
         DateFormat format = new SimpleDateFormat(dateFormat13, Locale.getDefault());
 
         format.setTimeZone(TimeZone.getDefault());
@@ -70,15 +67,15 @@ public class TimeUtil {
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
         cal2.setTime(date2);
-        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 
-        return sameDay;
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
     }
 
     @Nullable
     public synchronized Date getDateFromMillisecond(long timeMillis){
 
+        String dateFormat1 = "yyyy-MM-dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
         Date formattedDate = null;
 

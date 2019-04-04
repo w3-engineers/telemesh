@@ -3,8 +3,6 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 
 import java.util.ArrayList;
 import java.util.List;

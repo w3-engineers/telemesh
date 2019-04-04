@@ -18,11 +18,11 @@ import java.util.UUID;
 /**
  * Convenient util class to instantiate any object's all the field with random value
  */
-public class RandomGenerator {
+class RandomGenerator {
 
     private Random random = new Random();
 
-    public <T> T createAndFill(Class<T> clazz) throws Exception {
+    private <T> T createAndFill(Class<T> clazz) throws Exception {
         T instance = clazz.newInstance();
         for (Field field : clazz.getDeclaredFields()) {
             //https://javapapers.com/core-java/java-synthetic-class-method-field/

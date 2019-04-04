@@ -1,7 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
-import android.arch.lifecycle.LiveData;
-
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -11,8 +9,8 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityViewModel extends BaseRxViewModel {
-    private LiveData<Integer> messageCount;
-    private LiveData<Integer> surveyCount;
+//    private LiveData<Integer> messageCount;
+//    private LiveData<Integer> surveyCount;
     private MessageSourceData messageSourceData;
 
     public MainActivityViewModel() {

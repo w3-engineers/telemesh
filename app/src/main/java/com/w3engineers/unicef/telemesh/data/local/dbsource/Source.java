@@ -11,7 +11,6 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 
 import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
 
 /*
  * ============================================================================
@@ -23,7 +22,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class Source implements DataSource {
 
     private static Source dbSource = new Source();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String chatCurrentUser = null;
 
     private MessageDao messageDao;

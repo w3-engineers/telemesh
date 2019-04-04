@@ -3,10 +3,10 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 import android.annotation.SuppressLint;
 import android.arch.persistence.room.ColumnInfo;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
-import android.text.TextUtils;
 
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
+import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 
@@ -20,11 +20,11 @@ import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 @SuppressLint("ParcelCreator")
 public class ChatEntity extends DbBaseEntity {
 
-    @NonNull
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_ID)
     public String messageId;
 
-    @NonNull
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_FRIENDS_ID)
     public String friendsId;
 

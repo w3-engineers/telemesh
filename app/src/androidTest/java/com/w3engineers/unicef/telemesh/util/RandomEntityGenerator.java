@@ -144,7 +144,7 @@ public class RandomEntityGenerator {
         return messageEntity;
     }*/
 
-    public ChatEntity createChatEntity(String userId) throws Exception {
+    public ChatEntity createChatEntity(String userId) {
 
         return new MessageEntity().setMessage("Hi")
                 .setFriendsId(userId)

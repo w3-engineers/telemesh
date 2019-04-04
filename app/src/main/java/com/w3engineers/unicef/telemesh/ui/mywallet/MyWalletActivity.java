@@ -10,12 +10,10 @@ import android.view.View;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataActivity;
 import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
-import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 
 
 /*
@@ -27,7 +25,6 @@ import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
  */
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener{
 
-    private MyWalletViewModel viewModel;
     private ActivityMyWalletBinding mBinding;
 
 
@@ -45,9 +42,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected void startUI() {
 
         setTitle(getString(R.string.settings_open_wallet));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        viewModel = getViewModel();
+        MyWalletViewModel viewModel = getViewModel();
         mBinding = (ActivityMyWalletBinding) getViewDataBinding();
         mBinding.buttonSell.setOnClickListener(this);
         mBinding.buttonBuy.setOnClickListener(this);

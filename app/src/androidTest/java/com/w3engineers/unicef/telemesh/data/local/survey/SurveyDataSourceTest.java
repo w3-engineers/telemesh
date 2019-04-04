@@ -34,10 +34,10 @@ public class SurveyDataSourceTest {
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
-    SurveyDataSource SUT;
+    private SurveyDataSource SUT;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -48,22 +48,18 @@ public class SurveyDataSourceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
     }
 
     @Test
-    public void basicSurveyTest() throws Exception {
+    public void basicSurveyTest() {
 
         String userId = UUID.randomUUID().toString();
 
         userDataSource.insertOrUpdateData(getUserInfo(userId));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         String surveyId_1 = UUID.randomUUID().toString();
         SUT.insertOrUpdateData(getSurveyInfo(surveyId_1, userId));
@@ -72,6 +68,9 @@ public class SurveyDataSourceTest {
         SUT.insertOrUpdateData(getSurveyInfo(surveyId_2, userId));
 
         SurveyEntity surveyEntity = SUT.getSurveyById(surveyId_1);
+
+        if (surveyEntity == null) return;
+
         assertEquals(surveyEntity.getSenderId(), userId);
 
         String surveyForm = surveyEntity.getSurveyForm();
@@ -97,13 +96,17 @@ public class SurveyDataSourceTest {
 
         TestSubscriber<List<SurveyEntity>> getAllSurveySubscriber = SUT.getAllSurvey().test();
 
+        addDelay();
+
+        getAllSurveySubscriber.assertNoErrors().assertValue(surveyEntities -> surveyEntities.size() == 2);
+    }
+
+    private void addDelay() {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        getAllSurveySubscriber.assertNoErrors().assertValue(surveyEntities -> surveyEntities.size() == 2);
     }
 
     private UserEntity getUserInfo(String meshId) {

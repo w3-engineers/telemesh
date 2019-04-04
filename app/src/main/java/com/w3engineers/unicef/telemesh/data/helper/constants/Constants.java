@@ -3,7 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 public class Constants {
 
     //bottom navigation item position
-    public interface MenuItemPosition {
+    /*public interface MenuItemPosition {
         int POSITION_FOR_CONTACT = 0;
         int POSITION_FOR_MESSAGE_FEED = 1;
         int POSITION_FOR_SURVEY = 2;
@@ -11,11 +11,11 @@ public class Constants {
         float MENU_ITEM_WIDTH = 50f;
         float MENU_ITEM_HEIGHT = 50f;
         int MAXIMUM_MENU_ITEMS = 4;
-    }
+    }*/
 
     public interface DefaultValue {
-        int INTEGER_VALUE_ZERO = 0;
-        int MAXIMUM_BADGE_VALUE = 9;
+//        int INTEGER_VALUE_ZERO = 0;
+//        int MAXIMUM_BADGE_VALUE = 9;
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
         int DOUBLE_PRESS_INTERVAL = 2000;

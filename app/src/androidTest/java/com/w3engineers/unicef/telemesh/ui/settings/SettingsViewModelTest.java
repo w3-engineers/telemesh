@@ -1,8 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -31,22 +29,21 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class SettingsViewModelTest {
 
-    private SharedPreferences sharedPreferences;
     private Context context;
-    SettingsViewModel SUT;
+    private SettingsViewModel SUT;
 
     @Rule
     public ActivityTestRule<MainActivity> rule  = new ActivityTestRule<>(MainActivity.class);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         context = InstrumentationRegistry.getTargetContext();
         SUT = new SettingsViewModel(rule.getActivity().getApplication());
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test

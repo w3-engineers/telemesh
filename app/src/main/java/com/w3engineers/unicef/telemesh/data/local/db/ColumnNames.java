@@ -17,7 +17,6 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";
-    String COLUMN_USER_TYPE = "user_type";
     String COLUMN_USER_LAST_ONLINE_TIME = "last_online_time";
     String COLUMN_USER_IS_ONLINE = "is_online";
 

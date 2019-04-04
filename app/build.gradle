@@ -34,7 +34,7 @@ android {
     lintOptions {
 
         htmlReport true
-        htmlOutput file("lint-report.html")
+        htmlOutput file("../docs/lint_reports/lint-report.html")
 
         abortOnError true
 //        absolutePaths false causing error

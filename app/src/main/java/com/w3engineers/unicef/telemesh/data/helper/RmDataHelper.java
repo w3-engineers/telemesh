@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
@@ -24,29 +22,17 @@ import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.HashMap;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [22-Oct-2018 at 6:33 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [22-Oct-2018 at 6:33 PM].
- * * --> <Second Editor> on [22-Oct-2018 at 6:33 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [22-Oct-2018 at 6:33 PM].
- * * --> <Second Reviewer> on [22-Oct-2018 at 6:33 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class RmDataHelper {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
@@ -55,18 +41,22 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
-    public HashMap<Integer, RMDataModel> rmDataMap;
+    @NonNull
+    public SparseArray<RMDataModel> rmDataMap = new SparseArray<>();
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmDataMap = new HashMap<>();
         rmUserMap = new HashMap<>();
     }
 
+    @NonNull
     public static RmDataHelper getInstance() {
         return rmDataHelper;
     }
 
-    public RightMeshDataSource initRM(DataSource dataSource) {
+    @NonNull
+    public RightMeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
         rightMeshDataSource = RightMeshDataSource.getRmDataSource();
@@ -78,7 +68,7 @@ public class RmDataHelper {
      *
      * @param dataSource -> provide mock dataSource from unit test class
      */
-    public void initSource(DataSource dataSource) {
+    public void initSource(@NonNull DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -88,7 +78,7 @@ public class RmDataHelper {
      * @param rmUserModel -> contains all of info about users
      */
 
-    public void userAdd(RMUserModel rmUserModel) {
+    public void userAdd(@NonNull RMUserModel rmUserModel) {
 
         String userId = rmUserModel.getUserId();
         if (rmUserMap.containsKey(userId))
@@ -109,7 +99,7 @@ public class RmDataHelper {
      * @param meshPeer -> contains peer id
      */
 
-    public void userLeave(MeshPeer meshPeer) {
+    public void userLeave(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
 
@@ -118,16 +108,17 @@ public class RmDataHelper {
             RMUserModel rmUserModel = rmUserMap.get(userId);
             rmUserMap.remove(userId);
 
-            UserEntity userEntity = new UserEntity()
-                    .toUserEntity(rmUserModel)
-                    .setLastOnlineTime(TimeUtil.toCurrentTime())
-                    .setOnline(false);
+            if (rmUserModel != null) {
+                UserEntity userEntity = new UserEntity()
+                        .toUserEntity(rmUserModel)
+                        .setLastOnlineTime(TimeUtil.toCurrentTime())
+                        .setOnline(false);
 
-            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+                UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            }
         }
     }
 
-    @SuppressLint("CheckResult")
     /**
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
@@ -135,8 +126,9 @@ public class RmDataHelper {
      *
      * Only for outgoing message this method will be responsible
      */
+    @SuppressLint("CheckResult")
     public void prepareDataObserver() {
-        dataSource.getLastChatData()
+        compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
 
@@ -147,8 +139,7 @@ public class RmDataHelper {
                         dataSend(messageEntity.toProtoChat().toByteArray(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId());
                     }
-
-                });
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -157,7 +148,7 @@ public class RmDataHelper {
      * @param data -> raw data
      * @param type -> data type
      */
-    private void dataSend(byte[] data, byte type, String userId) {
+    private void dataSend(@NonNull byte[] data, byte type, String userId) {
 
         RMDataModel rmDataModel = RMDataModel.newBuilder()
                 .setRawData(ByteString.copyFrom(data))
@@ -224,7 +215,7 @@ public class RmDataHelper {
 
             } else {
 
-                /**
+                /*
                  * for delivery status update we don't need to replace the message and insert again.
                  * If we do so then paging library Diff Callback can't properly work
                  */
@@ -268,7 +259,7 @@ public class RmDataHelper {
 
         int dataSendId = rmDataModel.getRecDataId();
 
-        if (rmDataMap.containsKey(dataSendId)) {
+        if (rmDataMap.get(dataSendId) != null) {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
 

@@ -4,7 +4,7 @@
     android:shape="oval">
 
     <solid
-        android:color="@color/outcoming_message_color"/>
+        android:color="@color/out_coming_message_color"/>
 
     <!--<size-->
         <!--android:width="120dp"-->

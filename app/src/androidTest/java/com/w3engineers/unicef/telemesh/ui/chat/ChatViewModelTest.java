@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
@@ -32,23 +31,13 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [13-Feb-2019 at 1:47 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [13-Feb-2019 at 1:47 PM].
- * --> <Second Editor> on [13-Feb-2019 at 1:47 PM].
- * Reviewed by :
- * --> <First Reviewer> on [13-Feb-2019 at 1:47 PM].
- * --> <Second Reviewer> on [13-Feb-2019 at 1:47 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
@@ -57,14 +46,14 @@ public class ChatViewModelTest {
 
     private AppDatabase appDatabase;
 
-    ChatViewModel SUT;
+    private ChatViewModel SUT;
     private RandomEntityGenerator randomEntityGenerator;
 
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         randomEntityGenerator = new RandomEntityGenerator();
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -83,58 +72,36 @@ public class ChatViewModelTest {
 
             String message = "Hi";
 
-            SUT.sendMessage(userEntity.getMeshId(), message, true);
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (userEntity.getMeshId() != null) {
+                SUT.sendMessage(userEntity.getMeshId(), message, true);
             }
+
+            addDelay();
 
             TestObserver<List<ChatEntity>> listTestObserver = LiveDataTestUtil.testObserve(SUT.getAllMessage(userEntity.getMeshId()));
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
 
             TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             assertThat(((MessageEntity)listTestObserver.observedvalues.get(0).get(0)).getMessage(), is(message));
 
             ChatEntity receiverChat = randomEntityGenerator.createReceiverChatEntity(userEntity.getMeshId());
             messageSourceData.insertOrUpdateData(receiverChat);
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             SUT.updateAllMessageStatus(userEntity.getMeshId());
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             ChatEntity retrieveReceiverChat = messageSourceData.getMessageEntityById(receiverChat.getMessageId());
             assertThat(retrieveReceiverChat.getStatus(), is(Constants.MessageStatus.STATUS_READ));
@@ -144,15 +111,19 @@ public class ChatViewModelTest {
 
             TestObserver<UserEntity> entityTestObserver = LiveDataTestUtil.testObserve(SUT.getUserById(userEntity.getMeshId()));
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            addDelay();
 
             assertFalse(userEntity.isOnline());
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addDelay() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -201,7 +172,7 @@ public class ChatViewModelTest {
     }*/
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
     }
 }

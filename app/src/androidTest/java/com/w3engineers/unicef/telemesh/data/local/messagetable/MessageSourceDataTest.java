@@ -22,32 +22,22 @@ import io.reactivex.subscribers.TestSubscriber;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [07-Feb-2019 at 12:04 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [07-Feb-2019 at 12:04 PM].
- * --> <Second Editor> on [07-Feb-2019 at 12:04 PM].
- * Reviewed by :
- * --> <First Reviewer> on [07-Feb-2019 at 12:04 PM].
- * --> <Second Reviewer> on [07-Feb-2019 at 12:04 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class MessageSourceDataTest {
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
-    MessageSourceData SUT;
+    private MessageSourceData SUT;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -58,22 +48,18 @@ public class MessageSourceDataTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
     }
 
     @Test
-    public void basicMessageTest() throws Exception{
+    public void basicMessageTest() {
 
         String userId = UUID.randomUUID().toString();
 
         userDataSource.insertOrUpdateData(getUserInfo(userId));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         String messageId_1 = UUID.randomUUID().toString();
         SUT.insertOrUpdateData(getChatInfo(messageId_1, userId));
@@ -81,32 +67,20 @@ public class MessageSourceDataTest {
         String messageId_2 = UUID.randomUUID().toString();
         SUT.insertOrUpdateData(getChatInfo(messageId_2, userId));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         SUT.changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING, Constants.MessageStatus.STATUS_UNREAD);
 
         TestSubscriber<List<ChatEntity>> getAllMessageSubscriber = SUT.getAllMessages(userId).test();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         getAllMessageSubscriber.assertNoErrors().assertValue(chatEntities -> {
             ChatEntity chatEntity = chatEntities.get(0);
             return chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD;
         });
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         SUT.updateUnreadToRead(userId);
 
@@ -114,23 +88,21 @@ public class MessageSourceDataTest {
 
         assertThat(chatEntity.getStatus(), is(Constants.MessageStatus.STATUS_READ));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         TestSubscriber<ChatEntity> getLastChatEntity = SUT.getLastData().test();
 
+        addDelay();
+
+        getLastChatEntity.assertNoErrors().assertValue(lastChatEntity -> lastChatEntity.getMessageId().equals(messageId_2));
+    }
+
+    private void addDelay() {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        getLastChatEntity.assertNoErrors().assertValue(lastChatEntity -> {
-            return lastChatEntity.getMessageId().equals(messageId_2);
-        });
     }
 
     private UserEntity getUserInfo(String meshId) {

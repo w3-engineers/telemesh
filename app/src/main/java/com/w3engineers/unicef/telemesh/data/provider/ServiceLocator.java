@@ -7,7 +7,6 @@ import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
 import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataViewModel;
@@ -25,30 +24,18 @@ import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [17-Sep-2018 at 4:54 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [17-Sep-2018 at 4:54 PM].
- * * --> <Second Editor> on [17-Sep-2018 at 4:54 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [17-Sep-2018 at 4:54 PM].
- * * --> <Second Reviewer> on [17-Sep-2018 at 4:54 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class ServiceLocator extends BaseServiceLocator {
 
     private static ServiceLocator serviceLocator;
 
+    @NonNull
     public static ServiceLocator getInstance() {
         if (serviceLocator == null) {
             serviceLocator = new ServiceLocator();
@@ -56,62 +43,74 @@ public class ServiceLocator extends BaseServiceLocator {
         return serviceLocator;
     }
 
-
-    public SplashViewModel getSplashViewModel(Application application) {
+    @NonNull
+    public SplashViewModel getSplashViewModel(@NonNull Application application) {
         return new SplashViewModel(application);
     }
 
-    public AboutUsViewModel getAboutUsViewModel(Application application) {
+    @NonNull
+    public AboutUsViewModel getAboutUsViewModel(@NonNull Application application) {
         return new AboutUsViewModel(application);
     }
 
-    public UserProfileViewModel getUserProfileViewModel(Application application) {
+    @NonNull
+    public UserProfileViewModel getUserProfileViewModel(@NonNull Application application) {
         return new UserProfileViewModel(application);
     }
 
-    public CreateUserViewModel getCreateUserViewModel(Application application) {
+    @NonNull
+    public CreateUserViewModel getCreateUserViewModel(@NonNull Application application) {
         return new CreateUserViewModel(application);
     }
 
+    @NonNull
     public MainActivityViewModel getMainActivityViewModel(){
         return new MainActivityViewModel();
     }
 
-    public SettingsViewModel getSettingsViewModel(Application application){
+    @NonNull
+    public SettingsViewModel getSettingsViewModel(@NonNull Application application){
         return new SettingsViewModel(application);
     }
 
-
+    @NonNull
     public MeshContactViewModel getMeshContactViewModel() {
         return new MeshContactViewModel(UserDataSource.getInstance());
     }
 
+    @NonNull
     public MessageFeedViewModel getMessageFeedViewModel() {
         return new MessageFeedViewModel();
     }
 
+    @NonNull
     public SurveyViewModel getSurveyViewModel() {
         return new SurveyViewModel();
     }
 
-    public ChatViewModel getChatViewModel(Application application){
+    @NonNull
+    public ChatViewModel getChatViewModel(@NonNull Application application){
         return new ChatViewModel(application);
     }
 
+    @NonNull
     @Override
     public BaseRmDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
-    public MyWalletViewModel getMyWalletViewModel(Application application) {
+    @NonNull
+    public MyWalletViewModel getMyWalletViewModel(@NonNull Application application) {
         return new MyWalletViewModel(application);
     }
 
-    public BuyDataViewModel getBuyDataViewModel(Application application) {
+    @NonNull
+    public BuyDataViewModel getBuyDataViewModel(@NonNull Application application) {
         return new BuyDataViewModel(application);
     }
 
-    public SellDataViewModel getSellDataViewModel(Application application) {
+    @NonNull
+    public SellDataViewModel getSellDataViewModel(@NonNull Application application) {
         return new SellDataViewModel(application);
     }
 

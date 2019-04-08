@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.arch.persistence.room.Database;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
@@ -16,26 +17,13 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * <br>----------------------------------------------------------------------------
- * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-07-05 at 3:45 PM].
- * <br>----------------------------------------------------------------------------
- * <br>Project: android-framework.
- * <br>Code Responsibility: <Purpose of code>
- * <br>----------------------------------------------------------------------------
- * <br>Edited by :
- * <br>1. <First Editor> on [2018-07-05 at 3:45 PM].
- * <br>2. <Second Editor>
- * <br>----------------------------------------------------------------------------
- * <br>Reviewed by :
- * <br>1. <First Reviewer> on [2018-07-05 at 3:45 PM].
- * <br>2. <Second Reviewer>
- * <br>============================================================================
- **/
+ * ============================================================================
+ */
 
 
 //DB version will be aligned with App version,
@@ -48,10 +36,14 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {
 
+    @NonNull
     public abstract UserDao userDao();
+    @NonNull
     public abstract MessageDao messageDao();
+    @NonNull
     public abstract SurveyDao surveyDao();
 
+    @NonNull
     public static AppDatabase getInstance() {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {

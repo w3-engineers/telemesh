@@ -9,7 +9,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -36,18 +36,13 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md. Azizul Islam on 10/10/2018 at 10:54 AM.
- *  *
- *  * Purpose: Perform message related operations
- *  *
- *  * Last edited by : Md. Azizul Islam on 10/10/2018.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 public class ChatViewModel extends AndroidViewModel {
@@ -75,7 +70,7 @@ public class ChatViewModel extends AndroidViewModel {
      *
      *
      */
-    public ChatViewModel(Application application) {
+    public ChatViewModel(@NonNull Application application) {
         super(application);
         this.messageSourceData =  MessageSourceData.getInstance();
 
@@ -95,7 +90,8 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId : friends user id
      * @return : list of message
      */
-    public LiveData<List<ChatEntity>> getAllMessage(String meshId) {
+    @NonNull
+    public LiveData<List<ChatEntity>> getAllMessage(@NonNull String meshId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllMessages(meshId));
     }
 
@@ -145,7 +141,7 @@ public class ChatViewModel extends AndroidViewModel {
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe());
+                .subscribe(aLong -> {}, Throwable::printStackTrace));
 
     }
 
@@ -156,8 +152,8 @@ public class ChatViewModel extends AndroidViewModel {
 
     /**
      * Prepare a chat entity from text message.
-     * @param meshId
-     * @param messageEntity
+     * @param meshId -
+     * @param messageEntity -
      */
     private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity) {
 
@@ -184,18 +180,18 @@ public class ChatViewModel extends AndroidViewModel {
     public void updateAllMessageStatus(@NonNull String friendsId) {
 
 
-        compositeDisposable.add(updateMessageSatus(friendsId)
-                .subscribeOn(Schedulers.io()).subscribe());
+        compositeDisposable.add(updateMessageStatus(friendsId)
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
     }
 
-    private Single<Long> updateMessageSatus(String friendsId) {
+    private Single<Long> updateMessageStatus(String friendsId) {
         return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
     }
 
     /**
      * This API concerned for tracking offline and online the chat current chat user
-     * @param meshId
-     * @return
+     * @param meshId -
+     * @return -
      */
     @NonNull
     public LiveData<UserEntity> getUserById(@NonNull String meshId){
@@ -213,43 +209,45 @@ public class ChatViewModel extends AndroidViewModel {
      * but we will not display all messages at a time.
      * Custom Paging will load chunk data and update view.
      *
-     * @param chatEntityList
-     * @return
+     * @param chatEntityList -
      */
-    public void prepareDateSpecificChat(@NonNull List<ChatEntity> chatEntityList) {
+    public void prepareDateSpecificChat(@Nullable List<ChatEntity> chatEntityList) {
 
-        List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
+        if (chatEntityList != null) {
 
-        ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+            List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
 
-        PagedList.Config myConfig = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setPrefetchDistance(PREFETCH_DISTANCE)
-                .setPageSize(PAGE_SIZE)
-                .build();
+            ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
 
 
-        PagedList<ChatEntity> pagedStrings = new PagedList.Builder<Integer, ChatEntity>(chatEntityListDataSource, myConfig)
-                .setInitialKey(INITIAL_LOAD_KEY)
-                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
-                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                .build();
+            PagedList<ChatEntity> pagedStrings = new PagedList.Builder<>(chatEntityListDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
 
-        // here mutable live data is used to pass the updated value
-        mutableMovieList.postValue(pagedStrings);
+            // here mutable live data is used to pass the updated value
+            mutableMovieList.postValue(pagedStrings);
+        }
     }
 
 
     /**
      * group chat entities according to date.
      *  Set is used to ensure the list contain unique contents.
-     * @param chatEntities
-     * @return
+     * @param chatEntities -
+     * @return -
      */
     private List<ChatEntity> groupDataIntoHashMap(List<ChatEntity> chatEntities) {
 
         LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap = new LinkedHashMap<>();
-        Set<ChatEntity> chatEntitySet = null;
+        Set<ChatEntity> chatEntitySet;
 
         for (ChatEntity chatEntity : chatEntities) {
 
@@ -260,7 +258,11 @@ public class ChatViewModel extends AndroidViewModel {
                 if (groupedHashMap.containsKey(hashMapKey)) {
                     // The key is already in the HashMap; add the pojo object
                     // against the existing key.
-                    groupedHashMap.get(hashMapKey).add(chatEntity);
+                    chatEntitySet = groupedHashMap.get(hashMapKey);
+                    if (chatEntitySet != null) {
+                        chatEntitySet.add(chatEntity);
+                        groupedHashMap.put(hashMapKey, chatEntitySet);
+                    }
                 } else {
                     // The key is not there in the HashMap; create a new key-value pair
                     chatEntitySet = new LinkedHashSet<>();
@@ -280,8 +282,8 @@ public class ChatViewModel extends AndroidViewModel {
 
     private List<ChatEntity> generateListFromMap(LinkedHashMap<Long, Set<ChatEntity>> groupedHashMap) {
         // We linearly add every item into the consolidatedList.
-        Date date1 = null;
-        Date date2 = null;
+        Date date1;
+        Date date2;
 
 
         date1 = TimeUtil.getInstance().getDateFromMillisecond(TimeUtil.DEFAULT_MILLISEC);
@@ -290,26 +292,23 @@ public class ChatViewModel extends AndroidViewModel {
 
         List<ChatEntity> consolidatedList = new ArrayList<>();
 
-        for (long millisec : groupedHashMap.keySet()) {
+        for (long millisecond : groupedHashMap.keySet()) {
 
 
-            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisec);
+            date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecond);
 
-            if(!TimeUtil.getInstance().isSameDay(date1, date2)){
+            if(date1 != null && date2 != null && !TimeUtil.getInstance().isSameDay(date1, date2)){
 
                 date1 = date2;
 
                 MessageEntity messageEntity = new MessageEntity();
                 messageEntity.setMessageType(Constants.MessageType.DATE_MESSAGE);
-                messageEntity.setTime(millisec);
+                messageEntity.setTime(millisecond);
                 consolidatedList.add(messageEntity);
 
             }
 
-            for (ChatEntity chatEntity : groupedHashMap.get(millisec)) {
-
-                consolidatedList.add(chatEntity);
-            }
+            consolidatedList.addAll(Objects.requireNonNull(groupedHashMap.get(millisecond)));
 
         }
 

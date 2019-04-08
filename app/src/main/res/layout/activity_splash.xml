@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".ui.splashscreen.SplashActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@mipmap/bg"
+        android:contentDescription="@string/logo_image"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/bg"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_container"
@@ -25,10 +25,11 @@
         app:shimmer_base_alpha="1.0"
         app:shimmer_highlight_alpha="0.1">
 
+        <!--android:id="@+id/image_view_logo"-->
         <ImageView
-            android:id="@+id/image_view_logo"
             android:layout_width="@dimen/width_250"
             android:layout_height="@dimen/height_200"
+            android:contentDescription="@string/logo_image"
             android:src="@mipmap/splash_logo" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -36,30 +37,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_25"
-        app:layout_constraintTop_toBottomOf="@+id/shimmer_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shimmer_container">
 
+        <!--android:id="@+id/text_view_rightmesh_text"-->
         <TextView
-            android:id="@+id/text_view_rightmesh_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_5"
-            android:textColor="@color/splash_text_color"
             android:text="@string/communication_tool_to_connect"
-            android:textSize="17dp"
+            android:textColor="@color/splash_text_color"
+            android:textSize="17sp"
             app:layout_constraintEnd_toStartOf="@+id/image_rightmesh"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_rightmesh" />
 
         <ImageView
             android:id="@+id/image_rightmesh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/power_by_rightmesh"
             android:src="@mipmap/ic_rm_logo"
             android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/text_view_rightmesh_text"
-            android:contentDescription="@string/power_by_rightmesh" />
+            app:layout_constraintTop_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

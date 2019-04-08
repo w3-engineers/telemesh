@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -19,32 +20,18 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.util.helper.InAppShareUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.NetworkConfigureUtil;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [08-Oct-2018 at 3:14 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [08-Oct-2018 at 3:14 PM].
- * * --> <Second Editor> on [08-Oct-2018 at 3:14 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [08-Oct-2018 at 3:14 PM].
- * * --> <Second Reviewer> on [08-Oct-2018 at 3:14 PM].
- * * ============================================================================
- **/
-public class SettingsViewModel extends BaseRxAndroidViewModel implements NetworkConfigureUtil.NetworkCallback {
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+public class SettingsViewModel extends AndroidViewModel {
 
 
     public SettingsViewModel(@NonNull Application application) {
@@ -74,7 +61,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements Network
         return !language.equals("") ? language : App.getContext().getString(R.string.demo_language);
     }
 
-    public void setLocale(@Nullable String lang, @Nullable String landDisplay) {
+    public void setLocale(@NonNull String lang, @Nullable String landDisplay) {
 
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);

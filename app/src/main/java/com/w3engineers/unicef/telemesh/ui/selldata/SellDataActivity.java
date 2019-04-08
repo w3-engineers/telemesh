@@ -1,11 +1,10 @@
 package com.w3engineers.unicef.telemesh.ui.selldata;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,38 +12,21 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySellDataBinding;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [10-Jan-2019 at 10:37 AM].
- * * Email: sikderfaysal@w3engineers.com
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Editor> on [10-Jan-2019 at 10:37 AM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class SellDataActivity extends BaseActivity implements View.OnClickListener {
 
-    private SellDataViewModel viewModel;
     private ActivitySellDataBinding mBinding;
     private int currentBalance;
     private int earnedBalance;
@@ -64,33 +46,40 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
     protected void startUI() {
 
         setTitle("Sell Data ");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        viewModel = getViewModel();
+        SellDataViewModel viewModel = getViewModel();
         mBinding = (ActivitySellDataBinding) getViewDataBinding();
         mBinding.buttonBuy.setOnClickListener(this);
 
         currentBalance = SharedPref.getSharedPref(this).readInt("cr_token");
         earnedBalance = SharedPref.getSharedPref(this).readInt("er_token");
-        mBinding.currentToken.setText(currentBalance + " RMESH");
-        mBinding.spentToken.setText(earnedBalance + " RMESH");
+
+        String cBalance = currentBalance + " " + getString(R.string.rmesh);
+        String eBalance = earnedBalance + " " + getString(R.string.rmesh);
+
+        mBinding.currentToken.setText(cBalance);
+        mBinding.spentToken.setText(eBalance);
 
         if (earnedBalance > 0)
             mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
 
     }
 
-    void showDialog(String message) {
+    private void showDialog() {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.alert_buy_sell_dialog, null);
         dialogBuilder.setView(dialogView);
 
         AlertDialog alertDialog = dialogBuilder.create();
 
         TextView alertTitle = dialogView.findViewById(R.id.confirmation_title);
-        alertTitle.setText(message);
+        alertTitle.setText(getString(R.string.sell_data_success));
 
         Button alertButton = dialogView.findViewById(R.id.confirmation_ok);
 
@@ -101,7 +90,7 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
 
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         int id = view.getId();
         switch (id) {
             case R.id.button_buy:
@@ -116,13 +105,16 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
                 currentBalance = currentBalance + buyToken;
                 earnedBalance = earnedBalance + buyToken;
 
-                mBinding.spentToken.setText(earnedBalance + " RMESH");
-                mBinding.currentToken.setText(currentBalance + " RMESH");
+                String cBalance = currentBalance + " " + getString(R.string.rmesh);
+                String eBalance = earnedBalance + " " + getString(R.string.rmesh);
+
+                mBinding.spentToken.setText(eBalance);
+                mBinding.currentToken.setText(cBalance);
                 mBinding.layoutSpentToken.setVisibility(View.VISIBLE);
 
 //                Toaster.showLong("Sell data Successfully done!");
 //
-                showDialog("Sell data Successfully done!");
+                showDialog();
 //                }
                 break;
         }

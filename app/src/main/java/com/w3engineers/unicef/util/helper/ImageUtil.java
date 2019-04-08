@@ -1,15 +1,11 @@
 package com.w3engineers.unicef.util.helper;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md. Azizul Islam on 10/29/2018 at 4:21 PM.
- *  *
- *  * Purpose:
- *  *
- *  * Last edited by : Md. Azizul Islam on 10/29/2018.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 import android.graphics.Bitmap;
@@ -20,6 +16,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.SparseIntArray;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,16 +27,15 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ImageUtil {
     private static final String LOCAL_RESOURCE_SCHEME = "res";
-    private static Map<Integer, Integer> imageIndexMap;
+    private static SparseIntArray imageIndexMap;
 
     static {
-        imageIndexMap = new HashMap<>();
+        imageIndexMap = new SparseIntArray();
         imageIndexMap.put(0, R.mipmap.avatar0);
         imageIndexMap.put(1, R.mipmap.avatar1);
         imageIndexMap.put(2, R.mipmap.avatar2);
@@ -48,6 +46,7 @@ public class ImageUtil {
         imageIndexMap.put(7, R.mipmap.avatar7);
         imageIndexMap.put(8, R.mipmap.avatar8);
         imageIndexMap.put(9, R.mipmap.avatar9);
+        imageIndexMap.put(10, R.mipmap.avatar10);
         imageIndexMap.put(11, R.mipmap.avatar11);
         imageIndexMap.put(12, R.mipmap.avatar12);
         imageIndexMap.put(13, R.mipmap.avatar13);
@@ -60,6 +59,7 @@ public class ImageUtil {
         imageIndexMap.put(20, R.mipmap.avatar20);
     }
 
+    @NonNull
     public static List<Integer> getAllImages() {
         List<Integer> imageIds = new ArrayList<>();
         for (int i = 0; i < imageIndexMap.size(); i++) {
@@ -74,6 +74,7 @@ public class ImageUtil {
         return builder.build();
     }
 
+    @Nullable
     public static Bitmap getUserImageBitmap(int userImageIndex) {
         Uri uri = getUserImageUri(userImageIndex);
         Bitmap bitmap = getCenterCropBitmap(uri, 400, 400);
@@ -83,7 +84,8 @@ public class ImageUtil {
         return getCroppedBitmap(bitmap);
     }
 
-    public static Bitmap getCroppedBitmap(Bitmap bitmap) {
+    @Nullable
+    private static Bitmap getCroppedBitmap(@Nullable Bitmap bitmap) {
 
         if (bitmap == null) return null;
 
@@ -105,7 +107,8 @@ public class ImageUtil {
         return output;
     }
 
-    public static Bitmap getCenterCropBitmap(Uri imageUri, int width, int height) {
+    @Nullable
+    private static Bitmap getCenterCropBitmap(@NonNull Uri imageUri, int width, int height) {
         try {
             return Glide.with(TeleMeshApplication.getContext())
                     .asBitmap()

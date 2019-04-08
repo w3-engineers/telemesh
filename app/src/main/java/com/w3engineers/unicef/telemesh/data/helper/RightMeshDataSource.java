@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.App;
@@ -19,39 +20,28 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [22-Oct-2018 at 7:12 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [22-Oct-2018 at 7:12 PM].
- * * --> <Second Editor> on [22-Oct-2018 at 7:12 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [22-Oct-2018 at 7:12 PM].
- * * --> <Second Reviewer> on [22-Oct-2018 at 7:12 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class RightMeshDataSource extends BaseRmDataSource {
 
+    @SuppressLint("StaticFieldLeak")
     private static RightMeshDataSource rightMeshDataSource;
 
     private List<String> userIds;
 
-    protected RightMeshDataSource(byte[] profileInfo) {
+    RightMeshDataSource(@NonNull byte[] profileInfo) {
         super(App.getContext(), profileInfo);
 
         userIds = new ArrayList<>();
     }
 
-    public static RightMeshDataSource getRmDataSource() {
+    @NonNull
+    static RightMeshDataSource getRmDataSource() {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 
@@ -82,7 +72,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
      * @param rmDataModel -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
-    public int DataSend(RMDataModel rmDataModel) {
+    public int DataSend(@NonNull RMDataModel rmDataModel) {
 
         try {
 
@@ -106,7 +96,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
      */
     @SuppressLint("TimberArgCount")
     @Override
-    protected void onPeer(BaseMeshData profileInfo) {
+    protected void onPeer(@NonNull BaseMeshData profileInfo) {
 
         try {
             String userId = profileInfo.mMeshPeer.getPeerId();
@@ -136,7 +126,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
      * @param meshPeer - > It contains the peer id which is currently inactive in mesh
      */
     @Override
-    protected void onPeerGone(MeshPeer meshPeer) {
+    protected void onPeerGone(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
 
@@ -152,7 +142,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
      * @param meshData -> Contains data and peer info also
      */
     @Override
-    protected void onData(MeshData meshData) {
+    protected void onData(@NonNull MeshData meshData) {
         RMDataModel rmDataModel = RMDataModel.newBuilder()
                 .setUserMeshId(meshData.mMeshPeer.getPeerId())
                 .setRawData(ByteString.copyFrom(meshData.mData))
@@ -168,7 +158,7 @@ public class RightMeshDataSource extends BaseRmDataSource {
      * @param meshAcknowledgement -> Contains the success data id and user id
      */
     @Override
-    protected void onAcknowledgement(MeshAcknowledgement meshAcknowledgement) {
+    protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
 
         RMDataModel rmDataModel = RMDataModel.newBuilder()
                 .setUserMeshId(meshAcknowledgement.mMeshPeer.getPeerId())

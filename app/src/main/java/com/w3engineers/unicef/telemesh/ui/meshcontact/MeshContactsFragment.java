@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -25,44 +24,33 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+
 import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [04-Oct-2018 at 4:07 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [04-Oct-2018 at 4:07 PM].
- * * --> <Second Editor> on [04-Oct-2018 at 4:07 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [04-Oct-2018 at 4:07 PM].
- * * --> <Second Reviewer> on [04-Oct-2018 at 4:07 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class MeshContactsFragment extends BaseFragment {
 
     private FragmentMeshcontactBinding fragmentMeshcontactBinding;
-    private ServiceLocator serviceLocator;
-    private MeshContactViewModel meshContactViewModel;
-    private List<UserEntity> userEntityList;
-    private MenuItem mSearchItem;
-    private List<UserEntity> prevUserList = null;
+//    private ServiceLocator serviceLocator;
+    @Nullable
+    public MeshContactViewModel meshContactViewModel;
+    @Nullable
+    public List<UserEntity> userEntityList;
+    @Nullable
+    public MenuItem mSearchItem;
+//    private List<UserEntity> prevUserList = null;
 
     @Override
     protected int getLayoutId() {
@@ -84,43 +72,51 @@ public class MeshContactsFragment extends BaseFragment {
 
     private void userDataOperation() {
 
+        if (meshContactViewModel != null) {
 
-        meshContactViewModel.getAllUsers().observe(this, userEntities -> {
-            getAdapter().resetWithList(userEntities);
-            userEntityList = userEntities;
-            if (mSearchItem != null)
-                mSearchItem.setVisible(userEntities != null && userEntities.size() > 0);
-        });
+            meshContactViewModel.getAllUsers().observe(this, userEntities -> {
+                if (userEntities != null) {
+                    getAdapter().resetWithList(userEntities);
+                    userEntityList = userEntities;
+                }
+                if (mSearchItem != null)
+                    mSearchItem.setVisible(userEntities != null && userEntities.size() > 0);
+            });
 
-        meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
-            getAdapter().clear();
-            getAdapter().addItem(userEntities);
-        });
+            meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
+                if (userEntities != null) {
+                    getAdapter().clear();
+                    getAdapter().addItem(userEntities);
+                }
+            });
+        }
 
 
     }
 
     private void openUserMessage() {
-        meshContactViewModel.openUserMessage().observe(this, new Observer<UserEntity>() {
-            @Override
-            public void onChanged(@Nullable UserEntity userEntity) {
+        if (meshContactViewModel != null) {
+            meshContactViewModel.openUserMessage().observe(this, userEntity -> {
 
-                mSearchItem.getActionView().clearFocus();
+                if (mSearchItem != null) {
+                    mSearchItem.getActionView().clearFocus();
 
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra(UserEntity.class.getName(), userEntity);
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), userEntity);
+                    startActivity(intent);
+                }
+
+            });
+        }
     }
 
     private void initSearchView(SearchView searchView) {
 
         getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
                 .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()/*.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())*/
                 .subscribeWith(searchContacts()));
 
     }
@@ -129,14 +125,15 @@ public class MeshContactsFragment extends BaseFragment {
         return new DisposableObserver<String>() {
             @Override
             public void onNext(String string) {
-                Timber.d("Search query: " + string);
-                meshContactViewModel.startSearch(string, userEntityList);
-
+                if (meshContactViewModel != null) {
+                    Timber.d("Search query: %s", string);
+                    meshContactViewModel.startSearch(string, userEntityList);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
-                Timber.e("onError: " + e.getMessage());
+                Timber.e("onError: %s", e.getMessage());
             }
 
             @Override
@@ -148,33 +145,34 @@ public class MeshContactsFragment extends BaseFragment {
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
+        if (getActivity() != null) {
+            getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
         mSearchItem = menu.findItem(R.id.action_search);
         // Resolve search option visibility problem when contact is appeared from starting point
         mSearchItem.setVisible(userEntityList != null && userEntityList.size() > 0);
 
-        SearchView mSearchView = (SearchView) mSearchItem.getActionView();
-        mSearchView.setQueryHint(getString(R.string.search));
+            SearchView mSearchView = (SearchView) mSearchItem.getActionView();
+            mSearchView.setQueryHint(getString(R.string.search));
 
-        ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-        searchClose.setImageResource(R.mipmap.ic_cross_grey);
+            ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+            searchClose.setImageResource(R.mipmap.ic_cross_grey);
 
-        // Getting EditText view from searchview and change cursor color
-        AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        try {
-            // Fixed value for getting cursor drawable from Edit text or search view
-            Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
-            mCursorDrawableRes.setAccessible(true);
-            mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-        } catch (Exception e) {
-            e.printStackTrace();
+            // Getting EditText view from search view and change cursor color
+            AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            try {
+                // Fixed value for getting cursor drawable from Edit text or search view
+                Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
+                mCursorDrawableRes.setAccessible(true);
+                mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            initSearchView(mSearchView);
         }
-
-        initSearchView(mSearchView);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -201,8 +199,8 @@ public class MeshContactsFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getMeshContactViewModel();
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getMeshContactViewModel();
             }
         }).get(MeshContactViewModel.class);
     }

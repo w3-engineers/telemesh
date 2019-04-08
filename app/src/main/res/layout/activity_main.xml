@@ -43,7 +43,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:itemIconSize="50dp"
-            app:menu="@menu/menu_bottom_navigation" />
+            app:menu="@menu/menu_bottom_navigation"
+            tools:ignore="UnusedAttribute" />
 
 
     </android.support.constraint.ConstraintLayout>

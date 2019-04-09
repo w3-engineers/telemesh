@@ -38,6 +38,7 @@ import static android.support.test.espresso.action.ViewActions.pressImeActionBut
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -544,6 +545,44 @@ public class TeleMeshTest {
                                                 0)),
                                 3)));
         constraintLayoutShareApp.perform(scrollTo(), click());
+
+        addDelay(1500);
+
+        ViewInteraction againLayoutShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                3)));
+        againLayoutShareApp.perform(scrollTo(), click());
+
+        addDelay(10000);
+
+        ViewInteraction wifiAlertButton = onView(
+                allOf(withId(R.id.share_ok), withText("OK"),
+                        childAtPosition(
+                                allOf(withId(R.id.internal),
+                                        childAtPosition(
+                                                withId(R.id.layout_alert_wifi_share),
+                                                0)),
+                                8),
+                        isDisplayed()));
+        wifiAlertButton.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction inAppShareToolbarBack = onView(
+                allOf(withContentDescription("Navigate up"),
+                        childAtPosition(
+                                allOf(withId(R.id.toolbar),
+                                        childAtPosition(
+                                                withId(R.id.toolbar_share_app),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        inAppShareToolbarBack.perform(click());
 
         addDelay(700);
 

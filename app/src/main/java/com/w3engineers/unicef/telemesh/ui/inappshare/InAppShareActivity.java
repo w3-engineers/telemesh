@@ -54,7 +54,9 @@ public class InAppShareActivity extends BaseActivity {
         activityInAppShareBinding = (ActivityInAppShareBinding) getViewDataBinding();
 
         setTitle(getString(R.string.settings_share_app));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         inAppShareViewModel = getViewModel();
         // Start in app share server

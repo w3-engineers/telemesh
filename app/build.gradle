@@ -129,9 +129,6 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     // shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
-    androidTestImplementation ('com.github.javafaker:javafaker:0.17.2') {
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
-    }
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.google.zxing:core:3.3.3'
     /*androidTestImplementation group: 'com.github.javafaker', name: 'javafaker', version: '0.16'*/

@@ -83,30 +83,26 @@ public class NetworkConfigureUtil {
      * @return - Using a boolean for accessing in disposable
      */
     public boolean startRouterConfigureProcess() {
-        String SSID_Name = getWifiConfigurableName();
 
         try {
-            if (TextUtils.isEmpty(SSID_Name)) {
+            if (isApOn()) {
+                Method getConfigMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
+                WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
 
-                if (isApOn()) {
-                    Method getConfigMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
-                    WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
+                String SSID_Name = wifiConfig.SSID;
+                triggerNetworkCall(SSID_Name, false);
 
-                    SSID_Name = wifiConfig.SSID;
-                    triggerNetworkCall(SSID_Name, false);
+            } else {
+                RmDataHelper.getInstance().stopRmService();
 
-                } else {
-                    RmDataHelper.getInstance().stopRmService();
-
-                    isRmOff = true;
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    hotspotConfigure();
+                isRmOff = true;
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+                hotspotConfigure();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,40 +161,39 @@ public class NetworkConfigureUtil {
         return false;
     }
 
-    /**
+    /*
      * Concern of this api check the wifi is a RightMesh prepared or not
      * @return - Only provide the RM configurable wifi name
      */
-    @Nullable
-    private String getWifiConfigurableName() {
-        try {
-
-            String SSID_Name;
-
-            if (wifiManager.isWifiEnabled()) {
-
-                ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-                if (networkInfo.isConnected()) {
-
-                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
-                    SSID_Name = wifiInfo.getSSID();
-
-                    SSID_Name = SSID_Name.replace("\"", "");
-
-                    if (!TextUtils.isEmpty(SSID_Name) && SSID_Name.startsWith(networkNamePrefix)) {
-                        triggerNetworkCall(SSID_Name, true);
-                        return SSID_Name;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    private String getWifiConfigurableName() {
+//        try {
+//
+//            String SSID_Name;
+//
+//            if (wifiManager.isWifiEnabled()) {
+//
+//                ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//
+//                if (networkInfo.isConnected()) {
+//
+//                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+//
+//                    SSID_Name = wifiInfo.getSSID();
+//
+//                    SSID_Name = SSID_Name.replace("\"", "");
+//
+//                    if (!TextUtils.isEmpty(SSID_Name) && SSID_Name.startsWith(networkNamePrefix)) {
+//                        triggerNetworkCall(SSID_Name, true);
+//                        return SSID_Name;
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     /**
      * The purpose of this method is triggering network callback

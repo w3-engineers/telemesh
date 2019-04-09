@@ -199,8 +199,6 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
                 null, false);
 
-//        alertWifiShareViewHolderHolder = new AlertWifiShareViewHolderHolder(layoutView, settingsViewModel);
-
         DialogPlus dialog = DialogPlus.newDialog(getActivity())
                 .setContentHolder(new AlertWifiShareViewHolderHolder(layoutView, settingsViewModel))
                 .setContentBackgroundResource(android.R.color.transparent)

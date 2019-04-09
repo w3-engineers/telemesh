@@ -31,16 +31,19 @@ import io.reactivex.schedulers.Schedulers;
  * Proprietary and confidential
  * ============================================================================
  */
-public class SettingsViewModel extends AndroidViewModel {
+public class SettingsViewModel extends BaseRxAndroidViewModel implements NetworkConfigureUtil.NetworkCallback {
 
 
     public SettingsViewModel(@NonNull Application application) {
         super(application);
     }
 
+    @Nullable
     public String SSID_Name = null;
+    @Nullable
     public String wifiInfo = null;
 
+    @NonNull
     public MutableLiveData<Bitmap> bitmapMutableLiveData = new MutableLiveData<>();
 
 
@@ -100,7 +103,7 @@ public class SettingsViewModel extends AndroidViewModel {
      * @param SSID - Configured network name
      */
     @Override
-    public void networkName(@NonNull String SSID) {
+    public void networkName(@NonNull String SSID, boolean isRmWifi) {
 
         Context context = getApplication().getApplicationContext();
 

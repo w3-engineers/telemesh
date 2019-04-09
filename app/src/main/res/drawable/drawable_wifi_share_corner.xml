@@ -4,8 +4,7 @@
         android:color="@android:color/darker_gray"/>
 
     <solid android:color="@android:color/white"/>
-
-
+    
     <corners
         android:topLeftRadius="@dimen/margin_20"
         android:topRightRadius="@dimen/margin_20" />

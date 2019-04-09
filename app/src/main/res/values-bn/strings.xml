@@ -82,9 +82,10 @@
     <string name="hotspot_id_pass">ID: %s\nPassword: %s</string>
     <string name="connect_qr_scan">To connect, scan the QR code.</string>
     <string name="connecting">Connecting</string>
-    <string name="settings_open_wallet">My wallet</string>
 
     <string name="qr_content_description">QR Code</string>
     <string name="url_loading">Your URl is loading....</string>
+
+    <!--<string name="cancel">Cancel</string>-->
 
 </resources>

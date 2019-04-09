@@ -62,7 +62,7 @@ public class NetworkConfigureUtil {
     }
 
     public interface NetworkCallback {
-        void networkName(@NonNull String SSID);
+        void networkName(@NonNull String SSID, boolean isRmWifi);
     }
 
     /**
@@ -93,7 +93,7 @@ public class NetworkConfigureUtil {
                     WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
 
                     SSID_Name = wifiConfig.SSID;
-                    triggerNetworkCall(SSID_Name);
+                    triggerNetworkCall(SSID_Name, false);
 
                 } else {
                     RmDataHelper.getInstance().stopRmService();
@@ -143,7 +143,7 @@ public class NetworkConfigureUtil {
             while (startPoint) {
                 if ((Integer) stateMethod.invoke(wifiManager, (Object[]) null) == AP_STATE_ENABLED) {
                     startPoint = false;
-                    triggerNetworkCall(networkName);
+                    triggerNetworkCall(networkName, false);
                 }
             }
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class NetworkConfigureUtil {
                     SSID_Name = SSID_Name.replace("\"", "");
 
                     if (!TextUtils.isEmpty(SSID_Name) && SSID_Name.startsWith(networkNamePrefix)) {
-                        triggerNetworkCall(SSID_Name);
+                        triggerNetworkCall(SSID_Name, true);
                         return SSID_Name;
                     }
                 }
@@ -204,9 +204,9 @@ public class NetworkConfigureUtil {
      * The purpose of this method is triggering network callback
      * @param SSID - for triggering this callback need a ssid name for exposing to others
      */
-    private void triggerNetworkCall(@NonNull String SSID) {
+    private void triggerNetworkCall(@NonNull String SSID, boolean isRmWifi) {
         if (networkCallback != null) {
-            networkCallback.networkName(SSID);
+            networkCallback.networkName(SSID, isRmWifi);
         }
     }
 

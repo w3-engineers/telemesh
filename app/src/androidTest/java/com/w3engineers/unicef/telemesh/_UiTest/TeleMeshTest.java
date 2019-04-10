@@ -536,7 +536,7 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        ViewInteraction constraintLayoutShareApp = onView(
+        /*ViewInteraction constraintLayoutShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
                         childAtPosition(
                                 allOf(withId(R.id.layout_settings),
@@ -550,7 +550,7 @@ public class TeleMeshTest {
 
         pressBack();
 
-        addDelay(700);
+        addDelay(700);*/
 
         ViewInteraction againLayoutShareApp = onView(
                 allOf(withId(R.id.layout_share_app),

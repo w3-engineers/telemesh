@@ -156,7 +156,8 @@ public class NetworkConfigureUtil {
             Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
             method.setAccessible(true);
             return (Boolean) method.invoke(wifiManager);
-        } catch (Throwable ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

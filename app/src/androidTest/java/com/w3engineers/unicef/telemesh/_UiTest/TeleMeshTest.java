@@ -548,6 +548,10 @@ public class TeleMeshTest {
 
         addDelay(1500);
 
+        pressBack();
+
+        addDelay(700);
+
         ViewInteraction againLayoutShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
                         childAtPosition(

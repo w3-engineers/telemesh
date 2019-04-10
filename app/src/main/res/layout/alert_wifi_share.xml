@@ -7,7 +7,6 @@
 
     <!--android:id="@+id/layout_alert_wifi_share"-->
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/layout_alert_wifi_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -18,7 +17,6 @@
 
         <!--android:id="@+id/internal"-->
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/internal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_10"

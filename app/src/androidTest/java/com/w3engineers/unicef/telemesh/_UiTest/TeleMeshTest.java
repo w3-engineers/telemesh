@@ -562,7 +562,7 @@ public class TeleMeshTest {
                                 3)));
         againLayoutShareApp.perform(scrollTo(), click());
 
-        addDelay(10000);
+        /*addDelay(10000);
 
         ViewInteraction wifiAlertButton = onView(
                 allOf(withId(R.id.share_ok), withText("OK"),
@@ -586,7 +586,7 @@ public class TeleMeshTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-        inAppShareToolbarBack.perform(click());
+        inAppShareToolbarBack.perform(click());*/
 
         addDelay(700);
 

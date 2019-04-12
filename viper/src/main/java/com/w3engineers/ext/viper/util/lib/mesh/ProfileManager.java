@@ -4,26 +4,13 @@ package com.w3engineers.ext.viper.util.lib.mesh;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * <br>----------------------------------------------------------------------------
- * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-09 at 12:16 PM].
- * <br>----------------------------------------------------------------------------
- * <br>Project: android-framework.
- * <br>Code Responsibility: <Purpose of code>
- * <br>----------------------------------------------------------------------------
- * <br>Edited by :
- * <br>1. <First Editor> on [2018-08-09 at 12:16 PM].
- * <br>2. <Second Editor>
- * <br>----------------------------------------------------------------------------
- * <br>Reviewed by :
- * <br>1. <First Reviewer> on [2018-08-09 at 12:16 PM].
- * <br>2. <Second Reviewer>
- * <br>============================================================================
- **/
+ * ============================================================================
+ */
 public class ProfileManager {
     private static final ProfileManager ourInstance = new ProfileManager();
 

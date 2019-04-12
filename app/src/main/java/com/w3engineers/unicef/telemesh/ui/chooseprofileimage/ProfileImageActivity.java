@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +17,7 @@ import com.w3engineers.unicef.util.helper.ImageUtil;
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 
     private ActivityProfileImageBinding mProfileImageBinding;
-    private ProfileImageAdapter mAdapter;
     private int selectedItem = -1;
-    private int ITEM_IN_ROW = 3;
 
     @Override
     protected int getLayoutId() {
@@ -46,22 +45,23 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     private void initRecyclerView() {
-        mAdapter = new ProfileImageAdapter(this, selectedItem);
+        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem);
         mAdapter.setItemClickListener(this);
         mProfileImageBinding.recyclerView.setAdapter(mAdapter);
+        int ITEM_IN_ROW = 3;
         mProfileImageBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, ITEM_IN_ROW));
         mAdapter.addItem(ImageUtil.getAllImages());
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile_image, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
@@ -75,7 +75,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     @Override
-    public void onItemClick(View view, Integer item) {
+    public void onItemClick(@NonNull View view, @NonNull Integer item) {
         selectedItem = item;
     }
 }

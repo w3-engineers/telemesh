@@ -10,38 +10,21 @@ import android.view.View;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RightMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataActivity;
 import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
-import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [10-Jan-2019 at 10:37 AM].
- * * Email: sikderfaysal@w3engineers.com
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Editor> on [10-Jan-2019 at 10:37 AM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * --> <Second Reviewer> on [10-Jan-2019 at 10:37 AM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener{
 
-    private MyWalletViewModel viewModel;
     private ActivityMyWalletBinding mBinding;
 
 
@@ -59,9 +42,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     protected void startUI() {
 
         setTitle(getString(R.string.settings_open_wallet));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        viewModel = getViewModel();
+        MyWalletViewModel viewModel = getViewModel();
         mBinding = (ActivityMyWalletBinding) getViewDataBinding();
         mBinding.buttonSell.setOnClickListener(this);
         mBinding.buttonBuy.setOnClickListener(this);
@@ -76,7 +61,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         int id = view.getId();
         switch (id) {
             case R.id.button_buy:

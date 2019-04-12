@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -29,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
                 android:gravity="center"
-                android:text="Current Balance"
+                android:text="@string/current_balance"
                 android:textSize="@dimen/text_size_16"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -41,8 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
                 android:gravity="center"
-                android:text="1000 RMESH"
                 android:textSize="@dimen/text_size_25"
+                android:textIsSelectable="true"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/balance" />
@@ -62,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:gravity="center"
-                    android:text="Earned Balance"
+                    android:text="@string/earned_balance"
                     android:textSize="@dimen/text_size_16"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -74,8 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:gravity="center"
-                    android:text="0 RMESH"
                     android:textSize="@dimen/text_size_25"
+                    android:textIsSelectable="true"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spent_balance" />
@@ -104,10 +105,10 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_margin="@dimen/margin_20"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="100 RM/GB"
-                android:editable="false"
+                android:text="@string/rm_gb_data"
                 android:focusable="false"
-                />
+                android:inputType="none"
+                tools:ignore="Autofill,LabelFor" />
 
             <Button
                 android:id="@+id/button_buy"
@@ -115,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_20"
                 android:layout_marginRight="@dimen/margin_20"
-                android:text="Sell Data"
+                android:text="@string/sell_data"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

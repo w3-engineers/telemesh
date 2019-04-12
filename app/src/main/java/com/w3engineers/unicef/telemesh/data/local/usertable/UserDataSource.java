@@ -17,6 +17,7 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -40,10 +41,11 @@ public class UserDataSource{
      * This constructor is restricted and only used in unit test class
      * @param userDao -> provide dao from unit test class
      */
-    public UserDataSource(UserDao userDao) {
+    public UserDataSource(@NonNull UserDao userDao) {
         mUserDao = userDao;
     }
 
+    @NonNull
     public static UserDataSource getInstance() {
         if (userDataSource == null) {
             userDataSource = getInstance(AppDatabase.getInstance().userDao());
@@ -55,28 +57,34 @@ public class UserDataSource{
      * This constructor is restricted and only used in unit test class
      * @param userDao -> provide dao from unit test class
      */
-    public static UserDataSource getInstance(UserDao userDao) {
+    @NonNull
+    public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
             userDataSource = new UserDataSource(userDao);
         }
         return userDataSource;
     }
 
+    @NonNull
     public Flowable<UserEntity> getLastData() {
         return mUserDao.getLastInsertedUser();
     }
 
-    public long insertOrUpdateData(UserEntity userEntity) {
+    public long insertOrUpdateData(@NonNull UserEntity userEntity) {
         return mUserDao.writeUser(userEntity);
     }
 
+    @NonNull
     public Flowable<List<UserEntity>> getAllUsers() {
         return mUserDao.getAllUsers();
     }
-    public UserEntity getSingleUserById(String userId) {
+
+    @Nullable
+    public UserEntity getSingleUserById(@NonNull String userId) {
         return mUserDao.getSingleUserById(userId);
     }
 
+    @NonNull
     public Flowable<UserEntity> getUserById(@NonNull String userId) {
         return mUserDao.getUserById(userId);
     }

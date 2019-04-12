@@ -11,31 +11,14 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Sikder Faysal Ahmed on [03-Oct-2018 at 12:24 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [03-Oct-2018 at 12:24 PM].
- * * --> <Second Editor> on [03-Oct-2018 at 12:24 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [03-Oct-2018 at 12:24 PM].
- * * --> <Second Reviewer> on [03-Oct-2018 at 12:24 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class AboutUsActivity extends BaseActivity {
-
-    private ServiceLocator serviceLocator;
-    private AboutUsViewModel aboutUsViewModel;
-    private ActivityAboutUsBinding mBinding;
 
 
     @Override
@@ -57,10 +40,13 @@ public class AboutUsActivity extends BaseActivity {
     @Override
     protected void startUI() {
 
-        aboutUsViewModel = getViewModel();
-        mBinding = (ActivityAboutUsBinding) getViewDataBinding();
+        //    private ServiceLocator serviceLocator;
+        AboutUsViewModel aboutUsViewModel = getViewModel();
+        ActivityAboutUsBinding mBinding = (ActivityAboutUsBinding) getViewDataBinding();
         setTitle(getString(R.string.activity_about_us));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mBinding.setAboutViewModel(aboutUsViewModel);
 
@@ -72,8 +58,7 @@ public class AboutUsActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getAboutUsViewModel(getApplication());
+                return (T) ServiceLocator.getInstance().getAboutUsViewModel(getApplication());
             }
         }).get(AboutUsViewModel.class);
     }

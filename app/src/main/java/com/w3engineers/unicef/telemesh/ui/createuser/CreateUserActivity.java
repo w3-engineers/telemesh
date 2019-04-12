@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -24,10 +25,11 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private ActivityCreateUserBinding mBinding;
 
-    private ServiceLocator serviceLocator;
+//    private ServiceLocator serviceLocator;
     private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
+    @NonNull
     public static String IMAGE_POSITION = "image_position";
 
 
@@ -46,7 +48,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
         setTitle(getString(R.string.create_user));
-        getWindow().setBackgroundDrawableResource(R.drawable.splash_screen_bg);
+        getWindow().setBackgroundDrawableResource(R.mipmap.splash_screen_bg);
         mViewModel = getViewModel();
 
         mBinding.imageViewCamera.setOnClickListener(this);
@@ -78,16 +80,14 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 (aBoolean, aBoolean2) -> aBoolean && aBoolean2
         );
 
-        getCompositeDisposable().add(combineResult.subscribe(aBoolean ->
-                {
+        getCompositeDisposable().add(combineResult.subscribe(aBoolean -> {
                     mBinding.buttonSignup.setEnabled(aBoolean);
                     if (aBoolean) {
                         mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.ENABLE_EFFECT);
                     } else {
                         mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.DISABLE_EFFECT);
                     }
-                }
-
+                }, Throwable::printStackTrace
         ));
 
     }
@@ -97,14 +97,13 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getCreateUserViewModel(getApplication());
+                return (T) ServiceLocator.getInstance().getCreateUserViewModel(getApplication());
             }
         }).get(CreateUserViewModel.class);
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         super.onClick(view);
 
         int id = view.getId();
@@ -124,20 +123,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (data != null && requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
-            int id = getResources().getIdentifier(Constants.drawables.AVATER_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATER_DRAWABLE_DIRECTORY, getPackageName());
+            int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
         }
     }
 
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            if (mViewModel.storeData(mBinding.editTextFirstName.getText().toString(), mBinding.editTextLastName.getText().toString())) {
+            if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "", mBinding.editTextLastName.getText() + "")) {
                 Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
                 android:gravity="center"
-                android:text="Current Balance"
+                android:text="@string/current_balance"
                 android:textSize="@dimen/text_size_16"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -42,8 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
                 android:gravity="center"
-                android:text="1000 RMESH"
                 android:textSize="@dimen/text_size_25"
+                android:textIsSelectable="true"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/balance" />
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:gravity="center"
-                    android:text="Spent Balance"
+                    android:text="@string/spent_balance"
                     android:textSize="@dimen/text_size_16"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -75,8 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:gravity="center"
-                    android:text="0 RMESH"
                     android:textSize="@dimen/text_size_25"
+                    android:textIsSelectable="true"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spent_balance" />
@@ -101,15 +101,15 @@
                 android:id="@+id/edit_text_buy_token"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_20"
+                android:focusable="false"
+                android:inputType="none"
+                android:text="@string/rm_gb_data"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_margin="@dimen/margin_20"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="100 RM/GB"
-                android:editable="false"
-                android:focusable="false"
-                android:inputType="number"
-                />
+                tools:layout_editor_absoluteY="21dp"
+                tools:ignore="Autofill,LabelFor" />
 
             <Button
                 android:id="@+id/button_buy"
@@ -117,11 +117,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_20"
                 android:layout_marginRight="@dimen/margin_20"
-                android:text="Buy Data"
+                android:text="@string/buy_data"
                 android:textAllCaps="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_text_buy_token"/>
+                app:layout_constraintTop_toBottomOf="@id/edit_text_buy_token" />
 
 
         </android.support.constraint.ConstraintLayout>

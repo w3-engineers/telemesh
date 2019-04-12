@@ -41,6 +41,7 @@
             android:layout_width="@dimen/width_25"
             android:layout_height="@dimen/height_20"
             android:layout_marginTop="@dimen/margin_1"
+            android:contentDescription="@string/image"
             app:imageStatusResource="@{textMessage.status}"
             app:layout_constraintEnd_toStartOf="@+id/text_view_date_time"
             app:layout_constraintTop_toBottomOf="@+id/text_view_message" />

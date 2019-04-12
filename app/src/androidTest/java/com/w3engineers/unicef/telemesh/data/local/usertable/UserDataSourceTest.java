@@ -20,31 +20,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [04-Feb-2019 at 4:24 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [04-Feb-2019 at 4:24 PM].
- * --> <Second Editor> on [04-Feb-2019 at 4:24 PM].
- * Reviewed by :
- * --> <First Reviewer> on [04-Feb-2019 at 4:24 PM].
- * --> <Second Reviewer> on [04-Feb-2019 at 4:24 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class UserDataSourceTest {
 
     private AppDatabase appDatabase;
-    UserDataSource SUT;
+    private UserDataSource SUT;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -53,12 +43,12 @@ public class UserDataSourceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
     }
 
     @Test
-    public void basicUserDataTest() throws Exception {
+    public void basicUserDataTest() {
 
         String meshId1 = getRandomString();
         String customId1 = getRandomString();
@@ -77,11 +67,7 @@ public class UserDataSourceTest {
 
         TestSubscriber<List<UserEntity>> getAllUserEntitySubscriber = SUT.getAllUsers().test();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         // Test and check number of users size
         getAllUserEntitySubscriber.assertNoErrors().assertValue(userEntities -> userEntities.size() == 2);
@@ -89,31 +75,24 @@ public class UserDataSourceTest {
         // Test on user entities properties
         getAllUserEntitySubscriber.assertNoErrors().assertValue(userEntities -> {
             UserEntity userEntity = userEntities.get(0);
-            return userEntity.getCustomId().equals(customId1);
+            return userEntity.getCustomId() != null && userEntity.getCustomId().equals(customId1);
         });
 
         TestSubscriber<UserEntity> getLastInsertedUser = SUT.getLastData().test();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         // Test on last user entities properties
         getLastInsertedUser.assertNoErrors().assertValue(userEntity ->
-                userEntity.getCustomId().equals(customId2));
+                userEntity.getCustomId() != null && userEntity.getCustomId().equals(customId2));
 
         UserEntity userEntity = SUT.getSingleUserById(meshId1);
-        assertEquals(userEntity.getLastOnlineTime(), lastOnlineTime1);
+        long lastOnlineTime = userEntity != null ? userEntity.getLastOnlineTime() : 0L;
+        assertEquals(lastOnlineTime, lastOnlineTime1);
 
         TestSubscriber<UserEntity> getUserById = SUT.getUserById(meshId2).test();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         // Test on last user entities properties
         getUserById.assertNoErrors().assertValue(user ->
@@ -122,12 +101,20 @@ public class UserDataSourceTest {
         SUT.updateUserToOffline();
 
         userEntity = SUT.getSingleUserById(meshId2);
-        assertFalse(userEntity.isOnline());
+        assertFalse(userEntity != null && userEntity.isOnline());
 
         SUT.deleteUser(meshId1);
         userEntity = SUT.getSingleUserById(meshId1);
 
         assertNull(userEntity);
+    }
+
+    private void addDelay() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private UserEntity getUserInfo(String customId, long lastOnlineTime, String meshId) {

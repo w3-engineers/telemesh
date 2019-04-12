@@ -12,10 +12,6 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 
 public class MessageFeedFragment extends BaseFragment {
 
-    private FragmentMessageFeedBinding mMessageFeedBinding;
-    private ServiceLocator serviceLocator;
-    private MessageFeedViewModel mMessageFeedViewModel;
-
 
     public MessageFeedFragment() {
     }
@@ -28,8 +24,9 @@ public class MessageFeedFragment extends BaseFragment {
     @Override
     protected void startUI() {
 
-        mMessageFeedViewModel = getViewModel();
-        mMessageFeedBinding = (FragmentMessageFeedBinding) getViewDataBinding();
+        //    private ServiceLocator serviceLocator;
+        MessageFeedViewModel mMessageFeedViewModel = getViewModel();
+        FragmentMessageFeedBinding mMessageFeedBinding = (FragmentMessageFeedBinding) getViewDataBinding();
 
     }
 
@@ -38,8 +35,8 @@ public class MessageFeedFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getMessageFeedViewModel();
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getMessageFeedViewModel();
             }
         }).get(MessageFeedViewModel.class);
     }

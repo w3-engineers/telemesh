@@ -3,41 +3,28 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 import android.annotation.SuppressLint;
 import android.arch.persistence.room.ColumnInfo;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
-import android.text.TextUtils;
 
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
+import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [24-Oct-2018 at 12:30 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [24-Oct-2018 at 12:30 PM].
- * * --> <Second Editor> on [24-Oct-2018 at 12:30 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [24-Oct-2018 at 12:30 PM].
- * * --> <Second Reviewer> on [24-Oct-2018 at 12:30 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 @SuppressLint("ParcelCreator")
 public class ChatEntity extends DbBaseEntity {
 
-    @NonNull
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_ID)
     public String messageId;
 
-    @NonNull
+    @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_FRIENDS_ID)
     public String friendsId;
 
@@ -81,20 +68,24 @@ public class ChatEntity extends DbBaseEntity {
         return chatEntity.time == this.time && chatEntity.messageId.equals(this.messageId);
     }*/
 
+    @NonNull
     public String getMessageId() {
         return messageId;
     }
 
-    public ChatEntity setMessageId(String messageId) {
+    @NonNull
+    public ChatEntity setMessageId(@NonNull String messageId) {
         this.messageId = messageId;
         return this;
     }
 
+    @NonNull
     public String getFriendsId() {
         return friendsId;
     }
 
-    public ChatEntity setFriendsId(String friendsId) {
+    @NonNull
+    public ChatEntity setFriendsId(@NonNull String friendsId) {
         this.friendsId = friendsId;
         return this;
     }
@@ -103,6 +94,7 @@ public class ChatEntity extends DbBaseEntity {
         return isIncoming;
     }
 
+    @NonNull
     public ChatEntity setIncoming(boolean incoming) {
         isIncoming = incoming;
         return this;
@@ -112,6 +104,7 @@ public class ChatEntity extends DbBaseEntity {
         return messageType;
     }
 
+    @NonNull
     public ChatEntity setMessageType(int messageType) {
         this.messageType = messageType;
         return this;
@@ -121,6 +114,7 @@ public class ChatEntity extends DbBaseEntity {
         return time;
     }
 
+    @NonNull
     public ChatEntity setTime(long time) {
         this.time = time;
         return this;
@@ -130,16 +124,19 @@ public class ChatEntity extends DbBaseEntity {
         return status;
     }
 
+    @NonNull
     public ChatEntity setStatus(int status) {
         this.status = status;
         return this;
     }
 
+    @NonNull
     public TeleMeshChat toProtoChat() {
         throw new IllegalStateException();
     }
 
-    public ChatEntity toChatEntity(TeleMeshChat teleMeshChat) {
+    @NonNull
+    public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
         throw new IllegalStateException();
     }
 

@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class SplashViewModelTest {
 
-    SplashActivity splashActivity;
     private SharedPreferences sharedPreferences;
     private String REGISTRATION_STATUS = "REGISTRATION_STATUS";
     private boolean isRegistered = true;
@@ -29,7 +28,7 @@ public class SplashViewModelTest {
     public ActivityTestRule<SplashActivity> rule  = new ActivityTestRule<>(SplashActivity.class);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         Context context = InstrumentationRegistry.getTargetContext();
         SUT = new SplashViewModel(rule.getActivity().getApplication());
@@ -39,7 +38,7 @@ public class SplashViewModelTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 

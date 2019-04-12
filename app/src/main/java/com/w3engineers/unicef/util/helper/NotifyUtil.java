@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -26,23 +27,21 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 
 
 /*
- *  ****************************************************************************
- *  * Created by : Md. Azizul Islam on 1/23/2018 at 11:24 AM.
- *  *
- *  * Last edited by : Mohd. Asfaq-E-Azam Rifat on 29-Jan-18.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 public class NotifyUtil {
-    public static final String CHANNEL_NAME = "tele_mesh";
-    public static final String CHANNEL_ID = "notification_channel";
+    private static final String CHANNEL_NAME = "tele_mesh";
+    private static final String CHANNEL_ID = "notification_channel";
     private static final UserDataSource userDataSource = UserDataSource.getInstance();
-    private final String LOCAL_RESOURCE_SCHEME = "res";
+//    private final String LOCAL_RESOURCE_SCHEME = "res";
 
 
-    public static void showNotification(ChatEntity chatEntity) {
+    public static void showNotification(@NonNull ChatEntity chatEntity) {
         Context context = TeleMeshApplication.getContext();
 
         Intent intent = new Intent(context, ChatActivity.class);
@@ -65,19 +64,19 @@ public class NotifyUtil {
 
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context) {
-        NotificationCompat.Builder builder;
+        String channelId;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             if (mNotificationManager != null) {
                 mNotificationManager.createNotificationChannel(channel);
             }
-            builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+            channelId = channel.getId();
         } else {
-            builder = new NotificationCompat.Builder(context);
+            channelId = CHANNEL_ID;
         }
 
-        return builder;
+        return new NotificationCompat.Builder(context, channelId);
     }
 
     private static void prepareNotification(NotificationCompat.Builder builder,

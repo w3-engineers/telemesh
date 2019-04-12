@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -11,30 +13,18 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [04-Oct-2018 at 6:52 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [04-Oct-2018 at 6:52 PM].
- * * --> <Second Editor> on [04-Oct-2018 at 6:52 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [04-Oct-2018 at 6:52 PM].
- * * --> <Second Reviewer> on [04-Oct-2018 at 6:52 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class MeshContactViewModel extends BaseRxViewModel {
 
     private UserDataSource userDataSource;
@@ -43,11 +33,11 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
     private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
 
-    public MeshContactViewModel(UserDataSource userDataSource) {
+    public MeshContactViewModel(@NonNull UserDataSource userDataSource) {
         this.userDataSource = userDataSource;
     }
 
-    public void openMessage(UserEntity userEntity) {
+    public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
 
     }
@@ -65,21 +55,24 @@ public class MeshContactViewModel extends BaseRxViewModel {
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getAllUsers());
     }
 
+    @NonNull
     public MutableLiveData<List<UserEntity>> getGetFilteredList() {
         return getFilteredList;
     }
 
 
-    public void startSearch(String searchText, List<UserEntity> userEntities) {
-        List<UserEntity> filteredItemList = new ArrayList<>();
+    public void startSearch(@NonNull String searchText, @Nullable List<UserEntity> userEntities) {
+        if (userEntities != null) {
+            List<UserEntity> filteredItemList = new ArrayList<>();
 
-        for (UserEntity user : userEntities) {
+            for (UserEntity user : userEntities) {
 
-            if (user.getFullName().toLowerCase().contains(searchText))
-                filteredItemList.add(user);
+                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+                    filteredItemList.add(user);
+            }
+
+            getFilteredList.postValue(filteredItemList);
         }
-
-        getFilteredList.postValue(filteredItemList);
     }
 
 }

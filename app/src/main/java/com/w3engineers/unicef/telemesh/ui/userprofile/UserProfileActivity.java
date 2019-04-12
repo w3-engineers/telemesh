@@ -13,10 +13,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 
 public class UserProfileActivity extends BaseActivity {
 
-    private ServiceLocator serviceLocator;
-    private UserProfileViewModel userProfileViewModel;
-    private ActivityUserProfileBinding mBinding;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_user_profile;
@@ -36,9 +32,12 @@ public class UserProfileActivity extends BaseActivity {
     protected void startUI() {
 
         setTitle(getString(R.string.activity_view_profile));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userProfileViewModel = getViewModel();
-        mBinding = (ActivityUserProfileBinding) getViewDataBinding();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        //    private ServiceLocator serviceLocator;
+        UserProfileViewModel userProfileViewModel = getViewModel();
+        ActivityUserProfileBinding mBinding = (ActivityUserProfileBinding) getViewDataBinding();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         mBinding.setUserEntity(userEntity);
 
@@ -52,8 +51,8 @@ public class UserProfileActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                serviceLocator = ServiceLocator.getInstance();
-                return (T) serviceLocator.getUserProfileViewModel(getApplication());
+//                serviceLocator = ServiceLocator.getInstance();
+                return (T) ServiceLocator.getInstance().getUserProfileViewModel(getApplication());
             }
         }).get(UserProfileViewModel.class);
     }

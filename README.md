@@ -8,6 +8,7 @@
 
 [![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
 [![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
+[![Lint tool: TeleMesh](https://img.shields.io/badge/Lint_tool-telemesh-2e99e9.svg?style=flat)](https://w3-engineers.github.io/telemesh/lint_reports/lint-report.html)
 
 A mesh network based off-grid messaging application supported by blockchain technology.
 
@@ -32,38 +33,24 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
 
 ## Project's Structure
 
-.
-
-├── app 
-
-│   └── src 
-
-│       ├── main
-
-│       │───└── com.w3engineers.unicef
-
-│       │──────└── telemesh
-
-│       │─────────└── data 				#*local database, file, shared preferences etc.*
-
-│       │─────────└── ui            	#*ui components*
-
-│       │──────└── util
-
-│       │─────────└── helper        	#*Generic tasks like TimeUtil, NetworkUtil etc.*
-
-│       │─────────└── lib           	#*third party library, component etc.*
-
-│       │──────└── Application.java 	#*Android Application class*
-
-├── viper                          		#*RightMesh wrapper module*
-
-├── build.gradle
-
-├── settings.gradle
-
-├── gradle.properties
-
+```
+    .
+    |-- app
+    |-- src
+    |-- main
+        |-- com.w3engineers.unicef
+            |-- telemesh
+                |-- data #local database, file, shared preferences etc.
+                |-- ui #ui components
+            |-- util
+                |-- helper #Generic tasks like TimeUtil, NetworkUtil etc.
+                |-- lib #third party library, component etc.
+            |-- Application.java #Android Application class    
+    |-- viper #RightMesh wrapper module
+    |-- build.gradle
+    |-- settings.gradle
+    |-- gradle.properties
+```
 
 * **Alias**
 N/A
@@ -132,7 +119,7 @@ If everything is ok then sync and build should work as it should be. If not plea
 
 <kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
 
-### Project Architectur
+### Project Architecture
 For the project architecture and sequence diagram please check this [link][Project Architecture].
 
 ## License

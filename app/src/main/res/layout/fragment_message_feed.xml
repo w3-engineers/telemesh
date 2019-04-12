@@ -18,12 +18,45 @@
             android:layout_height="match_parent"
             app:brv_emptyLayoutId="@id/empty_layout" />
 
-        <include
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/empty_image_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginRight="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_30"
+                android:contentDescription="@string/no_message_available"
+                android:src="@mipmap/img_message_empty"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"
+                android:text="@string/no_message_available"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+        <!--<include
             android:id="@+id/empty_layout"
             layout="@layout/list_empty_layout"
             android:visibility="visible"
             app:emptyImage="@{R.drawable.img_message_empty}"
-            app:emptyMessage="@{@string/no_message_available}" />
+            app:emptyMessage="@{@string/no_message_available}" />-->
 
     </android.support.constraint.ConstraintLayout>
 

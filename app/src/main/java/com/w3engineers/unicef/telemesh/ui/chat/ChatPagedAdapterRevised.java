@@ -25,13 +25,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private final int TEXT_MESSAGE_IN = 0;
     private final int TEXT_MESSAGE_OUT = 1;
-    private final int MESSAGE_SEPARATOR = 2;
+
+    @NonNull
+    public Context mContext;
 
 
-    private Context mContext;
-
-
-    public ChatPagedAdapterRevised(Context context) {
+    public ChatPagedAdapterRevised(@NonNull Context context) {
         super(DIFF_CALLBACK);
         mContext = context;
     }
@@ -48,22 +47,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public int getItemViewType(int position) {
         ChatEntity chatEntity = getItem(position);
 
-        if(chatEntity!= null){
-
-            if (chatEntity.getMessageType() == Constants.MessageType.DATE_MESSAGE) {
-                return MESSAGE_SEPARATOR;
-            } else if (chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-                return chatEntity.isIncoming ? TEXT_MESSAGE_IN : TEXT_MESSAGE_OUT;
-            }
+        if (chatEntity != null && chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+            return chatEntity.isIncoming ? TEXT_MESSAGE_IN : TEXT_MESSAGE_OUT;
         }
-
 
         return -1;
     }
 
-
-
-
+    @NonNull
     @Override
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
@@ -71,7 +62,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         if (viewType == TEXT_MESSAGE_IN) {
             ItemTextMessageInBinding itemTextMessageInBinding = ItemTextMessageInBinding.inflate(inflater, viewGroup, false);
             return new TextMessageInHolder(itemTextMessageInBinding);
-        } else if(viewType == TEXT_MESSAGE_OUT){
+        } else if (viewType == TEXT_MESSAGE_OUT) {
             ItemTextMessageOutBinding itemTextMessageOutBinding = ItemTextMessageOutBinding.inflate(inflater, viewGroup, false);
             return new TextMessageOutHolder(itemTextMessageOutBinding);
         } else {
@@ -85,28 +76,25 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public void onBindViewHolder(@NonNull GenericViewHolder baseViewHolder, int position) {
 
 
-            MessageEntity messageEntity = (MessageEntity) getItem(position);
-            if(messageEntity != null){
-                baseViewHolder.bindView(messageEntity);
-            } else {
-                baseViewHolder.clearView();
-            }
+        MessageEntity messageEntity = (MessageEntity) getItem(position);
+        if (messageEntity != null) {
+            baseViewHolder.bindView(messageEntity);
+        } else {
+            baseViewHolder.clearView();
+        }
 
     }
 
 
-
-
-    public abstract class GenericViewHolder extends RecyclerView.ViewHolder
-    {
-        public GenericViewHolder(View itemView) {
+    public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+        public GenericViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
-        public abstract  void bindView(MessageEntity item);
-         public abstract void clearView();
-    }
+        protected abstract void bindView(@NonNull MessageEntity item);
 
+        protected abstract void clearView();
+    }
 
 
     private class TextMessageInHolder extends GenericViewHolder {
@@ -120,12 +108,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        public void bindView(MessageEntity item) {
+        protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
         }
 
         @Override
-        public void clearView() {
+        protected void clearView() {
             binding.textViewMessage.invalidate();
         }
     }
@@ -137,16 +125,16 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageOutBinding) viewDataBinding;
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.outcoming_message_color));
+                    ContextCompat.getColor(mContext, R.color.out_coming_message_color));
         }
 
         @Override
-        public void bindView(MessageEntity item) {
+        protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
         }
 
         @Override
-        public void clearView() {
+        protected void clearView() {
             binding.textViewMessage.invalidate();
         }
     }
@@ -154,18 +142,18 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     private class SeparatorViewHolder extends GenericViewHolder {
         private ItemMessageSeparatorBinding binding;
 
-        public SeparatorViewHolder(ViewDataBinding viewDataBinding) {
+        protected SeparatorViewHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemMessageSeparatorBinding) viewDataBinding;
         }
 
         @Override
-        public void bindView(MessageEntity item) {
+        protected void bindView(@NonNull MessageEntity item) {
             binding.setSeparatorMessage(item);
         }
 
         @Override
-        public void clearView() {
+        protected void clearView() {
             binding.textViewSeprator.invalidate();
         }
     }

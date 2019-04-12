@@ -33,33 +33,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [29-Jan-2019 at 5:56 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [29-Jan-2019 at 5:56 PM].
- * --> <Second Editor> on [29-Jan-2019 at 5:56 PM].
- * Reviewed by :
- * --> <First Reviewer> on [29-Jan-2019 at 5:56 PM].
- * --> <Second Reviewer> on [29-Jan-2019 at 5:56 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class MeshContactViewModelTest {
 
-    // Region constant
-    private static String FIRST_NAME = "Danial";
-    private static String LAST_NAME = "Alvez";
-    private static int AVATAR_INDEX = 2;
-
-    private final String EMPTY_SEARCH_TEXT = "", SMALL_SEARCH_TEXT = "or", CAPITAL_SEARCH_TEXT = "OR",
-            SMALL_CAPITAL_SEARCH_TEXT = "Or";
+//    private final String CAPITAL_SEARCH_TEXT = "OR";
+//    private final String SMALL_CAPITAL_SEARCH_TEXT = "Or";
 
     private CompositeDisposable mCompositeDisposable;
     private List<UserEntity> mUserEntities;
@@ -69,14 +54,12 @@ public class MeshContactViewModelTest {
 
     private MeshContactViewModel SUT;
 
-    private RandomEntityGenerator randomEntityGenerator;
-
     private UserEntity userEntity;
     private UserDataSource userDataSource;
     private AppDatabase appDatabase;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -85,12 +68,16 @@ public class MeshContactViewModelTest {
 
         SUT = new MeshContactViewModel(userDataSource);
 
+        // Region constant
+        String FIRST_NAME = "Danial";
+        String LAST_NAME = "Alvez";
+        int AVATAR_INDEX = 2;
         userEntity = new UserEntity()
                 .setUserFirstName(FIRST_NAME)
                 .setUserLastName(LAST_NAME)
                 .setAvatarIndex(AVATAR_INDEX);
 
-        randomEntityGenerator = new RandomEntityGenerator();
+        RandomEntityGenerator randomEntityGenerator = new RandomEntityGenerator();
 
         UserEntity userEntity1 = randomEntityGenerator.createUserEntityWithId();
         UserEntity userEntity2 = randomEntityGenerator.createUserEntityWithId();
@@ -113,7 +100,7 @@ public class MeshContactViewModelTest {
     }
 
     @Test
-    public void testGetAllUsers_addUser_checkUserProperties() throws Exception {
+    public void testGetAllUsers_addUser_checkUserProperties() {
 
         String userMeshId = UUID.randomUUID().toString();
 
@@ -126,7 +113,7 @@ public class MeshContactViewModelTest {
     }
 
     @Test
-    public void testGetAllUsers_addUser_getUserSize() throws Exception {
+    public void testGetAllUsers_addUser_getUserSize() {
 
         userEntity.setMeshId(UUID.randomUUID().toString());
         userDataSource.insertOrUpdateData(userEntity);
@@ -159,6 +146,7 @@ public class MeshContactViewModelTest {
     public void meshContactViewModelSearch_smallLetter_retrieveUsers() throws InterruptedException {
 
         //arrange
+        String SMALL_SEARCH_TEXT = "or";
         int itemCount = getItemCountInList(mUserEntities, SMALL_SEARCH_TEXT);
         LiveData<List<UserEntity>> listLiveData = SUT.getGetFilteredList();
 
@@ -207,6 +195,7 @@ public class MeshContactViewModelTest {
         LiveData<List<UserEntity>> listLiveData = SUT.getGetFilteredList();
 
         //action
+        String EMPTY_SEARCH_TEXT = "";
         SUT.startSearch(EMPTY_SEARCH_TEXT, mUserEntities);
 
         //assertion
@@ -218,17 +207,17 @@ public class MeshContactViewModelTest {
     //Our objective here is to count item rather the frequency.
     private int getItemCountInList(List<UserEntity> userEntities, String text) {
 
-        final int[] smallLetterActualUsercount = {0};
+        final int[] smallLetterActualUserCount = {0};
 
         mCompositeDisposable.add(Observable.fromIterable(userEntities).filter(userEntity ->
                 userEntity.getFullName().contains(text) ).subscribe(userEntity ->
-                smallLetterActualUsercount[0]++));
+                smallLetterActualUserCount[0]++));
 
-        return smallLetterActualUsercount[0];
+        return smallLetterActualUserCount[0];
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
         mCompositeDisposable.clear();
     }

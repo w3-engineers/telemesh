@@ -25,13 +25,16 @@
     <application
         android:name="com.w3engineers.unicef.TeleMeshApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:configChanges="locale"
+        android:extractNativeLibs="false"
         tools:replace="android:name"
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="UnusedAttribute">
 
         <activity
             android:name=".ui.main.MainActivity"

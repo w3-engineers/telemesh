@@ -1,7 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">TeleMesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
-    <string name="enter_your_name">Enter your name</string>
+    <!--<string name="enter_your_name">Enter your name</string>-->
     <string name="enter_first_name">Enter first name</string>
     <string name="enter_last_name">Enter last name</string>
     <string name="signup">SignUp</string>
@@ -10,14 +10,14 @@
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
     <string name="select_avatar">Please select an avatar</string>
-    <string name="select_avater_text">Select an avater</string>
+    <!--<string name="select_avater_text">Select an avater</string>-->
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">পরিচিতি</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_survey_fragment">জরিপ</string>
     <string name="title_settings_fragment">সেটিংস</string>
     <!-- notification badge count more than 9 -->
-    <string name="badge_count_more_than_9">9+</string>
+    <!--<string name="badge_count_more_than_9">9+</string>-->
 
     <string name="power_by_rightmesh">Powered by</string>
     <string name="communication_tool_to_connect">Connect the unconnected</string>
@@ -25,8 +25,8 @@
     <string name="double_press_exit">Please click BACK again to exit.</string>
     s
     <string name="search">Search</string>
-    <string name="type_message">আপনার বার্তা লিখুন ...</string>
-    <string name="no_conversation">এখনো কোন কথোপকথন নেই!</string>
+    <string name="type_message">আপনার বার্তা লিখুন &#8230;</string>
+    <!--<string name="no_conversation">এখনো কোন কথোপকথন নেই!</string>-->
 
     <string name="demo_language">English</string>
     <string name="activity_about_us">আমাদের সম্পর্কে</string>
@@ -40,11 +40,11 @@
     <string name="cursordrawable">mCursorDrawableRes</string>
 
     // Settings title
-    <string name="settings_view_profile">প্রোফাইল দেখুন</string>
+    <!--<string name="settings_view_profile">প্রোফাইল দেখুন</string>-->
     <string name="settings_notification_sound">নোটিফিকেশন শব্দ</string>
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
     <string name="settings_share_app">শেয়ার অ্যাপ্লিকেশন</string>
-    <string name="settings_about_us">আমাদের সম্পর্কে</string>
+    <!--<string name="settings_about_us">আমাদের সম্পর্কে</string>-->
     <string name="settings_privacy_policy">গোপনীয়তা নীতি</string>
 
     <string name="today">Today</string>
@@ -52,6 +52,24 @@
 
     <string name="choose_language">Choose a Language</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
+    <!--<string name="cancel">Cancel</string>-->
+
+    <string name="settings_open_wallet">My wallet</string>
+    <string name="settings_item_image">Settings icon image</string>
+    <string name="image">Image</string>
+    <string name="rmesh">RMESH</string>
+
+    <string name="current_balance" tools:ignore="ExtraTranslation">Current Balance</string>
+    <string name="spent_balance">Spent Balance</string>
+    <string name="earned_balance">Earned Balance</string>
+
+    <string name="rm_gb_data">100 RM/GB</string>
+    <string name="sell_data">Sell Data</string>
+    <string name="buy_data">Buy Data</string>
+    <string name="balance">Balance</string>
+    <string name="wallet_id">wallet Id:</string>
+
+    <string name="buy_data_success">Buy data Successfully done!</string>
+    <string name="sell_data_success">Sell data Successfully done!</string>
 
 </resources>

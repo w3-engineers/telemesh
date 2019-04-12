@@ -1,44 +1,27 @@
 package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
-import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [24-Oct-2018 at 12:23 PM].
- * * ----------------------------------------------------------------------------
- * * Project: telemesh.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [24-Oct-2018 at 12:23 PM].
- * * --> <Second Editor> on [24-Oct-2018 at 12:23 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [24-Oct-2018 at 12:23 PM].
- * * --> <Second Reviewer> on [24-Oct-2018 at 12:23 PM].
- * * ============================================================================
- **/
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 public class Source implements DataSource {
 
     private static Source dbSource = new Source();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String chatCurrentUser = null;
 
     private MessageDao messageDao;
@@ -53,15 +36,17 @@ public class Source implements DataSource {
      * This constructor is restricted and only used in unit test class
      * @param appDatabase -> provide mock database from unit test class
      */
-    public Source(AppDatabase appDatabase) {
+    public Source(@NonNull AppDatabase appDatabase) {
         messageDao = appDatabase.messageDao();
         userDao = appDatabase.userDao();
     }
 
+    @NonNull
     public static Source getDbSource() {
         return dbSource;
     }
 
+    @NonNull
     @Override
     public Flowable<ChatEntity> getLastChatData() {
         return MessageSourceData.getInstance().getLastData();
@@ -94,13 +79,14 @@ public class Source implements DataSource {
         return messageDao.hasChatEntityExist(friendsId, messageId);
     }*/
 
+    @Nullable
     @Override
     public String getCurrentUser() {
         return chatCurrentUser;
     }
 
     @Override
-    public void setCurrentUser(String currentUser) {
+    public void setCurrentUser(@Nullable String currentUser) {
         this.chatCurrentUser = currentUser;
     }
 

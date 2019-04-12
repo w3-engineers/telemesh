@@ -25,26 +25,13 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * <br>----------------------------------------------------------------------------
- * <br>Created by: Ahmed Mohmmad Ullah (Azim) on [2018-08-07 at 1:56 PM].
- * <br>----------------------------------------------------------------------------
- * <br>Project: android-framework.
- * <br>Code Responsibility: <Purpose of code>
- * <br>----------------------------------------------------------------------------
- * <br>Edited by :
- * <br>1. <First Editor> on [2018-08-07 at 1:56 PM].
- * <br>2. <Second Editor>
- * <br>----------------------------------------------------------------------------
- * <br>Reviewed by :
- * <br>1. <First Reviewer> on [2018-08-07 at 1:56 PM].
- * <br>2. <Second Reviewer>
- * <br>============================================================================
- **/
+ * ============================================================================
+ */
 
 // FIXME: 8/13/2018 Probably it has an issue of receiving selfPeer. need more check. If so counter measure is simple
 public class MeshProvider implements MeshStateListener {

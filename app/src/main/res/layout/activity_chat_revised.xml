@@ -2,7 +2,7 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="io.left.meshim.activities.ChatActivity">
+    tools:context=".ui.chat.ChatActivity">
     <data>
 
         <import type="com.w3engineers.unicef.telemesh.R" />
@@ -43,7 +43,7 @@
                     android:id="@+id/image_profile"
                     android:layout_width="@dimen/width_40"
                     android:layout_height="@dimen/height_40"
-                    app:civ_circle_background_color="@color/outcoming_message_color"
+                    app:civ_circle_background_color="@color/out_coming_message_color"
                     app:imageResource="@{userEntity.avatarIndex}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -74,6 +74,7 @@
                     android:layout_height="@dimen/height_40"
                     android:layout_marginEnd="@dimen/margin_10"
                     android:layout_marginRight="@dimen/margin_10"
+                    android:contentDescription="@string/logo_image"
                     android:src="@{userEntity.isOnline ? @drawable/drawable_in_renge: @drawable/drawable_out_renge}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -184,7 +185,8 @@
                 android:inputType="textCapSentences|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_send"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="Autofill" />
 
             <ImageButton
                 android:id="@+id/image_view_send"
@@ -195,7 +197,6 @@
                 android:scaleType="fitCenter"
                 android:autoMirrored="true"
                 android:rotationY="@integer/locale_mirror_flip"
-                android:onClick="sendMessage"
                 android:contentDescription="@string/chat_send_button_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

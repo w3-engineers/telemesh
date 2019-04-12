@@ -1,22 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
 /*
- * ****************************************************************************
- * * Copyright © 2018 W3 Engineers Ltd., All rights reserved.
- * *
- * * Created by:
- * * Name : Ahmed Mohmmad Ullah (Azim)
- * * Date : 2/15/18
- * *
- * * Purpose: Sample of ROOM model column names
- * *
- * * Last Edited by : SUDIPTA KUMAR PAIK on 12/21/17.
- * * History: Comment Added
- * * 1:
- * * 2:
- * *
- * * Last Reviewed by : SUDIPTA KUMAR PAIK on 3/19/18.
- * ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNames;
@@ -25,10 +14,9 @@ public interface ColumnNames extends BaseColumnNames {
     //Users table
     String COLUMN_USER_FIRST_NAME = "user_first_name";
     String COLUMN_USER_LAST_NAME = "user_last_name";
-    String COLUMN_USER_AVATAR = "avater";
+    String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";
-    String COLUMN_USER_TYPE = "user_type";
     String COLUMN_USER_LAST_ONLINE_TIME = "last_online_time";
     String COLUMN_USER_IS_ONLINE = "is_online";
 

@@ -22,32 +22,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
+/*
  * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [07-Feb-2019 at 3:49 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [07-Feb-2019 at 3:49 PM].
- * --> <Second Editor> on [07-Feb-2019 at 3:49 PM].
- * Reviewed by :
- * --> <First Reviewer> on [07-Feb-2019 at 3:49 PM].
- * --> <Second Reviewer> on [07-Feb-2019 at 3:49 PM].
  * ============================================================================
- **/
+ */
 @RunWith(AndroidJUnit4.class)
 public class SurveyDataSourceTest {
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
-    SurveyDataSource SUT;
+    private SurveyDataSource SUT;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
@@ -58,22 +48,18 @@ public class SurveyDataSourceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         appDatabase.close();
     }
 
     @Test
-    public void basicSurveyTest() throws Exception {
+    public void basicSurveyTest() {
 
         String userId = UUID.randomUUID().toString();
 
         userDataSource.insertOrUpdateData(getUserInfo(userId));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay();
 
         String surveyId_1 = UUID.randomUUID().toString();
         SUT.insertOrUpdateData(getSurveyInfo(surveyId_1, userId));
@@ -82,6 +68,9 @@ public class SurveyDataSourceTest {
         SUT.insertOrUpdateData(getSurveyInfo(surveyId_2, userId));
 
         SurveyEntity surveyEntity = SUT.getSurveyById(surveyId_1);
+
+        if (surveyEntity == null) return;
+
         assertEquals(surveyEntity.getSenderId(), userId);
 
         String surveyForm = surveyEntity.getSurveyForm();
@@ -107,13 +96,17 @@ public class SurveyDataSourceTest {
 
         TestSubscriber<List<SurveyEntity>> getAllSurveySubscriber = SUT.getAllSurvey().test();
 
+        addDelay();
+
+        getAllSurveySubscriber.assertNoErrors().assertValue(surveyEntities -> surveyEntities.size() == 2);
+    }
+
+    private void addDelay() {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        getAllSurveySubscriber.assertNoErrors().assertValue(surveyEntities -> surveyEntities.size() == 2);
     }
 
     private UserEntity getUserInfo(String meshId) {

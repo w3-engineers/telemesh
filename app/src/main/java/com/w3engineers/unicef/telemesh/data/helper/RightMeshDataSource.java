@@ -168,8 +168,10 @@ public class RightMeshDataSource extends BaseRmDataSource {
         RmDataHelper.getInstance().ackReceive(rmDataModel);
     }
 
-    @Override
-    public void onRmOff() {
-        super.onRmOff();
+    /**
+     * For ReInitiating RM service need to reset rightmesh data source instance
+     */
+    protected void resetInstance() {
+        rightMeshDataSource = null;
     }
 }

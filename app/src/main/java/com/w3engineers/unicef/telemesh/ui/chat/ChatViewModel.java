@@ -7,9 +7,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.common.util.concurrent.HandlerExecutor;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -19,7 +21,6 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
-import com.w3engineers.unicef.telemesh.pager.MainThreadExecutor;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
@@ -228,7 +229,7 @@ public class ChatViewModel extends AndroidViewModel {
 
             PagedList<ChatEntity> pagedStrings = new PagedList.Builder<>(chatEntityListDataSource, myConfig)
                     .setInitialKey(INITIAL_LOAD_KEY)
-                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setNotifyExecutor(new HandlerExecutor(Looper.getMainLooper())) //The executor defining where page loading updates are dispatched.
                     .setFetchExecutor(Executors.newSingleThreadExecutor())
                     .build();
 

@@ -93,7 +93,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
-                // Open Share app page
+                // In app share process trigger to start
+//                startActivity(new Intent(getActivity(), InAppShareActivity.class));
+                settingsViewModel.startInAppShareProcess();
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -119,7 +121,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         String[] languageList = mActivity.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = mActivity.getResources().getStringArray(R.array.language_code_list);
-        String currentLanguage =  settingsViewModel.getAppLanguage();
+        String currentLanguage = settingsViewModel.getAppLanguage();
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
@@ -134,7 +136,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         for (int i = 0; i < languageGroup.getChildCount(); i++) {
             RadioButton radioButton = (RadioButton) languageGroup.getChildAt(i);
             radioButton.setText(languageList[i]);
-            if (currentLanguage.equals(languageList[i])){
+            if (currentLanguage.equals(languageList[i])) {
                 radioButton.setChecked(true);
             }
         }
@@ -145,7 +147,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
                     settingsViewModel.setLocale(languageCodeList[0], languageList[0]);
                     alertDialog.dismiss();
-                    if (getActivity() != null){
+                    if (getActivity() != null) {
                         getActivity().finish();
                         startActivity(getActivity().getIntent());
                     }
@@ -154,7 +156,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
                     settingsViewModel.setLocale(languageCodeList[1], languageList[1]);
                     alertDialog.dismiss();
-                    if (getActivity() != null){
+                    if (getActivity() != null) {
                         getActivity().finish();
                         startActivity(getActivity().getIntent());
                     }
@@ -175,4 +177,94 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             }
         }).get(SettingsViewModel.class);
     }
+
+    /*
+     * Bottom dialog for sharing wifi network info
+     *//*
+    private void openInAppShareDialog() {
+
+        View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
+                null, false);
+
+        DialogPlus dialog = DialogPlus.newDialog(getActivity())
+                .setContentHolder(new AlertWifiShareViewHolderHolder(layoutView, settingsViewModel))
+                .setContentBackgroundResource(android.R.color.transparent)
+                .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setOnDismissListener(dialog1 -> {
+                    settingsViewModel.resetRM();
+                })
+                .setOnClickListener((dialog1, view) -> {
+                    switch (view.getId()) {
+                        case R.id.share_ok:
+                            startActivity(new Intent(getActivity(), InAppShareActivity.class));
+                            dialog1.dismiss();
+                            break;
+                    }
+                }).create();
+        dialog.show();
+    }*/
+
+    /*
+     * Wifi share view holder and
+     * observe network state using LiveData
+     *//*
+    private class AlertWifiShareViewHolderHolder extends ViewHolder {
+        private TextView shareWifiPass, connecting;
+        private ImageView imageView;
+
+        private View backWhiteView;
+        private ProgressBar loadingProgress;
+        private Button ok;
+
+        public AlertWifiShareViewHolderHolder(View view, SettingsViewModel settingsViewModel) {
+            super(view);
+            shareWifiPass = view.findViewById(R.id.share_wifi_id_pass);
+            imageView = view.findViewById(R.id.wifi_qr);
+
+            connecting = view.findViewById(R.id.progress_connecting);
+            backWhiteView = view.findViewById(R.id.progress_view);
+            loadingProgress = view.findViewById(R.id.progress);
+
+            ok = view.findViewById(R.id.share_ok);
+
+            backWhiteView.setVisibility(View.VISIBLE);
+            loadingProgress.setVisibility(View.VISIBLE);
+            connecting.setVisibility(View.VISIBLE);
+
+            ok.setEnabled(false);
+            ok.setTextColor(getResources().getColor(R.color.black));
+
+            settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, bitmap -> {activeView(bitmap, this, settingsViewModel);});
+        }*/
+
+        /*
+         * When network state is active
+         * then we will prepare a bitmap for exposing my network as a QR code
+         * @param bitmap- Qr code bitmap
+         *//*
+        private void activeView(Bitmap bitmap, AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder, SettingsViewModel settingsViewModel) {
+
+            getActivity().runOnUiThread(() -> {
+
+                if (alertWifiShareViewHolderHolder != null) {
+
+
+
+                    alertWifiShareViewHolderHolder.shareWifiPass.setText(settingsViewModel.wifiInfo);
+                    alertWifiShareViewHolderHolder.imageView.setImageBitmap(bitmap);
+
+                    alertWifiShareViewHolderHolder.backWhiteView.setVisibility(View.GONE);
+                    alertWifiShareViewHolderHolder.loadingProgress.setVisibility(View.GONE);
+                    alertWifiShareViewHolderHolder.connecting.setVisibility(View.GONE);
+
+                    alertWifiShareViewHolderHolder.ok.setEnabled(true);
+                    alertWifiShareViewHolderHolder.ok.setTextColor(getResources().getColor(R.color.white));
+                }
+            });
+        }
+
+        }
+
+        */
+
 }

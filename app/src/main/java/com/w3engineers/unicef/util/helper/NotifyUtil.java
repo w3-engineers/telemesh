@@ -96,7 +96,7 @@ public class NotifyUtil {
                 .setAutoCancel(true)
                 .setPriority(Notification.PRIORITY_HIGH).setVibrate(new long[0])
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                .setSmallIcon(R.mipmap.logo_telemesh)
+                .setSmallIcon(R.mipmap.ic_app_launcher)
                 .setLargeIcon(imageBitmap);
 
         if(SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)){

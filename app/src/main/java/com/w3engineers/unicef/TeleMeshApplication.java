@@ -28,7 +28,6 @@ public class TeleMeshApplication extends App {
             language = "en";
         }
         LanguageUtil.setAppLanguage(base, language);
-
     }
 
 }

@@ -111,4 +111,17 @@ public class ServiceLocator extends BaseServiceLocator {
     public SellDataViewModel getSellDataViewModel(@NonNull Application application) {
         return new SellDataViewModel(application);
     }
+
+    /*@NonNull
+    public InAppShareViewModel getInAppShareViewModel(@NonNull Application application) {
+        return new InAppShareViewModel(application);
+    }*/
+
+    public void resetRmDataSourceInstance() {
+        RmDataHelper.getInstance().resetRmDataSourceInstance();
+    }
+
+    public void restartRmService() {
+        RmDataHelper.getInstance().initRM(Source.getDbSource());
+    }
 }

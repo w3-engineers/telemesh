@@ -8,6 +8,7 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -26,9 +27,11 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -44,11 +47,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class TeleMeshTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
+
+    public UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
@@ -56,12 +62,6 @@ public class TeleMeshTest {
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
-
-    /*@Rule
-    public GrantPermissionRule mGrantPermissionRule =
-            GrantPermissionRule.grant(
-                    "android.permission.ACCESS_COARSE_LOCATION",
-                    "android.permission.WRITE_EXTERNAL_STORAGE");*/
 
     @Before
     public void setUp() {
@@ -76,12 +76,10 @@ public class TeleMeshTest {
         randomEntityGenerator = new RandomEntityGenerator();
     }
 
+    // Registration process
     @Test
-    public void teleMeshTest() {
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        addDelay(3000);
+    public void uiTest_1() {
+        addDelay(3200);
 
         ViewInteraction baseEditText = onView(
                 allOf(withId(R.id.edit_text_first_name),
@@ -133,9 +131,6 @@ public class TeleMeshTest {
                                 2)));
         appCompatImageView.perform(scrollTo(), click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(700);
 
         ViewInteraction constraintLayout = onView(
@@ -160,9 +155,6 @@ public class TeleMeshTest {
                         isDisplayed()));
         profileImageLayout.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(700);
 
         ViewInteraction actionMenuItemView = onView(
@@ -175,9 +167,6 @@ public class TeleMeshTest {
                         isDisplayed()));
         actionMenuItemView.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(700);
 
         ViewInteraction appCompatImageView1 = onView(
@@ -226,20 +215,13 @@ public class TeleMeshTest {
                                 5)));
         baseButton.perform(scrollTo(), click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(700);
+    }
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        addDelay(700);
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        addDelay(700);
+    // Fragment tab switch process
+    @Test
+    public void uiTest_2() {
+        addDelay(3800);
 
         ViewInteraction bottomNavigationMessageFeed = onView(
                 allOf(withId(R.id.action_message_feed),
@@ -274,6 +256,24 @@ public class TeleMeshTest {
         bottomNavigationSettings.perform(click());
 
         addDelay(700);
+    }
+
+    // Settings properties test
+    @Test
+    public void uiTest_3() {
+        addDelay(3800);
+
+        ViewInteraction bottomNavigationSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                3),
+                        isDisplayed()));
+        bottomNavigationSettings.perform(click());
+
+        addDelay(700);
 
         ViewInteraction viewProfile = onView(
                 allOf(withId(R.id.layout_view_profile),
@@ -285,12 +285,9 @@ public class TeleMeshTest {
                                 0)));
         viewProfile.perform(scrollTo(), click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(700);
 
-        pressBack();
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
         addDelay(700);
 
@@ -380,6 +377,68 @@ public class TeleMeshTest {
 
         addDelay(700);
 
+        ViewInteraction constraintLayout3 = onView(
+                allOf(withId(R.id.layout_about_us),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                5)));
+        constraintLayout3.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        pressBack();
+
+        addDelay(700);
+
+        ViewInteraction againLayoutShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                3)));
+        againLayoutShareApp.perform(scrollTo(), click());
+
+        addDelay(5000);
+
+        mDevice.pressBack();
+
+        addDelay(700);
+
+        ViewInteraction constraintLayoutPrivacyPolicy = onView(
+                allOf(withId(R.id.layout_privacy_policy),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                6)));
+        constraintLayoutPrivacyPolicy.perform(scrollTo(), click());
+
+        addDelay(700);
+    }
+
+    // Wallet functionalities test
+    @Test
+    public void uiTest_4() {
+        addDelay(3800);
+
+        ViewInteraction bottomNavigationSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                3),
+                        isDisplayed()));
+        bottomNavigationSettings.perform(click());
+
+        addDelay(700);
+
         ViewInteraction actionOnWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
                         childAtPosition(
@@ -428,8 +487,6 @@ public class TeleMeshTest {
                                 1),
                         isDisplayed()));
         appCompatButton3.perform(click());
-
-//        pressBack();
 
         addDelay(700);
 
@@ -491,8 +548,6 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatButton6.perform(click());
 
-//        pressBack();
-
         addDelay(700);
 
         pressBack();
@@ -519,100 +574,12 @@ public class TeleMeshTest {
         pressBack();
 
         addDelay(700);
+    }
 
-        ViewInteraction constraintLayout3 = onView(
-                allOf(withId(R.id.layout_about_us),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                5)));
-        constraintLayout3.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        /*ViewInteraction constraintLayoutShareApp = onView(
-                allOf(withId(R.id.layout_share_app),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                3)));
-        constraintLayoutShareApp.perform(scrollTo(), click());
-
-        addDelay(1500);
-
-        pressBack();
-
-        addDelay(700);*/
-
-        ViewInteraction againLayoutShareApp = onView(
-                allOf(withId(R.id.layout_share_app),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                3)));
-        againLayoutShareApp.perform(scrollTo(), click());
-
-        /*addDelay(10000);
-
-        ViewInteraction wifiAlertButton = onView(
-                allOf(withId(R.id.share_ok), withText("OK"),
-                        childAtPosition(
-                                allOf(withId(R.id.internal),
-                                        childAtPosition(
-                                                withId(R.id.layout_alert_wifi_share),
-                                                0)),
-                                8),
-                        isDisplayed()));
-        wifiAlertButton.perform(click());
-
-        addDelay(1000);
-
-        ViewInteraction inAppShareToolbarBack = onView(
-                allOf(withContentDescription("Navigate up"),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withId(R.id.toolbar_share_app),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        inAppShareToolbarBack.perform(click());*/
-
-        addDelay(700);
-
-        ViewInteraction constraintLayoutPrivacyPolicy = onView(
-                allOf(withId(R.id.layout_privacy_policy),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                6)));
-        constraintLayoutPrivacyPolicy.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction bottomNavigationContacts = onView(
-                allOf(withId(R.id.action_contact),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                0),
-                        isDisplayed()));
-        bottomNavigationContacts.perform(click());
-
-        addDelay(2000);
+    // Message and mesh contact test
+    @Test
+    public void uiTest_5() {
+        addDelay(4500);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
@@ -621,10 +588,6 @@ public class TeleMeshTest {
                 .setUserFirstName("Daniel")
                 .setUserLastName("Alvez");
         userEntity.setId(0);
-
-        /*Intent intent = new Intent();
-        intent.putExtra(UserEntity.class.getName(), userEntity);
-        mChatTestRule.launchActivity(intent);*/
 
         userDataSource.insertOrUpdateData(userEntity);
 
@@ -687,7 +650,7 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        pressBack();
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
         addDelay(700);
 
@@ -716,19 +679,16 @@ public class TeleMeshTest {
 
         addDelay(500);
 
-        pressBack();
+        mDevice.pressBack();
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         addDelay(2500);
 
-        pressBack();
+        mDevice.pressBack();
 
         addDelay(1000);
 
         try {
-            pressBack();
+            mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }

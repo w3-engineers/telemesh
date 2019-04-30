@@ -164,7 +164,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
                     android:text="@{settingsVM.getAppLanguage()}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

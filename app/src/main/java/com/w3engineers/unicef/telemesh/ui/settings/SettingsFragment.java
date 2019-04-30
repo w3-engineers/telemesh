@@ -7,20 +7,12 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.ViewHolder;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
@@ -29,7 +21,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
-import com.w3engineers.unicef.telemesh.ui.inappshare.InAppShareActivity;
 import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
@@ -102,10 +93,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
-                // open a bottom dialog for sharing wifi network info
-//                openInAppShareDialog();
                 // In app share process trigger to start
-//                settingsViewModel.startInAppShareProcess();
+//                startActivity(new Intent(getActivity(), InAppShareActivity.class));
+                settingsViewModel.startInAppShareProcess();
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -188,12 +178,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }).get(SettingsViewModel.class);
     }
 
-    // For UI need to add a view holder for DialogPlus library
-//    private AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder;
-
-    /**
+    /*
      * Bottom dialog for sharing wifi network info
-     */
+     *//*
     private void openInAppShareDialog() {
 
         View layoutView = LayoutInflater.from(getActivity()).inflate(R.layout.alert_wifi_share,
@@ -215,12 +202,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                     }
                 }).create();
         dialog.show();
-    }
+    }*/
 
-    /**
+    /*
      * Wifi share view holder and
      * observe network state using LiveData
-     */
+     *//*
     private class AlertWifiShareViewHolderHolder extends ViewHolder {
         private TextView shareWifiPass, connecting;
         private ImageView imageView;
@@ -248,13 +235,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             ok.setTextColor(getResources().getColor(R.color.black));
 
             settingsViewModel.bitmapMutableLiveData.observe(SettingsFragment.this, bitmap -> {activeView(bitmap, this, settingsViewModel);});
-        }
+        }*/
 
-        /**
+        /*
          * When network state is active
          * then we will prepare a bitmap for exposing my network as a QR code
          * @param bitmap- Qr code bitmap
-         */
+         *//*
         private void activeView(Bitmap bitmap, AlertWifiShareViewHolderHolder alertWifiShareViewHolderHolder, SettingsViewModel settingsViewModel) {
 
             getActivity().runOnUiThread(() -> {
@@ -275,5 +262,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }
             });
         }
-    }
+
+        }
+
+        */
+
 }

@@ -112,6 +112,7 @@ dependencies {
     androidTestImplementation deps.room.testing
     androidTestImplementation deps.arch_core.testing
     androidTestImplementation deps.retrofit.mock
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
@@ -131,6 +132,9 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.google.zxing:core:3.3.3'
+
+    api project(':appshare')
+
     /*androidTestImplementation group: 'com.github.javafaker', name: 'javafaker', version: '0.16'*/
 
 //    api project(':viper')

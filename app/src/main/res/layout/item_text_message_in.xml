@@ -41,7 +41,6 @@
             android:id="@+id/text_view_date_time"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_20"
-            android:layout_marginLeft="@dimen/margin_3"
             android:layout_marginStart="@dimen/margin_3"
             android:layout_marginTop="@dimen/margin_5"
             android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"

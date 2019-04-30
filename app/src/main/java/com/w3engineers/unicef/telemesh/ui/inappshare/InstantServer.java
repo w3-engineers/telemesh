@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.inappshare;
 
 import android.support.annotation.NonNull;
@@ -22,39 +23,31 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-/**
- * * ============================================================================
- * * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
- * * Unauthorized copying of this file, via any medium is strictly prohibited
- * * Proprietary and confidential
- * * ----------------------------------------------------------------------------
- * * Created by: Mimo Saha on [10-Jul-2018 at 12:48 PM].
- * * Email: mimosaha@w3engineers.com
- * * ----------------------------------------------------------------------------
- * * Project: DataTransferServer.
- * * Code Responsibility: <Purpose of code>
- * * ----------------------------------------------------------------------------
- * * Edited by :
- * * --> <First Editor> on [10-Jul-2018 at 12:48 PM].
- * * --> <Second Editor> on [10-Jul-2018 at 12:48 PM].
- * * ----------------------------------------------------------------------------
- * * Reviewed by :
- * * --> <First Reviewer> on [10-Jul-2018 at 12:48 PM].
- * * --> <Second Reviewer> on [10-Jul-2018 at 12:48 PM].
- * * ============================================================================
- **/
+*/
+/*
+ * ============================================================================
+ * Copyright (C) 2018 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ *//*
+
+
 public class InstantServer {
 
     private int port;
     private static InstantServer instantServer = new InstantServer();
-    /**
+    */
+/**
      * Response status type
-     */
+     *//*
+
     private String filePath;
 
-    /**
+    */
+/**
      * Response mime type
-     */
+     *//*
+
 
     private static final String
             MIME_PLAINTEXT = "text/plain",
@@ -69,9 +62,11 @@ public class InstantServer {
 
     }
 
-    /**
+    */
+/**
      * Initiating and starting server after calling this constructor
-     */
+     *//*
+
 //    InstantServer(int port, String filePath) {
 //        startServer();
 //    }
@@ -88,24 +83,30 @@ public class InstantServer {
         return this;
     }
 
-    /**
+    */
+/**
      * Purpose of this callback is
      * How amount of data has been passed
-     */
+     *//*
+
     public interface PercentCallback {
         void showPercent(int percent);
     }
 
-    /** A server socket for network communication */
+    */
+/** A server socket for network communication *//*
+
     private ServerSocket serverSocket;
     private Thread thread;
 
-    /**
+    */
+/**
      * The purpose of this API is socket initialize
      * and ready for accepting any type of request
      * which through using POST or GET method
      * then start this server
-     */
+     *//*
+
     public void startServer(){
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -134,10 +135,12 @@ public class InstantServer {
         }
     }
 
-    /**
+    */
+/**
      * When our purpose is done then we stop this server
      * and this time close our server socket
-     */
+     *//*
+
     public void stopServer() {
         try {
             serverSocket.close();
@@ -147,35 +150,43 @@ public class InstantServer {
         }
     }
 
-    /**
+    */
+/**
      * Handles one session, i.e. parses the HTTP request
      * and returns the local Response.
-     */
+     *//*
+
     private class HTTPRequestSession implements Runnable {
 
         private Socket socket;
         private Properties methods, header, parameters;
         private SimpleDateFormat simpleDateFormat;
 
-        /**
+        */
+/**
          * Response status type
-         */
+         *//*
+
         private String HTTP_OK = "200 OK", HTTP_RANGE_NOT_SATISFIABLE = "416 Requested Range Not Satisfiable",
                 HTTP_PARTIALCONTENT = "206 Partial Content",
                 HTTP_NOTMODIFIED = "304 Not Modified", filePath;
 
-        /**
+        */
+/**
          * Response mime type
-         */
+         *//*
+
         private static final String
                 MIME_HTML = "text/html",
                 MIME_CSS = "text/css",
                 MIME_PNG = "image/png",
                 MIME_ICO = "image/x-icon";
 
-        /**
+        */
+/**
          * Response file type
-         */
+         *//*
+
         private static final String
                 FILE_TYPE_CSS = ".css",
                 FILE_TYPE_PNG = ".png",
@@ -183,11 +194,13 @@ public class InstantServer {
                 FILE_TYPE_ICO = ".ico",
                 TYPE_STRING = ".str";
 
-        /**
+        */
+/**
          * @param socket
          * When server got any type of information
          * then it starts its session
-         */
+         *//*
+
         HTTPRequestSession(Socket socket, String filePath) {
             this.filePath = filePath;
             this.socket = socket;
@@ -196,10 +209,12 @@ public class InstantServer {
             thread.start();
         }
 
-        /**
+        */
+/**
          * Reset previous session data and clear all info
          * re-initiate it again
-         */
+         *//*
+
         private void reset() {
             if (methods != null)
                 methods.clear();
@@ -209,10 +224,12 @@ public class InstantServer {
                 parameters.clear();
         }
 
-        /**
+        */
+/**
          * Initiate all properties and
          * initiate time format for getting request from client
-         */
+         *//*
+
         private void init() {
 
             methods = new Properties();
@@ -261,12 +278,14 @@ public class InstantServer {
             }
         }
 
-        /**
+        */
+/**
          * Prepare and serve any type of response after getting any request
          * @param uri -> serve any response based on requested uri
          * @param header -> header is needed when serve a media or apk content
          * @return -> the desire response based on client request
-         */
+         *//*
+
         private Response serveFile(String uri, Properties header) {
 
             Response response = null;
@@ -298,12 +317,14 @@ public class InstantServer {
             return response;
         }
 
-        /**
+        */
+/**
          * Prepare a file response when client request to download a file
          * @param header -> Adding header params for preparing response file
          * @return a response which contains the input stream of selected file,
          * status and mime type also
-         */
+         *//*
+
         private Response prepareFile(Properties header) {
             Response response = null;
             String mime = MIME_DEFAULT_BINARY;
@@ -379,10 +400,12 @@ public class InstantServer {
             return response;
         }
 
-        /**
+        */
+/**
          * Purpose of this api send a response which already prepared by URI and property
          * @param response -> Sends given local Response to the socket.
-         */
+         *//*
+
         private void sendResponse(Response response) {
 
             String status = response.status;
@@ -446,10 +469,12 @@ public class InstantServer {
             }
         }
 
-        /**
+        */
+/**
          * Decodes the sent headers and loads the data into
          * java Properties' key - value pairs
-         **/
+         **//*
+
         private void decodeHeaderData(BufferedReader bufferedReader) {
 
             try {
@@ -482,36 +507,44 @@ public class InstantServer {
         }
     }
 
-    /**
+    */
+/**
      * HTTP local Response.
      * Return one of these from serve().
      * Preparing any response and
      * set all info in this response obj
-     */
+     *//*
+
     private class Response {
         String status, mimeType;
         InputStream inputStream;
         Properties header = new Properties();
 
-        /**
+        */
+/**
          * Inject any header for preparing response then use this api
-         */
+         *//*
+
         void addHeader(String key, String value) {
             header.put(key, value);
         }
 
-        /**
+        */
+/**
          * Basic constructor for sending file response
-         */
+         *//*
+
         Response(String status, String mimeType, InputStream inputStream) {
             this.status = status;
             this.mimeType = mimeType;
             this.inputStream = inputStream;
         }
 
-        /**
+        */
+/**
          * Convenience method that makes an InputStream out of given text.
-         */
+         *//*
+
         Response(String status, String mimeType, String txt) {
             this.status = status;
             this.mimeType = mimeType;
@@ -526,3 +559,4 @@ public class InstantServer {
 
 
 }
+*/

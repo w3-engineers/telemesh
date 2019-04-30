@@ -1,16 +1,11 @@
+/*
 package com.w3engineers.unicef.util.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
@@ -18,30 +13,21 @@ import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 
 import java.lang.reflect.Method;
 
-/**
+*/
+/*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Created by: Mimo Saha on [19-Mar-2019 at 3:20 PM].
- * Email:
- * Project: telemesh.
- * Code Responsibility: <Purpose of code>
- * Edited by :
- * --> <First Editor> on [19-Mar-2019 at 3:20 PM].
- * --> <Second Editor> on [19-Mar-2019 at 3:20 PM].
- * Reviewed by :
- * --> <First Reviewer> on [19-Mar-2019 at 3:20 PM].
- * --> <Second Reviewer> on [19-Mar-2019 at 3:20 PM].
- * ============================================================================
- **/
+ *//*
+
+
 public class NetworkConfigureUtil {
 
-    private static int AP_STATE_ENABLED = 13;
-
-    private String networkNamePrefix = "RM-";
     @NonNull
     public String SSID_Key = "m3sht3st";
+    @NonNull
+    public String SSID_Name = "";
     private WifiManager wifiManager;
     private boolean isRmOff = false;
 
@@ -62,26 +48,30 @@ public class NetworkConfigureUtil {
     }
 
     public interface NetworkCallback {
-        void networkName(@NonNull String SSID, boolean isRmWifi);
+        void networkName();
     }
 
-    /**
+    */
+/**
      * Using a callback, when network is prepared to share app
      * @param networkCallback - get instance from implemented class
      * @return - this class for using cyclic api
-     */
+     *//*
+
     @NonNull
     public NetworkConfigureUtil setNetworkCallback(@NonNull NetworkCallback networkCallback) {
         this.networkCallback = networkCallback;
         return this;
     }
 
-    /**
+    */
+/**
      * Concern of this method is establish a network using hotspot or wifi.
      * If device have a established mesh network then use this network system
      * otherwise prepare a hotspot manually
      * @return - Using a boolean for accessing in disposable
-     */
+     *//*
+
     public boolean startRouterConfigureProcess() {
 
         try {
@@ -89,8 +79,8 @@ public class NetworkConfigureUtil {
                 Method getConfigMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
                 WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
 
-                String SSID_Name = wifiConfig.SSID;
-                triggerNetworkCall(SSID_Name, false);
+                SSID_Name = wifiConfig.SSID;
+                triggerNetworkCall();
 
             } else {
                 RmDataHelper.getInstance().stopRmService();
@@ -110,17 +100,20 @@ public class NetworkConfigureUtil {
         return true;
     }
 
-    /**
+    */
+/**
      * Preparing a manual hotspot
      * when device node is not in a mesh network
-     */
+     *//*
+
     private void hotspotConfigure() {
         wifiManager.setWifiEnabled(false);
         WifiConfiguration wifiConfiguration = new WifiConfiguration();
 
-        String networkName = networkNamePrefix + context.getString(R.string.rm_ssid);
+        String networkNamePrefix = "RM-";
+        SSID_Name = networkNamePrefix + context.getString(R.string.rm_ssid) + "_AppShare";
 
-        wifiConfiguration.SSID = networkName;
+        wifiConfiguration.SSID = SSID_Name;
 
         wifiConfiguration.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
         wifiConfiguration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
@@ -135,11 +128,12 @@ public class NetworkConfigureUtil {
             stateMethod.setAccessible(true);
 
             boolean startPoint = true;
+            int AP_STATE_ENABLED = 13;
 
             while (startPoint) {
                 if ((Integer) stateMethod.invoke(wifiManager, (Object[]) null) == AP_STATE_ENABLED) {
                     startPoint = false;
-                    triggerNetworkCall(networkName, false);
+                    triggerNetworkCall();
                 }
             }
         } catch (Exception e) {
@@ -147,10 +141,12 @@ public class NetworkConfigureUtil {
         }
     }
 
-    /**
+    */
+/**
      * Check device hotspot is enable or not
      * @return - wifi ap state
-     */
+     *//*
+
     private boolean isApOn() {
         try {
             Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
@@ -162,65 +158,51 @@ public class NetworkConfigureUtil {
         return false;
     }
 
-    /*
-     * Concern of this api check the wifi is a RightMesh prepared or not
-     * @return - Only provide the RM configurable wifi name
-     */
-//    private String getWifiConfigurableName() {
-//        try {
-//
-//            String SSID_Name;
-//
-//            if (wifiManager.isWifiEnabled()) {
-//
-//                ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//                NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-//
-//                if (networkInfo.isConnected()) {
-//
-//                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-//
-//                    SSID_Name = wifiInfo.getSSID();
-//
-//                    SSID_Name = SSID_Name.replace("\"", "");
-//
-//                    if (!TextUtils.isEmpty(SSID_Name) && SSID_Name.startsWith(networkNamePrefix)) {
-//                        triggerNetworkCall(SSID_Name, true);
-//                        return SSID_Name;
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
-    /**
+    */
+/**
      * The purpose of this method is triggering network callback
-     * @param SSID - for triggering this callback need a ssid name for exposing to others
-     */
-    private void triggerNetworkCall(@NonNull String SSID, boolean isRmWifi) {
+     *//*
+
+    private void triggerNetworkCall() {
         if (networkCallback != null) {
-            networkCallback.networkName(SSID, isRmWifi);
+            networkCallback.networkName();
         }
     }
 
-    /**
+    */
+/**
      * Using a boolean toggle for checking RM
      * is enable or disable
      * @return - the RM enable state
-     */
+     *//*
+
     public boolean isRmOff() {
         return isRmOff;
     }
 
-    /**
+    */
+/**
      * Set RM off state false
      * When you restart the RM after completing the app sharing process
      * @param rmOff - set RM current state
-     */
+     *//*
+
     public void setRmOff(boolean rmOff) {
         isRmOff = rmOff;
     }
+
+    @NonNull
+    public String getNetworkConfig() {
+        return String.format(context.getString(R.string.hotspot_id_pass), SSID_Name, SSID_Key);
+    }
+
+    */
+/**
+     * Reset all properties when in app share process is completed
+     *//*
+
+    public void resetNetworkConfigureProperties() {
+        SSID_Name = "";
+    }
 }
+*/

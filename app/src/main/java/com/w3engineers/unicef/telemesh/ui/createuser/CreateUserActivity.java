@@ -1,11 +1,13 @@
 package com.w3engineers.unicef.telemesh.ui.createuser;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -17,9 +19,17 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.setorganization.SetOrganizationActivity;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
+import io.reactivex.schedulers.Schedulers;
 
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
@@ -40,56 +50,42 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void startUI() {
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
         setTitle(getString(R.string.create_user));
-        getWindow().setBackgroundDrawableResource(R.mipmap.splash_screen_bg);
         mViewModel = getViewModel();
+
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
         mBinding.imageViewCamera.setOnClickListener(this);
         mBinding.buttonSignup.setOnClickListener(this);
         mBinding.imageProfile.setOnClickListener(this);
 
-        mBinding.editTextFirstName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
-        mBinding.editTextLastName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
-        mBinding.editTextFirstName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
-        mBinding.editTextLastName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
+        mBinding.editTextName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
+        mBinding.editTextName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
 
+        mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
+        mViewModel.textEditControl(mBinding.editTextName);
+    }
 
-        mBinding.editTextLastName.setOnEditorActionListener((textView, i, keyEvent) -> {
-            saveData();
-            return true;
-        });
-
-
-        final Flowable<Boolean> firstNameObservable = RxTextView.afterTextChangeEvents(mBinding.editTextFirstName)
-                .map(textViewAfterTextChangeEvent -> mViewModel.isNameValid(textViewAfterTextChangeEvent.view().getText().toString())).toFlowable(BackpressureStrategy.LATEST);
-
-        final Flowable<Boolean> lastNameObservable = RxTextView.afterTextChangeEvents(mBinding.editTextLastName)
-                .map(textViewAfterTextChangeEvent -> mViewModel.isNameValid(textViewAfterTextChangeEvent.view().getText().toString())).toFlowable(BackpressureStrategy.LATEST);
-
-
-        final Flowable<Boolean> combineResult = Flowable.combineLatest(
-                firstNameObservable,
-                lastNameObservable,
-                (aBoolean, aBoolean2) -> aBoolean && aBoolean2
-        );
-
-        getCompositeDisposable().add(combineResult.subscribe(aBoolean -> {
-                    mBinding.buttonSignup.setEnabled(aBoolean);
-                    if (aBoolean) {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.ENABLE_EFFECT);
-                    } else {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.DISABLE_EFFECT);
-                    }
-                }, Throwable::printStackTrace
-        ));
-
+    private void nextButtonControl(String nameText) {
+        if (mViewModel.getImageIndex() >= 0 &&
+                !TextUtils.isEmpty(nameText) &&
+                nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
+            mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
+            mBinding.buttonSignup.setClickable(true);
+        } else {
+            mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.deep_grey));
+            mBinding.buttonSignup.setClickable(false);
+        }
     }
 
     private CreateUserViewModel getViewModel() {
@@ -131,15 +127,16 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
+
+            nextButtonControl(mBinding.editTextName.getText().toString());
         }
     }
 
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "", mBinding.editTextLastName.getText() + "")) {
-                Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
+            if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+                Intent intent = new Intent(CreateUserActivity.this, SetOrganizationActivity.class);
                 startActivity(intent);
-                finish();
             }
         } else {
             Toaster.showLong(getString(R.string.select_avatar));

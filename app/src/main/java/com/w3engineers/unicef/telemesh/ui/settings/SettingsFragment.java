@@ -81,7 +81,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 // Showing user profile
                 SharedPref sharedPref = SharedPref.getSharedPref(mActivity);
                 UserEntity userEntity = new UserEntity();
-                userEntity.setUserFirstName(sharedPref.read(Constants.preferenceKey.FIRST_NAME));
+                userEntity.setUserFirstName(sharedPref.read(Constants.preferenceKey.USER_NAME));
                 userEntity.setUserLastName(sharedPref.read(Constants.preferenceKey.LAST_NAME));
                 userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);

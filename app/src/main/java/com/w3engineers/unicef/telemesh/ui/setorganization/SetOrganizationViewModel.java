@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.createuser;
+package com.w3engineers.unicef.telemesh.ui.setorganization;
 
 import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
@@ -25,41 +25,51 @@ import io.reactivex.schedulers.Schedulers;
  * Proprietary and confidential
  * ============================================================================
  */
-public class CreateUserViewModel extends BaseRxAndroidViewModel {
+public class SetOrganizationViewModel extends BaseRxAndroidViewModel {
 
-    private int imageIndex = CreateUserActivity.INITIAL_IMAGE_INDEX;
+    private SharedPref sharedPref;
 
-    public CreateUserViewModel(@NonNull Application application) {
+    public SetOrganizationViewModel(@NonNull Application application) {
         super(application);
+        sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
     }
 
     public MutableLiveData<String> textChangeLiveData = new MutableLiveData<>();
 
     int getImageIndex() {
-        return imageIndex;
+        return sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
     }
 
-    void setImageIndex(int imageIndex) {
-        this.imageIndex = imageIndex;
+    String getName() {
+        return sharedPref.read(Constants.preferenceKey.USER_NAME);
     }
 
-    boolean storeData(@Nullable String firstName) {
+    boolean isInfoValid(@Nullable String name) {
+        return !TextUtils.isEmpty(name) && name != null &&
+                name.length() >= Constants.DefaultValue.MINIMUM_INFO_LIMIT;
+    }
+
+    boolean storeData(@Nullable String companyName, @NonNull String companyId) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
-        sharedPref.write(Constants.preferenceKey.USER_NAME, firstName);
-        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+        sharedPref.write(Constants.preferenceKey.COMPANY_NAME, companyName);
+        sharedPref.write(Constants.preferenceKey.COMPANY_ID, companyId);
+        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
         return true;
     }
 
-    boolean isNameValid(@Nullable String name) {
-        return !TextUtils.isEmpty(name) && name != null &&
-                name.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
-                && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
+    public void textOrganizationEditControl(EditText editText) {
+        getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
+                .map(input -> input.editable() + "")
+                .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(text -> textChangeLiveData.postValue(text)));
     }
 
-    public void textEditControl(EditText editText) {
+    public void textIdEditControl(EditText editText) {
         getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
                 .map(input -> input.editable() + "")
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())

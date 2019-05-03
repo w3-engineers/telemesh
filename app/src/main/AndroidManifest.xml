@@ -28,9 +28,12 @@
         <activity
             android:name=".ui.createuser.CreateUserActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" />
 
-        </activity>
+        <activity
+            android:name=".ui.setorganization.SetOrganizationActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.splashscreen.SplashActivity"
             android:theme="@style/NoActionBarTheme">

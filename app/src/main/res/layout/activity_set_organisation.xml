@@ -41,6 +41,17 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/op_back"
+                    android:layout_width="@dimen/width_40"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:padding="@dimen/padding_10"
+                    android:src="@mipmap/ic_back_white"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,14 +87,13 @@
                     android:id="@+id/image_profile_background"
                     android:layout_width="@dimen/width_120"
                     android:layout_height="@dimen/height_120"
-                    android:contentDescription="@string/logo_image"
                     android:background="@drawable/circular_white"
+                    android:contentDescription="@string/logo_image"
                     android:padding="@dimen/margin_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintTop_toTopOf="@+id/divider" />
-
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_profile"
@@ -91,26 +101,13 @@
                     android:layout_height="@dimen/height_120"
                     android:padding="@dimen/margin_15"
                     android:src="@mipmap/ic_avatar_grey"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintTop_toTopOf="@+id/divider" />
 
-                <ImageView
-                    android:id="@+id/image_view_camera"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/circular_gradient"
-                    android:contentDescription="@string/logo_image"
-                    android:padding="@dimen/padding_10"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_plus"
-                    app:layout_constraintBottom_toBottomOf="@+id/image_profile"
-                    app:layout_constraintEnd_toEndOf="@+id/image_profile" />
-
                 <TextView
-                    android:id="@+id/select_avatar"
+                    android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_15"
@@ -122,14 +119,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/image_profile" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/name_layout"
+                    android:id="@+id/organization_layout"
                     style="@style/signup_editext_style"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/select_avatar">
+                    app:layout_constraintTop_toBottomOf="@+id/user_name">
 
                     <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
-                        android:id="@+id/edit_text_name"
+                        android:id="@+id/edit_text_organization"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_15"
@@ -137,7 +134,7 @@
                         android:background="@color/transparent_color"
                         android:digits="@string/myDigits"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="@string/enter_first_name"
+                        android:hint="@string/organization"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
@@ -151,18 +148,73 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-
-
-                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-                    android:id="@+id/button_signup"
-                    style="@style/CustomButton"
-                    android:clickable="false"
-                    android:text="@string/next"
-                    android:textColor="@color/deep_grey"
-                    android:textSize="@dimen/text_size_18"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/id_layout"
+                    style="@style/signup_editext_style"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:bb_drawable="@drawable/ractangular_white"
-                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />
+                    app:layout_constraintTop_toBottomOf="@+id/organization_layout">
+
+                    <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+                        android:id="@+id/edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_15"
+                        android:layout_marginRight="@dimen/margin_15"
+                        android:background="@color/transparent_color"
+                        android:digits="@string/myDigits"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="@string/id"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:singleLine="true"
+                        android:textSize="@dimen/text_body"
+                        app:bet_baseColor="@color/colorPrimary"
+                        app:bet_textColor="@color/select_photo_color"
+                        app:bet_underlineColor="@color/grey">
+                    </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:layout_marginBottom="@dimen/margin_30"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/id_layout">
+
+                    <Button
+                        android:id="@+id/button_skip"
+                        style="@style/CustomButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="@dimen/margin_1"
+                        android:layout_weight="1"
+                        android:background="@drawable/ractangular_white"
+                        android:text="@string/skip"
+                        android:textColor="@color/deep_grey"
+                        android:textSize="@dimen/text_size_18" />
+
+
+                    <Button
+                        android:id="@+id/button_signup"
+                        style="@style/CustomButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="@dimen/margin_1"
+                        android:layout_weight="1"
+                        android:background="@drawable/ractangular_white"
+                        android:clickable="false"
+                        android:text="@string/signup"
+                        android:textColor="@color/deep_grey"
+                        android:textSize="@dimen/text_size_18" />
+
+                </LinearLayout>
+
+
             </android.support.constraint.ConstraintLayout>
 
         </ScrollView>

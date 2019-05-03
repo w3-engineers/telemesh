@@ -22,9 +22,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -105,9 +107,11 @@ public class SmoothCheckBox extends View implements Checkable {
         mFloorPaint.setStyle(Paint.Style.FILL);
         mFloorPaint.setColor(mFloorColor);
 
+
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mCheckedColor);
+
 
         mTickPath = new Path();
         mCenterPoint = new Point();

@@ -135,6 +135,8 @@ dependencies {
 
     api project(':appshare')
 
+    implementation project(':meshlib')
+
     /*androidTestImplementation group: 'com.github.javafaker', name: 'javafaker', version: '0.16'*/
 
 //    api project(':viper')

@@ -1,4 +1,4 @@
-include ':app', ':viper', ':appshare'
+include ':app', ':viper', ':meshlib', ':paylib'
 
 pluginManagement.repositories {
     jcenter()

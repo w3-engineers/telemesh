@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
-    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
+    // Remove RM-Lib
+//    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
 }
 
 def isCrashLyticsEnabled = project.hasProperty('org.w3.crashlytics') &&
@@ -18,7 +19,8 @@ if(isCrashLyticsEnabled) {
 //right-mesh config start
 
 //to load rm username and password from gradle properties file
-repositories {
+// Remove RM-Lib
+/*repositories {
     maven {
         url "http://artifactory.rightmesh.io/artifactory/maven"
         credentials {
@@ -44,7 +46,7 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
-}
+}*/
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
@@ -60,6 +62,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
+        // Remove RM-Lib
         resValue "integer", "rm_port_number", getRootProject().ext.port_number
         resValue "string", "rm_ssid", getRootProject().ext.rm_ssid
         resValue "string", "rm_super_peer", getRootProject().ext.rm_super_peer
@@ -101,9 +104,6 @@ dependencies {
     //Added by Aziz for BaseEditText
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation deps.lifecycle.extensions
-
-    //android-framework
-    api deps.strom_remote
 }
 
 //Utility
@@ -133,7 +133,11 @@ dependencies {
 
 
     //RightMesh
-    implementation deps.right_mesh
+    // Remove RM-Lib
+    /*implementation deps.right_mesh*/
+
+    api project(':meshlib')
+    api project(':paylib')
 
     //Image Picker, Glide
     implementation deps.glide

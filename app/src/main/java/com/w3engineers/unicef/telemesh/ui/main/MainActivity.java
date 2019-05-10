@@ -193,7 +193,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @NonNull
     @Override
     protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
+        return null;
     }
 
 

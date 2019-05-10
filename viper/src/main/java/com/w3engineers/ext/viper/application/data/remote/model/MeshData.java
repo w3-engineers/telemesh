@@ -10,6 +10,7 @@ package com.w3engineers.ext.viper.application.data.remote.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.viper.util.lib.mesh.ProfileManager;
 
@@ -65,9 +66,30 @@ public class MeshData extends BaseMeshData implements Parcelable {
             return null;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(1 + meshData.mData.length);
-        buffer.put(meshData.mType);
-        buffer.put(meshData.mData);
+        ByteBuffer buffer;
+        String peerId = meshData.mPeerId;
+        byte hasPeer;
+
+        if (TextUtils.isEmpty(peerId)) {
+            hasPeer = 0;
+            buffer = ByteBuffer.allocate(1 + 1 + meshData.mData.length);
+            buffer.put(meshData.mType);
+            buffer.put(hasPeer);
+            buffer.put(meshData.mData);
+        } else {
+
+            hasPeer = 1;
+            byte[] peerByte = peerId.getBytes();
+
+            byte length = (byte) peerByte.length;
+            buffer = ByteBuffer.allocate(1 + 1 + 1 + peerByte.length + meshData.mData.length);
+            buffer.put(meshData.mType);
+            buffer.put(hasPeer);
+            buffer.put(length);
+            buffer.put(peerByte);
+            buffer.put(meshData.mData);
+        }
+
         return buffer.array();
     }
 
@@ -77,9 +99,31 @@ public class MeshData extends BaseMeshData implements Parcelable {
             throw new IllegalStateException("Corrupted data");
         }
 
+        ByteBuffer byteBuffer = ByteBuffer.wrap(meshDataBytes);
+
         MeshData meshData = new MeshData();
-        meshData.mType = meshDataBytes[0];
-        meshData.mData = Arrays.copyOfRange(meshDataBytes, 1, meshDataBytes.length);
+        meshData.mType = byteBuffer.get();
+        byte hasPeer = byteBuffer.get();
+
+        if (hasPeer == 0) {
+            meshData.mData = new byte[byteBuffer.remaining()];
+
+        } else if (hasPeer == 1) {
+            byte peerLength = byteBuffer.get();
+
+            byte[] peerByte = new byte[peerLength];
+
+            byteBuffer.get(peerByte);
+
+            meshData.mPeerId = new String(peerByte);
+
+            byte[] peerData = new byte[byteBuffer.remaining()];
+            byteBuffer.get(peerData);
+
+            meshData.mData = Arrays.copyOfRange(peerData, 0, peerData.length);
+        }
+
+
         return meshData;
     }
 

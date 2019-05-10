@@ -1,40 +1,37 @@
+/*
 package com.w3engineers.ext.viper.util.lib.mesh;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.left.rightmesh.android.AndroidMeshManager;
-import io.left.rightmesh.id.MeshId;
-import io.left.rightmesh.mesh.MeshManager;
-import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.RightMeshException;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import timber.log.Timber;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 // FIXME: 8/13/2018 Probably it has an issue of receiving selfPeer. need more check. If so counter measure is simple
-public class MeshProvider implements MeshStateListener {
+// Remove RM-Lib
+public class MeshProvider */
+/*implements MeshStateListener*//*
+ {
 
     protected final int DEFAULT_ACK_ID = -1;
     private static final MeshProvider ourInstance = new MeshProvider();
@@ -43,7 +40,10 @@ public class MeshProvider implements MeshStateListener {
         return ourInstance;
     }
 
-    private AndroidMeshManager mAndroidMeshManager;
+    // Remove RM-Lib
+    */
+/*private AndroidMeshManager mAndroidMeshManager;*//*
+
     private MeshConfig mMeshConfig;
     private transient boolean mIsRunning;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -51,9 +51,11 @@ public class MeshProvider implements MeshStateListener {
 
 
     private final byte[] PROFILE_DATA_DEFAULT_BYTES;
-    /**
+    */
+/**
      * All active peer id with it's byte data.
-     */
+     *//*
+
     private final ConcurrentHashMap<String, byte[]> mMeshIdPeerMap;
     private final Set<Integer> mDeliveryIdSetMessage;
     private final Set<Integer> mDeliveryIdSetPi;
@@ -92,16 +94,21 @@ public class MeshProvider implements MeshStateListener {
         }
 
         //If either super peer or ssid then dev version otherwise production version
-        mAndroidMeshManager = TextUtils.isEmpty(mMeshConfig.mSsid) && TextUtils.isEmpty(mMeshConfig.mSuperPeer) ?
+        // Remove RM-Lib
+        */
+/*mAndroidMeshManager = TextUtils.isEmpty(mMeshConfig.mSsid) && TextUtils.isEmpty(mMeshConfig.mSuperPeer) ?
                 AndroidMeshManager.getInstance(context, this) :
                 AndroidMeshManager.getInstance(context, this, mMeshConfig.mSuperPeer,
-                        mMeshConfig.mSsid);
+                        mMeshConfig.mSsid);*//*
+
 
     }
 
     public void stop() {
 
-        if(mAndroidMeshManager != null) {
+        // Remove RM-Lib
+        */
+/*if(mAndroidMeshManager != null) {
             mAndroidMeshManager.unregisterAllPeerListener(mMeshConfig.mPort);
             mIsRunning = false;
             mMeshConfig = null;
@@ -114,7 +121,8 @@ public class MeshProvider implements MeshStateListener {
             }  catch (RightMeshException.RightMeshServiceDisconnectedException e) {
                 e.printStackTrace();
             }
-        }
+        }*//*
+
 
     }
 
@@ -146,12 +154,15 @@ public class MeshProvider implements MeshStateListener {
     public int sendProfileInfo(MeshData meshData) {
 
         int ackId = DEFAULT_ACK_ID;
-        try {
+        // Remove RM-Lib
+        */
+/*try {
             ackId = send(meshData);
             mDeliveryIdSetPi.add(ackId);
         } catch (RightMeshException e) {
             e.printStackTrace();
-        }
+        }*//*
+
 
         return ackId;
     }
@@ -159,25 +170,35 @@ public class MeshProvider implements MeshStateListener {
     public int sendData(MeshData meshData) {
 
         int ackId = DEFAULT_ACK_ID;
-        try {
+        // Remove RM-Lib
+        */
+/*try {
             ackId = send(meshData);
             mDeliveryIdSetMessage.add(ackId);
         } catch (RightMeshException e) {
             e.printStackTrace();
-        }
+        }*//*
+
 
         return ackId;
     }
 
-    /**
+    */
+/**
      * By default data sent from Remote Service Binder thread
      * @param meshData
      * @return
-     * @throws RightMeshException
-     */
-    private int send(MeshData meshData) throws RightMeshException {
+     * @throws
+     *//*
 
-        if(mAndroidMeshManager == null) {
+    // Remove RM-Lib
+    private int send(MeshData meshData) */
+/*throws RightMeshException*//*
+ {
+
+        // Remove RM-Lib
+        */
+/*if(mAndroidMeshManager == null) {
             throw new IllegalStateException("Mesh library not initialized");
         }
 
@@ -192,13 +213,16 @@ public class MeshProvider implements MeshStateListener {
                 meshId, mMeshConfig.mPort, Arrays.toString(bytes));
         int ackId = mAndroidMeshManager.sendDataReliable(meshId,
                 mMeshConfig.mPort, bytes);
-        Timber.d("mAndroidMeshManager.sendDataReliable() Ack %d. Thread::%s", ackId, Thread.currentThread().getName());
+        Timber.d("mAndroidMeshManager.sendDataReliable() Ack %d. Thread::%s", ackId, Thread.currentThread().getName());*//*
 
-        return ackId;
+
+        return DEFAULT_ACK_ID;
     }
 
-    @SuppressWarnings("unchecked")
+    */
+/*@SuppressWarnings("unchecked")
     @Override
+    // Remove RM-Lib
     public void meshStateChanged(MeshId meshId, int state) {
 
         if (state == MeshStateListener.SUCCESS || state == MeshStateListener.RESUME) {
@@ -244,9 +268,12 @@ public class MeshProvider implements MeshStateListener {
 
         }
 
-    }
+    }*//*
 
-    private void handlePeerChanged(MeshManager.RightMeshEvent e) {
+
+    // Remove RM-Lib
+    */
+/*private void handlePeerChanged(MeshManager.RightMeshEvent e) {
 
         if(e != null) {
 
@@ -349,13 +376,13 @@ public class MeshProvider implements MeshStateListener {
             }
         }
 
-    }
+    }*//*
+
 
 
     private boolean isPeerAvailable(String targetPeer) {
 
         if(!TextUtils.isEmpty(targetPeer)) {
-
 
             return mMeshIdPeerMap.containsKey(targetPeer);
 
@@ -365,10 +392,13 @@ public class MeshProvider implements MeshStateListener {
 
 
     public void openRmSettings(){
-        try {
+        */
+/*try {
             mAndroidMeshManager.showSettingsActivity();
         } catch (RightMeshException ignored) {
-        }
+        }*//*
+
     }
 
 }
+*/

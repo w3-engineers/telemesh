@@ -7,7 +7,6 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.ext.strom.util.BroadcastUtil;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.viper.IRmCommunicator;
 import com.w3engineers.ext.viper.IRmServiceConnection;
@@ -18,7 +17,7 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.ext.viper.util.lib.mesh.IMeshCallBack;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
-import com.w3engineers.ext.viper.util.lib.mesh.MeshProvider;
+import com.w3engineers.ext.viper.util.lib.mesh.MeshLibProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ import timber.log.Timber;
 public class BaseRmService extends Service implements IMeshCallBack {
 
     private List<IRmCommunicator> mIRmCommunicators;
-    private MeshProvider mMeshProvider;
+    private MeshLibProvider mMeshProvider;
     private boolean mIsServiceToCloseWithTask;
     private boolean mIsTaskCleared;
     private String mBroadcastActionString;
@@ -84,10 +83,10 @@ public class BaseRmService extends Service implements IMeshCallBack {
         Timber.d("Local Remote Service initiating with port number:%d ssid:%s", meshConfig.mPort,
                 meshConfig.mSsid);
 
-        mMeshProvider = MeshProvider.getInstance();
+        mMeshProvider = MeshLibProvider.getInstance();
         mMeshProvider.setMeshConfig(meshConfig);
         mMeshProvider.setIMeshCallBack(this);
-        mMeshProvider.start(getApplicationContext());
+        mMeshProvider.start();
     }
 
     @Nullable
@@ -132,7 +131,7 @@ public class BaseRmService extends Service implements IMeshCallBack {
         }
 
         @Override
-        public int sendMeshData(MeshData meshData) throws RemoteException {
+        public long sendMeshData(MeshData meshData) throws RemoteException {
             return mMeshProvider.sendData(meshData);
         }
 
@@ -170,6 +169,13 @@ public class BaseRmService extends Service implements IMeshCallBack {
         @Override
         public void stopRmService() throws RemoteException {
             shutTheService();
+        }
+
+        @Override
+        public void setMyUserId(String userId) throws RemoteException {
+            if(userId != null) {
+                mMeshProvider.setUserId(userId);
+            }
         }
     };
 

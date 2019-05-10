@@ -78,6 +78,8 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
     }
 
+    protected abstract String getOwnUserId();
+
     private void initService(Context context) {
 
         Intent intent = new Intent(context, BaseRmService.class);
@@ -102,6 +104,7 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
                 mIRmServiceConnection.setRmCommunicator(BaseRmDataSource.this);
                 mIRmServiceConnection.setProfile(mProfileInfo);
+                mIRmServiceConnection.setMyUserId(getOwnUserId());
 
                 //Assuming initial connection is from foreground.
                 //Often service remain foreground , it happens because often the caller Activity upon
@@ -200,7 +203,7 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
      * @return
      * @throws RemoteException
      */
-    public final int sendMeshData(MeshData meshData) throws RemoteException {
+    public final long sendMeshData(MeshData meshData) throws RemoteException {
 
         if(mIRmServiceConnection != null && meshData != null && meshData.mData != null &&
                 meshData.mType != ProfileManager.MY_PROFILE_INFO_TYPE) {

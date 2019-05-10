@@ -2,8 +2,7 @@ package com.w3engineers.ext.viper.application.data.remote.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import io.left.rightmesh.id.MeshId;
+import android.text.TextUtils;
 
 /*
  * ============================================================================
@@ -72,9 +71,17 @@ public class MeshPeer implements Parcelable {
         return mPeerId;
     }
 
-    public static MeshPeer from(MeshId meshId) {
+    // Remove RM-Lib
+    /*public static MeshPeer from(MeshId meshId) {
         if(meshId != null) {
             return new MeshPeer(meshId.toString());
+        }
+        return null;
+    }*/
+
+    public static MeshPeer from(String peerId) {
+        if(!TextUtils.isEmpty(peerId)) {
+            return new MeshPeer(peerId);
         }
         return null;
     }

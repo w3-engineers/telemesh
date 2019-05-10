@@ -33,7 +33,7 @@ public class CreateUserViewModel extends AndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String firstName, @Nullable String lastName) {
+    boolean storeData(@Nullable String firstName, @Nullable String lastName, @NonNull String myUserId) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
@@ -41,6 +41,7 @@ public class CreateUserViewModel extends AndroidViewModel {
         sharedPref.write(Constants.preferenceKey.FIRST_NAME, firstName);
         sharedPref.write(Constants.preferenceKey.LAST_NAME, lastName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+        sharedPref.write(Constants.preferenceKey.MY_USER_ID, myUserId);
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
         return true;
     }

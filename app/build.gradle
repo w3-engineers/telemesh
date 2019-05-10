@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
-    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
+    // Remove RM-Lib
+//    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
     id 'com.github.kt3k.coveralls'
     id 'com.google.protobuf'
 }
@@ -49,6 +50,19 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
     }
 }
 
@@ -117,7 +131,8 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
     //RightMesh
-    implementation deps.right_mesh
+    // Remove RM-Lib
+//    implementation deps.right_mesh
 
     api deps.framework
 
@@ -132,8 +147,12 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.google.zxing:core:3.3.3'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.github.MimoSaha:app-share:1.1.0'
 
-    api project(':appshare')
+    api project(':meshlib')
+    api project(':paylib')
 
     /*androidTestImplementation group: 'com.github.javafaker', name: 'javafaker', version: '0.16'*/
 
@@ -171,8 +190,8 @@ protobuf {
     }
 }
 // protobuf-end
-
-rightmesh {
+// Remove RM-Lib
+/*rightmesh {
     appKey = project.hasProperty('telemesh') ? project.getProperty('telemesh') : System.getenv('telemesh')
 
     username = System.getenv('rightmesh_build_username')
@@ -186,9 +205,9 @@ rightmesh {
     if (password.equals("") || password.equals(null)) {
         password = rightmesh_build_password
     }
-}
-
-preBuild.dependsOn("rightmesh")
+}*/
+// Remove RM-Lib
+/*preBuild.dependsOn("rightmesh")
 
 repositories {
     maven {
@@ -216,7 +235,7 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
-}
+}*/
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'

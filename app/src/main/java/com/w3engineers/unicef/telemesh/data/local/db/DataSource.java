@@ -1,10 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
-
-import javax.annotation.Nullable;
 
 import io.reactivex.Flowable;
 

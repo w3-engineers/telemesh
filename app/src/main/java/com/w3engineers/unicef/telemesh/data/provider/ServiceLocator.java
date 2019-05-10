@@ -29,7 +29,7 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  * Proprietary and confidential
  * ============================================================================
  */
-public class ServiceLocator extends BaseServiceLocator {
+public class ServiceLocator {
 
     private static ServiceLocator serviceLocator;
 
@@ -63,6 +63,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     public MainActivityViewModel getMainActivityViewModel(){
+        restartRmService();
         return new MainActivityViewModel();
     }
 
@@ -91,11 +92,11 @@ public class ServiceLocator extends BaseServiceLocator {
         return new ChatViewModel(application);
     }
 
-    @NonNull
+    /*@NonNull
     @Override
     public BaseRmDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
-    }
+    }*/
 
     @NonNull
     public MyWalletViewModel getMyWalletViewModel(@NonNull Application application) {

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
@@ -16,6 +15,7 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.helper.MeshLibDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +27,21 @@ import java.util.List;
  * Proprietary and confidential
  * ============================================================================
  */
-public class RightMeshDataSource extends BaseRmDataSource {
+public class MeshDataSource extends MeshLibDataSource {
 
     @SuppressLint("StaticFieldLeak")
-    private static RightMeshDataSource rightMeshDataSource;
+    private static MeshDataSource rightMeshDataSource;
 
     private List<String> userIds;
 
-    RightMeshDataSource(@NonNull byte[] profileInfo) {
+    MeshDataSource(@NonNull byte[] profileInfo) {
         super(App.getContext(), profileInfo);
 
         userIds = new ArrayList<>();
     }
 
     @NonNull
-    static RightMeshDataSource getRmDataSource() {
+    static MeshDataSource getRmDataSource() {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 
@@ -52,15 +52,13 @@ public class RightMeshDataSource extends BaseRmDataSource {
                     .build();
 
             byte[] bytes = rmUserMe.toByteArray();
-            rightMeshDataSource = new RightMeshDataSource(bytes);
+            rightMeshDataSource = new MeshDataSource(bytes);
         }
         return rightMeshDataSource;
     }
 
     @Override
     protected void onRmOn() {
-        super.onRmOn();
-
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
     }
@@ -160,7 +158,6 @@ public class RightMeshDataSource extends BaseRmDataSource {
     protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
 
         RMDataModel rmDataModel = RMDataModel.newBuilder()
-                .setUserMeshId(meshAcknowledgement.mMeshPeer.getPeerId())
                 .setRecDataId(meshAcknowledgement.id)
                 .build();
 

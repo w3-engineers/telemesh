@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.SparseArray;
 
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
@@ -36,13 +35,13 @@ import timber.log.Timber;
 public class RmDataHelper {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
-    private RightMeshDataSource rightMeshDataSource;
+    private MeshDataSource rightMeshDataSource;
 
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
     @NonNull
-    public SparseArray<RMDataModel> rmDataMap = new SparseArray<>();
+    public HashMap<Long, RMDataModel> rmDataMap = new HashMap<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -56,10 +55,10 @@ public class RmDataHelper {
     }
 
     @NonNull
-    public RightMeshDataSource initRM(@NonNull DataSource dataSource) {
+    public MeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
-        rightMeshDataSource = RightMeshDataSource.getRmDataSource();
+        rightMeshDataSource = MeshDataSource.getRmDataSource();
         return rightMeshDataSource;
     }
 
@@ -155,7 +154,7 @@ public class RmDataHelper {
                 .setUserMeshId(userId)
                 .setDataType(type).build();
 
-        int dataSendId = rightMeshDataSource.DataSend(rmDataModel);
+        long dataSendId = rightMeshDataSource.DataSend(rmDataModel);
 
         rmDataMap.put(dataSendId, rmDataModel);
     }
@@ -257,7 +256,7 @@ public class RmDataHelper {
      */
     public void ackReceive(@NonNull RMDataModel rmDataModel) {
 
-        int dataSendId = rmDataModel.getRecDataId();
+        long dataSendId = rmDataModel.getRecDataId();
 
         if (rmDataMap.get(dataSendId) != null) {
 
@@ -274,7 +273,7 @@ public class RmDataHelper {
      * Concern for this api stopping RM service from app layer
      */
     public void stopRmService() {
-        rightMeshDataSource.stopRMService();
+        rightMeshDataSource.stopMesh();
     }
 
     /**

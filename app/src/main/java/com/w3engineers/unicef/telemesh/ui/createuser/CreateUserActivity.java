@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.createuser;
 
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,6 +11,12 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.w3engineers.eth.data.remote.EthereumService;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
@@ -17,6 +25,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+
+import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -89,7 +99,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                     }
                 }, Throwable::printStackTrace
         ));
-
     }
 
     private CreateUserViewModel getViewModel() {
@@ -101,6 +110,34 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             }
         }).get(CreateUserViewModel.class);
     }
+
+    protected void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if (report.areAllPermissionsGranted()) {
+                            ethereumWalletCreation();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            requestMultiplePermissions();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(
+                            List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+    }
+
 
     @Override
     public void onClick(@NonNull View view) {
@@ -136,13 +173,40 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "", mBinding.editTextLastName.getText() + "")) {
-                Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            requestMultiplePermissions();
         } else {
             Toaster.showLong(getString(R.string.select_avatar));
+        }
+    }
+
+    private void ethereumWalletCreation() {
+
+        ProgressDialog dialog = ProgressDialog.show(this, "",
+                "Creating account. Please wait...", true);
+        dialog.setCancelable(false);
+
+        EthereumService.getInstance(CreateUserActivity.this).createWallet("123456789",
+                new EthereumService.RunnableListener() {
+                    @Override
+                    public void onWalletCreated(String walletName, String walletAddress) {
+                        dialog.dismiss();
+                        goNext(walletAddress);
+                    }
+
+                    @Override
+                    public void onWalletLoaded(String walletAddress) {
+                        dialog.dismiss();
+                        goNext(walletAddress);
+                    }
+                });
+    }
+
+    private void goNext(String myId) {
+        if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
+                mBinding.editTextLastName.getText() + "", myId)) {
+            Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

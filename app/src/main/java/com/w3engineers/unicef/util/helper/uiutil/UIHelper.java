@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.util.helper.uiutil;
 
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -33,9 +35,12 @@ public class UIHelper {
     public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
 
         String avatarName = Constants.drawables.AVATAR_IMAGE + resourceId;
-        Glide.with(App.getContext())
-                .load(App.getContext().getResources().getIdentifier(avatarName,
-                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
+
+        Context context = TeleMeshApplication.getContext();
+
+        Glide.with(context)
+                .load(context.getResources().getIdentifier(avatarName,
+                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName()))
                 .into(imageView);
     }
 

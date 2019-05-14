@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
@@ -15,7 +16,6 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.util.helper.MeshLibDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshDataSource extends MeshLibDataSource {
+public class MeshDataSource extends BaseMeshDataSource {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;
@@ -167,6 +167,11 @@ public class MeshDataSource extends MeshLibDataSource {
     @Override
     protected String getOwnUserId() {
         return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+    }
+
+    @Override
+    protected void onRmOff() {
+
     }
 
     /**

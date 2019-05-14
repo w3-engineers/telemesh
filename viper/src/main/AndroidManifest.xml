@@ -3,7 +3,7 @@
     package="com.w3engineers.ext.viper">
 
     <application
-        android:name="com.w3engineers.ext.strom.App"
+        android:name="com.w3engineers.mesh.MeshApp"
         tools:replace="android:name">
 
         <!--Added to replace the value, although dependency library might also use crashlytics. As rightmesh already use that-->
@@ -19,6 +19,11 @@
             android:description="@string/app_local_service_description"
             android:process="@string/base_rm_process_name">
         </service>
+
+        <service android:name=".application.data.local.service.MeshService"
+            android:stopWithTask="false"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

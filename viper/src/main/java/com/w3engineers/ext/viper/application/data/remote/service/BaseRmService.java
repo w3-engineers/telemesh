@@ -17,7 +17,7 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.ext.viper.util.lib.mesh.IMeshCallBack;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
-import com.w3engineers.ext.viper.util.lib.mesh.MeshLibProvider;
+import com.w3engineers.ext.viper.util.lib.mesh.MeshProviderOld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import timber.log.Timber;
 public class BaseRmService extends Service implements IMeshCallBack {
 
     private List<IRmCommunicator> mIRmCommunicators;
-    private MeshLibProvider mMeshProvider;
+    private MeshProviderOld mMeshProvider;
     private boolean mIsServiceToCloseWithTask;
     private boolean mIsTaskCleared;
     private String mBroadcastActionString;
@@ -83,10 +83,10 @@ public class BaseRmService extends Service implements IMeshCallBack {
         Timber.d("Local Remote Service initiating with port number:%d ssid:%s", meshConfig.mPort,
                 meshConfig.mSsid);
 
-        mMeshProvider = MeshLibProvider.getInstance();
+        mMeshProvider = MeshProviderOld.getInstance();
         mMeshProvider.setMeshConfig(meshConfig);
         mMeshProvider.setIMeshCallBack(this);
-        mMeshProvider.start();
+        mMeshProvider.start(getApplicationContext());
     }
 
     @Nullable
@@ -124,7 +124,7 @@ public class BaseRmService extends Service implements IMeshCallBack {
         }
 
         @Override
-        public void setProfile(byte[] profileInfo) throws RemoteException {
+        public void setProfile(byte[] profileInfo, String userId) throws RemoteException {
             if(profileInfo != null) {
                 mMeshProvider.setProfileInfo(profileInfo);
             }
@@ -169,13 +169,6 @@ public class BaseRmService extends Service implements IMeshCallBack {
         @Override
         public void stopRmService() throws RemoteException {
             shutTheService();
-        }
-
-        @Override
-        public void setMyUserId(String userId) throws RemoteException {
-            if(userId != null) {
-                mMeshProvider.setUserId(userId);
-            }
         }
     };
 

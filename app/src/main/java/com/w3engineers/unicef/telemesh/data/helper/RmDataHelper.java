@@ -273,7 +273,7 @@ public class RmDataHelper {
      * Concern for this api stopping RM service from app layer
      */
     public void stopRmService() {
-        rightMeshDataSource.stopMesh();
+//        rightMeshDataSource.stopMesh();
     }
 
     /**

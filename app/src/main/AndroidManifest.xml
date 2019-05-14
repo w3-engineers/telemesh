@@ -42,7 +42,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.w3engineers.unicef.TeleMeshApplication"
+        android:name="com.w3engineers.mesh.MeshApp"
         android:allowBackup="true"
         android:fullBackupContent="@xml/my_backup_rules"
         android:configChanges="locale"

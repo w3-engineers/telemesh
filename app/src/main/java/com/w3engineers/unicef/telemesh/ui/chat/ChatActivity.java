@@ -109,7 +109,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     @NonNull
     @Override
     protected BaseServiceLocator getServiceLocator() {
-        return null;
+        return ServiceLocator.getInstance();
     }
 
     @Override

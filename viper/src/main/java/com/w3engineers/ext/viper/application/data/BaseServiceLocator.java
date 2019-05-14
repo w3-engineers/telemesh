@@ -1,7 +1,7 @@
 package com.w3engineers.ext.viper.application.data;
 
 
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 
 /*
  * ============================================================================
@@ -12,6 +12,6 @@ import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
  */
 public abstract class BaseServiceLocator {
 
-    public abstract BaseRmDataSource getRmDataSource();
+    public abstract BaseMeshDataSource getRmDataSource();
 
 }

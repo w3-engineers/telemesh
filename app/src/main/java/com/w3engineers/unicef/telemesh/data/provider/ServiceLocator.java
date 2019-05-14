@@ -4,7 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -29,7 +29,7 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  * Proprietary and confidential
  * ============================================================================
  */
-public class ServiceLocator {
+public class ServiceLocator extends BaseServiceLocator {
 
     private static ServiceLocator serviceLocator;
 
@@ -92,11 +92,11 @@ public class ServiceLocator {
         return new ChatViewModel(application);
     }
 
-    /*@NonNull
+    @NonNull
     @Override
-    public BaseRmDataSource getRmDataSource() {
+    public BaseMeshDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
-    }*/
+    }
 
     @NonNull
     public MyWalletViewModel getMyWalletViewModel(@NonNull Application application) {

@@ -11,7 +11,7 @@ interface IRmServiceConnection {
 
     void setServiceToCloseWithTask(in boolean isToCloseWithTask);
 
-    void setProfile(in byte[] profileInfo);
+    void setProfile(in byte[] profileInfo, in String userId);
 
     long sendMeshData(in MeshData meshData);
 
@@ -26,6 +26,4 @@ interface IRmServiceConnection {
     void openRmSettings();
 
     void stopRmService();
-
-    void setMyUserId(in String userId);
 }

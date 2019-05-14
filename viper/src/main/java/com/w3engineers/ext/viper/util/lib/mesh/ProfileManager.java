@@ -45,8 +45,7 @@ public class ProfileManager {
         myProfileMeshData.mMeshPeer = meshPeer;
         myProfileMeshData.mType = MY_PROFILE_INFO_TYPE;
 
-        return MeshLibProvider.getInstance().sendProfileInfo(myProfileMeshData);
-
+        return MeshProviderOld.getInstance().sendProfileInfo(myProfileMeshData);
     }
 
     /**

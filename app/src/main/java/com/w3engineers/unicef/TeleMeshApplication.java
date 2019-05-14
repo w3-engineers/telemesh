@@ -28,7 +28,6 @@ public class TeleMeshApplication extends MeshApp {
         if (language.equals("")){
             language = "en";
         }
-        com.w3engineers.mesh.db.SharedPref.on(this);
         LanguageUtil.setAppLanguage(base, language);
     }
 

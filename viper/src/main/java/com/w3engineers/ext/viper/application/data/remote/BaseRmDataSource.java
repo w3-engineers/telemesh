@@ -103,8 +103,7 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
             try {
 
                 mIRmServiceConnection.setRmCommunicator(BaseRmDataSource.this);
-                mIRmServiceConnection.setProfile(mProfileInfo);
-                mIRmServiceConnection.setMyUserId(getOwnUserId());
+                mIRmServiceConnection.setProfile(mProfileInfo, getOwnUserId());
 
                 //Assuming initial connection is from foreground.
                 //Often service remain foreground , it happens because often the caller Activity upon

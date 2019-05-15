@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_25"
             android:layout_marginBottom="@dimen/margin_10"
-            android:text="@{user.userFirstName + ` ` + user.userLastName}"
+            android:text="@{user.userName}"
             android:textColor="@color/black"
             android:typeface='@{user.hasUnreadMessage > 0 ? "bold" : "normal"}'
             android:textSize="@dimen/text_size_18"

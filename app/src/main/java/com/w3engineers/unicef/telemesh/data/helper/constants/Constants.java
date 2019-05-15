@@ -31,7 +31,6 @@ public class Constants {
 
     public interface preferenceKey {
         String USER_NAME = "first_name";
-        String LAST_NAME = "last_name";
         String IMAGE_INDEX = "image_index";
         String MY_USER_ID = "my_user_id";
         String IS_USER_REGISTERED = "user_registered";

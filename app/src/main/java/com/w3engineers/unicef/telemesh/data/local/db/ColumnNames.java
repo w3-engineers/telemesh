@@ -12,8 +12,8 @@ import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNa
 
 public interface ColumnNames extends BaseColumnNames {
     //Users table
-    String COLUMN_USER_FIRST_NAME = "user_first_name";
-    String COLUMN_USER_LAST_NAME = "user_last_name";
+    String COLUMN_USER_NAME = "user_name";
+//    String COLUMN_USER_LAST_NAME = "user_last_name";
     String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";

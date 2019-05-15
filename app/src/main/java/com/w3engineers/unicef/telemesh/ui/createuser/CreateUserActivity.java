@@ -44,8 +44,6 @@ import io.reactivex.schedulers.Schedulers;
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
     private ActivityCreateUserBinding mBinding;
-
-//    private ServiceLocator serviceLocator;
     private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
@@ -84,32 +82,16 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         mViewModel.textEditControl(mBinding.editTextName);
     }
 
-
-        final Flowable<Boolean> combineResult = Flowable.combineLatest(
-                firstNameObservable,
-                lastNameObservable,
-                (aBoolean, aBoolean2) -> aBoolean && aBoolean2
-        );
-
-        getCompositeDisposable().add(combineResult.subscribe(aBoolean -> {
-                    mBinding.buttonSignup.setEnabled(aBoolean);
-                    if (aBoolean) {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.ENABLE_EFFECT);
-                    } else {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.DISABLE_EFFECT);
-                    }
-                }, Throwable::printStackTrace
-        ));
-    }
-
     private void nextButtonControl(String nameText) {
         if (mViewModel.getImageIndex() >= 0 &&
                 !TextUtils.isEmpty(nameText) &&
                 nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
+
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
             mBinding.buttonSignup.setClickable(true);
         } else {
+
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.deep_grey));
             mBinding.buttonSignup.setClickable(false);
@@ -219,11 +201,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void goNext(String myId) {
-        if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
-                mBinding.editTextLastName.getText() + "", myId)) {
-            Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "", myId)) {
+            Intent intent = new Intent(CreateUserActivity.this, SetOrganizationActivity.class);
             startActivity(intent);
-            finish();
         }
     }
 }

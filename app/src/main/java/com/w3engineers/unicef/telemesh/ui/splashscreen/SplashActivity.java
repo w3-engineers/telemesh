@@ -18,8 +18,6 @@ import timber.log.Timber;
 
 public class SplashActivity extends BaseActivity {
 
-    //    private ServiceLocator serviceLocator;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_splash;

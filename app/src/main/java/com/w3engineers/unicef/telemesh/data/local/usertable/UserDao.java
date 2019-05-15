@@ -53,8 +53,7 @@ public abstract class UserDao implements BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
             + ColumnNames.COLUMN_FRIENDS_ID + " ORDER BY IFNULL(" + ColumnNames.COLUMN_MESSAGE_STATUS + ","
             + Constants.MessageStatus.STATUS_READ + ") ASC, " + ColumnNames.COLUMN_USER_IS_ONLINE
-            + " DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_FIRST_NAME + " COLLATE NOCASE ASC, "
-            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_LAST_NAME + " COLLATE NOCASE ASC")
+            + " DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsers();
 
 }

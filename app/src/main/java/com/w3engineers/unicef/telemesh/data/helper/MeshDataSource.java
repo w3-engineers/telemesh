@@ -46,8 +46,7 @@ public class MeshDataSource extends BaseMeshDataSource {
             Context context = TeleMeshApplication.getContext();
 
             RMUserModel rmUserMe = RMUserModel.newBuilder()
-                    .setUserFirstName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.FIRST_NAME))
-                    .setUserLastName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.LAST_NAME))
+                    .setUserName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.USER_NAME))
                     .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
                     .build();
 

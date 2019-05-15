@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
@@ -20,13 +21,15 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 public class RightMeshDataSource extends BaseRmDataSource {
 
     @SuppressLint("StaticFieldLeak")
@@ -65,12 +68,14 @@ public class RightMeshDataSource extends BaseRmDataSource {
         RmDataHelper.getInstance().prepareDataObserver();
     }
 
-    /**
+    */
+/**
      * During send data to peer
      *
      * @param rmDataModel -> A generic data model which contains userData, type and peerId
      * @return return the send message id
-     */
+     *//*
+
     public long DataSend(@NonNull RMDataModel rmDataModel) {
 
         try {
@@ -88,11 +93,13 @@ public class RightMeshDataSource extends BaseRmDataSource {
         return -1;
     }
 
-    /**
+    */
+/**
      * During receive a peer this time onPeer api is execute
      *
      * @param profileInfo -> Got a peer data (profile information and meshId)
-     */
+     *//*
+
     @SuppressLint("TimberArgCount")
     @Override
     protected void onPeer(@NonNull BaseMeshData profileInfo) {
@@ -118,12 +125,14 @@ public class RightMeshDataSource extends BaseRmDataSource {
         }
     }
 
-    /**
+    */
+/**
      * When a peer is gone or switched the another network
      * this time onPeerGone api is executed
      *
      * @param meshPeer - > It contains the peer id which is currently inactive in mesh
-     */
+     *//*
+
     @Override
     protected void onPeerGone(@NonNull MeshPeer meshPeer) {
 
@@ -135,11 +144,13 @@ public class RightMeshDataSource extends BaseRmDataSource {
         }
     }
 
-    /**
+    */
+/**
      * This api execute during we receive data from network
      *
      * @param meshData -> Contains data and peer info also
-     */
+     *//*
+
     @Override
     protected void onData(@NonNull MeshData meshData) {
         RMDataModel rmDataModel = RMDataModel.newBuilder()
@@ -151,11 +162,13 @@ public class RightMeshDataSource extends BaseRmDataSource {
         RmDataHelper.getInstance().dataReceive(rmDataModel, true);
     }
 
-    /**
+    */
+/**
      * The sending data status is success this time we got a success ack using this api
      *
      * @param meshAcknowledgement -> Contains the success data id and user id
-     */
+     *//*
+
     @Override
     protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
 
@@ -172,10 +185,13 @@ public class RightMeshDataSource extends BaseRmDataSource {
         return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
     }
 
-    /**
+    */
+/**
      * For ReInitiating RM service need to reset rightmesh data source instance
-     */
+     *//*
+
     protected void resetInstance() {
         rightMeshDataSource = null;
     }
 }
+*/

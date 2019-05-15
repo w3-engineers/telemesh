@@ -145,7 +145,7 @@
                         android:textSize="@dimen/text_body"
                         app:bet_baseColor="@color/colorPrimary"
                         app:bet_textColor="@color/select_photo_color"
-                        app:bet_underlineColor="@color/grey">
+                        app:bet_underlineColor="@color/deep_grey">
 
                     </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
 

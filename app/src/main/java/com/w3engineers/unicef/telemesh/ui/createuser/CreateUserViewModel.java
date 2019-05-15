@@ -43,15 +43,15 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String firstName, @NonNull String myUserId) {
+    boolean storeData(@Nullable String userName, @NonNull String myUserId) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
-        sharedPref.write(Constants.preferenceKey.USER_NAME, firstName);
+        sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
         sharedPref.write(Constants.preferenceKey.MY_USER_ID, myUserId);
-        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
+
         return true;
     }
 

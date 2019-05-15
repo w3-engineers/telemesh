@@ -116,8 +116,7 @@ public class SetOrganizationActivity extends BaseActivity implements View.OnClic
     private void goNext(String companyName, String companyId) {
         if (mViewModel.storeData(companyName, companyId)) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }

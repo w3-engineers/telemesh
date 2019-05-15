@@ -3,10 +3,9 @@ syntax = "proto3";
 package com.w3engineers.unicef.telemesh;
 
 message RMUserModel {
-    string userFirstName = 1;
-    string userLastName = 2;
-    int32 imageIndex = 3;
-    string userId = 4;
+    string userName = 1;
+    int32 imageIndex = 2;
+    string userId = 3;
 }
 
 message RMDataModel {

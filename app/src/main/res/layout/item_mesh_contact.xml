@@ -25,8 +25,12 @@
             android:id="@+id/user_avatar_background"
             android:layout_width="@dimen/width_50"
             android:layout_height="@dimen/height_50"
-            android:layout_margin="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginRight="@dimen/margin_15"
             android:background="@drawable/circle_background"
+            android:alpha="0.1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +38,10 @@
             android:id="@+id/user_avatar"
             android:layout_width="@dimen/width_50"
             android:layout_height="@dimen/height_50"
-            android:layout_margin="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginRight="@dimen/margin_15"
             android:padding="@dimen/padding_5"
             android:src="@{contactViewModel.getUserAvatarByIndex(user.avatarIndex)}"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -42,10 +49,9 @@
 
         <ImageView
             android:id="@+id/user_mesh_status"
-            android:layout_width="@dimen/width_40"
-            android:layout_height="@dimen/height_40"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:src="@{user.isOnline ? @drawable/drawable_in_renge : @drawable/drawable_out_renge}"
+            android:layout_width="@dimen/width_10"
+            android:layout_height="@dimen/height_10"
+            android:layout_marginEnd="@dimen/margin_15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:contentDescription="@string/image"
@@ -64,6 +70,7 @@
             app:layout_constraintLeft_toRightOf="@id/user_avatar"
             app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
             android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_10"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -79,9 +86,9 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_15"
             android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_15"
             android:background="@color/grey_300"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

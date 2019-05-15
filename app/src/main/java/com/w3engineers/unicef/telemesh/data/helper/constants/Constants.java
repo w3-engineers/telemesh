@@ -2,6 +2,8 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 
 public class Constants {
 
+    public static boolean IS_LOADING_ENABLE = false;
+
     //bottom navigation item position
     /*public interface MenuItemPosition {
         int POSITION_FOR_CONTACT = 0;
@@ -70,5 +72,9 @@ public class Constants {
     public interface UserStatus {
         int OFFLINE = 0;
         int ONLINE = 1;
+    }
+
+    public interface AppConstant {
+        long LOADING_TIME = 5 * 1000;
     }
 }

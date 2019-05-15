@@ -75,6 +75,9 @@
     <string name="organization">Company/Organization</string>
     <string name="id">ID</string>
     <string name="skip">Skip</string>
+    <string name="this_may_take_while">This may take a while…</string>
+    <string name="discovering_users">Discovering Users</string>
+    <string name="searching">Searching…</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

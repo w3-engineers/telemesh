@@ -50,6 +50,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
+        Constants.IS_LOADING_ENABLE = false;
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         initBottomBar();

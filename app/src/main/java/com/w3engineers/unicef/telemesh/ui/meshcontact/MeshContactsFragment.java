@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +13,15 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
@@ -43,14 +48,13 @@ import timber.log.Timber;
 public class MeshContactsFragment extends BaseFragment {
 
     private FragmentMeshcontactBinding fragmentMeshcontactBinding;
-//    private ServiceLocator serviceLocator;
     @Nullable
     public MeshContactViewModel meshContactViewModel;
     @Nullable
     public List<UserEntity> userEntityList;
     @Nullable
     public MenuItem mSearchItem;
-//    private List<UserEntity> prevUserList = null;
+    private String title;
 
     @Override
     protected int getLayoutId() {
@@ -63,6 +67,8 @@ public class MeshContactsFragment extends BaseFragment {
                 getViewDataBinding();
 
         setHasOptionsMenu(true);
+        controlEmptyLayout();
+        setTitle(title);
 
         init();
 
@@ -80,18 +86,17 @@ public class MeshContactsFragment extends BaseFragment {
                     userEntityList = userEntities;
                 }
                 if (mSearchItem != null)
-                    mSearchItem.setVisible(userEntities != null && userEntities.size() > 0);
+                    searchViewControl(userEntities);
             });
 
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
                 if (userEntities != null) {
+
                     getAdapter().clear();
                     getAdapter().addItem(userEntities);
                 }
             });
         }
-
-
     }
 
     private void openUserMessage() {
@@ -123,8 +128,17 @@ public class MeshContactsFragment extends BaseFragment {
 
     private DisposableObserver<String> searchContacts() {
         return new DisposableObserver<String>() {
+
+            boolean isSearchStart = false;
+
             @Override
             public void onNext(String string) {
+
+                if (!isSearchStart) {
+                    searchLoading();
+                    isSearchStart = true;
+                }
+
                 if (meshContactViewModel != null) {
                     Timber.d("Search query: %s", string);
                     meshContactViewModel.startSearch(string, userEntityList);
@@ -138,7 +152,7 @@ public class MeshContactsFragment extends BaseFragment {
 
             @Override
             public void onComplete() {
-
+                Timber.e("onError: Complete");
             }
         };
     }
@@ -152,7 +166,7 @@ public class MeshContactsFragment extends BaseFragment {
 
         mSearchItem = menu.findItem(R.id.action_search);
         // Resolve search option visibility problem when contact is appeared from starting point
-        mSearchItem.setVisible(userEntityList != null && userEntityList.size() > 0);
+            searchViewControl(userEntityList);
 
             SearchView mSearchView = (SearchView) mSearchItem.getActionView();
             mSearchView.setQueryHint(getString(R.string.search));
@@ -174,6 +188,55 @@ public class MeshContactsFragment extends BaseFragment {
             initSearchView(mSearchView);
         }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void searchViewControl(List<UserEntity> userEntities) {
+        boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
+        mSearchItem.setVisible(isSearchVisible);
+
+        if (isSearchVisible) {
+            setTitle(getResources().getString(R.string.title_contacts_fragment));
+        }
+    }
+
+    private void controlEmptyLayout() {
+        if (!Constants.IS_LOADING_ENABLE) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            enableLoading();
+            title = getResources().getString(R.string.discovering_users);
+
+            Runnable runnable = () -> {
+                enableEmpty();
+                setTitle(getResources().getString(R.string.title_contacts_fragment));
+            };
+
+            Constants.IS_LOADING_ENABLE = true;
+            handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
+        } else {
+            enableEmpty();
+            title = getResources().getString(R.string.title_contacts_fragment);
+        }
+    }
+
+    private void enableLoading() {
+        fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
+        fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
+        fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void enableEmpty() {
+        fragmentMeshcontactBinding.notFoundView.setVisibility(View.VISIBLE);
+        fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+    }
+
+    private void searchLoading() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
+                fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
+                fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+            });
+        }
     }
 
     // General API's and initialization area

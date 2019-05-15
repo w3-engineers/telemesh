@@ -2,14 +2,13 @@
     <string name="app_name">TeleMesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <!--<string name="enter_your_name">Enter your name</string>-->
-    <string name="enter_first_name">Enter first name</string>
-    <string name="enter_last_name">Enter last name</string>
+    <string name="enter_first_name">Type Your Name</string>
     <string name="signup">SignUp</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
-    <string name="select_avatar">Please select an avatar</string>
+    <string name="select_avatar">Select an avatar</string>
     <!--<string name="select_avater_text">Select an avater</string>-->
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">পরিচিতি</string>
@@ -71,6 +70,11 @@
 
     <string name="buy_data_success">Buy data Successfully done!</string>
     <string name="sell_data_success">Sell data Successfully done!</string>
+
+    <string name="next">Next</string>
+    <string name="organization">Company/Organization</string>
+    <string name="id">ID</string>
+    <string name="skip">Skip</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

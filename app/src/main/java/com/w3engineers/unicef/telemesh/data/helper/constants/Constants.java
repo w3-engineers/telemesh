@@ -20,6 +20,7 @@ public class Constants {
         int DELAY_INTERVAL = 3000;
         int DOUBLE_PRESS_INTERVAL = 2000;
         int MINIMUM_TEXT_LIMIT = 2;
+        int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
     }
 
@@ -29,7 +30,7 @@ public class Constants {
     }
 
     public interface preferenceKey {
-        String FIRST_NAME = "first_name";
+        String USER_NAME = "first_name";
         String LAST_NAME = "last_name";
         String IMAGE_INDEX = "image_index";
         String MY_USER_ID = "my_user_id";
@@ -37,6 +38,8 @@ public class Constants {
         String IS_NOTIFICATION_ENABLED = "notification_enable";
         String APP_LANGUAGE = "app_language";
         String APP_LANGUAGE_DISPLAY = "app_language_display";
+        String COMPANY_NAME = "company_name";
+        String COMPANY_ID = "company_id";
     }
 
     public interface drawables {

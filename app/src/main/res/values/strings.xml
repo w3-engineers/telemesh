@@ -2,15 +2,14 @@
     <string name="app_name">TeleMesh</string>
     <string name="activity_view_profile">View Profile</string>
     <!--<string name="enter_your_name">Enter your name</string>-->
-    <string name="enter_first_name">First name</string>
-    <string name="enter_last_name">Last name</string>
+    <string name="enter_first_name">Type Your Name</string>
     <!--<string name="select_avater_text">Select an avatar</string>-->
     <string name="signup">Sign Up</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
-    <string name="select_avatar">Please select an avatar</string>
+    <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">Contacts</string>
     <string name="title_message_feed_fragment">Message Feed</string>
@@ -70,6 +69,11 @@
     <string name="wallet_id">wallet Id:</string>
     <string name="buy_data_success">Buy data Successfully done!</string>
     <string name="sell_data_success">Sell data Successfully done!</string>
+
+    <string name="next">Next</string>
+    <string name="organization">Company/Organization</string>
+    <string name="id">ID</string>
+    <string name="skip">Skip</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

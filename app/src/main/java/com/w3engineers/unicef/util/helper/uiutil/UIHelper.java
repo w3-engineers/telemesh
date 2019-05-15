@@ -1,10 +1,14 @@
 package com.w3engineers.unicef.util.helper.uiutil;
 
+import android.app.Activity;
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -117,5 +121,8 @@ public class UIHelper {
         return null;
     }
 
-
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

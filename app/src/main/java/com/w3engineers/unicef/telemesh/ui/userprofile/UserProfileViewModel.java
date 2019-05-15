@@ -21,7 +21,7 @@ public class UserProfileViewModel extends AndroidViewModel {
 
 //    public String getUserName() {
 //        return SharedPref.getSharedPref(getApplication().getApplicationContext())
-//                .read(Constants.preferenceKey.FIRST_NAME) + " " +
+//                .read(Constants.preferenceKey.USER_NAME) + " " +
 //                SharedPref.getSharedPref(getApplication().getApplicationContext())
 //                        .read(Constants.preferenceKey.LAST_NAME);
 //    }

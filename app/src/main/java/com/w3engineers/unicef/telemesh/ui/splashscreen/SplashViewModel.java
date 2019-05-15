@@ -3,11 +3,14 @@ package com.w3engineers.unicef.telemesh.ui.splashscreen;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 
@@ -36,6 +39,11 @@ public class SplashViewModel extends AndroidViewModel {
         handler.postDelayed(() -> isUserRegistered.postValue(SharedPref.getSharedPref(getApplication()
                 .getApplicationContext()).readBoolean(Constants.preferenceKey.IS_USER_REGISTERED)),
                 Constants.DefaultValue.DELAY_INTERVAL);
+    }
 
+    @NonNull
+    public String getAppVersion() {
+        Context context = getApplication().getApplicationContext();
+        return context.getString(R.string.app_name) + " " + context.getString(R.string.app_version) + BuildConfig.VERSION_NAME;
     }
 }

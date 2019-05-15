@@ -168,7 +168,7 @@ public class UserEntity extends DbBaseEntity {
         Context context = TeleMeshApplication.getContext();
         SharedPref sharedPref = SharedPref.getSharedPref(context);
         return RMUserModel.newBuilder()
-                .setUserFirstName(sharedPref.read(Constants.preferenceKey.FIRST_NAME))
+                .setUserFirstName(sharedPref.read(Constants.preferenceKey.USER_NAME))
                 .setUserLastName(sharedPref.read(Constants.preferenceKey.LAST_NAME))
                 .setImageIndex(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .build().toByteArray();

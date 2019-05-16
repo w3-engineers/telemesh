@@ -50,7 +50,7 @@
     <string name="settings_share_app">Share App</string>
     <!--<string name="settings_about_us">About Us</string>-->
     <string name="settings_privacy_policy">Privacy Policy</string>
-    <string name="settings_open_wallet">My wallet</string>
+    <string name="settings_open_wallet">My Wallet</string>
 
     <string name="choose_language">Choose a Language</string>
     <string name="ok">OK</string>
@@ -83,6 +83,12 @@
 
     <string name="profile">Profile</string>
     <string name="company_org">Company/Organization: %s</string>
+    <string name="account_balance">Account Balance</string>
+    <string name="eth">ETH</string>
+    <string name="my_wallet_address">My Wallet address</string>
+    <string name="total_earned">Total Earned: %s RMESH </string>
+    <string name="total_spent">Total Spent: %s RMESH </string>
+    <string name="copy_address">Copy Address</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

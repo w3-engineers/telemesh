@@ -56,7 +56,6 @@
     <string name="settings_open_wallet">My wallet</string>
     <string name="settings_item_image">Settings icon image</string>
     <string name="image">Image</string>
-    <string name="rmesh">RMESH</string>
 
     <string name="current_balance" tools:ignore="ExtraTranslation">Current Balance</string>
     <string name="spent_balance">Spent Balance</string>
@@ -83,6 +82,13 @@
 
     <string name="profile">Profile</string>
     <string name="company_org">Company/Organization: %s</string>
+    <string name="account_balance">Account Balance</string>
+    <string name="eth">ETH</string>
+    <string name="rmesh">RMESH</string>
+    <string name="my_wallet_address">My Wallet address</string>
+    <string name="total_earned">Total Earned: %s RMESH </string>
+    <string name="total_spent">Total Spent: %s RMESH </string>
+    <string name="copy_address">Copy Address</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

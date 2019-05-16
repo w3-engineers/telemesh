@@ -12,11 +12,11 @@
         android:icon="@drawable/message_selector"
         android:title=""
         app:showAsAction="ifRoom" />
-    <item
+    <!--<item
         android:id="@+id/action_survey"
         android:icon="@drawable/survey_selector"
         android:title=""
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/action_setting"
         android:icon="@drawable/setting_selector"

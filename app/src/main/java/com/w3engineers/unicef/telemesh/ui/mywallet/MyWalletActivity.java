@@ -1,18 +1,23 @@
 package com.w3engineers.unicef.telemesh.ui.mywallet;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.ActivityMyWalletBinding;
-import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataActivity;
+import com.w3engineers.unicef.telemesh.databinding.ActivityMyDataWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
 
 
@@ -25,17 +30,16 @@ import com.w3engineers.unicef.telemesh.ui.selldata.SellDataActivity;
  */
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener{
 
-    private ActivityMyWalletBinding mBinding;
-
+    private ActivityMyDataWalletBinding mBinding;
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_my_wallet;
+    protected int statusBarColor() {
+        return R.color.colorPrimaryDark;
     }
 
     @Override
-    protected int getToolbarId() {
-        return R.id.toolbar;
+    protected int getLayoutId() {
+        return R.layout.activity_my_data_wallet;
     }
 
     @Override
@@ -47,32 +51,41 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
 
         MyWalletViewModel viewModel = getViewModel();
-        mBinding = (ActivityMyWalletBinding) getViewDataBinding();
-        mBinding.buttonSell.setOnClickListener(this);
-        mBinding.buttonBuy.setOnClickListener(this);
+        mBinding = (ActivityMyDataWalletBinding) getViewDataBinding();
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String  currentBalance = SharedPref.getSharedPref(this).readInt("cr_token") + " RMESH";
-        mBinding.currentBalance.setText(currentBalance);
+        setClickListener(mBinding.walletAddress, mBinding.opBack);
     }
 
     @Override
     public void onClick(@NonNull View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.button_buy:
-                startActivity(new Intent(MyWalletActivity.this, BuyDataActivity.class));
-                 break;
-            case R.id.button_sell:
-                startActivity(new Intent(MyWalletActivity.this, SellDataActivity.class));
-
+            case R.id.op_back:
+                finish();
+                break;
+            case R.id.wallet_address:
+                showDialog();
                 break;
         }
         super.onClick(view);
+    }
+
+    public void showDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_wallet_address);
+
+        String myAddress = SharedPref.getSharedPref(this).read(Constants.preferenceKey.MY_USER_ID);
+
+        TextView walletId = dialog.findViewById(R.id.my_id);
+        ImageView imageView = dialog.findViewById(R.id.image_view_qr_code);
+
+        walletId.setText(myAddress);
+
+
+        Button copy = dialog.findViewById(R.id.copy_address);
+        copy.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private MyWalletViewModel getViewModel() {

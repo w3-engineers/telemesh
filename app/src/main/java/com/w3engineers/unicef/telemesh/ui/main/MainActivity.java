@@ -138,12 +138,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                         , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
                 break;
-            case R.id.action_survey:
-                toolbarTitle = getString(R.string.title_survey_fragment);
-              /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
-                        , Constants.MenuItemPosition.POSITION_FOR_SURVEY);*/
-                mFragment = new SurveyFragment();
-                break;
             case R.id.action_setting:
                 toolbarTitle = getString(R.string.title_settings_fragment);
                 mFragment = new SettingsFragment();

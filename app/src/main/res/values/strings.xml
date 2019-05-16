@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">TeleMesh</string>
-    <string name="activity_view_profile">View Profile</string>
+    <string name="activity_view_profile">My Profile</string>
     <!--<string name="enter_your_name">Enter your name</string>-->
     <string name="enter_first_name">Type Your Name</string>
     <!--<string name="select_avater_text">Select an avatar</string>-->
@@ -26,11 +26,11 @@
 
 
     <string name="demo_language">English</string>
-    <string name="activity_about_us">About Us</string>
+    <string name="activity_about_us">About Telemesh</string>
     <string name="app_version">Version:</string>
 
-    <string name="no_contact_available">No Contact Available</string>
-    <string name="no_message_available">No Message Available</string>
+    <string name="no_contact_available">There are no Telemesh users nearby.</string>
+    <string name="no_message_available">No broadcasting message available</string>
     <string name="no_survey_available">No Survey Available</string>
 
     <string name="search">Search</string>
@@ -46,7 +46,7 @@
     // Settings title
     <!--<string name="settings_view_profile">View Profile</string>-->
     <string name="settings_notification_sound">Notifications Sound</string>
-    <string name="settings_choose_language">Choose Language</string>
+    <string name="settings_choose_language">Language</string>
     <string name="settings_share_app">Share App</string>
     <!--<string name="settings_about_us">About Us</string>-->
     <string name="settings_privacy_policy">Privacy Policy</string>
@@ -78,6 +78,8 @@
     <string name="this_may_take_while">This may take a while…</string>
     <string name="discovering_users">Discovering Users</string>
     <string name="searching">Searching…</string>
+    <string name="data_plan">My Data Plan</string>
+    <string name="no_chat_available">Type your first message\nlet the story begin</string>
 
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->

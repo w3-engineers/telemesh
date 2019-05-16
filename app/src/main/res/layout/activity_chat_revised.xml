@@ -102,6 +102,46 @@
             app:layout_constraintTop_toBottomOf="@+id/shadow_view"
             app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"/>
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/empty_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/chat_rv"
+            app:layout_constraintBottom_toBottomOf="@+id/chat_rv"
+            app:layout_constraintLeft_toLeftOf="@+id/chat_rv"
+            app:layout_constraintRight_toRightOf="@+id/chat_rv"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/empty_image_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginRight="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_10"
+                android:contentDescription="@string/no_message_available"
+                android:src="@mipmap/ic_no_chat"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"
+                android:text="@string/no_chat_available"
+                android:textSize="@dimen/text_size_18"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
         <!-- android:visibility="@{model.messageViewVisible}"-->
         <!-- <android.support.v7.widget.RecyclerView
              android:id="@+id/chat_rv"

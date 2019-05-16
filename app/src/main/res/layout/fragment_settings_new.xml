@@ -25,136 +25,143 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layout_view_profile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/image_view_profile"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/settings_item_image"
-                    android:src="@mipmap/ic_user_cyan"
+                    style="@style/image_style_settings_page"
+                    android:src="@mipmap/ic_profile"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/title_view_profile"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
+                    style="@style/text_style_settings_page"
                     android:text="@string/activity_view_profile"
-                    android:textSize="@dimen/text_size_18"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_profile"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_profile" />
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_notification_sound"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:id="@+id/layout_open_wallet"
+                style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_view_profile">
 
                 <ImageView
-                    android:id="@+id/image_view_notification"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/image"
-                    android:src="@mipmap/ic_bell_cyan"
+                    android:id="@+id/image_view_wallet"
+                    style="@style/image_style_settings_page"
+                    android:src="@mipmap/ic_wallet"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/title_view_notification"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="@string/settings_notification_sound"
-                    android:textSize="@dimen/text_size_18"
+                    android:id="@+id/title_view_wallet"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/settings_open_wallet"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/image_view_notification"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/notification_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="@{settingsVM.getCheckedStatus()}"
-                    android:onCheckedChanged="@{(switch, checked) -> settingsVM.onCheckedChanged(checked)}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_wallet"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
-                    android:id="@+id/separator_view1"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_notification" />
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
-                <!--<include
-                    layout="@layout/item_settings_notification"
-                    app:isShowSeparator="@{true}"
-                    app:itemName="@{@string/settings_notification_sound}"
-                    app:rawImage="@{R.mipmap.ic_bell_cyan}"
-                    app:settingsVM="@{settingsVM}"/>-->
+            </android.support.constraint.ConstraintLayout>
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_data_plan"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_open_wallet">
+
+                <ImageView
+                    android:id="@+id/image_view_data_plan"
+                    style="@style/image_style_settings_page"
+                    android:src="@mipmap/ic_dataplan"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_data_plan"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/data_plan"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_data_plan"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_share_app"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_data_plan">
+
+                <ImageView
+                    android:id="@+id/image_view_share"
+                    style="@style/image_style_settings_page"
+                    android:src="@mipmap/ic_share"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_share"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/settings_share_app"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_share"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layout_choose_language"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_notification_sound">
+                app:layout_constraintTop_toBottomOf="@id/layout_share_app">
 
                 <ImageView
                     android:id="@+id/image_view_language"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:src="@mipmap/ic_globe_cyan"
-                    android:contentDescription="@string/image"
+                    style="@style/image_style_settings_page"
+                    android:src="@mipmap/ic_language"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/title_view_language"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
+                    style="@style/text_style_settings_page"
                     android:text="@string/settings_choose_language"
-                    android:textSize="@dimen/text_size_18"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_language"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -171,11 +178,9 @@
 
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_language" />
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
                 <!--<include
                     layout="@layout/item_settings_language"
@@ -187,110 +192,15 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_share_app"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:id="@+id/layout_about_us"
+                style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_choose_language">
 
                 <ImageView
-                    android:id="@+id/image_view_share"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/settings_item_image"
-                    android:src="@mipmap/ic_share_cyan"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/title_view_share"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="@string/settings_share_app"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/image_view_share"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_share" />
-
-                <!--<include
-                    layout="@layout/item_settings_default"
-                    app:isShowSeparator="@{true}"
-                    app:itemName="@{@string/settings_share_app}"
-                    app:rawImage="@{R.mipmap.ic_share_cyan}" />-->
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_open_wallet"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_share_app">
-
-                <ImageView
-                    android:id="@+id/image_view_wallet"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/settings_item_image"
-                    android:src="@mipmap/ic_wallet"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/title_view_wallet"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="@string/settings_open_wallet"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/image_view_wallet"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_wallet" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_about_us"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_open_wallet">
-
-                <ImageView
                     android:id="@+id/image_view_about"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/settings_item_image"
+                    style="@style/image_style_settings_page"
                     android:src="@mipmap/ic_about_cyan"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -298,60 +208,20 @@
 
                 <TextView
                     android:id="@+id/title_view_about"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
+                    style="@style/text_style_settings_page"
                     android:text="@string/activity_about_us"
-                    android:textSize="@dimen/text_size_18"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_about"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:background="@color/grey_300"
-                    app:layout_constraintTop_toBottomOf="@id/image_view_about" />
+                    style="@style/divider_style_settings_page"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/layout_privacy_policy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_about_us">
-
-                <ImageView
-                    android:id="@+id/image_view_privacy"
-                    android:layout_width="@dimen/width_50"
-                    android:layout_height="@dimen/height_50"
-                    android:contentDescription="@string/settings_item_image"
-                    android:src="@mipmap/ic_policy_cyan"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/title_view_privacy"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="@string/settings_privacy_policy"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/image_view_privacy"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 

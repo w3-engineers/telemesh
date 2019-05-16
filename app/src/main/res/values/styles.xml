@@ -67,22 +67,21 @@
         <item name="android:layout_marginTop">@dimen/margin_30</item>
     </style>
 
-    <!--<style name="image_style_settings_page">
-        <item name="android:layout_width">@dimen/width_50</item>
-        <item name="android:layout_height">@dimen/height_50</item>
-        <item name="android:layout_marginTop">@dimen/margin_20</item>
-        <item name="android:layout_marginBottom">@dimen/margin_20</item>
-        <item name="android:layout_marginLeft">@dimen/margin_2</item>
-    </style>-->
+    <style name="image_style_settings_page">
+        <item name="android:layout_width">@dimen/width_40</item>
+        <item name="android:layout_height">@dimen/height_40</item>
+        <item name="android:layout_marginTop">@dimen/margin_15</item>
+        <item name="android:layout_marginBottom">@dimen/margin_15</item>
+        <!--<item name="android:layout_marginLeft">@dimen/margin_2</item>-->
+    </style>
 
-    <!--<style name="text_style_settings_page">
+    <style name="text_style_settings_page">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">@dimen/margin_15</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
-        <item name="android:textColor">@color/font_color</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-    </style>-->
+    </style>
 
     <style name="shadow_style_settings_page">
         <item name="android:layout_width">match_parent</item>
@@ -91,6 +90,20 @@
         <item name="android:layout_marginLeft">@dimen/margin_10</item>
         <item name="android:layout_marginTop">@dimen/margin_20</item>
         <item name="android:background">@drawable/shadow</item>
+    </style>
+
+    <style name="full_content_style_settings_page">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/margin_15</item>
+        <item name="android:layout_marginRight">@dimen/margin_15</item>
+    </style>
+
+    <style name="divider_style_settings_page">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_10</item>
+        <item name="android:background">@color/grey_300</item>
     </style>
 
     <style name="check_box">

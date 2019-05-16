@@ -206,8 +206,10 @@ public class MeshContactsFragment extends BaseFragment {
             title = getResources().getString(R.string.discovering_users);
 
             Runnable runnable = () -> {
-                enableEmpty();
-                setTitle(getResources().getString(R.string.title_contacts_fragment));
+                if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
+                    enableEmpty();
+                    setTitle(getResources().getString(R.string.title_contacts_fragment));
+                }
             };
 
             Constants.IS_LOADING_ENABLE = true;

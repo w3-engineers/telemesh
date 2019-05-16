@@ -91,7 +91,7 @@
                     android:layout_marginTop="@dimen/margin_30"
                     android:layout_marginRight="@dimen/margin_20"
                     android:contentDescription="@string/no_contact_available"
-                    android:src="@mipmap/img_contact_empty"
+                    android:src="@mipmap/ic_no_contact"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

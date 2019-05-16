@@ -182,8 +182,9 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             }
 
             if (mUserEntity.meshId != null) {
-                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities ->
-                        mChatViewModel.prepareDateSpecificChat(chatEntities));
+                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
+                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+                });
             }
 
         }

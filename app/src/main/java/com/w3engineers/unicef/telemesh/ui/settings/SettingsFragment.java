@@ -55,7 +55,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutChooseLanguage.setOnClickListener(this);
         mBinding.layoutShareApp.setOnClickListener(this);
         mBinding.layoutAboutUs.setOnClickListener(this);
-        mBinding.layoutPrivacyPolicy.setOnClickListener(this);
+        mBinding.layoutDataPlan.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
 
         // Add sample mesh token 10000
@@ -100,7 +100,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 // Show about us
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
-            case R.id.layout_privacy_policy:
+            case R.id.layout_data_plan:
                 // Show privacy policy
                 break;
 

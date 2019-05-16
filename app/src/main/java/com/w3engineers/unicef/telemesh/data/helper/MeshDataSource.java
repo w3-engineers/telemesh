@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.App;
@@ -15,6 +16,8 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
+import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
+import com.w3engineers.unicef.telemesh.data.broadcast.MessageBroadcastTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;
+    private BroadcastManager broadcastManager;
 
     private List<String> userIds;
 
@@ -178,5 +182,39 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     protected void resetInstance() {
         rightMeshDataSource = null;
+    }
+
+
+    public int broadcastMessage(byte[] rawData,  List<BaseMeshData> livePeers){
+
+        broadcastManager = BroadcastManager.getInstance();
+
+        int size = livePeers.size();
+
+
+        for(int i=0; i< size; i++){
+
+            Log.e("Live Peers", "size:"+ size + " PeerId: "+livePeers.get(i).mMeshPeer.getPeerId());
+
+            if(livePeers.get(i).mMeshPeer.getPeerId()!= null){
+
+                MeshData meshData = new MeshData();
+                // Since message feed will be broadcasted so here the type will be feed
+                meshData.mType = Constants.DataType.MESSAGE_FEED;
+                meshData.mData = rawData;
+                meshData.mMeshPeer = livePeers.get(i).mMeshPeer;
+
+
+                MessageBroadcastTask messageBroadcastTask = new MessageBroadcastTask();
+                messageBroadcastTask.setMeshData(meshData);
+                messageBroadcastTask.setBaseRmDataSource(this);
+                messageBroadcastTask.setCustomThreadPoolManager(broadcastManager);
+
+                broadcastManager.addBroadCastMessage(messageBroadcastTask);
+            }
+
+        }
+
+        return -1;
     }
 }

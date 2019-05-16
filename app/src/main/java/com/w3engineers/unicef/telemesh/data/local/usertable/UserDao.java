@@ -56,4 +56,8 @@ public abstract class UserDao implements BaseDao<UserEntity> {
             + " DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsers();
 
+
+    @Query("SELECT * FROM "+ TableNames.USERS + " WHERE "+ ColumnNames.COLUMN_USER_IS_ONLINE + " = " +Constants.UserStatus.ONLINE )
+    public abstract List<UserEntity> getLivePeers();
+
 }

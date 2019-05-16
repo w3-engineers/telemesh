@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.protobuf.ByteString;
+import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallback;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -19,7 +21,11 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -45,6 +51,8 @@ public class RmDataHelper {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private FeedCallback feedCallback;
+
     private RmDataHelper() {
         rmUserMap = new HashMap<>();
     }
@@ -55,10 +63,12 @@ public class RmDataHelper {
     }
 
     @NonNull
-    public MeshDataSource initRM(@NonNull DataSource dataSource) {
+    public MeshDataSource initRM(@NonNull DataSource dataSource, FeedCallback fCall) {
 
         this.dataSource = dataSource;
         rightMeshDataSource = MeshDataSource.getRmDataSource();
+        feedCallback = fCall;
+
         return rightMeshDataSource;
     }
 
@@ -185,8 +195,62 @@ public class RmDataHelper {
 
             case Constants.DataType.MESSAGE_FEED:
                 // TODO include feed data operation module. i.e. DB operation and return a single insertion observer
+
+                String broadcastString = new String(rawData);
+                feedCallback.feedMessage(broadcastString);
+
+                break;
+
+            case Constants.DataType.BROADCAST_MESSAGE:
+                // This message is received from SP and it should be broadcast
+                broadcastString = new String(rawData);
+                //feedCallback.feedMessage(broadcastString);
+                // TODO we have to update the message type before broadcast, others state will be same
+
+                List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
+                List<BaseMeshData> meshDataList = new ArrayList<>();
+                for (int i=0; i<livePeers.size(); i++){
+
+                    MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
+
+                    BaseMeshData baseMeshData = new BaseMeshData();
+                    baseMeshData.mMeshPeer = meshPeer;
+
+                    meshDataList.add(baseMeshData);
+                }
+
+                broadcastMessage(rawData);
+
                 break;
         }
+    }
+
+
+    public void broadcastMessage (byte[] rawData){
+
+
+        List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
+        List<BaseMeshData> meshDataList = new ArrayList<>();
+
+        for (int i=0; i<livePeers.size(); i++){
+
+            MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
+
+            BaseMeshData baseMeshData = new BaseMeshData();
+            baseMeshData.mMeshPeer = meshPeer;
+
+            meshDataList.add(baseMeshData);
+        }
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                rightMeshDataSource.broadcastMessage(rawData, meshDataList);
+            }
+        });
+
+
     }
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {

@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.pager;
+package com.w3engineers.unicef.telemesh.data.pager;
 
 import android.content.Context;
 import android.graphics.PointF;

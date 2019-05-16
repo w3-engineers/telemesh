@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="feedEntity"
+            type="com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity" />
+
+        <variable
+            name="messageFeedViewModel"
+            type="com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_5"
+        android:layout_marginRight="@dimen/margin_5"
+        android:fontFamily="@font/poppins_regular"
+        android:onClick="@{() -> messageFeedViewModel.postMessageFeedEntity(feedEntity)}">
+
+        <View
+            android:id="@+id/feed_provider_logo_background"
+            android:layout_width="@dimen/width_70"
+            android:layout_height="@dimen/height_70"
+            android:layout_margin="@dimen/margin_10"
+            android:background="@drawable/circle_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_feed_provider_logo"
+            android:layout_width="@dimen/width_70"
+            android:layout_height="@dimen/height_70"
+            android:layout_margin="@dimen/margin_10"
+            android:padding="@dimen/padding_5"
+            app:imageUrl="@{feedEntity.feedProviderLogo}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholder="@{@drawable/ic_unicef}" />
+
+        <TextView
+            android:id="@+id/tv_feed_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_5"
+            android:text="@{TimeUtil.getOnlyTime(feedEntity.feedTime)}"
+            android:textColor="@{feedEntity.feedReadStatus ? @color/black : @color/grey_40}"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_feed_provider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_5"
+            android:ellipsize="end"
+            android:maxWidth="240dp"
+            android:maxLines="@integer/max_line_1"
+            android:padding="@dimen/padding_5"
+            android:text="@{feedEntity.feedProviderName}"
+            android:textColor="@{feedEntity.feedReadStatus ? @color/black : @color/grey_40}"
+            android:textSize="@dimen/text_size_18"
+            app:layout_constraintLeft_toRightOf="@id/image_view_feed_provider_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="85dp" />
+
+        <TextView
+            android:id="@+id/tv_feed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginTop="0dp"
+            android:ellipsize="end"
+            android:lines="@integer/max_line_1"
+            android:maxWidth="@dimen/width_240"
+            android:maxLines="@integer/max_line_1"
+            android:text="@{feedEntity.feedTitle}"
+            android:textColor="@{feedEntity.feedReadStatus ? @color/black : @color/grey_40}"
+            android:textSize="@dimen/text_size_16"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/image_view_feed_provider_logo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_feed_provider" />
+
+        <TextView
+            android:id="@+id/tv_feed_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:ellipsize="end"
+            android:lines="@integer/max_line_2"
+            android:maxWidth="@dimen/width_240"
+            android:maxLines="@integer/max_line_2"
+            android:text="@{feedEntity.feedDetail}"
+            android:textColor="@{feedEntity.feedReadStatus ? @color/black : @color/grey_40}"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintLeft_toRightOf="@id/image_view_feed_provider_logo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_feed_title" />
+
+        <View
+            android:id="@+id/bottom_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_15"
+            android:background="@color/grey_300"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_feed_provider_logo" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

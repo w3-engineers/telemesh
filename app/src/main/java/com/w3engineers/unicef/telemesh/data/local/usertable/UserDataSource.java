@@ -22,6 +22,10 @@ import android.support.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import io.reactivex.Flowable;
 
 /**
@@ -32,6 +36,8 @@ public class UserDataSource{
 
     private static UserDataSource userDataSource;
     private final UserDao mUserDao;
+
+    public static ExecutorService executorService;
 
 //    private UserDataSource() {
 //        mUserDao = AppDatabase.getInstance().userDao();
@@ -61,6 +67,7 @@ public class UserDataSource{
     public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
             userDataSource = new UserDataSource(userDao);
+            executorService = Executors.newSingleThreadExecutor();
         }
         return userDataSource;
     }
@@ -96,5 +103,17 @@ public class UserDataSource{
 
     public int deleteUser(@NonNull String userId) {
         return mUserDao.deleteUser(userId);
+    }
+
+
+    public List<UserEntity> getLivePeers(){
+
+        try {
+            return executorService.submit(mUserDao::getLivePeers).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

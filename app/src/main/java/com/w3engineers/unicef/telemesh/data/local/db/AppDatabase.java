@@ -9,6 +9,8 @@ import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseMigration;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.survey.SurveyDao;
@@ -29,7 +31,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, SurveyEntity.class},
+        UserEntity.class, MessageEntity.class, SurveyEntity.class, FeedEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 //DB version will be aligned with App version,
@@ -42,6 +44,8 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract MessageDao messageDao();
     @NonNull
     public abstract SurveyDao surveyDao();
+    @NonNull
+    public abstract FeedDao feedDao();
 
     @NonNull
     public static AppDatabase getInstance() {

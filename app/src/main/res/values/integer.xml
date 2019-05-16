@@ -10,4 +10,10 @@
     to mirror resources below API 19-->
     <integer name="locale_mirror_flip">0</integer>
 
+    <integer name="max_line_1">1</integer>
+    <integer name="max_line_2">2</integer>
+    <integer name="max_user_name_limit">20</integer>
+    <integer name="min_user_name_limit">2</integer>
+
+
 </resources>

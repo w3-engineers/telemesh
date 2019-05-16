@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.pager;
+package com.w3engineers.unicef.telemesh.data.pager;
 
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;

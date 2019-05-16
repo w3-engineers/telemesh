@@ -62,6 +62,7 @@ public class Constants {
         byte MESSAGE = 0x2;
         byte SURVEY = 0x3;
         byte MESSAGE_FEED = 0x4;
+        byte BROADCAST_MESSAGE = 0x5;
     }
 
     public interface MessageType {

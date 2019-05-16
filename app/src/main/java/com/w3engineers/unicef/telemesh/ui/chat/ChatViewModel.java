@@ -18,8 +18,8 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
-import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
-import com.w3engineers.unicef.telemesh.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
+import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;

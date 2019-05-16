@@ -66,7 +66,7 @@ public abstract class BaseMeshDataSource {
         }
     };
 
-    protected long sendMeshData(MeshData meshData) {
+    public long sendMeshData(MeshData meshData) {
         try {
             if(iSetInfo != null){
                 return iSetInfo.sendMeshData(meshData);

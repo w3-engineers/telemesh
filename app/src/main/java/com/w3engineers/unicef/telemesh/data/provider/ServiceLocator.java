@@ -7,6 +7,9 @@ import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallBackToUI;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallback;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
 import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataViewModel;
@@ -30,9 +33,10 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  * Proprietary and confidential
  * ============================================================================
  */
-public class ServiceLocator extends BaseServiceLocator {
+public class ServiceLocator extends BaseServiceLocator implements FeedCallback {
 
     private static ServiceLocator serviceLocator;
+    FeedCallBackToUI feedCallBackToUI;
 
     @NonNull
     public static ServiceLocator getInstance() {
@@ -85,7 +89,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     public MessageFeedViewModel getMessageFeedViewModel() {
-        return new MessageFeedViewModel();
+        return new MessageFeedViewModel(FeedDataSource.getInstance());
     }
 
     @NonNull
@@ -101,7 +105,7 @@ public class ServiceLocator extends BaseServiceLocator {
     @NonNull
     @Override
     public BaseMeshDataSource getRmDataSource() {
-        return RmDataHelper.getInstance().initRM(Source.getDbSource());
+        return RmDataHelper.getInstance().initRM(Source.getDbSource(), this);
     }
 
     @NonNull
@@ -129,6 +133,15 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
     public void restartRmService() {
-        RmDataHelper.getInstance().initRM(Source.getDbSource());
+        RmDataHelper.getInstance().initRM(Source.getDbSource(), this);
+    }
+
+    @Override
+    public void feedMessage(String message) {
+        feedCallBackToUI.sendToUi(message);
+    }
+
+    public void setFeedCallBack(FeedCallBackToUI feedCallBackToUI) {
+        this.feedCallBackToUI = feedCallBackToUI;
     }
 }

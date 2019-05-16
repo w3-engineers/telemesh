@@ -81,6 +81,9 @@
     <string name="data_plan">My Data Plan</string>
     <string name="no_chat_available">Type your first message\nlet the story begin</string>
 
+    <string name="profile">Profile</string>
+    <string name="company_org">Company/Organization: %s</string>
+
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->
     <!--<string name="text_or">OR</string>-->

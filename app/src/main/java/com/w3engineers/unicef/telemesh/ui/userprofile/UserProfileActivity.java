@@ -4,12 +4,21 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
+import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
 public class UserProfileActivity extends BaseActivity {
 
@@ -19,13 +28,8 @@ public class UserProfileActivity extends BaseActivity {
     }
 
     @Override
-    protected int getToolbarId() {
-        return R.id.toolbar;
-    }
-
-    @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
     @Override
@@ -39,11 +43,48 @@ public class UserProfileActivity extends BaseActivity {
         UserProfileViewModel userProfileViewModel = getViewModel();
         ActivityUserProfileBinding mBinding = (ActivityUserProfileBinding) getViewDataBinding();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
+        boolean isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
 
-        //mBinding.setUserProfileModel(userProfileViewModel);
-        //mBinding.imageProfile.setImageResource(userProfileViewModel.getProfileImage());
+        setClickListener(mBinding.opBack);
 
+        if (isMyProfile) {
+            SharedPref sharedPref = SharedPref.getSharedPref(this);
+            String companyId = sharedPref.read(Constants.preferenceKey.COMPANY_ID);
+            String companyName = sharedPref.read(Constants.preferenceKey.COMPANY_NAME);
+
+            if (!TextUtils.isEmpty(companyId)) {
+                mBinding.userId.setText(getResources().getString(R.string.id) + ": " + companyId);
+                mBinding.userCompany.setText(getCompanyName(companyName));
+                mBinding.icValid.setVisibility(View.VISIBLE);
+            } else {
+                mBinding.icValid.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private SpannableString getCompanyName(String name) {
+        String companyName = String.format(getResources().getString(R.string.company_org), name);
+
+        SpannableString spannableString = new SpannableString(companyName);
+
+        int startIndex = companyName.length() - name.length();
+
+        spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
+                startIndex, companyName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        int id = view.getId();
+        switch (id) {
+            case R.id.op_back:
+                finish();
+                break;
+        }
     }
 
     private UserProfileViewModel getViewModel() {

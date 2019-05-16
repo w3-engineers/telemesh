@@ -25,6 +25,8 @@ import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 /*
@@ -177,8 +179,10 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             });*/
 
             if (mChatPagedAdapter != null) {
-                mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
-                        mChatPagedAdapter.submitList(chatEntities));
+                mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
+                    controlEmptyView(chatEntities);
+                    mChatPagedAdapter.submitList(chatEntities);
+                });
             }
 
             if (mUserEntity.meshId != null) {
@@ -223,6 +227,18 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
                 break;
         }
 
+    }
+
+    private void controlEmptyView(List<ChatEntity> chatEntities) {
+        if (chatEntities != null && chatEntities.size() > 0) {
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.GONE);
+            }
+        } else {
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

@@ -162,7 +162,6 @@
                         android:layout_marginLeft="@dimen/margin_15"
                         android:layout_marginRight="@dimen/margin_15"
                         android:background="@color/transparent_color"
-                        android:digits="@string/myDigits"
                         android:fontFamily="@font/poppins_regular"
                         android:hint="@string/id"
                         android:imeOptions="actionNext"

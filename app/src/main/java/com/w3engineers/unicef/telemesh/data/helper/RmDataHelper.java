@@ -243,12 +243,7 @@ public class RmDataHelper {
         }
 
         ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                rightMeshDataSource.broadcastMessage(rawData, meshDataList);
-            }
-        });
+        service.execute(() -> rightMeshDataSource.broadcastMessage(rawData, meshDataList));
 
 
     }

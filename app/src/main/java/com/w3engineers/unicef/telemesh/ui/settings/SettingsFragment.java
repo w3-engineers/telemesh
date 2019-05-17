@@ -85,6 +85,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);
                 intent.putExtra(UserEntity.class.getName(), userEntity);
+                intent.putExtra(SettingsFragment.class.getName(), true);
                 startActivity(intent);
                 break;
             case R.id.layout_choose_language:

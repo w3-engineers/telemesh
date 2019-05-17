@@ -29,12 +29,15 @@
             android:paddingTop="@dimen/padding_10"
             android:paddingEnd="@dimen/padding_15"
             android:paddingRight="@dimen/padding_15"
-            android:paddingBottom="@dimen/padding_10"
+            android:paddingBottom="@dimen/padding_8"
             android:text="@{textMessage.message}"
+            android:gravity="center"
             android:textColor="@color/select_photo_text_color"
             android:textSize="@dimen/text_small_body_14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!--android:text="@{textMessage.message}"-->
 
         <ImageView
             android:id="@+id/image_view_delivery_status"

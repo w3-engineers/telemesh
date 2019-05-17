@@ -8,6 +8,7 @@
     <color name="colorAccent">#06AEC6</color>
 
     <color name="colorGradientPrimary">#18BC4E</color>
+    <color name="eth_color">#FFBA00</color>
 
     <color name="tab_disable">#979797</color>
     <color name="out_coming_message_color">#F0F0F0</color>
@@ -28,6 +29,7 @@
     <color name="splash_text_color">#00B883</color>
     <color name="overlay_light_60">#99FFFFFF</color>
     <color name="deep_grey">#707070</color>
+    <color name="dark_blue">#01434F</color>
     <!--<color name="font_color">#3C3C3C</color>-->
 
 </resources>

@@ -77,4 +77,10 @@ public class Constants {
     public interface AppConstant {
         long LOADING_TIME = 5 * 1000;
     }
+
+    public interface BuyerStatus {
+        int DEFAULT = 0;
+        int ACTIVE = 1;
+        int IN_USE = 2;
+    }
 }

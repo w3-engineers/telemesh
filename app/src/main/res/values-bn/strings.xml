@@ -90,6 +90,27 @@
     <string name="total_spent">Total Spent: %s RMESH </string>
     <string name="copy_address">Copy Address</string>
 
+    <string name="mesh_user">Mesh User - (No internet)</string>
+    <string name="data_seller">Data Seller - (Share internet)</string>
+    <string name="data_buyer">Data Buyer - (Use internet)</string>
+
+    <string name="mesh_user_info"><![CDATA[<b>Mesh User</b> is the default settings. You are able to see and communicate with other <b>Telemesh</b> users without any internet.<br/><br/>Use <b>Data Seller</b> to share your internet connection to other <b>Telemesh</b> users.<br/><br/>Use <b>Data Buyer</b> to use internet shared by other <b>Telemesh</b> users.]]></string>
+
+    <string name="share_internet_settings">Share internet settings</string>
+    <string name="data_share_off">Data Share is OFF</string>
+    <string name="data_share_on">Data Share is ON</string>
+    <string name="data_limit">Data Limit</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="limit_to">Limit to</string>
+    <string name="transferred_total"><![CDATA[<b>30MB</b> transferred total <b>100MB</b>]]></string>
+    <string name="date_range">Date Range</string>
+    <string name="fixed_by_the_network">(Fixed by the network)</string>
+    <string name="from">From</string>
+    <string name="to">to</string>
+    <string name="active">Active</string>
+    <string name="in_use">In Use</string>
+    <string name="used_s">Used: %sMB</string>
+
     <!--<string name="text_1">1</string>-->
     <!--<string name="text_2">2</string>-->
     <!--<string name="text_or">OR</string>-->

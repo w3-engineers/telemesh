@@ -29,6 +29,9 @@
     <color name="overlay_light_60">#99FFFFFF</color>
     <color name="deep_grey">#707070</color>
     <color name="dark_blue">#01434F</color>
+
+    <color name="light_yellow">#FFFCED</color>
+    <color name="in_use_color">#F78E00</color>
     <!--<color name="font_color">#3C3C3C</color>-->
 
 </resources>

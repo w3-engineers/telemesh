@@ -24,6 +24,8 @@
             android:id="@+id/image_view_profile"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:padding="@dimen/padding_5"
+            android:background="@drawable/circle_blue"
             app:imageResource="@{itemIndex}"
             android:contentDescription="@string/image"
             app:layout_constraintBottom_toBottomOf="parent"

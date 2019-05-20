@@ -202,8 +202,11 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void goNext(String myId) {
         if (mViewModel.storeData(mBinding.editTextName.getText() + "", myId)) {
-            Intent intent = new Intent(CreateUserActivity.this, SetOrganizationActivity.class);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         }
     }
 }

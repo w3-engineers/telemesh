@@ -33,7 +33,7 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
 

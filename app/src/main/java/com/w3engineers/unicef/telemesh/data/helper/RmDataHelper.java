@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -326,6 +327,16 @@ public class RmDataHelper {
                 rmDataMap.remove(dataSendId);
             }
         }
+    }
+
+    public void stopMeshService() {
+        compositeDisposable.add(updateUserToOffline()
+                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
+    }
+
+    private Single<Integer> updateUserToOffline() {
+        return Single.fromCallable(() ->
+                UserDataSource.getInstance().updateUserToOffline());
     }
 
     /**

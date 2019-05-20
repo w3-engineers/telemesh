@@ -21,6 +21,8 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.telemesh.ui.dataplan.DataPlanActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
@@ -102,7 +104,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                // Show privacy policy
+                startActivity(new Intent(getActivity(), DataPlanActivity.class));
                 break;
 
             case R.id.layout_open_wallet:
@@ -149,7 +151,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                     alertDialog.dismiss();
                     if (getActivity() != null) {
                         getActivity().finish();
-                        startActivity(getActivity().getIntent());
+                        Intent intent = getActivity().getIntent();
+                        intent.putExtra(MainActivity.class.getSimpleName(), true);
+                        startActivity(intent);
                     }
                     break;
                 case R.id.radio_bangla:
@@ -158,7 +162,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                     alertDialog.dismiss();
                     if (getActivity() != null) {
                         getActivity().finish();
-                        startActivity(getActivity().getIntent());
+                        Intent intent = getActivity().getIntent();
+                        intent.putExtra(MainActivity.class.getSimpleName(), true);
+                        startActivity(intent);
                     }
                     break;
             }

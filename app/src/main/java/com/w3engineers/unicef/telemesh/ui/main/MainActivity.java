@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -21,13 +22,13 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
-import com.w3engineers.unicef.telemesh.ui.survey.SurveyFragment;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener, FeedCallBackToUI {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
-//    private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
+    private Menu bottomMenu;
+    public static MainActivity mainActivity;
 
     @Override
     protected int getLayoutId() {
@@ -41,7 +42,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
     @Override
@@ -53,8 +54,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
         Constants.IS_LOADING_ENABLE = false;
+        mainActivity = this;
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+        bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
         mViewModel = getViewModel();
         //when  counting need to add
@@ -82,7 +85,19 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     }
 
     private void initBottomBar() {
-        loadFragment(new MeshContactsFragment(), getString(R.string.title_contacts_fragment));
+
+        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        Fragment mFragment = null;
+        if (fromSettings) {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_setting);
+            menuItem.setChecked(true);
+            mFragment = new SettingsFragment();
+        } else {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_contact);
+            menuItem.setChecked(true);
+            mFragment = new MeshContactsFragment();
+        }
+        loadFragment(mFragment, getString(R.string.title_contacts_fragment));
 
 //        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
 //                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
@@ -184,7 +199,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.userOfflineProcess();
+//        mViewModel.userOfflineProcess();
     }
 
     @NonNull

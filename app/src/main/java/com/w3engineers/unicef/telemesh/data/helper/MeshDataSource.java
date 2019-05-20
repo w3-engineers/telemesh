@@ -174,7 +174,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
     @Override
     protected void onRmOff() {
-
+        RmDataHelper.getInstance().stopMeshService();
     }
 
     /**

@@ -21,6 +21,7 @@ import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.HashMap;
 
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -267,6 +268,16 @@ public class RmDataHelper {
                 rmDataMap.remove(dataSendId);
             }
         }
+    }
+
+    public void stopMeshService() {
+        compositeDisposable.add(updateUserToOffline()
+                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
+    }
+
+    private Single<Integer> updateUserToOffline() {
+        return Single.fromCallable(() ->
+                UserDataSource.getInstance().updateUserToOffline());
     }
 
     /**

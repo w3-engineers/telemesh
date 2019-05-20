@@ -43,6 +43,11 @@ public class SellDataActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
+    protected int statusBarColor() {
+        return R.color.colorPrimaryDark;
+    }
+
+    @Override
     protected void startUI() {
 
         setTitle("Sell Data ");

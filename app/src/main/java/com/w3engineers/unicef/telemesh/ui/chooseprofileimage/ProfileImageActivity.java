@@ -31,7 +31,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
 

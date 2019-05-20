@@ -20,14 +20,13 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
-import com.w3engineers.unicef.telemesh.ui.survey.SurveyFragment;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
-//    private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
     private Menu bottomMenu;
+    public static MainActivity mainActivity;
 
     @Override
     protected int getLayoutId() {
@@ -41,7 +40,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
     @Override
@@ -53,6 +52,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
         Constants.IS_LOADING_ENABLE = false;
+        mainActivity = this;
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         bottomMenu = binding.bottomNavigation.getMenu();
@@ -197,7 +197,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.userOfflineProcess();
+//        mViewModel.userOfflineProcess();
     }
 
     @NonNull

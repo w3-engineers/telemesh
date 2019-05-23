@@ -87,15 +87,48 @@ public class RmDataHelper {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
-            //webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
+            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
         }
+
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             output("Receiving : " + text);
+
+            List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
+            List<BaseMeshData> meshDataList = new ArrayList<>();
+            for (int i=0; i<livePeers.size(); i++){
+
+                MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
+
+                BaseMeshData baseMeshData = new BaseMeshData();
+                baseMeshData.mMeshPeer = meshPeer;
+
+                meshDataList.add(baseMeshData);
+            }
+
+            byte [] rawData = text.getBytes();
+            broadcastMessage(rawData);
         }
+
         @Override
         public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
             output("Receiving bytes : " + bytes.hex());
+
+            List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
+            List<BaseMeshData> meshDataList = new ArrayList<>();
+            for (int i=0; i<livePeers.size(); i++){
+
+                MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
+
+                BaseMeshData baseMeshData = new BaseMeshData();
+                baseMeshData.mMeshPeer = meshPeer;
+
+                meshDataList.add(baseMeshData);
+            }
+
+            String rawText = bytes.hex();
+            byte [] rawData = rawText.getBytes();
+            broadcastMessage(rawData);
         }
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {

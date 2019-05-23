@@ -67,8 +67,10 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     public void onBroadcastButtonClick(){
         Log.e("Button" , "Clicked");
 
-        String message = "Broadcast Test Message";
-        RmDataHelper.getInstance().broadcastMessage(message.getBytes());
+        /*String message = "Broadcast Test Message";
+        RmDataHelper.getInstance().broadcastMessage(message.getBytes());*/
+
+        RmDataHelper.getInstance().requestWsMessage();
     }
 
 }

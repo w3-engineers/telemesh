@@ -30,6 +30,11 @@ import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import timber.log.Timber;
 
 /*
@@ -54,6 +59,8 @@ public class RmDataHelper {
 
     private FeedCallback feedCallback;
 
+    private OkHttpClient client;
+
     private RmDataHelper() {
         rmUserMap = new HashMap<>();
     }
@@ -68,9 +75,48 @@ public class RmDataHelper {
 
         this.dataSource = dataSource;
         rightMeshDataSource = MeshDataSource.getRmDataSource();
+        client = new OkHttpClient();
         feedCallback = fCall;
 
         return rightMeshDataSource;
+    }
+
+
+    private final class EchoWebSocketListener extends WebSocketListener {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
+            //webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !");
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            output("Receiving : " + text);
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
+            output("Receiving bytes : " + bytes.hex());
+        }
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            output("Closing : " + code + " / " + reason);
+        }
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            output("Error : " + t.getMessage());
+        }
+    }
+
+    public void requestWsMessage() {
+        Request request = new Request.Builder().url("ws://telemesh.w3engineers.com/websocket").build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        WebSocket ws = client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+    }
+
+    private void output(final String txt) {
+        feedCallback.feedMessage(txt);
     }
 
     /**

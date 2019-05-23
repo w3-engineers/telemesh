@@ -223,6 +223,12 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     public void sendToUi(String message) {
-        Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Message received:" + message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

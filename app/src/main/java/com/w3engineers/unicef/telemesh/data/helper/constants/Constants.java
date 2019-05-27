@@ -76,7 +76,7 @@ public class Constants {
     }
 
     public interface AppConstant {
-        long LOADING_TIME = 5 * 1000;
+        long LOADING_TIME = 30 * 1000;
     }
 
     public interface BuyerStatus {

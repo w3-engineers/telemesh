@@ -40,7 +40,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "unicef-007";
+    private String NETWORK_PREFIX = "unicefxyz-";
 
     private MeshProvider(Context context) {
         this.context = context;

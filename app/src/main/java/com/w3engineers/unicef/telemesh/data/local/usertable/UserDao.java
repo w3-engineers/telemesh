@@ -16,7 +16,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 @Dao
-public abstract class UserDao implements BaseDao<UserEntity> {
+public abstract class UserDao extends BaseDao<UserEntity> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract long writeUser(@NonNull UserEntity userEntity);

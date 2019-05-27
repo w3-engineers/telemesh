@@ -28,7 +28,7 @@ import io.reactivex.Flowable;
  */
 
 @Dao
-public interface MessageDao extends BaseDao<MessageEntity> {
+public abstract class MessageDao extends BaseDao<MessageEntity> {
 
     /**
      * <h1>Retrieve all messages by user id</h1>
@@ -41,10 +41,10 @@ public interface MessageDao extends BaseDao<MessageEntity> {
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME+" ASC")
-    Flowable<List<MessageEntity>> getAllMessages(@NonNull String friendsId);
+    public abstract Flowable<List<MessageEntity>> getAllMessages(@NonNull String friendsId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long writeMessage(@NonNull MessageEntity messageEntity);
+    public abstract long writeMessage(@NonNull MessageEntity messageEntity);
 
     /*
      * <h1>Provide last row id</h1>
@@ -66,7 +66,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      */
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS + " = :messageStatus WHERE "
             + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId")
-    long updateMessageStatus(@NonNull String messageId, int messageStatus);
+    public abstract long updateMessageStatus(@NonNull String messageId, int messageStatus);
 
     /**
      * <h>Get specific message by id</h1>
@@ -76,7 +76,7 @@ public interface MessageDao extends BaseDao<MessageEntity> {
      */
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
-    ChatEntity getMessageById(@NonNull String messageId);
+    public abstract ChatEntity getMessageById(@NonNull String messageId);
 
     /**
      * Mark all message as read
@@ -87,15 +87,15 @@ public interface MessageDao extends BaseDao<MessageEntity> {
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
             " = " + Constants.MessageStatus.STATUS_READ + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID +
             " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
-    long updateMessageAsRead(@NonNull String friendsId);
+    public abstract long updateMessageAsRead(@NonNull String friendsId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
-    long changeMessageStatusFrom(int fromStatus, int toStatus);
+    public abstract long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
-    Flowable<MessageEntity> getLastInsertedMessage();
+    public abstract Flowable<MessageEntity> getLastInsertedMessage();
 
     // This api is not used in app layer
     /*@Query("DELETE FROM " + TableNames.MESSAGE)

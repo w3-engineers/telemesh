@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.w3engineers.eth.ui.MyWallet;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.datasharing.ui.MyDataplan;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -104,11 +106,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                startActivity(new Intent(getActivity(), MyDataplan.class));
                 break;
 
             case R.id.layout_open_wallet:
-                startActivity(new Intent(mActivity, MyWalletActivity.class));
+                startActivity(new Intent(mActivity, MyWallet.class));
                 break;
             default:
                 break;

@@ -10,16 +10,23 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.mesh.wifi.TransportManager;
+import com.w3engineers.mesh.TransportManager;
+import com.w3engineers.mesh.TransportState;
+import com.w3engineers.mesh.datasharing.lib.Paylib;
+import com.w3engineers.mesh.db.SharedPref;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
 import com.w3engineers.mesh.wifi.protocol.Link;
-import com.w3engineers.mesh.wifi.protocol.MeshTransport;
 
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class MeshProvider implements LinkStateListener {
 
@@ -28,11 +35,12 @@ public class MeshProvider implements LinkStateListener {
     private Context context;
     private HashMap<String, Link> peerLinkMap;
     private ProviderCallback providerCallback;
-    private MeshTransport meshTransPort;
+    private TransportManager transportManager;
 
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
+    private String NETWORK_PREFIX = "unicef-007";
 
     private MeshProvider(Context context) {
         this.context = context;
@@ -54,10 +62,6 @@ public class MeshProvider implements LinkStateListener {
         this.myProfileInfo = myProfileInfo;
     }
 
-    public void setMyUserId(String myUserId) {
-        this.myUserId = myUserId;
-    }
-
     public void setProviderCallback(ProviderCallback providerCallback) {
         this.providerCallback = providerCallback;
     }
@@ -66,25 +70,17 @@ public class MeshProvider implements LinkStateListener {
      * Start the mesh communication process
      */
     public void startMesh() {
-        if (config == null || TextUtils.isEmpty(myUserId) || myProfileInfo == null)
+        if (config == null || myProfileInfo == null)
             return;
 
-        MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);
-
-        meshTransPort = TransportManager.on(context)
-                .configTransport(config.mPort, myUserId, this);
-
-        if (meshTransPort != null) {
-            meshTransPort.start();
-
-            if (providerCallback != null)
-                providerCallback.meshStart();
-        }
+        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, this);
     }
 
+
+
     public void stopMesh() {
-        if (meshTransPort != null) {
-            meshTransPort.stop();
+        if (transportManager != null) {
+            transportManager.stopMesh();
 
             if (providerCallback != null)
                 providerCallback.meshStop();
@@ -104,6 +100,26 @@ public class MeshProvider implements LinkStateListener {
         void receiveAck(MeshAcknowledgement meshAcknowledgement);
 
         void meshStop();
+    }
+
+    @Override
+    public void onTransportInit(String nodeId, String publicKey, TransportState transportState, String msg) {
+        boolean isSuccess = transportState == TransportState.SUCCESS;
+        if (isSuccess) {
+            SharedPref.write(Constant.KEY_USER_ID, nodeId);
+            myUserId = nodeId;
+
+            MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);
+
+            transportManager.configTransport(nodeId, publicKey, config.mPort, myProfileInfo);
+
+            if (transportManager != null) {
+                transportManager.startMesh();
+            }
+//            Paylib.getInstance(App.getContext());
+        }
+        if (providerCallback != null)
+            providerCallback.meshStart();
     }
 
     @Override
@@ -192,10 +208,10 @@ public class MeshProvider implements LinkStateListener {
 
             MeshData meshData = MeshData.setMeshData(frameData);
 
-            if (meshData != null) {
+            if (meshData != null && meshData.mData != null) {
 
-                String peerId = meshData.mPeerId;
-                meshData.mMeshPeer = new MeshPeer(peerId);
+//                String peerId = msgOwner;
+                meshData.mMeshPeer = new MeshPeer(msgOwner);
 
                 if (MeshDataManager.getInstance().isProfileData(meshData)) {
                     if (providerCallback != null) {

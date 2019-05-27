@@ -40,8 +40,8 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         super.onCreate();
     }
 
-    private void initMesh(String myUserId, byte[] profileInfo) {
-        if (profileInfo == null || TextUtils.isEmpty(myUserId))
+    private void initMesh(byte[] profileInfo) {
+        if (profileInfo == null)
             return;
 
         //Please do not modify here, this is an auto generated property from developers
@@ -53,7 +53,6 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
         meshProvider.setConfig(meshConfig);
         meshProvider.setMyProfileInfo(profileInfo);
-        meshProvider.setMyUserId(myUserId);
         meshProvider.setProviderCallback(this);
 
         meshProvider.startMesh();
@@ -115,7 +114,12 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
         @Override
         public void setProfile(byte[] profileInfo, String userId) throws RemoteException {
-            initMesh(userId, profileInfo);
+            initMesh(profileInfo);
+        }
+
+        @Override
+        public void setProfileInfo(byte[] profileInfo) throws RemoteException {
+            initMesh(profileInfo);
         }
 
         @Override

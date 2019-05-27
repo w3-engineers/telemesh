@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.Process;
 import android.os.RemoteException;
 
-import com.w3engineers.ext.strom.App;
-import com.w3engineers.ext.strom.util.Utility;
 import com.w3engineers.ext.viper.IRmCommunicator;
 import com.w3engineers.ext.viper.IRmServiceConnection;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
@@ -18,7 +15,6 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgeme
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.ext.viper.application.data.remote.service.BaseRmService;
-import com.w3engineers.ext.viper.util.RmUtility;
 import com.w3engineers.ext.viper.util.lib.mesh.ProfileManager;
 
 import java.util.List;

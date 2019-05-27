@@ -13,6 +13,8 @@ interface IRmServiceConnection {
 
     void setProfile(in byte[] profileInfo, in String userId);
 
+    void setProfileInfo(in byte[] profileInfo);
+
     long sendMeshData(in MeshData meshData);
 
     void setRmCommunicator(IRmCommunicator iRmCommunicator);

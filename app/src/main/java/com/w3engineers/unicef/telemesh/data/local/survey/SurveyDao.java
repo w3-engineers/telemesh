@@ -22,10 +22,10 @@ import io.reactivex.Flowable;
  * ============================================================================
  */
 @Dao
-public interface SurveyDao extends BaseDao<SurveyEntity> {
+public abstract class SurveyDao extends BaseDao<SurveyEntity> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long writeSurvey(@NonNull SurveyEntity surveyEntity);
+    public abstract long writeSurvey(@NonNull SurveyEntity surveyEntity);
     /**
      * <h1>Retrieve all survey</h1>
      * <p>All types of survey submitted and non submitted</p>
@@ -34,7 +34,7 @@ public interface SurveyDao extends BaseDao<SurveyEntity> {
      */
     @NonNull
     @Query("SELECT * FROM " + TableNames.SURVEY)
-    Flowable<List<SurveyEntity>> getAllSurvey();
+    public abstract Flowable<List<SurveyEntity>> getAllSurvey();
 
     /**
      * <h1>Get specific survey by id</h1>
@@ -44,5 +44,5 @@ public interface SurveyDao extends BaseDao<SurveyEntity> {
      */
     @Nullable
     @Query("SELECT * FROM " + TableNames.SURVEY + " WHERE " + ColumnNames.COLUMN_SURVEY_ID + " LIKE :surveyId")
-    SurveyEntity getSurveyById(@NonNull String surveyId);
+    public abstract SurveyEntity getSurveyById(@NonNull String surveyId);
 }

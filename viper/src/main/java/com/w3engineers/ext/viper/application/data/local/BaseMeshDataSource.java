@@ -51,7 +51,7 @@ public abstract class BaseMeshDataSource {
             try {
                 iSetInfo.setServiceForeground(false);
                 iSetInfo.setRmCommunicator(iGetInfo);
-                iSetInfo.setProfile(profileInfo, getOwnUserId());
+                iSetInfo.setProfileInfo(profileInfo);
             } catch (Exception e) {
                 e.printStackTrace();
             }

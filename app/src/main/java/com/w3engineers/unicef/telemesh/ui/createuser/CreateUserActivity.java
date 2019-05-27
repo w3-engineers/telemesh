@@ -118,7 +118,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            ethereumWalletCreation();
+                            goNext();
                         }
 
                         // check for permanent denial of any permission
@@ -178,30 +178,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void ethereumWalletCreation() {
-
-        ProgressDialog dialog = ProgressDialog.show(this, "",
-                "Creating account. Please wait...", true);
-        dialog.setCancelable(false);
-
-        EthereumService.getInstance(CreateUserActivity.this).createWallet("123456789",
-                new EthereumService.RunnableListener() {
-                    @Override
-                    public void onWalletCreated(String walletName, String walletAddress) {
-                        dialog.dismiss();
-                        goNext(walletAddress);
-                    }
-
-                    @Override
-                    public void onWalletLoaded(String walletAddress) {
-                        dialog.dismiss();
-                        goNext(walletAddress);
-                    }
-                });
-    }
-
-    private void goNext(String myId) {
-        if (mViewModel.storeData(mBinding.editTextName.getText() + "", myId)) {
+    private void goNext() {
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

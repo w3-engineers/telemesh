@@ -131,6 +131,11 @@ public class BaseRmService extends Service implements IMeshCallBack {
         }
 
         @Override
+        public void setProfileInfo(byte[] profileInfo) throws RemoteException {
+
+        }
+
+        @Override
         public long sendMeshData(MeshData meshData) throws RemoteException {
             return mMeshProvider.sendData(meshData);
         }

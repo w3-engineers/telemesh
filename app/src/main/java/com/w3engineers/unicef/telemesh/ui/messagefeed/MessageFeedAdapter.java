@@ -35,11 +35,10 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
 
     @Override
     public boolean isEqual(FeedEntity left, FeedEntity right) {
-        String leftUserId = left.getFeedId();
-        String rightUserId = right.getFeedId();
-        return !TextUtils.isEmpty(leftUserId)
-                && !TextUtils.isEmpty(rightUserId)
-                && leftUserId.equals(rightUserId);
+        String leftFeedId = left.getFeedId();
+        String rightFeedId = right.getFeedId();
+
+        return !TextUtils.isEmpty(leftFeedId) && !TextUtils.isEmpty(rightFeedId) && leftFeedId.equals(rightFeedId);
     }
 
     /**
@@ -58,7 +57,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
     }
 
     @Override
-    public BaseViewHolder<FeedEntity> newViewHolder(ViewGroup parent, int viewType) {
+    public BaseAdapterViewHolder<FeedEntity> newViewHolder(ViewGroup parent, int viewType) {
         return new MessageFeedViewHolder(inflate(parent, R.layout.item_message_feed));
     }
 
@@ -80,7 +79,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
         }
     }
 
-    private class MessageFeedViewHolder extends BaseViewHolder<FeedEntity> {
+    private class MessageFeedViewHolder extends BaseAdapterViewHolder<FeedEntity> {
         private ItemMessageFeedBinding mItemMessageFeedBinding;
 
         private MessageFeedViewHolder(ViewDataBinding viewDataBinding) {
@@ -90,7 +89,6 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
 
         /**
          * Bind the feed entities
-         *
          * @param feedEntity the required feed entity
          */
         @Override

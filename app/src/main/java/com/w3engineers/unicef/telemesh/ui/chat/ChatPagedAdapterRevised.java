@@ -28,11 +28,13 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     @NonNull
     public Context mContext;
+    private ChatViewModel chatViewModel;
 
 
-    public ChatPagedAdapterRevised(@NonNull Context context) {
+    public ChatPagedAdapterRevised(@NonNull Context context, ChatViewModel chatViewModel) {
         super(DIFF_CALLBACK);
         mContext = context;
+        this.chatViewModel = chatViewModel;
     }
 
 
@@ -131,6 +133,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
+            binding.setChatViewModel(chatViewModel);
         }
 
         @Override

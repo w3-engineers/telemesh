@@ -22,6 +22,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener, FeedCallBackToUI {
     private ActivityMainBinding binding;
@@ -56,6 +57,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         Constants.IS_LOADING_ENABLE = false;
         mainActivity = this;
 
+        BulletinTimeScheduler.getInstance().connectivityRegister();
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
@@ -69,7 +72,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             //call createBadgeCount() put necessary params (count, position)
         });*/
 
-        mViewModel.makeSendingMessageAsFailed();
+//        mViewModel.makeSendingMessageAsFailed();
 
     }
 

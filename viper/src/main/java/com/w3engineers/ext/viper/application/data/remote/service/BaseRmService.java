@@ -175,6 +175,11 @@ public class BaseRmService extends Service implements IMeshCallBack {
         public void stopRmService() throws RemoteException {
             shutTheService();
         }
+
+        @Override
+        public void stopMeshProcess() throws RemoteException {
+
+        }
     };
 
     @Override

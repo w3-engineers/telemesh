@@ -162,6 +162,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
         RMDataModel rmDataModel = RMDataModel.newBuilder()
                 .setRecDataId(meshAcknowledgement.id)
+                .setIsAckSuccess(meshAcknowledgement.isSuccess)
                 .build();
 
         RmDataHelper.getInstance().ackReceive(rmDataModel);

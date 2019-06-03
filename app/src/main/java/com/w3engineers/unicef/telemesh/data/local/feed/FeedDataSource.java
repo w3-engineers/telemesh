@@ -43,8 +43,16 @@ public class FeedDataSource {
         return feedDao.getAllFeed();
     }
 
-    public void updateFeedMessageReadStatus(long messageId) {
-        mIoExecutor.submit(() -> feedDao.updateFeedMessageReadStatusByMessageId(messageId));
+    public long updateFeedMessageReadStatus(String feedId) {
+
+        Callable<Long> updateFeed = ()-> feedDao.updateFeedMessageReadStatusByMessageId(feedId);
+
+        try {
+            return mIoExecutor.submit(updateFeed).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 }

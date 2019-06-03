@@ -38,7 +38,7 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends RmBaseActivity implements ItemClickListener<ChatEntity> {
+public class ChatActivity extends RmBaseActivity {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -76,10 +76,11 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         Intent intent = getIntent();
         mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
 
-
-
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
+
+        mChatViewModel = getViewModel();
+
         initComponent();
         subscribeForMessages();
         subscribeForUserEvent();
@@ -129,7 +130,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private void initComponent() {
 
 
-        mChatPagedAdapter = new ChatPagedAdapterRevised(this);
+        mChatPagedAdapter = new ChatPagedAdapterRevised(this, mChatViewModel);
         mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
@@ -144,8 +145,6 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             //  mViewBinging.emptyViewId.setOnClickListener(this);
             mViewBinging.imageViewSend.setOnClickListener(this);
         }
-
-        mChatViewModel = getViewModel();
 
         clearNotification();
     }
@@ -265,10 +264,6 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(newTask);
         }
-    }
-
-    @Override
-    public void onItemClick(@NonNull View view, @Nullable ChatEntity item) {
     }
 
     private ChatViewModel getViewModel() {

@@ -3,16 +3,22 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallback;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -30,6 +36,12 @@ import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import timber.log.Timber;
 
 /*
@@ -52,8 +64,6 @@ public class RmDataHelper {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private FeedCallback feedCallback;
-
     private RmDataHelper() {
         rmUserMap = new HashMap<>();
     }
@@ -68,7 +78,6 @@ public class RmDataHelper {
 
         this.dataSource = dataSource;
         rightMeshDataSource = MeshDataSource.getRmDataSource();
-        feedCallback = fCall;
 
         return rightMeshDataSource;
     }
@@ -150,6 +159,19 @@ public class RmDataHelper {
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId());
                     }
                 }, Throwable::printStackTrace));
+
+        compositeDisposable.add(dataSource.getReSendMessage()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(chatEntity -> {
+
+                    if (!chatEntity.isIncoming()
+                            && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
+
+                        MessageEntity messageEntity = (MessageEntity) chatEntity;
+                        dataSend(messageEntity.toProtoChat().toByteArray(),
+                                Constants.DataType.MESSAGE, chatEntity.getFriendsId());
+                    }
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -181,13 +203,14 @@ public class RmDataHelper {
         int dataType = rmDataModel.getDataType();
         byte[] rawData = rmDataModel.getRawData().toByteArray();
         String userId = rmDataModel.getUserMeshId();
+        boolean isAckSuccess = rmDataModel.getIsAckSuccess();
 
         switch (dataType) {
             case Constants.DataType.USER:
                 break;
 
             case Constants.DataType.MESSAGE:
-                setChatMessage(rawData, userId, isNewMessage);
+                setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
 
             case Constants.DataType.SURVEY:
@@ -197,30 +220,8 @@ public class RmDataHelper {
             case Constants.DataType.MESSAGE_FEED:
                 // TODO include feed data operation module. i.e. DB operation and return a single insertion observer
 
-                String broadcastString = new String(rawData);
-                feedCallback.feedMessage(broadcastString);
-
-                break;
-
-            case Constants.DataType.BROADCAST_MESSAGE:
-                // This message is received from SP and it should be broadcast
-                broadcastString = new String(rawData);
-                //feedCallback.feedMessage(broadcastString);
-                // TODO we have to update the message type before broadcast, others state will be same
-
-                List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
-                List<BaseMeshData> meshDataList = new ArrayList<>();
-                for (int i=0; i<livePeers.size(); i++){
-
-                    MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
-
-                    BaseMeshData baseMeshData = new BaseMeshData();
-                    baseMeshData.mMeshPeer = meshPeer;
-
-                    meshDataList.add(baseMeshData);
-                }
-
-                broadcastMessage(rawData);
+                setBulletinMessage(rawData);
+//                feedCallback.feedMessage(broadcastString);
 
                 break;
         }
@@ -245,11 +246,25 @@ public class RmDataHelper {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.broadcastMessage(rawData, meshDataList));
-
-
     }
 
-    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage) {
+    private void setBulletinMessage(byte[] rawBulletinData) {
+        try {
+            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
+                    .mergeFrom(rawBulletinData).build();
+
+            FeedEntity feedEntity = new FeedEntity()
+                    .toFeedEntity(teleMeshBulletin)
+                    .setFeedReadStatus(false);
+
+            FeedDataSource.getInstance().insertOrUpdateData(feedEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess) {
         try {
             TeleMeshChat teleMeshChat = TeleMeshChat.newBuilder()
                     .mergeFrom(rawChatData).build();
@@ -257,6 +272,7 @@ public class RmDataHelper {
             ChatEntity chatEntity = new MessageEntity()
                     .toChatEntity(teleMeshChat)
                     .setFriendsId(userId)
+                    .setTime(System.currentTimeMillis())
                     .setIncoming(true);
 
             if (isNewMessage) {
@@ -278,7 +294,8 @@ public class RmDataHelper {
                  * for delivery status update we don't need to replace the message and insert again.
                  * If we do so then paging library Diff Callback can't properly work
                  */
-                chatEntity.setStatus(Constants.MessageStatus.STATUS_DELIVERED).setIncoming(false);
+                chatEntity.setStatus(isAckSuccess ? Constants.MessageStatus.STATUS_DELIVERED
+                        : Constants.MessageStatus.STATUS_FAILED).setIncoming(false);
                 Timber.e("Delivered :: %s", chatEntity.getMessageId());
                 dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
             }
@@ -288,24 +305,6 @@ public class RmDataHelper {
             e.printStackTrace();
         }
     }
-
-    /*private void prepareDateSeparator(ChatEntity chatEntity) {
-
-        String dateFormat = TimeUtil.getDayMonthYear(chatEntity.getTime());
-
-        boolean dateEntity = dataSource.getMessage(chatEntity.getFriendsId(), dateFormat);
-
-        if (!dateEntity) {
-
-            ChatEntity separatorMessage = new MessageEntity().setMessage(dateFormat)
-                    .setTime(chatEntity.getTime())
-                    .setMessageType(Constants.MessageType.DATE_MESSAGE)
-                    .setFriendsId(chatEntity.getFriendsId())
-                    .setMessageId(dateFormat);
-
-            dataSource.insertOrUpdateData(separatorMessage);
-        }
-    }*/
 
 
     /**
@@ -321,17 +320,28 @@ public class RmDataHelper {
         if (rmDataMap.get(dataSendId) != null) {
 
             RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
-
             if (prevRMDataModel != null) {
-                dataReceive(prevRMDataModel, false);
+
+                RMDataModel.Builder newRmDataModel = prevRMDataModel.toBuilder();
+                newRmDataModel.setIsAckSuccess(rmDataModel.getIsAckSuccess());
+
+                dataReceive(newRmDataModel.build(), false);
                 rmDataMap.remove(dataSendId);
             }
         }
     }
 
+
+
     public void stopMeshService() {
+        updateUserStatus();
+    }
+
+    private void updateUserStatus() {
         compositeDisposable.add(updateUserToOffline()
-                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    makeSendingMessageAsFailed();
+                }, Throwable::printStackTrace));
     }
 
     private Single<Integer> updateUserToOffline() {
@@ -339,11 +349,29 @@ public class RmDataHelper {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
+    public void makeSendingMessageAsFailed() {
+
+        compositeDisposable.add(updateMessageStatus()
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
+                    stopMeshProcess();
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<Long> updateMessageStatus() {
+        return Single.fromCallable(() -> MessageSourceData.getInstance()
+                .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
+                        Constants.MessageStatus.STATUS_FAILED));
+    }
+
     /**
      * Concern for this api stopping RM service from app layer
      */
     public void stopRmService() {
-//        rightMeshDataSource.stopMesh();
+        rightMeshDataSource.stopMeshService();
+    }
+
+    private void stopMeshProcess() {
+        rightMeshDataSource.stopMeshProcess();
     }
 
     /**
@@ -351,5 +379,55 @@ public class RmDataHelper {
      */
     public void resetRmDataSourceInstance() {
         rightMeshDataSource.resetInstance();
+    }
+
+    public void requestWsMessage() {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(Constants.AppConstant.BROADCAST_URL).build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+    }
+
+    private final class EchoWebSocketListener extends WebSocketListener {
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            processBroadcastMessage(text);
+            webSocket.close(1001, "Goodbye !");
+        }
+
+        @Override
+        public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
+
+        }
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(1001, null);
+        }
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            Log.v("MIMO_SAHA::", "Msg: " + t.getMessage());
+        }
+    }
+
+    private void processBroadcastMessage(String broadcastText) {
+        try {
+
+            BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);
+
+            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
+
+            FeedDataSource.getInstance().insertOrUpdateData(feedEntity);
+
+            broadcastMessage(feedEntity.toTelemeshBulletin().toByteArray());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

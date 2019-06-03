@@ -14,8 +14,8 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 1
-        versionName "1.0"
+        versionCode 21
+        versionName "0.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.google.protobuf:protobuf-lite:3.0.0'
     implementation 'com.karumi:dexter:5.0.0'
-    implementation 'com.github.MimoSaha:app-share:1.1.4'
+    implementation 'com.github.MimoSaha:app-share:1.1.6'
 
     api project(':meshlib')
     api project(':paylib')

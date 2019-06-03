@@ -10,7 +10,6 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
@@ -18,15 +17,12 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.TransportManager;
 import com.w3engineers.mesh.TransportState;
-import com.w3engineers.mesh.datasharing.lib.Paylib;
 import com.w3engineers.mesh.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
 import com.w3engineers.mesh.wifi.protocol.Link;
 
 import java.util.HashMap;
-
-import timber.log.Timber;
 
 public class MeshProvider implements LinkStateListener {
 
@@ -40,7 +36,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "unicefxyz-";
+    private String NETWORK_PREFIX = "telemesh-";
 
     private MeshProvider(Context context) {
         this.context = context;
@@ -233,8 +229,10 @@ public class MeshProvider implements LinkStateListener {
      */
     @Override
     public void onMessageDelivered(long messageId, boolean isSuccess) {
-        if (providerCallback != null)
-            providerCallback.receiveAck(new MeshAcknowledgement(messageId));
+        if (providerCallback != null) {
+            MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId).setSuccess(isSuccess);
+            providerCallback.receiveAck(meshAcknowledgement);
+        }
     }
 
 }

@@ -77,6 +77,26 @@ public abstract class BaseMeshDataSource {
         return -1L;
     }
 
+    public void stopMeshService() {
+        try {
+            if(iSetInfo != null){
+                iSetInfo.stopRmService();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopMeshProcess() {
+        try {
+            if(iSetInfo != null){
+                iSetInfo.stopMeshProcess();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * To check underlying service properly initiated or not
      * @return true if connected

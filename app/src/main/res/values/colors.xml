@@ -29,6 +29,9 @@
     <color name="splash_text_color">#00B883</color>
     <color name="overlay_light_60">#99FFFFFF</color>
     <color name="deep_grey">#707070</color>
+    <color name="light_grey">#ACACAC</color>
+    <color name="deep_layer_grey">#535353</color>
+    <color name="deep_layer_grey_text">#313131</color>
     <color name="dark_blue">#01434F</color>
 
     <color name="light_yellow">#FFFCED</color>

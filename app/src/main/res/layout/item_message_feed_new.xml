@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -73,7 +72,7 @@
             android:layout_marginRight="@dimen/margin_15"
             android:layout_marginBottom="@dimen/margin_5"
             android:fontFamily="@font/opensans_regular"
-            android:text="@{TimeUtil.getBroadcastTime(feedEntity.feedTime)}"
+            android:text="4:45 PM"
             android:textColor="@color/light_grey"
             android:textSize="@dimen/text_size_12"
             app:layout_constraintBottom_toBottomOf="@+id/sender_name"

@@ -18,6 +18,7 @@ package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -98,6 +99,7 @@ public class UserDataSource{
 
     // TODO convert it to RX pattern when 2.1.0 Room is available
     public int updateUserToOffline() {
+        Log.v("MIMO_SAHA:", "1");
         return mUserDao.updateUserOffline();
     }
 

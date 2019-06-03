@@ -2,14 +2,11 @@ package com.w3engineers.unicef.telemesh.data.local.feed;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
-import com.w3engineers.unicef.telemesh.MessageFeedOuterClass;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
@@ -42,7 +39,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
 
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_TIME)
-    public long feedTime;
+    public String feedTime;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_READ_STATUS)
     public boolean feedReadStatus;
@@ -52,20 +49,40 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
 
     }
 
-    @Ignore
-    private FeedEntity(FeedEntityBuilder feedEntityBuilder) {
-        if (feedEntityBuilder != null) {
-            this.feedProviderName = feedEntityBuilder.mFeedProviderName;
-            this.feedProviderLogo = feedEntityBuilder.mFeedProviderLogo;
-            this.feedTitle = feedEntityBuilder.mFeedTitle;
-            this.feedDetail = feedEntityBuilder.mFeedDetail;
-            this.feedTime = feedEntityBuilder.mFeedTime;
-            this.feedReadStatus = feedEntityBuilder.mFeedReadStatus;
-        } else {
-            throw new NullPointerException("FeedEntity model is not properly build");
-        }
+    public FeedEntity setFeedId(String feedId) {
+        this.feedId = feedId;
+        return this;
     }
 
+    public FeedEntity setFeedProviderName(String feedProviderName) {
+        this.feedProviderName = feedProviderName;
+        return this;
+    }
+
+    public FeedEntity setFeedProviderLogo(String feedProviderLogo) {
+        this.feedProviderLogo = feedProviderLogo;
+        return this;
+    }
+
+    public FeedEntity setFeedTitle(String feedTitle) {
+        this.feedTitle = feedTitle;
+        return this;
+    }
+
+    public FeedEntity setFeedDetail(String feedDetail) {
+        this.feedDetail = feedDetail;
+        return this;
+    }
+
+    public FeedEntity setFeedTime(String feedTime) {
+        this.feedTime = feedTime;
+        return this;
+    }
+
+    public FeedEntity setFeedReadStatus(boolean feedReadStatus) {
+        this.feedReadStatus = feedReadStatus;
+        return this;
+    }
 
     public String getFeedId() {
         return feedId;
@@ -87,82 +104,12 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedDetail;
     }
 
-    public long getFeedTime() {
+    public String getFeedTime() {
         return feedTime;
     }
 
     public boolean isFeedRead() {
         return feedReadStatus;
-    }
-
-    public static class FeedEntityBuilder {
-        private String mFeedProviderName;
-        private String mFeedProviderLogo;
-        private String mFeedTitle;
-        private String mFeedDetail;
-        private long mFeedTime;
-        private boolean mFeedReadStatus;
-
-        public FeedEntityBuilder setFeedProviderName(String mFeedProviderName) {
-            this.mFeedProviderName = mFeedProviderName;
-            return this;
-        }
-
-        public FeedEntityBuilder setFeedProviderLogo(String mFeedProviderLogo) {
-            this.mFeedProviderLogo = mFeedProviderLogo;
-            return this;
-        }
-
-        public FeedEntityBuilder setFeedTitle(String mFeedTitle) {
-            this.mFeedTitle = mFeedTitle;
-            return this;
-        }
-
-        public FeedEntityBuilder setFeedDetail(String mFeedDetail) {
-            this.mFeedDetail = mFeedDetail;
-            return this;
-        }
-
-        public FeedEntityBuilder setFeedTime(long mFeedTime) {
-            this.mFeedTime = mFeedTime;
-            return this;
-        }
-
-        public FeedEntityBuilder setFeedReadStatus(boolean mFeedReadStatus) {
-            this.mFeedReadStatus = mFeedReadStatus;
-            return this;
-        }
-
-        public FeedEntity build() {
-            if (isValidFeedMessage()) {
-                return new FeedEntity(this);
-            }
-            return null;
-
-        }
-
-        // Validate the Feed message with the minimum requirement
-        private boolean isValidFeedMessage() {
-            return !TextUtils.isEmpty(mFeedTitle) && !TextUtils.isEmpty(mFeedDetail);
-        }
-
-        // Convert to Protocol buf message to transfer
-        public static byte[] toProtoFeedMessage(FeedEntity feedEntity) {
-            if (feedEntity != null) {
-                MessageFeedOuterClass.Feed feed = MessageFeedOuterClass.Feed.newBuilder()
-                        .setMessageTitle(feedEntity.getFeedTitle())
-                        .setMessageProvider(feedEntity.getFeedProviderName())
-                        .setMessageDetails(feedEntity.getFeedDetail())
-                        .build();
-                return MessageFeedOuterClass.MessageFeed.newBuilder()
-                        .setMessageType(Constants.DataType.MESSAGE_FEED)
-                        .setFeed(feed).setFeedTime(System.currentTimeMillis())
-                        .build()
-                        .toByteArray();
-            }
-            return null;
-
-        }
     }
 
     protected FeedEntity(Parcel in) {
@@ -172,7 +119,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedProviderLogo = in.readString();
         feedTitle = in.readString();
         feedDetail = in.readString();
-        feedTime = in.readLong();
+        feedTime = in.readString();
         feedReadStatus = in.readByte() != 0;
     }
 
@@ -184,7 +131,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedProviderLogo);
         dest.writeString(feedTitle);
         dest.writeString(feedDetail);
-        dest.writeLong(feedTime);
+        dest.writeString(feedTime);
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
     }
 
@@ -218,5 +165,32 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 ", feedReadStatus=" + feedReadStatus +
                 ", id=" + mId +
                 '}';
+    }
+
+    public BulletinFeed toBulletinFeed() {
+        return new BulletinFeed()
+                .setMessageBody(getFeedDetail())
+                .setMessageId(getFeedId())
+                .setCreatedAt(getFeedTime());
+    }
+
+    public FeedEntity toFeedEntity(BulletinFeed bulletinFeed) {
+        return new FeedEntity().setFeedDetail(bulletinFeed.getMessageBody())
+                .setFeedId(bulletinFeed.getMessageId())
+                .setFeedTime(bulletinFeed.getCreatedAt());
+    }
+
+    public TeleMeshBulletin toTelemeshBulletin() {
+        return TeleMeshBulletin.newBuilder()
+                .setBulletinId(getFeedId())
+                .setBulletinMessage(getFeedDetail())
+                .setBulletinTime(getFeedTime())
+                .build();
+    }
+
+    public FeedEntity toFeedEntity(TeleMeshBulletin teleMeshBulletin) {
+        return new FeedEntity().setFeedDetail(teleMeshBulletin.getBulletinMessage())
+                .setFeedId(teleMeshBulletin.getBulletinId())
+                .setFeedTime(teleMeshBulletin.getBulletinTime());
     }
 }

@@ -203,6 +203,12 @@ public class ChatViewModel extends AndroidViewModel {
         return mutableMovieList;
     }
 
+    public void messageOperation(ChatEntity chatEntity) {
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
+        messageInsertionProcess(chatEntity);
+        dataSource.reSendMessage(chatEntity);
+    }
+
     /**
      * chunk by chunk data load will be applicable.
      * From db all the chat entity will be fetched

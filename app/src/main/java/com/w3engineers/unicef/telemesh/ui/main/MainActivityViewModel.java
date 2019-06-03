@@ -9,8 +9,7 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityViewModel extends BaseRxViewModel {
-//    private LiveData<Integer> messageCount;
-//    private LiveData<Integer> surveyCount;
+
     private MessageSourceData messageSourceData;
 
     public MainActivityViewModel() {
@@ -22,30 +21,12 @@ public class MainActivityViewModel extends BaseRxViewModel {
                 .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
     }
 
-    // Again this apis will be enable when its functionality will be added
-
-    /*public LiveData<Integer> getMessageCount() {
-        return messageCount;
-    }
-
-    public LiveData<Integer> getSurveyCount() {
-        return messageCount;
-    }
-
-    private void calculateTotalMessageCount() {
-        //new broadcast message and total unread message counting which will be assigned to messageCount;
-    }
-
-    private void calculateTotalSurveyCount() {
-        //new broadcast Survey and total unread survey counting which will be assigned to surveyCount;
-    }*/
-
     private Single<Integer> updateUserToOffline() {
         return Single.fromCallable(() ->
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    public void makeSendingMessageAsFailed() {
+    /*public void makeSendingMessageAsFailed() {
 
         getCompositeDisposable().add(updateMessageStatus()
                 .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
@@ -55,5 +36,5 @@ public class MainActivityViewModel extends BaseRxViewModel {
         return Single.fromCallable(() -> messageSourceData
                 .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
                         Constants.MessageStatus.STATUS_FAILED));
-    }
+    }*/
 }

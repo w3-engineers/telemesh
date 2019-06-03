@@ -14,7 +14,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.viper.IRmCommunicator;
@@ -81,7 +81,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
             String action = intent.getAction();
             if(Text.isNotEmpty(action)) {
                 if (BaseRmServiceNotificationHelper.ACTION_STOP_SERVICE.equals(action)) {
-                    shutTheService();
+                    closeProcess();
                 }
             }
         }
@@ -90,15 +90,22 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
     }
 
     //Stopping service
-    private void shutTheService() {
+    private void closeProcess() {
         new BaseRmServiceNotificationHelper(this).stopForegroundService();
+        stopTheService();
+        stopSelf();
+//        Process.killProcess(Process.myPid());
+    }
 
+    public void stopProcess() {
+        Log.v("MIMO_SAHA:", "Killed: ");
+        Process.killProcess(Process.myPid());
+    }
+
+    private void stopTheService() {
         if (meshProvider != null) {
             meshProvider.stopMesh();
         }
-
-        stopSelf();
-        Process.killProcess(Process.myPid());
     }
 
     IRmServiceConnection.Stub iRmServiceConnection = new IRmServiceConnection.Stub() {
@@ -158,7 +165,12 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
         @Override
         public void stopRmService() throws RemoteException {
-            shutTheService();
+            stopTheService();
+        }
+
+        @Override
+        public void stopMeshProcess() throws RemoteException {
+            stopProcess();
         }
     };
 

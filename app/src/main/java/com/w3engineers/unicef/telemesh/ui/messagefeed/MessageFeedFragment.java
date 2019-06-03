@@ -1,10 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +19,8 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
+import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
+import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 public class MessageFeedFragment extends BaseFragment implements ItemClickListener<FeedEntity> {
@@ -36,7 +40,6 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
         mMessageFeedBinding = (FragmentMessageFeedBinding) getViewDataBinding();
         initGui();
         subscribeForMessageFeed();
-
     }
 
     /**
@@ -68,11 +71,12 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
         mMessageFeedBinding.messageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MessageFeedAdapter messageFeedAdapter = new MessageFeedAdapter(getActivity(), mMessageFeedViewModel);
         mMessageFeedBinding.messageRecyclerView.setAdapter(messageFeedAdapter);
+
+        mMessageFeedViewModel.getMessageFeedDetails().observe(this, this::openDetailsPage);
     }
 
     /**
      * Get the view model from the view model factory
-     *
      * @return ViewModel
      */
 
@@ -85,6 +89,12 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
                 return (T) mServiceLocator.getMessageFeedViewModel();
             }
         }).get(MessageFeedViewModel.class);
+    }
+
+    private void openDetailsPage(FeedEntity feedEntity) {
+        Intent intent = new Intent(getActivity(), BulletinDetails.class);
+        intent.putExtra(FeedEntity.class.getName(), feedEntity);
+        startActivity(intent);
     }
 
 

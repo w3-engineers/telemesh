@@ -36,4 +36,8 @@ public interface DataSource {
 
     void updateMessageStatus(@NonNull String messageId, int messageStatus);
 
+    void reSendMessage(ChatEntity chatEntity);
+
+    Flowable<ChatEntity> getReSendMessage();
+
 }

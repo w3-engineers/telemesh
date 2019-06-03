@@ -3,14 +3,16 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 
 import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /*
  * ============================================================================
@@ -52,7 +54,17 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      * @param feedEntity selected feed entity
      */
     public void postMessageFeedEntity(FeedEntity feedEntity) {
-        mSelectedFeedEntityObservable.postValue(feedEntity);
+        updateFeedEntity(feedEntity);
+    }
+
+    private void updateFeedEntity(FeedEntity feedEntity) {
+        getCompositeDisposable().add(Single.fromCallable(() ->
+                mFeedDataSource.updateFeedMessageReadStatus(feedEntity.getFeedId()))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    mSelectedFeedEntityObservable.postValue(feedEntity);
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -62,13 +74,6 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      */
     MutableLiveData<FeedEntity> getMessageFeedDetails() {
         return mSelectedFeedEntityObservable;
-    }
-
-    public void onBroadcastButtonClick(){
-        Log.e("Button" , "Clicked");
-
-        String message = "Broadcast Test Message";
-        RmDataHelper.getInstance().broadcastMessage(message.getBytes());
     }
 
 }

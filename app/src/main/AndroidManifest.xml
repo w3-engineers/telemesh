@@ -50,6 +50,7 @@
         tools:replace="android:name"
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
+        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -85,10 +86,17 @@
         <activity android:name=".ui.mywallet.MyWalletActivity" />
         <activity android:name=".ui.buydata.BuyDataActivity" />
         <activity android:name=".ui.selldata.SellDataActivity" />
+        <activity android:name=".ui.bulletindetails.BulletinDetails" />
         <activity
             android:name=".ui.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".ui.dataplan.DataPlanActivity" />
+
+        <service
+            android:name="com.w3engineers.unicef.util.helper.BulletinJobService"
+            android:label="Word service"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

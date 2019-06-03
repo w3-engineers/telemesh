@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public abstract class FeedDao extends BaseDao<FeedEntity> {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract long insertFeed(FeedEntity feedEntity);
 
 
@@ -23,6 +23,6 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
     public abstract LiveData<List<FeedEntity>> getAllFeed();
 
     @Query("UPDATE " + TableNames.FEED + " SET " + ColumnNames.COLUMN_FEED_READ_STATUS + " = 1 WHERE "
-            + ColumnNames.ID + " = :messageId")
-    public abstract void updateFeedMessageReadStatusByMessageId(long messageId);
+            + ColumnNames.COLUMN_FEED_ID + " = :feedId")
+    public abstract long updateFeedMessageReadStatusByMessageId(String feedId);
 }

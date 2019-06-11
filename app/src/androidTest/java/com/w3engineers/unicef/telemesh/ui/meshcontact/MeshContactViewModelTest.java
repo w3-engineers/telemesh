@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
@@ -48,9 +47,6 @@ public class MeshContactViewModelTest {
 
     private CompositeDisposable mCompositeDisposable;
     private List<UserEntity> mUserEntities;
-
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     private MeshContactViewModel SUT;
 

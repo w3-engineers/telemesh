@@ -71,7 +71,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         super.onDestroy();
 
         if (meshProvider != null) {
-            meshProvider.stopMesh();
+            meshProvider.stopMesh(true);
         }
     }
 
@@ -92,7 +92,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
     //Stopping service
     private void closeProcess() {
         new BaseRmServiceNotificationHelper(this).stopForegroundService();
-        stopTheService();
+        stopTheService(true);
         stopSelf();
 //        Process.killProcess(Process.myPid());
     }
@@ -102,9 +102,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         Process.killProcess(Process.myPid());
     }
 
-    private void stopTheService() {
+    private void stopTheService(boolean isStopProcess) {
         if (meshProvider != null) {
-            meshProvider.stopMesh();
+            meshProvider.stopMesh(isStopProcess);
         }
     }
 
@@ -165,7 +165,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
         @Override
         public void stopRmService() throws RemoteException {
-            stopTheService();
+            stopTheService(false);
         }
 
         @Override

@@ -60,8 +60,7 @@ public class RandomEntityGenerator {
         String lastName = "Alvez";
 
         return new UserEntity()
-                .setUserFirstName(firstName)
-                .setUserLastName(lastName)
+                .setUserName(firstName)
                 .setAvatarIndex(3);
     }
 
@@ -84,8 +83,7 @@ public class RandomEntityGenerator {
         String lastName = "Alvez";
 
         return new UserEntity()
-                .setUserFirstName(firstName)
-                .setUserLastName(lastName)
+                .setUserName(firstName)
                 .setAvatarIndex(3)
                 .setMeshId(UUID.randomUUID().toString());
     }
@@ -200,7 +198,7 @@ public class RandomEntityGenerator {
                 .build();
     }
 
-    public MeshAcknowledgement createAckRmDataModel(String userId, int transferId) {
+    public MeshAcknowledgement createAckRmDataModel(String userId, long transferId) {
         MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(transferId);
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;

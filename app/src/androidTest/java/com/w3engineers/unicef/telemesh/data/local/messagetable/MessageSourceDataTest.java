@@ -113,8 +113,7 @@ public class MessageSourceDataTest {
         return new UserEntity()
                 .setMeshId(meshId)
                 .setCustomId(UUID.randomUUID().toString())
-                .setUserFirstName(firstName)
-                .setUserLastName(lastName)
+                .setUserName(firstName)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(System.currentTimeMillis())
                 .setOnline(true);

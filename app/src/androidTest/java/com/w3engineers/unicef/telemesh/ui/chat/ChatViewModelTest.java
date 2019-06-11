@@ -128,49 +128,6 @@ public class ChatViewModelTest {
         }
     }
 
-    /*@Test
-    public void testPrepareDateSpecificChat_checkListSize_setListOfMessage() throws Exception {
-        UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
-        userDataSource.insertOrUpdateData(userEntity);
-
-        ChatEntity receiverChat = randomEntityGenerator.createReceiverChatEntity(userEntity.getMeshId());
-        messageSourceData.insertOrUpdateData(receiverChat);
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        TestObserver<List<ChatEntity>> listTestObserver = LiveDataTestUtil
-                .testObserve(SUT.getAllMessage(userEntity.getMeshId()));
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-//        LiveData<PagedList<ChatEntity>> pagedListLiveData = SUT.getChatEntityWithDate();
-
-        SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
-
-//        PagedList<ChatEntity> pagedListTestObserver = LiveDataTestUtil
-//                .getValue(pagedListLiveData);
-
-        TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
-
-//        assertNotNull(pagedListTestObserver.get(0));
-    }*/
-
     @After
     public void tearDown() {
         appDatabase.close();

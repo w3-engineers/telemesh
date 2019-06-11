@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.w3engineers.appshare.application.ui.InAppShareActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -56,6 +57,8 @@ public class TeleMeshTest {
 
     public UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
+    public ActivityTestRule<InAppShareActivity> mActivityAppShareRule = new ActivityTestRule<>(InAppShareActivity.class);
+
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
@@ -82,42 +85,22 @@ public class TeleMeshTest {
         addDelay(3200);
 
         ViewInteraction baseEditText = onView(
-                allOf(withId(R.id.edit_text_first_name),
+                allOf(withId(R.id.edit_text_name),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.first_name_layout),
+                                        withId(R.id.name_layout),
                                         0),
                                 0)));
         baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
 
         ViewInteraction baseEditText2 = onView(
-                allOf(withId(R.id.edit_text_first_name), withText("Mimo"),
+                allOf(withId(R.id.edit_text_name), withText("Mimo"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.first_name_layout),
+                                        withId(R.id.name_layout),
                                         0),
                                 0)));
         baseEditText2.perform(pressImeActionButton());
-
-        addDelay(700);
-
-        ViewInteraction baseEditText3 = onView(
-                allOf(withId(R.id.edit_text_last_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.last_name_layout),
-                                        0),
-                                0)));
-        baseEditText3.perform(scrollTo(), replaceText("Saha"), closeSoftKeyboard());
-
-        ViewInteraction baseEditText4 = onView(
-                allOf(withId(R.id.edit_text_last_name), withText("Saha"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.last_name_layout),
-                                        0),
-                                0)));
-        baseEditText4.perform(pressImeActionButton());
 
         addDelay(1000);
 
@@ -128,7 +111,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                2)));
+                                5)));
         appCompatImageView.perform(scrollTo(), click());
 
         addDelay(700);
@@ -176,7 +159,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                2)));
+                                5)));
         appCompatImageView1.perform(scrollTo(), click());
 
         addDelay(700);
@@ -206,13 +189,13 @@ public class TeleMeshTest {
         addDelay(700);
 
         ViewInteraction baseButton = onView(
-                allOf(withId(R.id.button_signup), withText("Sign Up"),
+                allOf(withId(R.id.button_signup), withText("Next"),
                         childAtPosition(
                                 allOf(withId(R.id.image_layout),
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                5)));
+                                8)));
         baseButton.perform(scrollTo(), click());
 
         addDelay(700);
@@ -235,23 +218,13 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        ViewInteraction bottomNavigationSurvey = onView(
-                allOf(withId(R.id.action_survey),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                2),
-                        isDisplayed()));
-        bottomNavigationSurvey.perform(click());
-
         ViewInteraction bottomNavigationSettings = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.bottom_navigation),
                                         0),
-                                3),
+                                2),
                         isDisplayed()));
         bottomNavigationSettings.perform(click());
 
@@ -269,51 +242,59 @@ public class TeleMeshTest {
                                 childAtPosition(
                                         withId(R.id.bottom_navigation),
                                         0),
-                                3),
+                                2),
                         isDisplayed()));
         bottomNavigationSettings.perform(click());
 
         addDelay(700);
 
-        ViewInteraction viewProfile = onView(
-                allOf(withId(R.id.layout_view_profile),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                0)));
+        ViewInteraction viewProfile = onView(allOf(withId(R.id.layout_view_profile),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
         viewProfile.perform(scrollTo(), click());
 
         addDelay(700);
 
-        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+        ViewInteraction baseButton = onView(
+                allOf(withId(R.id.op_back), childAtPosition(
+                        withId(R.id.view_profile_layout),
+                        1)));
+        baseButton.perform(click());
 
         addDelay(700);
 
-        ViewInteraction switchCompat = onView(
-                allOf(withId(R.id.notification_switch),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_notification_sound),
-                                        childAtPosition(
-                                                withId(R.id.layout_settings),
-                                                1)),
-                                2)));
-        switchCompat.perform(scrollTo(), click());
+
+        ViewInteraction openWallet = onView(allOf(withId(R.id.layout_open_wallet),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
+        openWallet.perform(scrollTo(), click());
 
         addDelay(700);
 
-        ViewInteraction constraintLayout2 = onView(
+        pressBack();
+
+//        mDevice.pressBack();
+
+        addDelay(700);
+
+        ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
+        constraintLayout2.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        pressBack();
+
+        addDelay(700);
+
+        ViewInteraction chooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),
                         childAtPosition(
                                 allOf(withId(R.id.layout_settings),
                                         childAtPosition(
                                                 withId(R.id.layout_scroll),
                                                 0)),
-                                2)));
-        constraintLayout2.perform(scrollTo(), click());
+                                4)));
+        chooseLanguage.perform(scrollTo(), click());
 
-        addDelay(700);
 
         ViewInteraction appCompatRadioButton = onView(
                 allOf(withId(R.id.radio_bangla), withText("বাংলা"),
@@ -334,7 +315,7 @@ public class TeleMeshTest {
                                 childAtPosition(
                                         withId(R.id.bottom_navigation),
                                         0),
-                                3),
+                                2),
                         isDisplayed()));
         bottomNavigationItemView2.perform(click());
 
@@ -347,7 +328,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.layout_scroll),
                                                 0)),
-                                2)));
+                                4)));
         constraintLayoutCooseLanguage.perform(scrollTo(), click());
 
         addDelay(700);
@@ -371,7 +352,7 @@ public class TeleMeshTest {
                                 childAtPosition(
                                         withId(R.id.bottom_navigation),
                                         0),
-                                3),
+                                2),
                         isDisplayed()));
         bottomNavigationItemViewSettings.perform(click());
 
@@ -393,200 +374,27 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        ViewInteraction againLayoutShareApp = onView(
-                allOf(withId(R.id.layout_share_app),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                3)));
+        ViewInteraction againLayoutShareApp = onView(allOf(withId(R.id.layout_share_app),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
         againLayoutShareApp.perform(scrollTo(), click());
 
         addDelay(5000);
 
-        mDevice.pressBack();
-
-        addDelay(700);
-
-        ViewInteraction constraintLayoutPrivacyPolicy = onView(
-                allOf(withId(R.id.layout_privacy_policy),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                6)));
-        constraintLayoutPrivacyPolicy.perform(scrollTo(), click());
-
-        addDelay(700);
-    }
-
-    // Wallet functionalities test
-    @Test
-    public void uiTest_4() {
-        addDelay(3800);
-
-        ViewInteraction bottomNavigationSettings = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                3),
-                        isDisplayed()));
-        bottomNavigationSettings.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction actionOnWallet = onView(
-                allOf(withId(R.id.layout_open_wallet),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                4)));
-        actionOnWallet.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.button_buy), withText("Buy Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.button_view),
-                                        childAtPosition(
-                                                withId(R.id.my_wallet_layout),
-                                                2)),
-                                0),
-                        isDisplayed()));
-        appCompatButton.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.button_buy), withText("Buy Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.transaction_layout),
-                                        childAtPosition(
-                                                withId(R.id.buy_data_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-
-        addDelay(2000);
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.confirmation_ok), withText("OK"),
-                        childAtPosition(
-                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.custom),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.button_buy), withText("Buy Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.button_view),
-                                        childAtPosition(
-                                                withId(R.id.my_wallet_layout),
-                                                2)),
-                                0),
-                        isDisplayed()));
-        appCompatButton4.perform(click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        ViewInteraction appCompatButtonSellData = onView(
-                allOf(withId(R.id.button_sell), withText("Sell Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.button_view),
-                                        childAtPosition(
-                                                withId(R.id.my_wallet_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
-        appCompatButtonSellData.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction appCompatButtonAgain = onView(
-                allOf(withId(R.id.button_buy), withText("Sell Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.sell_transaction_layout),
-                                        childAtPosition(
-                                                withId(R.id.sell_data_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
-        appCompatButtonAgain.perform(click());
-
-        addDelay(2000);
-
-        ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.confirmation_ok), withText("OK"),
-                        childAtPosition(
-                                allOf(withId(R.id.alert_buy_sell_dialog_layout),
-                                        childAtPosition(
-                                                withId(android.R.id.custom),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatButton6.perform(click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.button_sell), withText("Sell Data"),
-                        childAtPosition(
-                                allOf(withId(R.id.button_view),
-                                        childAtPosition(
-                                                withId(R.id.my_wallet_layout),
-                                                2)),
-                                1),
-                        isDisplayed()));
-        appCompatButton8.perform(click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        pressBack();
+        mActivityAppShareRule.finishActivity();
 
         addDelay(700);
     }
 
     // Message and mesh contact test
     @Test
-    public void uiTest_5() {
+    public void uiTest_4() {
         addDelay(4500);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnline(true)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
-                .setUserFirstName("Daniel")
-                .setUserLastName("Alvez");
+                .setUserName("Daniel");
         userEntity.setId(0);
 
         userDataSource.insertOrUpdateData(userEntity);
@@ -610,7 +418,7 @@ public class TeleMeshTest {
                                 allOf(withId(R.id.chat_message_bar),
                                         childAtPosition(
                                                 withId(R.id.chat_layout),
-                                                3)),
+                                                4)),
                                 0),
                         isDisplayed()));
         appCompatEditText.perform(replaceText("Hi"), closeSoftKeyboard());
@@ -621,7 +429,7 @@ public class TeleMeshTest {
                                 allOf(withId(R.id.chat_message_bar),
                                         childAtPosition(
                                                 withId(R.id.chat_layout),
-                                                3)),
+                                                4)),
                                 1),
                         isDisplayed()));
         appCompatImageButton.perform(click());

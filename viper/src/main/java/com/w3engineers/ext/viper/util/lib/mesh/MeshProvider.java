@@ -74,11 +74,11 @@ public class MeshProvider implements LinkStateListener {
 
 
 
-    public void stopMesh() {
+    public void stopMesh(boolean isStopProcess) {
         if (transportManager != null) {
             transportManager.stopMesh();
 
-            if (providerCallback != null)
+            if (providerCallback != null && isStopProcess)
                 providerCallback.meshStop();
         }
     }

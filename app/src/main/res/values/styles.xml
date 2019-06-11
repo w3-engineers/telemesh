@@ -106,10 +106,6 @@
         <item name="android:background">@color/grey_300</item>
     </style>
 
-    <style name="check_box">
-        <item name="android:background">@drawable/circular_gradient</item>
-    </style>
-
     <style name="MyRaidoButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="colorAccent">#0091ea</item>
         <item name="android:textColorPrimaryDisableOnly">#f44336</item>

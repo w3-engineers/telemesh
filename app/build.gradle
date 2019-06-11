@@ -18,6 +18,10 @@ android {
         versionName "0.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        ndk {
+            abiFilters 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
+            // armeabi, mips and mips64 has removed since NDK r17
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.arch.persistence.room.Database;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -34,6 +35,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
         UserEntity.class, MessageEntity.class, SurveyEntity.class, FeedEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
+@TypeConverters(Converters.class)
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {

@@ -128,7 +128,7 @@ dependencies {
     //androidTestImplementation deps.espresso.contrib
     //testImplementation deps.espresso.intents
 
-    //androidTestImplementation deps.room.testing
+    androidTestImplementation deps.room.testing
     //androidTestImplementation deps.arch_core.testing
     //androidTestImplementation deps.retrofit.mock
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'

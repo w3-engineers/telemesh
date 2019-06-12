@@ -119,7 +119,7 @@ dependencies {
     api deps.timber
 
     //Leakcanary to track memory leak
-    debugApi deps.leak_canary
+//    debugApi deps.leak_canary
 
     //debug database to manipulate
     if(isDebugDatabaseEnabled) {

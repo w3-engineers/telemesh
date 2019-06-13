@@ -22,7 +22,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
  */
 @SuppressLint("ParcelCreator")
 @Entity(tableName = TableNames.MESSAGE,
-        indices = {@Index(value = {ColumnNames.COLUMN_MESSAGE_ID, ColumnNames.COLUMN_FRIENDS_ID}, unique = true)},
+        indices = {@Index(value = {ColumnNames.COLUMN_FRIENDS_ID, ColumnNames.COLUMN_MESSAGE_ID}, unique = true)},
         foreignKeys = @ForeignKey(entity = UserEntity.class,
                 parentColumns = ColumnNames.COLUMN_USER_MESH_ID,
                 childColumns = ColumnNames.COLUMN_FRIENDS_ID))

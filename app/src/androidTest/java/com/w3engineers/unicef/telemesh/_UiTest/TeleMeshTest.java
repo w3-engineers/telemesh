@@ -564,19 +564,8 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        mDevice.pressBack();
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
-        addDelay(2500);
-
-        mDevice.pressBack();
-
-        addDelay(1000);
-
-        try {
-            mDevice.pressBack();
-        } catch (NoActivityResumedException e) {
-            e.printStackTrace();
-        }
     }
 
     //User company test

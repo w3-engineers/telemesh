@@ -16,7 +16,10 @@ import android.view.ViewParent;
 import com.w3engineers.appshare.application.ui.InAppShareActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -63,6 +66,7 @@ public class TeleMeshTest {
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
     private UserDataSource userDataSource;
+    private FeedDataSource feedDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
 
@@ -73,6 +77,8 @@ public class TeleMeshTest {
                 AppDatabase.class).allowMainThreadQueries().build();
 
         userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+
+        feedDataSource = FeedDataSource.getInstance();
 
         messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
 
@@ -500,6 +506,51 @@ public class TeleMeshTest {
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
+    }
+
+    // Testing Message Feed
+    @Test
+    public void unit_test_5() {
+        addDelay(3800);
+
+        FeedEntity entity = new FeedEntity();
+        entity.setFeedId("testId1");
+        entity.setFeedProviderName("Test Feed Provider");
+        entity.setFeedDetail("Test feed details");
+        entity.setFeedTitle("Test Feed time");
+
+        FeedEntity entity2 = new FeedEntity();
+        entity2.setFeedId("testId2");
+        entity2.setFeedProviderName("Test Feed Provider");
+        entity2.setFeedDetail("Test feed details");
+        entity2.setFeedTitle("Test Feed time");
+        entity2.setFeedProviderLogo("dummy logo link");
+
+        feedDataSource.insertOrUpdateData(entity);
+        feedDataSource.insertOrUpdateData(entity2);
+
+        ViewInteraction bottomNavigationMessageFeed = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                1),
+                        isDisplayed()));
+        bottomNavigationMessageFeed.perform(click());
+
+        addDelay(700);
+
+        ViewInteraction contactLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.message_recycler_view),
+                                childAtPosition(withId(R.id.message_feed_layout),
+                                        0)),
+                        0),
+                        isDisplayed()));
+        contactLayout.perform(click());
+
+        addDelay(700);
     }
 
     private void addDelay(int i) {

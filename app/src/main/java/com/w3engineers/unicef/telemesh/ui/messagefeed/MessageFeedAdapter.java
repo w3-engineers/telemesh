@@ -89,12 +89,14 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
 
         /**
          * Bind the feed entities
+         *
          * @param feedEntity the required feed entity
          */
         @Override
         public void bind(FeedEntity feedEntity) {
             mItemMessageFeedBinding.setFeedEntity(feedEntity);
             mItemMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
+            setImageUrl(mItemMessageFeedBinding.senderIcon, feedEntity.getFeedProviderLogo(), mContext.getResources().getDrawable(R.drawable.ic_unicef));
         }
 
 

@@ -142,7 +142,7 @@ public class RmDataHelper {
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     *
+     * <p>
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")
@@ -228,13 +228,13 @@ public class RmDataHelper {
     }
 
 
-    public void broadcastMessage (byte[] rawData){
+    public void broadcastMessage(byte[] rawData) {
 
 
         List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
         List<BaseMeshData> meshDataList = new ArrayList<>();
 
-        for (int i=0; i<livePeers.size(); i++){
+        for (int i = 0; i < livePeers.size(); i++) {
 
             MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
 
@@ -332,7 +332,6 @@ public class RmDataHelper {
     }
 
 
-
     public void stopMeshService() {
         updateUserStatus();
     }
@@ -405,10 +404,12 @@ public class RmDataHelper {
         public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
 
         }
+
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
             webSocket.close(1001, null);
         }
+
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             Log.v("MIMO_SAHA::", "Msg: " + t.getMessage());

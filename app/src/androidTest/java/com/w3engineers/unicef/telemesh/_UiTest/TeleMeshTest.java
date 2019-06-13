@@ -2,6 +2,9 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
@@ -14,7 +17,9 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.appshare.application.ui.InAppShareActivity;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
@@ -62,6 +67,7 @@ public class TeleMeshTest {
 
     public ActivityTestRule<InAppShareActivity> mActivityAppShareRule = new ActivityTestRule<>(InAppShareActivity.class);
 
+
     @Rule
     public ActivityTestRule<ChatActivity> mChatTestRule = new ActivityTestRule<>(ChatActivity.class, true, false);
 
@@ -69,6 +75,7 @@ public class TeleMeshTest {
     private FeedDataSource feedDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
+    private SharedPref sharedPref;
 
     @Before
     public void setUp() {
@@ -83,6 +90,9 @@ public class TeleMeshTest {
         messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
 
         randomEntityGenerator = new RandomEntityGenerator();
+
+        Context context = InstrumentationRegistry.getTargetContext();
+        sharedPref = SharedPref.getSharedPref(context);
     }
 
     // Registration process
@@ -518,6 +528,7 @@ public class TeleMeshTest {
         entity.setFeedProviderName("Test Feed Provider");
         entity.setFeedDetail("Test feed details");
         entity.setFeedTitle("Test Feed time");
+        entity.setFeedTime("2019-06-014T06:05:50.000Z");
 
         FeedEntity entity2 = new FeedEntity();
         entity2.setFeedId("testId2");
@@ -525,6 +536,7 @@ public class TeleMeshTest {
         entity2.setFeedDetail("Test feed details");
         entity2.setFeedTitle("Test Feed time");
         entity2.setFeedProviderLogo("dummy logo link");
+        entity2.setFeedTime("2019-06-014T06:05:50.000Z");
 
         feedDataSource.insertOrUpdateData(entity);
         feedDataSource.insertOrUpdateData(entity2);
@@ -551,6 +563,66 @@ public class TeleMeshTest {
         contactLayout.perform(click());
 
         addDelay(700);
+
+        mDevice.pressBack();
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //User company test
+    @Test
+    public void user_company_test() {
+        addDelay(3800);
+
+        ViewInteraction bottomNavigationSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationSettings.perform(click());
+
+        addDelay(700);
+
+        // just set dummy company
+        sharedPref.write(Constants.preferenceKey.COMPANY_ID, "ahukoip1890");
+        sharedPref.write(Constants.preferenceKey.COMPANY_NAME, "Refugi Camp 1");
+
+        ViewInteraction viewProfile = onView(allOf(withId(R.id.layout_view_profile),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        viewProfile.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        mDevice.pressBack();
+
+        // clear dummy company
+        sharedPref.write(Constants.preferenceKey.COMPANY_ID, "");
+        sharedPref.write(Constants.preferenceKey.COMPANY_NAME, "");
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addDelay(int i) {

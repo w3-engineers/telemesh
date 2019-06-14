@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
@@ -27,26 +29,28 @@ public class MessageBroadcastTask implements Callable {
     private MeshData mMeshData;
     private BaseMeshDataSource baseRmDataSource;
 
+    @Nullable
     public BaseMeshDataSource getBaseRmDataSource() {
         return baseRmDataSource;
     }
 
-    public void setBaseRmDataSource(BaseMeshDataSource baseRmDataSource) {
+    public void setBaseRmDataSource(@NonNull BaseMeshDataSource baseRmDataSource) {
         this.baseRmDataSource = baseRmDataSource;
     }
 
-
+    @Nullable
     public MeshData getMeshData() {
         return mMeshData;
     }
 
-    public void setMeshData(MeshData mMeshData) {
+    public void setMeshData(@Nullable MeshData mMeshData) {
         this.mMeshData = mMeshData;
     }
 
 
     @SuppressLint("TimberArgCount")
     @Override
+    @Nullable
     public Object call() {
         try {
 
@@ -78,7 +82,7 @@ public class MessageBroadcastTask implements Callable {
         return null;
     }
 
-    public void setCustomThreadPoolManager(BroadcastManager customThreadPoolManager) {
+    public void setCustomThreadPoolManager(@NonNull BroadcastManager customThreadPoolManager) {
         this.mCustomThreadPoolManagerWeakReference = new WeakReference<BroadcastManager>(customThreadPoolManager);
     }
 }

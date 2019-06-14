@@ -33,6 +33,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         super(application);
     }
 
+    @NonNull
     public MutableLiveData<String> textChangeLiveData = new MutableLiveData<>();
 
     int getImageIndex() {
@@ -61,7 +62,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
     }
 
-    public void textEditControl(EditText editText) {
+    public void textEditControl(@NonNull EditText editText) {
         getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
                 .map(input -> input.editable() + "")
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())

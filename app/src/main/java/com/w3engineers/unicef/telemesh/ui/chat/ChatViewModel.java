@@ -200,7 +200,7 @@ public class ChatViewModel extends AndroidViewModel {
         return mutableMovieList;
     }
 
-    public void messageOperation(ChatEntity chatEntity) {
+    public void messageOperation(@NonNull ChatEntity chatEntity) {
         chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
         messageInsertionProcess(chatEntity);
         dataSource.reSendMessage(chatEntity);

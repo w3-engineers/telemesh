@@ -227,7 +227,7 @@ public class RmDataHelper {
     }
 
 
-    public void broadcastMessage (byte[] rawData){
+    public void broadcastMessage (@NonNull byte[] rawData){
 
 
         List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
@@ -414,7 +414,7 @@ public class RmDataHelper {
         }
     }
 
-    protected void processBroadcastMessage(String broadcastText) {
+    protected void processBroadcastMessage(@NonNull String broadcastText) {
         try {
 
             BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);

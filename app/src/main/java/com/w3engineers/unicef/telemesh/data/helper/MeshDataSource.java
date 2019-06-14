@@ -170,6 +170,7 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
+    @NonNull
     protected String getOwnUserId() {
         return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
     }
@@ -187,7 +188,7 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
 
-    public int broadcastMessage(byte[] rawData,  List<BaseMeshData> livePeers){
+    public int broadcastMessage(@NonNull byte[] rawData, @NonNull List<BaseMeshData> livePeers){
 
         broadcastManager = BroadcastManager.getInstance();
 

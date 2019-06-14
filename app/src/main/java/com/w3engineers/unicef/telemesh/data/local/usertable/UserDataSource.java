@@ -107,6 +107,7 @@ public class UserDataSource{
     }
 
     @SuppressLint("LintError")
+    @NonNull
     public List<UserEntity> getLivePeers(){
 
         return mUserDao.getLivePeers();

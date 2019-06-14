@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -29,25 +30,10 @@ public class Util {
     public static final String MESSAGE_BODY = "MESSAGE_BODY";
     public static final String EMPTY_MESSAGE = "<EMPTY_MESSAGE>";
 
-    public static String getReadableTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS", Locale.US);
-        return sdf.format(new Date());
-    }
-
-    public static Message createMessage(int id, String dataString) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Util.MESSAGE_BODY, dataString);
-        Message message = new Message();
-        message.what = id;
-        message.setData(bundle);
-
-        return message;
-    }
-
     private static int jobId = 32;
     // schedule the start of the service every 10 - 30 seconds
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static void scheduleJob(Context context) {
+    public static void scheduleJob(@NonNull Context context) {
 
         ComponentName serviceComponent = new ComponentName(context, BulletinJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(jobId, serviceComponent);
@@ -61,7 +47,7 @@ public class Util {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static void cancelJob(Context context) {
+    public static void cancelJob(@NonNull Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(jobId);
     }

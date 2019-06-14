@@ -72,11 +72,12 @@ public class Source implements DataSource {
     }
 
     @Override
-    public void reSendMessage(ChatEntity chatEntity) {
+    public void reSendMessage(@NonNull ChatEntity chatEntity) {
         failedMessage.onNext(chatEntity);
     }
 
     @Override
+    @Nullable
     public Flowable<ChatEntity> getReSendMessage() {
         return failedMessage.toFlowable(BackpressureStrategy.LATEST);
     }

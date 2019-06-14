@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
@@ -23,25 +25,32 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 public class FeedEntity extends DbBaseEntity implements Parcelable {
     // This id will be used for uniqueness of a message in future
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_ID)
+    @Nullable
     public String feedId;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_PROVIDER_NAME)
+    @Nullable
     public String feedProviderName;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_PROVIDER_LOGO)
+    @Nullable
     public String feedProviderLogo;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_TITLE)
+    @Nullable
     public String feedTitle;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_DETAIL)
+    @Nullable
     public String feedDetail;
 
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_TIME)
+    @Nullable
     public String feedTime;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_READ_STATUS)
+    @Nullable
     public boolean feedReadStatus;
 
     // Empty constructor for Room database
@@ -49,61 +58,74 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
 
     }
 
-    public FeedEntity setFeedId(String feedId) {
+    @NonNull
+    public FeedEntity setFeedId(@Nullable String feedId) {
         this.feedId = feedId;
         return this;
     }
 
-    public FeedEntity setFeedProviderName(String feedProviderName) {
+    @NonNull
+    public FeedEntity setFeedProviderName(@Nullable String feedProviderName) {
         this.feedProviderName = feedProviderName;
         return this;
     }
 
-    public FeedEntity setFeedProviderLogo(String feedProviderLogo) {
+    @NonNull
+    public FeedEntity setFeedProviderLogo(@Nullable String feedProviderLogo) {
         this.feedProviderLogo = feedProviderLogo;
         return this;
     }
 
-    public FeedEntity setFeedTitle(String feedTitle) {
+    @NonNull
+    public FeedEntity setFeedTitle(@Nullable String feedTitle) {
         this.feedTitle = feedTitle;
         return this;
     }
 
-    public FeedEntity setFeedDetail(String feedDetail) {
+    @NonNull
+    public FeedEntity setFeedDetail(@Nullable String feedDetail) {
         this.feedDetail = feedDetail;
         return this;
     }
 
-    public FeedEntity setFeedTime(String feedTime) {
+    @NonNull
+    public FeedEntity setFeedTime(@Nullable String feedTime) {
         this.feedTime = feedTime;
         return this;
     }
 
+    @NonNull
     public FeedEntity setFeedReadStatus(boolean feedReadStatus) {
         this.feedReadStatus = feedReadStatus;
         return this;
     }
 
+    @Nullable
     public String getFeedId() {
         return feedId;
     }
 
+    @Nullable
     public String getFeedProviderName() {
         return feedProviderName;
     }
 
+    @Nullable
     public String getFeedProviderLogo() {
         return feedProviderLogo;
     }
 
+    @Nullable
     public String getFeedTitle() {
         return feedTitle;
     }
 
+    @Nullable
     public String getFeedDetail() {
         return feedDetail;
     }
 
+    @Nullable
     public String getFeedTime() {
         return feedTime;
     }
@@ -112,7 +134,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedReadStatus;
     }
 
-    protected FeedEntity(Parcel in) {
+    protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
         feedProviderName = in.readString();
@@ -124,7 +146,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(mId);
         dest.writeString(feedId);
         dest.writeString(feedProviderName);
@@ -154,6 +176,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
 
 
     @Override
+    @NonNull
     public String toString() {
         return "FeedEntity{" +
                 "feedId='" + feedId + '\'' +
@@ -167,6 +190,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 '}';
     }
 
+    @NonNull
     public BulletinFeed toBulletinFeed() {
         return new BulletinFeed()
                 .setMessageBody(getFeedDetail())
@@ -174,12 +198,14 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 .setCreatedAt(getFeedTime());
     }
 
-    public FeedEntity toFeedEntity(BulletinFeed bulletinFeed) {
+    @NonNull
+    public FeedEntity toFeedEntity(@NonNull BulletinFeed bulletinFeed) {
         return new FeedEntity().setFeedDetail(bulletinFeed.getMessageBody())
                 .setFeedId(bulletinFeed.getMessageId())
                 .setFeedTime(bulletinFeed.getCreatedAt());
     }
 
+    @NonNull
     public TeleMeshBulletin toTelemeshBulletin() {
         return TeleMeshBulletin.newBuilder()
                 .setBulletinId(getFeedId())
@@ -188,7 +214,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 .build();
     }
 
-    public FeedEntity toFeedEntity(TeleMeshBulletin teleMeshBulletin) {
+    @NonNull
+    public FeedEntity toFeedEntity(@NonNull TeleMeshBulletin teleMeshBulletin) {
         return new FeedEntity().setFeedDetail(teleMeshBulletin.getBulletinMessage())
                 .setFeedId(teleMeshBulletin.getBulletinId())
                 .setFeedTime(teleMeshBulletin.getBulletinTime());

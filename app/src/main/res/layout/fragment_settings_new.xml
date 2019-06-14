@@ -33,6 +33,7 @@
                 <ImageView
                     android:id="@+id/image_view_profile"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_profile"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -63,6 +64,7 @@
                 <ImageView
                     android:id="@+id/image_view_wallet"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_wallet"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -93,6 +95,7 @@
                 <ImageView
                     android:id="@+id/image_view_data_plan"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_dataplan"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -123,6 +126,7 @@
                 <ImageView
                     android:id="@+id/image_view_share"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_share"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -153,6 +157,7 @@
                 <ImageView
                     android:id="@+id/image_view_language"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_language"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -201,6 +206,7 @@
                 <ImageView
                     android:id="@+id/image_view_about"
                     style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
                     android:src="@mipmap/ic_about_cyan"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

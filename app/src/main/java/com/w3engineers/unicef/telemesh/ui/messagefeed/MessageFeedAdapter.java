@@ -5,6 +5,8 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +25,18 @@ import java.util.List;
  */
 
 public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
+    @Nullable
     protected MessageFeedViewModel mMessageFeedViewModel;
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
-    public MessageFeedAdapter(Context context, MessageFeedViewModel messageFeedViewModel) {
+    public MessageFeedAdapter(@NonNull Context context, @Nullable MessageFeedViewModel messageFeedViewModel) {
         this.mMessageFeedViewModel = messageFeedViewModel;
         mContext = context;
     }
 
     @Override
-    public boolean isEqual(FeedEntity left, FeedEntity right) {
+    public boolean isEqual(@NonNull FeedEntity left, @NonNull FeedEntity right) {
         String leftFeedId = left.getFeedId();
         String rightFeedId = right.getFeedId();
 
@@ -48,7 +51,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
      *
      * @param feedEntities the data source which will be converted to view
      */
-    public void resetWithList(List<FeedEntity> feedEntities) {
+    public void resetWithList(@NonNull List<FeedEntity> feedEntities) {
         List<FeedEntity> feedEntityList = getItems();
         feedEntityList.clear();
         notifyDataSetChanged();
@@ -56,32 +59,15 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
     }
 
     @Override
-    public BaseAdapterViewHolder<FeedEntity> newViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public BaseAdapterViewHolder<FeedEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MessageFeedViewHolder(inflate(parent, R.layout.item_message_feed));
-    }
-
-    /**
-     * Show the feed provider logo or default place holder
-     *
-     * @param imageView   the view location
-     * @param url         the url of the required logo
-     * @param placeHolder will show if the url is null
-     */
-    @BindingAdapter(value = {"imageUrl", "placeholder"}, requireAll = false)
-    public static void setImageUrl(ImageView imageView, String url, Drawable placeHolder) {
-        if (url == null || url.isEmpty()) {
-            imageView.setImageDrawable(placeHolder);
-        } else {
-            Glide.with(mContext)
-                    .load(url)
-                    .into(imageView);
-        }
     }
 
     protected class MessageFeedViewHolder extends BaseAdapterViewHolder<FeedEntity> {
         private ItemMessageFeedBinding mItemMessageFeedBinding;
 
-        private MessageFeedViewHolder(ViewDataBinding viewDataBinding) {
+        protected MessageFeedViewHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding);
             this.mItemMessageFeedBinding = (ItemMessageFeedBinding) viewDataBinding;
         }

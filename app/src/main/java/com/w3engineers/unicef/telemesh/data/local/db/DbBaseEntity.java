@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseEntity;
 
@@ -20,6 +21,11 @@ public class DbBaseEntity extends BaseEntity {
 
     protected DbBaseEntity() {
 
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
     }
 
     protected DbBaseEntity(@NonNull Parcel in) {

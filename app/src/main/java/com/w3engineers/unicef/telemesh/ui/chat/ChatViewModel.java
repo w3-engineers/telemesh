@@ -62,9 +62,6 @@ public class ChatViewModel extends AndroidViewModel {
     private CompositeDisposable compositeDisposable;
     private  MutableLiveData<PagedList<ChatEntity>> mutableMovieList = new MutableLiveData<>();
 
-
-
-
     /**
      * <h1>View model constructor</h1>
      *

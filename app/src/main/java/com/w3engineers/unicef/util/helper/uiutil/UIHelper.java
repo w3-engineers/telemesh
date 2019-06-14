@@ -43,15 +43,6 @@ public class UIHelper {
                 .into(imageView);
     }
 
-    /*@BindingAdapter("src")
-    public static void setImageFromResource(@NonNull ImageView imageView, int resourceId) {
-
-        Glide.with(App.getContext())
-                .load(resourceId)
-                .into(imageView);
-    }*/
-
-
     @BindingAdapter("imageStatusResource")
     public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId){
         //AppLog.v("Image status resource id ="+resourceId);
@@ -114,7 +105,6 @@ public class UIHelper {
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
                 return TimeUtil.getDateString(messageEntity.time);
-                //return messageEntity.message;
             }
         }
 

@@ -18,8 +18,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBindin
 
 public class BulletinDetails extends BaseActivity {
 
-    private ActivityBulletinDetailsBinding activityBulletinDetailsBinding;
-
     @Override
     protected int getToolbarId() {
         return R.id.toolbar;
@@ -38,7 +36,7 @@ public class BulletinDetails extends BaseActivity {
     @Override
     protected void startUI() {
 
-        activityBulletinDetailsBinding = (ActivityBulletinDetailsBinding) getViewDataBinding();
+        ActivityBulletinDetailsBinding activityBulletinDetailsBinding = (ActivityBulletinDetailsBinding) getViewDataBinding();
 
         FeedEntity feedEntity = getIntent().getParcelableExtra(FeedEntity.class.getName());
         activityBulletinDetailsBinding.setFeedEntity(feedEntity);

@@ -14,6 +14,7 @@ import com.w3engineers.unicef.util.helper.BulletinJobService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,7 +30,7 @@ public class Util {
     public static final String EMPTY_MESSAGE = "<EMPTY_MESSAGE>";
 
     public static String getReadableTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS", Locale.US);
         return sdf.format(new Date());
     }
 
@@ -44,13 +45,9 @@ public class Util {
     }
 
     private static int jobId = 32;
-    public static long previous = 0;
     // schedule the start of the service every 10 - 30 seconds
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void scheduleJob(Context context) {
-        long current = System.currentTimeMillis();
-        Log.v("MIMO_SAHA", "Job Started: " + (current - previous));
-        previous = current;
 
         ComponentName serviceComponent = new ComponentName(context, BulletinJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(jobId, serviceComponent);

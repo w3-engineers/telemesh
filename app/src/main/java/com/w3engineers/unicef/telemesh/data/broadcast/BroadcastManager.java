@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.broadcast;
 import android.os.Message;
 import android.os.Process;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -16,6 +15,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import timber.log.Timber;
 
 public class BroadcastManager {
 
@@ -34,16 +35,6 @@ public class BroadcastManager {
      * This provides a means of reducing resource consumption when the pool is not being actively used.
      */
     private static final int KEEP_ALIVE_TIME = 1;
-
-    /**
-     * Any BlockingQueue may be used to transfer and hold submitted tasks.
-     */
-    private final BlockingQueue<Runnable> mTaskQueue;
-
-    /**
-     * New threads are created using a ThreadFactory
-     */
-    private BackgroundThreadFactory backgroundThreadFactory;
 
 
     private static final TimeUnit KEEP_ALIVE_TIME_UNIT;
@@ -71,9 +62,15 @@ public class BroadcastManager {
     private BroadcastManager(){
 
         // initialize a queue for the thread pool. New tasks will be added to this queue
-        mTaskQueue = new LinkedBlockingQueue<Runnable>();
+        /**
+         * Any BlockingQueue may be used to transfer and hold submitted tasks.
+         */
+        BlockingQueue<Runnable> mTaskQueue = new LinkedBlockingQueue<Runnable>();
         mRunningTaskList = new ArrayList<>();
-        backgroundThreadFactory = new BackgroundThreadFactory();
+        /**
+         * New threads are created using a ThreadFactory
+         */
+        BackgroundThreadFactory backgroundThreadFactory = new BackgroundThreadFactory();
 
         mExecutorService = new ThreadPoolExecutor(NUMBER_OF_CORES,
                 NUMBER_OF_CORES*2,
@@ -90,7 +87,7 @@ public class BroadcastManager {
     /**
      * New threads are created using a ThreadFactory
      */
-    private static class BackgroundThreadFactory implements ThreadFactory {
+    protected static class BackgroundThreadFactory implements ThreadFactory {
 
         private static int sTag = 1;
 
@@ -105,7 +102,7 @@ public class BroadcastManager {
             thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread thread, Throwable ex) {
-                    Log.e("TPE", thread.getName() + " encountered an error: " + ex.getMessage());
+                    Timber.tag("TPE").e(thread.getName() + " encountered an error: " + ex.getMessage());
                 }
             });
             return thread;

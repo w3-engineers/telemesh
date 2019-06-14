@@ -1,7 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.createuser;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -12,13 +11,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.w3engineers.eth.data.remote.EthereumService;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
@@ -27,19 +24,9 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.telemesh.ui.setorganization.SetOrganizationActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
-import java.util.concurrent.TimeUnit;
-
 import java.util.List;
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
-import io.reactivex.schedulers.Schedulers;
 
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
@@ -178,7 +165,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void goNext() {
+    protected void goNext() {
         if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
 
             Intent intent = new Intent(this, MainActivity.class);

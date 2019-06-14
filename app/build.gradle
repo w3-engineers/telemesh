@@ -18,6 +18,11 @@ android {
         versionName "0.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        /*ndk {
+            abiFilters 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a'
+            //  Now a day there are 7 CPU architectures in Android market and 3 of them are hard to find(mips, mips64, armeabi)
+            // armeabi, mips and mips64 has removed since NDK r17
+        }*/
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -77,9 +82,9 @@ dependencies {
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
-    implementation deps.support.animated_vector_drawable
-    implementation deps.support.v4
-    implementation deps.support.media_compact
+    //implementation deps.support.animated_vector_drawable
+    //implementation deps.support.v4
+    //implementation deps.support.media_compact
 
     //lifecycle
     implementation deps.lifecycle.runtime
@@ -113,19 +118,19 @@ dependencies {
 
     // Dependencies for local unit tests
     testImplementation deps.junit
-    testImplementation deps.hamcrest
+    //testImplementation deps.hamcrest
     testImplementation deps.arch_core.testing
-    testImplementation deps.mockito.all
+    //testImplementation deps.mockito.all
     testImplementation deps.truth
     androidTestImplementation deps.atsl.rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
-    androidTestImplementation deps.espresso.contrib
-    testImplementation deps.espresso.intents
+    //androidTestImplementation deps.espresso.contrib
+    //testImplementation deps.espresso.intents
 
     androidTestImplementation deps.room.testing
-    androidTestImplementation deps.arch_core.testing
-    androidTestImplementation deps.retrofit.mock
+    //androidTestImplementation deps.arch_core.testing
+    //androidTestImplementation deps.retrofit.mock
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
@@ -146,8 +151,8 @@ dependencies {
     // shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
-    implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.github.MimoSaha:app-share:1.1.7'
 

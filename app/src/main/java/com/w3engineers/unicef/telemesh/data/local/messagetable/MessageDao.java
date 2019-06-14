@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RoomWarnings;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
@@ -75,6 +76,7 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
      * @return : MessageEntity
      */
     @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
     public abstract ChatEntity getMessageById(@NonNull String messageId);
 

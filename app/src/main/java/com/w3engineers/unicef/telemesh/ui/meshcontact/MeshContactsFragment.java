@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -235,7 +234,7 @@ public class MeshContactsFragment extends BaseFragment {
         fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
     }
 
-    private void searchLoading() {
+    protected void searchLoading() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
@@ -268,7 +267,6 @@ public class MeshContactsFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                serviceLocator = ServiceLocator.getInstance();
                 return (T) ServiceLocator.getInstance().getMeshContactViewModel();
             }
         }).get(MeshContactViewModel.class);

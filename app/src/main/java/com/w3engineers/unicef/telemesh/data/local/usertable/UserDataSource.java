@@ -16,9 +16,9 @@
 
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -38,7 +38,7 @@ public class UserDataSource{
     private static UserDataSource userDataSource;
     private final UserDao mUserDao;
 
-    public static ExecutorService executorService;
+//    private static ExecutorService executorService;
 
 //    private UserDataSource() {
 //        mUserDao = AppDatabase.getInstance().userDao();
@@ -68,7 +68,7 @@ public class UserDataSource{
     public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
             userDataSource = new UserDataSource(userDao);
-            executorService = Executors.newSingleThreadExecutor();
+//            executorService = Executors.newSingleThreadExecutor();
         }
         return userDataSource;
     }
@@ -99,23 +99,24 @@ public class UserDataSource{
 
     // TODO convert it to RX pattern when 2.1.0 Room is available
     public int updateUserToOffline() {
-        Log.v("MIMO_SAHA:", "1");
         return mUserDao.updateUserOffline();
     }
 
-    public int deleteUser(@NonNull String userId) {
-        return mUserDao.deleteUser(userId);
+    void deleteUser(@NonNull String userId) {
+        mUserDao.deleteUser(userId);
     }
 
-
+    @SuppressLint("LintError")
     public List<UserEntity> getLivePeers(){
 
-        try {
-            return executorService.submit(mUserDao::getLivePeers).get();
+        return mUserDao.getLivePeers();
+
+        /*try {
+//            return executorService.submit(mUserDao::getLivePeers).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
-        }
+        }*/
 
     }
 }

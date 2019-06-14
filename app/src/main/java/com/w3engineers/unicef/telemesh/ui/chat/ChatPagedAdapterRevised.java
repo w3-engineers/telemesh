@@ -28,7 +28,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     @NonNull
     public Context mContext;
-    private ChatViewModel chatViewModel;
+    protected ChatViewModel chatViewModel;
 
 
     public ChatPagedAdapterRevised(@NonNull Context context, ChatViewModel chatViewModel) {

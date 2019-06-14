@@ -50,7 +50,6 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
-//        sharedPref.write(Constants.preferenceKey.MY_USER_ID, myUserId);
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;
@@ -68,6 +67,6 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
-                .subscribe(text -> textChangeLiveData.postValue(text)));
+                .subscribe(text -> textChangeLiveData.postValue(text), Throwable::printStackTrace));
     }
 }

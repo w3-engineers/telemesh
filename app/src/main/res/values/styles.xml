@@ -106,10 +106,6 @@
         <item name="android:background">@color/grey_300</item>
     </style>
 
-    <style name="check_box">
-        <item name="android:background">@drawable/circular_gradient</item>
-    </style>
-
     <style name="MyRaidoButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="colorAccent">#0091ea</item>
         <item name="android:textColorPrimaryDisableOnly">#f44336</item>
@@ -124,8 +120,8 @@
         <item name="android:layout_marginStart">@dimen/margin_50</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint">@color/white</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:buttonTint" tools:targetApi="lollipop">@color/white</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 
     <style name="limit_radio">
@@ -136,8 +132,8 @@
         <item name="android:layout_marginStart">@dimen/margin_20</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint">@color/black</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:buttonTint" tools:targetApi="lollipop">@color/black</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 
     <!--<style name="style_EditText">

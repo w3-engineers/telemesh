@@ -156,7 +156,7 @@
                     android:id="@+id/button_signup"
                     style="@style/CustomButton"
                     android:clickable="false"
-                    android:text="@string/next"
+                    android:text="@string/signup"
                     android:textColor="@color/deep_grey"
                     android:textSize="@dimen/text_size_18"
                     app:layout_constraintRight_toRightOf="parent"

@@ -56,13 +56,4 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_FEED_DETAIL = "feed_detail";
     String COLUMN_FEED_TIME = "feed_time";
     String COLUMN_FEED_READ_STATUS = "feed_read_status";
-
-    /**
-     * Broadcast message table column
-     */
-    String COLUMN_BROADCAST_MESSAGE_ID = "broadcast_message_id";
-    String COLUMN_BROADCAST_MESSAGE_TITLE = "broadcast_message_title";
-    String COLUMN_BROADCAST_MESSAGE_DETAIL = "broadcast_message_detail";
-    String COLUMN_BROADCAST_MESSAGE_RECEIVED_TIME = "broadcast_message_received time";
-    String COLUMN_BROADCAST_MESSAGE_DEADLINE = "broadcast_message_deadline";
 }

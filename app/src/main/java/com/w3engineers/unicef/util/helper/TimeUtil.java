@@ -106,7 +106,7 @@ public class TimeUtil {
     @Nullable
     public static String getBroadcastFullTime(String serverTime) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             long time = sdf.parse(serverTime).getTime();
 
@@ -127,7 +127,7 @@ public class TimeUtil {
     @Nullable
     public static String getBroadcastTime(String serverTime) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             long time = sdf.parse(serverTime).getTime();
 

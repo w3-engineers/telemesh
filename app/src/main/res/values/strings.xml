@@ -13,12 +13,9 @@
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">Contacts</string>
     <string name="title_message_feed_fragment">Message Feed</string>
-    <string name="title_survey_fragment">Survey</string>
     <string name="title_settings_fragment">Settings</string>
     <!-- notification badge count more than 9 -->
     <!--<string name="badge_count_more_than_9">9+</string>-->
-    <string name="power_by_rightmesh">Powered by</string>
-    <string name="communication_tool_to_connect">Connect the unconnected</string>
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">Please click BACK again to exit.</string>
     <string name="chat_send_button_description" translatable="false">Send icon.</string>
@@ -45,11 +42,9 @@
 
     // Settings title
     <!--<string name="settings_view_profile">View Profile</string>-->
-    <string name="settings_notification_sound">Notifications Sound</string>
     <string name="settings_choose_language">Language</string>
     <string name="settings_share_app">Share App</string>
     <!--<string name="settings_about_us">About Us</string>-->
-    <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_open_wallet">My Wallet</string>
 
     <string name="choose_language">Choose a Language</string>
@@ -57,7 +52,6 @@
     <string name="image">Image</string>
     <!--<string name="cancel">Cancel</string>-->
 
-    <string name="settings_item_image">Settings icon image</string>
     <string name="rmesh">RMESH</string>
     <string name="current_balance" tools:ignore="ExtraTranslation">Current Balance</string>
     <string name="spent_balance">Spent Balance</string>
@@ -65,15 +59,13 @@
     <string name="rm_gb_data">100 RM/GB</string>
     <string name="sell_data">Sell Data</string>
     <string name="buy_data">Buy Data</string>
-    <string name="balance">Balance</string>
-    <string name="wallet_id">wallet Id:</string>
     <string name="buy_data_success">Buy data Successfully done!</string>
     <string name="sell_data_success">Sell data Successfully done!</string>
 
-    <string name="next">Next</string>
-    <string name="organization">Company/Organization</string>
+    <!--<string name="next">Next</string>-->
+    <!--<string name="organization">Company/Organization</string>-->
     <string name="id">ID</string>
-    <string name="skip">Skip</string>
+    <!--<string name="skip">Skip</string>-->
 
     <string name="this_may_take_while">This may take a while…</string>
     <string name="discovering_users">Discovering Users</string>

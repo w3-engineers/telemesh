@@ -205,7 +205,7 @@ public class TeleMeshTest {
         addDelay(700);
 
         ViewInteraction baseButton = onView(
-                allOf(withId(R.id.button_signup), withText("Next"),
+                allOf(withId(R.id.button_signup), withText("Sign Up"),
                         childAtPosition(
                                 allOf(withId(R.id.image_layout),
                                         childAtPosition(

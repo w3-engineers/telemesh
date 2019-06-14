@@ -95,7 +95,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
         public void bind(FeedEntity feedEntity) {
             mItemMessageFeedBinding.setFeedEntity(feedEntity);
             mItemMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
-            setImageUrl(mItemMessageFeedBinding.senderIcon, feedEntity.getFeedProviderLogo(), mContext.getResources().getDrawable(R.drawable.ic_unicef));
+            setImageUrl(mItemMessageFeedBinding.senderIcon, feedEntity.getFeedProviderLogo(), mContext.getResources().getDrawable(R.mipmap.ic_unicef));
         }
 
 

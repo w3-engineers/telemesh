@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
-import com.w3engineers.ext.strom.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageFeedBinding;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 
 public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
-    private MessageFeedViewModel mMessageFeedViewModel;
+    protected MessageFeedViewModel mMessageFeedViewModel;
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
@@ -79,7 +78,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
         }
     }
 
-    private class MessageFeedViewHolder extends BaseAdapterViewHolder<FeedEntity> {
+    protected class MessageFeedViewHolder extends BaseAdapterViewHolder<FeedEntity> {
         private ItemMessageFeedBinding mItemMessageFeedBinding;
 
         private MessageFeedViewHolder(ViewDataBinding viewDataBinding) {

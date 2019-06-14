@@ -37,6 +37,4 @@ public class TeleMeshDataHelper {
                 Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName());
     }
 
-
-
 }

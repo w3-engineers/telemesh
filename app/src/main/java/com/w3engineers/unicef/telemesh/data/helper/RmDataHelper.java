@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -16,7 +15,6 @@ import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallback;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -36,7 +34,6 @@ import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -59,6 +56,8 @@ public class RmDataHelper {
     private DataSource dataSource;
 
     private HashMap<String, RMUserModel> rmUserMap;
+
+    @SuppressLint("UseSparseArrays")
     @NonNull
     public HashMap<Long, RMDataModel> rmDataMap = new HashMap<>();
 
@@ -74,7 +73,7 @@ public class RmDataHelper {
     }
 
     @NonNull
-    public MeshDataSource initRM(@NonNull DataSource dataSource, FeedCallback fCall) {
+    public MeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
         rightMeshDataSource = MeshDataSource.getRmDataSource();
@@ -389,7 +388,7 @@ public class RmDataHelper {
         client.dispatcher().executorService().shutdown();
     }
 
-    private final class EchoWebSocketListener extends WebSocketListener {
+    protected final class EchoWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
@@ -411,11 +410,11 @@ public class RmDataHelper {
         }
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            Log.v("MIMO_SAHA::", "Msg: " + t.getMessage());
+
         }
     }
 
-    private void processBroadcastMessage(String broadcastText) {
+    protected void processBroadcastMessage(String broadcastText) {
         try {
 
             BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);

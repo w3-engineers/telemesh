@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.App;
@@ -22,6 +21,8 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -195,7 +196,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
         for(int i=0; i< size; i++){
 
-            Log.e("Live Peers", "size:"+ size + " PeerId: "+livePeers.get(i).mMeshPeer.getPeerId());
+            Timber.tag("Live Peers").e("size:" + size + " PeerId: " + livePeers.get(i).mMeshPeer.getPeerId());
 
             if(livePeers.get(i).mMeshPeer.getPeerId()!= null){
 

@@ -151,8 +151,8 @@ dependencies {
     // shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
-    implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.google.protobuf:protobuf-lite:3.0.0'
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.github.MimoSaha:app-share:1.1.7'
 

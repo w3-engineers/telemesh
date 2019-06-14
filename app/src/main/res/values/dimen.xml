@@ -16,7 +16,7 @@
     <dimen name="elevation_6">6dp</dimen>
 
     <!--<dimen name="padding_1">1dp</dimen>-->
-    <dimen name="padding_2">2dp</dimen>
+    <!--<dimen name="padding_2">2dp</dimen>-->
     <dimen name="padding_3">3dp</dimen>
     <dimen name="padding_5">5dp</dimen>
     <dimen name="padding_10">10dp</dimen>

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 
@@ -92,7 +91,6 @@ public class UserProfileActivity extends BaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                serviceLocator = ServiceLocator.getInstance();
                 return (T) ServiceLocator.getInstance().getUserProfileViewModel(getApplication());
             }
         }).get(UserProfileViewModel.class);

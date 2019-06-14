@@ -1,27 +1,20 @@
 package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
-import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
-import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
 public class MessageFeedFragment extends BaseFragment implements ItemClickListener<FeedEntity> {
 
@@ -85,8 +78,7 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                mServiceLocator = ServiceLocator.getInstance();
-                return (T) mServiceLocator.getMessageFeedViewModel();
+                return (T) ServiceLocator.getInstance().getMessageFeedViewModel();
             }
         }).get(MessageFeedViewModel.class);
     }

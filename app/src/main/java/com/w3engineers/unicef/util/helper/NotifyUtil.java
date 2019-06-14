@@ -24,8 +24,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 
-
-
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -38,8 +36,6 @@ public class NotifyUtil {
     private static final String CHANNEL_NAME = "tele_mesh";
     private static final String CHANNEL_ID = "notification_channel";
     private static final UserDataSource userDataSource = UserDataSource.getInstance();
-//    private final String LOCAL_RESOURCE_SCHEME = "res";
-
 
     public static void showNotification(@NonNull ChatEntity chatEntity) {
         Context context = TeleMeshApplication.getContext();
@@ -103,7 +99,6 @@ public class NotifyUtil {
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
         }
-
 
     }
 

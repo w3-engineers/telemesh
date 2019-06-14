@@ -28,7 +28,6 @@ import com.w3engineers.unicef.telemesh.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ImageUtil {
     private static final String LOCAL_RESOURCE_SCHEME = "res";

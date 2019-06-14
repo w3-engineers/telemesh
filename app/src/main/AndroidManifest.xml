@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.w3engineers.unicef.telemesh">
 
-    <!--<uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
-
     <uses-permission
         android:name="android.permission.INTERNET"
         android:required="true" />
@@ -42,7 +38,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.w3engineers.mesh.MeshApp"
+        android:name="com.w3engineers.unicef.TeleMeshApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/my_backup_rules"
         android:configChanges="locale"
@@ -66,10 +62,6 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.setorganization.SetOrganizationActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.splashscreen.SplashActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
@@ -83,14 +75,11 @@
         <activity android:name=".ui.chooseprofileimage.ProfileImageActivity" />
         <activity android:name=".ui.userprofile.UserProfileActivity" />
         <activity android:name=".ui.aboutus.AboutUsActivity" />
-        <activity android:name=".ui.mywallet.MyWalletActivity" />
-        <activity android:name=".ui.buydata.BuyDataActivity" />
-        <activity android:name=".ui.selldata.SellDataActivity" />
+
         <activity android:name=".ui.bulletindetails.BulletinDetails" />
         <activity
             android:name=".ui.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".ui.dataplan.DataPlanActivity" />
 
         <service
             android:name="com.w3engineers.unicef.util.helper.BulletinJobService"

@@ -4,31 +4,13 @@ public class Constants {
 
     public static boolean IS_LOADING_ENABLE = false;
 
-    //bottom navigation item position
-    /*public interface MenuItemPosition {
-        int POSITION_FOR_CONTACT = 0;
-        int POSITION_FOR_MESSAGE_FEED = 1;
-        int POSITION_FOR_SURVEY = 2;
-        int POSITION_FOR_SETTINGS = 3;
-        float MENU_ITEM_WIDTH = 50f;
-        float MENU_ITEM_HEIGHT = 50f;
-        int MAXIMUM_MENU_ITEMS = 4;
-    }*/
-
     public interface DefaultValue {
-//        int INTEGER_VALUE_ZERO = 0;
-//        int MAXIMUM_BADGE_VALUE = 9;
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
         int DOUBLE_PRESS_INTERVAL = 2000;
         int MINIMUM_TEXT_LIMIT = 2;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
-    }
-
-    public interface ButtonOpacity {
-        float DISABLE_EFFECT = 0.5f;
-        float ENABLE_EFFECT = 1.0f;
     }
 
     public interface preferenceKey {
@@ -78,11 +60,5 @@ public class Constants {
     public interface AppConstant {
         long LOADING_TIME = 30 * 1000;
         String BROADCAST_URL = "ws://telemesh.w3engineers.com/websocket";
-    }
-
-    public interface BuyerStatus {
-        int DEFAULT = 0;
-        int ACTIVE = 1;
-        int IN_USE = 2;
     }
 }

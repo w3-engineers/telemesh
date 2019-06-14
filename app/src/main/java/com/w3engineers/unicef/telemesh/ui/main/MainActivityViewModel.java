@@ -1,7 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 
@@ -26,15 +25,4 @@ public class MainActivityViewModel extends BaseRxViewModel {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    /*public void makeSendingMessageAsFailed() {
-
-        getCompositeDisposable().add(updateMessageStatus()
-                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
-    }
-
-    private Single<Long> updateMessageStatus() {
-        return Single.fromCallable(() -> messageSourceData
-                .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
-                        Constants.MessageStatus.STATUS_FAILED));
-    }*/
 }

@@ -8,21 +8,25 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 
 public class BulletinTimeScheduler {
 
+    @SuppressLint("StaticFieldLeak")
     private static BulletinTimeScheduler bulletinTimeScheduler = new BulletinTimeScheduler();
     private Context context;
-    private int DEFAULT = 0, WIFI = 1, DATA = 2, AP = 3;
+    protected int DEFAULT = 0, WIFI = 1, DATA = 2, AP = 3;
 
     private BulletinTimeScheduler() {
         context = App.getContext();
@@ -38,6 +42,7 @@ public class BulletinTimeScheduler {
         context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {
         int state = getNetworkState();
         if (state == DATA) {
@@ -48,7 +53,7 @@ public class BulletinTimeScheduler {
         }
     }
 
-    private int getNetworkState() {
+    protected int getNetworkState() {
         ConnectivityManager connectivitymanager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] networkInfo = connectivitymanager.getAllNetworkInfo();
 
@@ -62,11 +67,12 @@ public class BulletinTimeScheduler {
                 if (netInfo.isConnected())
                     return DATA;
         }
-        return DEFAULT;
+        return 0;
     }
 
     public class NetworkCheckReceiver extends BroadcastReceiver {
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -87,7 +93,8 @@ public class BulletinTimeScheduler {
         }
     }
 
-    private void resetScheduler(Context context) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void resetScheduler(Context context) {
         Util.cancelJob(context);
         Util.scheduleJob(context);
     }

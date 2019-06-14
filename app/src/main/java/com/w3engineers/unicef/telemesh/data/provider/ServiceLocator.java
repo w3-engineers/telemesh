@@ -7,24 +7,16 @@ import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallBackToUI;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallback;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
-import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
-import com.w3engineers.unicef.telemesh.ui.dataplan.DataPlanViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
-import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletViewModel;
-import com.w3engineers.unicef.telemesh.ui.selldata.SellDataViewModel;
-import com.w3engineers.unicef.telemesh.ui.setorganization.SetOrganizationViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
-import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 
 /*
@@ -34,10 +26,9 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  * Proprietary and confidential
  * ============================================================================
  */
-public class ServiceLocator extends BaseServiceLocator implements FeedCallback {
+public class ServiceLocator extends BaseServiceLocator {
 
     private static ServiceLocator serviceLocator;
-    FeedCallBackToUI feedCallBackToUI;
 
     @NonNull
     public static ServiceLocator getInstance() {
@@ -68,11 +59,6 @@ public class ServiceLocator extends BaseServiceLocator implements FeedCallback {
     }
 
     @NonNull
-    public SetOrganizationViewModel getSetOrganizationViewModel(@NonNull Application application) {
-        return new SetOrganizationViewModel(application);
-    }
-
-    @NonNull
     public MainActivityViewModel getMainActivityViewModel(){
         restartRmService();
         return new MainActivityViewModel();
@@ -94,11 +80,6 @@ public class ServiceLocator extends BaseServiceLocator implements FeedCallback {
     }
 
     @NonNull
-    public SurveyViewModel getSurveyViewModel() {
-        return new SurveyViewModel();
-    }
-
-    @NonNull
     public ChatViewModel getChatViewModel(@NonNull Application application){
         return new ChatViewModel(application);
     }
@@ -106,48 +87,14 @@ public class ServiceLocator extends BaseServiceLocator implements FeedCallback {
     @NonNull
     @Override
     public BaseMeshDataSource getRmDataSource() {
-        return RmDataHelper.getInstance().initRM(Source.getDbSource(), this);
+        return RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
-
-    @NonNull
-    public MyWalletViewModel getMyWalletViewModel(@NonNull Application application) {
-        return new MyWalletViewModel(application);
-    }
-
-    @NonNull
-    public BuyDataViewModel getBuyDataViewModel(@NonNull Application application) {
-        return new BuyDataViewModel(application);
-    }
-
-    @NonNull
-    public SellDataViewModel getSellDataViewModel(@NonNull Application application) {
-        return new SellDataViewModel(application);
-    }
-
-    @NonNull
-    public DataPlanViewModel getDataPlanViewModel() {
-        return new DataPlanViewModel();
-    }
-
-    /*@NonNull
-    public InAppShareViewModel getInAppShareViewModel(@NonNull Application application) {
-        return new InAppShareViewModel(application);
-    }*/
 
     public void resetRmDataSourceInstance() {
         RmDataHelper.getInstance().resetRmDataSourceInstance();
     }
 
     public void restartRmService() {
-        RmDataHelper.getInstance().initRM(Source.getDbSource(), this);
-    }
-
-    @Override
-    public void feedMessage(String message) {
-        feedCallBackToUI.sendToUi(message);
-    }
-
-    public void setFeedCallBack(FeedCallBackToUI feedCallBackToUI) {
-        this.feedCallBackToUI = feedCallBackToUI;
+        RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 }

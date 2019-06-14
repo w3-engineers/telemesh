@@ -1,15 +1,14 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
 import android.annotation.SuppressLint;
-import android.os.RemoteException;
-import android.util.Log;
 
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
+
+import timber.log.Timber;
 
 /**
  * Created by Anjan Debnath on 6/28/2018.
@@ -56,7 +55,7 @@ public class MessageBroadcastTask implements Callable {
             if (Thread.interrupted()) throw new InterruptedException();
 
 
-                Log.e("Live Peers", "message: sent");
+            Timber.tag("Live Peers").e("message: sent");
                 sentStatus = getBaseRmDataSource().sendMeshData(getMeshData());
 
 

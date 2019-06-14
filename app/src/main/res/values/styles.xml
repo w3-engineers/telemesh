@@ -120,7 +120,7 @@
         <item name="android:layout_marginStart">@dimen/margin_50</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint">@color/white</item>
+        <item name="android:buttonTint" tools:targetApi="lollipop">@color/white</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 
@@ -132,7 +132,7 @@
         <item name="android:layout_marginStart">@dimen/margin_20</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint">@color/black</item>
+        <item name="android:buttonTint" tools:targetApi="lollipop">@color/black</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
     </style>
 

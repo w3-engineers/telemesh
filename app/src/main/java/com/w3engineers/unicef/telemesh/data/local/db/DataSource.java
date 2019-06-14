@@ -23,12 +23,6 @@ public interface DataSource {
     @NonNull
     Flowable<ChatEntity> getLastChatData();
 
-//    long insertOrUpdateData(DbBaseEntity baseEntity);
-
-//    void deleteAllData();
-
-//    boolean getMessage(String friendsId, String messageId);
-
     @Nullable
     String getCurrentUser();
 

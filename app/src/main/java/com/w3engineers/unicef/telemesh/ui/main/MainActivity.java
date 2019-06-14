@@ -9,14 +9,12 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedCallBackToUI;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
@@ -24,7 +22,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
-public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener, FeedCallBackToUI {
+public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
@@ -81,7 +79,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                ServiceLocator.getInstance().setFeedCallBack(MainActivity.this);
                 return (T) ServiceLocator.getInstance().getMainActivityViewModel();
             }
         }).get(MainActivityViewModel.class);
@@ -224,8 +221,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
     }
 
-    @Override
+    /*@Override
     public void sendToUi(String message) {
         Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
-    }
+    }*/
 }

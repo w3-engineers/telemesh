@@ -14,8 +14,6 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyDao;
-import com.w3engineers.unicef.telemesh.data.local.survey.SurveyEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
@@ -32,7 +30,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, SurveyEntity.class, FeedEntity.class},
+        UserEntity.class, MessageEntity.class, FeedEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
@@ -44,8 +42,6 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract UserDao userDao();
     @NonNull
     public abstract MessageDao messageDao();
-    @NonNull
-    public abstract SurveyDao surveyDao();
     @NonNull
     public abstract FeedDao feedDao();
 

@@ -154,7 +154,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'com.karumi:dexter:5.0.0'
-    implementation 'com.github.MimoSaha:app-share:1.1.7'
+    implementation 'com.github.MimoSaha:app-share:1.1.8'
 
     api project(':meshlib')
     api project(':paylib')

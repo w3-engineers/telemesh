@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -390,11 +392,12 @@ public class RmDataHelper {
     protected final class EchoWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
+            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"223344\", \"payload\" : \"{}\"}");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
+            Log.d("WebsocketResponse: ", "Response: " + text);
             processBroadcastMessage(text);
             webSocket.close(1001, "Goodbye !");
         }
@@ -411,6 +414,9 @@ public class RmDataHelper {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            Log.e("WebsocketResponse: ", "Error: " + t.getMessage());
+            Log.e("WebsocketResponse: ", "Error: " + t.getLocalizedMessage());
+            Log.e("WebsocketResponse: ", "Error: " + t.toString());
 
         }
     }

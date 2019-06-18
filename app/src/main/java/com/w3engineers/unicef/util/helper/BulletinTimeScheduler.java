@@ -62,7 +62,6 @@ public class BulletinTimeScheduler {
             /*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
                 if (netInfo.isConnected())
                     return WIFI;*/
-
             if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
                 if (netInfo.isConnected())
                     return DATA;
@@ -97,6 +96,10 @@ public class BulletinTimeScheduler {
     protected void resetScheduler(Context context) {
         Util.cancelJob(context);
         Util.scheduleJob(context);
+    }
+
+    public NetworkCheckReceiver getReceiver() {
+        return new NetworkCheckReceiver();
     }
 
 }

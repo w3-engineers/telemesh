@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     // shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
-    implementation 'com.orhanobut:dialogplus:1.11@aar'
+
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'com.karumi:dexter:5.0.0'

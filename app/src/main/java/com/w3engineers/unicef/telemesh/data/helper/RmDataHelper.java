@@ -403,7 +403,7 @@ public class RmDataHelper {
 
     void processBroadcastMessage(@NonNull String broadcastText) {
         try {
-            Timber.tag("MIMO_SAHA:").v("Brd: " + broadcastText);
+            Timber.tag("MIMO_SAHA:").v("Brd: %s", broadcastText);
             BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);
 
             requestAckMessage(bulletinFeed.getMessageId());
@@ -420,7 +420,7 @@ public class RmDataHelper {
     }
 
     void processBroadcastAck(@NonNull String ackText) {
-        Timber.tag("MIMO_SAHA:").v("ack: " + ackText);
+        Timber.tag("MIMO_SAHA:").v("ack: %s", ackText);
     }
 
     private BroadcastCommand getBroadcastCommand() {

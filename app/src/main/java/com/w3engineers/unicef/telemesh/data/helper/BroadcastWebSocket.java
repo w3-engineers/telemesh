@@ -8,6 +8,8 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import timber.log.Timber;
 
 public class BroadcastWebSocket extends WebSocketListener {
 
@@ -26,12 +29,12 @@ public class BroadcastWebSocket extends WebSocketListener {
     private int closeCode = 1001;
     private String closeMessage = "Goodbye !";
 
-    public void setBroadcastCommand(BroadcastCommand broadcastCommand) {
+    public void setBroadcastCommand(@NonNull BroadcastCommand broadcastCommand) {
         this.broadcastCommand = broadcastCommand;
     }
 
     @Override
-    public void onOpen(WebSocket webSocket, Response response) {
+    public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
         if (broadcastCommand != null) {
             String broadcastString = new Gson().toJson(broadcastCommand);
             webSocket.send(broadcastString);
@@ -39,7 +42,7 @@ public class BroadcastWebSocket extends WebSocketListener {
     }
 
     @Override
-    public void onMessage(WebSocket webSocket, String text) {
+    public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
         try {
             JSONObject jsonObject = new JSONObject(text);
             if (jsonObject.has("status")) {
@@ -55,16 +58,16 @@ public class BroadcastWebSocket extends WebSocketListener {
     }
 
     @Override
-    public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
-        Log.v("MIMO_SAHA:", "Message: " + bytes);
+    public void onMessage(@NonNull WebSocket webSocket, @NonNull okio.ByteString bytes) {
+        Timber.tag("MIMO_SAHA:").v("Message: %s", bytes);
     }
     @Override
-    public void onClosing(WebSocket webSocket, int code, String reason) {
-        Log.v("MIMO_SAHA:", "Close: " + code);
+    public void onClosing(@NonNull WebSocket webSocket, int code, @Nullable String reason) {
+        Timber.tag("MIMO_SAHA:").v("Close: %s", code);
         webSocket.close(closeCode, null);
     }
     @Override
-    public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-        Log.v("MIMO_SAHA:", "Fail: " + t.getMessage());
+    public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, @Nullable Response response) {
+        Timber.tag("MIMO_SAHA:").v("Fail: %s", t.getMessage());
     }
 }

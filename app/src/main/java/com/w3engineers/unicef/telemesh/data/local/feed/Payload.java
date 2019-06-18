@@ -1,6 +1,8 @@
 
 package com.w3engineers.unicef.telemesh.data.local.feed;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,11 +12,13 @@ public class Payload {
     @Expose
     private String messageId;
 
+    @Nullable
     public String getMessageId() {
         return messageId;
     }
 
-    public Payload setMessageId(String messageId) {
+    @Nullable
+    public Payload setMessageId(@Nullable String messageId) {
         this.messageId = messageId;
         return this;
     }

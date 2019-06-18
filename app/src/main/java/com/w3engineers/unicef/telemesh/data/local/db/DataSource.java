@@ -30,8 +30,9 @@ public interface DataSource {
 
     void updateMessageStatus(@NonNull String messageId, int messageStatus);
 
-    void reSendMessage(ChatEntity chatEntity);
+    void reSendMessage(@NonNull ChatEntity chatEntity);
 
+    @Nullable
     Flowable<ChatEntity> getReSendMessage();
 
 }

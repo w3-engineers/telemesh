@@ -2,12 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fitsSystemWindows">true</item>
-        <!--<item name="android:windowLightStatusBar">true</item>-->
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>
 
@@ -15,7 +13,6 @@
 
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <!-- Customize color of navigation drawer icon and back arrow -->
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
@@ -23,21 +20,6 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
-
-    <!--<style name="CustomEditBox">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/margin_8</item>
-        <item name="android:layout_marginRight">@dimen/margin_8</item>
-        <item name="android:background">@drawable/bg_white_rounded_box</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:elevation" tools:targetApi="lollipop">@dimen/elevation_2</item>
-        <item name="android:paddingTop">@dimen/padding_3</item>
-        <item name="android:fontFamily">@font/poppins_regular</item>
-        <item name="android:textColor">@color/text_color_deep</item>
-        <item name="android:textColorHint">@color/text_color_light</item>
-        <item name="android:textSize">@dimen/text_large_body</item>
-    </style>-->
 
     <style name="CustomButton">
         <item name="android:layout_width">@dimen/width_150</item>
@@ -72,7 +54,6 @@
         <item name="android:layout_height">@dimen/height_40</item>
         <item name="android:layout_marginTop">@dimen/margin_15</item>
         <item name="android:layout_marginBottom">@dimen/margin_15</item>
-        <!--<item name="android:layout_marginLeft">@dimen/margin_2</item>-->
     </style>
 
     <style name="text_style_settings_page">
@@ -105,39 +86,5 @@
         <item name="android:layout_marginTop">@dimen/margin_10</item>
         <item name="android:background">@color/grey_300</item>
     </style>
-
-    <style name="MyRaidoButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="colorAccent">#0091ea</item>
-        <item name="android:textColorPrimaryDisableOnly">#f44336</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
-    </style>
-
-    <style name="data_share_radio">
-
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:theme">@style/MyRaidoButton</item>
-        <item name="android:layout_marginStart">@dimen/margin_50</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint" tools:targetApi="lollipop">@color/white</item>
-        <item name="android:fontFamily">@font/poppins_regular</item>
-    </style>
-
-    <style name="limit_radio">
-
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:theme">@style/MyRaidoButton</item>
-        <item name="android:layout_marginStart">@dimen/margin_20</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/text_size_18</item>
-        <item name="android:buttonTint" tools:targetApi="lollipop">@color/black</item>
-        <item name="android:fontFamily">@font/poppins_regular</item>
-    </style>
-
-    <!--<style name="style_EditText">
-        <item name="android:background">@drawable/edt_bg_selector</item>
-    </style>-->
 
 </resources>

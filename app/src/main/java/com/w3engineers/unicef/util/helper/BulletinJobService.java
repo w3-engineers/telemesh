@@ -11,6 +11,7 @@ Proprietary and confidential
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
@@ -21,7 +22,7 @@ public class BulletinJobService extends JobService {
     private static final String TAG = "SyncService";
 
     @Override
-    public boolean onStartJob(JobParameters params) {
+    public boolean onStartJob(@Nullable JobParameters params) {
         if (BulletinTimeScheduler.getInstance().isMobileDataEnable()) {
             RmDataHelper.getInstance().requestWsMessage();
 
@@ -31,7 +32,7 @@ public class BulletinJobService extends JobService {
     }
 
     @Override
-    public boolean onStopJob(JobParameters params) {
+    public boolean onStopJob(@Nullable JobParameters params) {
         return true;
     }
 

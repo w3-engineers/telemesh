@@ -8,6 +8,9 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,29 +26,35 @@ public class BulletinFeed {
     @Expose
     private String createdAt;
 
+    @Nullable
     public String getMessageId() {
         return messageId;
     }
 
-    public BulletinFeed setMessageId(String messageId) {
+    @NonNull
+    public BulletinFeed setMessageId(@Nullable String messageId) {
         this.messageId = messageId;
         return this;
     }
 
+    @Nullable
     public String getMessageBody() {
         return messageBody;
     }
 
-    public BulletinFeed setMessageBody(String messageBody) {
+    @NonNull
+    public BulletinFeed setMessageBody(@Nullable String messageBody) {
         this.messageBody = messageBody;
         return this;
     }
 
+    @Nullable
     public String getCreatedAt() {
         return createdAt;
     }
 
-    public BulletinFeed setCreatedAt(String createdAt) {
+    @NonNull
+    public BulletinFeed setCreatedAt(@Nullable String createdAt) {
         this.createdAt = createdAt;
         return this;
     }

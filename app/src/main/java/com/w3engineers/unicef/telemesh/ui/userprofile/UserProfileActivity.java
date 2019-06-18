@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.userprofile;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -31,6 +32,7 @@ public class UserProfileActivity extends BaseActivity {
         return R.color.colorPrimaryDark;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void startUI() {
 
@@ -76,7 +78,7 @@ public class UserProfileActivity extends BaseActivity {
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         super.onClick(view);
         int id = view.getId();
         switch (id) {

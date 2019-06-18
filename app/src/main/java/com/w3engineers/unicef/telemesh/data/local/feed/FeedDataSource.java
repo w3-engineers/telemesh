@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.feed;
 
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -23,11 +24,12 @@ public class FeedDataSource {
         mIoExecutor = Executors.newSingleThreadExecutor();
     }
 
+    @NonNull
     public static FeedDataSource getInstance() {
         return feedDataSource;
     }
 
-    public long insertOrUpdateData(FeedEntity feedEntity) {
+    public long insertOrUpdateData(@NonNull FeedEntity feedEntity) {
 
         Callable<Long> insertCallable = () -> feedDao.insertFeed(feedEntity);
 
@@ -39,11 +41,12 @@ public class FeedDataSource {
         }
     }
 
+    @NonNull
     public LiveData<List<FeedEntity>> loadFeeds() {
         return feedDao.getAllFeed();
     }
 
-    public long updateFeedMessageReadStatus(String feedId) {
+    public long updateFeedMessageReadStatus(@NonNull String feedId) {
 
         Callable<Long> updateFeed = ()-> feedDao.updateFeedMessageReadStatusByMessageId(feedId);
 

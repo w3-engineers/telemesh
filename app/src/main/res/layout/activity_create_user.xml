@@ -56,14 +56,16 @@
                         android:layout_weight="1"
                         android:background="@mipmap/shape"
                         android:scaleType="fitXY"
-                        android:scaleX="-1" />
+                        android:scaleX="-1"
+                        android:contentDescription="@string/app_name"/>
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="20dp"
                         android:layout_weight="1"
                         android:background="@mipmap/shape"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:contentDescription="@string/app_name" />
                 </LinearLayout>
 
                 <View

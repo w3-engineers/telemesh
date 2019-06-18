@@ -91,7 +91,7 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
 
 
     @Override
-    public void onItemClick(View view, FeedEntity item) {
+    public void onItemClick(@NonNull View view, @NonNull FeedEntity item) {
 
     }
 

@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import com.w3engineers.ext.strom.App;
@@ -32,6 +33,7 @@ public class BulletinTimeScheduler {
         context = App.getContext();
     }
 
+    @NonNull
     public static BulletinTimeScheduler getInstance() {
         return bulletinTimeScheduler;
     }
@@ -73,7 +75,7 @@ public class BulletinTimeScheduler {
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(@NonNull Context context, @NonNull Intent intent) {
             String action = intent.getAction();
             if (action != null && action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 
@@ -93,7 +95,7 @@ public class BulletinTimeScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    protected void resetScheduler(Context context) {
+    protected void resetScheduler(@NonNull Context context) {
         Util.cancelJob(context);
         Util.scheduleJob(context);
     }

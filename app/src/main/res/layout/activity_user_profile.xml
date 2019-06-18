@@ -39,9 +39,10 @@
             android:id="@+id/op_back"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
-            android:layout_marginLeft="@dimen/margin_5"
+            android:layout_marginStart="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_5"
             android:padding="@dimen/padding_10"
+            android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_back_white"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +54,7 @@
             android:text="@string/profile"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22"
-            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginStart="@dimen/margin_15"
             app:layout_constraintLeft_toRightOf="@+id/op_back"
             app:layout_constraintTop_toTopOf="@+id/op_back"
             app:layout_constraintBottom_toBottomOf="@+id/op_back"/>
@@ -71,6 +72,7 @@
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
+                android:contentDescription="@string/app_name"
                 android:background="@mipmap/shape"
                 android:scaleType="fitXY"
                 android:scaleX="-1" />
@@ -79,6 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
+                android:contentDescription="@string/app_name"
                 android:background="@mipmap/shape"
                 android:scaleType="fitXY" />
         </LinearLayout>
@@ -125,32 +128,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/image_profile"
             app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
-
-        <!--<ImageView
-            android:id="@+id/image_profile_background"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="32dp"
-            android:contentDescription="@string/image"
-            android:background="@mipmap/ic_user_bg"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/margin_55"
-            app:imageResource="@{userEntity.avatarIndex}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-            tools:src="@mipmap/avatar0" />-->
-
-
         <TextView
             android:id="@+id/user_name"
             android:layout_width="0dp"
@@ -166,6 +143,7 @@
         <TextView
             android:id="@+id/user_id"
             android:layout_width="0dp"
+            android:textIsSelectable="true"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
             android:gravity="center"
@@ -179,6 +157,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
+            android:textIsSelectable="true"
             android:gravity="center"
             android:textSize="@dimen/text_size_16"
             app:layout_constraintLeft_toLeftOf="parent"

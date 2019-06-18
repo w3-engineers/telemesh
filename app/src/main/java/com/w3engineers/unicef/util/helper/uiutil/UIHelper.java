@@ -111,7 +111,7 @@ public class UIHelper {
         return null;
     }
 
-    public static void hideKeyboardFrom(Context context, View view) {
+    public static void hideKeyboardFrom(@NonNull Context context, @NonNull View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

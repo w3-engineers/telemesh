@@ -60,6 +60,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
 
 
     @Query("SELECT * FROM "+ TableNames.USERS + " WHERE "+ ColumnNames.COLUMN_USER_IS_ONLINE + " = " +Constants.UserStatus.ONLINE )
+    @NonNull
     public abstract List<UserEntity> getLivePeers();
 
 }

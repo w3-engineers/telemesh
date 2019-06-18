@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -31,7 +32,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
 
 
-    public MessageFeedViewModel(FeedDataSource feedDataSource) {
+    public MessageFeedViewModel(@NonNull FeedDataSource feedDataSource) {
         this.mFeedDataSource = feedDataSource;
         this.mFeedEntitiesObservable = mFeedDataSource.loadFeeds();
     }
@@ -41,6 +42,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      *
      * @return FeedEntity list
      */
+    @NonNull
     public LiveData<List<FeedEntity>> loadFeedList() {
         if (mFeedEntitiesObservable != null) {
             return mFeedEntitiesObservable;
@@ -53,7 +55,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      *
      * @param feedEntity selected feed entity
      */
-    public void postMessageFeedEntity(FeedEntity feedEntity) {
+    public void postMessageFeedEntity(@NonNull FeedEntity feedEntity) {
         updateFeedEntity(feedEntity);
     }
 

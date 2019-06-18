@@ -1,10 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
-import android.os.Message;
 import android.os.Process;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -38,10 +37,6 @@ public class BroadcastManager {
 
 
     private static final TimeUnit KEEP_ALIVE_TIME_UNIT;
-
-
-    //The reference is later used to communicate with the UI thread
-    private WeakReference<UiThreadCallback> uiThreadCallbackWeakReference;
 
     //an interface which extends Executor interface. It is used to manage threads in the threads pool.
     private final ExecutorService mExecutorService;
@@ -80,6 +75,7 @@ public class BroadcastManager {
                 backgroundThreadFactory);
     }
 
+    @Nullable
     public static BroadcastManager getInstance(){
         return mBroadcastManager;
     }
@@ -111,7 +107,7 @@ public class BroadcastManager {
 
 
     // Add a callable to the queue, which will be executed by the next available thread in the pool
-    public void addBroadCastMessage(Callable callable){
+    public void addBroadCastMessage(@NonNull Callable callable){
         Future future = mExecutorService.submit(callable);
         mRunningTaskList.add(future);
     }
@@ -131,18 +127,5 @@ public class BroadcastManager {
         }
         sendMessageToUiThread(Util.createMessage(Util.MESSAGE_ID, "All tasks in the thread pool are cancelled"));
     }*/
-
-    // Keep a weak reference to the UI thread, so we can send messages to the UI thread
-    public void setUiThreadCallback(UiThreadCallback uiThreadCallback) {
-        this.uiThreadCallbackWeakReference = new WeakReference<UiThreadCallback>(uiThreadCallback);
-    }
-
-    // Pass the message to the UI thread
-    public void sendMessageToUiThread(Message message){
-        if(uiThreadCallbackWeakReference != null && uiThreadCallbackWeakReference.get() != null) {
-            uiThreadCallbackWeakReference.get().publishToUiThread(message);
-        }
-    }
-
 
 }

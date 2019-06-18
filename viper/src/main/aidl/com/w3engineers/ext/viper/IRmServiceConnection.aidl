@@ -30,4 +30,6 @@ interface IRmServiceConnection {
     void stopRmService();
 
     void stopMeshProcess();
+
+    String getMyId();
 }

@@ -173,17 +173,17 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 2 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 15 errors</span>
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
-Check performed at Mon Jun 17 11:20:31 BDT 2019      </nav>
+Check performed at Tue Jun 18 13:06:20 BDT 2019      </nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Issue Types</span>
     <nav class="mdl-navigation">
       <a class="mdl-navigation__link" href="#overview"><i class="material-icons">dashboard</i>Overview</a>
-      <a class="mdl-navigation__link" href="#ObsoleteLintCustomCheck"><i class="material-icons warning-icon">warning</i>Obsolete custom lint check (2)</a>
+      <a class="mdl-navigation__link" href="#UnknownNullness"><i class="material-icons error-icon">error</i>Unknown nullness (15)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -196,11 +196,11 @@ Check performed at Mon Jun 17 11:20:31 BDT 2019      </nav>
   </div>
               <div class="mdl-card__supporting-text">
 <table class="overview">
-<tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Lint">Lint</a>
+<tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Interoperability:Kotlin Interoperability">Interoperability:Kotlin Interoperability</a>
 </td></tr>
 <tr>
-<td class="countColumn">2</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
-<a href="#ObsoleteLintCustomCheck">ObsoleteLintCustomCheck</a>: Obsolete custom lint check</td></tr>
+<td class="countColumn">15</td><td class="issueColumn"><i class="material-icons error-icon">error</i>
+<a href="#UnknownNullness">UnknownNullness</a>: Unknown nullness</td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (2)</a>
 </td></tr></table>
 <br/>              </div>
@@ -209,49 +209,197 @@ Check performed at Mon Jun 17 11:20:31 BDT 2019      </nav>
 Dismiss</button>            </div>
             </div>
           </section>
-<a name="Lint"></a>
-<a name="ObsoleteLintCustomCheck"></a>
-<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="ObsoleteLintCustomCheckCard" style="display: block;">
+<a name="Interoperability:Kotlin Interoperability"></a>
+<a name="UnknownNullness"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="UnknownNullnessCard" style="display: block;">
             <div class="mdl-card mdl-cell mdl-cell--12-col">
   <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Obsolete custom lint check</h2>
+    <h2 class="mdl-card__title-text">Unknown nullness</h2>
   </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../../../../../.gradle/caches/transforms-2/files-2.1/5c1be03d7330c04360c588b865347030/jars/lint.jar">../../../../../../.gradle/caches/transforms-2/files-2.1/5c1be03d7330c04360c588b865347030/jars/lint.jar</a></span>: <span class="message">Lint found an issue registry (<code>nl.littlerobots.rxlint.RxIssueRegistry</code>) which is older than the current API level; these checks may not work correctly.<br/>
-<br/>
-Recompile the checks against the latest version. Custom check API version is 1 (3.1), current lint API level is 4 (3.4+)</span><br />
-<span class="location"><a href="../../../../../../.gradle/caches/transforms-2/files-2.1/16f81846b8e5186463835dd99ad447ae/jars/lint.jar">../../../../../../.gradle/caches/transforms-2/files-2.1/16f81846b8e5186463835dd99ad447ae/jars/lint.jar</a></span>: <span class="message">Lint found an issue registry (<code>timber.lint.TimberIssueRegistry</code>) which is older than the current API level; these checks may not work correctly.<br/>
-<br/>
-Recompile the checks against the latest version. Custom check API version is 1 (3.1), current lint API level is 4 (3.4+)</span><br />
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:24</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 21 </span>    <span class="keyword">private</span> <span class="keyword">int</span> closeCode = <span class="number">1001</span>;
+<span class="lineno"> 22 </span>    <span class="keyword">private</span> String closeMessage = <span class="string">"Goodbye !"</span>;
+<span class="lineno"> 23 </span>
+<span class="caretline"><span class="lineno"> 24 </span>    <span class="keyword">public</span> BroadcastWebSocket(<span class="error">BroadcastCommand</span> broadcastCommand) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 25 </span>        <span class="keyword">this</span>.broadcastCommand = broadcastCommand;
+<span class="lineno"> 26 </span>    }
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:29</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 26 </span>    }
+<span class="lineno"> 27 </span>
+<span class="lineno"> 28 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 29 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onOpen(<span class="error">WebSocket</span> webSocket, Response response) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 30 </span>        <span class="keyword">if</span> (broadcastCommand != <span class="keyword">null</span>) {
+<span class="lineno"> 31 </span>            String broadcastString = <span class="keyword">new</span> Gson().toJson(broadcastCommand);
+<span class="lineno"> 32 </span>            webSocket.send(broadcastString);
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:29</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 26 </span>    }
+<span class="lineno"> 27 </span>
+<span class="lineno"> 28 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 29 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onOpen(WebSocket webSocket, <span class="error">Response</span> response) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 30 </span>        <span class="keyword">if</span> (broadcastCommand != <span class="keyword">null</span>) {
+<span class="lineno"> 31 </span>            String broadcastString = <span class="keyword">new</span> Gson().toJson(broadcastCommand);
+<span class="lineno"> 32 </span>            webSocket.send(broadcastString);
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:37</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 34 </span>    }
+<span class="lineno"> 35 </span>
+<span class="lineno"> 36 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 37 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onMessage(<span class="error">WebSocket</span> webSocket, String text) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 38 </span>        RmDataHelper.getInstance().processBroadcastMessage(text);
+<span class="lineno"> 39 </span>        webSocket.close(closeCode, closeMessage);
+<span class="lineno"> 40 </span>    }
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:37</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 34 </span>    }
+<span class="lineno"> 35 </span>
+<span class="lineno"> 36 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 37 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onMessage(WebSocket webSocket, <span class="error">String</span> text) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 38 </span>        RmDataHelper.getInstance().processBroadcastMessage(text);
+<span class="lineno"> 39 </span>        webSocket.close(closeCode, closeMessage);
+<span class="lineno"> 40 </span>    }
+</pre>
+
+<button class="mdl-button mdl-js-button mdl-button--primary" id="UnknownNullnessDivLink" onclick="reveal('UnknownNullnessDiv');" />+ 10 More Occurrences...</button>
+<div id="UnknownNullnessDiv" style="display: none">
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:43</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 40 </span>    }
+<span class="lineno"> 41 </span>
+<span class="lineno"> 42 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 43 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onMessage(<span class="error">WebSocket</span> webSocket, okio.ByteString bytes) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 44 </span>
+<span class="lineno"> 45 </span>    }
+<span class="lineno"> 46 </span>    <span class="annotation">@Override</span></pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:43</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 40 </span>    }
+<span class="lineno"> 41 </span>
+<span class="lineno"> 42 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 43 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onMessage(WebSocket webSocket, <span class="error">okio.ByteString</span> bytes) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 44 </span>
+<span class="lineno"> 45 </span>    }
+<span class="lineno"> 46 </span>    <span class="annotation">@Override</span></pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:47</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 44 </span>
+<span class="lineno"> 45 </span>    }
+<span class="lineno"> 46 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 47 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onClosing(<span class="error">WebSocket</span> webSocket, <span class="keyword">int</span> code, String reason) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 48 </span>        webSocket.close(closeCode, <span class="keyword">null</span>);
+<span class="lineno"> 49 </span>    }
+<span class="lineno"> 50 </span>    <span class="annotation">@Override</span></pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:47</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 44 </span>
+<span class="lineno"> 45 </span>    }
+<span class="lineno"> 46 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 47 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onClosing(WebSocket webSocket, <span class="keyword">int</span> code, <span class="error">String</span> reason) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 48 </span>        webSocket.close(closeCode, <span class="keyword">null</span>);
+<span class="lineno"> 49 </span>    }
+<span class="lineno"> 50 </span>    <span class="annotation">@Override</span></pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:51</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 48 </span>        webSocket.close(closeCode, <span class="keyword">null</span>);
+<span class="lineno"> 49 </span>    }
+<span class="lineno"> 50 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 51 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onFailure(<span class="error">WebSocket</span> webSocket, Throwable t, Response response) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 52 </span>
+<span class="lineno"> 53 </span>    }
+<span class="lineno"> 54 </span>}
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:51</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 48 </span>        webSocket.close(closeCode, <span class="keyword">null</span>);
+<span class="lineno"> 49 </span>    }
+<span class="lineno"> 50 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 51 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onFailure(WebSocket webSocket, <span class="error">Throwable</span> t, Response response) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 52 </span>
+<span class="lineno"> 53 </span>    }
+<span class="lineno"> 54 </span>}
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/helper/BroadcastWebSocket.java</a>:51</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 48 </span>        webSocket.close(closeCode, <span class="keyword">null</span>);
+<span class="lineno"> 49 </span>    }
+<span class="lineno"> 50 </span>    <span class="annotation">@Override</span>
+<span class="caretline"><span class="lineno"> 51 </span>    <span class="keyword">public</span> <span class="keyword">void</span> onFailure(WebSocket webSocket, Throwable t, <span class="error">Response</span> response) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 52 </span>
+<span class="lineno"> 53 </span>    }
+<span class="lineno"> 54 </span>}
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java</a>:13</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 10 </span>    <span class="annotation">@Expose</span>
+<span class="lineno"> 11 </span>    <span class="keyword">private</span> String messageId;
+<span class="lineno"> 12 </span>
+<span class="caretline"><span class="lineno"> 13 </span>    <span class="keyword">public</span> <span class="error">String</span> getMessageId() {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 14 </span>        <span class="keyword">return</span> messageId;
+<span class="lineno"> 15 </span>    }
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java</a>:17</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 14 </span>        <span class="keyword">return</span> messageId;
+<span class="lineno"> 15 </span>    }
+<span class="lineno"> 16 </span>
+<span class="caretline"><span class="lineno"> 17 </span>    <span class="keyword">public</span> <span class="error">Payload</span> setMessageId(String messageId) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 18 </span>        <span class="keyword">this</span>.messageId = messageId;
+<span class="lineno"> 19 </span>        <span class="keyword">return</span> <span class="keyword">this</span>;
+<span class="lineno"> 20 </span>    }
+</pre>
+
+<span class="location"><a href="../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java">../../app/src/main/java/com/w3engineers/unicef/telemesh/data/local/feed/Payload.java</a>:17</span>: <span class="message">Unknown nullability; explicitly declare as <code>@Nullable</code> or <code>@NonNull</code> to improve Kotlin interoperability; see <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a></span><br /><pre class="errorlines">
+<span class="lineno"> 14 </span>        <span class="keyword">return</span> messageId;
+<span class="lineno"> 15 </span>    }
+<span class="lineno"> 16 </span>
+<span class="caretline"><span class="lineno"> 17 </span>    <span class="keyword">public</span> Payload setMessageId(<span class="error">String</span> messageId) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 18 </span>        <span class="keyword">this</span>.messageId = messageId;
+<span class="lineno"> 19 </span>        <span class="keyword">return</span> <span class="keyword">this</span>;
+<span class="lineno"> 20 </span>    }
+</pre>
+
 </div>
-<div class="metadata"><div class="explanation" id="explanationObsoleteLintCustomCheck" style="display: none;">
-Lint can be extended with "custom checks": additional checks implemented by developers and libraries to for example enforce specific API usages required by a library or a company coding style guideline.<br/>
+</div>
+<div class="metadata"><div class="explanation" id="explanationUnknownNullness" style="display: none;">
+To improve referencing this code from Kotlin, consider adding<br/>
+explicit nullness information here with either <code>@NonNull</code> or <code>@Nullable</code>.<br/>
 <br/>
-The Lint APIs are not yet stable, so these checks may either cause a performance degradation, or stop working, or provide wrong results.<br/>
-<br/>
-This warning flags custom lint checks that are found to be using obsolete APIs and will need to be updated to run in the current lint environment.<br/>
-<br/>
-It may also flag issues found to be using a <b>newer</b> version of the API, meaning that you need to use a newer version of lint (or Android Studio or Gradle plugin etc) to work with these checks.<br/>To suppress this error, use the issue id "ObsoleteLintCustomCheck" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+You can set the environment variable<br/>
+    <code>ANDROID_LINT_NULLNESS_IGNORE_DEPRECATED=true</code><br/>
+if you want lint to ignore classes and members that have been annotated with<br/>
+<code>@Deprecated</code>.<br/><div class="moreinfo">More info: <a href="https://android.github.io/kotlin-guides/interop.html#nullability-annotations">https://android.github.io/kotlin-guides/interop.html#nullability-annotations</a>
+</div>To suppress this error, use the issue id "UnknownNullness" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
 <br/></div>
 </div>
 </div>
 <div class="chips">
 <span class="mdl-chip">
-    <span class="mdl-chip__text">ObsoleteLintCustomCheck</span>
+    <span class="mdl-chip__text">UnknownNullness</span>
 </span>
 <span class="mdl-chip">
-    <span class="mdl-chip__text">Warning</span>
+    <span class="mdl-chip__text">Kotlin Interoperability</span>
 </span>
 <span class="mdl-chip">
-    <span class="mdl-chip__text">Priority 10/10</span>
+    <span class="mdl-chip__text">Interoperability</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Error</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 6/10</span>
 </span>
 </div>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationObsoleteLintCustomCheckLink" onclick="reveal('explanationObsoleteLintCustomCheck');">
-Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="ObsoleteLintCustomCheckCardLink" onclick="hideid('ObsoleteLintCustomCheckCard');">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationUnknownNullnessLink" onclick="reveal('explanationUnknownNullness');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="UnknownNullnessCardLink" onclick="hideid('UnknownNullnessCard');">
 Dismiss</button>            </div>
             </div>
           </section>

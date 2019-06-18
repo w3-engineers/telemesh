@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -14,9 +15,11 @@ import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -383,41 +386,27 @@ public class RmDataHelper {
     public void requestWsMessage() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(Constants.AppConstant.BROADCAST_URL).build();
-        EchoWebSocketListener listener = new EchoWebSocketListener();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getBroadcastCommand());
         client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
-    protected final class EchoWebSocketListener extends WebSocketListener {
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"122121\", \"payload\" : \"{}\"}");
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            processBroadcastMessage(text);
-            webSocket.close(1001, "Goodbye !");
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
-
-        }
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1001, null);
-        }
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-
-        }
+    private void requestAckMessage(String messageId) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(Constants.AppConstant.BROADCAST_URL).build();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getAckCommand(messageId));
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
     }
 
-    protected void processBroadcastMessage(@NonNull String broadcastText) {
+    void processBroadcastMessage(@NonNull String broadcastText) {
         try {
-
+            Timber.tag("MIMO_SAHA:").v("Brd: " + broadcastText);
             BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);
+
+            requestAckMessage(bulletinFeed.getMessageId());
 
             FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
 
@@ -428,5 +417,25 @@ public class RmDataHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void processBroadcastAck(@NonNull String ackText) {
+        Timber.tag("MIMO_SAHA:").v("ack: " + ackText);
+    }
+
+    private BroadcastCommand getBroadcastCommand() {
+        Payload payload = new Payload();
+        return new BroadcastCommand().setEvent("connect")
+                .setToken("yqE%IKjnmH3u874yUsey")
+                .setClientId(rightMeshDataSource.getMyMeshId())
+                .setPayload(payload);
+    }
+
+    private BroadcastCommand getAckCommand(String messageId) {
+        Payload payload = new Payload().setMessageId(messageId);
+        return new BroadcastCommand().setEvent("ack_msg_received")
+                .setToken("yqE%IKjnmH3u874yUsey")
+                .setClientId(rightMeshDataSource.getMyMeshId())
+                .setPayload(payload);
     }
 }

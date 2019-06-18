@@ -235,4 +235,8 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
+    public String getMyUserId() {
+        return myUserId;
+    }
+
 }

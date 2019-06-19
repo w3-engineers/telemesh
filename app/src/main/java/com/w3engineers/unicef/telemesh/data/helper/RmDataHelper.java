@@ -412,9 +412,6 @@ public class RmDataHelper {
         }
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            Log.e("WebsocketResponse: ", "Error: " + t.getMessage());
-            Log.e("WebsocketResponse: ", "Error: " + t.getLocalizedMessage());
-            Log.e("WebsocketResponse: ", "Error: " + t.toString());
 
         }
     }

@@ -550,25 +550,6 @@ public class TeleMeshTest {
 
         RmDataHelper.getInstance().dataReceive(rmDataModel, true);
 
-/*
-        FeedEntity entity = new FeedEntity();
-        entity.setFeedId("testId1");
-        entity.setFeedProviderName("Test Feed Provider");
-        entity.setFeedDetail("Test feed details");
-        entity.setFeedTitle("Test Feed time");
-        entity.setFeedTime("2019-06-014T06:05:50.000Z");
-
-        FeedEntity entity2 = new FeedEntity();
-        entity2.setFeedId("testId2");
-        entity2.setFeedProviderName("Test Feed Provider");
-        entity2.setFeedDetail("Test feed details");
-        entity2.setFeedTitle("Test Feed time");
-        entity2.setFeedProviderLogo("dummy logo link");
-        entity2.setFeedTime("2019-06-014T06:05:50.000Z");
-
-        feedDataSource.insertOrUpdateData(entity);
-        feedDataSource.insertOrUpdateData(entity2);*/
-
         ViewInteraction bottomNavigationMessageFeed = onView(
                 allOf(withId(R.id.action_message_feed),
                         childAtPosition(

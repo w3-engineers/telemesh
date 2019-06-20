@@ -13,10 +13,15 @@ import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import com.google.protobuf.ByteString;
 import com.w3engineers.appshare.application.ui.InAppShareActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass;
+import com.w3engineers.unicef.telemesh.TeleMeshUser;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -28,6 +33,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -37,6 +43,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -292,7 +299,7 @@ public class TeleMeshTest {
         // commented  below two line for ignoring unwanted crash issue in Emulator
         // We will re -enable the code after cod fix
 
-       // constraintLayout2.perform(scrollTo(), click());
+        // constraintLayout2.perform(scrollTo(), click());
 
         addDelay(700);
         //  pressBack();
@@ -402,7 +409,7 @@ public class TeleMeshTest {
 
     // Message and mesh contact test
     @Test
-    public void uiTest_4()  {
+    public void uiTest_4() {
         addDelay(4500);
 
         UserEntity userEntity = new UserEntity()
@@ -517,11 +524,33 @@ public class TeleMeshTest {
         }
     }
 
-    // Testing Message Feed
+    /**
+     * Testing Message/Bulletin Feed
+     * This test also cover {@link com.w3engineers.unicef.telemesh.data.helper.RmDataHelper}
+     * This test send fake bulletin and receive the bulletin
+     * message also show the message in UI
+     * So this test also Message Bulletin UI element also
+     */
     @Test
     public void unit_test_5() {
         addDelay(3800);
 
+        // Prepare bulletin
+        TeleMeshBulletinOuterClass.TeleMeshBulletin bulletin = TeleMeshBulletinOuterClass.TeleMeshBulletin.newBuilder()
+                .setBulletinId("testId1")
+                .setBulletinMessage("Test feed details")
+                .setBulletinTime("2019-06-014T06:05:50.000Z")
+                .build();
+
+        TeleMeshUser.RMDataModel rmDataModel = TeleMeshUser.RMDataModel.newBuilder()
+                .setUserMeshId("0xuodnaiabd1983nd")
+                .setRawData(ByteString.copyFrom(bulletin.toByteArray()))
+                .setDataType(Constants.DataType.MESSAGE_FEED)
+                .build();
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+
+/*
         FeedEntity entity = new FeedEntity();
         entity.setFeedId("testId1");
         entity.setFeedProviderName("Test Feed Provider");
@@ -538,7 +567,7 @@ public class TeleMeshTest {
         entity2.setFeedTime("2019-06-014T06:05:50.000Z");
 
         feedDataSource.insertOrUpdateData(entity);
-        feedDataSource.insertOrUpdateData(entity2);
+        feedDataSource.insertOrUpdateData(entity2);*/
 
         ViewInteraction bottomNavigationMessageFeed = onView(
                 allOf(withId(R.id.action_message_feed),

@@ -143,7 +143,7 @@ public class RmDataHelper {
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     *
+     * <p>
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")
@@ -229,7 +229,7 @@ public class RmDataHelper {
     }
 
 
-    public void broadcastMessage (@NonNull byte[] rawData){
+    public void broadcastMessage(@NonNull byte[] rawData) {
 
 
         List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
@@ -392,7 +392,7 @@ public class RmDataHelper {
     protected final class EchoWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"223344\", \"payload\" : \"{}\"}");
+            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"223355\", \"payload\" : \"{}\"}");
         }
 
         @Override
@@ -406,10 +406,12 @@ public class RmDataHelper {
         public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
 
         }
+
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
             webSocket.close(1001, null);
         }
+
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
 

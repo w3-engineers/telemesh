@@ -64,7 +64,7 @@ public class BulletinTimeSchedulerTest {
 
         // now we have no internet.
         // so we have to call okHttp on Message section
-        //addDelay(1000 * 60);
+        addDelay(1000 * 20);
 
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
         assertTrue(true);

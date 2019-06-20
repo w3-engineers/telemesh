@@ -604,6 +604,11 @@ public class TeleMeshTest {
 
         addDelay(700);
 
+        // test to off mesh service. Because we cannot hit notification button
+        //RmDataHelper.getInstance().stopMeshService();
+
+        addDelay(1000);
+
         mDevice.pressBack();
 
         // clear dummy company

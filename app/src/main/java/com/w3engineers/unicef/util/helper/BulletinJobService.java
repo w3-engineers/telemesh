@@ -13,6 +13,7 @@ import android.app.job.JobService;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -24,7 +25,8 @@ public class BulletinJobService extends JobService {
     @Override
     public boolean onStartJob(@Nullable JobParameters params) {
         if (BulletinTimeScheduler.getInstance().isMobileDataEnable()) {
-//            RmDataHelper.getInstance().requestWsMessage();
+            Log.v("MIMO_SAHA: ", "PP: enabled----------");
+            RmDataHelper.getInstance().requestWsMessage();
 
             Util.scheduleJob(getApplicationContext()); // reschedule the job
         }

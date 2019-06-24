@@ -4,10 +4,15 @@ import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.protobuf.ByteString;
+import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
+import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -47,6 +52,15 @@ public class BroadcastManager {
 
     private static BroadcastManager mBroadcastManager = null;
 
+    private BroadcastSendCallback broadcastSendCallback;
+
+    public interface BroadcastSendCallback {
+        void dataSent(RMDataModel rmDataModel, long dataSendId);
+    }
+
+    public void setBroadcastSendCallback(BroadcastSendCallback broadcastSendCallback) {
+        this.broadcastSendCallback = broadcastSendCallback;
+    }
 
     // The class is used as a singleton
     static {
@@ -107,9 +121,27 @@ public class BroadcastManager {
 
 
     // Add a callable to the queue, which will be executed by the next available thread in the pool
-    public void addBroadCastMessage(@NonNull Callable callable){
-        Future future = mExecutorService.submit(callable);
+    public void addBroadCastMessage(@NonNull SendDataTask sendDataTask){
+        Future future = mExecutorService.submit(sendDataTask);
         mRunningTaskList.add(future);
+
+        try {
+            long result = (long) future.get();
+            if (broadcastSendCallback != null) {
+                MeshData meshData = sendDataTask.getMeshData();
+
+                RMDataModel rmDataModel = RMDataModel.newBuilder()
+                        .setUserMeshId(meshData.mMeshPeer.getPeerId())
+                        .setRawData(ByteString.copyFrom(meshData.mData))
+                        .setDataType(meshData.mType)
+                        .build();
+                broadcastSendCallback.dataSent(rmDataModel, result);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /* Remove all tasks in the queue and stop all running threads

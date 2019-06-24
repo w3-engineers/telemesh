@@ -18,6 +18,9 @@ public class BroadcastCommand {
     @SerializedName("clientId")
     @Expose
     private String clientId;
+    @SerializedName("baseStationId")
+    @Expose
+    private String baseStationId;
     @SerializedName("payload")
     @Expose
     private Payload payload;
@@ -52,6 +55,17 @@ public class BroadcastCommand {
     @NonNull
     public BroadcastCommand setClientId(@Nullable String clientId) {
         this.clientId = clientId;
+        return this;
+    }
+
+    @Nullable
+    public String getBaseStationId() {
+        return baseStationId;
+    }
+
+    @NonNull
+    public BroadcastCommand setBaseStationId(@Nullable String baseStationId) {
+        this.baseStationId = baseStationId;
         return this;
     }
 

@@ -10,6 +10,8 @@ import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseMigration;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackDao;
+import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
@@ -30,7 +32,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, FeedEntity.class},
+        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
@@ -44,6 +46,8 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract MessageDao messageDao();
     @NonNull
     public abstract FeedDao feedDao();
+    @NonNull
+    public abstract BulletinTrackDao bulletinTrackDao();
 
     @NonNull
     public static AppDatabase getInstance() {

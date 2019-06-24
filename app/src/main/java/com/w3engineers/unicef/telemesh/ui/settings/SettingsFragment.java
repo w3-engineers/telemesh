@@ -93,8 +93,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
 
             case R.id.layout_open_wallet:
-                RmDataHelper.getInstance().requestWsMessage();
-//                startActivity(new Intent(mActivity, MyWallet.class));
+                startActivity(new Intent(mActivity, MyWallet.class));
                 break;
             default:
                 break;

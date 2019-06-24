@@ -16,7 +16,7 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
-import com.w3engineers.unicef.telemesh.data.broadcast.MessageBroadcastTask;
+import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.ArrayList;
@@ -35,14 +35,15 @@ public class MeshDataSource extends BaseMeshDataSource {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;
-    private BroadcastManager broadcastManager;
 
     private List<String> userIds;
+    private BroadcastManager broadcastManager;
 
     MeshDataSource(@NonNull byte[] profileInfo) {
         super(App.getContext(), profileInfo);
 
         userIds = new ArrayList<>();
+        broadcastManager = BroadcastManager.getInstance();
     }
 
     @NonNull
@@ -65,29 +66,36 @@ public class MeshDataSource extends BaseMeshDataSource {
     protected void onRmOn() {
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
+
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, getMyMeshId());
     }
 
     /**
      * During send data to peer
      *
-     * @param rmDataModel -> A generic data model which contains userData, type and peerId
+     * @param rmDataModelBuilder -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
-    public long DataSend(@NonNull RMDataModel rmDataModel) {
+    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, String receiverId) {
 
-        try {
+        RMDataModel rmDataModel = rmDataModelBuilder.setUserMeshId(receiverId).build();
 
-            MeshData meshData = new MeshData();
-            meshData.mType = (byte) rmDataModel.getDataType();
-            meshData.mData = rmDataModel.getRawData().toByteArray();
-            meshData.mMeshPeer = new MeshPeer(rmDataModel.getUserMeshId());
+        MeshData meshData = new MeshData();
+        meshData.mType = (byte) rmDataModel.getDataType();
+        meshData.mData = rmDataModel.getRawData().toByteArray();
+        meshData.mMeshPeer = new MeshPeer(rmDataModel.getUserMeshId());
 
-            return sendMeshData(meshData);
-        } catch (Exception e) {
-            e.printStackTrace();
+        broadcastManager.addBroadCastMessage(getMeshDataTask(meshData));
+    }
+
+    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, List<String> receiverIds) {
+        for (String receiverId : receiverIds) {
+            DataSend(rmDataModelBuilder, receiverId);
         }
+    }
 
-        return -1;
+    private SendDataTask getMeshDataTask(MeshData meshData) {
+        return new SendDataTask().setMeshData(meshData).setBaseRmDataSource(this);
     }
 
     /**
@@ -95,8 +103,6 @@ public class MeshDataSource extends BaseMeshDataSource {
      *
      * @param profileInfo -> Got a peer data (profile information and meshId)
      */
-    @SuppressLint("TimberArgCount")
-    @Override
     protected void onPeer(@NonNull BaseMeshData profileInfo) {
 
         try {
@@ -185,39 +191,5 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     protected void resetInstance() {
         rightMeshDataSource = null;
-    }
-
-
-    public int broadcastMessage(@NonNull byte[] rawData, @NonNull List<BaseMeshData> livePeers){
-
-        broadcastManager = BroadcastManager.getInstance();
-
-        int size = livePeers.size();
-
-
-        for(int i=0; i< size; i++){
-
-            Timber.tag("Live Peers").e("size:" + size + " PeerId: " + livePeers.get(i).mMeshPeer.getPeerId());
-
-            if(livePeers.get(i).mMeshPeer.getPeerId()!= null){
-
-                MeshData meshData = new MeshData();
-                // Since message feed will be broadcasted so here the type will be feed
-                meshData.mType = Constants.DataType.MESSAGE_FEED;
-                meshData.mData = rawData;
-                meshData.mMeshPeer = livePeers.get(i).mMeshPeer;
-
-
-                MessageBroadcastTask messageBroadcastTask = new MessageBroadcastTask();
-                messageBroadcastTask.setMeshData(meshData);
-                messageBroadcastTask.setBaseRmDataSource(this);
-                messageBroadcastTask.setCustomThreadPoolManager(broadcastManager);
-
-                broadcastManager.addBroadCastMessage(messageBroadcastTask);
-            }
-
-        }
-
-        return -1;
     }
 }

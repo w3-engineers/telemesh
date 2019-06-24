@@ -61,4 +61,14 @@ public class Constants {
         long LOADING_TIME = 30 * 1000;
         String BROADCAST_URL = "wss://telemesh.w3engineers.com/websocket";
     }
+
+    public interface Bulletin {
+        int DEFAULT = 0;
+        int BULLETIN_SEND = 1;
+        int BULLETIN_RECEIVED = 2;
+        int BULLETIN_SEND_TO_SERVER = 3;
+
+        int MINE = 1;
+        int OTHERS = 0;
+    }
 }

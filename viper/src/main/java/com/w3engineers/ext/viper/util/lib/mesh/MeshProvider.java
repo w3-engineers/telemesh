@@ -36,7 +36,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh-";
+    private String NETWORK_PREFIX = "telemesh_app-";
 
     private MeshProvider(Context context) {
         this.context = context;

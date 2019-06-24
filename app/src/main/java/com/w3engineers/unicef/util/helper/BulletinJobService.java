@@ -25,7 +25,6 @@ public class BulletinJobService extends JobService {
     @Override
     public boolean onStartJob(@Nullable JobParameters params) {
         if (BulletinTimeScheduler.getInstance().isMobileDataEnable()) {
-            Log.v("MIMO_SAHA: ", "PP: enabled----------");
             RmDataHelper.getInstance().requestWsMessage();
 
             Util.scheduleJob(getApplicationContext()); // reschedule the job

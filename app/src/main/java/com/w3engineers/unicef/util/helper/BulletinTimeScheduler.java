@@ -88,7 +88,6 @@ public class BulletinTimeScheduler {
                 if (!noConnectivity) {
                     int state = getNetworkState();
                     if (state == DATA) {
-                        Log.v("MIMO_SAHA: ", "PP: enabled Ack----------");
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
                     }

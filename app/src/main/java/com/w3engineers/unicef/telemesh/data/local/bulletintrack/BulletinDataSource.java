@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.local.bulletintrack;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 
@@ -17,23 +20,27 @@ public class BulletinDataSource {
         bulletinTrackDao = AppDatabase.getInstance().bulletinTrackDao();
     }
 
+    @NonNull
     public static BulletinDataSource getInstance() {
         return bulletinDataSource;
     }
 
-    public long insertOrUpdate(BulletinTrackEntity bulletinTrackEntity) {
+    public long insertOrUpdate(@NonNull BulletinTrackEntity bulletinTrackEntity) {
         return bulletinTrackDao.insertBulletin(bulletinTrackEntity);
     }
 
-    public Single<List<FeedEntity>> getUnsentMessage(String userId) {
+    @Nullable
+    public Single<List<FeedEntity>> getUnsentMessage(@NonNull String userId) {
         return bulletinTrackDao.getUnsentMessage(userId);
     }
 
+    @Nullable
     public Single<List<BulletinTrackEntity>> getAllSuccessBulletin() {
         return bulletinTrackDao.getAllSuccessBulletin();
     }
 
-    public Single<Integer> setFullSuccess(String messageId, String userId) {
+    @NonNull
+    public Single<Integer> setFullSuccess(@NonNull String messageId, @NonNull String userId) {
         return Single.fromCallable(() -> bulletinTrackDao.setFullSuccess(messageId, userId));
     }
 }

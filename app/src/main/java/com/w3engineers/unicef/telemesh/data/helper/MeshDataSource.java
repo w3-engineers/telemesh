@@ -76,7 +76,7 @@ public class MeshDataSource extends BaseMeshDataSource {
      * @param rmDataModelBuilder -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
-    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, String receiverId) {
+    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, @NonNull String receiverId) {
 
         RMDataModel rmDataModel = rmDataModelBuilder.setUserMeshId(receiverId).build();
 
@@ -88,7 +88,7 @@ public class MeshDataSource extends BaseMeshDataSource {
         broadcastManager.addBroadCastMessage(getMeshDataTask(meshData));
     }
 
-    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, List<String> receiverIds) {
+    public void DataSend(@NonNull RMDataModel.Builder rmDataModelBuilder, @NonNull List<String> receiverIds) {
         for (String receiverId : receiverIds) {
             DataSend(rmDataModelBuilder, receiverId);
         }

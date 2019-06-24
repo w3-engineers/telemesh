@@ -8,6 +8,9 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,27 +26,30 @@ public class AckCommand {
     @Expose
     private String clientId;
 
+    @NonNull
     public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(@NonNull Integer status) {
         this.status = status;
     }
 
+    @Nullable
     public String getAckMsgId() {
         return ackMsgId;
     }
 
-    public void setAckMsgId(String ackMsgId) {
+    public void setAckMsgId(@Nullable String ackMsgId) {
         this.ackMsgId = ackMsgId;
     }
 
+    @Nullable
     public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
+    public void setClientId(@Nullable String clientId) {
         this.clientId = clientId;
     }
 

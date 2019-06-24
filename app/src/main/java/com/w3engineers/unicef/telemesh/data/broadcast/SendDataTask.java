@@ -31,6 +31,7 @@ public class SendDataTask implements Callable {
         return baseRmDataSource;
     }
 
+    @NonNull
     public SendDataTask setBaseRmDataSource(@NonNull BaseMeshDataSource baseRmDataSource) {
         this.baseRmDataSource = baseRmDataSource;
         return this;
@@ -41,6 +42,7 @@ public class SendDataTask implements Callable {
         return mMeshData;
     }
 
+    @NonNull
     public SendDataTask setMeshData(@Nullable MeshData mMeshData) {
         this.mMeshData = mMeshData;
         return this;

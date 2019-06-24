@@ -55,10 +55,10 @@ public class BroadcastManager {
     private BroadcastSendCallback broadcastSendCallback;
 
     public interface BroadcastSendCallback {
-        void dataSent(RMDataModel rmDataModel, long dataSendId);
+        void dataSent(@NonNull RMDataModel rmDataModel, long dataSendId);
     }
 
-    public void setBroadcastSendCallback(BroadcastSendCallback broadcastSendCallback) {
+    public void setBroadcastSendCallback(@Nullable BroadcastSendCallback broadcastSendCallback) {
         this.broadcastSendCallback = broadcastSendCallback;
     }
 

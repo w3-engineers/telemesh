@@ -77,8 +77,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @NonNull
     public HashMap<Long, RMDataModel> rmDataMap = new HashMap<>();
 
-    private HashMap<Long, RMDataModel> ackMap = new HashMap<>();
-
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
@@ -258,7 +256,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                                                 .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
                                                 .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
                             }
-                        }));
+                        }, Throwable::printStackTrace));
             } else {
 
                 BulletinDataSource.getInstance().insertOrUpdate(
@@ -429,7 +427,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(feedEntity.getFeedId()));
                             broadcastMessage(feedEntity);
                         }
-                    }));
+                    }, Throwable::printStackTrace));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -533,7 +531,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     @Override
-    public void dataSent(RMDataModel rmDataModel, long dataSendId) {
+    public void dataSent(@NonNull RMDataModel rmDataModel, long dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 }

@@ -13,7 +13,6 @@ import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNa
 public interface ColumnNames extends BaseColumnNames {
     //Users table
     String COLUMN_USER_NAME = "user_name";
-//    String COLUMN_USER_LAST_NAME = "user_last_name";
     String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";
@@ -32,19 +31,6 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_MESSAGE_TIME = "time";
     String COLUMN_MESSAGE_STATUS = "message_status";
 
-    /**
-     * Survey table column
-     */
-    String COLUMN_SENDER_ID = "sender_id";
-    String COLUMN_SURVEY_ID = "survey_id";
-    String COLUMN_SURVEY_TITLE = "survey_title";
-    String COLUMN_SURVEY_FORM = "survey_form";
-    String COLUMN_START_TIME = "start_time";
-    String COLUMN_END_TIME = "end_time";
-    String COLUMN_VENDOR_NAME = "vendor_name";
-    String COLUMN_IS_SUBMITTED = "is_submitted";
-    String COLUMN_SURVEY_ANS = "survey_answer";
-
 
     /**
      * Message Feed table column
@@ -56,4 +42,13 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_FEED_DETAIL = "feed_detail";
     String COLUMN_FEED_TIME = "feed_time";
     String COLUMN_FEED_READ_STATUS = "feed_read_status";
+
+    /**
+     * Bulletin track table column
+     */
+    String COLUMN_BULLETIN_MESSAGE_ID = "bulletin_message_id";
+    String COLUMN_BULLETIN_TRACK_USER_ID = "bulletin_track_user_id";
+    String COLUMN_BULLETIN_ACK_STATUS = "bulletin_ack_status";
+    String COLUMN_BULLETIN_OWNER_STATUS = "bulletin_owner_status";
+
 }

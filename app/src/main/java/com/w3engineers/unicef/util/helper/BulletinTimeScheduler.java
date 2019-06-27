@@ -18,9 +18,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 
 public class BulletinTimeScheduler {
 
@@ -85,6 +87,7 @@ public class BulletinTimeScheduler {
                 if (!noConnectivity) {
                     int state = getNetworkState();
                     if (state == DATA) {
+                        RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
                     }
                 } else {

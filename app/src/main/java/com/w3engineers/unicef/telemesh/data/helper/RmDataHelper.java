@@ -1,24 +1,37 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
+import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
+import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
+import com.w3engineers.unicef.telemesh.TeleMeshUser;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
+import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
+import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -30,6 +43,7 @@ import com.w3engineers.unicef.util.helper.TimeUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,7 +64,7 @@ import timber.log.Timber;
  * Proprietary and confidential
  * ============================================================================
  */
-public class RmDataHelper {
+public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
     private MeshDataSource rightMeshDataSource;
@@ -67,6 +81,7 @@ public class RmDataHelper {
 
     private RmDataHelper() {
         rmUserMap = new HashMap<>();
+        BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
 
     @NonNull
@@ -110,6 +125,8 @@ public class RmDataHelper {
                 .toUserEntity(rmUserModel)
                 .setOnline(true);
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
+
+        syncUserWithBroadcastMessage(userId);
     }
 
     /**
@@ -143,7 +160,7 @@ public class RmDataHelper {
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     * <p>
+     *
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")
@@ -161,7 +178,7 @@ public class RmDataHelper {
                     }
                 }, Throwable::printStackTrace));
 
-        compositeDisposable.add(dataSource.getReSendMessage()
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getReSendMessage())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(chatEntity -> {
 
@@ -183,14 +200,12 @@ public class RmDataHelper {
      */
     private void dataSend(@NonNull byte[] data, byte type, String userId) {
 
-        RMDataModel rmDataModel = RMDataModel.newBuilder()
+        RMDataModel.Builder rmDataModel = RMDataModel.newBuilder()
                 .setRawData(ByteString.copyFrom(data))
-                .setUserMeshId(userId)
-                .setDataType(type).build();
+                .setDataType(type);
 
-        long dataSendId = rightMeshDataSource.DataSend(rmDataModel);
-
-        rmDataMap.put(dataSendId, rmDataModel);
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, userId));
     }
 
     /**
@@ -214,51 +229,41 @@ public class RmDataHelper {
                 setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
 
-            case Constants.DataType.SURVEY:
-                // TODO include survey data operation module. i.e. DB operation and process and return a single insertion observer
-                break;
-
             case Constants.DataType.MESSAGE_FEED:
-                // TODO include feed data operation module. i.e. DB operation and return a single insertion observer
-
-                setBulletinMessage(rawData);
-//                feedCallback.feedMessage(broadcastString);
-
+                setBulletinMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
         }
     }
 
-
-    public void broadcastMessage(@NonNull byte[] rawData) {
-
-
-        List<UserEntity> livePeers = UserDataSource.getInstance().getLivePeers();
-        List<BaseMeshData> meshDataList = new ArrayList<>();
-
-        for (int i = 0; i < livePeers.size(); i++) {
-
-            MeshPeer meshPeer = new MeshPeer(livePeers.get(i).meshId);
-
-            BaseMeshData baseMeshData = new BaseMeshData();
-            baseMeshData.mMeshPeer = meshPeer;
-
-            meshDataList.add(baseMeshData);
-        }
-
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(() -> rightMeshDataSource.broadcastMessage(rawData, meshDataList));
-    }
-
-    private void setBulletinMessage(byte[] rawBulletinData) {
+    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
         try {
+
             TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
                     .mergeFrom(rawBulletinData).build();
 
             FeedEntity feedEntity = new FeedEntity()
-                    .toFeedEntity(teleMeshBulletin)
-                    .setFeedReadStatus(false);
+                    .toFeedEntity(teleMeshBulletin);
 
-            FeedDataSource.getInstance().insertOrUpdateData(feedEntity);
+            if (isNewMessage) {
+                feedEntity.setFeedReadStatus(false);
+
+                compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
+                        .subscribe(aLong -> {
+                            if (aLong != -1) {
+                                BulletinDataSource.getInstance().insertOrUpdate(
+                                        getMyTrackEntity(feedEntity.getFeedId())
+                                                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
+                                                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
+                            }
+                        }, Throwable::printStackTrace));
+            } else {
+
+                BulletinDataSource.getInstance().insertOrUpdate(
+                        getOthersTrackEntity(feedEntity.getFeedId(), userId)
+                                .setBulletinAckStatus(isAckSuccess ?
+                                        Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -332,7 +337,6 @@ public class RmDataHelper {
         }
     }
 
-
     public void stopMeshService() {
         updateUserStatus();
     }
@@ -384,53 +388,150 @@ public class RmDataHelper {
     public void requestWsMessage() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(Constants.AppConstant.BROADCAST_URL).build();
-        EchoWebSocketListener listener = new EchoWebSocketListener();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getBroadcastCommand());
         client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
 
-    protected final class EchoWebSocketListener extends WebSocketListener {
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            webSocket.send("{\"event\":\"connect\", \"token\":\"yqE%IKjnmH3u874yUsey\", \"clientId\" : \"223355\", \"payload\" : \"{}\"}");
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            Log.d("WebsocketResponse: ", "Response: " + text);
-            processBroadcastMessage(text);
-            webSocket.close(1001, "Goodbye !");
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, okio.ByteString bytes) {
-
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1001, null);
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-
-        }
+    private String getMyMeshId() {
+        return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
     }
 
-    protected void processBroadcastMessage(@NonNull String broadcastText) {
-        try {
+    private void requestAckMessage(String messageId) {
+        requestAckMessage(messageId, getMyMeshId());
+    }
 
+    private void requestAckMessage(String messageId, String userId) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(Constants.AppConstant.BROADCAST_URL).build();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getAckCommand(messageId, userId));
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+    }
+
+    void processBroadcastMessage(@NonNull String broadcastText) {
+        try {
+            Timber.tag("MIMO_SAHA:").v("Brd: %s", broadcastText);
             BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);
+
+            requestAckMessage(bulletinFeed.getMessageId());
 
             FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
 
-            FeedDataSource.getInstance().insertOrUpdateData(feedEntity);
-
-            broadcastMessage(feedEntity.toTelemeshBulletin().toByteArray());
+            compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+                    .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
+                    .subscribe(aLong -> {
+                        if (aLong != -1) {
+                            BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(feedEntity.getFeedId()));
+                            broadcastMessage(feedEntity);
+                        }
+                    }, Throwable::printStackTrace));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void broadcastMessage (@NonNull FeedEntity feedEntity){
+
+        List<String> meshDataList = new ArrayList<>();
+
+        for (UserEntity userEntity : UserDataSource.getInstance().getLivePeers()) {
+
+            meshDataList.add(userEntity.meshId);
+
+            BulletinDataSource.getInstance().insertOrUpdate(
+                    getOthersTrackEntity(feedEntity.getFeedId(), userEntity.meshId));
+        }
+
+        RMDataModel.Builder rmDataModel = RMDataModel.newBuilder()
+                .setRawData(ByteString.copyFrom(feedEntity.toTelemeshBulletin().toByteArray()))
+                .setDataType(Constants.DataType.MESSAGE_FEED);
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList));
+    }
+
+    private void syncUserWithBroadcastMessage(String userId) {
+        compositeDisposable.add(BulletinDataSource.getInstance()
+                .getUnsentMessage(userId).subscribeOn(Schedulers.newThread())
+                .subscribe(feedEntities -> {
+                    sendSyncBroadcastMessage(feedEntities, userId);
+                }, Throwable::printStackTrace));
+    }
+
+    private void sendSyncBroadcastMessage(List<FeedEntity> feedEntities, String userId) {
+        if (feedEntities != null) {
+            for (FeedEntity feedEntity : feedEntities) {
+
+                BulletinDataSource.getInstance().insertOrUpdate(
+                        getOthersTrackEntity(feedEntity.getFeedId(), userId));
+
+                dataSend(feedEntity.toTelemeshBulletin().toByteArray(), Constants.DataType.MESSAGE_FEED, userId);
+            }
+        }
+    }
+
+    void processBroadcastAck(@NonNull String ackText) {
+        AckCommand ackCommand = new Gson().fromJson(ackText, AckCommand.class);
+        if (ackCommand.getStatus() == 1) {
+            compositeDisposable.add(BulletinDataSource.getInstance()
+                    .setFullSuccess(ackCommand.getAckMsgId(), ackCommand.getClientId())
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(integer -> {}, Throwable::printStackTrace));
+        }
+    }
+
+    public void sendPendingAck() {
+        compositeDisposable.add(BulletinDataSource.getInstance().getAllSuccessBulletin()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::sendToServer, Throwable::printStackTrace));
+    }
+
+    private void sendToServer(List<BulletinTrackEntity> bulletinTrackEntities) {
+        for (BulletinTrackEntity bulletinTrackEntity : bulletinTrackEntities) {
+            requestAckMessage(bulletinTrackEntity.getBulletinMessageId(), bulletinTrackEntity.getBulletinTrackUserId());
+        }
+    }
+
+    private BroadcastCommand getBroadcastCommand() {
+        Payload payload = new Payload();
+        return new BroadcastCommand().setEvent("connect")
+                .setToken("yqE%IKjnmH3u874yUsey")
+                .setBaseStationId(getMyMeshId())
+                .setClientId(getMyMeshId())
+                .setPayload(payload);
+    }
+
+    private BroadcastCommand getAckCommand(String messageId, String userId) {
+        Payload payload = new Payload().setMessageId(messageId);
+        return new BroadcastCommand().setEvent("ack_msg_received")
+                .setToken("yqE%IKjnmH3u874yUsey")
+                .setClientId(getMyMeshId())
+                .setClientId(userId)
+                .setPayload(payload);
+    }
+
+    private BulletinTrackEntity getMyTrackEntity(String messageId) {
+        return new BulletinTrackEntity()
+                .setBulletinMessageId(messageId)
+                .setBulletinTrackUserId(getMyMeshId())
+                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_RECEIVED)
+                .setBulletinOwnerStatus(Constants.Bulletin.MINE);
+    }
+
+    private BulletinTrackEntity getOthersTrackEntity(String messageId, String userId) {
+        return new BulletinTrackEntity()
+                .setBulletinMessageId(messageId)
+                .setBulletinTrackUserId(userId)
+                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND)
+                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
+    }
+
+    @Override
+    public void dataSent(@NonNull RMDataModel rmDataModel, long dataSendId) {
+        rmDataMap.put(dataSendId, rmDataModel);
     }
 }

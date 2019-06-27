@@ -180,6 +180,11 @@ public class BaseRmService extends Service implements IMeshCallBack {
         public void stopMeshProcess() throws RemoteException {
 
         }
+
+        @Override
+        public String getMyId() throws RemoteException {
+            return null;
+        }
     };
 
     @Override

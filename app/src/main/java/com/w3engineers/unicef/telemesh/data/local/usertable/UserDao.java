@@ -44,6 +44,16 @@ public abstract class UserDao extends BaseDao<UserEntity> {
 
     // Relatively faster then direct sub query, still expecting some more performance improvement of this query
     // Should be exactly minimum value
+
+    /**
+     * SELECT * FROM user LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE message_status WHEN 1 THEN 1 ELSE 0 END)
+     * AS hasUnreadMessage, MAX(id) AS MAXID FROM messages GROUP BY friends_id) AS M INNER JOIN messages
+     * AS MSG ON MSG.friends_id = M.friends_id WHERE MSG.id = M.MAXID) AS MESS ON user.mesh_id = MESS.friends_id
+     * ORDER BY IFNULL(message_status,2) ASC, is_online DESC, user.user_name COLLATE NOCASE ASC
+     *
+     * @return
+     */
+
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "

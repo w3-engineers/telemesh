@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.main;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
     private Menu bottomMenu;
+
+    // Location element
+    LocationManager locationManager;
+
     @Nullable
     public static MainActivity mainActivity;
 
@@ -227,4 +232,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     public void sendToUi(String message) {
         Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
     }*/
+
+
 }

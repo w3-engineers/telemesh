@@ -97,6 +97,17 @@ public abstract class BaseMeshDataSource {
         }
     }
 
+    public String getMyMeshId() {
+        try {
+            if(iSetInfo != null){
+                return iSetInfo.getMyId();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * To check underlying service properly initiated or not
      * @return true if connected

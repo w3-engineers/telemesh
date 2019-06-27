@@ -172,6 +172,11 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         public void stopMeshProcess() throws RemoteException {
             stopProcess();
         }
+
+        @Override
+        public String getMyId() throws RemoteException {
+            return meshProvider.getMyUserId();
+        }
     };
 
     @Nullable

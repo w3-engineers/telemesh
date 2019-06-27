@@ -38,7 +38,7 @@ public class Util {
         ComponentName serviceComponent = new ComponentName(context, BulletinJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(jobId, serviceComponent);
 //        builder.setMinimumLatency(1000); // wait at least
-        builder.setOverrideDeadline(TimeUnit.SECONDS.toMillis(10)); // maximum delay
+        builder.setOverrideDeadline(TimeUnit.MINUTES.toMillis(5)); // maximum delay
         //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         builder.setRequiresDeviceIdle(true); // device should be idle
         builder.setRequiresCharging(false); // we don't care if the device is charging or not

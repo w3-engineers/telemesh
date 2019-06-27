@@ -1,4 +1,4 @@
-// IRmServiceConnection.aidl
+// IRmServiceConnection.aidlnull
 package com.w3engineers.ext.viper;
 
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;

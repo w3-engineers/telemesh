@@ -69,6 +69,7 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
+
 }
 
 //MMH apply from: 'lint-checks.gradle'

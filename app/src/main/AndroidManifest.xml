@@ -40,17 +40,17 @@
     <application
         android:name="com.w3engineers.unicef.TeleMeshApplication"
         android:allowBackup="true"
-        android:fullBackupContent="@xml/my_backup_rules"
         android:configChanges="locale"
         android:extractNativeLibs="false"
-        tools:replace="android:name"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="UnusedAttribute">
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute"
+        tools:replace="android:name">
 
         <activity
             android:name=".ui.main.MainActivity"
@@ -79,7 +79,7 @@
         <activity android:name=".ui.bulletindetails.BulletinDetails" />
         <activity
             android:name=".ui.chat.ChatActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service
             android:name="com.w3engineers.unicef.util.helper.BulletinJobService"

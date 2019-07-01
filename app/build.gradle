@@ -157,6 +157,8 @@ dependencies {
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.github.MimoSaha:app-share:1.1.8'
 
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
     api project(':meshlib')
     api project(':paylib')
 

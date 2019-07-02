@@ -20,6 +20,8 @@ licenses:
     - 'android-sdk-license-.+'
 
 before_install:
+  - wget 'https://{$MESHLIB_WGET_URL}@meshlib.w3engineers.com/meshlib.zip' -O /tmp/meshlib.zip
+  - unzip /tmp/meshlib.zip -d ./
   - "chmod +x gradlew"
   - yes | sdkmanager "platforms;android-28"
 # Emulator Management: Create, Start and Wait

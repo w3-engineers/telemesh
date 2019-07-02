@@ -17,6 +17,8 @@ import com.w3engineers.eth.ui.MyWallet;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.datasharing.ui.MyDataplan;
+import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
+import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -89,11 +91,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                startActivity(new Intent(getActivity(), MyDataplan.class));
+                startActivity(new Intent(getActivity(), DataPlanActivity.class));
                 break;
 
             case R.id.layout_open_wallet:
-                startActivity(new Intent(mActivity, MyWallet.class));
+                startActivity(new Intent(mActivity, WalletActivity.class));
                 break;
             default:
                 break;

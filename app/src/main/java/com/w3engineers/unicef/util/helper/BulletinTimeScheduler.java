@@ -103,6 +103,7 @@ public class BulletinTimeScheduler {
         Util.scheduleJob(context);
     }
 
+    @NonNull
     public NetworkCheckReceiver getReceiver() {
         return new NetworkCheckReceiver();
     }

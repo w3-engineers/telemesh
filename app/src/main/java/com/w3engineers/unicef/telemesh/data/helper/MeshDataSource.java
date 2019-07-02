@@ -12,6 +12,7 @@ import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
@@ -118,7 +119,8 @@ public class MeshDataSource extends BaseMeshDataSource {
                 if (rmUserModel != null) {
 
                     rmUserModel.setUserId(userId);
-                    RmDataHelper.getInstance().userAdd(rmUserModel.build());
+                    HandlerUtil.postBackground(()-> RmDataHelper.getInstance().userAdd(rmUserModel.build()));
+
                 }
             }
         } catch (Exception e) {
@@ -138,7 +140,7 @@ public class MeshDataSource extends BaseMeshDataSource {
         String userId = meshPeer.getPeerId();
 
         if (userIds.contains(userId)) {
-            RmDataHelper.getInstance().userLeave(meshPeer);
+            HandlerUtil.postBackground(()-> RmDataHelper.getInstance().userLeave(meshPeer));
             userIds.remove(userId);
         }
     }
@@ -156,7 +158,7 @@ public class MeshDataSource extends BaseMeshDataSource {
                 .setDataType(meshData.mType)
                 .build();
 
-        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+        HandlerUtil.postBackground(()-> RmDataHelper.getInstance().dataReceive(rmDataModel, true));
     }
 
     /**
@@ -172,7 +174,7 @@ public class MeshDataSource extends BaseMeshDataSource {
                 .setIsAckSuccess(meshAcknowledgement.isSuccess)
                 .build();
 
-        RmDataHelper.getInstance().ackReceive(rmDataModel);
+        HandlerUtil.postBackground(()-> RmDataHelper.getInstance().ackReceive(rmDataModel));
     }
 
     @Override

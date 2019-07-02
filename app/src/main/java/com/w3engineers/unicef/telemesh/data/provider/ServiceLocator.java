@@ -29,12 +29,13 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 public class ServiceLocator extends BaseServiceLocator {
 
     // SingleTon
-    private ServiceLocator(){
+    protected ServiceLocator(){
 
     }
 
     // to manage proper singleton that will remained singleton during multi-thread instance
     public static class ServiceLocatorHolder{
+        @NonNull
         public static ServiceLocator serviceLocator = new ServiceLocator();
     }
 

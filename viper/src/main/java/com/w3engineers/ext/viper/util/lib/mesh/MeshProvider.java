@@ -19,28 +19,31 @@ import com.w3engineers.mesh.TransportManager;
 import com.w3engineers.mesh.TransportState;
 import com.w3engineers.mesh.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
 import com.w3engineers.mesh.wifi.protocol.Link;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MeshProvider implements LinkStateListener {
 
     private static MeshProvider meshProvider;
 
     private Context context;
-    private HashMap<String, Link> peerLinkMap;
+    private List<String> userIds;
     private ProviderCallback providerCallback;
     private TransportManager transportManager;
 
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_app-";
+    private String NETWORK_PREFIX = "telemeshApp-";
 
     private MeshProvider(Context context) {
         this.context = context;
-        peerLinkMap = new HashMap<>();
+        userIds = new ArrayList<>();
     }
 
     public static MeshProvider getInstance(Context context) {
@@ -119,48 +122,48 @@ public class MeshProvider implements LinkStateListener {
     }
 
     @Override
-    public void linkConnected(String nodeId, Link link) {
-        peerDiscovered(nodeId, link);
+    public void linkConnected(String nodeId) {
+        peerDiscovered(nodeId);
     }
 
     @Override
-    public void onMeshLinkFound(String nodeId, Link link) {
-        peerDiscovered(nodeId, link);
+    public void onMeshLinkFound(String nodeId) {
+        peerDiscovered(nodeId);
     }
 
-    private void peerDiscovered(String nodeId, Link link) {
+    private void peerDiscovered(String nodeId) {
 
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
 
-        if (!peerLinkMap.containsKey(nodeId)) {
-            peerLinkMap.put(nodeId, link);
-            sendMyInfo(nodeId, link);
+        if (!userIds.contains(nodeId)) {
+            sendMyInfo(nodeId);
+            userIds.add(nodeId);
         }
     }
 
     /**
      * Send my info after discovering him
      * @param nodeId - The discovered node id
-     * @param link - Connection info between us
      */
-    private void sendMyInfo(String nodeId, Link link) {
+    private void sendMyInfo(String nodeId) {
+        HandlerUtil.postBackground(()-> {
+            MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
 
-        MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
-
-        if (meshData != null) {
-            meshData.mPeerId = myUserId;
-            link.sendFrame(nodeId, myUserId, MeshData.getMeshData(meshData));
-        }
+            if (meshData != null) {
+                meshData.mPeerId = myUserId;
+                transportManager.sendMessage(nodeId, myUserId, MeshData.getMeshData(meshData));
+//                link.sendFrame(nodeId, myUserId, MeshData.getMeshData(meshData));
+            }
+        });
     }
 
     /**
      * When a node id or peer link is removed we get those callback
-     * @param link connection object to disconnected device
      */
     @Override
-    public void linkDisconnected(Link link) {
-        peerRemoved(link.getNodeId());
+    public void linkDisconnected(String nodeId) {
+        peerRemoved(nodeId);
     }
 
     @Override
@@ -169,7 +172,7 @@ public class MeshProvider implements LinkStateListener {
     }
 
     private void peerRemoved(String peerId) {
-        peerLinkMap.remove(peerId);
+        userIds.remove(peerId);
         if (providerCallback != null)
             providerCallback.connectionRemove(new MeshPeer(peerId));
     }
@@ -183,10 +186,10 @@ public class MeshProvider implements LinkStateListener {
         if (meshData != null) {
             String peerId = meshData.mMeshPeer.getPeerId();
             if (!TextUtils.isEmpty(peerId)) {
-                Link link = peerLinkMap.get(peerId);
-                if (link != null) {
-                    meshData.mPeerId = myUserId;
-                    return link.sendFrame(peerId, myUserId, MeshData.getMeshData(meshData));
+                meshData.mPeerId = myUserId;
+
+                if (transportManager != null) {
+                    return transportManager.sendMessage(peerId, myUserId, MeshData.getMeshData(meshData));
                 }
             }
         }

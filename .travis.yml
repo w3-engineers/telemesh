@@ -20,7 +20,7 @@ licenses:
     - 'android-sdk-license-.+'
 
 before_install:
-  - wget '{$MESHLIB_WGET_URL}' -O /tmp/meshlib.zip
+  - wget $MESHLIB_WGET_URL -O /tmp/meshlib.zip
   - unzip /tmp/meshlib.zip -d ./
   - "chmod +x gradlew"
   - yes | sdkmanager "platforms;android-28"

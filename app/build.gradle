@@ -157,6 +157,9 @@ dependencies {
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'com.github.MimoSaha:app-share:1.1.8'
 
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+
+
     api project(':meshlib')
     api project(':paylib')
 
@@ -247,3 +250,4 @@ repositories {
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
+apply plugin: 'com.google.gms.google-services'

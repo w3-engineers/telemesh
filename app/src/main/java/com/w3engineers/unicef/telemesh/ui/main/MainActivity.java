@@ -227,4 +227,5 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     public void sendToUi(String message) {
         Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
     }*/
+
 }

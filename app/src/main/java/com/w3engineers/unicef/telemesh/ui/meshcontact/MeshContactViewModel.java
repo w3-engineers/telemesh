@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -14,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
@@ -65,10 +67,18 @@ public class MeshContactViewModel extends BaseRxViewModel {
         if (userEntities != null) {
             List<UserEntity> filteredItemList = new ArrayList<>();
 
-            for (UserEntity user : userEntities) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //use java stream api on collection
+                filteredItemList = userEntities.stream()
+                        .filter(userEntity -> userEntity.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+                        .collect(Collectors.toList());
+            }else{
 
-                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
-                    filteredItemList.add(user);
+                for (UserEntity user : userEntities) {
+
+                    if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+                        filteredItemList.add(user);
+                }
             }
 
             getFilteredList.postValue(filteredItemList);

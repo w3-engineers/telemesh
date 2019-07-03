@@ -18,7 +18,7 @@ import io.reactivex.Flowable;
  */
 public class MessageSourceData {
 
-    private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
+    //private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
 
 //    public MessageSourceData() {
@@ -27,30 +27,48 @@ public class MessageSourceData {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param messageDao -> provide dao from unit test class
      */
     public MessageSourceData(@NonNull MessageDao messageDao) {
         this.messageDao = messageDao;
     }
 
+
+    // to get the singleton flavour
+    private MessageSourceData() {
+
+    }
+
     @NonNull
     public static MessageSourceData getInstance() {
-        if (messageSourceData == null) {
+        /*if (messageSourceData == null) {
             messageSourceData = getInstance(AppDatabase.getInstance().messageDao());
         }
-        return messageSourceData;
+        return messageSourceData;*/
+
+        return MessageSourceDataHolder.messageSourceData;
+    }
+
+    public static class MessageSourceDataHolder {
+        public static MessageSourceData messageSourceData =
+                new MessageSourceData(AppDatabase.getInstance().messageDao());
     }
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param messageDao -> provide dao from unit test class
      */
     @NonNull
     public static MessageSourceData getInstance(@NonNull MessageDao messageDao) {
-        if (messageSourceData == null) {
+        /*if (messageSourceData == null) {
             messageSourceData = new MessageSourceData(messageDao);
         }
-        return messageSourceData;
+        return messageSourceData;*/
+
+        // Anjan: I am changing this On-Demand-Holder initialization technique which is the cute way
+        return MessageSourceDataHolder.messageSourceData;
     }
 
     @NonNull

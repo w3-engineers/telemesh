@@ -17,7 +17,8 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     public void userOfflineProcess() {
         getCompositeDisposable().add(updateUserToOffline()
-                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
+                .subscribeOn(Schedulers.io())
+                .subscribe(integer -> {}, Throwable::printStackTrace));
     }
 
     private Single<Integer> updateUserToOffline() {

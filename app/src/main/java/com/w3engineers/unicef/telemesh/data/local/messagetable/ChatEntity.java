@@ -18,7 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
  * ============================================================================
  */
 @SuppressLint("ParcelCreator")
-public class ChatEntity extends DbBaseEntity {
+public class ChatEntity extends DbBaseEntity implements Comparable<ChatEntity>{
 
     @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_ID)
@@ -39,6 +39,11 @@ public class ChatEntity extends DbBaseEntity {
 
     @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_STATUS)
     public int status;
+
+    @Override
+    public int compareTo(ChatEntity o) {
+        return 0;
+    }
 
     public static final DiffUtil.ItemCallback<ChatEntity> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<ChatEntity>() {
@@ -139,6 +144,7 @@ public class ChatEntity extends DbBaseEntity {
     public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
         throw new IllegalStateException();
     }
+
 
 
 }

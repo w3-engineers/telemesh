@@ -59,6 +59,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
         BulletinTimeScheduler.getInstance().connectivityRegister();
 
+        //Method reference of an instance method
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();

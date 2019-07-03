@@ -283,15 +283,15 @@ public class TeleMeshTest {
 
         ViewInteraction openWallet = onView(allOf(withId(R.id.layout_open_wallet),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
-        openWallet.perform(scrollTo(), click());
+//        openWallet.perform(scrollTo(), click());
 
-        addDelay(700);
+       // addDelay(700);
 
-        pressBack();
+       // pressBack();
 
 //        mDevice.pressBack();
 
-        addDelay(700);
+     //   addDelay(700);
 
         ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
@@ -301,7 +301,7 @@ public class TeleMeshTest {
 
         // constraintLayout2.perform(scrollTo(), click());
 
-        addDelay(700);
+      //  addDelay(700);
         //  pressBack();
 
 

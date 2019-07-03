@@ -32,7 +32,8 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+#   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+  - ./gradlew clean build connectedCheck coveralls -PdisablePreDex --stacktrace
 #   - ./gradlew :app:lintDebug
 
 after_failure:

@@ -33,8 +33,9 @@ before_script:
 
 script:
 #   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
-  - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
+#  - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
 #   - ./gradlew :app:lintDebug
+  - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
 after_failure:
   # Customize this line, 'android' is the specific app module name of this project. Shows log.

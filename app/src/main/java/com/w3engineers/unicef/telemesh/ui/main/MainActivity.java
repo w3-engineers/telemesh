@@ -1,34 +1,33 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.w3.offlinelocationtrack.OfflineLocationTracker;
+import com.w3.offlinelocationtrack.listener.LocationUpdateListener;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -38,6 +37,8 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
+import java.util.List;
+
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
@@ -45,7 +46,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private Menu bottomMenu;
 
     // Location element
-    LocationManager locationManager;
+    private OfflineLocationTracker locationTracker;
+    private long updateTime = 1000 * 60; // 1 minute
+    private int minimumDistance = 0; // meter basis
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Nullable
     public static MainActivity mainActivity;
@@ -93,7 +98,9 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
 //        mViewModel.makeSendingMessageAsFailed();
 
-        initLocationManager();
+        // Only for location element
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        initLocationTracker();
     }
 
     private MainActivityViewModel getViewModel() {
@@ -163,6 +170,12 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        locationTracker.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setFragmentsOnPosition(@NonNull MenuItem item) {
         Fragment mFragment = null;
         String toolbarTitle = "";
@@ -220,6 +233,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onDestroy() {
+        locationTracker.removeLocationUpdate();
         super.onDestroy();
 //        mViewModel.userOfflineProcess();
     }
@@ -248,102 +262,40 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
     }*/
 
+    private void initLocationTracker() {
 
-    private void initLocationManager() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        locationTracker = OfflineLocationTracker.getInstance();
 
-        // getting GPS status
-        boolean isGPSEnabled = locationManager
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        locationTracker.init(MainActivity.this)
+                                .setUpdateTime(updateTime)
+                                .setMinimumDistance(minimumDistance)
+                                .requestLocation();
 
-        Log.d("TelemeshTag", "isGPSEnabled " + isGPSEnabled);
+                        locationTracker.getLocationListener(location -> {
+                            String userName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+                            String userId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
-        Criteria c = new Criteria();
-        // String provider = locationManager.getBestProvider(c, false);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, userId);
+                            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, userName);
+                            bundle.putDouble("latitude", location.getLatitude());
+                            bundle.putDouble("longitude", location.getLongitude());
+                            mFirebaseAnalytics.setUserId(userId);
+                            mFirebaseAnalytics.setUserProperty("userName", userName);
+                            mFirebaseAnalytics.logEvent("LocationTrack", bundle);
+                        });
+                    }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0,
-                0, locationListenerGPS);
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
 
-        isLocationEnabled();
-
-
-        if (locationManager != null) {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
-                Log.d("TelemeshTag", msg);
-            }
-        }
-    }
-
-    private LocationListener locationListenerGPS = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
-            Log.d("TelemeshTag", msg);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d("TelemeshTag", "onStatusChanged " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.d("TelemeshTag", "onProviderEnabled " + provider);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.d("TelemeshTag", "onProviderDisabled " + provider);
-        }
-    };
-
-    private void isLocationEnabled() {
-
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Enable Location");
-            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
-            alertDialog.setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alert = alertDialog.create();
-            alert.show();
-        } else {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Confirm Location");
-            alertDialog.setMessage("Your Location is enabled, please enjoy");
-            alertDialog.setNegativeButton("Back to interface", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alert = alertDialog.create();
-            alert.show();
-        }
     }
 }

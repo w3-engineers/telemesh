@@ -160,7 +160,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     * <p>
+     *
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")

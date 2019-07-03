@@ -99,7 +99,7 @@ public class RandomEntityGenerator {
         return baseMeshData;
     }*/
 
-    public BaseMeshData createBaseMeshData(UserEntity userEntity){
+    public BaseMeshData createBaseMeshData(UserEntity userEntity) {
         BaseMeshData baseMeshData = new BaseMeshData();
 
         baseMeshData.mData = userEntity == null ? null : userEntity.getProtoUser().toByteArray();
@@ -118,12 +118,17 @@ public class RandomEntityGenerator {
                 .setDataType(1).build();
     }*/
 
-    public RMDataModel createRMDataModel() {
+    public RMDataModel.Builder createRMDataModel() {
+
 
         return RMDataModel.newBuilder()
                 .setRawData(ByteString.copyFrom("Hi".getBytes()))
+                .setDataType(Constants.DataType.MESSAGE_FEED);
+
+        /*return RMDataModel.newBuilder()
+                .setRawData(ByteString.copyFrom("Hi".getBytes()))
                 .setUserMeshId(UUID.randomUUID().toString())
-                .setDataType(1).build();
+                .setDataType(1).build();*/
     }
 
     /*public ChatEntity createChatEntity(String userId) throws Exception {
@@ -185,7 +190,7 @@ public class RandomEntityGenerator {
 
         meshData.mType = Constants.DataType.MESSAGE;
         meshData.mMeshPeer = new MeshPeer(userId);
-        meshData.mData = ((MessageEntity)chatEntity).toProtoChat().toByteArray();
+        meshData.mData = ((MessageEntity) chatEntity).toProtoChat().toByteArray();
 
         return meshData;
     }

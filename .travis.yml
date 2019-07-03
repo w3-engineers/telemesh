@@ -33,7 +33,7 @@ before_script:
 
 script:
 #   - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
-  - ./gradlew clean build connectedCheck coveralls -PdisablePreDex --stacktrace
+  - ./gradlew clean build lintDebug connectedCheck coveralls -PdisablePreDex --stacktrace
 #   - ./gradlew :app:lintDebug
 
 after_failure:

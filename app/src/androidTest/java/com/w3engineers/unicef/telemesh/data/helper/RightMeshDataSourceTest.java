@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -121,7 +123,7 @@ public class RightMeshDataSourceTest {
         SUT.onPeerGone(meshPeer);
 
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        assertFalse(retrieveUser !=null && retrieveUser.isOnline());
+        assertFalse(retrieveUser != null && retrieveUser.isOnline());
     }
 
     @Test
@@ -129,8 +131,8 @@ public class RightMeshDataSourceTest {
 
         addDelay();
 
-        TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel);
+        TeleMeshUser.RMDataModel.Builder rmDataModel = randomEntityGenerator.createRMDataModel();
+        SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
     }
 
     private void addDelay() {

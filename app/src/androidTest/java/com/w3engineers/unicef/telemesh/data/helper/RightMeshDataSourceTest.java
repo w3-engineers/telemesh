@@ -83,6 +83,9 @@ public class RightMeshDataSourceTest {
 
         addDelay();
         addDelay();
+        addDelay();
+        addDelay();
+
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
         addDelay();
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
@@ -182,7 +185,11 @@ public class RightMeshDataSourceTest {
         addDelay();
         SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
 
-        addDelay();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 

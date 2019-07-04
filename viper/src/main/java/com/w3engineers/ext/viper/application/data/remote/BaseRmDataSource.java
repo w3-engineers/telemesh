@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.ext.viper.application.data.remote;
 
 import android.app.Service;
@@ -21,38 +22,48 @@ import java.util.List;
 
 import timber.log.Timber;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 // TODO: 8/8/2018 Add profile info to be sent from BaseService tyo manage discovery policy
 public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
-    /**
+    */
+/**
      * Called upon receiving any Peer data
      * @param profileInfo
-     */
+     *//*
+
     protected abstract void onPeer(BaseMeshData profileInfo);
 
-    /**
+    */
+/**
      * Calls upon disappearing of peers
      * @param meshPeer
-     */
+     *//*
+
     protected abstract void onPeerGone(MeshPeer meshPeer);
 
-    /**
+    */
+/**
      * Upon receiving any data from any peer
      * @param meshData
-     */
+     *//*
+
     protected abstract void onData(MeshData meshData);
 
-    /**
+    */
+/**
      * Upon receiving Data delivery acknowledgement
      * @param meshAcknowledgement
-     */
+     *//*
+
     protected abstract void onAcknowledgement(MeshAcknowledgement meshAcknowledgement);
 
     private IRmServiceConnection mIRmServiceConnection;
@@ -135,10 +146,12 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         }
     };
 
-    /**
+    */
+/**
      * Retrieve peers which are live with their profile info
      * @return {@link List} of {@link BaseMeshData} which represents live peers in the network
-     */
+     *//*
+
     public List<BaseMeshData> getLivePeers() {
 
         try {
@@ -152,19 +165,23 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         return null;
     }
 
-    /**
+    */
+/**
      * To check underlying service properly initiated or not
      * @return true if connected
-     */
+     *//*
+
     public boolean isServiceConnected() {
         return mIRmServiceConnection != null;
     }
 
-    /**
+    */
+/**
      * If service is not initiated properly then this method throws {@link IllegalStateException}.
      * Before using the method check service initiation through {@link #isServiceConnected()}
      * @param isForeGround
-     */
+     *//*
+
     public void setServiceForeground(boolean isForeGround) {
 
         if(mIRmServiceConnection == null) {
@@ -174,14 +191,16 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         try {
             mIRmServiceConnection.setServiceForeground(isForeGround);
 
-            /*if(mContext != null) {
+            */
+/*if(mContext != null) {
 
                 if (isForeGround) {
                     mContext.unbindService(mServiceConnection);
                 } else {
                     initService(mContext);
                 }
-            }*/
+            }*//*
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -191,13 +210,15 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
 
     //AIDL remote call back. These abstracts AIDL complexity from app layer
 
-    /**
+    */
+/**
      * Send data through mesh library. Before calling you must be sure that service is active.
      * You can check that by whether {@link #onAttachedToService()} method is called or not.
      * @param meshData
      * @return
      * @throws RemoteException
-     */
+     *//*
+
     public final long sendMeshData(MeshData meshData) throws RemoteException {
 
         if(mIRmServiceConnection != null && meshData != null && meshData.mData != null &&
@@ -244,34 +265,42 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
         //remote AIDL service is destroyed, do some work if application needs to do anything
 
         //To kill RM library service, current app's local service and current app's process
-        /*List<Integer> myProcessIdList = RmUtility.getMyProcessIdList(App.getContext());
+        */
+/*List<Integer> myProcessIdList = RmUtility.getMyProcessIdList(App.getContext());
         for(int pid : myProcessIdList) {
             Process.killProcess(pid);
         }
-        Process.killProcess(Process.myPid());*/
+        Process.killProcess(Process.myPid());*//*
+
 
         onRmOff();
     }
 
-    /**
+    */
+/**
      * Overridable method to receive the event of Library init
      * @throws RemoteException
-     */
+     *//*
+
     protected void onRmOn() { }
 
-    /**
+    */
+/**
      * Overridable method to receive the event of library destroy
      * @throws RemoteException
-     */
+     *//*
+
     protected void onRmOff() { }
 
-    /**
+    */
+/**
      * Convenient method so that developers can get the service attached event.
      * This method is called whenever app binds with the private service. This may occur several time
      * within the lifecycle. So, you should not do heavy lifting here. If you need to initiate something
      * or heavy lifting then you should make sure that is happening only once within the lifecycle
      * or alternatively you can consider {@link #onRmOn()}
-     */
+     *//*
+
     protected void onAttachedToService() { }
 
     public void openRmSettings(){
@@ -315,3 +344,4 @@ public abstract class BaseRmDataSource extends IRmCommunicator.Stub {
     }
 
 }
+*/

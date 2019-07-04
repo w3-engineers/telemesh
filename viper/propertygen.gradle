@@ -1,3 +1,4 @@
+/*
 ext {
 
     Properties localProperties = new Properties()
@@ -19,4 +20,4 @@ ext {
     port_number = globalProperties.getProperty("port_number")
     rm_ssid = globalProperties.getProperty('rm_ssid', '')
     rm_super_peer = globalProperties.getProperty('rm_super_peer', '')
-}
+}*/

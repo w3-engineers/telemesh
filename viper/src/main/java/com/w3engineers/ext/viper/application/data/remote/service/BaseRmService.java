@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.ext.viper.application.data.remote.service;
 
 import android.app.Service;
@@ -25,13 +26,15 @@ import java.util.List;
 import timber.log.Timber;
 
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 // TODO: 8/8/2018 Should override Baservice to stop services properly???
 public class BaseRmService extends Service implements IMeshCallBack {
 
@@ -190,7 +193,8 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onMesh(MeshData meshData) {
 
-        /*if (mIsTaskCleared) {//No task is there need to broadcast data
+        */
+/*if (mIsTaskCleared) {//No task is there need to broadcast data
 
             Intent intent = new Intent(mBroadcastActionString);
             intent.putExtra(getString(R.string.mesh_data), meshData);
@@ -207,7 +211,8 @@ public class BaseRmService extends Service implements IMeshCallBack {
                     }
                 }
             }
-        }*/
+        }*//*
+
 
         for(IRmCommunicator iRmCommunicator : mIRmCommunicators) {
 
@@ -237,7 +242,8 @@ public class BaseRmService extends Service implements IMeshCallBack {
 
         }
 
-        /*for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+        */
+/*for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
             if (mIRmCommunicator != null) {
                 try {
                     mIRmCommunicator.onMeshAcknowledgement(meshAcknowledgement);
@@ -245,7 +251,8 @@ public class BaseRmService extends Service implements IMeshCallBack {
                     e.printStackTrace();
                 }
             }
-        }*/
+        }*//*
+
     }
 
     @Override
@@ -297,11 +304,13 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        /*if(mIsServiceToCloseWithTask) {
+        */
+/*if(mIsServiceToCloseWithTask) {
             shutTheService();
         }
 
-        mIsTaskCleared = true;*/
+        mIsTaskCleared = true;*//*
+
     }
 
     private void shutTheService() {
@@ -332,3 +341,4 @@ public class BaseRmService extends Service implements IMeshCallBack {
         Process.killProcess(Process.myPid());
     }
 }
+*/

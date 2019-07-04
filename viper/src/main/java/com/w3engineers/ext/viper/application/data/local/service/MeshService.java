@@ -47,7 +47,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         //Please do not modify here, this is an auto generated property from developers
         //local.properties class
         MeshConfig meshConfig = new MeshConfig();
-        meshConfig.mPort = getResources().getInteger(R.integer.rm_port_number);
+        meshConfig.mPort = 10623;
 
         meshProvider = MeshProvider.getInstance(getApplicationContext());
 

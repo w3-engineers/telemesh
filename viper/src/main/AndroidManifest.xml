@@ -11,14 +11,14 @@
 
         <!--The process name is always prefixed by App's Id. So fixed name not going to be a issue and
         separate App would generate separate unique process name-->
-        <service
+        <!--<service
             android:name="com.w3engineers.ext.viper.application.data.remote.service.BaseRmService"
             android:stopWithTask="false"
             android:enabled="true"
             android:exported="true"
             android:description="@string/app_local_service_description"
             android:process="@string/base_rm_process_name">
-        </service>
+        </service>-->
 
         <service android:name=".application.data.local.service.MeshService"
             android:stopWithTask="false"

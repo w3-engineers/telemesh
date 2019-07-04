@@ -25,9 +25,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3.offlinelocationtrack.OfflineLocationTracker;
 import com.w3.offlinelocationtrack.listener.LocationUpdateListener;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
-import com.w3engineers.mesh.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -277,8 +277,9 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                                 .requestLocation();
 
                         locationTracker.getLocationListener(location -> {
-                            String userName = SharedPref.read(Constants.preferenceKey.USER_NAME);
-                            String userId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+                            SharedPref sharedPref = SharedPref.getSharedPref(MainActivity.this);
+                            String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+                            String userId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
                             Bundle bundle = new Bundle();
                             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, userId);

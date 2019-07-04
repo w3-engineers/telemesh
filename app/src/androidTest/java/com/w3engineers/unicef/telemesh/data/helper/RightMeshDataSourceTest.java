@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
@@ -27,8 +28,10 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /*
@@ -88,9 +91,21 @@ public class RightMeshDataSourceTest {
 
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
         addDelay();
+        addDelay();
+        addDelay();
+        addDelay();
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
+        if (retrieveFullName == null) {
+            assertNull(retrieveFullName);
+            return;
+        }
 
-        assertEquals(userEntity.getFullName(), retrieveFullName);
+        String realUserName = userEntity == null ? null : userEntity.getFullName();
+        if (realUserName == null) {
+            assertNull(realUserName);
+            return;
+        }
+        assertEquals(realUserName, retrieveFullName);
     }
 
     /*@Test
@@ -182,6 +197,9 @@ public class RightMeshDataSourceTest {
         addDelay();
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+
+        String prevMessageId = chatEntity != null ? chatEntity.getMessageId() : null;
+
         addDelay();
         SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
 
@@ -191,9 +209,23 @@ public class RightMeshDataSourceTest {
             e.printStackTrace();
         }
 
-        ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
+        if (prevMessageId == null) {
+            assertNull(prevMessageId);
+            return;
+        }
 
-        assertThat(chatEntity.getMessageId(), is(retrieveChatEntity.getMessageId()));
+        ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(prevMessageId);
+        addDelay();
+
+        String newMessageId = retrieveChatEntity != null ? retrieveChatEntity.getMessageId() : null;
+
+        if (!TextUtils.isEmpty(newMessageId) || !TextUtils.isEmpty(prevMessageId)) {
+            assertThat(prevMessageId, is(newMessageId));
+        } else {
+            assertNull(newMessageId);
+        }
+
+
     }
 
     @Test

@@ -219,10 +219,12 @@ public class RightMeshDataSourceTest {
 
         String newMessageId = retrieveChatEntity != null ? retrieveChatEntity.getMessageId() : null;
 
-        if (!TextUtils.isEmpty(newMessageId) || !TextUtils.isEmpty(prevMessageId)) {
-            assertThat(prevMessageId, is(newMessageId));
-        } else {
+        if (newMessageId == null) {
             assertNull(newMessageId);
+            return;
+        }
+        if (!TextUtils.isEmpty(newMessageId) && !TextUtils.isEmpty(prevMessageId)) {
+            assertThat(prevMessageId, is(newMessageId));
         }
 
 

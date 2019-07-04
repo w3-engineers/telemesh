@@ -82,9 +82,9 @@ public class RightMeshDataSourceTest {
         SUT.onPeer(baseMeshData);
 
         addDelay();
-
+        addDelay();
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-
+        addDelay();
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
 
         assertEquals(userEntity.getFullName(), retrieveFullName);
@@ -121,8 +121,9 @@ public class RightMeshDataSourceTest {
 
         MeshPeer meshPeer = baseMeshData.mMeshPeer;
         SUT.onPeerGone(meshPeer);
-
+        addDelay();
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
+        addDelay();
         assertFalse(retrieveUser != null && retrieveUser.isOnline());
     }
 
@@ -178,7 +179,7 @@ public class RightMeshDataSourceTest {
         addDelay();
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
-
+        addDelay();
         SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
 
         addDelay();

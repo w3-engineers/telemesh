@@ -49,6 +49,12 @@ public class SettingsViewModelTest {
     @Test
     public void testSetLocale_success_setValidData() {
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
 

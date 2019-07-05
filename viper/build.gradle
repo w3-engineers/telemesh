@@ -85,8 +85,8 @@ dependencies {
 
     }
 
-    api project(':meshlib')
-    api project(':paylib')
+    api deps.mesh
+    api deps.pay
 
     //Image Picker, Glide
     implementation deps.glide

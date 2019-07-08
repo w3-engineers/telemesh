@@ -73,6 +73,6 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
 
     @Override
     public void closeInAppShare() {
-        ServiceLocator.getInstance().resetRmDataSourceInstance();
+        ServiceLocator.getInstance().resetMesh();
     }
 }

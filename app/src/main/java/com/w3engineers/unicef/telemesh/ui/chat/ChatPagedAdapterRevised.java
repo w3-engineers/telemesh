@@ -5,6 +5,7 @@ import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,11 +29,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     @NonNull
     public Context mContext;
+    @Nullable
+    protected ChatViewModel chatViewModel;
 
 
-    public ChatPagedAdapterRevised(@NonNull Context context) {
+    public ChatPagedAdapterRevised(@NonNull Context context, @Nullable ChatViewModel chatViewModel) {
         super(DIFF_CALLBACK);
         mContext = context;
+        this.chatViewModel = chatViewModel;
     }
 
 
@@ -131,6 +135,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
+            binding.setChatViewModel(chatViewModel);
         }
 
         @Override

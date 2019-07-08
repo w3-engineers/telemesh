@@ -72,6 +72,10 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
 
         @Override
         public void bind(@NonNull UserEntity item) {
+
+            itemMeshContactBinding.userMeshStatus.setBackgroundResource(item.isOnline() ?
+                    R.drawable.circle_online : R.drawable.circle_offline);
+
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
         }

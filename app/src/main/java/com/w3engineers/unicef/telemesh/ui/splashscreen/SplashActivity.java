@@ -10,14 +10,13 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import timber.log.Timber;
 
 public class SplashActivity extends BaseActivity {
-
-    //    private ServiceLocator serviceLocator;
 
     @Override
     protected int getLayoutId() {
@@ -29,6 +28,10 @@ public class SplashActivity extends BaseActivity {
     protected void startUI() {
 
         SplashViewModel splashViewModel = getViewModel();
+        ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();
+
+        activitySplashBinding.setSplashViewModel(splashViewModel);
+
         splashViewModel.getUserRegistrationStatus();
         ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
         shimmerFrameLayout.startShimmer();

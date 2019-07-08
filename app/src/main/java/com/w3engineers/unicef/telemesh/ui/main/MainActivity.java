@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
@@ -19,13 +21,15 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
-import com.w3engineers.unicef.telemesh.ui.survey.SurveyFragment;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
-//    private ServiceLocator serviceLocator;
     private boolean doubleBackToExitPressedOnce = false;
+    private Menu bottomMenu;
+    @Nullable
+    public static MainActivity mainActivity;
 
     @Override
     protected int getLayoutId() {
@@ -39,7 +43,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
     @Override
@@ -50,8 +54,13 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
+        Constants.IS_LOADING_ENABLE = false;
+        mainActivity = this;
+
+        BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+        bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
         mViewModel = getViewModel();
         //when  counting need to add
@@ -63,7 +72,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             //call createBadgeCount() put necessary params (count, position)
         });*/
 
-        mViewModel.makeSendingMessageAsFailed();
+//        mViewModel.makeSendingMessageAsFailed();
 
     }
 
@@ -72,14 +81,25 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                serviceLocator = ServiceLocator.getInstance();
                 return (T) ServiceLocator.getInstance().getMainActivityViewModel();
             }
         }).get(MainActivityViewModel.class);
     }
 
     private void initBottomBar() {
-        loadFragment(new MeshContactsFragment(), getString(R.string.title_contacts_fragment));
+
+        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        Fragment mFragment = null;
+        if (fromSettings) {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_setting);
+            menuItem.setChecked(true);
+            mFragment = new SettingsFragment();
+        } else {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_contact);
+            menuItem.setChecked(true);
+            mFragment = new MeshContactsFragment();
+        }
+        loadFragment(mFragment, getString(R.string.title_contacts_fragment));
 
 //        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
 //                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
@@ -137,12 +157,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                         , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
                 break;
-            case R.id.action_survey:
-                toolbarTitle = getString(R.string.title_survey_fragment);
-              /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
-                        , Constants.MenuItemPosition.POSITION_FOR_SURVEY);*/
-                mFragment = new SurveyFragment();
-                break;
             case R.id.action_setting:
                 toolbarTitle = getString(R.string.title_settings_fragment);
                 mFragment = new SettingsFragment();
@@ -187,7 +201,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.userOfflineProcess();
+//        mViewModel.userOfflineProcess();
     }
 
     @NonNull
@@ -208,4 +222,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         Toaster.showShort(getString(R.string.double_press_exit));
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
     }
+
+    /*@Override
+    public void sendToUi(String message) {
+        Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
+    }*/
+
 }

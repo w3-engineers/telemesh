@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <variable
+            name="feedEntity"
+            type="com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/buy_data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.w3engineers.ext.strom.application.ui.base.BaseToolBar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/white"
+            android:theme="@style/ToolbarTheme"
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/title_color">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/chat_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image"
+                    android:layout_width="@dimen/width_40"
+                    android:layout_height="@dimen/height_40"
+                    android:background="@mipmap/ic_unicef"
+                    app:civ_circle_background_color="@color/out_coming_message_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_view_last_name"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:ellipsize="end"
+                    android:ems="@integer/three_dot_ems"
+                    android:fontFamily="@font/poppins_regular"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/margin_5"
+                    android:text="@string/unicef"
+                    android:textColor="@color/select_photo_text_color"
+                    android:textSize="@dimen/text_size_18"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+        </com.w3engineers.ext.strom.application.ui.base.BaseToolBar>
+
+        <View
+            android:id="@+id/shadow_view"
+            style="@style/shadow_style_settings_page"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/padding_3"
+            android:layout_margin="0dp"
+            android:paddingBottom="@dimen/padding_3"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/shadow_view">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_15"
+                    android:layout_marginRight="@dimen/margin_15"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="@{TimeUtil.getBroadcastFullTime(feedEntity.feedTime)}"
+                    android:textColor="@color/deep_layer_grey"
+                    android:textSize="@dimen/text_small_body_14"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginRight="@dimen/margin_15"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="@{feedEntity.feedDetail}"
+                    android:textColor="@color/deep_layer_grey_text"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintTop_toBottomOf="@+id/time" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

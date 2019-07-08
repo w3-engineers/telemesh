@@ -3,8 +3,8 @@ package com.w3engineers.unicef;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.MeshApp;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
@@ -16,7 +16,7 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  * Proprietary and confidential
  * ============================================================================
  */
-public class TeleMeshApplication extends App {
+public class TeleMeshApplication extends MeshApp {
 
     @Override
     protected void attachBaseContext(@NonNull Context base) {
@@ -28,7 +28,6 @@ public class TeleMeshApplication extends App {
             language = "en";
         }
         LanguageUtil.setAppLanguage(base, language);
-
     }
 
 }

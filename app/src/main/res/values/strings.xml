@@ -1,42 +1,31 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">TeleMesh</string>
-    <string name="activity_view_profile">View Profile</string>
-    <!--<string name="enter_your_name">Enter your name</string>-->
-    <string name="enter_first_name">First name</string>
-    <string name="enter_last_name">Last name</string>
-    <!--<string name="select_avater_text">Select an avatar</string>-->
+    <string name="activity_view_profile">My Profile</string>
+    <string name="enter_first_name">Type Your Name</string>
     <string name="signup">Sign Up</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
-    <string name="select_avatar">Please select an avatar</string>
+    <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">Contacts</string>
     <string name="title_message_feed_fragment">Message Feed</string>
-    <string name="title_survey_fragment">Survey</string>
     <string name="title_settings_fragment">Settings</string>
-    <!-- notification badge count more than 9 -->
-    <!--<string name="badge_count_more_than_9">9+</string>-->
-    <string name="power_by_rightmesh">Powered by</string>
-    <string name="communication_tool_to_connect">Connect the unconnected</string>
+
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">Please click BACK again to exit.</string>
     <string name="chat_send_button_description" translatable="false">Send icon.</string>
 
-
-
     <string name="demo_language">English</string>
-    <string name="activity_about_us">About Us</string>
+    <string name="activity_about_us">About Telemesh</string>
     <string name="app_version">Version:</string>
 
-    <string name="no_contact_available">No Contact Available</string>
-    <string name="no_message_available">No Message Available</string>
-    <string name="no_survey_available">No Survey Available</string>
+    <string name="no_contact_available">There are no Telemesh users nearby.</string>
+    <string name="no_message_available">No broadcasting message available</string>
 
     <string name="search">Search</string>
     <string name="type_message">Type your message…</string>
-    <!--<string name="no_conversation">No conversation yet!</string>-->
 
     // Fixed value for getting cursor drawable from Edit text or search view
     <string name="cursordrawable">mCursorDrawableRes</string>
@@ -45,31 +34,24 @@
     <string name="yesterday">Yesterday</string>
 
     // Settings title
-    <!--<string name="settings_view_profile">View Profile</string>-->
-    <string name="settings_notification_sound">Notifications Sound</string>
-    <string name="settings_choose_language">Choose Language</string>
+    <string name="settings_choose_language">Language</string>
     <string name="settings_share_app">Share App</string>
-    <!--<string name="settings_about_us">About Us</string>-->
-    <string name="settings_privacy_policy">Privacy Policy</string>
-    <string name="settings_open_wallet">My wallet</string>
+    <string name="settings_open_wallet">My Wallet</string>
 
     <string name="choose_language">Choose a Language</string>
-    <string name="ok">OK</string>
     <string name="image">Image</string>
-    <!--<string name="cancel">Cancel</string>-->
 
-    <string name="settings_item_image">Settings icon image</string>
-    <string name="rmesh">RMESH</string>
-    <string name="current_balance" tools:ignore="ExtraTranslation">Current Balance</string>
-    <string name="spent_balance">Spent Balance</string>
-    <string name="earned_balance">Earned Balance</string>
-    <string name="rm_gb_data">100 RM/GB</string>
-    <string name="sell_data">Sell Data</string>
-    <string name="buy_data">Buy Data</string>
-    <string name="balance">Balance</string>
-    <string name="wallet_id">wallet Id:</string>
-    <string name="buy_data_success">Buy data Successfully done!</string>
-    <string name="sell_data_success">Sell data Successfully done!</string>
+    <string name="id">ID</string>
+
+    <string name="this_may_take_while">This may take a while…</string>
+    <string name="discovering_users">Discovering Users</string>
+    <string name="searching">Searching…</string>
+    <string name="data_plan">My Data Plan</string>
+    <string name="no_chat_available">Type your first message\nlet the story begin</string>
+
+    <string name="profile">Profile</string>
+    <string name="company_org">Company/Organization: %s</string>
+    <string name="unicef">UNICEF</string>
 
     <string-array name="language_list">
         <item>English</item>

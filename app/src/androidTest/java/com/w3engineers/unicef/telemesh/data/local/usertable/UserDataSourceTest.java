@@ -125,8 +125,6 @@ public class UserDataSourceTest {
         return new UserEntity()
                 .setMeshId(meshId)
                 .setCustomId(customId)
-                .setUserFirstName(firstName)
-                .setUserLastName(lastName)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(lastOnlineTime)
                 .setOnline(true);

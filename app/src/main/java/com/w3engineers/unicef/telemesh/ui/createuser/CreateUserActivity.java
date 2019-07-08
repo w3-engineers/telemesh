@@ -1,14 +1,21 @@
 package com.w3engineers.unicef.telemesh.ui.createuser;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
-import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
@@ -17,15 +24,13 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import java.util.List;
 
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
     private ActivityCreateUserBinding mBinding;
-
-//    private ServiceLocator serviceLocator;
     private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
@@ -40,56 +45,44 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void startUI() {
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
         setTitle(getString(R.string.create_user));
-        getWindow().setBackgroundDrawableResource(R.mipmap.splash_screen_bg);
         mViewModel = getViewModel();
+
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
         mBinding.imageViewCamera.setOnClickListener(this);
         mBinding.buttonSignup.setOnClickListener(this);
         mBinding.imageProfile.setOnClickListener(this);
 
-        mBinding.editTextFirstName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
-        mBinding.editTextLastName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
-        mBinding.editTextFirstName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
-        mBinding.editTextLastName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
+        mBinding.editTextName.setMaxCharacters(Constants.DefaultValue.MAXIMUM_TEXT_LIMIT);
+        mBinding.editTextName.setMinCharacters(Constants.DefaultValue.MINIMUM_TEXT_LIMIT);
 
+        mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
+        mViewModel.textEditControl(mBinding.editTextName);
+    }
 
-        mBinding.editTextLastName.setOnEditorActionListener((textView, i, keyEvent) -> {
-            saveData();
-            return true;
-        });
+    private void nextButtonControl(String nameText) {
+        if (mViewModel.getImageIndex() >= 0 &&
+                !TextUtils.isEmpty(nameText) &&
+                nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
+            mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
+            mBinding.buttonSignup.setClickable(true);
+        } else {
 
-        final Flowable<Boolean> firstNameObservable = RxTextView.afterTextChangeEvents(mBinding.editTextFirstName)
-                .map(textViewAfterTextChangeEvent -> mViewModel.isNameValid(textViewAfterTextChangeEvent.view().getText().toString())).toFlowable(BackpressureStrategy.LATEST);
-
-        final Flowable<Boolean> lastNameObservable = RxTextView.afterTextChangeEvents(mBinding.editTextLastName)
-                .map(textViewAfterTextChangeEvent -> mViewModel.isNameValid(textViewAfterTextChangeEvent.view().getText().toString())).toFlowable(BackpressureStrategy.LATEST);
-
-
-        final Flowable<Boolean> combineResult = Flowable.combineLatest(
-                firstNameObservable,
-                lastNameObservable,
-                (aBoolean, aBoolean2) -> aBoolean && aBoolean2
-        );
-
-        getCompositeDisposable().add(combineResult.subscribe(aBoolean -> {
-                    mBinding.buttonSignup.setEnabled(aBoolean);
-                    if (aBoolean) {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.ENABLE_EFFECT);
-                    } else {
-                        mBinding.buttonSignup.setAlpha(Constants.ButtonOpacity.DISABLE_EFFECT);
-                    }
-                }, Throwable::printStackTrace
-        ));
-
+            mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.deep_grey));
+            mBinding.buttonSignup.setClickable(false);
+        }
     }
 
     private CreateUserViewModel getViewModel() {
@@ -101,6 +94,34 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             }
         }).get(CreateUserViewModel.class);
     }
+
+    protected void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        if (report.areAllPermissionsGranted()) {
+                            goNext();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            requestMultiplePermissions();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(
+                            List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+    }
+
 
     @Override
     public void onClick(@NonNull View view) {
@@ -131,18 +152,26 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
+
+            nextButtonControl(mBinding.editTextName.getText().toString());
         }
     }
 
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "", mBinding.editTextLastName.getText() + "")) {
-                Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            requestMultiplePermissions();
         } else {
             Toaster.showLong(getString(R.string.select_avatar));
+        }
+    }
+
+    protected void goNext() {
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         }
     }
 }

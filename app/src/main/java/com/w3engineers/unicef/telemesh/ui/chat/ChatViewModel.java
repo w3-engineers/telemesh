@@ -18,8 +18,8 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
-import com.w3engineers.unicef.telemesh.pager.ChatEntityListDataSource;
-import com.w3engineers.unicef.telemesh.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
+import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
@@ -61,9 +61,6 @@ public class ChatViewModel extends AndroidViewModel {
 
     private CompositeDisposable compositeDisposable;
     private  MutableLiveData<PagedList<ChatEntity>> mutableMovieList = new MutableLiveData<>();
-
-
-
 
     /**
      * <h1>View model constructor</h1>
@@ -201,6 +198,12 @@ public class ChatViewModel extends AndroidViewModel {
     @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
         return mutableMovieList;
+    }
+
+    public void messageOperation(@NonNull ChatEntity chatEntity) {
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
+        messageInsertionProcess(chatEntity);
+        dataSource.reSendMessage(chatEntity);
     }
 
     /**

@@ -8,11 +8,9 @@
 
     <!--Base process name-->
     <string name="base_rm_process_name">:RmBaseService</string>
-    <string name="rm_process_name">.mesh</string>
 
     <!--service description-->
     <string name="app_local_service_description">To retain RM library workable with high priority</string>
 
     <!--service broadcast upon task clear-->
-    <string name="mesh_data">data</string>
 </resources>

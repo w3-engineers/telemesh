@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
@@ -23,10 +24,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /*
@@ -44,9 +49,9 @@ public class RightMeshDataSourceTest {
 
     private RmDataHelper rmDataHelper;
 
-    private RightMeshDataSource SUT;
+    private MeshDataSource SUT;
     private RandomEntityGenerator randomEntityGenerator;
-    private int transferKey = 2381;
+    private long transferKey = 2381;
 
     @Before
     public void setUp() {
@@ -65,30 +70,10 @@ public class RightMeshDataSourceTest {
         rmDataHelper.initSource(source);
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
-        SUT = new RightMeshDataSource(userEntity.getProtoUser().toByteArray());
+        SUT = new MeshDataSource(userEntity.getProtoUser().toByteArray());
 
         SUT.onRmOn();
     }
-
-    /*@Test
-    public void testOnPeerAdd_getNonNull_setValidUser() throws Exception {
-
-        UserEntity userEntity = randomEntityGenerator.createUserEntity();
-
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
-
-        SUT.onPeer(baseMeshData);
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-
-        assertNotNull(retrieveUser);
-    }*/
 
     @Test
     public void testOnPeerAdd_checkUserFullName_setValidUser() {
@@ -100,12 +85,27 @@ public class RightMeshDataSourceTest {
         SUT.onPeer(baseMeshData);
 
         addDelay();
+        addDelay();
+        addDelay();
+        addDelay();
 
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-
+        addDelay();
+        addDelay();
+        addDelay();
+        addDelay();
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
+        if (retrieveFullName == null) {
+            assertNull(retrieveFullName);
+            return;
+        }
 
-        assertEquals(userEntity.getFullName(), retrieveFullName);
+        String realUserName = userEntity == null ? null : userEntity.getFullName();
+        if (realUserName == null) {
+            assertNull(realUserName);
+            return;
+        }
+        assertEquals(realUserName, retrieveFullName);
     }
 
     /*@Test
@@ -139,9 +139,10 @@ public class RightMeshDataSourceTest {
 
         MeshPeer meshPeer = baseMeshData.mMeshPeer;
         SUT.onPeerGone(meshPeer);
-
+        addDelay();
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        assertFalse(retrieveUser !=null && retrieveUser.isOnline());
+        addDelay();
+        assertFalse(retrieveUser != null && retrieveUser.isOnline());
     }
 
     @Test
@@ -149,8 +150,8 @@ public class RightMeshDataSourceTest {
 
         addDelay();
 
-        TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel);
+        TeleMeshUser.RMDataModel.Builder rmDataModel = randomEntityGenerator.createRMDataModel();
+        SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
     }
 
     private void addDelay() {
@@ -197,13 +198,36 @@ public class RightMeshDataSourceTest {
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
 
-        SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
+        String prevMessageId = chatEntity != null ? chatEntity.getMessageId() : null;
 
         addDelay();
+        SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
 
-        ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        assertThat(chatEntity.getMessageId(), is(retrieveChatEntity.getMessageId()));
+        if (prevMessageId == null) {
+            assertNull(prevMessageId);
+            return;
+        }
+
+        ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(prevMessageId);
+        addDelay();
+
+        String newMessageId = retrieveChatEntity != null ? retrieveChatEntity.getMessageId() : null;
+
+        if (newMessageId == null) {
+            assertNull(newMessageId);
+            return;
+        }
+        if (!TextUtils.isEmpty(newMessageId) && !TextUtils.isEmpty(prevMessageId)) {
+            assertThat(prevMessageId, is(newMessageId));
+        }
+
+
     }
 
     @Test
@@ -216,7 +240,7 @@ public class RightMeshDataSourceTest {
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
 
-        int transferKey = this.transferKey++;
+        long transferKey = this.transferKey++;
         TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator
                 .createChatEntityRmDataModel(userEntity.getMeshId(), (MessageEntity) chatEntity);
 

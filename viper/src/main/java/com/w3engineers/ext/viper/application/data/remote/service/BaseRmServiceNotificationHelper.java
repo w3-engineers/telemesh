@@ -21,10 +21,10 @@ import com.w3engineers.ext.viper.R;
 public class BaseRmServiceNotificationHelper {
 
     private static final int NOTIFICATION_ID = 1;
-    static final String ACTION_STOP_SERVICE = "stop_service";
+    public static final String ACTION_STOP_SERVICE = "stop_service";
     private Service mService;
 
-    protected BaseRmServiceNotificationHelper(Service service) {
+    public BaseRmServiceNotificationHelper(Service service) {
 
         this.mService = service;
 
@@ -35,7 +35,7 @@ public class BaseRmServiceNotificationHelper {
      * Upon checking the source code icon texts can be configured from app layer. App Name should
      * be automatically fetched from Application layer if developers maintain convention
      */
-    void startForegroundService() {
+    public void startForegroundService() {
 
         if(mService == null) {
             return;
@@ -56,7 +56,7 @@ public class BaseRmServiceNotificationHelper {
         Bitmap largeIconBitmap = BitmapFactory.decodeResource(mService.getResources(), R.drawable.ic_rm_notif_icon_black_24dp);
 
         // Add Play button intent in notification.
-        Intent stopServiceIntent = new Intent(mService, BaseRmService.class);
+        Intent stopServiceIntent = new Intent(mService, mService.getClass());
         stopServiceIntent.setAction(ACTION_STOP_SERVICE);
         PendingIntent pendingStopServiceIntent = PendingIntent.getService(mService, 0, stopServiceIntent, 0);
         NotificationCompat.Action stopServiceAction = new NotificationCompat.Action
@@ -78,7 +78,7 @@ public class BaseRmServiceNotificationHelper {
         mService.startForeground(NOTIFICATION_ID, notification);
     }
 
-    void stopForegroundService() {
+    public void stopForegroundService() {
         // Stop foreground service and remove the notification.
         mService.stopForeground(true);
 

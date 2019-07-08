@@ -61,6 +61,16 @@ public class TimeUtil {
         return format.format(new Date(milliSeconds));
     }
 
+    @Nullable
+    public static String getDateWithMonthString(long milliSeconds) {
+        String dateFormat13 = "dd-MMM";
+        DateFormat format = new SimpleDateFormat(dateFormat13, Locale.getDefault());
+
+        format.setTimeZone(TimeZone.getDefault());
+
+        return format.format(new Date(milliSeconds));
+    }
+
     public boolean isSameDay(@NonNull Date date1, @NonNull Date date2){
 
         Calendar cal1 = Calendar.getInstance();
@@ -91,5 +101,50 @@ public class TimeUtil {
         }
 
         return formattedDate;
+    }
+
+    @Nullable
+    public static String getBroadcastFullTime(@NonNull String serverTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            long time = sdf.parse(serverTime).getTime();
+
+            Date date = new Date(time);
+            String dateFormat9 = "dd MMM yyyy, hh:mm aa";
+            DateFormat format = new SimpleDateFormat(dateFormat9, Locale.getDefault());
+            format.setTimeZone(TimeZone.getDefault());
+
+            return format.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Nullable
+    public static String getBroadcastTime(@NonNull String serverTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            long time = sdf.parse(serverTime).getTime();
+
+            Calendar feedTime = Calendar.getInstance();
+            feedTime.setTimeInMillis(time);
+
+            Calendar now = Calendar.getInstance();
+            if (now.get(Calendar.DATE) == feedTime.get(Calendar.DATE) ) {
+                return getOnlyTime(time);
+            } else {
+                return getDateWithMonthString(time);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }

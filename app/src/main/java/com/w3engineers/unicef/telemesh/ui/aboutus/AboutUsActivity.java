@@ -33,14 +33,13 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
 
     @Override
     protected void startUI() {
 
-        //    private ServiceLocator serviceLocator;
         AboutUsViewModel aboutUsViewModel = getViewModel();
         ActivityAboutUsBinding mBinding = (ActivityAboutUsBinding) getViewDataBinding();
         setTitle(getString(R.string.activity_about_us));

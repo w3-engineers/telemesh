@@ -36,6 +36,10 @@ captures/
 *.iml
 .idea/
 
+meshlib/
+paylib/
+proxy/
+
 # Keystore files
 # Uncomment the following line if you do not want to check your keystore files in.
 #*.jks
@@ -44,7 +48,7 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+# google-services.json
 
 # Freeline
 freeline.py

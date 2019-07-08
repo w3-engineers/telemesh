@@ -12,10 +12,12 @@ import android.os.Parcelable;
  */
 public class MeshAcknowledgement implements Parcelable {
 
-    public int id;
+    public long id;
     public MeshPeer mMeshPeer;
 
-    public MeshAcknowledgement(int id) {
+    public boolean isSuccess;
+
+    public MeshAcknowledgement(long id) {
         this.id = id;
     }
 
@@ -26,13 +28,24 @@ public class MeshAcknowledgement implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeParcelable(this.mMeshPeer, flags);
+        dest.writeByte((byte) (isSuccess ? 1 : 0));
     }
 
     protected MeshAcknowledgement(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.mMeshPeer = in.readParcelable(MeshPeer.class.getClassLoader());
+        this.isSuccess = in.readByte() != 0;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public MeshAcknowledgement setSuccess(boolean success) {
+        isSuccess = success;
+        return this;
     }
 
     public static final Creator<MeshAcknowledgement> CREATOR = new Creator<MeshAcknowledgement>() {

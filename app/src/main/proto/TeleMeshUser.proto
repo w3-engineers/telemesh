@@ -3,17 +3,17 @@ syntax = "proto3";
 package com.w3engineers.unicef.telemesh;
 
 message RMUserModel {
-    string userFirstName = 1;
-    string userLastName = 2;
-    int32 imageIndex = 3;
-    string userId = 4;
+    string userName = 1;
+    int32 imageIndex = 2;
+    string userId = 3;
 }
 
 message RMDataModel {
     string userMeshId = 1;
     bytes rawData = 2;
     int32 dataType = 3;
-    int32 recDataId = 4;
+    int64 recDataId = 4;
+    bool isAckSuccess = 5;
 }
 
 message TeleMeshProto {

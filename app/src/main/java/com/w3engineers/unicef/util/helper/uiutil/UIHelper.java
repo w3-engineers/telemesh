@@ -1,10 +1,14 @@
 package com.w3engineers.unicef.util.helper.uiutil;
 
+import android.app.Activity;
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,15 +42,6 @@ public class UIHelper {
                         Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
                 .into(imageView);
     }
-
-    /*@BindingAdapter("src")
-    public static void setImageFromResource(@NonNull ImageView imageView, int resourceId) {
-
-        Glide.with(App.getContext())
-                .load(resourceId)
-                .into(imageView);
-    }*/
-
 
     @BindingAdapter("imageStatusResource")
     public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId){
@@ -110,12 +105,14 @@ public class UIHelper {
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
                 return TimeUtil.getDateString(messageEntity.time);
-                //return messageEntity.message;
             }
         }
 
         return null;
     }
 
-
+    public static void hideKeyboardFrom(@NonNull Context context, @NonNull View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

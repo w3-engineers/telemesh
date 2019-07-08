@@ -12,5 +12,6 @@ public interface TableNames {
     //Users
     String USERS = "user";
     String MESSAGE = "messages";
-    String SURVEY = "survey";
+    String FEED = "feed";
+    String BULLETIN_TRACK = "bulletin_track";
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RoomWarnings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 @Dao
-public abstract class UserDao implements BaseDao<UserEntity> {
+public abstract class UserDao extends BaseDao<UserEntity> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract long writeUser(@NonNull UserEntity userEntity);
@@ -43,7 +44,18 @@ public abstract class UserDao implements BaseDao<UserEntity> {
 
     // Relatively faster then direct sub query, still expecting some more performance improvement of this query
     // Should be exactly minimum value
+
+    /**
+     * SELECT * FROM user LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE message_status WHEN 1 THEN 1 ELSE 0 END)
+     * AS hasUnreadMessage, MAX(id) AS MAXID FROM messages GROUP BY friends_id) AS M INNER JOIN messages
+     * AS MSG ON MSG.friends_id = M.friends_id WHERE MSG.id = M.MAXID) AS MESS ON user.mesh_id = MESS.friends_id
+     * ORDER BY IFNULL(message_status,2) ASC, is_online DESC, user.user_name COLLATE NOCASE ASC
+     *
+     * @return
+     */
+
     @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN 1 ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
@@ -53,8 +65,12 @@ public abstract class UserDao implements BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
             + ColumnNames.COLUMN_FRIENDS_ID + " ORDER BY IFNULL(" + ColumnNames.COLUMN_MESSAGE_STATUS + ","
             + Constants.MessageStatus.STATUS_READ + ") ASC, " + ColumnNames.COLUMN_USER_IS_ONLINE
-            + " DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_FIRST_NAME + " COLLATE NOCASE ASC, "
-            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_LAST_NAME + " COLLATE NOCASE ASC")
+            + " DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsers();
+
+
+    @Query("SELECT * FROM "+ TableNames.USERS + " WHERE "+ ColumnNames.COLUMN_USER_IS_ONLINE + " = " +Constants.UserStatus.ONLINE )
+    @NonNull
+    public abstract List<UserEntity> getLivePeers();
 
 }

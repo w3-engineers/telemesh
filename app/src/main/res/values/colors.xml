@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="button_gradient_light">#49D69E</color>
-    <color name="button_gradient_deep">#42BFAD</color>
 
-    <color name="colorPrimary">#17AC82</color>
-    <color name="colorPrimaryDark">#17AC82</color>
-    <color name="colorAccent">#17AC82</color>
+    <color name="colorPrimary">#06AEC6</color>
+    <color name="colorPrimaryDark">#01A39D</color>
+    <color name="colorAccent">#06AEC6</color>
+
+    <color name="colorGradientPrimary">#18BC4E</color>
+    <!--<color name="eth_color">#FFBA00</color>-->
 
     <color name="tab_disable">#979797</color>
     <color name="out_coming_message_color">#F0F0F0</color>
@@ -15,15 +16,22 @@
     <color name="select_photo_text_color">#3C3C3C</color>
     <color name="grey_400">#BDBDBD</color>
     <color name="grey_300">#E0E0E0</color>
-    <color name="grey_100">#F5F5F5</color>
+    <!--<color name="grey_100">#F5F5F5</color>-->
     <!--<color name="grey_600">#757575</color>-->
-    <color name="blue_grey_600">#546E7A</color>
+    <!--<color name="blue_grey_600">#546E7A</color>-->
     <color name="black">#000000</color>
     <color name="transparent_color">#00FFFFFF</color>
     <color name="select_photo_color">#3C3C3C</color>
     <color name="title_color">#3C3C3C</color>
-    <color name="splash_text_color">#00B883</color>
     <color name="overlay_light_60">#99FFFFFF</color>
+    <color name="deep_grey">#707070</color>
+    <color name="light_grey">#ACACAC</color>
+    <color name="deep_layer_grey">#535353</color>
+    <color name="deep_layer_grey_text">#313131</color>
+    <!--<color name="dark_blue">#01434F</color>-->
+
+    <!--<color name="light_yellow">#FFFCED</color>-->
+    <!--<color name="in_use_color">#F78E00</color>-->
     <!--<color name="font_color">#3C3C3C</color>-->
 
 </resources>

@@ -1,12 +1,13 @@
+/*
 package com.w3engineers.ext.viper.application.data.remote.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.ext.strom.util.BroadcastUtil;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.viper.IRmCommunicator;
 import com.w3engineers.ext.viper.IRmServiceConnection;
@@ -17,25 +18,28 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.ext.viper.util.lib.mesh.IMeshCallBack;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
-import com.w3engineers.ext.viper.util.lib.mesh.MeshProvider;
+import com.w3engineers.ext.viper.util.lib.mesh.MeshProviderOld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 // TODO: 8/8/2018 Should override Baservice to stop services properly???
 public class BaseRmService extends Service implements IMeshCallBack {
 
-    private IRmCommunicator mIRmCommunicator;
-    private MeshProvider mMeshProvider;
+    private List<IRmCommunicator> mIRmCommunicators;
+    private MeshProviderOld mMeshProvider;
     private boolean mIsServiceToCloseWithTask;
     private boolean mIsTaskCleared;
     private String mBroadcastActionString;
@@ -43,6 +47,7 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onCreate() {
         super.onCreate();
+        mIRmCommunicators = new ArrayList<>();
         mBroadcastActionString = getApplicationContext().getPackageName();
 
         initMesh();
@@ -81,7 +86,7 @@ public class BaseRmService extends Service implements IMeshCallBack {
         Timber.d("Local Remote Service initiating with port number:%d ssid:%s", meshConfig.mPort,
                 meshConfig.mSsid);
 
-        mMeshProvider = MeshProvider.getInstance();
+        mMeshProvider = MeshProviderOld.getInstance();
         mMeshProvider.setMeshConfig(meshConfig);
         mMeshProvider.setIMeshCallBack(this);
         mMeshProvider.start(getApplicationContext());
@@ -122,14 +127,19 @@ public class BaseRmService extends Service implements IMeshCallBack {
         }
 
         @Override
-        public void setProfile(byte[] profileInfo) throws RemoteException {
+        public void setProfile(byte[] profileInfo, String userId) throws RemoteException {
             if(profileInfo != null) {
                 mMeshProvider.setProfileInfo(profileInfo);
             }
         }
 
         @Override
-        public int sendMeshData(MeshData meshData) throws RemoteException {
+        public void setProfileInfo(byte[] profileInfo) throws RemoteException {
+
+        }
+
+        @Override
+        public long sendMeshData(MeshData meshData) throws RemoteException {
             return mMeshProvider.sendData(meshData);
         }
 
@@ -140,7 +150,7 @@ public class BaseRmService extends Service implements IMeshCallBack {
                 //Any task is available now as connection is being established
                 mIsTaskCleared = false;
 
-                mIRmCommunicator = iRmCommunicator;
+                mIRmCommunicators.add(iRmCommunicator);
             }
 
         }
@@ -157,18 +167,34 @@ public class BaseRmService extends Service implements IMeshCallBack {
 
         @Override
         public void resetCommunicator(IRmCommunicator iRmCommunicator) throws RemoteException {
-            mIRmCommunicator = null;
+            mIRmCommunicators.clear();
         }
         @Override
         public void openRmSettings(){
             mMeshProvider.openRmSettings();
+        }
+
+        @Override
+        public void stopRmService() throws RemoteException {
+            shutTheService();
+        }
+
+        @Override
+        public void stopMeshProcess() throws RemoteException {
+
+        }
+
+        @Override
+        public String getMyId() throws RemoteException {
+            return null;
         }
     };
 
     @Override
     public void onMesh(MeshData meshData) {
 
-        if (mIsTaskCleared) {//No task is there need to broadcast data
+        */
+/*if (mIsTaskCleared) {//No task is there need to broadcast data
 
             Intent intent = new Intent(mBroadcastActionString);
             intent.putExtra(getString(R.string.mesh_data), meshData);
@@ -176,10 +202,23 @@ public class BaseRmService extends Service implements IMeshCallBack {
 
         } else {
 
-            if(mIRmCommunicator != null) {
+            for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+                if (mIRmCommunicator != null) {
+                    try {
+                        mIRmCommunicator.onMeshData(meshData);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }*//*
 
+
+        for(IRmCommunicator iRmCommunicator : mIRmCommunicators) {
+
+            if(iRmCommunicator != null) {
                 try {
-                    mIRmCommunicator.onMeshData(meshData);
+                    iRmCommunicator.onMeshData(meshData);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -191,24 +230,41 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onMesh(MeshAcknowledgement meshAcknowledgement) {
 
-        if(mIRmCommunicator != null) {
-            try {
-                mIRmCommunicator.onMeshAcknowledgement(meshAcknowledgement);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for(IRmCommunicator iRmCommunicator : mIRmCommunicators) {
+
+            if(iRmCommunicator != null) {
+                try {
+                    iRmCommunicator.onMeshAcknowledgement(meshAcknowledgement);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
+
+        */
+/*for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+            if (mIRmCommunicator != null) {
+                try {
+                    mIRmCommunicator.onMeshAcknowledgement(meshAcknowledgement);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*//*
 
     }
 
     @Override
     public void onProfileInfo(BaseMeshData baseMeshData) {
 
-        if(mIRmCommunicator != null) {
-            try {
-                mIRmCommunicator.onProfileInfo(baseMeshData);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+            if (mIRmCommunicator != null) {
+                try {
+                    mIRmCommunicator.onProfileInfo(baseMeshData);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -216,24 +272,27 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onPeerRemoved(MeshPeer meshPeer) {
 
-        if(mIRmCommunicator != null) {
-            try {
-                mIRmCommunicator.onPeerRemoved(meshPeer);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+            if (mIRmCommunicator != null) {
+                try {
+                    mIRmCommunicator.onPeerRemoved(meshPeer);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
     }
 
     @Override
     public void onInitSuccess(MeshPeer selfMeshPeer) {
 
-        if(mIRmCommunicator != null) {
-            try {
-                mIRmCommunicator.onLibraryInitSuccess();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+            if (mIRmCommunicator != null) {
+                try {
+                    mIRmCommunicator.onLibraryInitSuccess();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -245,11 +304,13 @@ public class BaseRmService extends Service implements IMeshCallBack {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        if(mIsServiceToCloseWithTask) {
+        */
+/*if(mIsServiceToCloseWithTask) {
             shutTheService();
         }
 
-        mIsTaskCleared = true;
+        mIsTaskCleared = true;*//*
+
     }
 
     private void shutTheService() {
@@ -264,15 +325,20 @@ public class BaseRmService extends Service implements IMeshCallBack {
         }
 
         //Stopping service
-        super.stopSelf();
 
         //Sending call back to app layer so that corresponding process can be cleared
-        if(mIRmCommunicator != null) {
-            try {
-                mIRmCommunicator.onServiceDestroy();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IRmCommunicator mIRmCommunicator : mIRmCommunicators) {
+            if (mIRmCommunicator != null) {
+                try {
+                    mIRmCommunicator.onServiceDestroy();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
+        stopSelf();
+        Process.killProcess(Process.myPid());
     }
 }
+*/

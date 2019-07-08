@@ -1,374 +1,245 @@
 package com.w3engineers.ext.viper.util.lib.mesh;
+ 
+/*
+============================================================================
+Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+Unauthorized copying of this file, via any medium is strictly prohibited
+Proprietary and confidential
+============================================================================
+*/
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.TransportManager;
+import com.w3engineers.mesh.TransportState;
+import com.w3engineers.mesh.db.SharedPref;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
+import com.w3engineers.mesh.wifi.protocol.Link;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
-import io.left.rightmesh.android.AndroidMeshManager;
-import io.left.rightmesh.id.MeshId;
-import io.left.rightmesh.mesh.MeshManager;
-import io.left.rightmesh.mesh.MeshStateListener;
-import io.left.rightmesh.util.RightMeshException;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import timber.log.Timber;
+public class MeshProvider implements LinkStateListener {
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
+    private static MeshProvider meshProvider;
 
-// FIXME: 8/13/2018 Probably it has an issue of receiving selfPeer. need more check. If so counter measure is simple
-public class MeshProvider implements MeshStateListener {
+    private Context context;
+    private List<String> userIds;
+    private ProviderCallback providerCallback;
+    private TransportManager transportManager;
 
-    protected final int DEFAULT_ACK_ID = -1;
-    private static final MeshProvider ourInstance = new MeshProvider();
+    private MeshConfig config;
+    private byte[] myProfileInfo;
+    private String myUserId;
+    private String NETWORK_PREFIX = "telemeshApp-";
 
-    public static MeshProvider getInstance() {
-        return ourInstance;
+    private MeshProvider(Context context) {
+        this.context = context;
+        userIds = new ArrayList<>();
     }
 
-    private AndroidMeshManager mAndroidMeshManager;
-    private MeshConfig mMeshConfig;
-    private transient boolean mIsRunning;
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-    private IMeshCallBack mIMeshCallBack;
+    public static MeshProvider getInstance(Context context) {
+        if (meshProvider == null) {
+            meshProvider = new MeshProvider(context);
+        }
+        return meshProvider;
+    }
 
+    public void setConfig(MeshConfig config) {
+        this.config = config;
+    }
 
-    private final byte[] PROFILE_DATA_DEFAULT_BYTES;
+    public void setMyProfileInfo(byte[] myProfileInfo) {
+        this.myProfileInfo = myProfileInfo;
+    }
+
+    public void setProviderCallback(ProviderCallback providerCallback) {
+        this.providerCallback = providerCallback;
+    }
+
     /**
-     * All active peer id with it's byte data.
+     * Start the mesh communication process
      */
-    private final ConcurrentHashMap<String, byte[]> mMeshIdPeerMap;
-    private final Set<Integer> mDeliveryIdSetMessage;
-    private final Set<Integer> mDeliveryIdSetPi;
+    public void startMesh() {
+        if (config == null || myProfileInfo == null)
+            return;
 
-    private MeshProvider() {
-
-        PROFILE_DATA_DEFAULT_BYTES = new byte[]{1, 2};//default byte array
-        mMeshIdPeerMap = new ConcurrentHashMap<>(3);
-        mDeliveryIdSetMessage = Collections.synchronizedSet(new HashSet<>());
-        mDeliveryIdSetPi = Collections.synchronizedSet(new HashSet<>());
-
+        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, this);
     }
 
-    public void setProfileInfo(byte[] profileInfo) {
-        ProfileManager.getInstance().setProfileInfo(profileInfo);
-    }
 
-    public void setIMeshCallBack(IMeshCallBack iMeshCallBack) {
 
-        this.mIMeshCallBack = iMeshCallBack;
+    public void stopMesh(boolean isStopProcess) {
+        if (transportManager != null) {
+            transportManager.stopMesh();
 
-    }
-
-    public void setMeshConfig(MeshConfig meshConfig) {
-        this.mMeshConfig = meshConfig;
-    }
-
-    public void start(Context context) {
-
-        if(context == null) {
-            throw new NullPointerException("set a valid context");
+            if (providerCallback != null && isStopProcess)
+                providerCallback.meshStop();
         }
-
-        if(mMeshConfig == null || mMeshConfig.mPort == 0) {
-            throw new IllegalStateException("Please set port number through configuration");
-        }
-
-        //If either super peer or ssid then dev version otherwise production version
-        mAndroidMeshManager = TextUtils.isEmpty(mMeshConfig.mSsid) && TextUtils.isEmpty(mMeshConfig.mSuperPeer) ?
-                AndroidMeshManager.getInstance(context, this) :
-                AndroidMeshManager.getInstance(context, this, mMeshConfig.mSuperPeer,
-                        mMeshConfig.mSsid);
-
     }
 
-    public void stop() {
+    public interface ProviderCallback {
 
-        if(mAndroidMeshManager != null) {
-            mAndroidMeshManager.unregisterAllPeerListener(mMeshConfig.mPort);
-            mIsRunning = false;
-            mMeshConfig = null;
-            mCompositeDisposable.dispose();
+        void meshStart();
 
-            try {
+        void connectionAdd(MeshData meshData);
 
-                mAndroidMeshManager.stop();
+        void connectionRemove(MeshPeer meshPeer);
 
-            }  catch (RightMeshException.RightMeshServiceDisconnectedException e) {
-                e.printStackTrace();
+        void receiveData(MeshData meshData);
+
+        void receiveAck(MeshAcknowledgement meshAcknowledgement);
+
+        void meshStop();
+    }
+
+    @Override
+    public void onTransportInit(String nodeId, String publicKey, TransportState transportState, String msg) {
+        boolean isSuccess = transportState == TransportState.SUCCESS;
+        if (isSuccess) {
+            SharedPref.write(Constant.KEY_USER_ID, nodeId);
+            myUserId = nodeId;
+
+            MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);
+
+            transportManager.configTransport(nodeId, publicKey, config.mPort, myProfileInfo);
+
+            if (transportManager != null) {
+                transportManager.startMesh();
             }
+//            Paylib.getInstance(App.getContext());
         }
-
+        if (providerCallback != null)
+            providerCallback.meshStart();
     }
 
-    public List<BaseMeshData> getLivePeers() {
+    @Override
+    public void linkConnected(String nodeId) {
+        peerDiscovered(nodeId);
+    }
 
-        List<BaseMeshData> meshPeerList = new ArrayList<>();
+    @Override
+    public void onMeshLinkFound(String nodeId) {
+        peerDiscovered(nodeId);
+    }
 
+    private void peerDiscovered(String nodeId) {
 
-        BaseMeshData baseMeshData;
-        byte[] data;
-        for (String meshId : mMeshIdPeerMap.keySet()) {//By default ConcurrentHashMap does not allow null
-            data = mMeshIdPeerMap.get(meshId);
-            if(PROFILE_DATA_DEFAULT_BYTES.equals(data)) {//As we always use  the same object
-                continue;//As no profile data yet available
+        if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
+            return;
+
+        if (!userIds.contains(nodeId)) {
+            sendMyInfo(nodeId);
+            userIds.add(nodeId);
+        }
+    }
+
+    /**
+     * Send my info after discovering him
+     * @param nodeId - The discovered node id
+     */
+    private void sendMyInfo(String nodeId) {
+        HandlerUtil.postBackground(()-> {
+            MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
+
+            if (meshData != null) {
+                meshData.mPeerId = myUserId;
+                transportManager.sendMessage(nodeId, myUserId, MeshData.getMeshData(meshData));
+//                link.sendFrame(nodeId, myUserId, MeshData.getMeshData(meshData));
             }
-
-            baseMeshData = new MeshData();
-
-            //init data
-            baseMeshData.mMeshPeer = new MeshPeer(meshId);
-            baseMeshData.mData = mMeshIdPeerMap.get(meshId);
-
-            meshPeerList.add(baseMeshData);
-        }
-
-        return meshPeerList;
+        });
     }
 
-    public int sendProfileInfo(MeshData meshData) {
-
-        int ackId = DEFAULT_ACK_ID;
-        try {
-            ackId = send(meshData);
-            mDeliveryIdSetPi.add(ackId);
-        } catch (RightMeshException e) {
-            e.printStackTrace();
-        }
-
-        return ackId;
+    /**
+     * When a node id or peer link is removed we get those callback
+     */
+    @Override
+    public void linkDisconnected(String nodeId) {
+        peerRemoved(nodeId);
     }
 
-    public int sendData(MeshData meshData) {
+    @Override
+    public void onMeshLinkDisconnect(String nodeId) {
+        peerRemoved(nodeId);
+    }
 
-        int ackId = DEFAULT_ACK_ID;
-        try {
-            ackId = send(meshData);
-            mDeliveryIdSetMessage.add(ackId);
-        } catch (RightMeshException e) {
-            e.printStackTrace();
-        }
-
-        return ackId;
+    private void peerRemoved(String peerId) {
+        userIds.remove(peerId);
+        if (providerCallback != null)
+            providerCallback.connectionRemove(new MeshPeer(peerId));
     }
 
     /**
      * By default data sent from Remote Service Binder thread
-     * @param meshData
-     * @return
-     * @throws RightMeshException
+     * @param meshData - message send
+     * @return - get the message send id
      */
-    private int send(MeshData meshData) throws RightMeshException {
+    public long sendMeshData(MeshData meshData) {
+        if (meshData != null) {
+            String peerId = meshData.mMeshPeer.getPeerId();
+            if (!TextUtils.isEmpty(peerId)) {
+                meshData.mPeerId = myUserId;
 
-        if(mAndroidMeshManager == null) {
-            throw new IllegalStateException("Mesh library not initialized");
+                if (transportManager != null) {
+                    return transportManager.sendMessage(peerId, myUserId, MeshData.getMeshData(meshData));
+                }
+            }
         }
-
-        if(meshData == null || meshData.mMeshPeer == null || meshData.mMeshPeer.getPeerId() == null
-                || meshData.mData == null) {
-            throw new NullPointerException("Mesh Data not initialized properly");
-        }
-
-        MeshId meshId = MeshId.fromString(meshData.mMeshPeer.getPeerId());
-        byte[] bytes = MeshData.getMeshData(meshData);
-        Timber.d("mAndroidMeshManager.sendDataReliable() calling with %s, %s and %s",
-                meshId, mMeshConfig.mPort, Arrays.toString(bytes));
-        int ackId = mAndroidMeshManager.sendDataReliable(meshId,
-                mMeshConfig.mPort, bytes);
-        Timber.d("mAndroidMeshManager.sendDataReliable() Ack %d. Thread::%s", ackId, Thread.currentThread().getName());
-
-        return ackId;
+        return -1L;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * When any kind of message data we received
+     * @param msgOwner - Get my id
+     * @param frameData frame data received from remote device
+     */
     @Override
-    public void meshStateChanged(MeshId meshId, int state) {
+    public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
+        if (frameData != null) {
 
-        if (state == MeshStateListener.SUCCESS || state == MeshStateListener.RESUME) {
+            MeshData meshData = MeshData.setMeshData(frameData);
 
-            try {
+            if (meshData != null && meshData.mData != null) {
 
-                mAndroidMeshManager.bind(mMeshConfig.mPort);
+//                String peerId = msgOwner;
+                meshData.mMeshPeer = new MeshPeer(msgOwner);
 
-            } catch (RightMeshException e) {
-                e.printStackTrace();
-                return;//no need to proceed further
-            }
-
-            Timber.d("Library activated successfully.");
-
-            mIsRunning = true;
-
-            // Subscribes handlers to receive events from the mesh.
-
-            mCompositeDisposable.add(mAndroidMeshManager.on(MeshManager.PEER_CHANGED,
-                    (Consumer) o -> handlePeerChanged((MeshManager.RightMeshEvent) o)));
-
-            mCompositeDisposable.add(mAndroidMeshManager.on(MeshManager.DATA_RECEIVED,
-                    (Consumer) o -> handleDataReceived((MeshManager.RightMeshEvent) o)));
-
-            mCompositeDisposable.add(mAndroidMeshManager.on(MeshManager.DATA_DELIVERED,
-                    (Consumer) o -> handleDataDelivery((MeshManager.RightMeshEvent) o)));
-
-            if(mIMeshCallBack != null) {
-
-                mIMeshCallBack.onInitSuccess(new MeshPeer(meshId.toString()));
-
-            }
-
-        } else if (state == MeshStateListener.DISABLED || state == MeshStateListener.FAILURE) {
-
-            if(mIMeshCallBack != null) {
-
-                mIMeshCallBack.onInitFailed(state);
-
-            }
-            stop();
-
-        }
-
-    }
-
-    private void handlePeerChanged(MeshManager.RightMeshEvent e) {
-
-        if(e != null) {
-
-            MeshManager.PeerChangedEvent event = (MeshManager.PeerChangedEvent) e;
-
-            // Ignore ourselves.
-            if (event.peerUuid.equals(mAndroidMeshManager.getUuid())) {
-                return;
-            }
-
-            //We normally accept only Added and Removed event. Reference: S. K. Paik
-            if (event.state == MeshManager.REMOVED ||
-                    event.state == MeshManager.ADDED || event.state == MeshManager.UPDATED) {
-
-                String meshPeerId = event.peerUuid.toString();
-
-                //Managing set of MeshId
-                if(event.state == MeshManager.ADDED) {
-
-                    Timber.d("%s Added", event.peerUuid);
-
-                    if(!mMeshIdPeerMap.containsKey(meshPeerId)) {//If it was really able to add
-                        mMeshIdPeerMap.put(meshPeerId, PROFILE_DATA_DEFAULT_BYTES);
-                        ProfileManager.getInstance().sendMyProfileInfo(new MeshPeer(event.peerUuid.toString()));
+                if (MeshDataManager.getInstance().isProfileData(meshData)) {
+                    if (providerCallback != null) {
+                        providerCallback.connectionAdd(meshData);
                     }
-
-
-                } else if(event.state == MeshManager.REMOVED) {
-
-                    Timber.d("%s Removed", event.peerUuid);
-
-                    mMeshIdPeerMap.remove(meshPeerId);//remove record
-
-                    //Updating upper layer about removal
-                    mIMeshCallBack.onPeerRemoved(new MeshPeer(meshPeerId));
-
+                } else {
+                    if (providerCallback != null) {
+                        providerCallback.receiveData(meshData);
+                    }
                 }
             }
         }
-
     }
 
-    private void handleDataReceived(MeshManager.RightMeshEvent e) {
-
-        MeshManager.DataReceivedEvent dataReceivedEvent = (MeshManager.DataReceivedEvent) e;
-        MeshData meshData = MeshData.setMeshData(dataReceivedEvent.data);
-
-        if(meshData != null) {
-
-            //first check whether this is profile data or not
-            //We would init switch case if more facility provides by framework (like file sending)
-            byte[] profileData = ProfileManager.getInstance().processProfileData(meshData);
-
-            if (profileData == null) {//not profile data
-
-                Timber.d("Data received from::%s. Thread::%s", dataReceivedEvent.peerUuid,
-                        Thread.currentThread().getName());
-                meshData.mMeshPeer = MeshPeer.from(dataReceivedEvent.peerUuid);
-                mIMeshCallBack.onMesh(meshData);
-
-            } else {//profile data
-
-                Timber.d("Profile data received from::%s. Thread::%s", dataReceivedEvent.peerUuid,
-                        Thread.currentThread().getName());
-
-                //last time check that the peer is not removed
-                if(isPeerAvailable(dataReceivedEvent.peerUuid.toString())) {
-                    String peerId = dataReceivedEvent.peerUuid.toString();
-
-                    meshData.mMeshPeer = new MeshPeer(peerId);
-
-                    //Keeping peer records with info
-                    mMeshIdPeerMap.put(peerId, meshData.mData);
-
-                    mIMeshCallBack.onProfileInfo(meshData);
-                }
-            }
+    /**
+     * After successful deliver a frame we get message delivery id
+     * @param messageId : Long message sent id
+     * @param isSuccess : boolean status true of success false otherwise
+     */
+    @Override
+    public void onMessageDelivered(long messageId, boolean isSuccess) {
+        if (providerCallback != null) {
+            MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId).setSuccess(isSuccess);
+            providerCallback.receiveAck(meshAcknowledgement);
         }
-
     }
 
-    private void handleDataDelivery(MeshManager.RightMeshEvent e) {
-
-        MeshManager.DataDeliveredEvent dataDeliveredEvent = (MeshManager.DataDeliveredEvent) e;
-
-        if(dataDeliveredEvent != null) {
-            Timber.d("Ack received for::%d", dataDeliveredEvent.data_id);
-
-            if(!mDeliveryIdSetPi.remove(dataDeliveredEvent.data_id)) {
-
-                if(mDeliveryIdSetMessage.remove(dataDeliveredEvent.data_id)) {
-                    //Propagate event to higher level only if event is not profile info related event
-                    //and available in message set
-
-                    MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(dataDeliveredEvent.data_id);
-                    meshAcknowledgement.mMeshPeer = new MeshPeer(dataDeliveredEvent.peerUuid.toString());
-                    mIMeshCallBack.onMesh(meshAcknowledgement);
-                }
-
-            }
-        }
-
-    }
-
-
-    private boolean isPeerAvailable(String targetPeer) {
-
-        if(!TextUtils.isEmpty(targetPeer)) {
-
-
-            return mMeshIdPeerMap.containsKey(targetPeer);
-
-        }
-        return false;
-    }
-
-
-    public void openRmSettings(){
-        try {
-            mAndroidMeshManager.showSettingsActivity();
-        } catch (RightMeshException ignored) {
-        }
+    public String getMyUserId() {
+        return myUserId;
     }
 
 }

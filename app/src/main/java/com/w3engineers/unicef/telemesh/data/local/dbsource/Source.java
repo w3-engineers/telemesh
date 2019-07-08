@@ -10,7 +10,9 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.subjects.BehaviorSubject;
 
 /*
  * ============================================================================
@@ -26,6 +28,7 @@ public class Source implements DataSource {
 
     private MessageDao messageDao;
     private UserDao userDao;
+    private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -52,33 +55,6 @@ public class Source implements DataSource {
         return MessageSourceData.getInstance().getLastData();
     }
 
-    /*@Override
-    public long insertOrUpdateData(DbBaseEntity baseEntity) {
-
-        try {
-            if (MessageEntity.class.isInstance(baseEntity)) {
-                return messageDao.writeMessage((MessageEntity) baseEntity);
-
-            } else if (UserEntity.class.isInstance(baseEntity)) {
-                return userDao.insertOrUpdate((UserEntity) baseEntity);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1L;
-    }
-
-    @Override
-    public void deleteAllData() {
-
-    }
-
-    @Override
-    public boolean getMessage(String friendsId, String messageId) {
-        return messageDao.hasChatEntityExist(friendsId, messageId);
-    }*/
-
     @Nullable
     @Override
     public String getCurrentUser() {
@@ -93,5 +69,16 @@ public class Source implements DataSource {
     @Override
     public void updateMessageStatus(@NonNull String messageId, int messageStatus) {
         messageDao.updateMessageStatus(messageId, messageStatus);
+    }
+
+    @Override
+    public void reSendMessage(@NonNull ChatEntity chatEntity) {
+        failedMessage.onNext(chatEntity);
+    }
+
+    @Override
+    @Nullable
+    public Flowable<ChatEntity> getReSendMessage() {
+        return failedMessage.toFlowable(BackpressureStrategy.LATEST);
     }
 }

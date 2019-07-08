@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'io.left.rightmesh.rightmesh-plugin' version '1.8.4'
 }
 
 def isCrashLyticsEnabled = project.hasProperty('org.w3.crashlytics') &&
@@ -14,42 +13,9 @@ if(isCrashLyticsEnabled) {
     apply plugin: 'io.fabric'
 }
 
-
-//right-mesh config start
-
-//to load rm username and password from gradle properties file
-repositories {
-    maven {
-        url "http://artifactory.rightmesh.io/artifactory/maven"
-        credentials {
-            username = System.getenv('rightmesh_build_username')
-
-            if (username.equals("") || username.equals(null)) {
-                username = rightmesh_build_username
-            }
-
-            password = System.getenv('rightmesh_build_password')
-
-            if (password.equals("") || password.equals(null)) {
-                password = rightmesh_build_password
-            }
-        }
-    }
-    maven{
-        url "https://dl.bintray.com/ethereum/maven/"
-    }
-    mavenCentral()
-    jcenter()
-
-    maven {
-        url "https://jitpack.io"
-    }
-}
-
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
-//right-mesh config end
 
 android {
 
@@ -59,10 +25,6 @@ android {
         targetSdkVersion build_versions.target_sdk
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-
-        resValue "integer", "rm_port_number", getRootProject().ext.port_number
-        resValue "string", "rm_ssid", getRootProject().ext.rm_ssid
-        resValue "string", "rm_super_peer", getRootProject().ext.rm_super_peer
     }
     buildTypes {
         release {
@@ -98,12 +60,8 @@ dependencies {
     //multidex
     implementation deps.multidex
 
-    //Added by Aziz for BaseEditText
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation deps.lifecycle.extensions
-
-    //android-framework
-    api deps.strom_remote
 }
 
 //Utility
@@ -115,11 +73,7 @@ dependencies {
         }
     }
 
-    //Timber to log
     api deps.timber
-
-    //Leakcanary to track memory leak
-    debugApi deps.leak_canary
 
     //debug database to manipulate
     if(isDebugDatabaseEnabled) {
@@ -131,9 +85,8 @@ dependencies {
 
     }
 
-
-    //RightMesh
-    implementation deps.right_mesh
+    api deps.mesh
+    api deps.pay
 
     //Image Picker, Glide
     implementation deps.glide

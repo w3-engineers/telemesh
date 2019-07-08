@@ -48,14 +48,13 @@ public class CreateUserViewModelTest {
 
     @Test
     public void storeData_storeNameString_getNameString() {
-        String firstName = "Daniel";
-        String lastName = "Alvez";
+        String firstName = "Daniel Alvez";
         int imageIndex = 1;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName, lastName);
+        SUT.storeData(firstName);
 
-        checkValues(firstName, lastName, imageIndex);
+        checkValues(firstName, imageIndex);
     }
 
     @Test
@@ -65,9 +64,9 @@ public class CreateUserViewModelTest {
         int imageIndex = 5;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName, lastName);
+        SUT.storeData(firstName);
 
-        checkValues(firstName, lastName, imageIndex);
+        checkValues(firstName, imageIndex);
     }
 
     @Test
@@ -77,9 +76,9 @@ public class CreateUserViewModelTest {
         int imageIndex = -1;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName, lastName);
+        SUT.storeData(firstName);
 
-        checkValues(firstName, lastName, imageIndex);
+        checkValues(firstName, imageIndex);
     }
 
     @Test
@@ -112,9 +111,8 @@ public class CreateUserViewModelTest {
         assertFalse(SUT.isNameValid(firstName));
     }
 
-    private void checkValues(String firstName, String lastName, int imageIndex) {
-        assertEquals(firstName, sharedPreferences.getString(Constants.preferenceKey.FIRST_NAME, null));
-        assertEquals(lastName, sharedPreferences.getString(Constants.preferenceKey.LAST_NAME, null));
+    private void checkValues(String firstName, int imageIndex) {
+        assertEquals(firstName, sharedPreferences.getString(Constants.preferenceKey.USER_NAME, null));
         assertEquals(imageIndex, sharedPreferences.getInt(Constants.preferenceKey.IMAGE_INDEX, -1));
     }
 }

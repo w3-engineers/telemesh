@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="feedEntity"
+            type="com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity" />
+
+        <variable
+            name="messageFeedViewModel"
+            type="com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:onClick="@{() -> messageFeedViewModel.postMessageFeedEntity(feedEntity)}">
+
+        <View
+            android:id="@+id/new_feed_indicator"
+            android:layout_width="@dimen/width_10"
+            android:layout_height="@dimen/height_10"
+            android:layout_marginStart="@dimen/margin_10"
+            android:visibility="@{feedEntity.feedReadStatus ? View.INVISIBLE : View.VISIBLE}"
+            android:background="@drawable/circle_primary_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/sender_icon"
+            android:layout_width="@dimen/width_55"
+            android:layout_height="@dimen/height_55"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:src="@mipmap/ic_unicef"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/new_feed_indicator"
+            app:layout_constraintStart_toEndOf="@+id/new_feed_indicator"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/unicef"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_18"
+            app:layout_constraintLeft_toRightOf="@+id/sender_icon"
+            app:layout_constraintStart_toEndOf="@+id/sender_icon"
+            app:layout_constraintTop_toTopOf="@+id/sender_icon" />
+
+        <TextView
+            android:id="@+id/sender_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@{TimeUtil.getBroadcastTime(feedEntity.feedTime)}"
+            android:textColor="@color/light_grey"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintBottom_toBottomOf="@+id/sender_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/sender_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_regular"
+            android:maxLines="2"
+            android:text="@{feedEntity.feedDetail}"
+            android:textColor="@color/deep_layer_grey"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/sender_icon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sender_icon"
+            app:layout_constraintTop_toBottomOf="@+id/sender_name" />
+
+        <View
+            android:id="@+id/bottom_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin_15"
+            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:layout_marginRight="@dimen/margin_15"
+            android:background="@color/grey_300"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

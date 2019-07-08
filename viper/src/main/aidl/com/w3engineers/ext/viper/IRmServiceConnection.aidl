@@ -11,9 +11,11 @@ interface IRmServiceConnection {
 
     void setServiceToCloseWithTask(in boolean isToCloseWithTask);
 
-    void setProfile(in byte[] profileInfo);
+    void setProfile(in byte[] profileInfo, in String userId);
 
-    int sendMeshData(in MeshData meshData);
+    void setProfileInfo(in byte[] profileInfo);
+
+    long sendMeshData(in MeshData meshData);
 
     void setRmCommunicator(IRmCommunicator iRmCommunicator);
 
@@ -24,4 +26,10 @@ interface IRmServiceConnection {
     List<BaseMeshData> getLivePeers();
 
     void openRmSettings();
+
+    void stopRmService();
+
+    void stopMeshProcess();
+
+    String getMyId();
 }

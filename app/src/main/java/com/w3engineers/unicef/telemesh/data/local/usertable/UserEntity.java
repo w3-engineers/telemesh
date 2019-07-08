@@ -13,7 +13,8 @@ import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 
 
-@Entity(tableName = TableNames.USERS, indices = {@Index(value = {ColumnNames.COLUMN_USER_MESH_ID}, unique = true)})
+@Entity(tableName = TableNames.USERS,
+        indices = {@Index(value = {ColumnNames.COLUMN_USER_MESH_ID}, unique = true)})
 public class UserEntity extends DbBaseEntity {
 
     @Nullable
@@ -25,12 +26,8 @@ public class UserEntity extends DbBaseEntity {
     public String customId;
 
     @Nullable
-    @ColumnInfo(name = ColumnNames.COLUMN_USER_FIRST_NAME)
-    public String userFirstName;
-
-    @Nullable
-    @ColumnInfo(name = ColumnNames.COLUMN_USER_LAST_NAME)
-    public String userLastName;
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_NAME)
+    public String userName;
 
     @ColumnInfo(name = ColumnNames.COLUMN_USER_AVATAR)
     public int avatarIndex;
@@ -71,24 +68,13 @@ public class UserEntity extends DbBaseEntity {
     }
 
     @Nullable
-    public String getUserFirstName() {
-        return userFirstName;
+    public String getUserName() {
+        return userName;
     }
 
     @NonNull
-    public UserEntity setUserFirstName(@NonNull String userName) {
-        this.userFirstName = userName;
-        return this;
-    }
-
-    @Nullable
-    public String getUserLastName() {
-        return userLastName;
-    }
-
-    @NonNull
-    public UserEntity setUserLastName(@NonNull String userName) {
-        this.userLastName = userName;
+    public UserEntity setUserName(@NonNull String userName) {
+        this.userName = userName;
         return this;
     }
 
@@ -125,8 +111,7 @@ public class UserEntity extends DbBaseEntity {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(this.userFirstName);
-        dest.writeString(this.userLastName);
+        dest.writeString(this.userName);
         dest.writeString(this.meshId);
         dest.writeString(this.customId);
         dest.writeInt(this.avatarIndex);
@@ -137,8 +122,7 @@ public class UserEntity extends DbBaseEntity {
 
     protected UserEntity(@NonNull Parcel in) {
         super(in);
-        this.userFirstName = in.readString();
-        this.userLastName = in.readString();
+        this.userName = in.readString();
         this.meshId = in.readString();
         this.customId = in.readString();
         this.avatarIndex = in.readInt();
@@ -168,7 +152,7 @@ public class UserEntity extends DbBaseEntity {
         Context context = TeleMeshApplication.getContext();
         SharedPref sharedPref = SharedPref.getSharedPref(context);
         return RMUserModel.newBuilder()
-                .setUserFirstName(sharedPref.read(Constants.preferenceKey.FIRST_NAME))
+                .setUserFirstName(sharedPref.read(Constants.preferenceKey.USER_NAME))
                 .setUserLastName(sharedPref.read(Constants.preferenceKey.LAST_NAME))
                 .setImageIndex(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .build().toByteArray();
@@ -178,22 +162,20 @@ public class UserEntity extends DbBaseEntity {
     @NonNull
     public RMUserModel getProtoUser() {
         return RMUserModel.newBuilder()
-                .setUserFirstName(getUserFirstName())
-                .setUserLastName(getUserLastName())
+                .setUserName(getUserName())
                 .setImageIndex(getAvatarIndex())
                 .build();
     }
 
     // if lots of similar task holds in entity then ti should be used in util class
-    @NonNull
+    @Nullable
     public String getFullName() {
-        return userFirstName + " " + userLastName;
+        return userName;
     }
 
     @NonNull
     public UserEntity toUserEntity(@NonNull RMUserModel rmUserModel) {
-        return setUserFirstName(rmUserModel.getUserFirstName())
-                .setUserLastName(rmUserModel.getUserLastName())
+        return setUserName(rmUserModel.getUserName())
                 .setAvatarIndex(rmUserModel.getImageIndex())
                 .setMeshId(rmUserModel.getUserId());
     }

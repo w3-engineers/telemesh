@@ -9,6 +9,10 @@
         <variable
             name="textMessage"
             type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
+
+        <variable
+            name="chatViewModel"
+            type="com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -24,17 +28,21 @@
             android:layout_marginTop="@dimen/margin_10"
             android:background="@drawable/bg_message_item_rounded_box"
             android:fontFamily="@font/poppins_regular"
-            android:paddingStart="@dimen/padding_10"
-            android:paddingLeft="@dimen/padding_10"
-            android:paddingTop="@dimen/padding_2"
-            android:paddingEnd="@dimen/padding_10"
-            android:paddingRight="@dimen/padding_10"
-            android:paddingBottom="@dimen/padding_2"
+            android:paddingStart="@dimen/padding_15"
+            android:paddingLeft="@dimen/padding_15"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_15"
+            android:paddingRight="@dimen/padding_15"
+            android:paddingBottom="@dimen/padding_8"
             android:text="@{textMessage.message}"
+            android:gravity="center"
             android:textColor="@color/select_photo_text_color"
             android:textSize="@dimen/text_small_body_14"
+            android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!--android:text="@{textMessage.message}"-->
 
         <ImageView
             android:id="@+id/image_view_delivery_status"
@@ -43,6 +51,7 @@
             android:layout_marginTop="@dimen/margin_1"
             android:contentDescription="@string/image"
             app:imageStatusResource="@{textMessage.status}"
+            android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"
             app:layout_constraintEnd_toStartOf="@+id/text_view_date_time"
             app:layout_constraintTop_toBottomOf="@+id/text_view_message" />
 

@@ -54,7 +54,6 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/height_40"
                     android:layout_marginStart="@dimen/margin_5"
-                    android:layout_marginLeft="@dimen/margin_5"
                     android:ellipsize="end"
                     android:ems="@integer/three_dot_ems"
                     android:fontFamily="@font/poppins_regular"
@@ -70,12 +69,11 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/height_40"
+                    android:layout_width="@dimen/height_10"
+                    android:layout_height="@dimen/height_10"
                     android:layout_marginEnd="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
                     android:contentDescription="@string/logo_image"
-                    android:src="@{userEntity.isOnline ? @drawable/drawable_in_renge: @drawable/drawable_out_renge}"
+                    android:src="@{userEntity.isOnline ? @drawable/circle_online: @drawable/circle_offline}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_view_last_name"
@@ -104,63 +102,43 @@
             app:layout_constraintTop_toBottomOf="@+id/shadow_view"
             app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"/>
 
-        <!-- android:visibility="@{model.messageViewVisible}"-->
-        <!-- <android.support.v7.widget.RecyclerView
-             android:id="@+id/chat_rv"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingBottom="@dimen/margin_8"
-             android:layout_marginTop="@dimen/margin_1"
-             app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
-             app:layout_constraintLeft_toLeftOf="parent"
-             app:layout_constraintRight_toRightOf="parent"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />-->
-        <!--
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/chat_no_message_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
-                    android:visibility="@{model.emptyViewVisible}">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/empty_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/shadow_view"
+            app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
-                    <ImageView
-                        android:id="@+id/im_no_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.326"
-                        app:srcCompat="@drawable/img_survey_empty" />
+            <ImageView
+                android:id="@+id/empty_image_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginRight="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_10"
+                android:contentDescription="@string/no_message_available"
+                android:src="@mipmap/ic_no_chat"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-                    <TextView
-                        android:id="@+id/tv_loading_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_8"
-                        android:text="No messages yet"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/im_no_message" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"
+                android:text="@string/no_chat_available"
+                android:textSize="@dimen/text_size_18"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
 
-                    <TextView
-                        android:id="@+id/tv_empty_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_8"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="@dimen/margin_8"
-                        android:text="@{model.emptyMessage}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.506"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_loading_text" />
-                </android.support.constraint.ConstraintLayout>-->
 
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/chat_message_bar"
@@ -179,7 +157,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_16"
-                android:layout_marginRight="@dimen/margin_16"
                 android:ems="10"
                 android:hint="@string/type_message"
                 android:inputType="textCapSentences|textMultiLine"

@@ -26,6 +26,8 @@ public class BaseMeshData implements Parcelable {
      */
     public MeshPeer mMeshPeer;
 
+    public String mPeerId;
+
     @Override
     public int describeContents() {
         return 0;
@@ -35,6 +37,7 @@ public class BaseMeshData implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mData);
         dest.writeParcelable(this.mMeshPeer, flags);
+        dest.writeString(this.mPeerId);
     }
 
     public BaseMeshData() {
@@ -43,6 +46,7 @@ public class BaseMeshData implements Parcelable {
     protected BaseMeshData(Parcel in) {
         this.mData = in.createByteArray();
         this.mMeshPeer = in.readParcelable(MeshPeer.class.getClassLoader());
+        this.mPeerId = in.readString();
     }
 
     public static final Creator<BaseMeshData> CREATOR = new Creator<BaseMeshData>() {

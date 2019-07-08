@@ -11,7 +11,7 @@ package com.w3engineers.ext.viper.application.ui.base.rm;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 
 /**
  * Currently this Activity only serves to show service notification only.
@@ -43,12 +43,10 @@ public abstract class RmBaseActivity extends BaseActivity {
         BaseServiceLocator baseServiceLocator = getServiceLocator();
         if(baseServiceLocator != null) {
 
-            BaseRmDataSource baseRmDataSource = baseServiceLocator.getRmDataSource();
+            BaseMeshDataSource baseRmDataSource = baseServiceLocator.getRmDataSource();
 
             if(baseRmDataSource != null && baseRmDataSource.isServiceConnected()) {
-
                 baseRmDataSource.setServiceForeground(isForeground);
-
             }
 
         }

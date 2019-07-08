@@ -13,17 +13,18 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
-import com.w3engineers.unicef.telemesh.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -35,7 +36,7 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends RmBaseActivity implements ItemClickListener<ChatEntity> {
+public class ChatActivity extends RmBaseActivity {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -65,7 +66,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     @Override
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
     @Override
@@ -73,10 +74,11 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
         Intent intent = getIntent();
         mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
 
-
-
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
+
+        mChatViewModel = getViewModel();
+
         initComponent();
         subscribeForMessages();
         subscribeForUserEvent();
@@ -126,7 +128,7 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     private void initComponent() {
 
 
-        mChatPagedAdapter = new ChatPagedAdapterRevised(this);
+        mChatPagedAdapter = new ChatPagedAdapterRevised(this, mChatViewModel);
         mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
@@ -141,8 +143,6 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             //  mViewBinging.emptyViewId.setOnClickListener(this);
             mViewBinging.imageViewSend.setOnClickListener(this);
         }
-
-        mChatViewModel = getViewModel();
 
         clearNotification();
     }
@@ -177,13 +177,16 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
             });*/
 
             if (mChatPagedAdapter != null) {
-                mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities ->
-                        mChatPagedAdapter.submitList(chatEntities));
+                mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
+                    controlEmptyView(chatEntities);
+                    mChatPagedAdapter.submitList(chatEntities);
+                });
             }
 
             if (mUserEntity.meshId != null) {
-                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities ->
-                        mChatViewModel.prepareDateSpecificChat(chatEntities));
+                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
+                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+                });
             }
 
         }
@@ -224,6 +227,18 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
 
     }
 
+    private void controlEmptyView(List<ChatEntity> chatEntities) {
+        if (chatEntities != null && chatEntities.size() > 0) {
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.GONE);
+            }
+        } else {
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -241,13 +256,12 @@ public class ChatActivity extends RmBaseActivity implements ItemClickListener<Ch
     }
 
     private void loadMainActivity() {
-        Intent newTask = new Intent(this, MainActivity.class);
-        newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(newTask);
-    }
-
-    @Override
-    public void onItemClick(@NonNull View view, @Nullable ChatEntity item) {
+        // When user comes in chat screen using notification
+        if (isTaskRoot()) {
+            Intent newTask = new Intent(this, MainActivity.class);
+            newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(newTask);
+        }
     }
 
     private ChatViewModel getViewModel() {

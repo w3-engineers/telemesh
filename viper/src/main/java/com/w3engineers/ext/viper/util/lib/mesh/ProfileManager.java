@@ -38,15 +38,14 @@ public class ProfileManager {
     // fixme We do not have proper specification on sendDataReliable API so we have returned false
     // based on natural assumption
     // Currently we do not handle any profile data acknowledgement
-    public int sendMyProfileInfo(MeshPeer meshPeer) {
+    public long sendMyProfileInfo(MeshPeer meshPeer) {
 
         MeshData myProfileMeshData = new MeshData();
         myProfileMeshData.mData = mProfileInfo;
         myProfileMeshData.mMeshPeer = meshPeer;
         myProfileMeshData.mType = MY_PROFILE_INFO_TYPE;
 
-        return MeshProvider.getInstance().sendProfileInfo(myProfileMeshData);
-
+        return MeshProviderOld.getInstance().sendProfileInfo(myProfileMeshData);
     }
 
     /**

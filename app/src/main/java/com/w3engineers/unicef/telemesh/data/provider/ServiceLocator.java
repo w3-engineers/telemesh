@@ -4,22 +4,19 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.data.remote.BaseRmDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
-import com.w3engineers.unicef.telemesh.ui.buydata.BuyDataViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
-import com.w3engineers.unicef.telemesh.ui.mywallet.MyWalletViewModel;
-import com.w3engineers.unicef.telemesh.ui.selldata.SellDataViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
-import com.w3engineers.unicef.telemesh.ui.survey.SurveyViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 
 /*
@@ -31,14 +28,21 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
  */
 public class ServiceLocator extends BaseServiceLocator {
 
-    private static ServiceLocator serviceLocator;
+    // SingleTon
+    protected ServiceLocator(){
+
+    }
+
+    // to manage proper singleton that will remained singleton during multi-thread instance
+    public static class ServiceLocatorHolder{
+        @NonNull
+        public static ServiceLocator serviceLocator = new ServiceLocator();
+    }
 
     @NonNull
     public static ServiceLocator getInstance() {
-        if (serviceLocator == null) {
-            serviceLocator = new ServiceLocator();
-        }
-        return serviceLocator;
+
+        return ServiceLocatorHolder.serviceLocator;
     }
 
     @NonNull
@@ -63,6 +67,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     public MainActivityViewModel getMainActivityViewModel(){
+        restartRmService();
         return new MainActivityViewModel();
     }
 
@@ -78,12 +83,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     public MessageFeedViewModel getMessageFeedViewModel() {
-        return new MessageFeedViewModel();
-    }
-
-    @NonNull
-    public SurveyViewModel getSurveyViewModel() {
-        return new SurveyViewModel();
+        return new MessageFeedViewModel(FeedDataSource.getInstance());
     }
 
     @NonNull
@@ -93,22 +93,15 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     @Override
-    public BaseRmDataSource getRmDataSource() {
+    public BaseMeshDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
-    @NonNull
-    public MyWalletViewModel getMyWalletViewModel(@NonNull Application application) {
-        return new MyWalletViewModel(application);
+    public void resetRmDataSourceInstance() {
+        RmDataHelper.getInstance().resetRmDataSourceInstance();
     }
 
-    @NonNull
-    public BuyDataViewModel getBuyDataViewModel(@NonNull Application application) {
-        return new BuyDataViewModel(application);
-    }
-
-    @NonNull
-    public SellDataViewModel getSellDataViewModel(@NonNull Application application) {
-        return new SellDataViewModel(application);
+    public void restartRmService() {
+        RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 }

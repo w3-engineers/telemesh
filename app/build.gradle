@@ -127,6 +127,8 @@ dependencies {
     implementation deps.dexter.dexter
     implementation deps.appshare.share
 
+    implementation deps.parse.server
+
     api deps.framework
     api deps.mesh
     api deps.pay

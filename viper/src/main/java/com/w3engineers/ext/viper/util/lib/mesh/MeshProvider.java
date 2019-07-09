@@ -86,6 +86,12 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
+    public void restartMesh() {
+        if (transportManager != null) {
+            transportManager.restart();
+        }
+    }
+
     public interface ProviderCallback {
 
         void meshStart();

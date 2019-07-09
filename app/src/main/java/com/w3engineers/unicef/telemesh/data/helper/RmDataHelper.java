@@ -1,24 +1,16 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
-import com.w3engineers.unicef.telemesh.TeleMeshUser;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
@@ -52,9 +44,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 import timber.log.Timber;
 
 /*
@@ -381,8 +370,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     /**
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
-    public void resetRmDataSourceInstance() {
-        rightMeshDataSource.resetInstance();
+    public void restartMesh() {
+        rightMeshDataSource.resetMeshService();
     }
 
     public void requestWsMessage() {

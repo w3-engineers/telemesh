@@ -108,6 +108,16 @@ public abstract class BaseMeshDataSource {
         return null;
     }
 
+    public void restartMesh() {
+        try {
+            if(iSetInfo != null){
+                iSetInfo.restartMeshService();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * To check underlying service properly initiated or not
      * @return true if connected

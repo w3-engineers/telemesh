@@ -2,7 +2,7 @@
 [travis]:https://travis-ci.com/w3-engineers/
 [coverall]:https://coveralls.io/github/w3-engineers/telemesh
 [Apache License 2.0]:https://choosealicense.com/licenses/apache-2.0/
-[Project Architecture]:https://docs.google.com/document/d/1nNWNfHxftL_qd6flrjceo7LTNNgfszdgMXk9TCxHHko/edit?usp=sharing
+
 
 # Telemesh
 
@@ -26,9 +26,9 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
 
 ## Feature list
 * One to one messaging
-* Message broadcast, multicast
+* Message broadcast
 * App sharing
-* More to come ...
+* forthcoming
 
 
 ## Project's Structure
@@ -46,7 +46,7 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
                 |-- helper #Generic tasks like TimeUtil, NetworkUtil etc.
                 |-- lib #third party library, component etc.
             |-- Application.java #Android Application class    
-    |-- viper #RightMesh wrapper module
+    |-- viper #W3Engineers wrapper module
     |-- build.gradle
     |-- settings.gradle
     |-- gradle.properties
@@ -69,7 +69,7 @@ N/A
 
 ## Development environments
 We are using the below environment for android mobile app development:
-* Minimum API: 16 (Jelly Bean - 4.1.x)
+* Minimum API: 19 (KitKat - 4.4.x)
 * Java: 1.8.0_121
 * Android Studio: 3.3 Stable
 * Machine Used: Linux/Ubuntu, MacOS 10.14: Mojave (Liberty)
@@ -81,20 +81,7 @@ Navigate to directory where you want to keep source code. Open command prompt. E
 
 
 **Step 2: Prepare gradle.properties file:**
-We can use global **_gradle.properties_** file for **RM keys**. In general it could be found in the following location:
-> **Linux/Ubuntu:**  _home/\<usr>/.gradle_ 
-
-> **Windows:** _C:/Users\<usr>/.gradle/gradle.properties_.
-
-> **MAC:** _~/Users/\<usr>/.gradle (By default this file is hidden in Mac. Press Command+Shift+. to see the hidden files)._
-
-In case if the file is not there then we can create one by the name: _gradle.properties_. The content of the file is username, password, and the App key:
-
-> User name key is: _rightmesh_build_username_ 
-> 
-> User password is: _rightmesh_build_password_ 
-> 
-> App key is: _org.w3.telemesh_ 
+You need to request for mesh technology support to the Telemesh team to build the project successfully.
 
 **Step 3: Sync and build:**
 If everything is ok then sync and build should work as it should be. If not please recheck step 1 and 2. 
@@ -119,8 +106,7 @@ If everything is ok then sync and build should work as it should be. If not plea
 
 <kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
 
-### Project Architecture
-For the project architecture and sequence diagram please check this [link][Project Architecture].
+
 
 ## License
 **[Apache License 2.0]**

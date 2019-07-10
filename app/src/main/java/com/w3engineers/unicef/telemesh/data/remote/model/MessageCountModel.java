@@ -1,17 +1,15 @@
 package com.w3engineers.unicef.telemesh.data.remote.model;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md Tariqul Islam on 7/9/2019 at 1:12 PM.
- *  * Email : tariqul@w3engineers.com
- *  *
- *  * Purpose: This class is the container of Message count analytics data
- *  *
- *  * Last edited by : Md Tariqul Islam on 7/9/2019.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ *
+ * Purpose:  This class is the container of Message count analytics data
+ * ============================================================================
  */
+
 
 public class MessageCountModel {
     private String userId;

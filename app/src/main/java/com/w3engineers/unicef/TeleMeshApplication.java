@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.MeshApp;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.remote.CredentialHolder;
-import com.w3engineers.unicef.telemesh.data.remote.RemoteApi;
+import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
+import com.w3engineers.unicef.telemesh.data.analytics.RemoteApi;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 

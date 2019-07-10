@@ -1,7 +1,7 @@
-package com.w3engineers.unicef.telemesh.data.remote.parseapi;
+package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
 import com.parse.ParseObject;
-import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 
 /*
  * ============================================================================

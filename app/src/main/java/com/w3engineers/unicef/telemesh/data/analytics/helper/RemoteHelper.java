@@ -1,8 +1,8 @@
-package com.w3engineers.unicef.telemesh.data.remote.helper;
+package com.w3engineers.unicef.telemesh.data.analytics.helper;
 
-import com.w3engineers.unicef.telemesh.data.remote.RemoteApi;
-import com.w3engineers.unicef.telemesh.data.remote.helper.callback.RemoteCallback;
-import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.RemoteApi;
+import com.w3engineers.unicef.telemesh.data.analytics.helper.callback.RemoteCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.

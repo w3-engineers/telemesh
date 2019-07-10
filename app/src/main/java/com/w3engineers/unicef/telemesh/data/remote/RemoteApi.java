@@ -7,19 +7,17 @@ import com.w3engineers.unicef.telemesh.data.helper.InitManagerAsync;
 import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.remote.parseapi.ParseManager;
 /*
- *  ****************************************************************************
- *  * Created by : Md Tariqul Islam on 7/8/2019 at 6:41 PM.
- *  * Email : tariqul@w3engineers.com
- *  *
- *  * Purpose: This is main api platform of Remote call.
- *  * It is not depend on Parse or Manager class.
- *  * If any change of manager layer one manger fully replaced
- *  * here we have to change manager class
- *  *
- *  * Last edited by : Md Tariqul Islam on 7/8/2019.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ *
+ * Purpose: This is main api platform of Remote call.
+ * It is not depend on Parse or Manager class.
+ * If any change of manager layer one manger fully replaced
+ * here we have to change manager class
+ *
+ * ============================================================================
  */
 
 

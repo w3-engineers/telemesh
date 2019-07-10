@@ -1,16 +1,13 @@
 package com.w3engineers.unicef.telemesh.data.remote.helper.callback;
 
 /*
- *  ****************************************************************************
- *  * Created by : Md Tariqul Islam on 7/9/2019 at 1:21 PM.
- *  * Email : tariqul@w3engineers.com
- *  *
- *  * Purpose: Callback method container from parseManager
- *  *
- *  * Last edited by : Md Tariqul Islam on 7/9/2019.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ *
+ * Purpose:  Callback method container from parseManager
+ * ============================================================================
  */
 
 public interface RemoteCallback {

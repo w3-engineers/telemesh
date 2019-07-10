@@ -36,7 +36,7 @@ public class TeleMeshApplication extends MeshApp {
     }
 
     private void initCredential() {
-        CredentialHolder.init("Server-AppId", "Server-ClientKey", "Server-Url");
+
     }
 
 }

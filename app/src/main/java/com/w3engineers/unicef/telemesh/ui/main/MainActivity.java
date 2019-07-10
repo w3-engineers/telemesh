@@ -17,6 +17,8 @@ import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.telemesh.data.remote.helper.RemoteHelper;
+import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
@@ -74,6 +76,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
 //        mViewModel.makeSendingMessageAsFailed();
 
+
+       /* new Handler().postDelayed(() -> {
+            MessageCountModel model = new MessageCountModel();
+            model.setMsgCount(1);
+            model.setMsgTime(17890394);
+            model.setUserId("1234567890");
+            RemoteHelper.saveMessageCount(model);
+        }, 5000);*/
     }
 
     private MainActivityViewModel getViewModel() {

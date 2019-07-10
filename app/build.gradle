@@ -4,6 +4,8 @@ plugins {
     id 'com.google.protobuf'
 }
 
+
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion '28.0.3'
@@ -24,9 +26,21 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', "BROADCAST_URL", telemesh_broadcast_url
+            buildConfigField 'String', "BROADCAST_TOKEN", telemesh_broadcast_token
+            buildConfigField 'String', "PARSE_URL", telemesh_parse_url
+            buildConfigField 'String', "PARSE_APP_ID", telemesh_parse_app_id
+
         }
         debug {
             testCoverageEnabled true
+
+            buildConfigField 'String', "BROADCAST_URL", telemesh_broadcast_url
+            buildConfigField 'String', "BROADCAST_TOKEN", telemesh_broadcast_token
+            buildConfigField 'String', "PARSE_URL", telemesh_parse_url
+            buildConfigField 'String', "PARSE_APP_ID", telemesh_parse_app_id
+
         }
     }
     lintOptions {

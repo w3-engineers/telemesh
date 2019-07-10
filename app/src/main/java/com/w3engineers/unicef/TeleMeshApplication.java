@@ -20,6 +20,13 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  */
 public class TeleMeshApplication extends MeshApp {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    public native String getParseUrl();
+    public native String getParseAppId();
+
     @Override
     protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
@@ -36,7 +43,7 @@ public class TeleMeshApplication extends MeshApp {
     }
 
     private void initCredential() {
-
+        CredentialHolder.init(getParseAppId(), "", getParseUrl());
     }
 
 }

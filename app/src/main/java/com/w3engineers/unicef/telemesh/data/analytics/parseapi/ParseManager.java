@@ -65,4 +65,8 @@ public class ParseManager {
         });
 
     }
+
+    public void saveNewUserAnalytics() {
+
+    }
 }

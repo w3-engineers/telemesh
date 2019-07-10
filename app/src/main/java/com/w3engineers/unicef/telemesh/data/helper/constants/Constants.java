@@ -58,7 +58,6 @@ public class Constants {
 
     public interface AppConstant {
         long LOADING_TIME = 30 * 1000;
-        String BROADCAST_URL = "wss://telemesh.w3engineers.com/websocket/";
         int MESSAGE_SYNC_PLOT = 10;
         int DEFAULT = 0;
     }

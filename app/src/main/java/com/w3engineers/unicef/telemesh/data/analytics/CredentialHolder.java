@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.data.remote;
+package com.w3engineers.unicef.telemesh.data.analytics;
 
 /*
  * ============================================================================

@@ -9,10 +9,12 @@ import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
@@ -154,6 +156,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      */
     @SuppressLint("CheckResult")
     public void prepareDataObserver() {
+
+        AnalyticsDataHelper.getInstance().analyticsDataObserver();
+
         compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
@@ -221,41 +226,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.MESSAGE_FEED:
                 setBulletinMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
-        }
-    }
 
-    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
-        try {
-
-            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
-                    .mergeFrom(rawBulletinData).build();
-
-            FeedEntity feedEntity = new FeedEntity()
-                    .toFeedEntity(teleMeshBulletin);
-
-            if (isNewMessage) {
-                feedEntity.setFeedReadStatus(false);
-
-                compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
-                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
-                        .subscribe(aLong -> {
-                            if (aLong != -1) {
-                                BulletinDataSource.getInstance().insertOrUpdate(
-                                        getMyTrackEntity(feedEntity.getFeedId())
-                                                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
-                                                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
-                            }
-                        }, Throwable::printStackTrace));
-            } else {
-
-                BulletinDataSource.getInstance().insertOrUpdate(
-                        getOthersTrackEntity(feedEntity.getFeedId(), userId)
-                                .setBulletinAckStatus(isAckSuccess ?
-                                        Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            case Constants.DataType.ANALYTICS_MESSAGE_COUNT:
+                break;
         }
     }
 
@@ -301,7 +274,54 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
+    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
+        try {
 
+            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
+                    .mergeFrom(rawBulletinData).build();
+
+            FeedEntity feedEntity = new FeedEntity()
+                    .toFeedEntity(teleMeshBulletin);
+
+            if (isNewMessage) {
+                feedEntity.setFeedReadStatus(false);
+
+                compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
+                        .subscribe(aLong -> {
+                            if (aLong != -1) {
+                                BulletinDataSource.getInstance().insertOrUpdate(
+                                        getMyTrackEntity(feedEntity.getFeedId())
+                                                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
+                                                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
+                            }
+                        }, Throwable::printStackTrace));
+            } else {
+
+                BulletinDataSource.getInstance().insertOrUpdate(
+                        getOthersTrackEntity(feedEntity.getFeedId(), userId)
+                                .setBulletinAckStatus(isAckSuccess ?
+                                        Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, String userId) {
+        try {
+            MessageCount messageCount = MessageCount.newBuilder()
+                    .mergeFrom(rawMessageCountAnalyticsData).build();
+
+            MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity
+                    .MessageAnalyticsEntity().toMessageAnalyticsEntity(messageCount);
+
+            AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, messageAnalyticsEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * When we got any ack message from RM this API is responsible
      * for updating med message status which already sent
@@ -517,6 +537,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setBulletinTrackUserId(userId)
                 .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND)
                 .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
+    }
+
+    public void analyticsDataSendToSellers(MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
+
+        MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
+
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(messageCount.toByteArray(), Constants.DataType.ANALYTICS_MESSAGE_COUNT, sellersId);
+        }
+
     }
 
     @Override

@@ -244,6 +244,16 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
+    public List<String> getAllSellers() {
+        List<String> currentSharers = new ArrayList<>();
+        if (transportManager != null) {
+            for (Link link : transportManager.getSharers()) {
+                currentSharers.add(link.getNodeId());
+            }
+        }
+        return currentSharers;
+    }
+
     public String getMyUserId() {
         return myUserId;
     }

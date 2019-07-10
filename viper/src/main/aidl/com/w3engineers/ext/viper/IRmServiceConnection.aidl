@@ -34,4 +34,6 @@ interface IRmServiceConnection {
     String getMyId();
 
     void restartMeshService();
+
+    List<String> getCurrentSellers();
 }

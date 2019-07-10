@@ -1,14 +1,11 @@
-package com.w3engineers.unicef.telemesh.data.remote.parseapi;
+package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
-import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.

@@ -17,8 +17,6 @@ import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.data.remote.helper.RemoteHelper;
-import com.w3engineers.unicef.telemesh.data.remote.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;

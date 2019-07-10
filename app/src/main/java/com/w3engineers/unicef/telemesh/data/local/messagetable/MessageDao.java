@@ -99,16 +99,10 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     public abstract Flowable<MessageEntity> getLastInsertedMessage();
 
-    // This api is not used in app layer
-    /*@Query("DELETE FROM " + TableNames.MESSAGE)
-    void deleteAllUsers();*/
-
-    // This api is not used in app layer
-    /*@Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
-            + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    MessageEntity getMessageByFriendAndMessageId(String friendsId, String messageId);*/
-
-    /*@Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
-            + " = :messageId" + " AND " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId" + " LIMIT 1")
-    boolean hasChatEntityExist(@NonNull String friendsId, @NonNull String messageId);*/
+    @Query("SELECT " + ColumnNames.COLUMN_MESSAGE_TIME + ", (SELECT (COUNT(*)/" + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") FROM " + TableNames.MESSAGE +
+            " WHERE (((( SELECT COUNT(*) FROM " + TableNames.MESSAGE + ") % " + Constants.AppConstant.MESSAGE_SYNC_PLOT
+            + ") = " + Constants.AppConstant.DEFAULT + ")) AND (((SELECT COUNT(*) FROM " + TableNames.MESSAGE + ")/"
+            + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") != " + Constants.AppConstant.DEFAULT + ")) AS syncMessageCountToken"
+            + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
+    public abstract Flowable<MessageEntity.MessageAnalyticsEntity> getBlockMessageInfoForSync();
 }

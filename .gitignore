@@ -26,6 +26,8 @@ proguard/
 # Log Files
 *.log
 
+app/src/main/native/native-lib.cpp
+
 # Android Studio Navigation editor temp files
 .navigation/
 

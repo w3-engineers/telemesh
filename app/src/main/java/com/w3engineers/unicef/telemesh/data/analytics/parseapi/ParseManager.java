@@ -4,8 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
+
+import java.util.List;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -66,7 +71,13 @@ public class ParseManager {
 
     }
 
-    public void saveNewUserAnalytics() {
+    public void saveNewUserAnalytics(List<NewNodeModel> nodeList) {
+        List<ParseObject> newUserList = new ParseMapper().NewNodeToParse(nodeList);
+        ParseObject.saveAllInBackground(newUserList, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
 
+            }
+        });
     }
 }

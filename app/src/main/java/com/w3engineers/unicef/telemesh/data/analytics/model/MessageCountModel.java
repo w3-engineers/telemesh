@@ -20,23 +20,26 @@ public class MessageCountModel {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public MessageCountModel setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     public int getMsgCount() {
         return msgCount;
     }
 
-    public void setMsgCount(int msgCount) {
+    public MessageCountModel setMsgCount(int msgCount) {
         this.msgCount = msgCount;
+        return this;
     }
 
     public long getMsgTime() {
         return msgTime;
     }
 
-    public void setMsgTime(long msgTime) {
+    public MessageCountModel setMsgTime(long msgTime) {
         this.msgTime = msgTime;
+        return this;
     }
 }

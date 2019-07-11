@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.data.helper;
+package com.w3engineers.unicef.telemesh.data.analytics;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,17 +6,18 @@ import android.os.AsyncTask;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
 /*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
+============================================================================
+Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
+Unauthorized copying of this file, via any medium is strictly prohibited
+Proprietary and confidential
+============================================================================
+*/
 
-public class InitManagerAsync extends AsyncTask<Void, Void, Void> {
+
+public class InitParseManagerAsync extends AsyncTask<Void, Void, Void> {
     private static Context mContext;
 
-    public InitManagerAsync(Context context) {
+    public InitParseManagerAsync(Context context) {
         mContext = context;
     }
 

@@ -25,7 +25,7 @@ public class ParseMapper {
         ParseObject parseObject = new ParseObject(ParseConstant.MessageCount.TABLE);
         parseObject.put(ParseConstant.MessageCount.USER_ID, model.getUserId());
         parseObject.put(ParseConstant.MessageCount.MESSAGE_COUNT, model.getMsgCount());
-        parseObject.put(ParseConstant.MessageCount.MSG_TIME, model.getMsgTime());
+        //parseObject.put(ParseConstant.MessageCount.MSG_TIME, model.getMsgTime());
 
         return parseObject;
     }

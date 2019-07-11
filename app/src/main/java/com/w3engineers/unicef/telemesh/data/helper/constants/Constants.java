@@ -42,9 +42,8 @@ public class Constants {
         //RM data type
         byte USER = 0x1;
         byte MESSAGE = 0x2;
-        byte SURVEY = 0x3;
+        byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;
-        byte BROADCAST_MESSAGE = 0x5;
     }
 
     public interface MessageType {
@@ -59,6 +58,8 @@ public class Constants {
 
     public interface AppConstant {
         long LOADING_TIME = 30 * 1000;
+        int MESSAGE_SYNC_PLOT = 10;
+        int DEFAULT = 0;
     }
 
     public interface Bulletin {

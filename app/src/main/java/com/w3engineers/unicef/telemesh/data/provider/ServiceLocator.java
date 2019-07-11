@@ -97,8 +97,8 @@ public class ServiceLocator extends BaseServiceLocator {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
-    public void resetRmDataSourceInstance() {
-        RmDataHelper.getInstance().resetRmDataSourceInstance();
+    public void resetMesh() {
+        RmDataHelper.getInstance().restartMesh();
     }
 
     public void restartRmService() {

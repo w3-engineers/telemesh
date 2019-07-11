@@ -16,6 +16,9 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgeme
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 ============================================================================
 Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
@@ -106,6 +109,27 @@ public abstract class BaseMeshDataSource {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void restartMesh() {
+        try {
+            if(iSetInfo != null){
+                iSetInfo.restartMeshService();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getAllSellers() {
+        try {
+            if(iSetInfo != null){
+                return iSetInfo.getCurrentSellers();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     /**

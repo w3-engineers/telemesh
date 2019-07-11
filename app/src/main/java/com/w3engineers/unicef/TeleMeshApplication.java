@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.MeshApp;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
-import com.w3engineers.unicef.telemesh.data.analytics.RemoteApi;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 
@@ -40,7 +41,7 @@ public class TeleMeshApplication extends MeshApp {
         LanguageUtil.setAppLanguage(base, language);
 
         initCredential();
-        RemoteApi.init(base);
+        AnalyticsApi.init(base);
     }
 
     private void initCredential() {

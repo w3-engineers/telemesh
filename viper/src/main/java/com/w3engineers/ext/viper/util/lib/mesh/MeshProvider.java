@@ -86,6 +86,12 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
+    public void restartMesh() {
+        if (transportManager != null) {
+            transportManager.restart();
+        }
+    }
+
     public interface ProviderCallback {
 
         void meshStart();
@@ -236,6 +242,16 @@ public class MeshProvider implements LinkStateListener {
             MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId).setSuccess(isSuccess);
             providerCallback.receiveAck(meshAcknowledgement);
         }
+    }
+
+    public List<String> getAllSellers() {
+        List<String> currentSharers = new ArrayList<>();
+        if (transportManager != null) {
+            for (Link link : transportManager.getSharers()) {
+                currentSharers.add(link.getNodeId());
+            }
+        }
+        return currentSharers;
     }
 
     public String getMyUserId() {

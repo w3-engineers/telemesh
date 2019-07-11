@@ -92,7 +92,7 @@ public class MessageSourceData {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
-    public Flowable<MessageEntity.MessageAnalyticsEntity> getBlockMessageInfoForSync() {
+    public Flowable<Integer> getBlockMessageInfoForSync() {
         return messageDao.getBlockMessageInfoForSync();
     }
 

@@ -42,16 +42,18 @@ public class AnalyticsDataHelper {
 
         compositeDisposable.add(messageSourceData.getBlockMessageInfoForSync()
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(messageAnalyticsEntity -> {
+                .subscribe(messagePlotCount -> {
 
-                    if (messageAnalyticsEntity != null && messageAnalyticsEntity.syncMessageCountToken > 0) {
+                    if (messagePlotCount != null && messagePlotCount > 0) {
 
-                        if (trackMessageCount < messageAnalyticsEntity.syncMessageCountToken) {
+                        if (trackMessageCount < messagePlotCount) {
 
-                            trackMessageCount = messageAnalyticsEntity.syncMessageCountToken;
+                            trackMessageCount = messagePlotCount;
 
                             String userId = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-                            messageAnalyticsEntity.setUserId(userId);
+
+                            MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity.MessageAnalyticsEntity()
+                                    .setTime(System.currentTimeMillis()).setSyncMessageCountToken(messagePlotCount).setUserId(userId);
 
                             processMessageForAnalytics(true, messageAnalyticsEntity);
                         }

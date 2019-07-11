@@ -52,7 +52,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         ChatEntity chatEntity = getItem(position);
 
         if (chatEntity != null && chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-            return chatEntity.isIncoming ? TEXT_MESSAGE_IN : TEXT_MESSAGE_OUT;
+            return chatEntity.isIncoming ? Constants.MessageType.MESSAGE_INCOMING : Constants.MessageType.MESSAGE_OUTGOING;
         }
 
         return -1;
@@ -63,10 +63,10 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        if (viewType == TEXT_MESSAGE_IN) {
+        if (viewType == Constants.MessageType.MESSAGE_INCOMING) {
             ItemTextMessageInBinding itemTextMessageInBinding = ItemTextMessageInBinding.inflate(inflater, viewGroup, false);
             return new TextMessageInHolder(itemTextMessageInBinding);
-        } else if (viewType == TEXT_MESSAGE_OUT) {
+        } else if (viewType == Constants.MessageType.MESSAGE_OUTGOING) {
             ItemTextMessageOutBinding itemTextMessageOutBinding = ItemTextMessageOutBinding.inflate(inflater, viewGroup, false);
             return new TextMessageOutHolder(itemTextMessageOutBinding);
         } else {

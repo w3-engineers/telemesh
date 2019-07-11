@@ -49,6 +49,8 @@ public class Constants {
     public interface MessageType {
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
+        int MESSAGE_INCOMING = 1;
+        int MESSAGE_OUTGOING = 0;
     }
 
     public interface UserStatus {

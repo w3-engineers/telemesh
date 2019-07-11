@@ -418,7 +418,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void requestWsMessage() {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url("").build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getBroadcastCommand());
         client.newWebSocket(request, listener);
@@ -435,7 +435,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void requestAckMessage(String messageId, String userId) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url("").build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getAckCommand(messageId, userId));
         client.newWebSocket(request, listener);

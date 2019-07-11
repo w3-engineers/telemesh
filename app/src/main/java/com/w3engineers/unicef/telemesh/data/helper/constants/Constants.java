@@ -42,7 +42,7 @@ public class Constants {
         //RM data type
         byte USER = 0x1;
         byte MESSAGE = 0x2;
-        byte ANALYTICS_MESSAGE_COUNT = 0x3;
+        byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;
     }
 

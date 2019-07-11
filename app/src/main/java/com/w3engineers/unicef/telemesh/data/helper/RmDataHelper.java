@@ -10,9 +10,7 @@ import com.google.protobuf.ByteString;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
@@ -536,7 +534,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private BroadcastCommand getBroadcastCommand() {
         Payload payload = new Payload();
         return new BroadcastCommand().setEvent("connect")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken("")
                 .setBaseStationId(getMyMeshId())
                 .setClientId(getMyMeshId())
                 .setPayload(payload);
@@ -545,7 +543,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private BroadcastCommand getAckCommand(String messageId, String userId) {
         Payload payload = new Payload().setMessageId(messageId);
         return new BroadcastCommand().setEvent("ack_msg_received")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken("")
                 .setBaseStationId(getMyMeshId())
                 .setClientId(userId)
                 .setPayload(payload);

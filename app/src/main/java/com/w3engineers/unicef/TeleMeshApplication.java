@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.MeshApp;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
+import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
@@ -19,10 +21,6 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  * ============================================================================
  */
 public class TeleMeshApplication extends MeshApp {
-
-    static {
-        System.loadLibrary("native-lib");
-    }
 
     public native String getParseUrl();
     public native String getParseAppId();
@@ -43,7 +41,7 @@ public class TeleMeshApplication extends MeshApp {
     }
 
     private void initCredential() {
-        CredentialHolder.init(getParseAppId(), "", getParseUrl());
+        CredentialHolder.init(BuildConfig.PARSE_APP_ID, "", BuildConfig.PARSE_URL);
     }
 
 }

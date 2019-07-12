@@ -2,6 +2,10 @@ package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
 import com.parse.ParseObject;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * ============================================================================
@@ -16,13 +20,26 @@ import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 
 public class ParseMapper {
 
-    public ParseObject MessageCountToParse(MessageCountModel model) {
+    ParseObject MessageCountToParse(MessageCountModel model) {
 
         ParseObject parseObject = new ParseObject(ParseConstant.MessageCount.TABLE);
         parseObject.put(ParseConstant.MessageCount.USER_ID, model.getUserId());
         parseObject.put(ParseConstant.MessageCount.MESSAGE_COUNT, model.getMsgCount());
-        parseObject.put(ParseConstant.MessageCount.MSG_TIME, model.getMsgTime());
+        //parseObject.put(ParseConstant.MessageCount.MSG_TIME, model.getMsgTime());
 
         return parseObject;
+    }
+
+    ParseObject NewNodeToParse(List<NewNodeModel> nodeList) {
+        ParseObject object = new ParseObject(ParseConstant.NewNodeUser.TABLE);
+        List<String> userIdList = new ArrayList<>();
+        List<Long> userTime = new ArrayList<>();
+        for (NewNodeModel model : nodeList) {
+            userIdList.add(model.getUserId());
+            userTime.add(model.getUserAddingTime());
+        }
+        object.put(ParseConstant.NewNodeUser.USER_ID, userIdList);
+        object.put(ParseConstant.NewNodeUser.USER_ADDING_TIME, userTime);
+        return object;
     }
 }

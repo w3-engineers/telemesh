@@ -69,11 +69,11 @@ android {
         exclude 'META-INF/io.netty.versions.properties'
     }
 
-    externalNativeBuild {
+  /*  externalNativeBuild {
         cmake {
             path 'src/CMakeLists.txt'
         }
-    }
+    }*/
 
 }
 

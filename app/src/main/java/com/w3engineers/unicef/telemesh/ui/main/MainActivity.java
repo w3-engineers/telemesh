@@ -15,6 +15,8 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
@@ -78,9 +80,9 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
        /* new Handler().postDelayed(() -> {
             MessageCountModel model = new MessageCountModel();
             model.setMsgCount(1);
-            model.setMsgTime(17890394);
-            model.setUserId("1234567890");
-            RemoteHelper.saveMessageCount(model);
+            model.setMsgTime(178903945);
+            model.setUserId("12345678909");
+            AnalyticsDataHelper.getInstance().sendMessageCount(model);
         }, 5000);*/
     }
 

@@ -19,4 +19,10 @@ public class ParseConstant {
         String MESSAGE_COUNT = "msg_count";
         String MSG_TIME = "msg_time";
     }
+
+    interface NewNodeUser {
+        String TABLE = "NewNodeUser";
+        String USER_ID = "user_id";
+        String USER_ADDING_TIME = "user_adding_time";
+    }
 }

@@ -59,12 +59,8 @@ import timber.log.Timber;
  */
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
-
-    static {
-        System.loadLibrary("native-lib");
-    }
-
     public native String getBroadCastUrl();
+
     public native String getBroadcastToken();
 
 
@@ -162,7 +158,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     *
+     * <p>
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")
@@ -302,7 +298,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             if (isNewMessage) {
                 feedEntity.setFeedReadStatus(false);
 
-                compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+                compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                         .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
                         .subscribe(aLong -> {
                             if (aLong != -1) {
@@ -343,6 +339,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             e.printStackTrace();
         }
     }
+
     /**
      * When we got any ack message from RM this API is responsible
      * for updating med message status which already sent
@@ -450,7 +447,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
 
-            compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+            compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
                     .subscribe(aLong -> {
                         if (aLong != -1) {
@@ -466,7 +463,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void broadcastMessage (@NonNull FeedEntity feedEntity){
+    public void broadcastMessage(@NonNull FeedEntity feedEntity) {
 
         List<String> meshDataList = new ArrayList<>();
 
@@ -516,7 +513,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             compositeDisposable.add(BulletinDataSource.getInstance()
                     .setFullSuccess(ackCommand.getAckMsgId(), ackCommand.getClientId())
                     .subscribeOn(Schedulers.newThread())
-                    .subscribe(integer -> {}, Throwable::printStackTrace));
+                    .subscribe(integer -> {
+                    }, Throwable::printStackTrace));
         }
     }
 

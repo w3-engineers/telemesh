@@ -117,6 +117,12 @@ public class SettingsViewModelTest {
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;
 
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         SUT.onCheckedChanged(checkedStatus);
 
         assertFalse(SUT.getCheckedStatus());

@@ -1,10 +1,6 @@
 language: android
 sudo: required
 jdk: oraclejdk8
-
-env:
-  global:
-    - android.enableAapt2=false
 android:
   components:
     - tools

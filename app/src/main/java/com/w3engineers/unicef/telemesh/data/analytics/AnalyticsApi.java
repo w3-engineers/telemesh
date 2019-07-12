@@ -3,8 +3,12 @@ package com.w3engineers.unicef.telemesh.data.analytics;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
+
+import java.util.List;
 /*
 ============================================================================
 Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
@@ -33,7 +37,11 @@ public class AnalyticsApi {
         return ourInstance;
     }
 
-    public void saveMessageCount(MessageCountModel model) {
-        AsyncTask.execute(() -> ParseManager.on().saveMessageCount(model));
+    public void saveMessageCount(MessageCountModel model, AnalyticsCallback callback) {
+        AsyncTask.execute(() -> ParseManager.on().saveMessageCount(model,callback));
+    }
+
+    public void sendNewUserAnalytics(List<NewNodeModel> nodeList) {
+        AsyncTask.execute(() -> ParseManager.on().sendNewUserAnalytics(nodeList));
     }
 }

@@ -22,10 +22,6 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  */
 public class TeleMeshApplication extends MeshApp {
 
-    static {
-        System.loadLibrary("native-lib");
-    }
-
     public native String getParseUrl();
     public native String getParseAppId();
 

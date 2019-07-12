@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ParseMapper {
 
-    public ParseObject MessageCountToParse(MessageCountModel model) {
+    ParseObject MessageCountToParse(MessageCountModel model) {
 
         ParseObject parseObject = new ParseObject(ParseConstant.MessageCount.TABLE);
         parseObject.put(ParseConstant.MessageCount.USER_ID, model.getUserId());
@@ -30,14 +30,16 @@ public class ParseMapper {
         return parseObject;
     }
 
-    public List<ParseObject> NewNodeToParse(List<NewNodeModel> nodeList) {
-        List<ParseObject> parseObjects = new ArrayList<>();
+    ParseObject NewNodeToParse(List<NewNodeModel> nodeList) {
+        ParseObject object = new ParseObject(ParseConstant.NewNodeUser.TABLE);
+        List<String> userIdList = new ArrayList<>();
+        List<Long> userTime = new ArrayList<>();
         for (NewNodeModel model : nodeList) {
-            ParseObject object = new ParseObject(ParseConstant.NewNodeUser.TABLE);
-            object.put(ParseConstant.NewNodeUser.USER_ID, model.getUserId());
-            object.put(ParseConstant.NewNodeUser.USER_ADDING_TIME, model.getUserAddingTime());
-            parseObjects.add(object);
+            userIdList.add(model.getUserId());
+            userTime.add(model.getUserAddingTime());
         }
-        return parseObjects;
+        object.put(ParseConstant.NewNodeUser.USER_ID, userIdList);
+        object.put(ParseConstant.NewNodeUser.USER_ADDING_TIME, userTime);
+        return object;
     }
 }

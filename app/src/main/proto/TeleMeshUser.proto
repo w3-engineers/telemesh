@@ -6,6 +6,7 @@ message RMUserModel {
     string userName = 1;
     int32 imageIndex = 2;
     string userId = 3;
+    int64 registrationTime = 4;
 }
 
 message RMDataModel {

@@ -564,6 +564,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
     }
 
+    ////////////////////////////////////////////////////////////////
+    ////////////////// Analytics data Process //////////////////////
+    ////////////////////////////////////////////////////////////////
+
     public void analyticsDataSendToSellers(MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
 
         MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
@@ -572,6 +576,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             dataSend(messageCount.toByteArray(), Constants.DataType.MESSAGE_COUNT, sellersId);
         }
 
+    }
+
+    public void newUserAnalyticsSend() {
+        compositeDisposable.add(Single.fromCallable(()->
+                UserDataSource.getInstance().getUnSyncedUsers())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(newMeshUserCounts -> {
+                    AnalyticsDataHelper.getInstance().processNewNodesForAnalytics(newMeshUserCounts);
+                }, Throwable::printStackTrace));
+    }
+
+    public void updateSyncedUser() {
+        compositeDisposable.add(Single.fromCallable(()->
+                UserDataSource.getInstance().updateUserSynced())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(syncedUserCounts -> {}, Throwable::printStackTrace));
     }
 
     @Override

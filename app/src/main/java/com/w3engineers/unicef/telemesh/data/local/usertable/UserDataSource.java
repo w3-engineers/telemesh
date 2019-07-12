@@ -106,6 +106,14 @@ public class UserDataSource{
         mUserDao.deleteUser(userId);
     }
 
+    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers() {
+        return mUserDao.getUnSyncedUsers();
+    }
+
+    public int updateUserSynced() {
+        return mUserDao.updateUserToSynced();
+    }
+
     @SuppressLint("LintError")
     @NonNull
     public List<UserEntity> getLivePeers(){

@@ -3,7 +3,7 @@ package com.w3engineers.unicef.telemesh.data.analytics;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
@@ -21,6 +21,8 @@ Proprietary and confidential
 public class AnalyticsApi {
     private static volatile AnalyticsApi ourInstance;
     private static final Object mutex = new Object();
+    private byte analyticsType;
+    private AnalyticsResponseCallback analyticsResponseCallback;
 
     private AnalyticsApi(Context context) {
         new InitParseManagerAsync(context).execute();
@@ -37,11 +39,23 @@ public class AnalyticsApi {
         return ourInstance;
     }
 
-    public void saveMessageCount(MessageCountModel model, AnalyticsCallback callback) {
-        AsyncTask.execute(() -> ParseManager.on().saveMessageCount(model,callback));
+    public AnalyticsApi setAnalyticsType(byte analyticsType) {
+        this.analyticsType = analyticsType;
+        return this;
+    }
+
+    public AnalyticsApi setAnalyticsResponseCallback(AnalyticsResponseCallback analyticsResponseCallback) {
+        this.analyticsResponseCallback = analyticsResponseCallback;
+        return this;
+    }
+
+    public void saveMessageCount(MessageCountModel model) {
+        AsyncTask.execute(() -> ParseManager.on()
+                .setCallback(analyticsType, analyticsResponseCallback).saveMessageCount(model));
     }
 
     public void sendNewUserAnalytics(List<NewNodeModel> nodeList) {
-        AsyncTask.execute(() -> ParseManager.on().sendNewUserAnalytics(nodeList));
+        AsyncTask.execute(() -> ParseManager.on().setCallback(analyticsType, analyticsResponseCallback)
+                .sendNewUserAnalytics(nodeList));
     }
 }

@@ -23,6 +23,8 @@ public class Constants {
         String APP_LANGUAGE_DISPLAY = "app_language_display";
         String COMPANY_NAME = "company_name";
         String COMPANY_ID = "company_id";
+        String MY_REGISTRATION_TIME = "registration_time";
+        String MY_SYNC_IS_DONE = "my_sync_is_done";
     }
 
     public interface drawables {
@@ -72,5 +74,11 @@ public class Constants {
 
         int MINE = 1;
         int OTHERS = 0;
+    }
+
+    public interface AnalyticsResponseType {
+        byte MESSAGE_COUNT = 1;
+        byte NEW_USER_COUNT = 2;
+        byte APP_SHARE_COUNT = 3;
     }
 }

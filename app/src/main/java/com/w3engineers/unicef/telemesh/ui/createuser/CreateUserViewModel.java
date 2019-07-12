@@ -51,6 +51,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+        sharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;

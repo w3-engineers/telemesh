@@ -18,6 +18,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -81,7 +82,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_share_app:
 
-                settingsViewModel.startInAppShareProcess();
+//                settingsViewModel.startInAppShareProcess();
+                RmDataHelper.getInstance().newUserAnalyticsSend();
                 break;
             case R.id.layout_about_us:
                 // Show about us

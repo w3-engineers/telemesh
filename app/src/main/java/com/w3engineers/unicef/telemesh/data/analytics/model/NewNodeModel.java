@@ -17,15 +17,17 @@ public class NewNodeModel {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public NewNodeModel setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     public long getUserAddingTime() {
         return userAddingTime;
     }
 
-    public void setUserAddingTime(long userAddingTime) {
+    public NewNodeModel setUserAddingTime(long userAddingTime) {
         this.userAddingTime = userAddingTime;
+        return this;
     }
 }

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.SaveCallback;
-import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
@@ -29,11 +27,12 @@ public class ParseManager {
     private static final Object mutex = new Object();
     private static Context mContext;
     private static String TAG = ParseManager.class.getName();
+    private byte analyticsType;
+    private AnalyticsResponseCallback analyticsResponseCallback;
 
     public synchronized static void init(Context context, String serverUrl, String appId, String clientKey) {
 
         synchronized (mutex) {
-
             if (sInstance == null) sInstance = new ParseManager();
         }
         mContext = context;
@@ -47,8 +46,13 @@ public class ParseManager {
     }
 
     public static ParseManager on() {
-
         return sInstance;
+    }
+
+    public ParseManager setCallback(byte analyticsType, AnalyticsResponseCallback analyticsResponseCallback) {
+        this.analyticsResponseCallback = analyticsResponseCallback;
+        this.analyticsType = analyticsType;
+        return this;
     }
 
     /**
@@ -59,15 +63,11 @@ public class ParseManager {
      *
      * @param model {@link MessageCountModel}
      */
-    public void saveMessageCount(MessageCountModel model, AnalyticsCallback callback) {
+    public void saveMessageCount(MessageCountModel model) {
         ParseObject parseObject = new ParseMapper().MessageCountToParse(model);
 
         parseObject.saveEventually(e -> {
-            if (e == null) {
-                Log.d(TAG, "Data Save complete");
-            } else {
-                Log.e(TAG, "Error: " + e.getMessage());
-            }
+            sendResponse(e == null);
         });
 
     }
@@ -75,11 +75,13 @@ public class ParseManager {
     public void sendNewUserAnalytics(List<NewNodeModel> nodeList) {
         ParseObject newUserList = new ParseMapper().NewNodeToParse(nodeList);
         newUserList.saveEventually(e -> {
-            if (e == null) {
-                Log.d(TAG, "Data Save complete");
-            } else {
-                Log.e(TAG, "Error: " + e.getMessage());
-            }
+            sendResponse(e == null);
         });
+    }
+
+    private void sendResponse(boolean isSuccess) {
+        if (analyticsResponseCallback != null) {
+            analyticsResponseCallback.response(isSuccess, analyticsType);
+        }
     }
 }

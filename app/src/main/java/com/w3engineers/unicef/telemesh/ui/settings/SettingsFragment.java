@@ -82,8 +82,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_share_app:
 
-//                settingsViewModel.startInAppShareProcess();
-                RmDataHelper.getInstance().newUserAnalyticsSend();
+                settingsViewModel.startInAppShareProcess();
+//                RmDataHelper.getInstance().newUserAnalyticsSend();
                 break;
             case R.id.layout_about_us:
                 // Show about us

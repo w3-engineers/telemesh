@@ -50,7 +50,7 @@ public class SettingsViewModelTest {
     public void testSetLocale_success_setValidData() {
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

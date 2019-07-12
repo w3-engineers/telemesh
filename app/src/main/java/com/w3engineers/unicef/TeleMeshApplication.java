@@ -29,5 +29,4 @@ public class TeleMeshApplication extends MeshApp {
         }
         LanguageUtil.setAppLanguage(base, language);
     }
-
 }

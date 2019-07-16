@@ -41,5 +41,4 @@ public class TeleMeshApplication extends MeshApp {
     private void initCredential() {
         CredentialHolder.init(BuildConfig.PARSE_APP_ID, "", BuildConfig.PARSE_URL);
     }
-
 }

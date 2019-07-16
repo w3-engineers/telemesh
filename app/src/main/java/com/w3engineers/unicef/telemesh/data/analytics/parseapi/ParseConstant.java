@@ -27,7 +27,7 @@ public class ParseConstant {
     }
 
     interface AppShareCount {
-        String TABLE = "AppShareCount";
+        String TABLE = "AppShareCountEntity";
         String USER_ID = "user_id";
         String DATE = "date";
         String COUNT = "count";

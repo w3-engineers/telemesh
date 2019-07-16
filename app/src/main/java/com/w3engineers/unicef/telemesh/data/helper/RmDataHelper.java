@@ -7,11 +7,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass;
 import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
@@ -19,6 +23,8 @@ import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -241,6 +247,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.MESSAGE_COUNT:
                 setAnalyticsMessageCount(rawData, isAckSuccess);
                 break;
+            case Constants.DataType.APP_SHARE_COUNT:
+                saveAppShareCount(rawData, isAckSuccess);
+                break;
         }
     }
 
@@ -337,6 +346,26 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
+        if (!isAckSuccess) {
+            try {
+                AppShareCount appShareCount = AppShareCount.newBuilder().mergeFrom(rawData).build();
+                AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(appShareCount);
+                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
+                        .insertAppShareCount(entity))
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(longResult -> {
+                            if (longResult > 1) {
+                                Log.d("AppShareCount", "Data saved");
+                            }
+                        }, Throwable::printStackTrace));
+
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -578,8 +607,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
+    public void sendAppShareCountToSellers(AppShareCountEntity entity) {
+        AppShareCount appShareCount = entity.toAnalyticAppShareCount();
+
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+        }
+    }
+
     public void newUserAnalyticsSend() {
-        compositeDisposable.add(Single.fromCallable(()->
+        compositeDisposable.add(Single.fromCallable(() ->
                 UserDataSource.getInstance().getUnSyncedUsers())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(newMeshUserCounts -> {
@@ -588,10 +625,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void updateSyncedUser() {
-        compositeDisposable.add(Single.fromCallable(()->
+        compositeDisposable.add(Single.fromCallable(() ->
                 UserDataSource.getInstance().updateUserSynced())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(syncedUserCounts -> {}, Throwable::printStackTrace));
+                .subscribe(syncedUserCounts -> {
+                }, Throwable::printStackTrace));
     }
 
     @Override

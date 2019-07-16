@@ -53,4 +53,12 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_BULLETIN_ACK_STATUS = "bulletin_ack_status";
     String COLUMN_BULLETIN_OWNER_STATUS = "bulletin_owner_status";
 
+    /*
+     * AppShareCount
+     * */
+
+    String COLUMN_USER_ID = "user_id";
+    String COLUMN_COUNT = "count";
+    String COLUMN_DATE = "date";
+
 }

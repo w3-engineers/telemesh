@@ -8,11 +8,17 @@ import com.w3engineers.appshare.application.ui.InAppShareControl;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.TimeUtil;
+
+import java.util.logging.Handler;
 
 /*
  * ============================================================================
@@ -73,7 +79,20 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
 
     @Override
     public void successShared() {
-
+        HandlerUtil.postBackground(() -> {
+            String date = TimeUtil.getDateString(System.currentTimeMillis());
+            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
+            if (isExist) {
+                AppShareCountDataService.getInstance().updateCount(myId, date);
+            } else {
+                AppShareCountEntity entity = new AppShareCountEntity();
+                entity.setDate(date);
+                entity.setCount(1);
+                entity.setUserId(myId);
+                AppShareCountDataService.getInstance().insertAppShareCount(entity);
+            }
+        });
     }
 
     @Override

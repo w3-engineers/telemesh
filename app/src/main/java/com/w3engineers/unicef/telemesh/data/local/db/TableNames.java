@@ -14,4 +14,5 @@ public interface TableNames {
     String MESSAGE = "messages";
     String FEED = "feed";
     String BULLETIN_TRACK = "bulletin_track";
+    String APP_SHARE_COUNT = "AppShareCount";
 }

@@ -14,6 +14,7 @@ import android.os.Build;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -110,6 +111,11 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     public void sendNewUserAnalytics(List<NewNodeModel> nodeList) {
         AnalyticsApi.on().setAnalyticsType(Constants.AnalyticsResponseType.NEW_USER_COUNT)
                 .setAnalyticsResponseCallback(this).sendNewUserAnalytics(nodeList);
+    }
+
+    public void sendAppShareCount(AppShareCountModel model){
+        AnalyticsApi.on().setAnalyticsType(Constants.AnalyticsResponseType.APP_SHARE_COUNT)
+                .setAnalyticsResponseCallback(this).sendAppShareCount(model);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

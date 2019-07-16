@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
 import com.parse.ParseObject;
+import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
@@ -40,6 +41,14 @@ public class ParseMapper {
         }
         object.put(ParseConstant.NewNodeUser.USER_ID, userIdList);
         object.put(ParseConstant.NewNodeUser.USER_ADDING_TIME, userTime);
+        return object;
+    }
+
+    ParseObject AppShareCountToParse(AppShareCountModel model) {
+        ParseObject object = new ParseObject(ParseConstant.AppShareCount.TABLE);
+        object.put(ParseConstant.AppShareCount.USER_ID, model.getUserId());
+        object.put(ParseConstant.AppShareCount.COUNT, model.getCount());
+        object.put(ParseConstant.AppShareCount.DATE, model.getDate());
         return object;
     }
 }

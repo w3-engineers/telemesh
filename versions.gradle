@@ -49,7 +49,6 @@ versions.atsl_rules = "1.0.1"
 versions.hamcrest = "1.3"
 versions.kotlin = "1.2.41"
 versions.paging = "1.0.1"
-versions.work = "1.0.0-alpha04"
 versions.navigation = "1.0.0-alpha01"
 versions.multidex = "1.0.3"
 versions.timber = "4.7.0"
@@ -69,6 +68,7 @@ versions.protobuf = "3.0.1"
 versions.dexter = "5.0.0"
 versions.appshare = "1.2.8"
 versions.parse = "1.17.3"
+versions.work = "1.0.1"
 ext.versions = versions
 
 def deps = [:]

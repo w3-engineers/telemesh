@@ -273,4 +273,16 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean isNodeExist(String nodeId, boolean isActive) {
+        try {
+            if (getInfo != null) {
+                return getInfo.isNodeExist(nodeId, isActive);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

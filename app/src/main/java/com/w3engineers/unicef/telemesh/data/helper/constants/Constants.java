@@ -42,7 +42,7 @@ public class Constants {
 
     public interface DataType {
         //RM data type
-        byte USER = 0x1;
+        // Restricted for 1 and 3 for type
         byte MESSAGE = 0x2;
         byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;

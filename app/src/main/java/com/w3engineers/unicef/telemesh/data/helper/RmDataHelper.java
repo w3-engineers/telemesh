@@ -69,8 +69,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private DataSource dataSource;
 
-    private HashMap<String, RMUserModel> rmUserMap;
-
     @SuppressLint("UseSparseArrays")
     @NonNull
     public HashMap<Long, RMDataModel> rmDataMap = new HashMap<>();
@@ -78,7 +76,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmUserMap = new HashMap<>();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
 
@@ -114,10 +111,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull RMUserModel rmUserModel) {
 
         String userId = rmUserModel.getUserId();
-        if (rmUserMap.containsKey(userId))
-            return;
-
-        rmUserMap.put(userId, rmUserModel);
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(rmUserModel)
@@ -125,6 +118,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+    }
+
+    public boolean userExistedOperation(String userId, boolean isActive) {
+        int updateId = UserDataSource.getInstance()
+                .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
+
+        return updateId > 0;
     }
 
     /**
@@ -137,21 +137,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userLeave(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
-
-        if (rmUserMap.containsKey(userId)) {
-
-            RMUserModel rmUserModel = rmUserMap.get(userId);
-            rmUserMap.remove(userId);
-
-            if (rmUserModel != null) {
-                UserEntity userEntity = new UserEntity()
-                        .toUserEntity(rmUserModel)
-                        .setLastOnlineTime(TimeUtil.toCurrentTime())
-                        .setOnline(false);
-
-                UserDataSource.getInstance().insertOrUpdateData(userEntity);
-            }
-        }
+        UserDataSource.getInstance().updateUserStatus(userId, Constants.UserStatus.OFFLINE);
     }
 
     /**
@@ -224,12 +210,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         String userId = rmDataModel.getUserMeshId();
         boolean isAckSuccess = rmDataModel.getIsAckSuccess();
 
-        Log.v("MIMO_SAHA::", "Type: " + dataType);
-
         switch (dataType) {
-            case Constants.DataType.USER:
-                break;
-
             case Constants.DataType.MESSAGE:
                 setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;

@@ -187,6 +187,11 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
+    protected boolean isNodeAvailable(String nodeId, boolean isActive) {
+        return RmDataHelper.getInstance().userExistedOperation(nodeId, isActive);
+    }
+
+    @Override
     protected void onRmOff() {
         RmDataHelper.getInstance().stopMeshService();
     }
@@ -196,6 +201,5 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     protected void resetMeshService() {
         restartMesh();
-//        rightMeshDataSource = null;
     }
 }

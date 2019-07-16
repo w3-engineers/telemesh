@@ -42,4 +42,12 @@ public class AppShareCountDataService {
     public int updateCount(String userID, String date) {
         return appShareCountDao.updateCount(userID, date);
     }
+
+    public int deleteCount(String userId, String date) {
+        return appShareCountDao.deleteAppShareCount(userId, date);
+    }
+
+    public int updateSentShareCount(String userId, String date) {
+        return appShareCountDao.updateSentShareCount(userId, date);
+    }
 }

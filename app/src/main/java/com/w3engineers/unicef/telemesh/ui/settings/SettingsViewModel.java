@@ -69,6 +69,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
     }
 
     public void startInAppShareProcess() {
+
         InAppShareControl.getInstance().startInAppShareProcess(getApplication().getApplicationContext(), this);
     }
 

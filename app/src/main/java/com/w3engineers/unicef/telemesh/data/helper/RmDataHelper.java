@@ -350,10 +350,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
-        if (!isAckSuccess) {
-            try {
-                AppShareCount appShareCount = AppShareCount.newBuilder().mergeFrom(rawData).build();
-                AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(appShareCount);
+        try {
+            AppShareCount appShareCount = AppShareCount.newBuilder().mergeFrom(rawData).build();
+            AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(appShareCount);
+
+            if (!isAckSuccess) {
                 compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
                         .insertAppShareCount(entity))
                         .subscribeOn(Schedulers.newThread())
@@ -363,10 +364,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             }
                         }, Throwable::printStackTrace));
 
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
+
+            } else {
+                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
+                        .updateSentShareCount(entity.getUserId(), entity.getDate()))
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(longResult -> {
+                            if (longResult > 1) {
+                                Log.d("AppShareCount", "Data Deleted");
+                            }
+                        }, Throwable::printStackTrace));
             }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
         }
+
     }
 
     /**

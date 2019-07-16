@@ -30,13 +30,18 @@ public class AppShareCountEntity extends DbBaseEntity implements Parcelable {
     @ColumnInfo(name = ColumnNames.COLUMN_DATE)
     private String date;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_IS_SEND)
+    private boolean isSend;
+
+    public AppShareCountEntity() {
+    }
+
+
     protected AppShareCountEntity(Parcel in) {
         userId = in.readString();
         count = in.readInt();
         date = in.readString();
-    }
-
-    public AppShareCountEntity() {
+        isSend = in.readByte() != 0;
     }
 
     @Override
@@ -44,6 +49,7 @@ public class AppShareCountEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(userId);
         dest.writeInt(count);
         dest.writeString(date);
+        dest.writeByte((byte) (isSend ? 1 : 0));
     }
 
     @Override
@@ -85,6 +91,14 @@ public class AppShareCountEntity extends DbBaseEntity implements Parcelable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 
     public AppShareCount toAnalyticAppShareCount() {

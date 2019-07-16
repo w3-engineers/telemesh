@@ -60,5 +60,6 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_ID = "user_id";
     String COLUMN_COUNT = "count";
     String COLUMN_DATE = "date";
+    String COLUMN_IS_SEND = "is_send";
 
 }

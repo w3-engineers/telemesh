@@ -10,11 +10,13 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.internet.MessageAckListener;
 import com.w3engineers.mesh.TransportManager;
 import com.w3engineers.mesh.TransportState;
 import com.w3engineers.mesh.db.SharedPref;
@@ -24,7 +26,6 @@ import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
 import com.w3engineers.mesh.wifi.protocol.Link;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MeshProvider implements LinkStateListener {
@@ -128,22 +129,30 @@ public class MeshProvider implements LinkStateListener {
     }
 
     @Override
-    public void linkConnected(String nodeId) {
-        peerDiscovered(nodeId);
+    public void linkConnected(String nodeId, MessageAckListener listener) {
+        Log.v("MIMO_SAHA:","linkConnected " + nodeId);
+        peerDiscovered(nodeId, listener);
     }
 
     @Override
     public void onMeshLinkFound(String nodeId) {
-        peerDiscovered(nodeId);
+        Log.v("MIMO_SAHA:","onMeshLinkFound " + nodeId);
+        peerDiscovered(nodeId, null);
     }
 
-    private void peerDiscovered(String nodeId) {
+    private void peerDiscovered(String nodeId, MessageAckListener messageAckListener) {
 
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
 
         if (!userIds.contains(nodeId)) {
-            sendMyInfo(nodeId);
+            HandlerUtil.postBackground(() -> {
+                long ack = sendMyInfo(nodeId);
+                if (messageAckListener != null) {
+                    messageAckListener.onGetAck(ack != 0L);
+                }
+            });
+
             userIds.add(nodeId);
         }
     }
@@ -152,16 +161,16 @@ public class MeshProvider implements LinkStateListener {
      * Send my info after discovering him
      * @param nodeId - The discovered node id
      */
-    private void sendMyInfo(String nodeId) {
-        HandlerUtil.postBackground(()-> {
-            MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
+    private long sendMyInfo(String nodeId) {
 
-            if (meshData != null) {
-                meshData.mPeerId = myUserId;
-                transportManager.sendMessage(nodeId, myUserId, MeshData.getMeshData(meshData));
-//                link.sendFrame(nodeId, myUserId, MeshData.getMeshData(meshData));
-            }
-        });
+        MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
+
+        if (meshData != null) {
+            meshData.mPeerId = myUserId;
+            return transportManager.sendMessage(nodeId, myUserId, MeshData.getMeshData(meshData));
+        }
+
+        return 0L;
     }
 
     /**
@@ -169,11 +178,13 @@ public class MeshProvider implements LinkStateListener {
      */
     @Override
     public void linkDisconnected(String nodeId) {
+        Log.e("MIMO_SAHA:","linkDisconnected " + nodeId);
         peerRemoved(nodeId);
     }
 
     @Override
     public void onMeshLinkDisconnect(String nodeId) {
+        Log.e("MIMO_SAHA:","onMeshLinkDisconnect " + nodeId);
         peerRemoved(nodeId);
     }
 
@@ -234,12 +245,13 @@ public class MeshProvider implements LinkStateListener {
     /**
      * After successful deliver a frame we get message delivery id
      * @param messageId : Long message sent id
-     * @param isSuccess : boolean status true of success false otherwise
+     * @param status : boolean status true of success false otherwise
      */
     @Override
-    public void onMessageDelivered(long messageId, boolean isSuccess) {
+    public void onMessageDelivered(long messageId, int status) {
         if (providerCallback != null) {
-            MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId).setSuccess(isSuccess);
+            MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId)
+                    .setSuccess(status == Constant.MessageStatus.SEND || status == Constant.MessageStatus.DELIVERED);
             providerCallback.receiveAck(meshAcknowledgement);
         }
     }
@@ -247,9 +259,10 @@ public class MeshProvider implements LinkStateListener {
     public List<String> getAllSellers() {
         List<String> currentSharers = new ArrayList<>();
         if (transportManager != null) {
-            for (Link link : transportManager.getSharers()) {
+            // TODO need to add seller list for providing data to parse via sellers
+            /*for (Link link : transportManager.getSharers()) {
                 currentSharers.add(link.getNodeId());
-            }
+            }*/
         }
         return currentSharers;
     }

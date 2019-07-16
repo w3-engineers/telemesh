@@ -67,7 +67,7 @@ versions.fb_shimmer = "0.4.0"
 versions.zxing = "3.4.0"
 versions.protobuf = "3.0.1"
 versions.dexter = "5.0.0"
-versions.appshare = "1.2.7"
+versions.appshare = "1.2.8"
 versions.parse = "1.17.3"
 ext.versions = versions
 

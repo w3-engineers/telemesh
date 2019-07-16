@@ -82,8 +82,4 @@ public class Constants {
         byte NEW_USER_COUNT = 2;
         byte APP_SHARE_COUNT = 3;
     }
-
-    public interface AppShareCount {
-
-    }
 }

@@ -619,12 +619,27 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
+    /**
+     * Send data to local user (Seller)
+     */
     public void sendAppShareCountToSellers(AppShareCountEntity entity) {
         AppShareCount appShareCount = entity.toAnalyticAppShareCount();
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
         }
+    }
+
+    /**
+     * Send data to server
+     */
+    public void sendAppShareCountAnalytics() {
+        compositeDisposable.add(AppShareCountDataService.getInstance()
+                .getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(countList -> {
+                    AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(countList);
+                }, Throwable::printStackTrace));
     }
 
     public void newUserAnalyticsSend() {

@@ -82,7 +82,7 @@ public class ParseManager {
         });
     }
 
-    public void sendAppShareCount(AppShareCountModel model) {
+    public void sendAppShareCount(List<AppShareCountModel> model) {
         ParseObject object = new ParseMapper().AppShareCountToParse(model);
         object.saveEventually(e -> sendResponse(e == null));
     }

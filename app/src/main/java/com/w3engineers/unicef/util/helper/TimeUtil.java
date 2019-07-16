@@ -31,8 +31,8 @@ public class TimeUtil {
     }
 
     @NonNull
-    public static TimeUtil getInstance(){
-        if(timeUtil == null){
+    public static TimeUtil getInstance() {
+        if (timeUtil == null) {
             timeUtil = new TimeUtil();
         }
         return timeUtil;
@@ -71,7 +71,7 @@ public class TimeUtil {
         return format.format(new Date(milliSeconds));
     }
 
-    public boolean isSameDay(@NonNull Date date1, @NonNull Date date2){
+    public boolean isSameDay(@NonNull Date date1, @NonNull Date date2) {
 
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -83,7 +83,7 @@ public class TimeUtil {
     }
 
     @Nullable
-    public synchronized Date getDateFromMillisecond(long timeMillis){
+    public synchronized Date getDateFromMillisecond(long timeMillis) {
 
         String dateFormat1 = "yyyy-MM-dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
@@ -91,7 +91,7 @@ public class TimeUtil {
 
         df.setTimeZone(TimeZone.getDefault());
 
-        Date date =new Date(timeMillis);
+        Date date = new Date(timeMillis);
         String stringDate = df.format(date);
 
         try {
@@ -135,7 +135,7 @@ public class TimeUtil {
             feedTime.setTimeInMillis(time);
 
             Calendar now = Calendar.getInstance();
-            if (now.get(Calendar.DATE) == feedTime.get(Calendar.DATE) ) {
+            if (now.get(Calendar.DATE) == feedTime.get(Calendar.DATE)) {
                 return getOnlyTime(time);
             } else {
                 return getDateWithMonthString(time);
@@ -146,6 +146,17 @@ public class TimeUtil {
         }
 
         return "";
+    }
+
+    public static Date stringToDate(String date) {
+        String dateFormat13 = "dd-MM-yyyy";
+        DateFormat format = new SimpleDateFormat(dateFormat13, Locale.getDefault());
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

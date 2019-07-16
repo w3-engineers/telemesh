@@ -12,6 +12,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
@@ -19,6 +20,8 @@ import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -35,6 +38,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private static AnalyticsDataHelper analyticsDataHelper;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int trackMessageCount = 0;
+    private List<AppShareCountEntity> countSentList;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
@@ -113,7 +117,24 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                 .setAnalyticsResponseCallback(this).sendNewUserAnalytics(nodeList);
     }
 
-    public void sendAppShareCount(AppShareCountModel model){
+    ///////////////////////////// AppShare count /////////////////////
+
+    public void sendAppShareCountAnalytics(List<AppShareCountEntity> entityList) {
+        if (entityList.isEmpty()) return;
+        List<AppShareCountModel> modelList = new ArrayList<>();
+        for (AppShareCountEntity entity : entityList) {
+            AppShareCountModel model = new AppShareCountModel();
+            model.setCount(entity.getCount());
+            model.setDate(entity.getDate());
+            model.setUserId(entity.getUserId());
+        }
+
+        countSentList = entityList;
+
+        sendAppShareCount(modelList);
+    }
+
+    private void sendAppShareCount(List<AppShareCountModel> model) {
         AnalyticsApi.on().setAnalyticsType(Constants.AnalyticsResponseType.APP_SHARE_COUNT)
                 .setAnalyticsResponseCallback(this).sendAppShareCount(model);
     }
@@ -133,7 +154,13 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                 RmDataHelper.getInstance().updateSyncedUser();
             }
         } else if (analyticsType == Constants.AnalyticsResponseType.APP_SHARE_COUNT) {
-
+            HandlerUtil.postBackground(() -> {
+                if (countSentList != null && isSuccess) {
+                    for (AppShareCountEntity entity : countSentList) {
+                        AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getUserId());
+                    }
+                }
+            });
         }
     }
 }

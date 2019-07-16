@@ -60,7 +60,7 @@ public class AnalyticsApi {
                 .sendNewUserAnalytics(nodeList));
     }
 
-    public void sendAppShareCount(AppShareCountModel model) {
+    public void sendAppShareCount(List<AppShareCountModel> model) {
         AsyncTask.execute(() -> ParseManager.on().setCallback(analyticsType, analyticsResponseCallback)
                 .sendAppShareCount(model));
     }

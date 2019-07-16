@@ -28,7 +28,7 @@ public abstract class AppShareCountDao extends BaseDao<AppShareCountEntity> {
 
     @Query("UPDATE " + TableNames.APP_SHARE_COUNT + " SET " + ColumnNames.COLUMN_COUNT + " = " +
             ColumnNames.COLUMN_COUNT + "+1 WHERE " + ColumnNames.COLUMN_USER_ID +
-            " LIKE :userId AND " + ColumnNames.COLUMN_DATE + " NOT Like :date AND " + ColumnNames.COLUMN_IS_SEND + " = " + false)
+            " LIKE :userId AND " + ColumnNames.COLUMN_DATE + " Like :date AND " + ColumnNames.COLUMN_IS_SEND + " = 0")
     abstract int updateCount(String userId, String date);
 
     @Query("SELECT COUNT FROM " + TableNames.APP_SHARE_COUNT +

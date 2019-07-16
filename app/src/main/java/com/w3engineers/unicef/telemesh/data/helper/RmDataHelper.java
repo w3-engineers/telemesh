@@ -619,14 +619,27 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
+    public void sendAppShareCount() {
+        if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
+            sendAppShareCountAnalytics();
+        } else {
+            compositeDisposable.add(AppShareCountDataService.getInstance()
+                    .getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
+        }
+    }
+
     /**
      * Send data to local user (Seller)
      */
-    public void sendAppShareCountToSellers(AppShareCountEntity entity) {
-        AppShareCount appShareCount = entity.toAnalyticAppShareCount();
+    private void sendAppShareCountToSellers(List<AppShareCountEntity> entityList) {
+        for (AppShareCountEntity entity : entityList) {
+            AppShareCount appShareCount = entity.toAnalyticAppShareCount();
 
-        for (String sellersId : rightMeshDataSource.getAllSellers()) {
-            dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+            for (String sellersId : rightMeshDataSource.getAllSellers()) {
+                dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+            }
         }
     }
 

@@ -19,7 +19,9 @@ public class NewUserCountWorker extends Worker {
     @Override
     public Result doWork() {
 
-        RmDataHelper.getInstance().newUserAnalyticsSend();
+        // RmDataHelper.getInstance().newUserAnalyticsSend();
+
+        RmDataHelper.getInstance().sendAppShareCount();
 
         return Result.success();
     }

@@ -149,10 +149,12 @@ public class TimeUtil {
     }
 
     public static Date stringToDate(String date) {
-        String dateFormat13 = "dd-MM-yyyy";
-        DateFormat format = new SimpleDateFormat(dateFormat13, Locale.getDefault());
+        String dateFormat1 = "dd-MM-yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat1, Locale.US);
+
         try {
-            return format.parse(date);
+            Date newDate = format.parse(date);
+            return new Date(newDate.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }

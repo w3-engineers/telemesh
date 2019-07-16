@@ -12,6 +12,7 @@ import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
+import java.util.Date;
 import java.util.List;
 /*
  * ============================================================================
@@ -84,6 +85,7 @@ public class ParseManager {
 
     public void sendAppShareCount(List<AppShareCountModel> model) {
         ParseObject object = new ParseMapper().AppShareCountToParse(model);
+        object.getUpdatedAt();
         object.saveEventually(e -> sendResponse(e == null));
     }
 

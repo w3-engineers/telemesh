@@ -127,6 +127,8 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             model.setCount(entity.getCount());
             model.setDate(entity.getDate());
             model.setUserId(entity.getUserId());
+
+            modelList.add(model);
         }
 
         countSentList = entityList;
@@ -140,7 +142,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private boolean isMobileDataEnable() {
+    public boolean isMobileDataEnable() {
         return BulletinTimeScheduler.getInstance().isMobileDataEnable();
     }
 

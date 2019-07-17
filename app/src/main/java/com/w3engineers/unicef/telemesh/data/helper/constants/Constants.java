@@ -46,6 +46,7 @@ public class Constants {
         byte MESSAGE = 0x2;
         byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;
+        byte APP_SHARE_COUNT = 0x6;
     }
 
     public interface MessageType {

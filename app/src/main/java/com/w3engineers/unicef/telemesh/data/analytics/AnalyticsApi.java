@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
@@ -57,5 +58,10 @@ public class AnalyticsApi {
     public void sendNewUserAnalytics(List<NewNodeModel> nodeList) {
         AsyncTask.execute(() -> ParseManager.on().setCallback(analyticsType, analyticsResponseCallback)
                 .sendNewUserAnalytics(nodeList));
+    }
+
+    public void sendAppShareCount(List<AppShareCountModel> model) {
+        AsyncTask.execute(() -> ParseManager.on().setCallback(analyticsType, analyticsResponseCallback)
+                .sendAppShareCount(model));
     }
 }

@@ -146,6 +146,7 @@ dependencies {
     implementation deps.appshare.share
 
     implementation deps.parse.server
+    implementation deps.work.runtime
 
     api deps.framework
     api deps.mesh

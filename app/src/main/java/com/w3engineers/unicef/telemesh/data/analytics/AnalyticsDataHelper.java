@@ -10,14 +10,19 @@ Proprietary and confidential
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -34,6 +39,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private static AnalyticsDataHelper analyticsDataHelper;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int trackMessageCount = 0;
+    private List<AppShareCountEntity> countSentList;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
@@ -112,8 +118,32 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                 .setAnalyticsResponseCallback(this).sendNewUserAnalytics(nodeList);
     }
 
+    ///////////////////////////// AppShare count /////////////////////
+
+    public void sendAppShareCountAnalytics(List<AppShareCountEntity> entityList) {
+        if (entityList.isEmpty()) return;
+        List<AppShareCountModel> modelList = new ArrayList<>();
+        for (AppShareCountEntity entity : entityList) {
+            AppShareCountModel model = new AppShareCountModel();
+            model.setCount(entity.getCount());
+            model.setDate(entity.getDate());
+            model.setUserId(entity.getUserId());
+
+            modelList.add(model);
+        }
+
+        countSentList = entityList;
+
+        sendAppShareCount(modelList);
+    }
+
+    private void sendAppShareCount(List<AppShareCountModel> model) {
+        AnalyticsApi.on().setAnalyticsType(Constants.AnalyticsResponseType.APP_SHARE_COUNT)
+                .setAnalyticsResponseCallback(this).sendAppShareCount(model);
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private boolean isMobileDataEnable() {
+    public boolean isMobileDataEnable() {
         return BulletinTimeScheduler.getInstance().isMobileDataEnable();
     }
 
@@ -127,7 +157,20 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                 RmDataHelper.getInstance().updateSyncedUser();
             }
         } else if (analyticsType == Constants.AnalyticsResponseType.APP_SHARE_COUNT) {
+            HandlerUtil.postBackground(() -> {
+                if (countSentList != null) {
+                    if (isSuccess) {
+                        Log.d("AppShareTest", "countSentList not null");
+                        for (AppShareCountEntity entity : countSentList) {
+                            int id = AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getDate());
+                            Log.d("AppShareTest", "Delete id " + id);
+                        }
+                    }
 
+                } else {
+                    Log.d("AppShareTest", "countSentList null");
+                }
+            });
         }
     }
 }

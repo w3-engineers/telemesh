@@ -25,4 +25,11 @@ public class ParseConstant {
         String USER_ID = "user_id";
         String USER_ADDING_TIME = "user_adding_time";
     }
+
+    interface AppShareCount {
+        String TABLE = "AppShareCountEntity";
+        String USER_ID = "user_id";
+        String DATE = "date";
+        String COUNT = "count";
+    }
 }

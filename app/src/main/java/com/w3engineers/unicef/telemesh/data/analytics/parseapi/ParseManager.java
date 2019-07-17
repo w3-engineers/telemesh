@@ -4,11 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
+import java.util.Date;
 import java.util.List;
 /*
  * ============================================================================
@@ -77,6 +81,12 @@ public class ParseManager {
         newUserList.saveEventually(e -> {
             sendResponse(e == null);
         });
+    }
+
+    public void sendAppShareCount(List<AppShareCountModel> model) {
+        ParseObject object = new ParseMapper().AppShareCountToParse(model);
+        object.getUpdatedAt();
+        object.saveEventually(e -> sendResponse(e == null));
     }
 
     private void sendResponse(boolean isSuccess) {

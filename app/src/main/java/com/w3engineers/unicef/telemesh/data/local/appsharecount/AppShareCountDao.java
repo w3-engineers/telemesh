@@ -23,12 +23,13 @@ import io.reactivex.Single;
 @Dao
 public abstract class AppShareCountDao extends BaseDao<AppShareCountEntity> {
 
-    @Query("SELECT * FROM " + TableNames.APP_SHARE_COUNT + " WHERE " + ColumnNames.COLUMN_DATE + " LIKE :date")
+    @Query("SELECT * FROM " + TableNames.APP_SHARE_COUNT + " WHERE " + ColumnNames.COLUMN_DATE + " NOT LIKE :date AND " +
+            ColumnNames.COLUMN_IS_SEND + " = 0")
     abstract Single<List<AppShareCountEntity>> getTodayAppShareCount(String date);
 
     @Query("UPDATE " + TableNames.APP_SHARE_COUNT + " SET " + ColumnNames.COLUMN_COUNT + " = " +
             ColumnNames.COLUMN_COUNT + "+1 WHERE " + ColumnNames.COLUMN_USER_ID +
-            " LIKE :userId AND " + ColumnNames.COLUMN_DATE + " Like :date AND " + ColumnNames.COLUMN_IS_SEND + " = 0")
+            " LIKE :userId AND " + ColumnNames.COLUMN_DATE + " Like :date")
     abstract int updateCount(String userId, String date);
 
     @Query("SELECT COUNT FROM " + TableNames.APP_SHARE_COUNT +

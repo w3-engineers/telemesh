@@ -13,19 +13,24 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
@@ -79,6 +84,20 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             case R.id.layout_choose_language:
                 // Go system settings for change language
                 showLanguageChangeDialog();
+
+                /*HandlerUtil.postBackground(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppShareCountEntity entity = new AppShareCountEntity();
+                        entity.setCount(1);
+                        String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+                        entity.setUserId(myId);
+                        entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
+                        AppShareCountDataService.getInstance().insertAppShareCount(entity);
+
+                        RmDataHelper.getInstance().sendAppShareCountAnalytics();
+                    }
+                });*/
                 break;
             case R.id.layout_share_app:
 

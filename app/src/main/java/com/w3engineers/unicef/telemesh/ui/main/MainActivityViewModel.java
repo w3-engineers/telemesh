@@ -11,6 +11,8 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountLocalWorker;
+import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountSendServerWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -29,7 +31,11 @@ public class MainActivityViewModel extends BaseRxViewModel {
     // New instance variable for the WorkInfo
     private LiveData<List<WorkInfo>> mNewUserCountWorkInfo;
     public static final String NEW_USER_COUNT = "new_user_count";
+    public static final String LOCAL_APP_SHARE = "local_app_share";
+    public static final String APP_SHARE_SEND_SERVER = "app_share_send_server";
     private PeriodicWorkRequest userCountWorkRequest;
+    private PeriodicWorkRequest localUserCountRequest;
+    private PeriodicWorkRequest sendCountToServerRequest;
 
     private MessageSourceData messageSourceData;
 
@@ -41,7 +47,8 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     public void userOfflineProcess() {
         getCompositeDisposable().add(updateUserToOffline()
-                .subscribeOn(Schedulers.io()).subscribe(integer -> {}, Throwable::printStackTrace));
+                .subscribeOn(Schedulers.io()).subscribe(integer -> {
+                }, Throwable::printStackTrace));
     }
 
     private Single<Integer> updateUserToOffline() {
@@ -54,7 +61,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
         return mNewUserCountWorkInfo;
     }
 
-    public void setUserCountWorkRequest(){
+    public void setUserCountWorkRequest() {
 
         // Create charging constraint
         Constraints constraints = new Constraints.Builder()
@@ -73,6 +80,38 @@ public class MainActivityViewModel extends BaseRxViewModel {
         mWorkManager.enqueue(userCountWorkRequest);
     }
 
+    void setLocalAppShareCountWorkerRequest() {
+        Constraints constraints = new Constraints.Builder()
+                .build();
+
+        localUserCountRequest = new PeriodicWorkRequest.Builder(AppShareCountLocalWorker.class, 6, TimeUnit.HOURS)
+                .addTag(LOCAL_APP_SHARE)
+                .setConstraints(constraints)
+                .setBackoffCriteria(
+                        BackoffPolicy.LINEAR,
+                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                        TimeUnit.MILLISECONDS)
+                .build();
+
+        mWorkManager.enqueue(localUserCountRequest);
+    }
+
+    void setServerAppShareCountWorkerRequest() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        sendCountToServerRequest = new PeriodicWorkRequest.Builder(AppShareCountSendServerWorker.class, 7, TimeUnit.HOURS)
+                .addTag(APP_SHARE_SEND_SERVER)
+                .setConstraints(constraints)
+                .setBackoffCriteria(
+                        BackoffPolicy.LINEAR,
+                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                        TimeUnit.MILLISECONDS)
+                .build();
+
+        mWorkManager.enqueue(sendCountToServerRequest);
+    }
 
 
 }

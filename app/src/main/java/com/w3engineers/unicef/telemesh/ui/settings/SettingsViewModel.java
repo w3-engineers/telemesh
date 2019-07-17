@@ -92,8 +92,6 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
                 entity.setCount(1);
                 entity.setUserId(myId);
                 AppShareCountDataService.getInstance().insertAppShareCount(entity);
-
-                RmDataHelper.getInstance().sendAppShareCountAnalytics();
             }
         });
     }

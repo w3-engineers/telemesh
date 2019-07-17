@@ -10,6 +10,7 @@ Proprietary and confidential
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.HandlerUtil;
@@ -157,10 +158,17 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             }
         } else if (analyticsType == Constants.AnalyticsResponseType.APP_SHARE_COUNT) {
             HandlerUtil.postBackground(() -> {
-                if (countSentList != null && isSuccess) {
-                    for (AppShareCountEntity entity : countSentList) {
-                        AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getUserId());
+                if (countSentList != null) {
+                    if (isSuccess) {
+                        Log.d("AppShareTest", "countSentList not null");
+                        for (AppShareCountEntity entity : countSentList) {
+                            int id = AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getDate());
+                            Log.d("AppShareTest", "Delete id " + id);
+                        }
                     }
+
+                } else {
+                    Log.d("AppShareTest", "countSentList null");
                 }
             });
         }

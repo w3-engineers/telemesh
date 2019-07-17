@@ -78,6 +78,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
         // set new user count analytics so that the work manager will trigger
         mViewModel.setUserCountWorkRequest();
+        mViewModel.setServerAppShareCountWorkerRequest();
+        mViewModel.setLocalAppShareCountWorkerRequest();
 
         mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
 

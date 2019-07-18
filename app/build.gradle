@@ -147,6 +147,7 @@ dependencies {
 
     implementation deps.parse.server
     implementation deps.work.runtime
+    implementation deps.work.testing
 
     api deps.framework
     api deps.mesh

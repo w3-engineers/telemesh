@@ -179,7 +179,7 @@ deps.right_mesh = "io.left.rightmesh:lib-rightmesh-android:$versions.right_mesh"
 ext.deps = deps
 
 def build_versions = [:]
-build_versions.min_sdk = 19
+build_versions.min_sdk = 21
 build_versions.target_sdk = 28
 build_versions.build_tools = "28.0.3"
 ext.build_versions = build_versions

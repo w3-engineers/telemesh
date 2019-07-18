@@ -130,6 +130,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         int updateId = UserDataSource.getInstance()
                 .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
 
+        if (updateId > 0 && isActive) {
+            syncUserWithBroadcastMessage(userId);
+        }
+
         return updateId > 0;
     }
 
@@ -393,7 +397,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateUserStatus() {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    makeSendingMessageAsFailed();
+                    stopMeshProcess();
+//                    makeSendingMessageAsFailed();
                 }, Throwable::printStackTrace));
     }
 
@@ -402,7 +407,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    public void makeSendingMessageAsFailed() {
+    /*public void makeSendingMessageAsFailed() {
 
         compositeDisposable.add(updateMessageStatus()
                 .subscribeOn(Schedulers.io()).subscribe(aLong -> {
@@ -414,7 +419,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return Single.fromCallable(() -> MessageSourceData.getInstance()
                 .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
                         Constants.MessageStatus.STATUS_FAILED));
-    }
+    }*/
 
     /**
      * Concern for this api stopping RM service from app layer

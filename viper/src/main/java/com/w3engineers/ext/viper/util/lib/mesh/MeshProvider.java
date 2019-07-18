@@ -277,21 +277,22 @@ public class MeshProvider implements LinkStateListener {
     @Override
     public void onMessageDelivered(long messageId, int status) {
         if (providerCallback != null) {
-            MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId)
-                    .setSuccess(status == Constant.MessageStatus.SEND || status == Constant.MessageStatus.DELIVERED);
-            providerCallback.receiveAck(meshAcknowledgement);
+
+            if (status == Constant.MessageStatus.SEND
+                    || status == Constant.MessageStatus.DELIVERED
+                    || status == Constant.MessageStatus.RECEIVED) {
+                MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId)
+                        .setSuccess(true);
+                providerCallback.receiveAck(meshAcknowledgement);
+            }
         }
     }
 
     public List<String> getAllSellers() {
-        List<String> currentSharers = new ArrayList<>();
         if (transportManager != null) {
-            // TODO need to add seller list for providing data to parse via sellers
-            /*for (Link link : transportManager.getSharers()) {
-                currentSharers.add(link.getNodeId());
-            }*/
+            return transportManager.getInternetSelers();
         }
-        return currentSharers;
+        return new ArrayList<>();
     }
 
     public String getMyUserId() {

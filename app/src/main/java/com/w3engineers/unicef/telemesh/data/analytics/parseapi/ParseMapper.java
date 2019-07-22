@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
+import android.text.TextUtils;
+
 import com.parse.ParseObject;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
@@ -38,8 +40,10 @@ public class ParseMapper {
         List<String> userIdList = new ArrayList<>();
         List<Long> userTime = new ArrayList<>();
         for (NewNodeModel model : nodeList) {
-            userIdList.add(model.getUserId());
-            userTime.add(model.getUserAddingTime());
+            if (!TextUtils.isEmpty(model.getUserId())) {
+                userIdList.add(model.getUserId());
+                userTime.add(model.getUserAddingTime());
+            }
         }
         object.put(ParseConstant.NewNodeUser.USER_ID, userIdList);
         object.put(ParseConstant.NewNodeUser.USER_ADDING_TIME, userTime);

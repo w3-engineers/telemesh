@@ -7,7 +7,6 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
@@ -175,11 +174,11 @@ public class UserEntity extends DbBaseEntity {
     };
 
     @NonNull
-    public RMUserModel getProtoUser() {
-        return RMUserModel.newBuilder()
-                .setUserName(getUserName())
-                .setImageIndex(getAvatarIndex())
-                .build();
+    public UserModel getProtoUser() {
+        return new UserModel()
+                .setName(getUserName())
+                .setImage(getAvatarIndex())
+                .setTime(getRegistrationTime());
     }
 
     // if lots of similar task holds in entity then ti should be used in util class
@@ -189,11 +188,11 @@ public class UserEntity extends DbBaseEntity {
     }
 
     @NonNull
-    public UserEntity toUserEntity(@NonNull RMUserModel rmUserModel) {
-        return setUserName(rmUserModel.getUserName())
-                .setAvatarIndex(rmUserModel.getImageIndex())
-                .setRegistrationTime(rmUserModel.getRegistrationTime())
-                .setMeshId(rmUserModel.getUserId());
+    public UserEntity toUserEntity(@NonNull UserModel userModel) {
+        return setUserName(userModel.getName())
+                .setAvatarIndex(userModel.getImage())
+                .setRegistrationTime(userModel.getTime())
+                .setMeshId(userModel.getUserId());
     }
 
     public static class NewMeshUserCount {

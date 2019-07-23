@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package com.w3engineers.unicef.telemesh;
-
-message TeleMeshBulletin{
-    string bulletinId = 1;
-    string bulletinMessage = 2;
-    string bulletinTime = 3;
-}

@@ -10,6 +10,7 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
@@ -74,7 +75,6 @@ public class MeshProvider implements LinkStateListener {
     }
 
 
-
     public void stopMesh(boolean isStopProcess) {
         if (transportManager != null) {
             transportManager.stopMesh();
@@ -116,6 +116,8 @@ public class MeshProvider implements LinkStateListener {
 
             MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);
 
+            Log.v("MIMO_SAHA::", "Length: " + myProfileInfo.length + " Id: " + nodeId);
+
             transportManager.configTransport(nodeId, publicKey, config.mPort, myProfileInfo);
 
             if (transportManager != null) {
@@ -140,6 +142,7 @@ public class MeshProvider implements LinkStateListener {
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
 
         HandlerUtil.postBackground(() -> {
+
             boolean isUserExist = false;
 
             if (providerCallback != null) {
@@ -167,8 +170,9 @@ public class MeshProvider implements LinkStateListener {
         MeshData meshData = MeshDataManager.getInstance().getPingForProfile();
 
         if (meshData != null) {
-            meshData.mPeerId = myUserId;
-            return transportManager.sendMessage(nodeId, myUserId, MeshData.getPingData(meshData));
+            long transferId = getDataTransferId();
+            transportManager.sendMessage(nodeId, myUserId, transferId, MeshDataProcessor.getInstance().getPingFormat(meshData));
+            return transferId;
         }
 
         return 0L;
@@ -194,8 +198,9 @@ public class MeshProvider implements LinkStateListener {
         MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
 
         if (meshData != null) {
-            meshData.mPeerId = myUserId;
-            return transportManager.sendMessage(nodeId, myUserId, MeshData.getMeshData(meshData));
+            long transferId = getDataTransferId();
+            transportManager.sendMessage(nodeId, myUserId, transferId, MeshDataProcessor.getInstance().getDataFormat(meshData));
+            return transferId;
         }
 
         return 0L;
@@ -228,10 +233,11 @@ public class MeshProvider implements LinkStateListener {
         if (meshData != null) {
             String peerId = meshData.mMeshPeer.getPeerId();
             if (!TextUtils.isEmpty(peerId)) {
-                meshData.mPeerId = myUserId;
 
                 if (transportManager != null) {
-                    return transportManager.sendMessage(peerId, myUserId, MeshData.getMeshData(meshData));
+                    long transferId = getDataTransferId();
+                    transportManager.sendMessage(peerId, myUserId, transferId, MeshDataProcessor.getInstance().getDataFormat(meshData));
+                    return transferId;
                 }
             }
         }
@@ -247,7 +253,7 @@ public class MeshProvider implements LinkStateListener {
     public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
         if (frameData != null) {
 
-            MeshData meshData = MeshData.setMeshData(frameData);
+            MeshData meshData = MeshDataProcessor.getInstance().setDataFormat(frameData);
 
             if (meshData != null) {
 
@@ -297,6 +303,10 @@ public class MeshProvider implements LinkStateListener {
 
     public String getMyUserId() {
         return myUserId;
+    }
+
+    private long getDataTransferId() {
+        return System.currentTimeMillis();
     }
 
 }

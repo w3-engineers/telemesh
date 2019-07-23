@@ -7,9 +7,6 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
@@ -46,7 +43,7 @@ public class MessageEntity extends ChatEntity {
         return this;
     }
 
-    @NonNull
+    /*@NonNull
     @Override
     public TeleMeshChat toProtoChat() {
 
@@ -61,9 +58,18 @@ public class MessageEntity extends ChatEntity {
                 .setMessageStatus(getStatus())
                 .setTeleMeshMessage(teleMeshMessage)
                 .build();
-    }
+    }*/
 
     @NonNull
+    @Override
+    public MessageModel toMessageModel() {
+        return new MessageModel()
+                .setId(getMessageId())
+                .setMessage(getMessage())
+                .setType(getMessageType());
+    }
+
+    /*@NonNull
     @Override
     public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
 
@@ -75,6 +81,18 @@ public class MessageEntity extends ChatEntity {
                 .setMessageType(teleMeshChat.getMessageType())
                 .setStatus(teleMeshChat.getMessageStatus())
                 .setTime(teleMeshChat.getMessageTime());
+
+        return messageEntity;
+    }*/
+
+    @NonNull
+    @Override
+    public ChatEntity toChatEntity(@NonNull MessageModel messageModel) {
+
+        MessageEntity messageEntity = setMessage(messageModel.getMessage());
+
+        messageEntity.setMessageId(messageModel.getId())
+                .setMessageType(messageModel.getType());
 
         return messageEntity;
     }
@@ -104,16 +122,15 @@ public class MessageEntity extends ChatEntity {
         }
 
         public MessageCount toAnalyticMessageCount() {
-            return MessageCount.newBuilder().setLastMessageTime(time)
-                    .setMessageSetCount(syncMessageCountToken)
-                    .setUserId(userId)
-                    .build();
+            return new MessageCount().setTime(time)
+                    .setCount(syncMessageCountToken)
+                    .setId(userId);
         }
 
         public MessageAnalyticsEntity toMessageAnalyticsEntity(MessageCount messageCount) {
-            return setSyncMessageCountToken(messageCount.getMessageSetCount())
-                    .setTime(messageCount.getLastMessageTime())
-                    .setUserId(messageCount.getUserId());
+            return setSyncMessageCountToken(messageCount.getCount())
+                    .setTime(messageCount.getTime())
+                    .setUserId(messageCount.getId());
         }
 
         public MessageCountModel toMessageCountModel() {

@@ -39,7 +39,6 @@ public class MeshDataManager {
         MeshData meshData = new MeshData();
         meshData.mData = myProfileInfo;
         meshData.mMeshPeer = new MeshPeer(myPeerId);
-        meshData.mPeerId = myPeerId;
         meshData.mType = TYPE_PROFILE;
 
         return meshData;
@@ -49,7 +48,6 @@ public class MeshDataManager {
 
         MeshData meshData = new MeshData();
         meshData.mMeshPeer = new MeshPeer(myPeerId);
-        meshData.mPeerId = myPeerId;
         meshData.mType = TYPE_PING;
 
         return meshData;

@@ -11,6 +11,7 @@ package com.w3engineers.ext.viper.application.data.remote.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.ext.viper.util.lib.mesh.ProfileManager;
 
@@ -60,7 +61,7 @@ public class MeshData extends BaseMeshData implements Parcelable {
     };
 
 
-    public static byte[] getMeshData(MeshData meshData) {
+    /*public static byte[] getMeshData(MeshData meshData) {
 
         if(meshData == null || meshData.mData == null) {
             return null;
@@ -72,9 +73,12 @@ public class MeshData extends BaseMeshData implements Parcelable {
 
         if (TextUtils.isEmpty(peerId)) {
             hasPeer = 0;
-            buffer = ByteBuffer.allocate(1 + 1 + meshData.mData.length);
+            byte dataLength = (byte) meshData.mData.length;
+
+            buffer = ByteBuffer.allocate(1 + 1 + 1 + meshData.mData.length);
             buffer.put(meshData.mType);
             buffer.put(hasPeer);
+            buffer.put(dataLength);
             buffer.put(meshData.mData);
         } else {
 
@@ -82,10 +86,14 @@ public class MeshData extends BaseMeshData implements Parcelable {
             byte[] peerByte = peerId.getBytes();
 
             byte length = (byte) peerByte.length;
-            buffer = ByteBuffer.allocate(1 + 1 + 1 + peerByte.length + meshData.mData.length);
+            byte dataLength = (byte) meshData.mData.length;
+
+            buffer = ByteBuffer.allocate(1 + 1 + 1 + 1 + peerByte.length + meshData.mData.length);
             buffer.put(meshData.mType);
             buffer.put(hasPeer);
             buffer.put(length);
+            buffer.put(dataLength);
+
             buffer.put(peerByte);
             buffer.put(meshData.mData);
         }
@@ -103,8 +111,9 @@ public class MeshData extends BaseMeshData implements Parcelable {
 
         if (TextUtils.isEmpty(peerId)) {
             hasPeer = 0;
-            buffer = ByteBuffer.allocate(1 + 1);
+            buffer = ByteBuffer.allocate(1 + 1 + 1);
             buffer.put(meshData.mType);
+            buffer.put(hasPeer);
             buffer.put(hasPeer);
         } else {
 
@@ -112,10 +121,11 @@ public class MeshData extends BaseMeshData implements Parcelable {
             byte[] peerByte = peerId.getBytes();
 
             byte length = (byte) peerByte.length;
-            buffer = ByteBuffer.allocate(1 + 1 + 1 + peerByte.length);
+            buffer = ByteBuffer.allocate(1 + 1 + 1 + 1 + peerByte.length);
             buffer.put(meshData.mType);
             buffer.put(hasPeer);
             buffer.put(length);
+            buffer.put(hasPeer);
             buffer.put(peerByte);
         }
 
@@ -134,13 +144,24 @@ public class MeshData extends BaseMeshData implements Parcelable {
 
         MeshData meshData = new MeshData();
         meshData.mType = byteBuffer.get();
+
+        Log.v("MIMO_SAHA::", "Type: " + meshData.mType);
+
         byte hasPeer = byteBuffer.get();
+        byte dataLength;
 
         if (hasPeer == 0) {
-            meshData.mData = new byte[byteBuffer.remaining()];
+            dataLength = byteBuffer.get();
+            if (byteBuffer.hasRemaining()) {
+                byte[] peerData = new byte[dataLength];
+                byteBuffer.get(peerData);
+
+                meshData.mData = Arrays.copyOfRange(peerData, 0, peerData.length);
+            }
 
         } else if (hasPeer == 1) {
             byte peerLength = byteBuffer.get();
+            dataLength = byteBuffer.get();
 
             byte[] peerByte = new byte[peerLength];
 
@@ -149,7 +170,7 @@ public class MeshData extends BaseMeshData implements Parcelable {
             meshData.mPeerId = new String(peerByte);
 
             if (byteBuffer.hasRemaining()) {
-                byte[] peerData = new byte[byteBuffer.remaining()];
+                byte[] peerData = new byte[dataLength];
                 byteBuffer.get(peerData);
 
                 meshData.mData = Arrays.copyOfRange(peerData, 0, peerData.length);
@@ -166,5 +187,5 @@ public class MeshData extends BaseMeshData implements Parcelable {
         meshData.mData = mData;
 
         return meshData;
-    }
+    }*/
 }

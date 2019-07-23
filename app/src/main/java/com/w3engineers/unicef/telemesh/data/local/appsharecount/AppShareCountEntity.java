@@ -112,7 +112,7 @@ public class AppShareCountEntity extends DbBaseEntity implements Parcelable {
     public AppShareCountEntity toAppShareCountEntity(AppShareCount appShareCount) {
         AppShareCountEntity entity = new AppShareCountEntity();
         entity.setCount(appShareCount.getShareCount());
-        entity.setUserId(entity.getUserId());
+        entity.setUserId(appShareCount.getUserId());
         entity.setDate(appShareCount.getUserId());
         return entity;
     }

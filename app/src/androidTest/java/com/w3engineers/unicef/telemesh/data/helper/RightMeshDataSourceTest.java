@@ -5,10 +5,10 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.unicef.telemesh.TeleMeshUser;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -28,7 +28,6 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -70,7 +69,7 @@ public class RightMeshDataSourceTest {
         rmDataHelper.initSource(source);
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
-        SUT = new MeshDataSource(userEntity.getProtoUser().toByteArray());
+        SUT = new MeshDataSource(new Gson().toJson(userEntity.getProtoUser()).getBytes());
 
         SUT.onRmOn();
     }
@@ -150,7 +149,7 @@ public class RightMeshDataSourceTest {
 
         addDelay();
 
-        TeleMeshUser.RMDataModel.Builder rmDataModel = randomEntityGenerator.createRMDataModel();
+        DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
         SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
     }
 
@@ -241,10 +240,10 @@ public class RightMeshDataSourceTest {
         messageSourceData.insertOrUpdateData(chatEntity);
 
         long transferKey = this.transferKey++;
-        TeleMeshUser.RMDataModel rmDataModel = randomEntityGenerator
+        DataModel rmDataModel = randomEntityGenerator
                 .createChatEntityRmDataModel(userEntity.getMeshId(), (MessageEntity) chatEntity);
 
-        rmDataHelper.rmDataMap.put(transferKey, rmDataModel);
+        rmDataHelper.rmDataMap.put(String.valueOf(transferKey), rmDataModel);
 
         MeshAcknowledgement meshAcknowledgement = randomEntityGenerator.createAckRmDataModel(userEntity.getMeshId(), transferKey);
 

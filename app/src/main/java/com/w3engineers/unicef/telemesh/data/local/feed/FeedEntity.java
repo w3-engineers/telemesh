@@ -7,8 +7,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
@@ -206,18 +204,17 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     }
 
     @NonNull
-    public TeleMeshBulletin toTelemeshBulletin() {
-        return TeleMeshBulletin.newBuilder()
-                .setBulletinId(getFeedId())
-                .setBulletinMessage(getFeedDetail())
-                .setBulletinTime(getFeedTime())
-                .build();
+    public BulletinModel toTelemeshBulletin() {
+        return new BulletinModel()
+                .setId(getFeedId())
+                .setMessage(getFeedDetail())
+                .setTime(getFeedTime());
     }
 
     @NonNull
-    public FeedEntity toFeedEntity(@NonNull TeleMeshBulletin teleMeshBulletin) {
-        return new FeedEntity().setFeedDetail(teleMeshBulletin.getBulletinMessage())
-                .setFeedId(teleMeshBulletin.getBulletinId())
-                .setFeedTime(teleMeshBulletin.getBulletinTime());
+    public FeedEntity toFeedEntity(@NonNull BulletinModel bulletinModel) {
+        return new FeedEntity().setFeedDetail(bulletinModel.getMessage())
+                .setFeedId(bulletinModel.getId())
+                .setFeedTime(bulletinModel.getTime());
     }
 }

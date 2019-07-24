@@ -6,39 +6,34 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
-import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass;
-import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
-import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
-import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -55,6 +50,11 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import timber.log.Timber;
+
+//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
+//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
+//import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
+//import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 
 /*
  * ============================================================================
@@ -75,16 +75,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private DataSource dataSource;
 
-    private HashMap<String, RMUserModel> rmUserMap;
-
     @SuppressLint("UseSparseArrays")
     @NonNull
-    public HashMap<Long, RMDataModel> rmDataMap = new HashMap<>();
+    public HashMap<String, DataModel> rmDataMap = new HashMap<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmUserMap = new HashMap<>();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
 
@@ -114,23 +111,30 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     /**
      * This api is responsible for insert users in database when users is added
      *
-     * @param rmUserModel -> contains all of info about users
+     * @param userModel -> contains all of info about users
      */
 
-    public void userAdd(@NonNull RMUserModel rmUserModel) {
+    public void userAdd(@NonNull UserModel userModel) {
 
-        String userId = rmUserModel.getUserId();
-        if (rmUserMap.containsKey(userId))
-            return;
-
-        rmUserMap.put(userId, rmUserModel);
+        String userId = userModel.getUserId();
 
         UserEntity userEntity = new UserEntity()
-                .toUserEntity(rmUserModel)
+                .toUserEntity(userModel)
                 .setOnline(true);
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+    }
+
+    public boolean userExistedOperation(String userId, boolean isActive) {
+        int updateId = UserDataSource.getInstance()
+                .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
+
+        if (updateId > 0 && isActive) {
+            syncUserWithBroadcastMessage(userId);
+        }
+
+        return updateId > 0;
     }
 
     /**
@@ -143,21 +147,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userLeave(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
-
-        if (rmUserMap.containsKey(userId)) {
-
-            RMUserModel rmUserModel = rmUserMap.get(userId);
-            rmUserMap.remove(userId);
-
-            if (rmUserModel != null) {
-                UserEntity userEntity = new UserEntity()
-                        .toUserEntity(rmUserModel)
-                        .setLastOnlineTime(TimeUtil.toCurrentTime())
-                        .setOnline(false);
-
-                UserDataSource.getInstance().insertOrUpdateData(userEntity);
-            }
-        }
+        UserDataSource.getInstance().updateUserStatus(userId, Constants.UserStatus.OFFLINE);
     }
 
     /**
@@ -180,7 +170,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        dataSend(messageEntity.toProtoChat().toByteArray(),
+                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+
+                        dataSend(messageModelString.getBytes(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId());
                     }
                 }, Throwable::printStackTrace));
@@ -193,7 +185,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        dataSend(messageEntity.toProtoChat().toByteArray(),
+                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+
+                        dataSend(messageModelString.getBytes(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId());
                     }
                 }, Throwable::printStackTrace));
@@ -207,11 +201,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      */
     private void dataSend(@NonNull byte[] data, byte type, String userId) {
 
-        RMDataModel.Builder rmDataModel = RMDataModel.newBuilder()
-                .setRawData(ByteString.copyFrom(data))
+        DataModel rmDataModel = new DataModel()
+                .setRawData(data)
                 .setDataType(type);
-
-        Log.v("MIMO_SAHA:", "User Id: " + userId);
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, userId));
@@ -220,22 +212,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     /**
      * During receive any data to from RM this API is manipulating data based on application
      *
-     * @param rmDataModel -> contains all of info about receive data
+     * @param dataModel -> contains all of info about receive data
      */
 
-    public void dataReceive(@NonNull RMDataModel rmDataModel, boolean isNewMessage) {
+    public void dataReceive(@NonNull DataModel dataModel, boolean isNewMessage) {
 
-        int dataType = rmDataModel.getDataType();
-        byte[] rawData = rmDataModel.getRawData().toByteArray();
-        String userId = rmDataModel.getUserMeshId();
-        boolean isAckSuccess = rmDataModel.getIsAckSuccess();
-
-        Log.v("MIMO_SAHA::", "Type: " + dataType);
+        int dataType = dataModel.getDataType();
+        byte[] rawData = dataModel.getRawData();
+        String userId = dataModel.getUserId();
+        boolean isAckSuccess = dataModel.isAckSuccess();
 
         switch (dataType) {
-            case Constants.DataType.USER:
-                break;
-
             case Constants.DataType.MESSAGE:
                 setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
@@ -255,11 +242,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess) {
         try {
-            TeleMeshChat teleMeshChat = TeleMeshChat.newBuilder()
-                    .mergeFrom(rawChatData).build();
+
+            String messageModelText = new String(rawChatData);
+            MessageModel messageModel = new Gson().fromJson(messageModelText, MessageModel.class);
 
             ChatEntity chatEntity = new MessageEntity()
-                    .toChatEntity(teleMeshChat)
+                    .toChatEntity(messageModel)
                     .setFriendsId(userId)
                     .setTime(System.currentTimeMillis())
                     .setIncoming(true);
@@ -291,6 +279,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
 
         } catch (Exception e) {
+            Log.v("MIMO_SAHA:", "Error message: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -298,11 +287,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
         try {
 
-            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
-                    .mergeFrom(rawBulletinData).build();
+            String bulletinString = new String(rawBulletinData);
+            BulletinModel bulletinModel = new Gson().fromJson(bulletinString, BulletinModel.class);
 
             FeedEntity feedEntity = new FeedEntity()
-                    .toFeedEntity(teleMeshBulletin);
+                    .toFeedEntity(bulletinModel);
 
             if (isNewMessage) {
                 feedEntity.setFeedReadStatus(false);
@@ -336,8 +325,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
         try {
             if (!isAck) {
-                MessageCount messageCount = MessageCount.newBuilder()
-                        .mergeFrom(rawMessageCountAnalyticsData).build();
+
+                String messageCountString = new String(rawMessageCountAnalyticsData);
+
+                MessageCount messageCount = new Gson().fromJson(messageCountString, MessageCount.class);
 
                 MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity
                         .MessageAnalyticsEntity().toMessageAnalyticsEntity(messageCount);
@@ -351,8 +342,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
         try {
-            AppShareCount appShareCount = AppShareCount.newBuilder().mergeFrom(rawData).build();
-            AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(appShareCount);
+
+            String shareCountString = new String(rawData);
+
+            ShareCountModel shareCountModel = new Gson().fromJson(shareCountString, ShareCountModel.class);
+            AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(shareCountModel);
 
             if (!isAckSuccess) {
                 compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
@@ -375,7 +369,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             }
                         }, Throwable::printStackTrace));
             }
-        } catch (InvalidProtocolBufferException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -385,21 +379,20 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * When we got any ack message from RM this API is responsible
      * for updating med message status which already sent
      *
-     * @param rmDataModel -> Contains received message id
+     * @param dataModel -> Contains received message id
      */
-    public void ackReceive(@NonNull RMDataModel rmDataModel) {
+    public void ackReceive(@NonNull DataModel dataModel) {
 
-        long dataSendId = rmDataModel.getRecDataId();
+        String dataSendId = dataModel.getDataTransferId();
 
         if (rmDataMap.get(dataSendId) != null) {
 
-            RMDataModel prevRMDataModel = rmDataMap.get(dataSendId);
+            DataModel prevRMDataModel = rmDataMap.get(dataSendId);
             if (prevRMDataModel != null) {
 
-                RMDataModel.Builder newRmDataModel = prevRMDataModel.toBuilder();
-                newRmDataModel.setIsAckSuccess(rmDataModel.getIsAckSuccess());
+                prevRMDataModel.setAckSuccess(dataModel.isAckSuccess());
 
-                dataReceive(newRmDataModel.build(), false);
+                dataReceive(prevRMDataModel, false);
                 rmDataMap.remove(dataSendId);
             }
         }
@@ -412,7 +405,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateUserStatus() {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    makeSendingMessageAsFailed();
+                    stopMeshProcess();
+//                    makeSendingMessageAsFailed();
                 }, Throwable::printStackTrace));
     }
 
@@ -421,7 +415,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    public void makeSendingMessageAsFailed() {
+    /*public void makeSendingMessageAsFailed() {
 
         compositeDisposable.add(updateMessageStatus()
                 .subscribeOn(Schedulers.io()).subscribe(aLong -> {
@@ -433,7 +427,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return Single.fromCallable(() -> MessageSourceData.getInstance()
                 .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
                         Constants.MessageStatus.STATUS_FAILED));
-    }
+    }*/
 
     /**
      * Concern for this api stopping RM service from app layer
@@ -518,11 +512,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             }
         }
 
-        RMDataModel.Builder rmDataModel = RMDataModel.newBuilder()
-                .setRawData(ByteString.copyFrom(feedEntity.toTelemeshBulletin().toByteArray()))
+        String bulletinString = new Gson().toJson(feedEntity.toTelemeshBulletin());
+
+        DataModel rmDataModel = new DataModel()
+                .setRawData(bulletinString.getBytes())
                 .setDataType(Constants.DataType.MESSAGE_FEED);
 
         ExecutorService service = Executors.newSingleThreadExecutor();
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
         service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList));
     }
 
@@ -542,8 +541,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     BulletinDataSource.getInstance().insertOrUpdate(
                             getOthersTrackEntity(feedEntity.getFeedId(), userId));
                 }
-
-                dataSend(feedEntity.toTelemeshBulletin().toByteArray(), Constants.DataType.MESSAGE_FEED, userId);
+                String bulletinString = new Gson().toJson(feedEntity.toTelemeshBulletin());
+                dataSend(bulletinString.getBytes(), Constants.DataType.MESSAGE_FEED, userId);
             }
         }
     }
@@ -612,9 +611,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void analyticsDataSendToSellers(MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
 
         MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
+        String messageCountString = new Gson().toJson(messageCount);
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
-            dataSend(messageCount.toByteArray(), Constants.DataType.MESSAGE_COUNT, sellersId);
+            dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);
         }
 
     }
@@ -633,12 +633,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     /**
      * Send data to local user (Seller)
      */
-    private void sendAppShareCountToSellers(List<AppShareCountEntity> entityList) {
+    public void sendAppShareCountToSellers(List<AppShareCountEntity> entityList) {
         for (AppShareCountEntity entity : entityList) {
-            AppShareCount appShareCount = entity.toAnalyticAppShareCount();
-
+            ShareCountModel appShareCount = entity.toAnalyticAppShareCount();
+            String shareCountString = new Gson().toJson(appShareCount);
+            if (rightMeshDataSource == null) {
+                rightMeshDataSource = MeshDataSource.getRmDataSource();
+            }
             for (String sellersId : rightMeshDataSource.getAllSellers()) {
-                dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+                dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId);
             }
         }
     }
@@ -673,7 +676,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     @Override
-    public void dataSent(@NonNull RMDataModel rmDataModel, long dataSendId) {
+    public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 }

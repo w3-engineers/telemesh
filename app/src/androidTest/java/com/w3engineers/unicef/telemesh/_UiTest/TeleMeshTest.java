@@ -14,18 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.google.protobuf.ByteString;
+import com.google.gson.Gson;
 import com.w3engineers.appshare.application.ui.InAppShareActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass;
-import com.w3engineers.unicef.telemesh.TeleMeshUser;
-import com.w3engineers.unicef.telemesh.data.broadcast.Util;
+import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -56,6 +54,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -285,13 +285,13 @@ public class TeleMeshTest {
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
 //        openWallet.perform(scrollTo(), click());
 
-       // addDelay(700);
+        // addDelay(700);
 
-       // pressBack();
+        // pressBack();
 
 //        mDevice.pressBack();
 
-     //   addDelay(700);
+        //   addDelay(700);
 
         ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
@@ -301,7 +301,7 @@ public class TeleMeshTest {
 
         // constraintLayout2.perform(scrollTo(), click());
 
-      //  addDelay(700);
+        //  addDelay(700);
         //  pressBack();
 
 
@@ -421,6 +421,7 @@ public class TeleMeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
+
         addDelay(700);
 
         ViewInteraction contactLayout = onView(
@@ -536,17 +537,17 @@ public class TeleMeshTest {
         addDelay(3800);
 
         // Prepare bulletin
-        TeleMeshBulletinOuterClass.TeleMeshBulletin bulletin = TeleMeshBulletinOuterClass.TeleMeshBulletin.newBuilder()
-                .setBulletinId("testId1")
-                .setBulletinMessage("Test feed details")
-                .setBulletinTime("2019-06-014T06:05:50.000Z")
-                .build();
+        BulletinModel bulletin = new BulletinModel()
+                .setId("testId1")
+                .setMessage("Test feed details")
+                .setTime("2019-06-014T06:05:50.000Z");
 
-        TeleMeshUser.RMDataModel rmDataModel = TeleMeshUser.RMDataModel.newBuilder()
-                .setUserMeshId("0xuodnaiabd1983nd")
-                .setRawData(ByteString.copyFrom(bulletin.toByteArray()))
-                .setDataType(Constants.DataType.MESSAGE_FEED)
-                .build();
+        String bulletinString = new Gson().toJson(bulletin);
+
+        DataModel rmDataModel = new DataModel()
+                .setUserId("0xuodnaiabd1983nd")
+                .setRawData(bulletinString.getBytes())
+                .setDataType(Constants.DataType.MESSAGE_FEED);
 
         RmDataHelper.getInstance().dataReceive(rmDataModel, true);
 

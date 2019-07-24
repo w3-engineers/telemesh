@@ -16,7 +16,7 @@ public class MeshDataManager {
     private static MeshDataManager meshLibManager = new MeshDataManager();
     private byte[] myProfileInfo = null;
     private String myPeerId;
-    public static final byte TYPE_PROFILE = 3, TYPE_DATA = 4;
+    public static final byte TYPE_PING = 1, TYPE_PROFILE = 3;
 
     public static MeshDataManager getInstance() {
         return meshLibManager;
@@ -39,14 +39,29 @@ public class MeshDataManager {
         MeshData meshData = new MeshData();
         meshData.mData = myProfileInfo;
         meshData.mMeshPeer = new MeshPeer(myPeerId);
-        meshData.mPeerId = myPeerId;
         meshData.mType = TYPE_PROFILE;
+
+        return meshData;
+    }
+
+    public MeshData getPingForProfile() {
+
+        MeshData meshData = new MeshData();
+        meshData.mMeshPeer = new MeshPeer(myPeerId);
+        meshData.mType = TYPE_PING;
 
         return meshData;
     }
 
     public boolean isProfileData(MeshData meshData) {
         if (meshData != null && meshData.mType == TYPE_PROFILE)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isProfilePing(MeshData meshData) {
+        if (meshData != null && meshData.mType == TYPE_PING)
             return true;
         else
             return false;

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Frank Tan on 10/04/2016.
- *
+ * <p>
  * A helper class with static properties and methods
  */
 public class Util {
@@ -25,6 +25,7 @@ public class Util {
     public static final String EMPTY_MESSAGE = "<EMPTY_MESSAGE>";
 
     private static int jobId = 32;
+
     // schedule the start of the service every 10 - 30 seconds
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void scheduleJob(@NonNull Context context) {

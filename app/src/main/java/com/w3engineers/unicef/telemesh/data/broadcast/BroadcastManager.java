@@ -4,14 +4,12 @@ import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.protobuf.ByteString;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -55,7 +53,7 @@ public class BroadcastManager {
     private BroadcastSendCallback broadcastSendCallback;
 
     public interface BroadcastSendCallback {
-        void dataSent(@NonNull RMDataModel rmDataModel, long dataSendId);
+        void dataSent(@NonNull DataModel rmDataModel, String dataSendId);
     }
 
     public void setBroadcastSendCallback(@Nullable BroadcastSendCallback broadcastSendCallback) {
@@ -130,12 +128,13 @@ public class BroadcastManager {
             if (broadcastSendCallback != null) {
                 MeshData meshData = sendDataTask.getMeshData();
 
-                RMDataModel rmDataModel = RMDataModel.newBuilder()
-                        .setUserMeshId(meshData.mMeshPeer.getPeerId())
-                        .setRawData(ByteString.copyFrom(meshData.mData))
-                        .setDataType(meshData.mType)
-                        .build();
-                broadcastSendCallback.dataSent(rmDataModel, result);
+                if (meshData != null) {
+                    DataModel rmDataModel = new DataModel()
+                            .setUserId(meshData.mMeshPeer.getPeerId())
+                            .setRawData(meshData.mData)
+                            .setDataType(meshData.mType);
+                    broadcastSendCallback.dataSent(rmDataModel, (result + ""));
+                }
             }
         } catch (ExecutionException e) {
             e.printStackTrace();

@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'com.github.kt3k.coveralls'
-    id 'com.google.protobuf'
 }
 
 android {
@@ -141,7 +140,6 @@ dependencies {
     implementation deps.fb_shimmer.shimmer
 
     implementation deps.zxing.core
-    implementation deps.protobuf.lite
     implementation deps.dexter.dexter
     implementation deps.appshare.share
 
@@ -160,28 +158,6 @@ coveralls {
 tasks.coveralls {
     dependsOn 'connectedAndroidTest'
     onlyIf { System.env.'CI' }
-}
-
-// protobuf-start
-protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
-    }
-    plugins {
-        javalite {
-            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
-        }
-    }
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                remove java
-            }
-            task.plugins {
-                javalite {}
-            }
-        }
-    }
 }
 
 configurations.all {

@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
+//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
@@ -101,19 +101,18 @@ public class AppShareCountEntity extends DbBaseEntity implements Parcelable {
         isSend = send;
     }
 
-    public AppShareCount toAnalyticAppShareCount() {
-        return AppShareCount.newBuilder()
-                .setUserId(userId)
-                .setDate(date)
-                .setShareCount(count)
-                .build();
+    public ShareCountModel toAnalyticAppShareCount() {
+        return new ShareCountModel()
+                .setId(userId)
+                .setTime(date)
+                .setCount(count);
     }
 
-    public AppShareCountEntity toAppShareCountEntity(AppShareCount appShareCount) {
+    public AppShareCountEntity toAppShareCountEntity(ShareCountModel shareCountModel) {
         AppShareCountEntity entity = new AppShareCountEntity();
-        entity.setCount(appShareCount.getShareCount());
-        entity.setUserId(appShareCount.getUserId());
-        entity.setDate(appShareCount.getUserId());
+        entity.setCount(shareCountModel.getCount());
+        entity.setUserId(shareCountModel.getId());
+        entity.setDate(shareCountModel.getTime());
         return entity;
     }
 }

@@ -51,11 +51,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import timber.log.Timber;
 
-//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
-//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
-//import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
-//import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
-
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -385,7 +380,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String dataSendId = dataModel.getDataTransferId();
 
-        if (rmDataMap.get(dataSendId) != null) {
+        if (dataSendId != null && rmDataMap.get(dataSendId) != null) {
 
             DataModel prevRMDataModel = rmDataMap.get(dataSendId);
             if (prevRMDataModel != null) {
@@ -673,5 +668,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    public int getUserActiveStatus(String userId) {
+        return rightMeshDataSource.getUserActiveStatus(userId);
     }
 }

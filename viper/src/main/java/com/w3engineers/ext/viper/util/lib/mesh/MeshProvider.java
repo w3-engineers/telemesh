@@ -26,6 +26,7 @@ import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MeshProvider implements LinkStateListener {
 
@@ -39,7 +40,8 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemeshApp-";
+    private String NETWORK_PREFIX = "telemesh_dhaka-";
+    private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider(Context context) {
         this.context = context;
@@ -71,7 +73,7 @@ public class MeshProvider implements LinkStateListener {
         if (config == null || myProfileInfo == null)
             return;
 
-        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, this);
+        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, SOCKET_URL, this);
     }
 
 
@@ -163,19 +165,16 @@ public class MeshProvider implements LinkStateListener {
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
 
-        long ack = sendProfilePing(nodeId);
+        sendProfilePing(nodeId);
     }
 
-    private long sendProfilePing(String nodeId) {
+    private void sendProfilePing(String nodeId) {
         MeshData meshData = MeshDataManager.getInstance().getPingForProfile();
 
         if (meshData != null) {
-            long transferId = getDataTransferId();
-            transportManager.sendMessage(nodeId, myUserId, transferId, MeshDataProcessor.getInstance().getPingFormat(meshData));
-            return transferId;
+            String sendId = UUID.randomUUID().toString();
+            transportManager.sendMessage(nodeId, myUserId, sendId, MeshDataProcessor.getInstance().getPingFormat(meshData));
         }
-
-        return 0L;
     }
 
     private void myProfileSend(String nodeId) {
@@ -184,7 +183,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
         HandlerUtil.postBackground(() -> {
-            long ack = sendMyInfo(nodeId);
+            sendMyInfo(nodeId);
         });
     }
 
@@ -193,17 +192,14 @@ public class MeshProvider implements LinkStateListener {
      * Send my info after discovering him
      * @param nodeId - The discovered node id
      */
-    private long sendMyInfo(String nodeId) {
+    private void sendMyInfo(String nodeId) {
 
         MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
 
         if (meshData != null) {
-            long transferId = getDataTransferId();
-            transportManager.sendMessage(nodeId, myUserId, transferId, MeshDataProcessor.getInstance().getDataFormat(meshData));
-            return transferId;
+            String sendId = UUID.randomUUID().toString();
+            transportManager.sendMessage(nodeId, myUserId, sendId, MeshDataProcessor.getInstance().getDataFormat(meshData));
         }
-
-        return 0L;
     }
 
     /**
@@ -229,19 +225,19 @@ public class MeshProvider implements LinkStateListener {
      * @param meshData - message send
      * @return - get the message send id
      */
-    public long sendMeshData(MeshData meshData) {
+    public String sendMeshData(MeshData meshData) {
         if (meshData != null) {
             String peerId = meshData.mMeshPeer.getPeerId();
             if (!TextUtils.isEmpty(peerId)) {
 
                 if (transportManager != null) {
-                    long transferId = getDataTransferId();
-                    transportManager.sendMessage(peerId, myUserId, transferId, MeshDataProcessor.getInstance().getDataFormat(meshData));
-                    return transferId;
+                    String sendId = UUID.randomUUID().toString();
+                    transportManager.sendMessage(peerId, myUserId, sendId, MeshDataProcessor.getInstance().getDataFormat(meshData));
+                    return sendId;
                 }
             }
         }
-        return -1L;
+        return null;
     }
 
     /**
@@ -281,12 +277,12 @@ public class MeshProvider implements LinkStateListener {
      * @param status : boolean status true of success false otherwise
      */
     @Override
-    public void onMessageDelivered(long messageId, int status) {
+    public void onMessageDelivered(String messageId, int status) {
         if (providerCallback != null) {
 
-            if (status == Constant.MessageStatus.SEND
+            if (/*status == Constant.MessageStatus.SEND
                     || status == Constant.MessageStatus.DELIVERED
-                    || status == Constant.MessageStatus.RECEIVED) {
+                    || */status == Constant.MessageStatus.RECEIVED) {
                 MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId)
                         .setSuccess(true);
                 providerCallback.receiveAck(meshAcknowledgement);
@@ -296,7 +292,7 @@ public class MeshProvider implements LinkStateListener {
 
     public List<String> getAllSellers() {
         if (transportManager != null) {
-            return transportManager.getInternetSelers();
+            return transportManager.getInternetSellers();
         }
         return new ArrayList<>();
     }
@@ -307,6 +303,10 @@ public class MeshProvider implements LinkStateListener {
 
     private long getDataTransferId() {
         return System.currentTimeMillis();
+    }
+
+    public int getUserActiveStatus(String userId) {
+        return transportManager.getLinkType(userId);
     }
 
 }

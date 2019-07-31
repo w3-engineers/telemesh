@@ -163,7 +163,7 @@ public class MeshDataSource extends BaseMeshDataSource {
     protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
 
         DataModel rmDataModel = new DataModel()
-                .setDataTransferId("" + meshAcknowledgement.id)
+                .setDataTransferId(meshAcknowledgement.id)
                 .setAckSuccess(meshAcknowledgement.isSuccess);
 
         HandlerUtil.postBackground(()-> RmDataHelper.getInstance().ackReceive(rmDataModel));

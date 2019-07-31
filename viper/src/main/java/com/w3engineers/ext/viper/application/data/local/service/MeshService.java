@@ -131,7 +131,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         }
 
         @Override
-        public long sendMeshData(MeshData meshData) throws RemoteException {
+        public String sendMeshData(MeshData meshData) throws RemoteException {
             return meshProvider.sendMeshData(meshData);
         }
 
@@ -192,6 +192,14 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
                 return meshProvider.getAllSellers();
             }
             return new ArrayList<>();
+        }
+
+        @Override
+        public int getUserLinkType(String userId) throws RemoteException {
+            if (meshProvider != null) {
+                return meshProvider.getUserActiveStatus(userId);
+            }
+            return 0;
         }
     };
 

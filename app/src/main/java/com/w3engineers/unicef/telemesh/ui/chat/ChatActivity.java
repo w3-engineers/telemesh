@@ -15,7 +15,9 @@ import android.view.View;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
@@ -91,6 +93,7 @@ public class ChatActivity extends RmBaseActivity {
             mViewBinging.textViewLastName.setOnClickListener(this);
 
             mViewBinging.setUserEntity(mUserEntity);
+            mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.meshId));
         }
 
 
@@ -198,9 +201,23 @@ public class ChatActivity extends RmBaseActivity {
 
             mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
-                if (userEntity != null && mViewBinging != null)
+                if (userEntity != null && mViewBinging != null) {
                     mViewBinging.setUserEntity(userEntity);
+                    mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.meshId));
+                }
             });
+        }
+    }
+
+    public int activeStatusResource(String userId) {
+        int userStatus = RmDataHelper.getInstance().getUserActiveStatus(userId);
+
+        if (userStatus == Constant.UserTpe.WIFI || userStatus == Constant.UserTpe.BLUETOOTH) {
+            return R.drawable.circle_online;
+        } else if (userStatus == Constant.UserTpe.INTERNET) {
+            return R.drawable.circle_internet;
+        } else {
+            return R.drawable.circle_offline;
         }
     }
 

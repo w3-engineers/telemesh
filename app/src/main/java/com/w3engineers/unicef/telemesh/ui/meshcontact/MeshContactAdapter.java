@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
 
@@ -73,11 +75,22 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         @Override
         public void bind(@NonNull UserEntity item) {
 
-            itemMeshContactBinding.userMeshStatus.setBackgroundResource(item.isOnline() ?
-                    R.drawable.circle_online : R.drawable.circle_offline);
+            itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.meshId));
 
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
+        }
+
+        public int activeStatusResource(String userId) {
+            int userStatus = RmDataHelper.getInstance().getUserActiveStatus(userId);
+
+            if (userStatus == Constant.UserTpe.WIFI || userStatus == Constant.UserTpe.BLUETOOTH) {
+                return R.drawable.circle_online;
+            } else if (userStatus == Constant.UserTpe.INTERNET) {
+                return R.drawable.circle_internet;
+            } else {
+                return R.drawable.circle_offline;
+            }
         }
     }
 }

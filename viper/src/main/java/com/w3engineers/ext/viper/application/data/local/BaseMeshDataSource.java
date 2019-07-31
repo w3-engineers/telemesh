@@ -69,7 +69,7 @@ public abstract class BaseMeshDataSource {
         }
     };
 
-    public long sendMeshData(MeshData meshData) {
+    public String sendMeshData(MeshData meshData) {
         try {
             if(iSetInfo != null){
                 return iSetInfo.sendMeshData(meshData);
@@ -77,7 +77,7 @@ public abstract class BaseMeshDataSource {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return -1L;
+        return null;
     }
 
     public void stopMeshService() {
@@ -130,6 +130,17 @@ public abstract class BaseMeshDataSource {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public int getUserActiveStatus(String userId) {
+        try {
+            if(iSetInfo != null){
+                return iSetInfo.getUserLinkType(userId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**

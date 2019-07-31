@@ -20,12 +20,10 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass;
 import com.w3engineers.unicef.telemesh.TeleMeshUser;
-import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -414,7 +412,7 @@ public class TeleMeshTest {
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnline(true)
+                .setOnlineStatus(true)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel");
         userEntity.setId(0);

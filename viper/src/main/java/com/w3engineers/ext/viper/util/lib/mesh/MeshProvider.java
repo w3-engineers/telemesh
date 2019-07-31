@@ -106,7 +106,7 @@ public class MeshProvider implements LinkStateListener {
 
         void meshStop();
 
-        boolean isNodeExist(String nodeId, boolean isActive);
+        boolean isNodeExist(String nodeId, int activeStatus);
     }
 
     @Override
@@ -148,7 +148,8 @@ public class MeshProvider implements LinkStateListener {
             boolean isUserExist = false;
 
             if (providerCallback != null) {
-                isUserExist = providerCallback.isNodeExist(nodeId, isActive);
+                int userConnectivityStatus = isActive ? getUserActiveStatus(nodeId) : 0;
+                isUserExist = providerCallback.isNodeExist(nodeId, userConnectivityStatus);
             }
 
             if (!isUserExist) {

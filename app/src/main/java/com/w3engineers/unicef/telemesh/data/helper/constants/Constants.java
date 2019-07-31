@@ -59,6 +59,9 @@ public class Constants {
     public interface UserStatus {
         int OFFLINE = 0;
         int ONLINE = 1;
+        int WIFI_ONLINE = 3;
+        int BLE_ONLINE = 2;
+        int INTERNET_ONLINE = 1;
     }
 
     public interface AppConstant {

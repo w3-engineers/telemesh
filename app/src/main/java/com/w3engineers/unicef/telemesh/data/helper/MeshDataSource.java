@@ -109,18 +109,13 @@ public class MeshDataSource extends BaseMeshDataSource {
             String userId = profileInfo.mMeshPeer.getPeerId();
 
             String userString = new String(profileInfo.mData);
-
             UserModel userModel = new Gson().fromJson(userString, UserModel.class);
-
-            Log.v("MIMO_SAHA:", "User: " + userString);
 
             if (userModel != null) {
                 userModel.setUserId(userId);
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
-
             }
         } catch (Exception e) {
-            Log.v("MIMO_SAHA:", "Error User: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -133,8 +128,6 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     @Override
     protected void onPeerGone(@NonNull MeshPeer meshPeer) {
-
-        String userId = meshPeer.getPeerId();
 
         HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(meshPeer));
     }
@@ -176,8 +169,8 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
-    protected boolean isNodeAvailable(String nodeId, boolean isActive) {
-        return RmDataHelper.getInstance().userExistedOperation(nodeId, isActive);
+    protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
+        return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
 
     @Override

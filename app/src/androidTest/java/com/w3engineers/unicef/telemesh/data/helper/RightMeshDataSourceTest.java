@@ -142,7 +142,7 @@ public class RightMeshDataSourceTest {
         addDelay();
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
         addDelay();
-        assertFalse(retrieveUser != null && retrieveUser.isOnline());
+        assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus());
     }
 
     @Test

@@ -80,7 +80,7 @@
             </android.support.constraint.ConstraintLayout>
         </com.w3engineers.ext.strom.application.ui.base.BaseToolBar>
 
-        <!--android:src="@{userEntity.isOnline ? @drawable/circle_online: @drawable/circle_offline}"-->
+        <!--android:src="@{userEntity.getOnlineStatus ? @drawable/circle_online: @drawable/circle_offline}"-->
 
         <View
             android:id="@+id/shadow_view"

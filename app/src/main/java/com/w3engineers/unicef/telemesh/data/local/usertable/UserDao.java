@@ -35,7 +35,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
 
 
     @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.OFFLINE
-            + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.ONLINE)
+            + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE)
     abstract int updateUserOffline();
 
     @NonNull
@@ -69,7 +69,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     abstract Flowable<List<UserEntity>> getAllUsers();
 
 
-    @Query("SELECT * FROM "+ TableNames.USERS + " WHERE "+ ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.ONLINE )
+    @Query("SELECT * FROM "+ TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
+            + Constants.UserStatus.WIFI_ONLINE + " OR " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
+            + Constants.UserStatus.BLE_ONLINE )
     @NonNull
     public abstract List<UserEntity> getLivePeers();
 

@@ -210,7 +210,7 @@ public abstract class BaseMeshDataSource {
 
     protected abstract String getOwnUserId();
 
-    protected abstract boolean isNodeAvailable(String nodeId, boolean isActive);
+    protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
 
     /**
      * Overridable method to receive the event of library destroy
@@ -250,8 +250,8 @@ public abstract class BaseMeshDataSource {
         }
 
         @Override
-        public boolean isNodeExist(String nodeId, boolean isActive) throws RemoteException {
-            return isNodeAvailable(nodeId, isActive);
+        public boolean isNodeExist(String nodeId, int userActiveStatus) throws RemoteException {
+            return isNodeAvailable(nodeId, userActiveStatus);
         }
     };
 }

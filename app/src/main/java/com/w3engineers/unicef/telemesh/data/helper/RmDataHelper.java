@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
@@ -115,21 +116,38 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(userModel)
-                .setOnline(true);
+                .setOnlineStatus(getUserActiveStatus(userId));
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
     }
 
-    public boolean userExistedOperation(String userId, boolean isActive) {
-        int updateId = UserDataSource.getInstance()
-                .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
+    public boolean userExistedOperation(String userId, int userActiveStatus) {
 
-        if (updateId > 0 && isActive) {
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        int updateId = UserDataSource.getInstance()
+                .updateUserStatus(userId, userConnectivityStatus);
+
+        if (updateId > 0 && (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
             syncUserWithBroadcastMessage(userId);
         }
 
         return updateId > 0;
+    }
+
+    public int getActiveStatus(int userActiveStatus) {
+
+        if (userActiveStatus == Constant.UserTpe.WIFI) {
+            return Constants.UserStatus.WIFI_ONLINE;
+        } else if (userActiveStatus == Constant.UserTpe.BLUETOOTH) {
+            return Constants.UserStatus.BLE_ONLINE;
+        } else if (userActiveStatus == Constant.UserTpe.INTERNET) {
+            return Constants.UserStatus.INTERNET_ONLINE;
+        } else {
+            return Constants.UserStatus.OFFLINE;
+        }
     }
 
     /**

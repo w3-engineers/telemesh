@@ -113,10 +113,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull UserModel userModel) {
 
         String userId = userModel.getUserId();
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(userModel)
-                .setOnlineStatus(getUserActiveStatus(userId));
+                .setOnlineStatus(userActiveStatus);
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
@@ -686,9 +687,5 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
-    }
-
-    public int getUserActiveStatus(String userId) {
-        return rightMeshDataSource.getUserActiveStatus(userId);
     }
 }

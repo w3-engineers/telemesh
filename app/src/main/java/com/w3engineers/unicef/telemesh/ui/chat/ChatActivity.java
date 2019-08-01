@@ -18,6 +18,7 @@ import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
@@ -93,7 +94,7 @@ public class ChatActivity extends RmBaseActivity {
             mViewBinging.textViewLastName.setOnClickListener(this);
 
             mViewBinging.setUserEntity(mUserEntity);
-            mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.meshId));
+            mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
         }
 
 
@@ -203,18 +204,17 @@ public class ChatActivity extends RmBaseActivity {
                 mUserEntity = userEntity;
                 if (userEntity != null && mViewBinging != null) {
                     mViewBinging.setUserEntity(userEntity);
-                    mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.meshId));
+                    mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.getOnlineStatus()));
                 }
             });
         }
     }
 
-    public int activeStatusResource(String userId) {
-        int userStatus = RmDataHelper.getInstance().getUserActiveStatus(userId);
+    private int activeStatusResource(int userActiveStatus) {
 
-        if (userStatus == Constant.UserTpe.WIFI || userStatus == Constant.UserTpe.BLUETOOTH) {
+        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
             return R.drawable.circle_online;
-        } else if (userStatus == Constant.UserTpe.INTERNET) {
+        } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
             return R.drawable.circle_internet;
         } else {
             return R.drawable.circle_offline;

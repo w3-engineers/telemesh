@@ -11,6 +11,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
 
@@ -75,18 +76,17 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         @Override
         public void bind(@NonNull UserEntity item) {
 
-            itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.meshId));
+            itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
 
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
         }
 
-        public int activeStatusResource(String userId) {
-            int userStatus = RmDataHelper.getInstance().getUserActiveStatus(userId);
+        private int activeStatusResource(int userActiveStatus) {
 
-            if (userStatus == Constant.UserTpe.WIFI || userStatus == Constant.UserTpe.BLUETOOTH) {
+            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
                 return R.drawable.circle_online;
-            } else if (userStatus == Constant.UserTpe.INTERNET) {
+            } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
                 return R.drawable.circle_internet;
             } else {
                 return R.drawable.circle_offline;

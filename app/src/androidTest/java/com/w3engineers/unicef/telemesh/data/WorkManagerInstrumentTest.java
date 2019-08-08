@@ -4,6 +4,7 @@ package com.w3engineers.unicef.telemesh.data;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
 import android.util.Log;
 
 import androidx.work.Configuration;
@@ -31,6 +32,7 @@ public class WorkManagerInstrumentTest {
     // on setup method we will initialize WorkManager in test mode
     // so we can test our worker
 
+
     @Before
     public void setup() {
         Context context = InstrumentationRegistry.getTargetContext();
@@ -46,6 +48,7 @@ public class WorkManagerInstrumentTest {
         // Initialize WorkManager for instrumentation tests.
         WorkManagerTestInitHelper.initializeTestWorkManager(
                 context, config);
+
     }
 
     // WorkManager has been initialized in test mode, you are ready to test your Workers.
@@ -67,6 +70,9 @@ public class WorkManagerInstrumentTest {
         testDriver.setPeriodDelayMet(request.getId());
         // Get WorkInfo and outputData
         WorkInfo workInfo = workManager.getWorkInfoById(request.getId()).get();
+
+
+
         // Assert
         assertThat(workInfo.getState(), is(WorkInfo.State.ENQUEUED)); // Since it's a periodic task so initially it get enqueued.
 

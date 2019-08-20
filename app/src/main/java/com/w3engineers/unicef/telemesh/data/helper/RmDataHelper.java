@@ -116,9 +116,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         String userId = userModel.getUserId();
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
 
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(userModel)
-                .setOnlineStatus(userActiveStatus);
+                .setOnlineStatus(userConnectivityStatus);
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
@@ -127,6 +129,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        Log.v("MIMO_SAHA:", "Status: " + userConnectivityStatus);
 
         int updateId = UserDataSource.getInstance()
                 .updateUserStatus(userId, userConnectivityStatus);

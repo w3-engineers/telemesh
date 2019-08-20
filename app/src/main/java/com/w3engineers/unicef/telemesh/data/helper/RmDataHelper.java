@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.wifi.protocol.Link;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
@@ -140,11 +141,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public int getActiveStatus(int userActiveStatus) {
 
-        if (userActiveStatus == Constant.UserTpe.WIFI) {
+        if (userActiveStatus == Link.Type.WIFI.getValue() || userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
             return Constants.UserStatus.WIFI_ONLINE;
-        } else if (userActiveStatus == Constant.UserTpe.BLUETOOTH) {
+        } else if (userActiveStatus == Link.Type.BT.getValue() || userActiveStatus == Link.Type.BT_MESH.getValue()) {
             return Constants.UserStatus.BLE_ONLINE;
-        } else if (userActiveStatus == Constant.UserTpe.INTERNET) {
+        } else if (userActiveStatus == Link.Type.INTERNET.getValue()) {
             return Constants.UserStatus.INTERNET_ONLINE;
         } else {
             return Constants.UserStatus.OFFLINE;

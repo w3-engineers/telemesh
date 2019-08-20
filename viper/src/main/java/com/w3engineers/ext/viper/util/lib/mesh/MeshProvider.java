@@ -16,7 +16,6 @@ import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.internet.MessageAckListener;
 import com.w3engineers.mesh.TransportManager;
 import com.w3engineers.mesh.TransportState;
 import com.w3engineers.mesh.db.SharedPref;
@@ -40,7 +39,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_feroze-";
+    private String NETWORK_PREFIX = "telemesh_2-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider(Context context) {
@@ -132,7 +131,7 @@ public class MeshProvider implements LinkStateListener {
     }
 
     @Override
-    public void linkConnected(String nodeId, MessageAckListener listener) {
+    public void linkConnected(String nodeId) {
         peerDiscoveryProcess(nodeId, true);
     }
 
@@ -174,7 +173,7 @@ public class MeshProvider implements LinkStateListener {
 
         if (meshData != null) {
             String sendId = UUID.randomUUID().toString();
-            transportManager.sendMessage(nodeId, myUserId, sendId, MeshDataProcessor.getInstance().getPingFormat(meshData));
+            sendDataToMesh(nodeId, meshData, sendId);
         }
     }
 
@@ -199,8 +198,13 @@ public class MeshProvider implements LinkStateListener {
 
         if (meshData != null) {
             String sendId = UUID.randomUUID().toString();
-            transportManager.sendMessage(nodeId, myUserId, sendId, MeshDataProcessor.getInstance().getDataFormat(meshData));
+            sendDataToMesh(nodeId, meshData, sendId);
         }
+    }
+
+    private void sendDataToMesh(String nodeId, MeshData meshData, String sendId) {
+        byte[] data = MeshDataProcessor.getInstance().getDataFormatToJson(meshData);
+        transportManager.sendMessage(myUserId, nodeId, sendId, data);
     }
 
     /**
@@ -233,7 +237,7 @@ public class MeshProvider implements LinkStateListener {
 
                 if (transportManager != null) {
                     String sendId = UUID.randomUUID().toString();
-                    transportManager.sendMessage(peerId, myUserId, sendId, MeshDataProcessor.getInstance().getDataFormat(meshData));
+                    sendDataToMesh(peerId, meshData, sendId);
                     return sendId;
                 }
             }
@@ -250,7 +254,7 @@ public class MeshProvider implements LinkStateListener {
     public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
         if (frameData != null) {
 
-            MeshData meshData = MeshDataProcessor.getInstance().setDataFormat(frameData);
+            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
 
             if (meshData != null) {
 
@@ -307,7 +311,7 @@ public class MeshProvider implements LinkStateListener {
     }
 
     public int getUserActiveStatus(String userId) {
-        return transportManager.getLinkType(userId);
+        return transportManager.getLinkTypeById(userId);
     }
 
 }

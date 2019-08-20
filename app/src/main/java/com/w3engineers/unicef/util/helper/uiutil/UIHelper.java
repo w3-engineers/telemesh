@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.Calendar;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -65,7 +66,8 @@ public class UIHelper {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                subject.onComplete();
+                subject.onNext(s);
+                //subject.onComplete();
                 return true;
             }
 

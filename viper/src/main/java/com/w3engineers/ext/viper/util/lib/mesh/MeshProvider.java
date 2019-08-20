@@ -39,7 +39,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_2-";
+    private String NETWORK_PREFIX = "telemesh_t1-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider(Context context) {

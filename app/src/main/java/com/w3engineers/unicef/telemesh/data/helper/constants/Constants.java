@@ -68,6 +68,7 @@ public class Constants {
         long LOADING_TIME = 30 * 1000;
         int MESSAGE_SYNC_PLOT = 10;
         int DEFAULT = 0;
+        long LOADING_TIME_SHORT = 1000;
     }
 
     public interface Bulletin {
@@ -84,5 +85,10 @@ public class Constants {
         byte MESSAGE_COUNT = 1;
         byte NEW_USER_COUNT = 2;
         byte APP_SHARE_COUNT = 3;
+    }
+
+    public interface UpdatedData {
+        int YES = 0;
+        int NO = 1;
     }
 }

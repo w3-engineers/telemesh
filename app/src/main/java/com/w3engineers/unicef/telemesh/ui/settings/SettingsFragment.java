@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
@@ -109,11 +110,19 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                if (Constants.IsMeshInit) {
+                    startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                } else {
+                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                }
                 break;
 
             case R.id.layout_open_wallet:
-                startActivity(new Intent(mActivity, WalletActivity.class));
+                if (Constants.IsMeshInit) {
+                    startActivity(new Intent(mActivity, WalletActivity.class));
+                } else {
+                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                }
                 break;
             default:
                 break;

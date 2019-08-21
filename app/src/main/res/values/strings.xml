@@ -63,4 +63,6 @@
         <item>bn</item>
     </string-array>
 
+    <string name="mesh_not_initiated">Mesh is not initialized yet</string>
+
 </resources>

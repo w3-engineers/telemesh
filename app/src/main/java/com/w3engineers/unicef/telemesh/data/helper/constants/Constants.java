@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 public class Constants {
 
     public static boolean IS_LOADING_ENABLE = false;
+    public static boolean IsMeshInit;
 
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;

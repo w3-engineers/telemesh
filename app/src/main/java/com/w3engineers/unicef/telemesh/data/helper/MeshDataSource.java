@@ -67,6 +67,7 @@ public class MeshDataSource extends BaseMeshDataSource {
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
 
+        Constants.IsMeshInit = true;
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, getMyMeshId());
     }
 

@@ -11,7 +11,9 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.helper.ExceptionTracker;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.LogProcessUtil;
 
 
 /*
@@ -36,6 +38,7 @@ public class TeleMeshApplication extends MeshApp {
 
         initCredential();
         AnalyticsApi.init(base);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
     }
 
     private void initCredential() {

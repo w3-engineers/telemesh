@@ -70,6 +70,10 @@ public class Constants {
         int MESSAGE_SYNC_PLOT = 10;
         int DEFAULT = 0;
         long LOADING_TIME_SHORT = 1000;
+        String LOG_FOLDER = ".log";
+        String INFO_LOG_FILE = "InfoLog.txt";
+        String CRASH_REPORT_FILE_NAME = "Crashes.txt";
+        String DASHES = "-------------------------------";
     }
 
     public interface Bulletin {
@@ -91,5 +95,13 @@ public class Constants {
     public interface UpdatedData {
         int YES = 0;
         int NO = 1;
+    }
+
+    public interface MeshLogType {
+        int SPECIAL = 1;
+        int WARNING = 2;
+        int INFO = 3;
+        int ERROR = 4;
+        int DATE = 5;
     }
 }

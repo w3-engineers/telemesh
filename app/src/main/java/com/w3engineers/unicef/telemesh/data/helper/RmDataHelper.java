@@ -36,6 +36,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -692,5 +693,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    public void showMeshLog(String log) {
+        LogProcessUtil.getInstance().writeLog(log);
     }
 }

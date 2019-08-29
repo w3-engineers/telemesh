@@ -8,7 +8,10 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -42,13 +45,13 @@ public class MeshProvider implements LinkStateListener {
     private String NETWORK_PREFIX = "telemesh_t1-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
-    private MeshProvider(Context context) {
-        this.context = context;
+    private MeshProvider() {
+        this.context = App.getContext();
     }
 
-    public static MeshProvider getInstance(Context context) {
+    public static MeshProvider getInstance() {
         if (meshProvider == null) {
-            meshProvider = new MeshProvider(context);
+            meshProvider = new MeshProvider();
         }
         return meshProvider;
     }
@@ -72,6 +75,7 @@ public class MeshProvider implements LinkStateListener {
         if (config == null || myProfileInfo == null)
             return;
 
+        setLogBroadcastRegister();
         transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, SOCKET_URL, this);
     }
 
@@ -80,8 +84,10 @@ public class MeshProvider implements LinkStateListener {
         if (transportManager != null) {
             transportManager.stopMesh();
 
-            if (providerCallback != null && isStopProcess)
+            if (providerCallback != null && isStopProcess) {
+                setLogBroadcastUnregister();
                 providerCallback.meshStop();
+            }
         }
     }
 
@@ -106,6 +112,8 @@ public class MeshProvider implements LinkStateListener {
         void meshStop();
 
         boolean isNodeExist(String nodeId, int activeStatus);
+
+        void showMeshLog(String log);
     }
 
     @Override
@@ -314,4 +322,36 @@ public class MeshProvider implements LinkStateListener {
         return transportManager.getLinkTypeById(userId);
     }
 
+    private BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent != null && intent.getAction() != null) {
+                if (intent.getAction().equals("com.w3engineers.meshrnd.DEBUG_MESSAGE")) {
+                    String text = intent.getStringExtra("value");
+                    showMeshLog(text);
+                }
+            }
+        }
+    };
+
+    private void setLogBroadcastRegister() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.w3engineers.meshrnd.DEBUG_MESSAGE");
+        context.registerReceiver(logBroadcastReceiver, intentFilter);
+    }
+
+    private void setLogBroadcastUnregister() {
+        try {
+            context.unregisterReceiver(logBroadcastReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showMeshLog(String meshLog) {
+        if (providerCallback != null) {
+            providerCallback.showMeshLog(meshLog);
+        }
+    }
 }

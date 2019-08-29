@@ -50,7 +50,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         MeshConfig meshConfig = new MeshConfig();
         meshConfig.mPort = 10626;
 
-        meshProvider = MeshProvider.getInstance(getApplicationContext());
+        meshProvider = MeshProvider.getInstance();
 
         meshProvider.setConfig(meshConfig);
         meshProvider.setMyProfileInfo(profileInfo);
@@ -292,5 +292,16 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void showMeshLog(String log) {
+        try {
+            if (getInfo != null) {
+                getInfo.showMeshLog(log);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -175,6 +175,11 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
+    protected void showLog(String log) {
+        RmDataHelper.getInstance().showMeshLog(log);
+    }
+
+    @Override
     protected void onRmOff() {
         RmDataHelper.getInstance().stopMeshService();
     }

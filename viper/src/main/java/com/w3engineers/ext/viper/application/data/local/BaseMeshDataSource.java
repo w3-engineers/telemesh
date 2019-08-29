@@ -212,6 +212,8 @@ public abstract class BaseMeshDataSource {
 
     protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
 
+    protected abstract void showLog(String log);
+
     /**
      * Overridable method to receive the event of library destroy
      * @throws RemoteException
@@ -252,6 +254,11 @@ public abstract class BaseMeshDataSource {
         @Override
         public boolean isNodeExist(String nodeId, int userActiveStatus) throws RemoteException {
             return isNodeAvailable(nodeId, userActiveStatus);
+        }
+
+        @Override
+        public void showMeshLog(String log) throws RemoteException {
+            showLog(log);
         }
     };
 }

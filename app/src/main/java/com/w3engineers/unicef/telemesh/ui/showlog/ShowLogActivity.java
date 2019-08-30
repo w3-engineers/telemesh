@@ -1,28 +1,24 @@
 package com.w3engineers.unicef.telemesh.ui.showlog;
-
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityShowLogBinding;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.annotations.NonNull;
 
 public class ShowLogActivity extends BaseActivity {
-
     private ActivityShowLogBinding mShowLogBinding;
     @Nullable
     public ShowLogViewModel showLogViewModel;
@@ -73,10 +69,8 @@ public class ShowLogActivity extends BaseActivity {
 
             showLogViewModel.startAllLogObserver().observe(this, (List<MeshLogModel> meshLogModels) -> {
                 if (meshLogModels != null && meshLogModels.size() > 0) {
-
                     logList.clear();
-
-                    logList = meshLogModels;
+                    logList.addAll(meshLogModels);
                     showLogAdapter.resetWithList(logList);
                 }
                 mShowLogBinding.pbLoading.setVisibility(View.GONE);
@@ -93,9 +87,10 @@ public class ShowLogActivity extends BaseActivity {
                 if (meshLogModel != null) {
                     logList.add(meshLogModel);
 
-                    if (type == meshLogModel.getType()) {
+                    if (type == ALL || type == meshLogModel.getType()) {
                         mShowLogBinding.recyclerViewLog.setVisibility(View.VISIBLE);
                         showLogAdapter.addItem(meshLogModel);
+                        scrollToLast();
                     }
                     mShowLogBinding.pbLoading.setVisibility(View.GONE);
                 }
@@ -144,10 +139,12 @@ public class ShowLogActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (showLogViewModel != null && textChanged) {
-                    showLogAdapter.clear();
-                    showLogViewModel.startSearch(String.valueOf(s), logList);
-                    mShowLogBinding.pbLoading.setVisibility(View.VISIBLE);
+                String text = s.toString();
+                if (showLogViewModel != null) {
+                    if (!TextUtils.isEmpty(text)) {
+                        showLogAdapter.clear();
+                    }
+                    showLogViewModel.startSearch(text, logList);
                 }
                 textChanged = true;
             }
@@ -176,6 +173,7 @@ public class ShowLogActivity extends BaseActivity {
                 if (showLogEntities != null && showLogEntities.size() > 0) {
                     mShowLogBinding.recyclerViewLog.setVisibility(View.VISIBLE);
                     showLogAdapter.resetWithList(showLogEntities);
+                    scrollToLast();
                 } else {
                     showLogAdapter.clear();
                 }
@@ -191,6 +189,7 @@ public class ShowLogActivity extends BaseActivity {
                 if (showLogEntities != null && showLogEntities.size() > 0) {
                     mShowLogBinding.recyclerViewLog.setVisibility(View.VISIBLE);
                     showLogAdapter.resetWithList(showLogEntities);
+                    scrollToLast();
                 }
                 mShowLogBinding.pbLoading.setVisibility(View.GONE);
             });

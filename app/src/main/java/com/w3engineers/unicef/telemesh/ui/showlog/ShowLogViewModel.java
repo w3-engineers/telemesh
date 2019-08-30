@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
@@ -42,11 +43,16 @@ public class ShowLogViewModel extends BaseRxAndroidViewModel {
         if (showLogEntities != null) {
             List<MeshLogModel> filteredItemList = new ArrayList<>();
 
-            for (MeshLogModel log : showLogEntities) {
-                if (log.getLog().toLowerCase().contains(searchText.toLowerCase())) {
-                    filteredItemList.add(log);
+            if (!TextUtils.isEmpty(searchText)) {
+                for (MeshLogModel log : showLogEntities) {
+                    if (log.getLog().toLowerCase().contains(searchText.toLowerCase())) {
+                        filteredItemList.add(log);
+                    }
                 }
+            } else  {
+                filteredItemList.addAll(showLogEntities);
             }
+
             getFilteredList.postValue(filteredItemList);
         }
     }

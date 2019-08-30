@@ -39,6 +39,7 @@ public class LogProcessUtil {
     private BehaviorSubject<List<MeshLogModel>> listBehaviorSubject = BehaviorSubject.create();
     private BehaviorSubject<MeshLogModel> behaviorMeshLogModel = BehaviorSubject.create();
     private String fullContent;
+    private boolean isLoadStart = false;
     private ArrayList<String> pendingLogs = new ArrayList<>();
 
     private LogProcessUtil() {
@@ -151,6 +152,11 @@ public class LogProcessUtil {
 
                 if (TextUtils.isEmpty(fullContent)) {
 
+                    if (!isLoadStart) {
+                        isLoadStart = true;
+                        loadAllLogs();
+                    }
+
                     pendingLogs.add(log);
 
                 } else {
@@ -159,7 +165,7 @@ public class LogProcessUtil {
 
                     sendCurrentLog(log, logData.contains(Constants.AppConstant.DASHES));
 
-                    fullContent = fullContent + (logData.contains(Constants.AppConstant.DASHES) ? "\n" : "") + logData;
+                    fullContent = fullContent + "\n" + (logData.contains(Constants.AppConstant.DASHES) ? "\n" : "") + logData;
 
                     FileOutputStream fileOutputStream = new FileOutputStream(crashFile);
                     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -289,6 +295,7 @@ public class LogProcessUtil {
                         outputStreamWriter.close();
                         fileOutputStream.close();
 
+                        isLoadStart = false;
                         pendingLogs.clear();
 
                     } else {

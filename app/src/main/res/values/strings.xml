@@ -65,4 +65,6 @@
 
     <string name="mesh_not_initiated">Mesh is not initialized yet</string>
 
+    <string name="settings_open_log">Device Log</string>
+
 </resources>

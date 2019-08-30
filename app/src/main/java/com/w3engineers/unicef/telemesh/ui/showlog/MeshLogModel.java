@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.meshlog;
+package com.w3engineers.unicef.telemesh.ui.showlog;
  
 /*
 ============================================================================

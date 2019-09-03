@@ -12,6 +12,8 @@ public class Constants {
         int MINIMUM_TEXT_LIMIT = 2;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
+        int INTEGER_VALUE_ZERO = 0;
+        int MAXIMUM_BADGE_VALUE = 99;
     }
 
     public interface preferenceKey {
@@ -26,6 +28,12 @@ public class Constants {
         String COMPANY_ID = "company_id";
         String MY_REGISTRATION_TIME = "registration_time";
         String MY_SYNC_IS_DONE = "my_sync_is_done";
+    }
+
+    public interface MenuItemPosition {
+        int POSITION_FOR_CONTACT = 0;
+        int POSITION_FOR_MESSAGE_FEED = 1;
+        int POSITION_FOR_MESSAGE_SETTINGS = 2;
     }
 
     public interface drawables {
@@ -59,8 +67,9 @@ public class Constants {
 
     public interface UserStatus {
         int OFFLINE = 0;
-        int ONLINE = 1;
-        int WIFI_ONLINE = 3;
+        int WIFI_ONLINE = 5;
+        int WIFI_MESH_ONLINE = 4;
+        int BLE_MESH_ONLINE = 3;
         int BLE_ONLINE = 2;
         int INTERNET_ONLINE = 1;
     }

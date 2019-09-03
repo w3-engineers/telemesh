@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.support.annotation.NonNull;
 
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
@@ -16,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountS
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,8 +41,10 @@ public class MainActivityViewModel extends BaseRxViewModel {
     private PeriodicWorkRequest sendCountToServerRequest;
 
     private MessageSourceData messageSourceData;
+    private UserDataSource userDataSource;
 
     public MainActivityViewModel() {
+        userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
         mWorkManager = WorkManager.getInstance();
         mNewUserCountWorkInfo = mWorkManager.getWorkInfosByTagLiveData(NEW_USER_COUNT);
@@ -114,4 +119,8 @@ public class MainActivityViewModel extends BaseRxViewModel {
     }
 
 
+    @NonNull
+    public LiveData<List<UserEntity>> getActiveUser() {
+        return userDataSource.getActiveUser();
+    }
 }

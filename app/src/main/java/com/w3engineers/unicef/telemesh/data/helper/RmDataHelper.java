@@ -1,12 +1,15 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.ext.viper.application.data.local.service.MeshService;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.wifi.protocol.Link;
@@ -146,10 +149,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public int getActiveStatus(int userActiveStatus) {
 
-        if (userActiveStatus == Link.Type.WIFI.getValue() || userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
+        if (userActiveStatus == Link.Type.WIFI.getValue()) {
             return Constants.UserStatus.WIFI_ONLINE;
-        } else if (userActiveStatus == Link.Type.BT.getValue() || userActiveStatus == Link.Type.BT_MESH.getValue()) {
+        } else if (userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
+            return Constants.UserStatus.WIFI_MESH_ONLINE;
+        } else if (userActiveStatus == Link.Type.BT.getValue()) {
             return Constants.UserStatus.BLE_ONLINE;
+        } else if (userActiveStatus == Link.Type.BT_MESH.getValue()) {
+            return Constants.UserStatus.BLE_MESH_ONLINE;
         } else if (userActiveStatus == Link.Type.INTERNET.getValue()) {
             return Constants.UserStatus.INTERNET_ONLINE;
         } else {
@@ -419,14 +426,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void stopMeshService() {
-        updateUserStatus();
+        updateUserStatus(true);
     }
 
-    private void updateUserStatus() {
+    private void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    stopMeshProcess();
-//                    makeSendingMessageAsFailed();
+                    if (isServiceStop) {
+                        stopMeshProcess();
+                    }
                 }, Throwable::printStackTrace));
     }
 
@@ -435,20 +443,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    /*public void makeSendingMessageAsFailed() {
-
-        compositeDisposable.add(updateMessageStatus()
-                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
-                    stopMeshProcess();
-                }, Throwable::printStackTrace));
-    }
-
-    private Single<Long> updateMessageStatus() {
-        return Single.fromCallable(() -> MessageSourceData.getInstance()
-                .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
-                        Constants.MessageStatus.STATUS_FAILED));
-    }*/
-
     /**
      * Concern for this api stopping RM service from app layer
      */
@@ -456,8 +450,31 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.stopMeshService();
     }
 
+    /**
+     * This api called when all of app layer dependencies are removed,
+     * i.e. update user status to offline successfully then called this method
+     */
     private void stopMeshProcess() {
         rightMeshDataSource.stopMeshProcess();
+    }
+
+    public void resetUserToOfflineBasedOnService() {
+        boolean isServiceEnable = isMeshServiceRunning();
+        Log.v("MIMO_SAHA:", "PP: " + isServiceEnable);
+        if (!isServiceEnable) {
+            updateUserStatus(false);
+        }
+    }
+
+    public boolean isMeshServiceRunning() {
+        Context context = TeleMeshApplication.getContext();
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (MeshService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

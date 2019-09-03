@@ -55,5 +55,6 @@
     <string name="unicef">UNICEF</string>
     <string name="mesh_not_initiated">মেস সেটআপ এখনো প্রক্রিয়াধীন</string>
     <string name="settings_open_log">Device Log</string>
+    <string name="badge_count_more_than_99">99+</string>
 
 </resources>

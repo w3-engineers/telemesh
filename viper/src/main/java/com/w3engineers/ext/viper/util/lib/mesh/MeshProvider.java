@@ -42,7 +42,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_t1-";
+    private String NETWORK_PREFIX = "telemesh_t6-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
@@ -151,8 +151,11 @@ public class MeshProvider implements LinkStateListener {
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
 
         HandlerUtil.postBackground(() -> {
+            // If you send data directly without ping then enable this api
+            // and after the following lines should be comment out
+            directSend(nodeId, isActive);
 
-            boolean isUserExist = false;
+            /*boolean isUserExist = false;
 
             if (providerCallback != null) {
                 int userConnectivityStatus = isActive ? getUserActiveStatus(nodeId) : 0;
@@ -165,8 +168,16 @@ public class MeshProvider implements LinkStateListener {
                 } else {
                     peerRemoved(nodeId);
                 }
-            }
+            }*/
         });
+    }
+
+    private void directSend(String nodeId, boolean isActive) {
+        if (isActive) {
+            sendMyInfo(nodeId);
+        } else {
+            peerRemoved(nodeId);
+        }
     }
 
     private void pingedNodeId(String nodeId) {
@@ -206,8 +217,13 @@ public class MeshProvider implements LinkStateListener {
 
         if (meshData != null) {
             String sendId = UUID.randomUUID().toString();
-            sendDataToMesh(nodeId, meshData, sendId);
+            sendProfileDataToMesh(nodeId, meshData, sendId);
         }
+    }
+
+    private void sendProfileDataToMesh(String nodeId, MeshData meshData, String sendId) {
+        byte[] data = MeshDataProcessor.getInstance().getDataFormatToJson(meshData);
+        transportManager.sendUserInfo(myUserId, nodeId, sendId, data);
     }
 
     private void sendDataToMesh(String nodeId, MeshData meshData, String sendId) {

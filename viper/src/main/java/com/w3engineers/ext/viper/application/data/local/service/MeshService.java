@@ -95,11 +95,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         new BaseRmServiceNotificationHelper(this).stopForegroundService();
         stopTheService(true);
         stopSelf();
-//        Process.killProcess(Process.myPid());
     }
 
     public void stopProcess() {
-        Log.v("MIMO_SAHA:", "Killed: ");
         Process.killProcess(Process.myPid());
     }
 

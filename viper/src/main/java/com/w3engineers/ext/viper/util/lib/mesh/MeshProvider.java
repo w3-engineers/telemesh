@@ -42,7 +42,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_t6-";
+    private String NETWORK_PREFIX = "telemesh_t7-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
@@ -114,6 +114,8 @@ public class MeshProvider implements LinkStateListener {
         boolean isNodeExist(String nodeId, int activeStatus);
 
         void showMeshLog(String log);
+
+        void onlyNodeDiscover(String nodeId);
     }
 
     @Override
@@ -153,6 +155,11 @@ public class MeshProvider implements LinkStateListener {
         HandlerUtil.postBackground(() -> {
             // If you send data directly without ping then enable this api
             // and after the following lines should be comment out
+
+            if (providerCallback != null && isActive) {
+                providerCallback.onlyNodeDiscover(nodeId);
+            }
+
             directSend(nodeId, isActive);
 
             /*boolean isUserExist = false;

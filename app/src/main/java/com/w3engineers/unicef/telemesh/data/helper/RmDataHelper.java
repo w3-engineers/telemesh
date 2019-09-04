@@ -130,6 +130,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         syncUserWithBroadcastMessage(userId);
     }
 
+    public void onlyNodeAdd(String nodeId) {
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
+
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        UserEntity userEntity = new UserEntity().setUserName("").setAvatarIndex(-1).setMeshId(nodeId).setOnlineStatus(userConnectivityStatus);
+
+        UserDataSource.getInstance().insertOrUpdateData(userEntity);
+
+    }
+
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);

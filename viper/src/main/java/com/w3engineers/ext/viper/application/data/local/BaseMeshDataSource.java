@@ -214,6 +214,8 @@ public abstract class BaseMeshDataSource {
 
     protected abstract void showLog(String log);
 
+    protected abstract void nodeIdDiscovered(String nodeId);
+
     /**
      * Overridable method to receive the event of library destroy
      * @throws RemoteException
@@ -259,6 +261,11 @@ public abstract class BaseMeshDataSource {
         @Override
         public void showMeshLog(String log) throws RemoteException {
             showLog(log);
+        }
+
+        @Override
+        public void nodeDiscovered(String nodeId) throws RemoteException {
+            nodeIdDiscovered(nodeId);
         }
     };
 }

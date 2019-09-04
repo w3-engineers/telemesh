@@ -180,6 +180,11 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
+    protected void nodeIdDiscovered(String nodeId) {
+        RmDataHelper.getInstance().onlyNodeAdd(nodeId);
+    }
+
+    @Override
     protected void onRmOff() {
         RmDataHelper.getInstance().stopMeshService();
     }

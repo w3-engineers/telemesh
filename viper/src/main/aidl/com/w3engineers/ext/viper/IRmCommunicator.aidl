@@ -23,4 +23,6 @@ interface IRmCommunicator {
     boolean isNodeExist(in String nodeId, in int isActive);
 
     void showMeshLog(in String log);
+
+    void nodeDiscovered(in String nodeId);
 }

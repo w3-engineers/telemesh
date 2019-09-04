@@ -302,4 +302,15 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onlyNodeDiscover(String nodeId) {
+        try {
+            if (getInfo != null) {
+                getInfo.nodeDiscovered(nodeId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 }

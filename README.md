@@ -25,8 +25,8 @@ We intend to make use of mesh network. It allows for multi-hop, peer-to-peer con
 
 For UNICEF, we plan to develop an open source messaging app to be tested in refugee camps, specifically, Cox’s Bazar, Bangladesh. A broadcast channel would allow UNICEF to push vital information to smartphone users about services like vaccination clinics, maternity clinics and schools. The app would also allow refugees to message one another even if they do not have a SIM card or cellular data.
 
+<iframe src="https://drive.google.com/file/d/1lD5_FyceXP2DiTiiw4NGqGKo6yzGjhsT/preview" width="640" height="480"></iframe>
 
-<kbd><img src="https://github.com/w3-engineers/telemesh/blob/feature/readme_diagram_update/mesh.png" align="center"></kbd>
 
 ## Feature list
 * One to one messaging

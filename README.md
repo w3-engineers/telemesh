@@ -6,11 +6,15 @@
 
 # Telemesh
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE-OF-CONDUCT.md)
 [![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
 [![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
 [![Lint tool: TeleMesh](https://img.shields.io/badge/Lint_tool-telemesh-2e99e9.svg?style=flat)](https://w3-engineers.github.io/telemesh/lint_reports/lint-report.html)
 
 A mesh network based off-grid messaging application supported by blockchain technology.
+
+## Mission Statement
+The freedom of connectivity to the edge of the world
 
 ## Project Overview
 ### Background
@@ -21,8 +25,7 @@ We intend to make use of mesh network. It allows for multi-hop, peer-to-peer con
 
 For UNICEF, we plan to develop an open source messaging app to be tested in refugee camps, specifically, Cox’s Bazar, Bangladesh. A broadcast channel would allow UNICEF to push vital information to smartphone users about services like vaccination clinics, maternity clinics and schools. The app would also allow refugees to message one another even if they do not have a SIM card or cellular data.
 
-
-<kbd><img src="http://gdurl.com/5ujQ" align="center"></kbd>
+<kbd><img src="https://drive.google.com/uc?export=view&id=1lD5_FyceXP2DiTiiw4NGqGKo6yzGjhsT" align="center"></kbd>
 
 ## Feature list
 * One to one messaging

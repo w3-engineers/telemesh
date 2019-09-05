@@ -30,6 +30,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -617,6 +618,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private BroadcastCommand getBroadcastCommand() {
         Payload payload = new Payload();
+
+        GeoLocation geoLocation = new GeoLocation()
+                .setLatitude("22.845272").setLongitude("89.531472");
+
+        payload.setGeoLocation(geoLocation);
+        payload.setConnectedClients("2");
+
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)
                 .setBaseStationId(getMyMeshId())

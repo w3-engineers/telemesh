@@ -12,6 +12,13 @@ public class Payload {
     @Expose
     private String messageId;
 
+    @SerializedName("geoLocation")
+    @Expose
+    private GeoLocation geoLocation;
+    @SerializedName("connectedClients")
+    @Expose
+    private String connectedClients;
+
     @Nullable
     public String getMessageId() {
         return messageId;
@@ -21,6 +28,22 @@ public class Payload {
     public Payload setMessageId(@Nullable String messageId) {
         this.messageId = messageId;
         return this;
+    }
+
+    public GeoLocation getGeoLocation() {
+        return geoLocation;
+    }
+
+    public void setGeoLocation(GeoLocation geoLocation) {
+        this.geoLocation = geoLocation;
+    }
+
+    public String getConnectedClients() {
+        return connectedClients;
+    }
+
+    public void setConnectedClients(String connectedClients) {
+        this.connectedClients = connectedClients;
     }
 
 }

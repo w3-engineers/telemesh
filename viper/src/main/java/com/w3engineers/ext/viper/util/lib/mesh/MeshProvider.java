@@ -42,7 +42,7 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_t7-";
+    private String NETWORK_PREFIX = "telemesh_t8-";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
@@ -93,7 +93,7 @@ public class MeshProvider implements LinkStateListener {
 
     public void restartMesh() {
         if (transportManager != null) {
-            transportManager.restart();
+            transportManager.startMesh();
         }
     }
 

@@ -31,13 +31,13 @@ android {
         }
         release {
 
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
-
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
     }
@@ -68,6 +68,12 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
+
+//    externalNativeBuild {
+//        cmake {
+//            path 'src/CMakeLists.txt'
+//        }
+//    }
 
 }
 
@@ -138,6 +144,10 @@ dependencies {
     implementation deps.protobuf.lite
     implementation deps.dexter.dexter
     implementation deps.appshare.share
+
+    implementation deps.parse.server
+    implementation deps.work.runtime
+    implementation deps.work.testing
 
     api deps.framework
     api deps.mesh

@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
  * Using the Room database as a data source.
@@ -106,6 +107,14 @@ public class UserDataSource{
         mUserDao.deleteUser(userId);
     }
 
+    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers() {
+        return mUserDao.getUnSyncedUsers();
+    }
+
+    public int updateUserSynced() {
+        return mUserDao.updateUserToSynced();
+    }
+
     @SuppressLint("LintError")
     @NonNull
     public List<UserEntity> getLivePeers(){
@@ -119,5 +128,9 @@ public class UserDataSource{
             return null;
         }*/
 
+    }
+
+    public int updateUserStatus(String userId, int activityStatus) {
+        return mUserDao.updateUserStatus(userId, activityStatus);
     }
 }

@@ -92,6 +92,10 @@ public class MessageSourceData {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
+    public Flowable<Integer> getBlockMessageInfoForSync() {
+        return messageDao.getBlockMessageInfoForSync();
+    }
+
     // This api is not used in app layer
     /*public Boolean hasChatEntityExist(String friendsId, String messageId) {
         return messageDao.hasChatEntityExist(friendsId, messageId);

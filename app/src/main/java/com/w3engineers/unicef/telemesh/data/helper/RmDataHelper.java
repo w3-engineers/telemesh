@@ -3,19 +3,28 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
 import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -56,12 +65,15 @@ import timber.log.Timber;
  */
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
+    public native String getBroadCastUrl();
+
+    public native String getBroadcastToken();
+
+
     private static RmDataHelper rmDataHelper = new RmDataHelper();
     private MeshDataSource rightMeshDataSource;
 
     private DataSource dataSource;
-
-    private HashMap<String, RMUserModel> rmUserMap;
 
     @SuppressLint("UseSparseArrays")
     @NonNull
@@ -70,7 +82,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
-        rmUserMap = new HashMap<>();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
 
@@ -106,10 +117,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull RMUserModel rmUserModel) {
 
         String userId = rmUserModel.getUserId();
-        if (rmUserMap.containsKey(userId))
-            return;
-
-        rmUserMap.put(userId, rmUserModel);
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(rmUserModel)
@@ -117,6 +124,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+    }
+
+    public boolean userExistedOperation(String userId, boolean isActive) {
+        int updateId = UserDataSource.getInstance()
+                .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
+
+        if (updateId > 0 && isActive) {
+            syncUserWithBroadcastMessage(userId);
+        }
+
+        return updateId > 0;
     }
 
     /**
@@ -129,32 +147,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userLeave(@NonNull MeshPeer meshPeer) {
 
         String userId = meshPeer.getPeerId();
-
-        if (rmUserMap.containsKey(userId)) {
-
-            RMUserModel rmUserModel = rmUserMap.get(userId);
-            rmUserMap.remove(userId);
-
-            if (rmUserModel != null) {
-                UserEntity userEntity = new UserEntity()
-                        .toUserEntity(rmUserModel)
-                        .setLastOnlineTime(TimeUtil.toCurrentTime())
-                        .setOnline(false);
-
-                UserDataSource.getInstance().insertOrUpdateData(userEntity);
-            }
-        }
+        UserDataSource.getInstance().updateUserStatus(userId, Constants.UserStatus.OFFLINE);
     }
 
     /**
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
      * sent via RM.
-     *
+     * <p>
      * Only for outgoing message this method will be responsible
      */
     @SuppressLint("CheckResult")
     public void prepareDataObserver() {
+
+        AnalyticsDataHelper.getInstance().analyticsDataObserver();
+
         compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
@@ -194,6 +201,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setRawData(ByteString.copyFrom(data))
                 .setDataType(type);
 
+        Log.v("MIMO_SAHA:", "User Id: " + userId);
+
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, userId));
     }
@@ -212,9 +221,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         boolean isAckSuccess = rmDataModel.getIsAckSuccess();
 
         switch (dataType) {
-            case Constants.DataType.USER:
-                break;
-
             case Constants.DataType.MESSAGE:
                 setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
@@ -222,41 +228,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.MESSAGE_FEED:
                 setBulletinMessage(rawData, userId, isNewMessage, isAckSuccess);
                 break;
-        }
-    }
 
-    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
-        try {
-
-            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
-                    .mergeFrom(rawBulletinData).build();
-
-            FeedEntity feedEntity = new FeedEntity()
-                    .toFeedEntity(teleMeshBulletin);
-
-            if (isNewMessage) {
-                feedEntity.setFeedReadStatus(false);
-
-                compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
-                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
-                        .subscribe(aLong -> {
-                            if (aLong != -1) {
-                                BulletinDataSource.getInstance().insertOrUpdate(
-                                        getMyTrackEntity(feedEntity.getFeedId())
-                                                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
-                                                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
-                            }
-                        }, Throwable::printStackTrace));
-            } else {
-
-                BulletinDataSource.getInstance().insertOrUpdate(
-                        getOthersTrackEntity(feedEntity.getFeedId(), userId)
-                                .setBulletinAckStatus(isAckSuccess ?
-                                        Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            case Constants.DataType.MESSAGE_COUNT:
+                setAnalyticsMessageCount(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.APP_SHARE_COUNT:
+                saveAppShareCount(rawData, isAckSuccess);
+                break;
         }
     }
 
@@ -302,6 +280,91 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
+    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
+        try {
+
+            TeleMeshBulletin teleMeshBulletin = TeleMeshBulletin.newBuilder()
+                    .mergeFrom(rawBulletinData).build();
+
+            FeedEntity feedEntity = new FeedEntity()
+                    .toFeedEntity(teleMeshBulletin);
+
+            if (isNewMessage) {
+                feedEntity.setFeedReadStatus(false);
+
+                compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
+                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
+                        .subscribe(aLong -> {
+                            if (aLong != -1) {
+                                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
+                                    BulletinDataSource.getInstance().insertOrUpdate(
+                                            getMyTrackEntity(feedEntity.getFeedId())
+                                                    .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
+                                                    .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
+                                }
+                            }
+                        }, Throwable::printStackTrace));
+            } else {
+                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
+                    BulletinDataSource.getInstance().insertOrUpdate(
+                            getOthersTrackEntity(feedEntity.getFeedId(), userId)
+                                    .setBulletinAckStatus(isAckSuccess ?
+                                            Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
+        try {
+            if (!isAck) {
+                MessageCount messageCount = MessageCount.newBuilder()
+                        .mergeFrom(rawMessageCountAnalyticsData).build();
+
+                MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity
+                        .MessageAnalyticsEntity().toMessageAnalyticsEntity(messageCount);
+
+                AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, messageAnalyticsEntity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
+        try {
+            AppShareCount appShareCount = AppShareCount.newBuilder().mergeFrom(rawData).build();
+            AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(appShareCount);
+
+            if (!isAckSuccess) {
+                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
+                        .insertAppShareCount(entity))
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(longResult -> {
+                            if (longResult > 1) {
+                                Log.d("AppShareCount", "Data saved");
+                            }
+                        }, Throwable::printStackTrace));
+
+
+            } else {
+                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
+                        .updateSentShareCount(entity.getUserId(), entity.getDate()))
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(longResult -> {
+                            if (longResult > 1) {
+                                Log.d("AppShareCount", "Data Deleted");
+                            }
+                        }, Throwable::printStackTrace));
+            }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * When we got any ack message from RM this API is responsible
@@ -334,7 +397,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateUserStatus() {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    makeSendingMessageAsFailed();
+                    stopMeshProcess();
+//                    makeSendingMessageAsFailed();
                 }, Throwable::printStackTrace));
     }
 
@@ -343,7 +407,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    public void makeSendingMessageAsFailed() {
+    /*public void makeSendingMessageAsFailed() {
 
         compositeDisposable.add(updateMessageStatus()
                 .subscribeOn(Schedulers.io()).subscribe(aLong -> {
@@ -355,7 +419,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return Single.fromCallable(() -> MessageSourceData.getInstance()
                 .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
                         Constants.MessageStatus.STATUS_FAILED));
-    }
+    }*/
 
     /**
      * Concern for this api stopping RM service from app layer
@@ -410,11 +474,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
 
-            compositeDisposable.add(Single.fromCallable(()-> FeedDataSource.getInstance()
+            compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
                     .subscribe(aLong -> {
                         if (aLong != -1) {
-                            BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(feedEntity.getFeedId()));
+                            if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
+                                BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(feedEntity.getFeedId()));
+                            }
                             broadcastMessage(feedEntity);
                         }
                     }, Throwable::printStackTrace));
@@ -424,7 +490,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void broadcastMessage (@NonNull FeedEntity feedEntity){
+    public void broadcastMessage(@NonNull FeedEntity feedEntity) {
 
         List<String> meshDataList = new ArrayList<>();
 
@@ -432,8 +498,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             meshDataList.add(userEntity.meshId);
 
-            BulletinDataSource.getInstance().insertOrUpdate(
-                    getOthersTrackEntity(feedEntity.getFeedId(), userEntity.meshId));
+            if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
+                BulletinDataSource.getInstance().insertOrUpdate(
+                        getOthersTrackEntity(feedEntity.getFeedId(), userEntity.meshId));
+            }
         }
 
         RMDataModel.Builder rmDataModel = RMDataModel.newBuilder()
@@ -456,8 +524,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (feedEntities != null) {
             for (FeedEntity feedEntity : feedEntities) {
 
-                BulletinDataSource.getInstance().insertOrUpdate(
-                        getOthersTrackEntity(feedEntity.getFeedId(), userId));
+                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
+                    BulletinDataSource.getInstance().insertOrUpdate(
+                            getOthersTrackEntity(feedEntity.getFeedId(), userId));
+                }
 
                 dataSend(feedEntity.toTelemeshBulletin().toByteArray(), Constants.DataType.MESSAGE_FEED, userId);
             }
@@ -470,7 +540,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             compositeDisposable.add(BulletinDataSource.getInstance()
                     .setFullSuccess(ackCommand.getAckMsgId(), ackCommand.getClientId())
                     .subscribeOn(Schedulers.newThread())
-                    .subscribe(integer -> {}, Throwable::printStackTrace));
+                    .subscribe(integer -> {
+                    }, Throwable::printStackTrace));
         }
     }
 
@@ -499,7 +570,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         Payload payload = new Payload().setMessageId(messageId);
         return new BroadcastCommand().setEvent("ack_msg_received")
                 .setToken(BuildConfig.BROADCAST_TOKEN)
-                .setClientId(getMyMeshId())
+                .setBaseStationId(getMyMeshId())
                 .setClientId(userId)
                 .setPayload(payload);
     }
@@ -518,6 +589,73 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setBulletinTrackUserId(userId)
                 .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND)
                 .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
+    }
+
+    ////////////////////////////////////////////////////////////////
+    ////////////////// Analytics data Process //////////////////////
+    ////////////////////////////////////////////////////////////////
+
+    public void analyticsDataSendToSellers(MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
+
+        MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
+
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(messageCount.toByteArray(), Constants.DataType.MESSAGE_COUNT, sellersId);
+        }
+
+    }
+
+    public void sendAppShareCount() {
+        if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
+            sendAppShareCountAnalytics();
+        } else {
+            compositeDisposable.add(AppShareCountDataService.getInstance()
+                    .getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
+        }
+    }
+
+    /**
+     * Send data to local user (Seller)
+     */
+    private void sendAppShareCountToSellers(List<AppShareCountEntity> entityList) {
+        for (AppShareCountEntity entity : entityList) {
+            AppShareCount appShareCount = entity.toAnalyticAppShareCount();
+
+            for (String sellersId : rightMeshDataSource.getAllSellers()) {
+                dataSend(appShareCount.toByteArray(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+            }
+        }
+    }
+
+    /**
+     * Send data to server
+     */
+    public void sendAppShareCountAnalytics() {
+        compositeDisposable.add(AppShareCountDataService.getInstance()
+                .getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(countList -> {
+                    AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(countList);
+                }, Throwable::printStackTrace));
+    }
+
+    public void newUserAnalyticsSend() {
+        compositeDisposable.add(Single.fromCallable(() ->
+                UserDataSource.getInstance().getUnSyncedUsers())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(newMeshUserCounts -> {
+                    AnalyticsDataHelper.getInstance().processNewNodesForAnalytics(newMeshUserCounts);
+                }, Throwable::printStackTrace));
+    }
+
+    public void updateSyncedUser() {
+        compositeDisposable.add(Single.fromCallable(() ->
+                UserDataSource.getInstance().updateUserSynced())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(syncedUserCounts -> {
+                }, Throwable::printStackTrace));
     }
 
     @Override

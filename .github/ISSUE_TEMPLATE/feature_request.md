@@ -7,14 +7,29 @@ assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+<!--- Provide a general summary of the feature/request in the Title above -->
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+## I'm submitting a ...
+<!--- Tell us whether this is a feature suggestion or a request for support -->
+  - [ ] feature request
+  - [ ] support request
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Expected Behavior
+<!--- Tell us what should happen -->
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+## Actual Behavior
+<!--- Tell us what happens instead -->
+
+
+## What is the motivation / use case for changing the behavior?
+<!-- Why do you think this feature is warrented -->
+
+
+## Your Environment
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+* App version used:
+* Device Name and version:
+* Operating System and version:
+
+
+* **Other information** (e.g. detailed explanation, stacktraces, related issues, suggestions how to fix, links for us to have context, eg. stackoverflow, gitter, etc)

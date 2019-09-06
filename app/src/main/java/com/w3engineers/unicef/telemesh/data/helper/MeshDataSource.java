@@ -52,9 +52,12 @@ public class MeshDataSource extends BaseMeshDataSource {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 
+            SharedPref sharedPref = SharedPref.getSharedPref(context);
+
             RMUserModel rmUserMe = RMUserModel.newBuilder()
-                    .setUserName(SharedPref.getSharedPref(context).read(Constants.preferenceKey.USER_NAME))
-                    .setImageIndex(SharedPref.getSharedPref(context).readInt(Constants.preferenceKey.IMAGE_INDEX))
+                    .setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME))
+                    .setImageIndex(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                    .setRegistrationTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME))
                     .build();
 
             byte[] bytes = rmUserMe.toByteArray();
@@ -184,6 +187,11 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
+    protected boolean isNodeAvailable(String nodeId, boolean isActive) {
+        return RmDataHelper.getInstance().userExistedOperation(nodeId, isActive);
+    }
+
+    @Override
     protected void onRmOff() {
         RmDataHelper.getInstance().stopMeshService();
     }
@@ -193,6 +201,5 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     protected void resetMeshService() {
         restartMesh();
-//        rightMeshDataSource = null;
     }
 }

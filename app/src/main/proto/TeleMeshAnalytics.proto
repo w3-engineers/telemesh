@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.w3engineers.unicef.telemesh;
+
+message TeleMeshAnalytics {
+
+}
+
+message MessageCount {
+    string userId = 1;
+    int32 messageSetCount = 2;
+    int64 lastMessageTime = 3;
+}
+
+message AppShareCount {
+    string userId = 1;
+    int32 shareCount = 2;
+    string date = 3;
+}

@@ -8,7 +8,9 @@ import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
 import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.*;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -75,5 +77,50 @@ public class MessageEntity extends ChatEntity {
                 .setTime(teleMeshChat.getMessageTime());
 
         return messageEntity;
+    }
+
+    public static class MessageAnalyticsEntity {
+
+        @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_TIME)
+        public long time;
+
+        public int syncMessageCountToken;
+
+        public String userId;
+
+        public MessageAnalyticsEntity setTime(long time) {
+            this.time = time;
+            return this;
+        }
+
+        public MessageAnalyticsEntity setSyncMessageCountToken(int syncMessageCountToken) {
+            this.syncMessageCountToken = syncMessageCountToken;
+            return this;
+        }
+
+        public MessageAnalyticsEntity setUserId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public MessageCount toAnalyticMessageCount() {
+            return MessageCount.newBuilder().setLastMessageTime(time)
+                    .setMessageSetCount(syncMessageCountToken)
+                    .setUserId(userId)
+                    .build();
+        }
+
+        public MessageAnalyticsEntity toMessageAnalyticsEntity(MessageCount messageCount) {
+            return setSyncMessageCountToken(messageCount.getMessageSetCount())
+                    .setTime(messageCount.getLastMessageTime())
+                    .setUserId(messageCount.getUserId());
+        }
+
+        public MessageCountModel toMessageCountModel() {
+            return new MessageCountModel()
+                    .setUserId(userId)
+                    .setMsgCount(syncMessageCountToken)
+                    .setMsgTime(time);
+        }
     }
 }

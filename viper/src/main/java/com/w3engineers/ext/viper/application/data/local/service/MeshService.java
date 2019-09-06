@@ -28,6 +28,7 @@ import com.w3engineers.ext.viper.application.data.remote.service.BaseRmServiceNo
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MeshService extends Service implements MeshProvider.ProviderCallback {
@@ -184,6 +185,14 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
                 meshProvider.restartMesh();
             }
         }
+
+        @Override
+        public List<String> getCurrentSellers() throws RemoteException {
+            if (meshProvider != null) {
+                return meshProvider.getAllSellers();
+            }
+            return new ArrayList<>();
+        }
     };
 
     @Nullable
@@ -263,5 +272,17 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isNodeExist(String nodeId, boolean isActive) {
+        try {
+            if (getInfo != null) {
+                return getInfo.isNodeExist(nodeId, isActive);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

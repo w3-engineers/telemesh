@@ -16,6 +16,9 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgeme
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 ============================================================================
 Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
@@ -118,6 +121,17 @@ public abstract class BaseMeshDataSource {
         }
     }
 
+    public List<String> getAllSellers() {
+        try {
+            if(iSetInfo != null){
+                return iSetInfo.getCurrentSellers();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     /**
      * To check underlying service properly initiated or not
      * @return true if connected
@@ -185,6 +199,8 @@ public abstract class BaseMeshDataSource {
 
     protected abstract String getOwnUserId();
 
+    protected abstract boolean isNodeAvailable(String nodeId, boolean isActive);
+
     /**
      * Overridable method to receive the event of library destroy
      * @throws RemoteException
@@ -220,6 +236,11 @@ public abstract class BaseMeshDataSource {
         @Override
         public void onMeshAcknowledgement(MeshAcknowledgement meshAcknowledgement) throws RemoteException {
             onAcknowledgement(meshAcknowledgement);
+        }
+
+        @Override
+        public boolean isNodeExist(String nodeId, boolean isActive) throws RemoteException {
+            return isNodeAvailable(nodeId, isActive);
         }
     };
 }

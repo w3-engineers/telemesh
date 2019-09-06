@@ -18,6 +18,8 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_CUSTOM_ID = "custom_id";
     String COLUMN_USER_LAST_ONLINE_TIME = "last_online_time";
     String COLUMN_USER_IS_ONLINE = "is_online";
+    String COLUMN_USER_IS_SYNCED = "is_synced";
+    String COLUMN_USER_REGISTRATION_TIME = "registration_time";
 
 
     /**
@@ -50,5 +52,14 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_BULLETIN_TRACK_USER_ID = "bulletin_track_user_id";
     String COLUMN_BULLETIN_ACK_STATUS = "bulletin_ack_status";
     String COLUMN_BULLETIN_OWNER_STATUS = "bulletin_owner_status";
+
+    /*
+     * AppShareCount
+     * */
+
+    String COLUMN_USER_ID = "user_id";
+    String COLUMN_COUNT = "count";
+    String COLUMN_DATE = "date";
+    String COLUMN_IS_SEND = "is_send";
 
 }

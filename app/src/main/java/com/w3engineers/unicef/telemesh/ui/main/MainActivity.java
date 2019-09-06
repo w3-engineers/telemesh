@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,17 +12,28 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.work.WorkInfo;
+
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.TimeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
@@ -63,6 +75,26 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
         mViewModel = getViewModel();
+
+        // set new user count analytics so that the work manager will trigger
+        mViewModel.setUserCountWorkRequest();
+        mViewModel.setServerAppShareCountWorkerRequest();
+        mViewModel.setLocalAppShareCountWorkerRequest();
+
+        mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
+
+            // If there are no matching work info, do nothing
+            if (workInfos == null || workInfos.isEmpty()) {
+                return;
+            }
+
+            // We only care about the first output status.
+            WorkInfo workInfo = workInfos.get(0);
+
+            boolean finished = workInfo.getState().isFinished();
+
+
+        });
         //when  counting need to add
         /*
         mViewModel.getMessageCount().observe(this, messageCount -> {
@@ -74,6 +106,17 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
 //        mViewModel.makeSendingMessageAsFailed();
 
+
+       /* new Handler().postDelayed(() -> {
+            AppShareCountEntity entity = new AppShareCountEntity();
+            entity.setCount(1);
+            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            entity.setUserId(myId);
+            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
+            List<AppShareCountEntity> list = new ArrayList<>();
+            list.add(entity);
+            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
+        }, 10000);*/
     }
 
     private MainActivityViewModel getViewModel() {

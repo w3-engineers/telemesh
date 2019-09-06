@@ -23,6 +23,8 @@ public class Constants {
         String APP_LANGUAGE_DISPLAY = "app_language_display";
         String COMPANY_NAME = "company_name";
         String COMPANY_ID = "company_id";
+        String MY_REGISTRATION_TIME = "registration_time";
+        String MY_SYNC_IS_DONE = "my_sync_is_done";
     }
 
     public interface drawables {
@@ -40,16 +42,18 @@ public class Constants {
 
     public interface DataType {
         //RM data type
-        byte USER = 0x1;
+        // Restricted for 1 and 3 for type
         byte MESSAGE = 0x2;
-        byte SURVEY = 0x3;
+        byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;
-        byte BROADCAST_MESSAGE = 0x5;
+        byte APP_SHARE_COUNT = 0x6;
     }
 
     public interface MessageType {
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
+        int MESSAGE_INCOMING = 1;
+        int MESSAGE_OUTGOING = 0;
     }
 
     public interface UserStatus {
@@ -59,6 +63,8 @@ public class Constants {
 
     public interface AppConstant {
         long LOADING_TIME = 30 * 1000;
+        int MESSAGE_SYNC_PLOT = 10;
+        int DEFAULT = 0;
     }
 
     public interface Bulletin {
@@ -69,5 +75,11 @@ public class Constants {
 
         int MINE = 1;
         int OTHERS = 0;
+    }
+
+    public interface AnalyticsResponseType {
+        byte MESSAGE_COUNT = 1;
+        byte NEW_USER_COUNT = 2;
+        byte APP_SHARE_COUNT = 3;
     }
 }

@@ -93,6 +93,37 @@ public class MeshData extends BaseMeshData implements Parcelable {
         return buffer.array();
     }
 
+    public static byte[] getPingData(MeshData meshData) {
+        if (meshData == null)
+            return null;
+
+        ByteBuffer buffer;
+        String peerId = meshData.mPeerId;
+        byte hasPeer;
+
+        if (TextUtils.isEmpty(peerId)) {
+            hasPeer = 0;
+            buffer = ByteBuffer.allocate(1 + 1);
+            buffer.put(meshData.mType);
+            buffer.put(hasPeer);
+        } else {
+
+            hasPeer = 1;
+            byte[] peerByte = peerId.getBytes();
+
+            byte length = (byte) peerByte.length;
+            buffer = ByteBuffer.allocate(1 + 1 + 1 + peerByte.length);
+            buffer.put(meshData.mType);
+            buffer.put(hasPeer);
+            buffer.put(length);
+            buffer.put(peerByte);
+        }
+
+        return buffer.array();
+    }
+
+
+
     public static MeshData setMeshData(byte[] meshDataBytes) {
 
         if(meshDataBytes == null || meshDataBytes.length < 2) {
@@ -117,10 +148,12 @@ public class MeshData extends BaseMeshData implements Parcelable {
 
             meshData.mPeerId = new String(peerByte);
 
-            byte[] peerData = new byte[byteBuffer.remaining()];
-            byteBuffer.get(peerData);
+            if (byteBuffer.hasRemaining()) {
+                byte[] peerData = new byte[byteBuffer.remaining()];
+                byteBuffer.get(peerData);
 
-            meshData.mData = Arrays.copyOfRange(peerData, 0, peerData.length);
+                meshData.mData = Arrays.copyOfRange(peerData, 0, peerData.length);
+            }
         }
 
 

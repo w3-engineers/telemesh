@@ -13,6 +13,9 @@
 
 A mesh network based off-grid messaging application supported by blockchain technology.
 
+## Mission Statement
+The freedom of connectivity to the edge of the world
+
 ## Project Overview
 ### Background
 Globally, 68.5 million people are forcibly displaced at the time of writing this readme, and over 25.4 million are refugees. In Bangladesh, there are over 650,000 Rohingya refugees who have fled violence, mass killings and sexual abuse from neighboring Myanmar.2 Of those, nearly 60% are children, many of whom are orphaned Distributing information about humanitarian services to large numbers of refugees poses significant challenges for NGOs like UNICEF. While 40% of rural refugee households have smartphones, many are unconnected due to a lack of or poor telecommunications infrastructure or unaffordable cellular costs. The UNHCR believes that connecting refugees would ultimately transform humanitarian operations.
@@ -22,8 +25,7 @@ We intend to make use of mesh network. It allows for multi-hop, peer-to-peer con
 
 For UNICEF, we plan to develop an open source messaging app to be tested in refugee camps, specifically, Cox’s Bazar, Bangladesh. A broadcast channel would allow UNICEF to push vital information to smartphone users about services like vaccination clinics, maternity clinics and schools. The app would also allow refugees to message one another even if they do not have a SIM card or cellular data.
 
-
-<kbd><img src="https://github.com/w3-engineers/telemesh/blob/feature/readme_diagram_update/mesh.png" align="center"></kbd>
+<kbd><img src="https://drive.google.com/uc?export=view&id=1lD5_FyceXP2DiTiiw4NGqGKo6yzGjhsT" align="center"></kbd>
 
 ## Feature list
 * One to one messaging

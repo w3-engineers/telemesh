@@ -42,7 +42,8 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_t8-";
+    private String WIFI_PREFIX = "bna.1";
+    private String BLE_PREFIX = "que";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
@@ -76,7 +77,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
         setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, SOCKET_URL, this);
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX,BLE_PREFIX, SOCKET_URL, this);
     }
 
 

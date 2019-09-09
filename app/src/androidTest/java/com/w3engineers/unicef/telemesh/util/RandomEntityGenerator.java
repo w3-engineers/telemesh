@@ -202,7 +202,7 @@ public class RandomEntityGenerator {
     }
 
     public MeshAcknowledgement createAckRmDataModel(String userId, long transferId) {
-        MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(transferId);
+        MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(String.valueOf(transferId));
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;
     }

@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class RmDataHelperTest {
+public class VRmDataHelperTest {
     private String msgBody;
     private String createdAt;
     private String date;

@@ -77,7 +77,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
         setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX,BLE_PREFIX, SOCKET_URL, this);
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, SOCKET_URL, this);
     }
 
 
@@ -217,6 +217,7 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * Send my info after discovering him
+     *
      * @param nodeId - The discovered node id
      */
     private void sendMyInfo(String nodeId) {
@@ -259,6 +260,7 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * By default data sent from Remote Service Binder thread
+     *
      * @param meshData - message send
      * @return - get the message send id
      */
@@ -279,7 +281,8 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * When any kind of message data we received
-     * @param msgOwner - Get my id
+     *
+     * @param msgOwner  - Get my id
      * @param frameData frame data received from remote device
      */
     @Override
@@ -310,8 +313,9 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * After successful deliver a frame we get message delivery id
+     *
      * @param messageId : Long message sent id
-     * @param status : boolean status true of success false otherwise
+     * @param status    : boolean status true of success false otherwise
      */
     @Override
     public void onMessageDelivered(String messageId, int status) {
@@ -343,7 +347,10 @@ public class MeshProvider implements LinkStateListener {
     }
 
     public int getUserActiveStatus(String userId) {
-        return transportManager.getLinkTypeById(userId);
+        if (transportManager != null) {
+            return transportManager.getLinkTypeById(userId);
+        }
+        return 0;
     }
 
     private BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {

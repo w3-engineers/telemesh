@@ -35,12 +35,15 @@ import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+
+import java.io.IOException;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -78,23 +81,31 @@ public class TeleMeshTest {
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
     private SharedPref sharedPref;
+    private AppDatabase appDatabase;
 
     @Before
     public void setUp() {
 
-        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+       // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        userDataSource = UserDataSource.getInstance();
 
         feedDataSource = FeedDataSource.getInstance();
 
-        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+        //messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+        messageSourceData = MessageSourceData.getInstance();
 
         randomEntityGenerator = new RandomEntityGenerator();
 
         Context context = InstrumentationRegistry.getTargetContext();
         sharedPref = SharedPref.getSharedPref(context);
+    }
+
+    @After
+    public void closeDb() throws IOException {
+        appDatabase.close();
     }
 
     // Registration process
@@ -456,6 +467,9 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
+        addDelay(700);
+        addDelay(700);
+        addDelay(700);
         addDelay(700);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());

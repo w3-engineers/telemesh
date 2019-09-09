@@ -54,9 +54,15 @@ public class AnalyticsDataHelperTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        /*userDataSource = UserDataSource.getInstance(appDatabase.userDao());
 
-        SUT = MessageSourceData.getInstance(appDatabase.messageDao());
+        SUT = MessageSourceData.getInstance(appDatabase.messageDao());*/
+
+        userDataSource = UserDataSource.getInstance();
+
+        SUT = MessageSourceData.getInstance();
+
+
         appShareCountDataService = AppShareCountDataService.getInstance();
 
         userId = UUID.randomUUID().toString();

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import org.junit.After;
@@ -101,7 +102,7 @@ public class UserDataSourceTest {
         SUT.updateUserToOffline();
 
         userEntity = SUT.getSingleUserById(meshId2);
-        assertFalse(userEntity != null && userEntity.getOnlineStatus());
+        assertFalse(userEntity != null && userEntity.getOnlineStatus() > Constants.UserStatus.OFFLINE);
 
         SUT.deleteUser(meshId1);
         userEntity = SUT.getSingleUserById(meshId1);
@@ -127,7 +128,7 @@ public class UserDataSourceTest {
                 .setCustomId(customId)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(lastOnlineTime)
-                .setOnlineStatus(true);
+                .setOnlineStatus(Constants.UserStatus.BLE_ONLINE);
     }
 
     private String getRandomString() {

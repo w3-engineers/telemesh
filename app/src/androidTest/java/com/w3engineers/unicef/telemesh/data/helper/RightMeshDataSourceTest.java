@@ -52,16 +52,21 @@ public class RightMeshDataSourceTest {
     private RandomEntityGenerator randomEntityGenerator;
     private long transferKey = 2381;
 
+    private AppDatabase appDatabase;
+
     @Before
     public void setUp() {
 
         randomEntityGenerator = new RandomEntityGenerator();
 
-        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
-        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+       // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+       // messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+
+        userDataSource = UserDataSource.getInstance();
+        messageSourceData = MessageSourceData.getInstance();
 
         Source source = new Source(appDatabase);
 
@@ -72,6 +77,11 @@ public class RightMeshDataSourceTest {
         SUT = new MeshDataSource(new Gson().toJson(userEntity.getProtoUser()).getBytes());
 
         SUT.onRmOn();
+    }
+
+    @After
+    public void tearDown() {
+        appDatabase.close();
     }
 
     @Test
@@ -141,7 +151,7 @@ public class RightMeshDataSourceTest {
         addDelay();
         UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
         addDelay();
-        assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus());
+        assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus() > Constants.UserStatus.OFFLINE);
     }
 
     @Test
@@ -256,8 +266,4 @@ public class RightMeshDataSourceTest {
         assertThat(retrieveChatEntity.getStatus(), greaterThanOrEqualTo(Constants.MessageStatus.STATUS_SENDING));
     }
 
-    @After
-    public void tearDown() {
-//        SUT.onRmOff();
-    }
 }

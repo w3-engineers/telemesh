@@ -57,7 +57,7 @@ public class MainActivityViewModelTest {
     public void testUserOfflineProcess_getOfflineState_afterOnlineState() {
 
         String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
+        userEntity.setMeshId(userMeshId).setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE);
 
         userDataSource.insertOrUpdateData(userEntity);
 
@@ -67,7 +67,7 @@ public class MainActivityViewModelTest {
         addDelay();
 
         UserEntity userEntity = userDataSource.getSingleUserById(userMeshId);
-        boolean isOnline = userEntity !=null && userEntity.getOnlineStatus();
+        boolean isOnline = userEntity !=null && userEntity.getOnlineStatus()>Constants.UserStatus.OFFLINE;
 
         assertFalse(isOnline);
     }

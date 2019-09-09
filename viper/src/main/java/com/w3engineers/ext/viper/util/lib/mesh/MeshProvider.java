@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.viper.BuildConfig;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
@@ -42,9 +43,9 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
+    //BT NAME
     private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";
-    private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -76,8 +77,8 @@ public class MeshProvider implements LinkStateListener {
         if (config == null || myProfileInfo == null)
             return;
 
-        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, SOCKET_URL, this);
+//        setLogBroadcastRegister();
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 
@@ -86,7 +87,7 @@ public class MeshProvider implements LinkStateListener {
             transportManager.stopMesh();
 
             if (providerCallback != null && isStopProcess) {
-                setLogBroadcastUnregister();
+//                setLogBroadcastUnregister();
                 providerCallback.meshStop();
             }
         }
@@ -157,13 +158,13 @@ public class MeshProvider implements LinkStateListener {
             // If you send data directly without ping then enable this api
             // and after the following lines should be comment out
 
-            if (providerCallback != null && isActive) {
+            /*if (providerCallback != null && isActive) {
                 providerCallback.onlyNodeDiscover(nodeId);
-            }
+            }*/
 
-            directSend(nodeId, isActive);
+//            directSend(nodeId, isActive);
 
-            /*boolean isUserExist = false;
+            boolean isUserExist = false;
 
             if (providerCallback != null) {
                 int userConnectivityStatus = isActive ? getUserActiveStatus(nodeId) : 0;
@@ -176,7 +177,7 @@ public class MeshProvider implements LinkStateListener {
                 } else {
                     peerRemoved(nodeId);
                 }
-            }*/
+            }
         });
     }
 
@@ -217,7 +218,6 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * Send my info after discovering him
-     *
      * @param nodeId - The discovered node id
      */
     private void sendMyInfo(String nodeId) {
@@ -260,7 +260,6 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * By default data sent from Remote Service Binder thread
-     *
      * @param meshData - message send
      * @return - get the message send id
      */
@@ -281,8 +280,7 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * When any kind of message data we received
-     *
-     * @param msgOwner  - Get my id
+     * @param msgOwner - Get my id
      * @param frameData frame data received from remote device
      */
     @Override
@@ -313,9 +311,8 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * After successful deliver a frame we get message delivery id
-     *
      * @param messageId : Long message sent id
-     * @param status    : boolean status true of success false otherwise
+     * @param status : boolean status true of success false otherwise
      */
     @Override
     public void onMessageDelivered(String messageId, int status) {

@@ -37,7 +37,7 @@ public class TeleMeshApplication extends MeshApp {
         LanguageUtil.setAppLanguage(base, language);
 
         initCredential();
-        LogProcessUtil.getInstance().loadAllLogs();
+//        LogProcessUtil.getInstance().loadAllLogs();
         AnalyticsApi.init(base);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
     }

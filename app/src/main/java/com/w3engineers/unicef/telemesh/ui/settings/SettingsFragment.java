@@ -13,26 +13,21 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.connectivitydiagram.ConnectivityDiagramActiviy;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.meshlog.ui.meshloghistory.MeshLogHistoryActivity;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
-import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.telemesh.ui.showlog.ShowLogActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
-import com.w3engineers.unicef.util.helper.TimeUtil;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
@@ -65,6 +60,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutDataPlan.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
         mBinding.layoutShowLog.setOnClickListener(this);
+        mBinding.layoutDiagramMap.setOnClickListener(this);
     }
 
     @Override
@@ -127,7 +123,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }
                 break;
             case R.id.layout_show_log:
-                startActivity(new Intent(getActivity(), ShowLogActivity.class));
+                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
+                break;
+            case R.id.layout_diagram_map:
+                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
                 break;
             default:
                 break;

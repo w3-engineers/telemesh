@@ -398,7 +398,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.layout_scroll),
                                                 0)),
-                                5)));
+                                7)));
         constraintLayout3.perform(scrollTo(), click());
 
         addDelay(700);
@@ -467,9 +467,6 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-        addDelay(700);
-        addDelay(700);
-        addDelay(700);
         addDelay(700);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());

@@ -3,6 +3,7 @@ package com.w3engineers.unicef.util.helper;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -91,7 +92,7 @@ public class LocationUtil {
     }
 
     private void requestLocation() {
-        mFusedLocationClient.requestLocationUpdates(getLocationRequest(), locationCallback, null);
+        mFusedLocationClient.requestLocationUpdates(getLocationRequest(), locationCallback, Looper.getMainLooper());
     }
 
     private LocationCallback locationCallback = new LocationCallback() {

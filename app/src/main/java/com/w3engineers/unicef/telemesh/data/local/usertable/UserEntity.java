@@ -7,7 +7,6 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMUserModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
@@ -37,7 +36,7 @@ public class UserEntity extends DbBaseEntity {
     public long lastOnlineTime;
 
     @ColumnInfo(name = ColumnNames.COLUMN_USER_IS_ONLINE)
-    public boolean isOnline;
+    public int isOnline;
 
     @ColumnInfo(name = ColumnNames.COLUMN_USER_REGISTRATION_TIME)
     public long registrationTime;
@@ -105,12 +104,12 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
-    public boolean isOnline() {
+    public int getOnlineStatus() {
         return isOnline;
     }
 
     @NonNull
-    public UserEntity setOnline(boolean online) {
+    public UserEntity setOnlineStatus(int online) {
         isOnline = online;
         return this;
     }
@@ -143,7 +142,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeString(this.customId);
         dest.writeInt(this.avatarIndex);
         dest.writeLong(this.lastOnlineTime);
-        dest.writeByte((byte) (isOnline ? 1 : 0));
+        dest.writeInt(isOnline);
         dest.writeLong(this.registrationTime);
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
@@ -156,7 +155,7 @@ public class UserEntity extends DbBaseEntity {
         this.customId = in.readString();
         this.avatarIndex = in.readInt();
         this.lastOnlineTime = in.readLong();
-        this.isOnline = in.readByte() != 0;
+        this.isOnline = in.readInt();
         this.registrationTime = in.readLong();
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();
@@ -175,11 +174,11 @@ public class UserEntity extends DbBaseEntity {
     };
 
     @NonNull
-    public RMUserModel getProtoUser() {
-        return RMUserModel.newBuilder()
-                .setUserName(getUserName())
-                .setImageIndex(getAvatarIndex())
-                .build();
+    public UserModel getProtoUser() {
+        return new UserModel()
+                .setName(getUserName())
+                .setImage(getAvatarIndex())
+                .setTime(getRegistrationTime());
     }
 
     // if lots of similar task holds in entity then ti should be used in util class
@@ -189,11 +188,11 @@ public class UserEntity extends DbBaseEntity {
     }
 
     @NonNull
-    public UserEntity toUserEntity(@NonNull RMUserModel rmUserModel) {
-        return setUserName(rmUserModel.getUserName())
-                .setAvatarIndex(rmUserModel.getImageIndex())
-                .setRegistrationTime(rmUserModel.getRegistrationTime())
-                .setMeshId(rmUserModel.getUserId());
+    public UserEntity toUserEntity(@NonNull UserModel userModel) {
+        return setUserName(userModel.getName())
+                .setAvatarIndex(userModel.getImage())
+                .setRegistrationTime(userModel.getTime())
+                .setMeshId(userModel.getUserId());
     }
 
     public static class NewMeshUserCount {

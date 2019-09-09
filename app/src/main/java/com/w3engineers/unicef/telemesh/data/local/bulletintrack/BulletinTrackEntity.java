@@ -9,13 +9,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
-import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 /**
  * This class represents BroadcastMessage which is broadcast through the local mesh.

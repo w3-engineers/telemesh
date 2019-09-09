@@ -11,6 +11,9 @@ Proprietary and confidential
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MeshDataManager {
 
     private static MeshDataManager meshLibManager = new MeshDataManager();
@@ -39,7 +42,6 @@ public class MeshDataManager {
         MeshData meshData = new MeshData();
         meshData.mData = myProfileInfo;
         meshData.mMeshPeer = new MeshPeer(myPeerId);
-        meshData.mPeerId = myPeerId;
         meshData.mType = TYPE_PROFILE;
 
         return meshData;
@@ -47,12 +49,22 @@ public class MeshDataManager {
 
     public MeshData getPingForProfile() {
 
-        MeshData meshData = new MeshData();
-        meshData.mMeshPeer = new MeshPeer(myPeerId);
-        meshData.mPeerId = myPeerId;
-        meshData.mType = TYPE_PING;
+        try {
+            JSONObject jaJsonObject = new JSONObject();
+            jaJsonObject.put("ping", "ping");
 
-        return meshData;
+            MeshData meshData = new MeshData();
+            meshData.mData = jaJsonObject.toString().getBytes();
+            meshData.mMeshPeer = new MeshPeer(myPeerId);
+            meshData.mType = TYPE_PING;
+
+            return meshData;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public boolean isProfileData(MeshData meshData) {

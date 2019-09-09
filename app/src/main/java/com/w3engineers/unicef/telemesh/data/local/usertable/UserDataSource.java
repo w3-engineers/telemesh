@@ -17,6 +17,7 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -132,5 +133,10 @@ public class UserDataSource{
 
     public int updateUserStatus(String userId, int activityStatus) {
         return mUserDao.updateUserStatus(userId, activityStatus);
+    }
+
+    @NonNull
+    public LiveData<List<UserEntity>> getActiveUser() {
+        return mUserDao.getActiveUser();
     }
 }

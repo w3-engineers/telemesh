@@ -34,4 +34,10 @@
     <!--<color name="in_use_color">#F78E00</color>-->
     <!--<color name="font_color">#3C3C3C</color>-->
 
+    <color name="error_color">#7F0000</color>
+    <color name="info_color">#398EEA</color>
+    <color name="warning_color">#3939FF</color>
+    <color name="color_special">#46c1d3</color>
+    <color name="color_date">#18BC4E</color>
+
 </resources>

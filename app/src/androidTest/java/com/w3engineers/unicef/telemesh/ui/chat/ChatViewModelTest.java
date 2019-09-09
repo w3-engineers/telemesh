@@ -106,14 +106,14 @@ public class ChatViewModelTest {
             ChatEntity retrieveReceiverChat = messageSourceData.getMessageEntityById(receiverChat.getMessageId());
             assertThat(retrieveReceiverChat.getStatus(), is(Constants.MessageStatus.STATUS_READ));
 
-            userEntity.setOnline(false);
+            userEntity.setOnlineStatus(false);
             userDataSource.insertOrUpdateData(userEntity);
 
             TestObserver<UserEntity> entityTestObserver = LiveDataTestUtil.testObserve(SUT.getUserById(userEntity.getMeshId()));
 
             addDelay();
 
-            assertFalse(userEntity.isOnline());
+            assertFalse(userEntity.getOnlineStatus());
 
         } catch (Exception e) {
             e.printStackTrace();

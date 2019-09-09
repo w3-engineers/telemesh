@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <import type="com.w3engineers.unicef.telemesh.R" />
-
-        <variable
-            name="settingsVM"
-            type="com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel" />
-
-    </data>
 
     <ScrollView
         android:id="@+id/layout_scroll"
@@ -65,7 +56,7 @@
                     android:id="@+id/image_view_wallet"
                     style="@style/image_style_settings_page"
                     android:contentDescription="@string/app_name"
-                    android:src="@mipmap/ic_wallet"
+                    android:src="@mipmap/ic_wallet_settings"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -196,12 +187,77 @@
 
             </android.support.constraint.ConstraintLayout>
 
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_diagram_map"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_choose_language">
+
+                <ImageView
+                    android:id="@+id/image_view_map"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_diagram"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_map"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/diagram_map"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_map"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_show_log"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_diagram_map">
+
+                <ImageView
+                    android:id="@+id/image_view_log"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_show_log_active"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_log"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/settings_open_log"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_log"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/divider_style_settings_page"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layout_about_us"
                 style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_choose_language">
+                app:layout_constraintTop_toBottomOf="@id/layout_show_log">
 
                 <ImageView
                     android:id="@+id/image_view_about"
@@ -228,9 +284,18 @@
 
             </android.support.constraint.ConstraintLayout>
 
-
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
+
+    <data>
+
+        <import type="com.w3engineers.unicef.telemesh.R" />
+
+        <variable
+            name="settingsVM"
+            type="com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel" />
+
+    </data>
 
 </layout>

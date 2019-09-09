@@ -15,7 +15,7 @@ interface IRmServiceConnection {
 
     void setProfileInfo(in byte[] profileInfo);
 
-    long sendMeshData(in MeshData meshData);
+    String sendMeshData(in MeshData meshData);
 
     void setRmCommunicator(IRmCommunicator iRmCommunicator);
 
@@ -36,4 +36,6 @@ interface IRmServiceConnection {
     void restartMeshService();
 
     List<String> getCurrentSellers();
+
+    int getUserLinkType(in String userId);
 }

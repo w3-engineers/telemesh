@@ -69,17 +69,18 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="@dimen/height_10"
-                    android:layout_height="@dimen/height_10"
+                    android:layout_width="@dimen/height_30"
+                    android:layout_height="@dimen/height_30"
                     android:layout_marginEnd="@dimen/margin_10"
                     android:contentDescription="@string/logo_image"
-                    android:src="@{userEntity.isOnline ? @drawable/circle_online: @drawable/circle_offline}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_view_last_name"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
         </com.w3engineers.ext.strom.application.ui.base.BaseToolBar>
+
+        <!--android:src="@{userEntity.getOnlineStatus ? @drawable/circle_online: @drawable/circle_offline}"-->
 
         <View
             android:id="@+id/shadow_view"

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
-import com.w3engineers.unicef.telemesh.TeleMeshChatOuterClass.TeleMeshChat;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 
@@ -130,13 +129,23 @@ public class ChatEntity extends DbBaseEntity {
         return this;
     }
 
-    @NonNull
+    /*@NonNull
     public TeleMeshChat toProtoChat() {
+        throw new IllegalStateException();
+    }*/
+
+    @NonNull
+    public MessageModel toMessageModel() {
         throw new IllegalStateException();
     }
 
-    @NonNull
+    /*@NonNull
     public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
+        throw new IllegalStateException();
+    }*/
+
+    @NonNull
+    public ChatEntity toChatEntity(@NonNull MessageModel messageModel) {
         throw new IllegalStateException();
     }
 

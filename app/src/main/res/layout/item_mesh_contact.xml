@@ -49,8 +49,8 @@
 
         <ImageView
             android:id="@+id/user_mesh_status"
-            android:layout_width="@dimen/width_10"
-            android:layout_height="@dimen/height_10"
+            android:layout_width="@dimen/width_30"
+            android:layout_height="@dimen/height_30"
             android:layout_marginEnd="@dimen/margin_15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -61,9 +61,6 @@
             android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_25"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:text="@{user.userName}"
             android:textColor="@color/black"
             android:typeface='@{user.hasUnreadMessage > 0 ? "bold" : "normal"}'
             android:textSize="@dimen/text_size_18"
@@ -71,7 +68,22 @@
             app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
             android:layout_marginStart="@dimen/margin_10"
             android:layout_marginEnd="@dimen/margin_10"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/user_avatar" />
+
+        <TextView
+            android:id="@+id/user_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:maxLines="2"
+            android:text="@{user.meshId}"
+            android:textColor="@color/light_grey"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintLeft_toRightOf="@id/user_avatar"
+            app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+            app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
         <TextView
             android:id="@+id/text_view_date_time"
@@ -92,7 +104,7 @@
             android:background="@color/grey_300"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_avatar" />
+            app:layout_constraintTop_toBottomOf="@id/user_address" />
 
 
     </android.support.constraint.ConstraintLayout>

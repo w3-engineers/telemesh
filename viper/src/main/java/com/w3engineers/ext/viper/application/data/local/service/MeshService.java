@@ -48,9 +48,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         //Please do not modify here, this is an auto generated property from developers
         //local.properties class
         MeshConfig meshConfig = new MeshConfig();
-        meshConfig.mPort = 10623;
+        meshConfig.mPort = 10626;
 
-        meshProvider = MeshProvider.getInstance(getApplicationContext());
+        meshProvider = MeshProvider.getInstance();
 
         meshProvider.setConfig(meshConfig);
         meshProvider.setMyProfileInfo(profileInfo);
@@ -95,11 +95,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         new BaseRmServiceNotificationHelper(this).stopForegroundService();
         stopTheService(true);
         stopSelf();
-//        Process.killProcess(Process.myPid());
     }
 
     public void stopProcess() {
-        Log.v("MIMO_SAHA:", "Killed: ");
         Process.killProcess(Process.myPid());
     }
 
@@ -131,7 +129,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         }
 
         @Override
-        public long sendMeshData(MeshData meshData) throws RemoteException {
+        public String sendMeshData(MeshData meshData) throws RemoteException {
             return meshProvider.sendMeshData(meshData);
         }
 
@@ -192,6 +190,14 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
                 return meshProvider.getAllSellers();
             }
             return new ArrayList<>();
+        }
+
+        @Override
+        public int getUserLinkType(String userId) throws RemoteException {
+            if (meshProvider != null) {
+                return meshProvider.getUserActiveStatus(userId);
+            }
+            return 0;
         }
     };
 
@@ -275,14 +281,36 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
     }
 
     @Override
-    public boolean isNodeExist(String nodeId, boolean isActive) {
+    public boolean isNodeExist(String nodeId, int userActiveStatus) {
         try {
             if (getInfo != null) {
-                return getInfo.isNodeExist(nodeId, isActive);
+                return getInfo.isNodeExist(nodeId, userActiveStatus);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void showMeshLog(String log) {
+        try {
+            if (getInfo != null) {
+                getInfo.showMeshLog(log);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onlyNodeDiscover(String nodeId) {
+        try {
+            if (getInfo != null) {
+                getInfo.nodeDiscovered(nodeId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

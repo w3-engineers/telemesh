@@ -1,4 +1,4 @@
-include ':app', ':viper', ':meshlib', ':paylib'
+include ':app', ':viper', ':meshlib', ':paylib', ':hardwareoff'
 
 // Remove RM-Lib
 /*pluginManagement.repositories {

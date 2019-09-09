@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 public class Constants {
 
     public static boolean IS_LOADING_ENABLE = false;
+    public static boolean IsMeshInit;
 
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
@@ -11,6 +12,8 @@ public class Constants {
         int MINIMUM_TEXT_LIMIT = 2;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
+        int INTEGER_VALUE_ZERO = 0;
+        int MAXIMUM_BADGE_VALUE = 99;
     }
 
     public interface preferenceKey {
@@ -25,6 +28,12 @@ public class Constants {
         String COMPANY_ID = "company_id";
         String MY_REGISTRATION_TIME = "registration_time";
         String MY_SYNC_IS_DONE = "my_sync_is_done";
+    }
+
+    public interface MenuItemPosition {
+        int POSITION_FOR_CONTACT = 0;
+        int POSITION_FOR_MESSAGE_FEED = 1;
+        int POSITION_FOR_MESSAGE_SETTINGS = 2;
     }
 
     public interface drawables {
@@ -58,13 +67,22 @@ public class Constants {
 
     public interface UserStatus {
         int OFFLINE = 0;
-        int ONLINE = 1;
+        int WIFI_ONLINE = 5;
+        int WIFI_MESH_ONLINE = 4;
+        int BLE_MESH_ONLINE = 3;
+        int BLE_ONLINE = 2;
+        int INTERNET_ONLINE = 1;
     }
 
     public interface AppConstant {
         long LOADING_TIME = 30 * 1000;
         int MESSAGE_SYNC_PLOT = 10;
         int DEFAULT = 0;
+        long LOADING_TIME_SHORT = 1000;
+        String LOG_FOLDER = ".log";
+        String INFO_LOG_FILE = "InfoLog.txt";
+        String CRASH_REPORT_FILE_NAME = "Crashes.txt";
+        String DASHES = "-------------------------------";
     }
 
     public interface Bulletin {
@@ -81,5 +99,18 @@ public class Constants {
         byte MESSAGE_COUNT = 1;
         byte NEW_USER_COUNT = 2;
         byte APP_SHARE_COUNT = 3;
+    }
+
+    public interface UpdatedData {
+        int YES = 0;
+        int NO = 1;
+    }
+
+    public interface MeshLogType {
+        int SPECIAL = 1;
+        int WARNING = 2;
+        int INFO = 3;
+        int ERROR = 4;
+        int DATE = 5;
     }
 }

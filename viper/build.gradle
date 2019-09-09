@@ -27,9 +27,14 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', 'MULTIVERSE_URL', System.getenv('MULTIVERSE_URL').equals(null) ? MULTIVERSE_URL : System.getenv('MULTIVERSE_URL')
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', 'MULTIVERSE_URL', System.getenv('MULTIVERSE_URL').equals(null) ? MULTIVERSE_URL : System.getenv('MULTIVERSE_URL')
         }
     }
     compileOptions {

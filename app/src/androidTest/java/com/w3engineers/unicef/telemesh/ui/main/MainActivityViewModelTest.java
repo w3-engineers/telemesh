@@ -57,7 +57,7 @@ public class MainActivityViewModelTest {
     public void testUserOfflineProcess_getOfflineState_afterOnlineState() {
 
         String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnline(true);
+        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
 
         userDataSource.insertOrUpdateData(userEntity);
 
@@ -67,7 +67,7 @@ public class MainActivityViewModelTest {
         addDelay();
 
         UserEntity userEntity = userDataSource.getSingleUserById(userMeshId);
-        boolean isOnline = userEntity !=null && userEntity.isOnline();
+        boolean isOnline = userEntity !=null && userEntity.getOnlineStatus();
 
         assertFalse(isOnline);
     }
@@ -84,7 +84,7 @@ public class MainActivityViewModelTest {
     public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() {
 
         String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnline(true);
+        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
 
         userDataSource.insertOrUpdateData(userEntity);
 
@@ -106,7 +106,7 @@ public class MainActivityViewModelTest {
     public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() {
 
         String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnline(true);
+        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
 
         userDataSource.insertOrUpdateData(userEntity);
 

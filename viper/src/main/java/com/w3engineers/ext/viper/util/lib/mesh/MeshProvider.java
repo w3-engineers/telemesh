@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.viper.BuildConfig;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
@@ -45,7 +46,6 @@ public class MeshProvider implements LinkStateListener {
     //BT NAME
     private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";
-    private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -78,7 +78,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
 //        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, SOCKET_URL, this);
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 

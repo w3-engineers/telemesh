@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
 
@@ -73,11 +74,40 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
         @Override
         public void bind(@NonNull UserEntity item) {
 
-            itemMeshContactBinding.userMeshStatus.setBackgroundResource(item.isOnline() ?
-                    R.drawable.circle_online : R.drawable.circle_offline);
+            itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
+            itemMeshContactBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
+        }
+
+        private String getHopIndicator(int userActiveStatus) {
+            if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE
+                    || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE)
+                return "(Mesh)";
+            else
+                return "";
+        }
+
+        private int activeStatusResource(int userActiveStatus) {
+
+            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
+                return R.mipmap.ic_wifi;
+            } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+                return R.mipmap.empty_mesh;
+            } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
+                return R.mipmap.ic_internet;
+            } else {
+                return R.mipmap.ic_offline;
+            }
+
+            /*if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+                return R.drawable.circle_online;
+            } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
+                return R.drawable.circle_internet;
+            } else {
+                return R.drawable.circle_offline;
+            }*/
         }
     }
 }

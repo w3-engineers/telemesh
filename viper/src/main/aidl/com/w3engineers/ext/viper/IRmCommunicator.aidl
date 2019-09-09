@@ -20,5 +20,9 @@ interface IRmCommunicator {
 
     void onMeshAcknowledgement(in MeshAcknowledgement meshAcknowledgement);
 
-    boolean isNodeExist(in String nodeId, in boolean isActive);
+    boolean isNodeExist(in String nodeId, in int isActive);
+
+    void showMeshLog(in String log);
+
+    void nodeDiscovered(in String nodeId);
 }

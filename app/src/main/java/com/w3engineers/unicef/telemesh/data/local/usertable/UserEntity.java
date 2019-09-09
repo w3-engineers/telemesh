@@ -36,7 +36,7 @@ public class UserEntity extends DbBaseEntity {
     public long lastOnlineTime;
 
     @ColumnInfo(name = ColumnNames.COLUMN_USER_IS_ONLINE)
-    public boolean isOnline;
+    public int isOnline;
 
     @ColumnInfo(name = ColumnNames.COLUMN_USER_REGISTRATION_TIME)
     public long registrationTime;
@@ -104,12 +104,12 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
-    public boolean isOnline() {
+    public int getOnlineStatus() {
         return isOnline;
     }
 
     @NonNull
-    public UserEntity setOnline(boolean online) {
+    public UserEntity setOnlineStatus(int online) {
         isOnline = online;
         return this;
     }
@@ -142,7 +142,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeString(this.customId);
         dest.writeInt(this.avatarIndex);
         dest.writeLong(this.lastOnlineTime);
-        dest.writeByte((byte) (isOnline ? 1 : 0));
+        dest.writeInt(isOnline);
         dest.writeLong(this.registrationTime);
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
@@ -155,7 +155,7 @@ public class UserEntity extends DbBaseEntity {
         this.customId = in.readString();
         this.avatarIndex = in.readInt();
         this.lastOnlineTime = in.readLong();
-        this.isOnline = in.readByte() != 0;
+        this.isOnline = in.readInt();
         this.registrationTime = in.readLong();
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();

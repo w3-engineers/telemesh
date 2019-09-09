@@ -15,7 +15,10 @@ import android.view.View;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
@@ -91,6 +94,7 @@ public class ChatActivity extends RmBaseActivity {
             mViewBinging.textViewLastName.setOnClickListener(this);
 
             mViewBinging.setUserEntity(mUserEntity);
+            mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
         }
 
 
@@ -198,10 +202,33 @@ public class ChatActivity extends RmBaseActivity {
 
             mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
-                if (userEntity != null && mViewBinging != null)
+                if (userEntity != null && mViewBinging != null) {
                     mViewBinging.setUserEntity(userEntity);
+                    mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.getOnlineStatus()));
+                }
             });
         }
+    }
+
+    private int activeStatusResource(int userActiveStatus) {
+
+        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
+            return R.mipmap.ic_wifi;
+        } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+            return R.mipmap.empty_mesh;
+        } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
+            return R.mipmap.ic_internet;
+        } else {
+            return R.mipmap.ic_offline;
+        }
+
+        /*if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+            return R.drawable.circle_online;
+        } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
+            return R.drawable.circle_internet;
+        } else {
+            return R.drawable.circle_offline;
+        }*/
     }
 
     @Override

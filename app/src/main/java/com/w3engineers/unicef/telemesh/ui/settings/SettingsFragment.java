@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
@@ -29,6 +30,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.showlog.ShowLogActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -62,6 +64,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutAboutUs.setOnClickListener(this);
         mBinding.layoutDataPlan.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
+        mBinding.layoutShowLog.setOnClickListener(this);
     }
 
     @Override
@@ -109,11 +112,22 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                if (Constants.IsMeshInit) {
+                    startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                } else {
+                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                }
                 break;
 
             case R.id.layout_open_wallet:
-                startActivity(new Intent(mActivity, WalletActivity.class));
+                if (Constants.IsMeshInit) {
+                    startActivity(new Intent(mActivity, WalletActivity.class));
+                } else {
+                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                }
+                break;
+            case R.id.layout_show_log:
+                startActivity(new Intent(getActivity(), ShowLogActivity.class));
                 break;
             default:
                 break;

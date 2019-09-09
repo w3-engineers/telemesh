@@ -7,10 +7,15 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.work.WorkInfo;
 
@@ -24,8 +29,10 @@ import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
+import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
@@ -40,6 +47,9 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
     private Menu bottomMenu;
+    private BottomNavigationMenuView bottomNavigationMenuView;
+    NotificationBadgeBinding notificationBadgeBinding;
+
     @Nullable
     public static MainActivity mainActivity;
 
@@ -95,6 +105,9 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
 
         });
+
+        subscribeForActiveUser();
+
         //when  counting need to add
         /*
         mViewModel.getMessageCount().observe(this, messageCount -> {
@@ -144,8 +157,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         }
         loadFragment(mFragment, getString(R.string.title_contacts_fragment));
 
-//        BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
-//                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+        bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
+                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+
+        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
 
         /*binding.bottomNavigation
                 .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
@@ -167,14 +182,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     }
 
     // Again this api will be enable when its functionality will be added
-    /*private void addBadgeToBottomBar(int menuItemPosition) {
-        NotificationBadgeBinding notificationBadgeBinding = NotificationBadgeBinding.inflate(getLayoutInflater());
+    private void addBadgeToBottomBar(int menuItemPosition) {
+        notificationBadgeBinding = NotificationBadgeBinding.inflate(getLayoutInflater());
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
         if (itemView != null) {
             itemView.addView(notificationBadgeBinding.getRoot());
         }
-    }*/
+    }
 
 
     @Override
@@ -219,7 +234,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     }
 
     // Again this api will be enable when its functionality will be added
-    /*public void createBadgeCount(int latestCount, int menuItemPosition) {
+    public void createBadgeCount(int latestCount, int menuItemPosition) {
 
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
@@ -231,15 +246,18 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
         if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+
+            constraintLayoutContainer.setVisibility(View.VISIBLE);
+
             if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
                 textViewBadgeCount.setText(String.valueOf(latestCount));
             } else {
-                textViewBadgeCount.setText(R.string.badge_count_more_than_9);
+                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
             }
         } else {
             constraintLayoutContainer.setVisibility(View.GONE);
         }
-    }*/
+    }
 
     @Override
     protected void onDestroy() {
@@ -264,6 +282,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         this.doubleBackToExitPressedOnce = true;
         Toaster.showShort(getString(R.string.double_press_exit));
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
+    }
+
+    private void subscribeForActiveUser() {
+        if (mViewModel != null) {
+            mViewModel.getActiveUser().observe(this, userEntities -> {
+                        runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+                    });
+        }
     }
 
     /*@Override

@@ -1,13 +1,18 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.ext.viper.application.data.local.service.MeshService;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.wifi.protocol.Link;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
@@ -25,6 +30,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -34,6 +40,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -50,11 +57,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import timber.log.Timber;
-
-//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.AppShareCount;
-//import com.w3engineers.unicef.telemesh.TeleMeshAnalyticsOuterClass.MessageCount;
-//import com.w3engineers.unicef.telemesh.TeleMeshBulletinOuterClass.TeleMeshBulletin;
-//import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 
 /*
  * ============================================================================
@@ -117,24 +119,61 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull UserModel userModel) {
 
         String userId = userModel.getUserId();
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
+
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
         UserEntity userEntity = new UserEntity()
                 .toUserEntity(userModel)
-                .setOnline(true);
+                .setOnlineStatus(userConnectivityStatus);
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
     }
 
-    public boolean userExistedOperation(String userId, boolean isActive) {
-        int updateId = UserDataSource.getInstance()
-                .updateUserStatus(userId, isActive ? Constants.UserStatus.ONLINE : Constants.UserStatus.OFFLINE);
+    public void onlyNodeAdd(String nodeId) {
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
 
-        if (updateId > 0 && isActive) {
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        UserEntity userEntity = new UserEntity().setUserName("").setAvatarIndex(-1).setMeshId(nodeId).setOnlineStatus(userConnectivityStatus);
+
+        UserDataSource.getInstance().insertOrUpdateData(userEntity);
+
+    }
+
+    public boolean userExistedOperation(String userId, int userActiveStatus) {
+
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        Log.v("MIMO_SAHA:", "Status: " + userConnectivityStatus);
+
+        int updateId = UserDataSource.getInstance()
+                .updateUserStatus(userId, userConnectivityStatus);
+
+        if (updateId > 0 && (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
             syncUserWithBroadcastMessage(userId);
         }
 
         return updateId > 0;
+    }
+
+    public int getActiveStatus(int userActiveStatus) {
+
+        if (userActiveStatus == Link.Type.WIFI.getValue()) {
+            return Constants.UserStatus.WIFI_ONLINE;
+        } else if (userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
+            return Constants.UserStatus.WIFI_MESH_ONLINE;
+        } else if (userActiveStatus == Link.Type.BT.getValue()) {
+            return Constants.UserStatus.BLE_ONLINE;
+        } else if (userActiveStatus == Link.Type.BT_MESH.getValue()) {
+            return Constants.UserStatus.BLE_MESH_ONLINE;
+        } else if (userActiveStatus == Link.Type.INTERNET.getValue()) {
+            return Constants.UserStatus.INTERNET_ONLINE;
+        } else {
+            return Constants.UserStatus.OFFLINE;
+        }
     }
 
     /**
@@ -385,7 +424,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String dataSendId = dataModel.getDataTransferId();
 
-        if (rmDataMap.get(dataSendId) != null) {
+        if (dataSendId != null && rmDataMap.get(dataSendId) != null) {
 
             DataModel prevRMDataModel = rmDataMap.get(dataSendId);
             if (prevRMDataModel != null) {
@@ -399,14 +438,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void stopMeshService() {
-        updateUserStatus();
+        updateUserStatus(true);
     }
 
-    private void updateUserStatus() {
+    private void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    stopMeshProcess();
-//                    makeSendingMessageAsFailed();
+                    if (isServiceStop) {
+                        stopMeshProcess();
+                    }
                 }, Throwable::printStackTrace));
     }
 
@@ -415,20 +455,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    /*public void makeSendingMessageAsFailed() {
-
-        compositeDisposable.add(updateMessageStatus()
-                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
-                    stopMeshProcess();
-                }, Throwable::printStackTrace));
-    }
-
-    private Single<Long> updateMessageStatus() {
-        return Single.fromCallable(() -> MessageSourceData.getInstance()
-                .changeMessageStatusFrom(Constants.MessageStatus.STATUS_SENDING,
-                        Constants.MessageStatus.STATUS_FAILED));
-    }*/
-
     /**
      * Concern for this api stopping RM service from app layer
      */
@@ -436,8 +462,31 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.stopMeshService();
     }
 
+    /**
+     * This api called when all of app layer dependencies are removed,
+     * i.e. update user status to offline successfully then called this method
+     */
     private void stopMeshProcess() {
         rightMeshDataSource.stopMeshProcess();
+    }
+
+    public void resetUserToOfflineBasedOnService() {
+        boolean isServiceEnable = isMeshServiceRunning();
+        Log.v("MIMO_SAHA:", "PP: " + isServiceEnable);
+        if (!isServiceEnable) {
+            updateUserStatus(false);
+        }
+    }
+
+    public boolean isMeshServiceRunning() {
+        Context context = TeleMeshApplication.getContext();
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (MeshService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -572,6 +621,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private BroadcastCommand getBroadcastCommand() {
         Payload payload = new Payload();
+
+        GeoLocation geoLocation = new GeoLocation()
+                .setLatitude("22.845272").setLongitude("89.531472");
+
+        payload.setGeoLocation(geoLocation);
+        payload.setConnectedClients("2");
+
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)
                 .setBaseStationId(getMyMeshId())
@@ -678,5 +734,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    public void showMeshLog(String log) {
+        LogProcessUtil.getInstance().writeLog(log);
     }
 }

@@ -69,7 +69,7 @@ public abstract class BaseMeshDataSource {
         }
     };
 
-    public long sendMeshData(MeshData meshData) {
+    public String sendMeshData(MeshData meshData) {
         try {
             if(iSetInfo != null){
                 return iSetInfo.sendMeshData(meshData);
@@ -77,7 +77,7 @@ public abstract class BaseMeshDataSource {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return -1L;
+        return null;
     }
 
     public void stopMeshService() {
@@ -130,6 +130,17 @@ public abstract class BaseMeshDataSource {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public int getUserActiveStatus(String userId) {
+        try {
+            if(iSetInfo != null){
+                return iSetInfo.getUserLinkType(userId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -199,7 +210,11 @@ public abstract class BaseMeshDataSource {
 
     protected abstract String getOwnUserId();
 
-    protected abstract boolean isNodeAvailable(String nodeId, boolean isActive);
+    protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
+
+    protected abstract void showLog(String log);
+
+    protected abstract void nodeIdDiscovered(String nodeId);
 
     /**
      * Overridable method to receive the event of library destroy
@@ -239,8 +254,18 @@ public abstract class BaseMeshDataSource {
         }
 
         @Override
-        public boolean isNodeExist(String nodeId, boolean isActive) throws RemoteException {
-            return isNodeAvailable(nodeId, isActive);
+        public boolean isNodeExist(String nodeId, int userActiveStatus) throws RemoteException {
+            return isNodeAvailable(nodeId, userActiveStatus);
+        }
+
+        @Override
+        public void showMeshLog(String log) throws RemoteException {
+            showLog(log);
+        }
+
+        @Override
+        public void nodeDiscovered(String nodeId) throws RemoteException {
+            nodeIdDiscovered(nodeId);
         }
     };
 }

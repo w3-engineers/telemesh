@@ -67,6 +67,7 @@ public class MeshDataSource extends BaseMeshDataSource {
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
 
+        Constants.IsMeshInit = true;
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, getMyMeshId());
     }
 
@@ -109,18 +110,13 @@ public class MeshDataSource extends BaseMeshDataSource {
             String userId = profileInfo.mMeshPeer.getPeerId();
 
             String userString = new String(profileInfo.mData);
-
             UserModel userModel = new Gson().fromJson(userString, UserModel.class);
-
-            Log.v("MIMO_SAHA:", "User: " + userString);
 
             if (userModel != null) {
                 userModel.setUserId(userId);
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
-
             }
         } catch (Exception e) {
-            Log.v("MIMO_SAHA:", "Error User: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -133,8 +129,6 @@ public class MeshDataSource extends BaseMeshDataSource {
      */
     @Override
     protected void onPeerGone(@NonNull MeshPeer meshPeer) {
-
-        String userId = meshPeer.getPeerId();
 
         HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(meshPeer));
     }
@@ -163,7 +157,7 @@ public class MeshDataSource extends BaseMeshDataSource {
     protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
 
         DataModel rmDataModel = new DataModel()
-                .setDataTransferId("" + meshAcknowledgement.id)
+                .setDataTransferId(meshAcknowledgement.id)
                 .setAckSuccess(meshAcknowledgement.isSuccess);
 
         HandlerUtil.postBackground(()-> RmDataHelper.getInstance().ackReceive(rmDataModel));
@@ -176,8 +170,18 @@ public class MeshDataSource extends BaseMeshDataSource {
     }
 
     @Override
-    protected boolean isNodeAvailable(String nodeId, boolean isActive) {
-        return RmDataHelper.getInstance().userExistedOperation(nodeId, isActive);
+    protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
+        return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
+    }
+
+    @Override
+    protected void showLog(String log) {
+        RmDataHelper.getInstance().showMeshLog(log);
+    }
+
+    @Override
+    protected void nodeIdDiscovered(String nodeId) {
+        RmDataHelper.getInstance().onlyNodeAdd(nodeId);
     }
 
     @Override
@@ -189,6 +193,7 @@ public class MeshDataSource extends BaseMeshDataSource {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     protected void resetMeshService() {
-        restartMesh();
+//        restartMesh();
+        rightMeshDataSource = null;
     }
 }

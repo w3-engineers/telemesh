@@ -101,7 +101,7 @@ public class UserDataSourceTest {
         SUT.updateUserToOffline();
 
         userEntity = SUT.getSingleUserById(meshId2);
-        assertFalse(userEntity != null && userEntity.isOnline());
+        assertFalse(userEntity != null && userEntity.getOnlineStatus());
 
         SUT.deleteUser(meshId1);
         userEntity = SUT.getSingleUserById(meshId1);
@@ -127,7 +127,7 @@ public class UserDataSourceTest {
                 .setCustomId(customId)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(lastOnlineTime)
-                .setOnline(true);
+                .setOnlineStatus(true);
     }
 
     private String getRandomString() {

@@ -54,6 +54,8 @@ public class MeshContactsFragment extends BaseFragment {
     @Nullable
     public MenuItem mSearchItem;
     private String title;
+    private boolean isLoaded = false;
+    Handler loaderHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected int getLayoutId() {
@@ -72,6 +74,7 @@ public class MeshContactsFragment extends BaseFragment {
         init();
 
         userDataOperation();
+
         openUserMessage();
     }
 
@@ -79,7 +82,7 @@ public class MeshContactsFragment extends BaseFragment {
 
         if (meshContactViewModel != null) {
 
-            meshContactViewModel.getAllUsers().observe(this, userEntities -> {
+            meshContactViewModel.allUserEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().resetWithList(userEntities);
                     userEntityList = userEntities;
@@ -89,12 +92,36 @@ public class MeshContactsFragment extends BaseFragment {
             });
 
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
-                if (userEntities != null) {
 
+                setTitle(getResources().getString(R.string.title_contacts_fragment));
+
+                if (userEntities != null && userEntities.size() > 0) {
+                    fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
                     getAdapter().clear();
                     getAdapter().addItem(userEntities);
+                    isLoaded = false;
+
+                } else {
+                    if (!isLoaded) {
+                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+                        enableLoading();
+
+                        isLoaded = true;
+                        Runnable runnable = () -> {
+                            fragmentMeshcontactBinding.tvMessage.setText("No User Found");
+                            enableEmpty();
+                            fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+                        };
+                        loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
+                    }
                 }
             });
+
+            meshContactViewModel.backUserEntity.observe(this, userEntities -> {
+                userEntityList = userEntities;
+            });
+
+            meshContactViewModel.startUserObserver();
         }
     }
 

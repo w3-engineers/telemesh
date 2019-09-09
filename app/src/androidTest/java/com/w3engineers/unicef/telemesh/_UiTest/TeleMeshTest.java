@@ -414,13 +414,12 @@ public class TeleMeshTest {
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnline(true)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel");
         userEntity.setId(0);
 
         userDataSource.insertOrUpdateData(userEntity);
-
 
         addDelay(700);
 

@@ -124,7 +124,7 @@ public class BroadcastManager {
         mRunningTaskList.add(future);
 
         try {
-            long result = (long) future.get();
+            String result = (String) future.get();
             if (broadcastSendCallback != null) {
                 MeshData meshData = sendDataTask.getMeshData();
 
@@ -133,7 +133,7 @@ public class BroadcastManager {
                             .setUserId(meshData.mMeshPeer.getPeerId())
                             .setRawData(meshData.mData)
                             .setDataType(meshData.mType);
-                    broadcastSendCallback.dataSent(rmDataModel, (result + ""));
+                    broadcastSendCallback.dataSent(rmDataModel, result);
                 }
             }
         } catch (ExecutionException e) {

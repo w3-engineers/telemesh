@@ -129,7 +129,7 @@ public class AnalyticsDataHelperTest {
                 .setUserName(firstName)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(System.currentTimeMillis())
-                .setOnline(true);
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE);
     }
 
     private ChatEntity getChatInfo(String messageId, String userId) {

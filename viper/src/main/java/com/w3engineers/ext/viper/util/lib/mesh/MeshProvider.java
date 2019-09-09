@@ -42,7 +42,9 @@ public class MeshProvider implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "telemesh_t8-";
+    //BT NAME
+    private String WIFI_PREFIX = "bna.1";
+    private String BLE_PREFIX = "que";
     private final String SOCKET_URL = "https://multiverse.w3engineers.com/";
 
     private MeshProvider() {
@@ -75,8 +77,8 @@ public class MeshProvider implements LinkStateListener {
         if (config == null || myProfileInfo == null)
             return;
 
-        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, SOCKET_URL, this);
+//        setLogBroadcastRegister();
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, SOCKET_URL, this);
     }
 
 
@@ -85,7 +87,7 @@ public class MeshProvider implements LinkStateListener {
             transportManager.stopMesh();
 
             if (providerCallback != null && isStopProcess) {
-                setLogBroadcastUnregister();
+//                setLogBroadcastUnregister();
                 providerCallback.meshStop();
             }
         }
@@ -156,13 +158,13 @@ public class MeshProvider implements LinkStateListener {
             // If you send data directly without ping then enable this api
             // and after the following lines should be comment out
 
-            if (providerCallback != null && isActive) {
+            /*if (providerCallback != null && isActive) {
                 providerCallback.onlyNodeDiscover(nodeId);
-            }
+            }*/
 
-            directSend(nodeId, isActive);
+//            directSend(nodeId, isActive);
 
-            /*boolean isUserExist = false;
+            boolean isUserExist = false;
 
             if (providerCallback != null) {
                 int userConnectivityStatus = isActive ? getUserActiveStatus(nodeId) : 0;
@@ -175,7 +177,7 @@ public class MeshProvider implements LinkStateListener {
                 } else {
                     peerRemoved(nodeId);
                 }
-            }*/
+            }
         });
     }
 

@@ -44,8 +44,8 @@ public class MeshProvider implements LinkStateListener {
     private byte[] myProfileInfo;
     private String myUserId;
     //BT NAME
-    private String WIFI_PREFIX = "bna.1";
-    private String BLE_PREFIX = "que";
+    private String WIFI_PREFIX = "tm.1";
+    private String BLE_PREFIX = "tm1";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -176,6 +176,10 @@ public class MeshProvider implements LinkStateListener {
                     pingedNodeId(nodeId);
                 } else {
                     peerRemoved(nodeId);
+                }
+            } else {
+                if (isActive) {
+                    transportManager.updateDataSyncMapWhenUserInfoExist(nodeId);
                 }
             }
         });

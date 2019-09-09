@@ -37,6 +37,7 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
@@ -287,8 +288,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private void subscribeForActiveUser() {
         if (mViewModel != null) {
             mViewModel.getActiveUser().observe(this, userEntities -> {
-                        runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
-                    });
+                runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+            });
         }
     }
 

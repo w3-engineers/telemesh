@@ -40,6 +40,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -497,12 +498,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void requestWsMessage() {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand());
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
+        LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener(new LocationUtil.LocationRequestCallback() {
+            @Override
+            public void onGetLocation(String lat, String lang) {
+
+                LocationUtil.getInstance().removeListener();
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+                BroadcastWebSocket listener = new BroadcastWebSocket();
+                listener.setBroadcastCommand(getBroadcastCommand(lat, lang));
+                client.newWebSocket(request, listener);
+                client.dispatcher().executorService().shutdown();
+            }
+        });
+
     }
 
     private String getMyMeshId() {
@@ -619,11 +629,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private BroadcastCommand getBroadcastCommand() {
+    private BroadcastCommand getBroadcastCommand(String lat, String lang) {
         Payload payload = new Payload();
 
         GeoLocation geoLocation = new GeoLocation()
-                .setLatitude("22.845272").setLongitude("89.531472");
+                .setLatitude(lat).setLongitude(lang);
 
         payload.setGeoLocation(geoLocation);
         payload.setConnectedClients("2");

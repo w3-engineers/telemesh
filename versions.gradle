@@ -69,6 +69,7 @@ versions.dexter = "5.0.0"
 versions.appshare = "1.3"
 versions.parse = "1.17.3"
 versions.work = "1.0.1"
+versions.location = "16.0.0"
 ext.versions = versions
 
 def deps = [:]
@@ -239,6 +240,10 @@ deps.appshare = appshare
 def parse = [:]
 parse.server = "com.parse:parse-android:$versions.parse"
 deps.parse = parse
+
+def location = [:]
+location.service = "com.google.android.gms:play-services-location:$versions.location"
+deps.location = location
 
 ext.deps = deps
 

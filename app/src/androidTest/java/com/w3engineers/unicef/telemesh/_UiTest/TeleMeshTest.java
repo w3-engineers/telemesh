@@ -419,7 +419,7 @@ public class TeleMeshTest {
     }
 
     // Message and mesh contact test
-    @Test
+   /* @Test
     public void uiTest_4() {
         addDelay(3800);
 
@@ -495,7 +495,7 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        /*ViewInteraction contactSearch = onView(
+        ViewInteraction contactSearch = onView(
                 allOf(withId(R.id.action_search),
                         childAtPosition(
                                 childAtPosition(
@@ -518,7 +518,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
 
-        addDelay(500);*/
+        addDelay(500);
 
         mDevice.pressBack();
 
@@ -533,7 +533,7 @@ public class TeleMeshTest {
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /**
      * Testing Message/Bulletin Feed

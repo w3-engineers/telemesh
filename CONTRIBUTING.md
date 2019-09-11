@@ -332,3 +332,8 @@ for our coding. Code review includes
 # Organize github issues
 
 We are following this guideline [Style Guide](https://robinpowered.com/blog/best-practice-system-for-organizing-and-tagging-github-issues/)
+
+# Issue Referencing on Github
+
+You can include keywords in your pull request descriptions, as well as commit messages, to automatically close issues in GitHub.
+[About issue reference](https://help.github.com/en/articles/closing-issues-using-keywords#about-issue-references)

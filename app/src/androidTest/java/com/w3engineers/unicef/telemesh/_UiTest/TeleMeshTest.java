@@ -421,7 +421,7 @@ public class TeleMeshTest {
     // Message and mesh contact test
     @Test
     public void uiTest_4() {
-        addDelay(4500);
+        addDelay(3800);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)

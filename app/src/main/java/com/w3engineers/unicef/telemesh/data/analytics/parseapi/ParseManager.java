@@ -89,6 +89,10 @@ public class ParseManager {
         object.saveEventually(e -> sendResponse(e == null));
     }
 
+    public void sendLogFileInServer() {
+
+    }
+
     private void sendResponse(boolean isSuccess) {
         if (analyticsResponseCallback != null) {
             analyticsResponseCallback.response(isSuccess, analyticsType);

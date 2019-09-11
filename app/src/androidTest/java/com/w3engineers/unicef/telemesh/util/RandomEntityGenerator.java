@@ -1,11 +1,11 @@
 package com.w3engineers.unicef.telemesh.util;
 
-import com.google.protobuf.ByteString;
+import com.google.gson.Gson;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
+import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -101,8 +101,7 @@ public class RandomEntityGenerator {
 
     public BaseMeshData createBaseMeshData(UserEntity userEntity) {
         BaseMeshData baseMeshData = new BaseMeshData();
-
-        baseMeshData.mData = userEntity == null ? null : userEntity.getProtoUser().toByteArray();
+        baseMeshData.mData = userEntity == null ? null : new Gson().toJson(userEntity.getProtoUser()).getBytes();
         baseMeshData.mMeshPeer = new MeshPeer(UUID.randomUUID().toString());
 
         return baseMeshData;
@@ -118,11 +117,11 @@ public class RandomEntityGenerator {
                 .setDataType(1).build();
     }*/
 
-    public RMDataModel.Builder createRMDataModel() {
+    public DataModel createRMDataModel() {
 
 
-        return RMDataModel.newBuilder()
-                .setRawData(ByteString.copyFrom("Hi".getBytes()))
+        return new DataModel()
+                .setRawData("Hi".getBytes())
                 .setDataType(Constants.DataType.MESSAGE_FEED);
 
         /*return RMDataModel.newBuilder()
@@ -190,21 +189,20 @@ public class RandomEntityGenerator {
 
         meshData.mType = Constants.DataType.MESSAGE;
         meshData.mMeshPeer = new MeshPeer(userId);
-        meshData.mData = ((MessageEntity) chatEntity).toProtoChat().toByteArray();
+        meshData.mData = new Gson().toJson(chatEntity.toMessageModel()).getBytes();
 
         return meshData;
     }
 
-    public RMDataModel createChatEntityRmDataModel(String userId, MessageEntity chatEntity) {
-        return RMDataModel.newBuilder()
-                .setUserMeshId(userId)
-                .setRawData(ByteString.copyFrom(chatEntity.toProtoChat().toByteArray()))
-                .setDataType(Constants.DataType.MESSAGE)
-                .build();
+    public DataModel createChatEntityRmDataModel(String userId, MessageEntity chatEntity) {
+        return new DataModel()
+                .setUserId(userId)
+                .setRawData(new Gson().toJson(chatEntity.toMessageModel()).getBytes())
+                .setDataType(Constants.DataType.MESSAGE);
     }
 
     public MeshAcknowledgement createAckRmDataModel(String userId, long transferId) {
-        MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(transferId);
+        MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(String.valueOf(transferId));
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;
     }

@@ -147,6 +147,8 @@ dependencies {
     implementation deps.work.runtime
     implementation deps.work.testing
 
+    implementation deps.location.service
+
     api deps.framework
     api deps.mesh
     api deps.pay

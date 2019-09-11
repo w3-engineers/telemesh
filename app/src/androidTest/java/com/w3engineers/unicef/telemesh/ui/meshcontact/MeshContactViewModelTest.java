@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -91,28 +92,42 @@ public class MeshContactViewModelTest {
     }
 
     @Test
-    public void testGetAllUsers_forFirstTime_getEmptyUserList() {
+    public void testGetAllUsers_forFirstTime_getEmptyUserList() throws InterruptedException {
 
-        TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
 
-        assertTrue(testObserver.observedvalues.get(0).isEmpty());
+        //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+
+        SUT.startUserObserver();
+
+        List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+        // assertTrue(testObserver.observedvalues.get(0).isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testGetAllUsers_addUser_checkUserProperties() {
+    public void testGetAllUsers_addUser_checkUserProperties() throws InterruptedException {
 
         String userMeshId = UUID.randomUUID().toString();
 
         userEntity.setMeshId(userMeshId);
         userDataSource.insertOrUpdateData(userEntity);
 
-        TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
 
-        assertEquals(testObserver.observedvalues.get(0).get(0).getMeshId(), userMeshId);
+        //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+
+        SUT.startUserObserver();
+
+        List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+        // assertEquals(testObserver.observedvalues.get(0).get(0).getMeshId(), userMeshId);
+        assertEquals(result.get(0).getMeshId(), userMeshId);
     }
 
     @Test
-    public void testGetAllUsers_addUser_getUserSize() {
+    public void testGetAllUsers_addUser_getUserSize() throws InterruptedException {
 
         userEntity.setMeshId(UUID.randomUUID().toString());
         userDataSource.insertOrUpdateData(userEntity);
@@ -120,9 +135,15 @@ public class MeshContactViewModelTest {
         userEntity.setMeshId(UUID.randomUUID().toString());
         userDataSource.insertOrUpdateData(userEntity);
 
-        TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
 
-        assertThat(testObserver.observedvalues.get(0).size(), is(2));
+        //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
+
+        SUT.startUserObserver();
+
+        List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+        assertThat(result.size(), is(2));
     }
 
     @Test
@@ -209,7 +230,7 @@ public class MeshContactViewModelTest {
         final int[] smallLetterActualUserCount = {0};
 
         mCompositeDisposable.add(Observable.fromIterable(userEntities).filter(userEntity ->
-                userEntity.getFullName().contains(text) ).subscribe(userEntity ->
+                userEntity.getFullName().contains(text)).subscribe(userEntity ->
                 smallLetterActualUserCount[0]++));
 
         return smallLetterActualUserCount[0];

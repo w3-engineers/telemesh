@@ -18,18 +18,6 @@ import okhttp3.WebSocketListener;
 
 import static org.junit.Assert.*;
 
-/*
- *  ****************************************************************************
- *  * Created by : Md Tariqul Islam on 6/17/2019 at 1:41 PM.
- *  * Email : tariqul@w3engineers.com
- *  *
- *  * Purpose:
- *  *
- *  * Last edited by : Md Tariqul Islam on 6/17/2019.
- *  *
- *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
- *  ****************************************************************************
- */
 
 @RunWith(AndroidJUnit4.class)
 public class BulletinTimeSchedulerTest {

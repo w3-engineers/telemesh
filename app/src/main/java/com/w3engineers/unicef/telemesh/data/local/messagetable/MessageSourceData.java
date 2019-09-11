@@ -27,6 +27,7 @@ public class MessageSourceData {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param messageDao -> provide dao from unit test class
      */
     public MessageSourceData(@NonNull MessageDao messageDao) {
@@ -43,6 +44,7 @@ public class MessageSourceData {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param messageDao -> provide dao from unit test class
      */
     @NonNull

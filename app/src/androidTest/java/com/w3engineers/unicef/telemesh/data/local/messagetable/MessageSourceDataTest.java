@@ -116,7 +116,7 @@ public class MessageSourceDataTest {
                 .setUserName(firstName)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(System.currentTimeMillis())
-                .setOnlineStatus(true);
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
     }
 
     private ChatEntity getChatInfo(String messageId, String userId) {

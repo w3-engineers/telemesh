@@ -55,7 +55,6 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         compositeDisposable.add(messageSourceData.getBlockMessageInfoForSync()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(messagePlotCount -> {
-
                     if (messagePlotCount != null && messagePlotCount > 0) {
 
                         if (trackMessageCount < messagePlotCount) {
@@ -71,7 +70,11 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                         }
                     }
 
-                }, Throwable::printStackTrace));
+                }, this::exception));
+    }
+
+    private void exception(Throwable tr) {
+        Log.e("MessageCountTest", "Error: " + tr.getMessage());
     }
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
@@ -167,8 +170,6 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                         }
                     }
 
-                } else {
-                    Log.d("AppShareTest", "countSentList null");
                 }
             });
         }

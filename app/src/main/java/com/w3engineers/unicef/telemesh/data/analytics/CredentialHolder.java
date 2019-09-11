@@ -12,10 +12,19 @@ public class CredentialHolder {
     private static String sParseAppId;
     private static String sParseClientKey;
     private static String sParseServerUrl;
+    private static CredentialHolder sInstance;
 
     /**
      * Constructor
      */
+
+    public static CredentialHolder getInStance() {
+        if (sInstance == null) {
+            sInstance = new CredentialHolder();
+        }
+        return sInstance;
+    }
+
     private CredentialHolder() {
     }
 
@@ -26,7 +35,7 @@ public class CredentialHolder {
      * @param parseClientKey Parse Client key
      * @param parseServerUrl parse server url
      */
-    public static void init(String parseAppId, String parseClientKey, String parseServerUrl) {
+    public void init(String parseAppId, String parseClientKey, String parseServerUrl) {
         sParseAppId = parseAppId;
         sParseClientKey = parseClientKey;
         sParseServerUrl = parseServerUrl;

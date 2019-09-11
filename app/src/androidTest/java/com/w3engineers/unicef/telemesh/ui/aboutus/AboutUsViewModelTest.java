@@ -27,7 +27,7 @@ public class AboutUsViewModelTest {
     private AboutUsViewModel SUT;
 
     @Rule
-    public ActivityTestRule<AboutUsActivity> rule  = new ActivityTestRule<>(AboutUsActivity.class);
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {

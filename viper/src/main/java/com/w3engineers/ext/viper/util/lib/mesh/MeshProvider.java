@@ -344,7 +344,10 @@ public class MeshProvider implements LinkStateListener {
     }
 
     public int getUserActiveStatus(String userId) {
-        return transportManager.getLinkTypeById(userId);
+        if (transportManager != null) {
+            return transportManager.getLinkTypeById(userId);
+        }
+        return 0;
     }
 
     private BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {

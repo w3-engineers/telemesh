@@ -33,7 +33,7 @@ public class SettingsViewModelTest {
     private SettingsViewModel SUT;
 
     @Rule
-    public ActivityTestRule<MainActivity> rule  = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
@@ -116,6 +116,27 @@ public class SettingsViewModelTest {
     @Test
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        SUT.onCheckedChanged(checkedStatus);
+
+        assertFalse(SUT.getCheckedStatus());
+    }
+
+    @Test
+    public void testOnAppShareCount() {
+        boolean checkedStatus = false;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        SUT.successShared();
 
         try {
             Thread.sleep(1500);

@@ -156,70 +156,37 @@ implement feature ideas as separate projects outside of the core codebase.
 
 
 
-# Getting started
-### Give them a quick walkthrough of how to submit a contribution.
-How you write this is up to you, but some things you may want to include:
+# Submitting an Issue
+Before you submit an issue,
+**[search](https://github.com/w3-engineers/telemesh/issues)** the issues archive;
+maybe the issue has already been submitted or considered. If the issue appears to be a bug,
+and hasn't been reported, open a [new issue](https://github.com/w3-engineers/telemesh/issues/new/choose).
 
-* Let them know if they need to sign a CLA, agree to a DCO, or get any other legal stuff out of the way
-* If tests are required for contributions, let them know, and explain how to run the tests
-* If you use anything other than GitHub to manage issues (ex. JIRA or Trac), let them know which tools they’ll need to contribute
+> Please **do not report duplicate issues**; help us maximize the effort we can spend fixing
+issues and adding enhancements.
 
->For something that is bigger than a one or two line fix:
+Providing the following information will increase the chances of your issue being dealt with
+quickly:
 
->1. Create your own fork of the code
->2. Do the changes in your fork
->3. If you like the change and think the project could use it:
-    * Be sure you have followed the code style for the project.
-    * Sign the Contributor License Agreement, CLA, with the jQuery Foundation.
-    * Note the jQuery Foundation Code of Conduct.
-    * Send a pull request indicating that you have a CLA on file.
+* **Issue Title** - provide a concise issue title prefixed with a snake-case name of the
+                    associated service or component (if any): `<component>: <issue title>`.
+                    Adding the `md-` prefix should be avoided.
 
-[source: [Requirejs](http://requirejs.org/docs/contributing.html)] **Need more inspiration?** [1] [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md#1-where-do-i-go-from-here) [2] [Node.js](https://github.com/nodejs/node/blob/master/CONTRIBUTING.md#code-contributions) [3] [Ember.js](https://github.com/emberjs/ember.js/blob/master/CONTRIBUTING.md#pull-requests)
+  > e.g.
+  > *  menu-bar: does not support dark mode themes [#11238](https://github.com/angular/material/issues/11238)
+  > *  tooltip: memory leak on destroy [#11133](https://github.com/angular/material/issues/11133)
 
-### If you have a different process for small or "obvious" fixes, let them know.
+* **Complete the full Issue Template** - You will get the issue template where we put some predefined rules to create an issue.
+  Moreover we are always open to make any changes according contributor's feedback.
 
-> Small contributions such as fixing spelling errors, where the content is small enough to not be considered intellectual property, can be submitted by a contributor as a patch, without a CLA.
->
->As a rule of thumb, changes are obvious fixes if they do not introduce any new functionality or creative thinking. As long as the change does not affect functionality, some likely examples include the following:
->* Spelling / grammar fixes
->* Typo correction, white space and formatting changes
->* Comment clean up
->* Bug fixes that change default return values or error codes stored in constants
->* Adding logging messages or debugging output
->* Changes to ‘metadata’ files like Gemfile, .gitignore, build scripts, etc.
->* Moving source files from one directory or package to another
+* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
+  causing the problem (line of code or commit).
 
-[source: [Chef](https://github.com/chef/chef/blob/master/CONTRIBUTING.md#chef-obvious-fix-policy)] **Need more inspiration?** [1] [Puppet](https://github.com/puppetlabs/puppet/blob/master/CONTRIBUTING.md#making-trivial-changes)
+#### <a name="submitpr"></a>Submitting Pull Requests
 
-# How to report a bug
-### Explain security disclosures first!
-At bare minimum, include this sentence:
-> If you find a security vulnerability, do NOT open an issue. Email XXXX instead.
+**Important**: We are not accepting major feature requests or PRs that contain major new features
+ or breaking changes at this time.
 
-If you don’t want to use your personal contact information, set up a “security@” email address. Larger projects might have more formal processes for disclosing security, including encrypted communication. (Disclosure: I am not a security expert.)
-
-> Any security issues should be submitted directly to security@travis-ci.org
-> In order to determine whether you are dealing with a security issue, ask yourself these two questions:
-> * Can I access something that's not mine, or something I shouldn't have access to?
-> * Can I disable something for other people?
->
-> If the answer to either of those two questions are "yes", then you're probably dealing with a security issue. Note that even if you answer "no" to both questions, you may still be dealing with a security issue, so if you're unsure, just email us at security@travis-ci.org.
-
-[source: [Travis CI](https://github.com/travis-ci/travis-ci/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#security) [2] [Express.js](https://github.com/expressjs/express/blob/master/Security.md)
-
-### Tell your contributors how to file a bug report.
-You can even include a template so people can just copy-paste (again, less work for you).
-
-> When filing an issue, make sure to answer these five questions:
->
-> 1. What version of Go are you using (go version)?
-> 2. What operating system and processor architecture are you using?
-> 3. What did you do?
-> 4. What did you expect to see?
-> 5. What did you see instead?
-> General questions should go to the golang-nuts mailing list instead of the issue tracker. The gophers there will answer or ask you to file an issue if you've tripped over a bug.
-
-[source: [Go](https://github.com/golang/go/blob/master/CONTRIBUTING.md#filing-issues)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#other-bugs ) [2] [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#reporting-bugs) (includes template)
 
 # How to suggest a feature or enhancement
 ### If you have a particular roadmap, goals, or philosophy for development, share it here.
@@ -239,33 +206,132 @@ If there is back-and-forth or signoff required, say so. Ask them to scope the fe
 [source: [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#feature-requests)] **Need more inspiration?** [1] [Hoodie](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md#feature-requests) [2] [Ember.js](https://github.com/emberjs/ember.js/blob/master/CONTRIBUTING.md#requesting-a-feature)
 
 # Code review process
-### Explain how a contribution gets accepted after it’s been submitted.
-Who reviews it? Who needs to sign off before it’s accepted? When should a contributor expect to hear from you? How can contributors get commit access, if at all?
 
-> The core team looks at Pull Requests on a regular basis in a weekly triage meeting that we hold in a public Google Hangout. The hangout is announced in the weekly status updates that are sent to the puppet-dev list. Notes are posted to the Puppet Community community-triage repo and include a link to a YouTube recording of the hangout.
-> After feedback has been given we expect responses within two weeks. After two weeks we may close the pull request if it isn't showing any activity.
+We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
+for our coding. Code review includes
 
-[source: [Puppet](https://github.com/puppetlabs/puppet/blob/master/CONTRIBUTING.md#submitting-changes)] **Need more inspiration?** [1] [Meteor](https://meteor.hackpad.com/Responding-to-GitHub-Issues-SKE2u3tkSiH ) [2] [Express.js](https://github.com/expressjs/express/blob/master/Contributing.md#becoming-a-committer)
+- Variable naming convention.
+- Method naming convention.
+- is the Class file is written in suitable package that is defined in guideline.
+- Override methods should be listed upper and then the private methods.
+- xml naming convention.
+- Layout design.
+- Unit test check.
+- Proper commenting on each method.
+- Method body and if any logical improvement is needed.
+- If any 3rd party library used then is it good to use or not
+- No sophisticated url access/data on git commit
 
 # Community
-If there are other channels you use besides GitHub to discuss contributions, mention them here. You can also list the author, maintainers, and/or contributors here, or set expectations for response time.
 
-> You can chat with the core team on https://gitter.im/cucumber/cucumber. We try to have office hours on Fridays.
+TBD
 
-[source: [cucumber-ruby](https://github.com/cucumber/cucumber-ruby/blob/master/CONTRIBUTING.md#talking-with-other-devs)] **Need more inspiration?**
- [1] [Chef](https://github.com/chef/chef/blob/master/CONTRIBUTING.md#-developer-office-hours) [2] [Cookiecutter](https://github.com/audreyr/cookiecutter#community)
+# Pull Requests
 
-# BONUS: Code, commit message and labeling conventions
-These sections are not necessary, but can help streamline the contributions you receive.
+The process described here has several goals:
 
-### Explain your preferred style for code, if you have any.
+- Maintain Telemesh's code quality
+- Fix problems that are important to users
+- Engage the community in working toward the best possible Telemesh
+- Enable a sustainable system for Telemesh's maintainers to review contributions
 
-**Need inspiration?** [1] [Requirejs](http://requirejs.org/docs/contributing.html#codestyle) [2] [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#contributing-to-the-elasticsearch-codebase)
 
-### Explain if you use any commit message conventions.
+# Git Commit Guidelines
 
-**Need inspiration?** [1] [Angular](https://github.com/angular/material/blob/master/.github/CONTRIBUTING.md#submit) [2] [Node.js](https://github.com/nodejs/node/blob/master/CONTRIBUTING.md#step-3-commit)
+We have very precise rules over how our git commit messages can be formatted. This leads to **more
+readable messages** that are easy to follow when looking through the **project history**. 
 
-### Explain if you use any labeling conventions for issues.
 
-**Need inspiration?** [1] [StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) [2] [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#issue-and-pull-request-labels)
+### <a name="commit-message-format"></a> Commit Message Format
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
+format that includes a **type**, a **scope** and a **subject**:
+
+```html
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+> Any line of the commit message cannot be longer 100 characters!<br/>
+  This allows the message to be easier to read on GitHub as well as in various Git tools.
+
+##### Type
+Must be one of the following:
+
+* **feat**: A new feature
+* **fix**: A bug fix
+* **docs**: Documentation only changes
+* **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
+  semi-colons, etc)
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **perf**: A code change that improves performance
+* **test**: Adding missing tests
+* **chore**: Changes to the build process or auxiliary tools and libraries such as documentation
+  generation
+
+##### Scope
+The scope could be anything that helps specifying the scope (or feature) that is changing.
+
+Examples
+- select(multiple): 
+- dialog(alert): 
+
+##### Subject
+The subject contains a succinct description of the change:
+
+* use the imperative, present tense: "change" not "changed" nor "changes"
+* don't capitalize first letter
+* no dot (.) at the end
+
+##### Body
+Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes"
+The body should include the motivation for the change and contrast this with previous behavior.
+
+##### Footer
+The footer should contain any information about **Breaking Changes** and is also the place to
+reference GitHub issues that this commit **Closes**, **Fixes**, or **Relates to**.
+
+> Breaking Changes are intended to be highlighted in the ChangeLog as changes that will require
+  community users to modify their code after updating to a version that contains this commit.
+
+##### Sample Commit messages:
+```text
+fix(autocomplete): don't show the menu panel when readonly
+
+this could sometimes happen when no value was selected
+
+Fixes #11231
+```
+```text
+feat(chips): trigger ng-change on chip addition/removal
+
+* add test of `ng-change` for `md-chips`
+* add docs regarding `ng-change` for `md-chips` and `md-contact-chips`
+* add demo for ng-change on `md-chips`
+* add demo for ng-change on `md-contact-chips`
+
+Fixes #11161 Fixes #3857
+```
+
+```text
+refactor(content): prefix mdContent scroll- attributes
+
+    BREAKING CHANGE: md-content's `scroll-` attributes are now prefixed with `md-`.
+
+    Change your code from this:
+
+    ```html
+    <md-content scroll-x scroll-y scroll-xy>
+    ```
+
+    To this:
+
+    ```html
+    <md-content md-scroll-x md-scroll-y md-scroll-xy>
+    ```
+```
+
+
+

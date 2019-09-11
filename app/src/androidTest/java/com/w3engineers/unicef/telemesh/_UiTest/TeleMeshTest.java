@@ -495,7 +495,7 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        ViewInteraction contactSearch = onView(
+        /*ViewInteraction contactSearch = onView(
                 allOf(withId(R.id.action_search),
                         childAtPosition(
                                 childAtPosition(
@@ -518,7 +518,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
 
-        addDelay(500);
+        addDelay(500);*/
 
         mDevice.pressBack();
 
@@ -542,7 +542,7 @@ public class TeleMeshTest {
      * message also show the message in UI
      * So this test also Message Bulletin UI element also
      */
-   /* @Test
+    @Test
     public void unit_test_5() {
         addDelay(3800);
 
@@ -589,7 +589,6 @@ public class TeleMeshTest {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
     }
-*/
     //User company test
     @Test
     public void user_company_test() {

@@ -561,6 +561,8 @@ public class TeleMeshTest {
 
         RmDataHelper.getInstance().dataReceive(rmDataModel, true);
 
+        addDelay(700);
+
         ViewInteraction bottomNavigationMessageFeed = onView(
                 allOf(withId(R.id.action_message_feed),
                         childAtPosition(

@@ -67,6 +67,12 @@ public class SettingsViewModelTest {
 
     @Test
     public void testSetLocale_notSuccess_setAsyncData() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -81,6 +87,12 @@ public class SettingsViewModelTest {
     @Test
     public void testSetLocale_success_setEmptyData() {
 
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
 
@@ -93,6 +105,12 @@ public class SettingsViewModelTest {
 
     @Test
     public void testSetLocale_success_setNullData() {
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -107,6 +125,12 @@ public class SettingsViewModelTest {
     @Test
     public void testOnCheckedChanged_success_setBoolean() {
         boolean checkedStatus = true;
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         SUT.onCheckedChanged(checkedStatus);
 

@@ -66,6 +66,8 @@ public class ChatViewModelTest {
 
     @Test
     public void testMessageSetAndGet_getMessageObject_setMessage() {
+        addDelay();
+        addDelay();
         try {
             UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
             userDataSource.insertOrUpdateData(userEntity);

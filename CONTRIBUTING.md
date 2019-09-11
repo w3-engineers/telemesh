@@ -97,8 +97,8 @@ can pick up where you leave off.
 
 Unsure where to begin contributing to Atom? You can start by looking through these `beginner` and `help-wanted` issues:
 
-* [Good first issues][https://github.com/w3-engineers/telemesh/labels/good%20first%20issue] - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues][https://github.com/w3-engineers/telemesh/labels/help%20wanted] - issues which should be a bit more involved than `beginner` issues.
+* [Good first issues](https://github.com/w3-engineers/telemesh/labels/good%20first%20issue) - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues](https://github.com/w3-engineers/telemesh/labels/help%20wanted) - issues which should be a bit more involved than `beginner` issues.
 
 Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 

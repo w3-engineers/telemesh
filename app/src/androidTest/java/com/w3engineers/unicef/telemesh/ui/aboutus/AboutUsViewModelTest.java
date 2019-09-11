@@ -40,8 +40,10 @@ public class AboutUsViewModelTest {
 
     @Test
     public void getAppVersion_matched_useValidBuildVersion() {
+        addDelay(500);
         String buildVersion = "Version:" + BuildConfig.VERSION_NAME;
         assertEquals(SUT.getAppVersion(), buildVersion);
+        addDelay(1000);
     }
 
     @Test
@@ -56,4 +58,11 @@ public class AboutUsViewModelTest {
         assertNotEquals(SUT.getAppVersion(), buildVersion);
     }
 
+    private void addDelay(int i) {
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

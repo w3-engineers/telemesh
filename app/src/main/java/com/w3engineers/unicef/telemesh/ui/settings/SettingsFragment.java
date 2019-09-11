@@ -60,6 +60,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutDataPlan.setOnClickListener(this);
         mBinding.layoutOpenWallet.setOnClickListener(this);
         mBinding.layoutShowLog.setOnClickListener(this);
+        mBinding.layoutDiagramMap.setOnClickListener(this);
     }
 
     @Override

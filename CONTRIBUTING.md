@@ -1,46 +1,98 @@
-# Introduction
+# Contributing
 
-### Write something nice here!
+First off, thank you for considering contributing to Telemesh. It's people like you that make Telemesh such a great tool.
 
->First off, thank you for considering contributing to Active Admin. It's people like you that make Active Admin such a great tool.
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
-[source: [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Read The Docs](http://read-the-docs.readthedocs.org/en/latest/contribute.html) [2] [Mustache.js](https://github.com/janl/mustache.js/#contributing)
+Please note we have a code of conduct, please follow it in all your interactions with the project.
 
-### Tell them why they should read your guidelines.
+When contributing to Telemesh, we ask that you:
 
->Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
+- let us know what you plan in the GitHub Issue tracker so we can provide feedback.
 
-[source: [Hoodie](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md)]
+- provide tests and documentation whenever possible. It is very unlikely that we will accept new features or functionality into Telemesh without the proper testing and documentation. When fixing a bug, provide a failing test case that your patch solves.
 
-### Explain what kinds of contributions you are looking for.
+- open a GitHub Pull Request with your patches and we will review your contribution and respond as quickly as possible. Keep in mind that this is an open source project, and it may take us some time to get back to you. Your patience is very much appreciated.
 
-Keep an open mind! Improving documentation, bug triaging, or writing tutorials are all examples of helpful contributions that mean less work for you.
 
-> Elasticsearch is an open source project and we love to receive contributions from our community — you! There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into Elasticsearch itself.
+.. _community-code-of-conduct:
 
-[source: [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Devise](https://github.com/plataformatec/devise/wiki/Contributing) [2] [Geocoder](https://github.com/alexreisner/geocoder#known-issue) (“known issue”)
+Community Code of Conduct
+=========================
 
-### Explain contributions you are NOT looking for (if any).
+The goal is to maintain a Telemesh community that's pleasant for everyone.
+That's why we would greatly appreciate it if everyone contributing to and
+interacting with the community also followed this Code of Conduct.
 
-Again, defining this up front means less work for you. If someone ignores your guide and submits something you don’t want, you can simply close it and point to your policy.
 
-> Please, don't use the issue tracker for [support questions]. Check whether the #pocoo IRC channel on Freenode can help with your issue. If your problem is not strictly Werkzeug or Flask specific, #python is generally more active. Stack Overflow is also worth considering.
+Be considerate
+--------------
 
-[source: [Flask](https://github.com/pallets/flask/blob/master/CONTRIBUTING.rst)] **Need more inspiration?** [1] [cucumber-ruby](https://github.com/cucumber/cucumber-ruby/blob/master/CONTRIBUTING.md#about-to-create-a-new-github-issue) [2] [Read the Docs](http://read-the-docs.readthedocs.org/en/latest/open-source-philosophy.html#unsupported)
+Your work will be used by other people, and you in turn will depend on the
+work of others. Any decision you take will affect users and colleagues, and
+we expect you to take those consequences into account when making decisions.
+Even if it's not obvious at the time, our contributions to Telemesh will impact
+the work of others. For example, changes to code, infrastructure, policy,
+documentation and translations during a release may negatively impact
+others work.
 
-# Ground Rules
-### Set expectations for behavior (yours, and theirs).
-This includes not just how to communicate with others (being respectful, considerate, etc) but also technical responsibilities (importance of testing, project dependencies, etc). Mention and link to your code of conduct, if you have one.
+Be respectful
+-------------
 
-> Responsibilities
-> * Ensure cross-platform compatibility for every change that's accepted. Windows, Mac, Debian & Ubuntu Linux.
-> * Ensure that code that goes into core meets all requirements in this checklist: https://gist.github.com/audreyr/4feef90445b9680475f2
-> * Create issues for any major changes and enhancements that you wish to make. Discuss things transparently and get community feedback.
-> * Don't add any classes to the codebase unless absolutely needed. Err on the side of using functions.
-> * Keep feature versions as small as possible, preferably one new feature per version.
-> * Be welcoming to newcomers and encourage diverse new contributors from all backgrounds. See the [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
+The Telemesh community and its members treat one another with respect. Everyone
+can make a valuable contribution to Telemesh. We may not always agree, but
+disagreement is no excuse for poor behavior and poor manners. We might all
+experience some frustration now and then, but we cannot allow that frustration
+to turn into a personal attack. It's important to remember that a community
+where people feel uncomfortable or threatened isn't a productive one. We
+expect members of the Telemesh community to be respectful when dealing with
+other contributors as well as with people outside the Telemesh project and with
+users of Telemesh.
 
-[source: [cookiecutter](https://github.com/audreyr/cookiecutter/blob/master/CONTRIBUTING.rst)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#community-code-of-conduct) [2] [geocoder](https://github.com/alexreisner/geocoder#contributing)
+Be collaborative
+----------------
+
+Collaboration is central to Telemesh and to the larger free software community.
+We should always be open to collaboration. Your work should be done
+transparently and patches from Telemesh should be given back to the community
+when they're made, not just when the distribution releases. If you wish
+to work on new code for existing upstream projects, at least keep those
+projects informed of your ideas and progress. It many not be possible to
+get consensus from upstream, or even from your colleagues about the correct
+implementation for an idea, so don't feel obliged to have that agreement
+before you begin, but at least keep the outside world informed of your work,
+and publish your work in a way that allows outsiders to test, discuss, and
+contribute to your efforts.
+
+When you disagree, consult others
+---------------------------------
+
+Disagreements, both political and technical, happen all the time and
+the Telemesh community is no exception. It's important that we resolve
+disagreements and differing views constructively and with the help of the
+community and community process. If you really want to go a different
+way, then we encourage you to make a derivative distribution or alternate
+set of packages that still build on the work we've done to utilize as common
+of a core as possible.
+
+When you're unsure, ask for help
+--------------------------------
+
+Nobody knows everything, and nobody is expected to be perfect. Asking
+questions avoids many problems down the road, and so questions are
+encouraged. Those who are asked questions should be responsive and helpful.
+However, when asking a question, care must be taken to do so in an appropriate
+forum.
+
+Step down considerately
+-----------------------
+
+Developers on every project come and go and Telemesh is no different. When you
+leave or disengage from the project, in whole or in part, we ask that you do
+so in a way that minimizes disruption to the project. This means you should
+tell people you're leaving and take the proper steps to ensure that others
+can pick up where you leave off.
+
 
 # Your First Contribution
 Help people who are new to your project understand where they can be most helpful. This is also a good time to let people know if you follow a label convention for flagging beginner issues.
@@ -51,6 +103,66 @@ Help people who are new to your project understand where they can be most helpfu
 > Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
 [source: [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#your-first-code-contribution)] **Need more inspiration?** [1] [Read the Docs](http://docs.readthedocs.org/en/latest/contribute.html#contributing-to-development) [2] [Django](https://docs.djangoproject.com/en/dev/internals/contributing/new-contributors/#first-steps) (scroll down to "Guidelines" as well)
+
+### Bonus points: Add a link to a resource for people who have never contributed to open source before.
+Here are a couple of friendly tutorials you can include: http://makeapullrequest.com/ and http://www.firsttimersonly.com/
+
+> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+
+[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]  
+
+As a side note, it helps to use newcomer-friendly language throughout the rest of your document. Here are a couple of examples from [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md):
+
+>At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
+>
+>If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
+
+
+Support questions
+-----------------
+
+Please, don't use the issue tracker for this. Use one of the following
+resources for questions about your own code:
+
+* The ``#get-help`` channel on our Discord chat: [Link will be updated soon]
+
+* The mailing list info@telemesh.net for long term discussion or larger issues.
+
+
+Reporting issues
+----------------
+Report bugs at https://github.com/w3-engineers/telemesh/issues.
+
+- Describe what you expected to happen.
+- If possible, include a `minimal reproducible example`_ to help us
+  identify the issue. This also helps check that the issue is not with
+  your own code.
+- Describe what actually happened. Include the full traceback if there was an
+  exception.
+- List your Android Studio, Testing device, and any other hardware or supporting tools versions. If possible, check if this
+  issue is already fixed in the repository.
+
+.. _minimal reproducible example: https://stackoverflow.com/help/minimal-reproducible-example
+
+
+Fix Bugs
+~~~~~~~~
+
+Look through the GitHub issues for bugs. Anything tagged with "bug"
+is open to whoever wants to implement it.
+
+
+Implement Features
+~~~~~~~~~~~~~~~~~~
+
+Look through the GitHub issues for features. Anything tagged with "enhancement"
+and "optimization" is open to whoever wants to implement it.
+
+Please do not combine multiple feature enhancements into a single pull request.
+
+Note: We're trying to keep the code base
+small, extensible, and streamlined. Whenever possible, it's best to try and
+implement feature ideas as separate projects outside of the core codebase.
 
 ### Bonus points: Add a link to a resource for people who have never contributed to open source before.
 Here are a couple of friendly tutorials you can include: http://makeapullrequest.com/ and http://www.firsttimersonly.com/

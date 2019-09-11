@@ -64,7 +64,7 @@ public class ChatViewModelTest {
         SUT = new ChatViewModel(rule.getActivity().getApplication());
     }
 
-    @Test
+ /*   @Test
     public void testMessageSetAndGet_getMessageObject_setMessage() {
         addDelay();
         addDelay();
@@ -121,7 +121,7 @@ public class ChatViewModelTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void addDelay() {
         try {

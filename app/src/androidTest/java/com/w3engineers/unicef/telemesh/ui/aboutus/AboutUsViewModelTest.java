@@ -48,14 +48,18 @@ public class AboutUsViewModelTest {
 
     @Test
     public void getAppVersion_notMatched_useEmptyBuildVersion() {
+        addDelay(500);
         String buildVersion = "Version:" + "";
         assertNotEquals(SUT.getAppVersion(), buildVersion);
+        addDelay(1000);
     }
 
     @Test
     public void getAppVersion_success_useNullBuildVersion() {
+        addDelay(500);
         String buildVersion = "Version:" + null;
         assertNotEquals(SUT.getAppVersion(), buildVersion);
+        addDelay(1000);
     }
 
     private void addDelay(int i) {

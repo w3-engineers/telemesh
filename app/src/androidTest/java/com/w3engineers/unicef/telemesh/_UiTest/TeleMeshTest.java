@@ -542,7 +542,7 @@ public class TeleMeshTest {
      * message also show the message in UI
      * So this test also Message Bulletin UI element also
      */
-    @Test
+   /* @Test
     public void unit_test_5() {
         addDelay(3800);
 
@@ -589,7 +589,7 @@ public class TeleMeshTest {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
     }
-
+*/
     //User company test
     @Test
     public void user_company_test() {

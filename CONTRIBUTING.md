@@ -188,27 +188,11 @@ quickly:
  or breaking changes at this time.
 
 
-# How to suggest a feature or enhancement
-### If you have a particular roadmap, goals, or philosophy for development, share it here.
-This information will give contributors context before they make suggestions that may not align with the project’s needs.
+# Feature requests
 
-> The Express philosophy is to provide small, robust tooling for HTTP servers, making it a great solution for single page applications, web sites, hybrids, or public HTTP APIs.
->
-> Express does not force you to use any specific ORM or template engine. With support for over 14 template engines via Consolidate.js, you can quickly craft your perfect framework.
-
-[source: [Express](https://github.com/expressjs/express#philosophy)] **Need more inspiration?** [Active Admin](https://github.com/activeadmin/activeadmin#goals)
-
-### Explain your desired process for suggesting a feature.
-If there is back-and-forth or signoff required, say so. Ask them to scope the feature, thinking through why it’s needed and how it might work.
-
-> If you find yourself wishing for a feature that doesn't exist in Elasticsearch, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Elasticsearch has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
-
-[source: [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#feature-requests)] **Need more inspiration?** [1] [Hoodie](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md#feature-requests) [2] [Ember.js](https://github.com/emberjs/ember.js/blob/master/CONTRIBUTING.md#requesting-a-feature)
+If you find yourself wishing for a feature that doesn't exist in Telemesh, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Telemesh has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
 
 # Code review process
-
-We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
-for our coding. Code review includes
 
 - Variable naming convention.
 - Method naming convention.
@@ -228,12 +212,19 @@ TBD
 
 # Pull Requests
 
+Follow all instructions in [the template](https://github.com/w3-engineers/telemesh/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 The process described here has several goals:
 
 - Maintain Telemesh's code quality
 - Fix problems that are important to users
 - Engage the community in working toward the best possible Telemesh
 - Enable a sustainable system for Telemesh's maintainers to review contributions
+
+### How to create PR 
+
+[How to create PR on Github](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github)
+
+[How to update existing PR](https://www.digitalocean.com/community/tutorials/how-to-rebase-and-update-a-pull-request)
 
 
 # Git Commit Guidelines
@@ -333,5 +324,11 @@ refactor(content): prefix mdContent scroll- attributes
     ```
 ```
 
+# Coding style guide 
 
+We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
+for our coding. Code review includes
 
+# Organize github issues
+
+We are following this guideline [Style Guide](https://robinpowered.com/blog/best-practice-system-for-organizing-and-tagging-github-issues/)

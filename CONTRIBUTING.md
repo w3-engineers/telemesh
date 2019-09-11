@@ -15,10 +15,9 @@ When contributing to Telemesh, we ask that you:
 - open a GitHub Pull Request with your patches and we will review your contribution and respond as quickly as possible. Keep in mind that this is an open source project, and it may take us some time to get back to you. Your patience is very much appreciated.
 
 
-.. _community-code-of-conduct:
 
-Community Code of Conduct
-=========================
+# Community Code of Conduct
+
 
 The goal is to maintain a Telemesh community that's pleasant for everyone.
 That's why we would greatly appreciate it if everyone contributing to and
@@ -95,31 +94,23 @@ can pick up where you leave off.
 
 
 # Your First Contribution
-Help people who are new to your project understand where they can be most helpful. This is also a good time to let people know if you follow a label convention for flagging beginner issues.
 
-> Unsure where to begin contributing to Atom? You can start by looking through these beginner and help-wanted issues:
-> Beginner issues - issues which should only require a few lines of code, and a test or two.
-> Help wanted issues - issues which should be a bit more involved than beginner issues.
-> Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
+Unsure where to begin contributing to Atom? You can start by looking through these `beginner` and `help-wanted` issues:
 
-[source: [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#your-first-code-contribution)] **Need more inspiration?** [1] [Read the Docs](http://docs.readthedocs.org/en/latest/contribute.html#contributing-to-development) [2] [Django](https://docs.djangoproject.com/en/dev/internals/contributing/new-contributors/#first-steps) (scroll down to "Guidelines" as well)
+* [Good first issues][https://github.com/w3-engineers/telemesh/labels/good%20first%20issue] - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues][https://github.com/w3-engineers/telemesh/labels/help%20wanted] - issues which should be a bit more involved than `beginner` issues.
 
-### Bonus points: Add a link to a resource for people who have never contributed to open source before.
-Here are a couple of friendly tutorials you can include: http://makeapullrequest.com/ and http://www.firsttimersonly.com/
+Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]  
+At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
 
-As a side note, it helps to use newcomer-friendly language throughout the rest of your document. Here are a couple of examples from [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md):
-
->At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
->
->If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
+If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
 
 
-Support questions
------------------
+# Support questions
+
 
 Please, don't use the issue tracker for this. Use one of the following
 resources for questions about your own code:
@@ -129,12 +120,12 @@ resources for questions about your own code:
 * The mailing list info@telemesh.net for long term discussion or larger issues.
 
 
-Reporting issues
-----------------
+# Reporting issues
+
 Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
 - Describe what you expected to happen.
-- If possible, include a `minimal reproducible example`_ to help us
+- If possible, include a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) to help us
   identify the issue. This also helps check that the issue is not with
   your own code.
 - Describe what actually happened. Include the full traceback if there was an
@@ -142,18 +133,17 @@ Report bugs at https://github.com/w3-engineers/telemesh/issues.
 - List your Android Studio, Testing device, and any other hardware or supporting tools versions. If possible, check if this
   issue is already fixed in the repository.
 
-.. _minimal reproducible example: https://stackoverflow.com/help/minimal-reproducible-example
 
 
-Fix Bugs
-~~~~~~~~
+# Fix Bugs
+
 
 Look through the GitHub issues for bugs. Anything tagged with "bug"
 is open to whoever wants to implement it.
 
 
-Implement Features
-~~~~~~~~~~~~~~~~~~
+# Implement Features
+
 
 Look through the GitHub issues for features. Anything tagged with "enhancement"
 and "optimization" is open to whoever wants to implement it.
@@ -164,18 +154,7 @@ Note: We're trying to keep the code base
 small, extensible, and streamlined. Whenever possible, it's best to try and
 implement feature ideas as separate projects outside of the core codebase.
 
-### Bonus points: Add a link to a resource for people who have never contributed to open source before.
-Here are a couple of friendly tutorials you can include: http://makeapullrequest.com/ and http://www.firsttimersonly.com/
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
-
-[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]  
-
-As a side note, it helps to use newcomer-friendly language throughout the rest of your document. Here are a couple of examples from [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md):
-
->At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
->
->If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
 
 # Getting started
 ### Give them a quick walkthrough of how to submit a contribution.

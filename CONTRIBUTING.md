@@ -10,11 +10,19 @@
     4. [When you disagree, consult others](#disagree)
     5. [When you're unsure, ask for help](#unsure)
     6. [Step down considerately](#stepdown)
-    
-    
-3. [Another paragraph](#paragraph2)
-
-
+        
+3. [Your First Contribution](#firstcontribution)
+4. [Support questions](#supportquestions)
+5. [Reporting issues](#reportissue)
+6. [Fix Bugs](#fixbugs)
+7. [Implement Features](#features)
+8. [Submitting an Issue](#submitissue)
+9. [Feature requests](#featurereq)
+10. [Code review process](#codereview)
+11. [Community](#community)
+12. [Pull Requests](#pullreq)
+     1. [How to create PR](#howpullreq)
+13. [Git Commit Guidelines](#gitcommit)     
 
 
 
@@ -113,12 +121,12 @@ tell people you're leaving and take the proper steps to ensure that others
 can pick up where you leave off.
 
 
-## Your First Contribution
+## Your First Contribution <a name="firstcontribution"></a>
 
-Unsure where to begin contributing to Atom? You can start by looking through these `beginner` and `help-wanted` issues:
+Unsure where to begin contributing to Telemesh? You can start by looking through these `good-first` and `help-wanted` issues:
 
 * [Good first issues](https://github.com/w3-engineers/telemesh/labels/good%20first%20issue) - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues](https://github.com/w3-engineers/telemesh/labels/help%20wanted) - issues which should be a bit more involved than `beginner` issues.
+* [Help wanted issues](https://github.com/w3-engineers/telemesh/labels/help%20wanted) - issues which should be a bit more involved than `good-first` issues.
 
 Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
@@ -129,7 +137,7 @@ At this point, you're ready to make your changes! Feel free to ask for help; eve
 If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
 
 
-# Support questions
+## Support questions <a name="supportquestions"></a>
 
 
 Please, don't use the issue tracker for this. Use one of the following
@@ -140,7 +148,7 @@ resources for questions about your own code:
 * The mailing list info@telemesh.net for long term discussion or larger issues.
 
 
-# Reporting issues
+## Reporting issues <a name="reportissue"></a>
 
 Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
@@ -155,14 +163,13 @@ Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
 
 
-# Fix Bugs
-
+## Fix Bugs <a name="fixbugs"></a>
 
 Look through the GitHub issues for bugs. Anything tagged with "bug"
 is open to whoever wants to implement it.
 
 
-# Implement Features
+## Implement Features <a name="features"></a>
 
 
 Look through the GitHub issues for features. Anything tagged with "enhancement"
@@ -176,7 +183,8 @@ implement feature ideas as separate projects outside of the core codebase.
 
 
 
-# Submitting an Issue
+## Submitting an Issue <a name="submitissue"></a>
+
 Before you submit an issue,
 **[search](https://github.com/w3-engineers/telemesh/issues)** the issues archive;
 maybe the issue has already been submitted or considered. If the issue appears to be a bug,
@@ -208,11 +216,11 @@ quickly:
  or breaking changes at this time.
 
 
-# Feature requests
+## Feature requests <a name="featurereq"></a>
 
 If you find yourself wishing for a feature that doesn't exist in Telemesh, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Telemesh has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
 
-# Code review process
+## Code review process <a name="codereview"></a>
 
 - Variable naming convention.
 - Method naming convention.
@@ -226,11 +234,11 @@ If you find yourself wishing for a feature that doesn't exist in Telemesh, you a
 - If any 3rd party library used then is it good to use or not
 - No sophisticated url access/data on git commit
 
-# Community
+## Community <a name="community"></a>
 
 TBD
 
-# Pull Requests
+## Pull Requests <a name="pullreq"></a>
 
 Follow all instructions in [the template](https://github.com/w3-engineers/telemesh/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 The process described here has several goals:
@@ -240,14 +248,14 @@ The process described here has several goals:
 - Engage the community in working toward the best possible Telemesh
 - Enable a sustainable system for Telemesh's maintainers to review contributions
 
-### How to create PR 
+### How to create PR <a name="howpullreq"></a>
 
 [How to create PR on Github](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github)
 
 [How to update existing PR](https://www.digitalocean.com/community/tutorials/how-to-rebase-and-update-a-pull-request)
 
 
-# Git Commit Guidelines
+## Git Commit Guidelines <a name="gitcommit"></a>
 
 We have very precise rules over how our git commit messages can be formatted. This leads to **more
 readable messages** that are easy to follow when looking through the **project history**. 
@@ -344,16 +352,16 @@ refactor(content): prefix mdContent scroll- attributes
     ```
 ```
 
-# Coding style guide 
+## Coding style guide 
 
 We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
 for our coding. Code review includes
 
-# Organize github issues
+## Organize github issues
 
 We are following this guideline [Style Guide](https://robinpowered.com/blog/best-practice-system-for-organizing-and-tagging-github-issues/)
 
-# Issue Referencing on Github
+## Issue Referencing on Github
 
 You can include keywords in your pull request descriptions, as well as commit messages, to automatically close issues in GitHub.
 [About issue reference](https://help.github.com/en/articles/closing-issues-using-keywords#about-issue-references)

@@ -22,9 +22,11 @@
 11. [Community](#community)
 12. [Pull Requests](#pullreq)
      1. [How to create PR](#howpullreq)
-13. [Git Commit Guidelines](#gitcommit)     
-
-
+13. [Git Commit Guidelines](#gitcommit) 
+14. [Coding style guide](#codingstyle) 
+15. [Organize github issues](#organize) 
+16. [Issue Referencing on Github](#issuereference) 
+    
 
 
 ## Introduction <a name="introduction"></a>
@@ -352,16 +354,16 @@ refactor(content): prefix mdContent scroll- attributes
     ```
 ```
 
-## Coding style guide 
+## Coding style guide <a name="codingstyle"></a>
 
 We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
 for our coding. Code review includes
 
-## Organize github issues
+## Organize github issues <a name="organize"></a>
 
 We are following this guideline [Style Guide](https://robinpowered.com/blog/best-practice-system-for-organizing-and-tagging-github-issues/)
 
-## Issue Referencing on Github
+## Issue Referencing on Github <a name="issuereference"></a>
 
 You can include keywords in your pull request descriptions, as well as commit messages, to automatically close issues in GitHub.
 [About issue reference](https://help.github.com/en/articles/closing-issues-using-keywords#about-issue-references)

@@ -1,5 +1,26 @@
 # Contributing
 
+
+# Table of contents
+1. [Introduction](#introduction)
+2. [Community Code of Conduct](#codeofconduct)
+    1. [Be considerate](#beconsiderate)
+    2. [Be respectful](#berespectful)
+    3. [Be collaborative](#becollaborative)
+    4. [When you disagree, consult others](#disagree)
+    5. [When you're unsure, ask for help](#unsure)
+    6. [Step down considerately](#stepdown)
+    
+    
+3. [Another paragraph](#paragraph2)
+
+
+
+
+
+
+## Introduction <a name="introduction"></a>
+
 First off, thank you for considering contributing to Telemesh. It's people like you that make Telemesh such a great tool.
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
@@ -16,7 +37,7 @@ When contributing to Telemesh, we ask that you:
 
 
 
-# Community Code of Conduct
+## Community Code of Conduct <a name="codeofconduct"></a>
 
 
 The goal is to maintain a Telemesh community that's pleasant for everyone.
@@ -24,8 +45,8 @@ That's why we would greatly appreciate it if everyone contributing to and
 interacting with the community also followed this Code of Conduct.
 
 
-Be considerate
---------------
+### Be considerate <a name="beconsiderate"></a>
+
 
 Your work will be used by other people, and you in turn will depend on the
 work of others. Any decision you take will affect users and colleagues, and
@@ -35,8 +56,8 @@ the work of others. For example, changes to code, infrastructure, policy,
 documentation and translations during a release may negatively impact
 others work.
 
-Be respectful
--------------
+### Be respectful <a name="berespectful"></a>
+
 
 The Telemesh community and its members treat one another with respect. Everyone
 can make a valuable contribution to Telemesh. We may not always agree, but
@@ -48,8 +69,8 @@ expect members of the Telemesh community to be respectful when dealing with
 other contributors as well as with people outside the Telemesh project and with
 users of Telemesh.
 
-Be collaborative
-----------------
+### Be collaborative <a name="becollaborative"></a>
+
 
 Collaboration is central to Telemesh and to the larger free software community.
 We should always be open to collaboration. Your work should be done
@@ -63,8 +84,8 @@ before you begin, but at least keep the outside world informed of your work,
 and publish your work in a way that allows outsiders to test, discuss, and
 contribute to your efforts.
 
-When you disagree, consult others
----------------------------------
+### When you disagree, consult others <a name="disagree"></a>
+
 
 Disagreements, both political and technical, happen all the time and
 the Telemesh community is no exception. It's important that we resolve
@@ -74,8 +95,8 @@ way, then we encourage you to make a derivative distribution or alternate
 set of packages that still build on the work we've done to utilize as common
 of a core as possible.
 
-When you're unsure, ask for help
---------------------------------
+### When you're unsure, ask for help <a name="unsure"></a>
+
 
 Nobody knows everything, and nobody is expected to be perfect. Asking
 questions avoids many problems down the road, and so questions are
@@ -83,8 +104,7 @@ encouraged. Those who are asked questions should be responsive and helpful.
 However, when asking a question, care must be taken to do so in an appropriate
 forum.
 
-Step down considerately
------------------------
+### Step down considerately <a name="stepdown"></a>
 
 Developers on every project come and go and Telemesh is no different. When you
 leave or disengage from the project, in whole or in part, we ask that you do
@@ -93,7 +113,7 @@ tell people you're leaving and take the proper steps to ensure that others
 can pick up where you leave off.
 
 
-# Your First Contribution
+## Your First Contribution
 
 Unsure where to begin contributing to Atom? You can start by looking through these `beginner` and `help-wanted` issues:
 

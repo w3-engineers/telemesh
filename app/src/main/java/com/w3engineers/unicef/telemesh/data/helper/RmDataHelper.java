@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -45,6 +47,7 @@ import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -741,12 +744,39 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }, Throwable::printStackTrace));
     }
 
+    public void uploadLogFile() {
+        compositeDisposable.add(Single.fromCallable(() ->
+                MeshLogDataSource.getInstance().getAllUploadedLogList())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::uploadLogFile, Throwable::printStackTrace));
+    }
+
+    private void uploadLogFile(List<String> previousList) {
+        if (previousList == null) {
+            previousList = new ArrayList<>();
+        }
+
+        Log.d("ParseFileUpload", "Upload file call");
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdCard.getAbsolutePath() +
+                "/MeshRnD");
+        File[] files = directory.listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (!previousList.contains(file.getName())) {
+                AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "testUser", Constants.getDeviceName());
+            }
+
+        }
+    }
+
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 
     public void showMeshLog(String log) {
-        LogProcessUtil.getInstance().writeLog(log);
+       // LogProcessUtil.getInstance().writeLog(log);
     }
 }

@@ -32,4 +32,12 @@ public class ParseConstant {
         String DATE = "date";
         String COUNT = "count";
     }
+
+    interface MeshLog{
+        String TABLE = "MeshLog";
+        String USER_ID = "user_id";
+        String LOG_FILE = "log_file";
+        String DEVICE_NAME = "device_name";
+        String DEVICE_OS = "os_version";
+    }
 }

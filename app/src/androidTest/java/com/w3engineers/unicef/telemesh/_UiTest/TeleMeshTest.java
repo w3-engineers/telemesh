@@ -419,7 +419,7 @@ public class TeleMeshTest {
     }
 
     // Message and mesh contact test
-    @Test
+   /* @Test
     public void uiTest_4() {
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED,true);
 
@@ -534,10 +534,11 @@ public class TeleMeshTest {
 
         try {
             mDevice.pressBack();
+            RmDataHelper.getInstance().stopRmService();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /**
      * Testing Message/Bulletin Feed

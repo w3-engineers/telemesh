@@ -38,6 +38,8 @@ import static org.junit.Assert.assertThat;
  * Proprietary and confidential
  * ============================================================================
  */
+
+/*
 @RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
@@ -64,7 +66,7 @@ public class ChatViewModelTest {
         SUT = new ChatViewModel(rule.getActivity().getApplication());
     }
 
- /*   @Test
+    @Test
     public void testMessageSetAndGet_getMessageObject_setMessage() {
         addDelay();
         addDelay();
@@ -121,7 +123,7 @@ public class ChatViewModelTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     private void addDelay() {
         try {
@@ -135,4 +137,4 @@ public class ChatViewModelTest {
     public void tearDown() {
         appDatabase.close();
     }
-}
+}*/

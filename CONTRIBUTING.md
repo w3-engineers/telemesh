@@ -357,7 +357,8 @@ refactor(content): prefix mdContent scroll- attributes
 ## Coding style guide <a name="codingstyle"></a>
 
 We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
-for our coding. Code review includes
+for our coding.
+
 
 ## Organize github issues <a name="organize"></a>
 

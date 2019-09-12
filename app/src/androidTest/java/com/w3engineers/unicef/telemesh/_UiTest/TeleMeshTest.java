@@ -419,9 +419,9 @@ public class TeleMeshTest {
     }
 
     // Message and mesh contact test
-   /* @Test
+    @Test
     public void uiTest_4() {
-        addDelay(3800);
+        addDelay(35*1000);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
@@ -432,7 +432,7 @@ public class TeleMeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay(700);
+        addDelay(1000);
 
         ViewInteraction contactLayout = onView(
                 allOf(childAtPosition(
@@ -443,7 +443,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         contactLayout.perform(click());
 
-        addDelay(700);
+        addDelay(1000);
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edit_text_message),
@@ -456,6 +456,8 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatEditText.perform(replaceText("Hi"), closeSoftKeyboard());
 
+        addDelay(700);
+
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(
@@ -467,12 +469,12 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-        addDelay(700);
+        addDelay(1000);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
 
-        addDelay(700);
+        addDelay(1000);
 
         ViewInteraction appCompatTextView = onView(
                 allOf(withId(R.id.text_view_last_name),
@@ -485,7 +487,7 @@ public class TeleMeshTest {
                         isDisplayed()));
         appCompatTextView.perform(click());
 
-        addDelay(700);
+        addDelay(1000);
 
         pressBack();
 
@@ -522,18 +524,18 @@ public class TeleMeshTest {
 
         mDevice.pressBack();
 
-        addDelay(2500);
+        addDelay(500);
 
         mDevice.pressBack();
 
-        addDelay(1000);
+        addDelay(2000);
 
         try {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     /**
      * Testing Message/Bulletin Feed

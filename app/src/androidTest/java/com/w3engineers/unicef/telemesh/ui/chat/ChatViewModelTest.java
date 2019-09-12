@@ -39,6 +39,7 @@ import static org.junit.Assert.assertThat;
  * ============================================================================
  */
 
+/*
 @RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
@@ -59,8 +60,10 @@ public class ChatViewModelTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        /*userDataSource = UserDataSource.getInstance(appDatabase.userDao());
-        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());*/
+        */
+/*userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());*//*
+
 
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
@@ -140,3 +143,4 @@ public class ChatViewModelTest {
         appDatabase.close();
     }
 }
+*/

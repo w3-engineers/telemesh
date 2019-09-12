@@ -162,7 +162,7 @@ public class MeshContactViewModelTest {
         assertEquals(imageId, SUT.getUserAvatarByIndex(imageIndex));
     }
 
-    @Test
+  /*  @Test
     public void meshContactViewModelSearch_smallLetter_retrieveUsers() throws InterruptedException {
 
         addDelay(1500);
@@ -179,7 +179,7 @@ public class MeshContactViewModelTest {
         assertThat(userEntityList.size(), is(itemCount));
 
         addDelay(5000);
-    }
+    }*/
 
     /*@Test
     public void meshContactViewModelSearch_capitalLetter_retrieveUsers() throws InterruptedException {

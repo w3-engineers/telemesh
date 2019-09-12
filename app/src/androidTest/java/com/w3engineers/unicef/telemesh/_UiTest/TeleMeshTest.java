@@ -421,7 +421,9 @@ public class TeleMeshTest {
     // Message and mesh contact test
     @Test
     public void uiTest_4() {
-        addDelay(35*1000);
+        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED,true);
+
+        addDelay(5*1000);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)

@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import org.junit.After;
@@ -28,7 +29,6 @@ import static org.junit.Assert.assertTrue;
  */
 
 
-/*
 @RunWith(AndroidJUnit4.class)
 public class SettingsViewModelTest {
 
@@ -36,7 +36,7 @@ public class SettingsViewModelTest {
     private SettingsViewModel SUT;
 
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -167,4 +167,3 @@ public class SettingsViewModelTest {
         }
     }
 }
-*/

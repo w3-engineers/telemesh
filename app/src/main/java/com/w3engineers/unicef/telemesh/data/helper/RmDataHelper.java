@@ -762,12 +762,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 "/MeshRnD");
         File[] files = directory.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            if (!previousList.contains(file.getName())) {
-                AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "testUser", Constants.getDeviceName());
+        if(files!=null){
+            for (File file : files) {
+                if (!previousList.contains(file.getName())) {
+                    AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "testUser", Constants.getDeviceName());
+                }
             }
-
         }
     }
 

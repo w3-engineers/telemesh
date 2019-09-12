@@ -65,6 +65,7 @@ public class ChatViewModelTest {
         messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());*//*
 
 
+
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
 

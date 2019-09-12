@@ -49,11 +49,7 @@ public class SettingsViewModelTest {
     @Test
     public void testSetLocale_success_setValidData() {
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -63,15 +59,13 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], languageList[dataIndex]);
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testSetLocale_notSuccess_setAsyncData() {
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
@@ -82,16 +76,15 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], languageList[1]);
 
         assertNotEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
+
     }
 
     @Test
     public void testSetLocale_success_setEmptyData() {
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -101,16 +94,14 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], "");
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testSetLocale_success_setNullData() {
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -120,56 +111,56 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], null);
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnCheckedChanged_success_setBoolean() {
         boolean checkedStatus = true;
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         SUT.onCheckedChanged(checkedStatus);
 
         assertTrue(SUT.getCheckedStatus());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         SUT.onCheckedChanged(checkedStatus);
 
         assertFalse(SUT.getCheckedStatus());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnAppShareCount() {
         boolean checkedStatus = false;
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
         SUT.successShared();
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         SUT.onCheckedChanged(checkedStatus);
 
         assertFalse(SUT.getCheckedStatus());
+
+        addDelay(700);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

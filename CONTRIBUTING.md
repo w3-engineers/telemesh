@@ -238,7 +238,7 @@ If you find yourself wishing for a feature that doesn't exist in Telemesh, you a
 
 ## Community <a name="community"></a>
 
-TBD
+We will finalise our contributors community and list down their details soon
 
 ## Pull Requests <a name="pullreq"></a>
 

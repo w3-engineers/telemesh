@@ -1,9 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.helper.constants;
 
+import android.os.Build;
+
 public class Constants {
 
     public static boolean IS_LOADING_ENABLE = false;
     public static boolean IsMeshInit;
+    public static boolean IS_LOG_UPLOADING_START = false;
 
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
@@ -112,5 +115,32 @@ public class Constants {
         int INFO = 3;
         int ERROR = 4;
         int DATE = 5;
+    }
+
+    /**
+     * Purpose: Get device name.
+     *
+     * @return string type device name
+     */
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
+    }
+
+    private static String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
 }

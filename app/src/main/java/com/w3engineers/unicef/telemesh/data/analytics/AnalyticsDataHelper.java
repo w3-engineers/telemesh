@@ -9,6 +9,7 @@ Proprietary and confidential
 */
 
 import android.annotation.TargetApi;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
@@ -23,11 +25,14 @@ import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
+import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
+import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +45,21 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int trackMessageCount = 0;
     private List<AppShareCountEntity> countSentList;
+    private static FileUploadResponseCallback fileUploadResponseCallback;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
+        
+        fileUploadResponseCallback = (isSuccessful, name) -> {
+            if (isSuccessful) {
+                AsyncTask.execute(() -> {
+                    MeshLogEntity entity = new MeshLogEntity();
+                    entity.setLogName(name);
+
+                    MeshLogDataSource.getInstance().insertOrUpdateData(entity);
+                });
+            }
+        };
     }
 
     public static AnalyticsDataHelper getInstance() {
@@ -143,6 +160,10 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private void sendAppShareCount(List<AppShareCountModel> model) {
         AnalyticsApi.on().setAnalyticsType(Constants.AnalyticsResponseType.APP_SHARE_COUNT)
                 .setAnalyticsResponseCallback(this).sendAppShareCount(model);
+    }
+
+    public void sendLogFileInServer(File file, String userId, String deviceName) {
+        AnalyticsApi.on().sendLogFileInServer(file, userId, deviceName, fileUploadResponseCallback);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

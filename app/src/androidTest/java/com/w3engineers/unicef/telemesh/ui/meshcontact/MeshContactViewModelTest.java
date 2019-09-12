@@ -165,6 +165,7 @@ public class MeshContactViewModelTest {
     @Test
     public void meshContactViewModelSearch_smallLetter_retrieveUsers() throws InterruptedException {
 
+        addDelay(1500);
         //arrange
         String SMALL_SEARCH_TEXT = "or";
         int itemCount = getItemCountInList(mUserEntities, SMALL_SEARCH_TEXT);
@@ -176,6 +177,8 @@ public class MeshContactViewModelTest {
         //assertion
         List<UserEntity> userEntityList = LiveDataTestUtil.getValue(listLiveData);
         assertThat(userEntityList.size(), is(itemCount));
+
+        addDelay(5000);
     }
 
     /*@Test
@@ -240,5 +243,13 @@ public class MeshContactViewModelTest {
     public void tearDown() {
         appDatabase.close();
         mCompositeDisposable.clear();
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

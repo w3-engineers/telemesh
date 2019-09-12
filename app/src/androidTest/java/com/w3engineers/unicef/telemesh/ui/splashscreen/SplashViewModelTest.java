@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
+/*
 @RunWith(AndroidJUnit4.class)
 public class SplashViewModelTest {
 
@@ -56,4 +57,4 @@ public class SplashViewModelTest {
         boolean registrationStatus = sharedPreferences.getBoolean(REGISTRATION_STATUS, false);
         assertEquals(registrationStatus, isRegistered);
     }
-}
+}*/

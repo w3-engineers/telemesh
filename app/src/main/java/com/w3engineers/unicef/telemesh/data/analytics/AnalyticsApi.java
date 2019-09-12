@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
 
+import java.io.File;
 import java.util.List;
 /*
 ============================================================================
@@ -63,5 +65,9 @@ public class AnalyticsApi {
     public void sendAppShareCount(List<AppShareCountModel> model) {
         AsyncTask.execute(() -> ParseManager.on().setCallback(analyticsType, analyticsResponseCallback)
                 .sendAppShareCount(model));
+    }
+
+    public void sendLogFileInServer(File file, String userId, String deviceName, FileUploadResponseCallback callback) {
+        AsyncTask.execute(() -> ParseManager.on().sendLogFileInServer(file, userId,deviceName,callback));
     }
 }

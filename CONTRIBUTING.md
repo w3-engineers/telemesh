@@ -39,7 +39,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 When contributing to Telemesh, we ask that you:
 
-- let us know what you plan in the GitHub Issue tracker so we can provide feedback.
+- let us know what you plan in the [GitHub Issue tracker](https://github.com/w3-engineers/telemesh/projects/1) so we can provide feedback.
 
 - provide tests and documentation whenever possible. It is very unlikely that we will accept new features or functionality into Telemesh without the proper testing and documentation. When fixing a bug, provide a failing test case that your patch solves.
 
@@ -194,6 +194,7 @@ We have different templates for bug report and feature request which you can fin
 
 Look through the GitHub issues for bugs. Anything tagged with "bug"
 is open to whoever wants to implement it.
+[Sample issue](https://github.com/w3-engineers/telemesh/issues/51)
 
 
 ## Implement Features <a name="features"></a>
@@ -228,8 +229,8 @@ quickly:
                     Adding the `md-` prefix should be avoided.
 
   > e.g.
-  > *  menu-bar: does not support dark mode themes [#11238](https://github.com/angular/material/issues/11238)
-  > *  tooltip: memory leak on destroy [#11133](https://github.com/angular/material/issues/11133)
+  > *  menu-bar: does not support dark mode themes [#51](https://github.com/w3-engineers/telemesh/issues/51)
+ 
 
 * **Complete the full Issue Template** - You will get the issue template where we put some predefined rules to create an issue.
   Moreover we are always open to make any changes according contributor's feedback.

@@ -147,21 +147,54 @@ resources for questions about your own code:
 
 * The ``#get-help`` channel on our Discord chat: [Link will be updated soon]
 
-* The mailing list info@telemesh.net for long term discussion or larger issues.
+* It can be a labeled issue on github project. find the label already given here [label-issue](https://github.com/w3-engineers/telemesh/labels)
 
 
 ## Reporting issues <a name="reportissue"></a>
 
 Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
-- Describe what you expected to happen.
-- If possible, include a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) to help us
-  identify the issue. This also helps check that the issue is not with
-  your own code.
-- Describe what actually happened. Include the full traceback if there was an
-  exception.
-- List your Android Studio, Testing device, and any other hardware or supporting tools versions. If possible, check if this
-  issue is already fixed in the repository.
+We have a template for bug report that you can automatically get during issue creation.
+
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+<!--- Provide a general summary of the issue in the Title above -->
+
+### Description
+<!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
+
+### Expected Behavior
+<!--- Tell us what should happen -->
+
+### Actual Behavior
+<!--- Tell us what happens instead -->
+
+### Possible Fix
+<!--- Not obligatory, but suggest a fix or reason for the bug -->
+
+### Steps to Reproduce
+<!--- Provide a link to a live example, or an unambiguous set of steps to -->
+<!--- reproduce this bug. Include code to reproduce, if relevant -->
+1.
+2.
+3.
+4.
+
+### Context
+<!--- How has this bug affected you? What were you trying to accomplish? -->
+
+### Your Environment
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+* App version used:
+* Device Name and version:
+* Operating System and version:
 
 
 
@@ -215,7 +248,7 @@ quickly:
 #### <a name="submitpr"></a>Submitting Pull Requests
 
 **Important**: We are not accepting major feature requests or PRs that contain major new features
- or breaking changes at this time.
+ or breaking changes at this time but we are welcoming to plan it for future or, we can discuss further offline.
 
 
 ## Feature requests <a name="featurereq"></a>
@@ -223,6 +256,29 @@ quickly:
 If you find yourself wishing for a feature that doesn't exist in Telemesh, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Telemesh has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
 
 ## Code review process <a name="codereview"></a>
+
+The core team looks at Pull Requests on a regular basis.Each code review should aim to achieve one or more of these goals; however, not all code reviews need to aim for all goals.
+
+Code review goals: 
+
+- Finding bugs
+- Bugs found in code review require much less effort to find & fix than bugs found in QA/testing.
+- Coding style. Ensure that [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7) are followed.
+- Improving code quality
+- Teaching best practices
+- Code consistency (can't tell the author from the code)
+- Learning code
+- Efficiency (getting pull requests reviewed quickly)
+- Ensuring that the pull request guidelines are followed.
+
+
+Code review processes:
+
+- Issue a pull request with a full link to your ticket in the description.
+- Click the "Request Review" option on the ticket to move into the "Code Review (pre commit)" state.
+- Add a comment linking to your pull request by its url.
+
+Code review checklists :
 
 - Variable naming convention.
 - Method naming convention.

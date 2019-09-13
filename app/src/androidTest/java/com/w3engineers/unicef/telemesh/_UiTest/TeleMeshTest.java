@@ -527,9 +527,103 @@ public class TeleMeshTest {
 
         addDelay(700);
 
+
+        // ----------------- unit test 5 part ----------------------
+
+        addDelay(3800);
+
+        // Prepare bulletin
+        BulletinModel bulletin = new BulletinModel()
+                .setId("testId1")
+                .setMessage("Test feed details")
+                .setTime("2019-06-014T06:05:50.000Z");
+
+        String bulletinString = new Gson().toJson(bulletin);
+
+        DataModel rmDataModel = new DataModel()
+                .setUserId("0xuodnaiabd1983nd")
+                .setRawData(bulletinString.getBytes())
+                .setDataType(Constants.DataType.MESSAGE_FEED);
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+
+        addDelay(700);
+
+        ViewInteraction bottomNavigationMessageFeed = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                1),
+                        isDisplayed()));
+        bottomNavigationMessageFeed.perform(click());
+
+        addDelay(700);
+
+        ViewInteraction contactLayout1 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.message_recycler_view),
+                                childAtPosition(withId(R.id.message_feed_layout),
+                                        0)),
+                        0),
+                        isDisplayed()));
+        contactLayout1.perform(click());
+
+        addDelay(700);
+
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+
+        // ---------------------  user company test -----------------------
+
+        addDelay(3800);
+
+        ViewInteraction bottomNavigationSettings1 = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationSettings1.perform(click());
+
+        addDelay(700);
+
+        // just set dummy company
+        sharedPref.write(Constants.preferenceKey.COMPANY_ID, "ahukoip1890");
+        sharedPref.write(Constants.preferenceKey.COMPANY_NAME, "Refugi Camp 1");
+
+        ViewInteraction viewProfile1 = onView(allOf(withId(R.id.layout_view_profile),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        viewProfile1.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        // test to off mesh service. Because we cannot hit notification button
+        //  RmDataHelper.getInstance().stopMeshService();
+
+        // addDelay(4000);
+
+        mDevice.pressBack();
+
+        // clear dummy company
+        sharedPref.write(Constants.preferenceKey.COMPANY_ID, "");
+        sharedPref.write(Constants.preferenceKey.COMPANY_NAME, "");
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+
         // for chat and user search test
-
-
 
         mDevice.pressBack();
 
@@ -540,8 +634,8 @@ public class TeleMeshTest {
         addDelay(2000);
 
         try {
-            mDevice.pressBack();
             RmDataHelper.getInstance().stopRmService();
+            mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
@@ -676,7 +770,8 @@ public class TeleMeshTest {
      * message also show the message in UI
      * So this test also Message Bulletin UI element also
      */
-    @Test
+
+   /* @Test
     public void unit_test_5() {
         addDelay(3800);
 
@@ -722,10 +817,12 @@ public class TeleMeshTest {
 
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
-    }
+    }*/
+
 
     //User company test
-    @Test
+
+   /* @Test
     public void user_company_test() {
         addDelay(3800);
 
@@ -774,7 +871,7 @@ public class TeleMeshTest {
             e.printStackTrace();
         }
     }
-
+*/
     private void addDelay(int i) {
         try {
             Thread.sleep(i);

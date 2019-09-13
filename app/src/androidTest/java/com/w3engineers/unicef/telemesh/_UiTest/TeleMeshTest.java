@@ -89,7 +89,7 @@ public class TeleMeshTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-       // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
         userDataSource = UserDataSource.getInstance();
 
         feedDataSource = FeedDataSource.getInstance();
@@ -120,7 +120,10 @@ public class TeleMeshTest {
                                         withId(R.id.name_layout),
                                         0),
                                 0)));
+        addDelay(500);
         baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+        addDelay(500);
 
         ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
@@ -522,7 +525,7 @@ public class TeleMeshTest {
 
 
 
-      /*  mDevice.pressBack();
+        mDevice.pressBack();
 
         addDelay(500);
 
@@ -536,7 +539,6 @@ public class TeleMeshTest {
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
-*/
     }
 
     // Message and mesh contact test
@@ -715,6 +717,7 @@ public class TeleMeshTest {
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
     }
+
     //User company test
     @Test
     public void user_company_test() {

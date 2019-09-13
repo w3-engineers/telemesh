@@ -156,6 +156,7 @@ Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
 We have different templates for bug report and feature request which you can find during issue creation.
 
+```text
 
 <!--- Provide a general summary of the issue in the Title above -->
 
@@ -188,6 +189,7 @@ We have different templates for bug report and feature request which you can fin
 * Device Name and version:
 * Operating System and version:
 
+```
 
 
 ## Fix Bugs <a name="fixbugs"></a>

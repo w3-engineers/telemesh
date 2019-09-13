@@ -145,7 +145,7 @@ If a maintainer asks you to "rebase" your PR, they're saying that a lot of code 
 Please, don't use the issue tracker for this. Use one of the following
 resources for questions about your own code:
 
-* The ``#get-help`` channel on our Discord chat: [discord](https://discord.gg/dqsJwC)
+* The ``#get-help`` channel on our [Discord chat](https://discord.gg/dqsJwC)
 
 * The mailing list media@telemesh.net for long term discussion or larger issues.
 

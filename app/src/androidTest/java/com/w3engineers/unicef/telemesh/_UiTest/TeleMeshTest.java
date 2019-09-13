@@ -261,6 +261,12 @@ public class TeleMeshTest {
         bottomNavigationSettings.perform(click());
 
         addDelay(700);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        mDevice.pressBack();
     }
 
     // Settings properties test

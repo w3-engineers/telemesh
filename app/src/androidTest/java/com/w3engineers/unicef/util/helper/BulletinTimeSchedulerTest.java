@@ -46,9 +46,9 @@ public class BulletinTimeSchedulerTest {
 
         // create temporary file
         createDummyLogFile("(W) Sample Log 1");
-        addDelay(1000);
+        addDelay(5000);
         createDummyLogFile("(S) Sample Log 2");
-        addDelay(1000);
+        addDelay(5000);
 
         // fake calling in Broadcast
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter(Intent.ACTION_PACKAGE_REPLACED));
@@ -92,7 +92,7 @@ public class BulletinTimeSchedulerTest {
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-            
+
             File file = new File(directory, CURRENT_LOG_FILE_NAME);
             if (!file.exists()) {
                 file.createNewFile();

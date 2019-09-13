@@ -154,16 +154,8 @@ resources for questions about your own code:
 
 Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
-We have a template for bug report that you can automatically get during issue creation.
+We have different templates for bug report and feature request which you can find during issue creation.
 
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
----
 
 <!--- Provide a general summary of the issue in the Title above -->
 

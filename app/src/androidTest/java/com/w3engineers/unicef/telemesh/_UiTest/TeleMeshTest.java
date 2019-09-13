@@ -265,6 +265,107 @@ public class TeleMeshTest {
     public void uiTest_3() {
         addDelay(3800);
 
+        UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel");
+        userEntity.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(1000);
+
+        ViewInteraction contactLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.contact_recycler_view),
+                                childAtPosition(withId(R.id.mesh_contact_layout),
+                                        0)),
+                        0),
+                        isDisplayed()));
+        contactLayout.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                4)),
+                                0),
+                        isDisplayed()));
+        appCompatEditText.perform(replaceText("Hi"), closeSoftKeyboard());
+
+        addDelay(700);
+
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.image_view_send),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                4)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
+
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+        messageSourceData.insertOrUpdateData(chatEntity);
+
+        addDelay(1000);
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.text_view_last_name),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_toolbar_layout),
+                                        childAtPosition(
+                                                withId(R.id.toolbar_chat),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(1000);
+
+        pressBack();
+
+        addDelay(700);
+
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+
+        addDelay(700);
+
+        ViewInteraction contactSearch = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.toolbar),
+                                        1),
+                                0),
+                        isDisplayed()));
+        contactSearch.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction searchAutoComplete = onView(
+                allOf(withId(R.id.search_src_text),
+                        childAtPosition(
+                                allOf(withId(R.id.search_plate),
+                                        childAtPosition(
+                                                withId(R.id.search_edit_frame),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        searchAutoComplete.perform(replaceText("dane"), closeSoftKeyboard());
+
+        addDelay(500);
+
+        // message and contact test end
+
         ViewInteraction bottomNavigationSettings = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(
@@ -416,6 +517,26 @@ public class TeleMeshTest {
         mActivityAppShareRule.finishActivity();
 
         addDelay(700);
+
+        // for chat and user search test
+
+
+
+      /*  mDevice.pressBack();
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        addDelay(2000);
+
+        try {
+            mDevice.pressBack();
+            RmDataHelper.getInstance().stopRmService();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+*/
     }
 
     // Message and mesh contact test

@@ -762,10 +762,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 "/MeshRnD");
         File[] files = directory.listFiles();
 
-        if(files!=null){
+        if (files != null) {
             for (File file : files) {
                 if (!previousList.contains(file.getName())) {
-                    AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "testUser", Constants.getDeviceName());
+                    AnalyticsDataHelper.getInstance().sendLogFileInServer(file, TextUtils.isEmpty(getMyMeshId()) ? "Test User" : getMyMeshId(), Constants.getDeviceName());
                 }
             }
         }
@@ -777,6 +777,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void showMeshLog(String log) {
-       // LogProcessUtil.getInstance().writeLog(log);
+        // LogProcessUtil.getInstance().writeLog(log);
     }
 }

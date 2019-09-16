@@ -46,9 +46,9 @@ public class BulletinTimeSchedulerTest {
 
         // create temporary file
         createDummyLogFile("(W) Sample Log 1");
-        addDelay(5000);
+
         createDummyLogFile("(S) Sample Log 2");
-        addDelay(5000);
+
 
         // fake calling in Broadcast
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter(Intent.ACTION_PACKAGE_REPLACED));
@@ -91,11 +91,15 @@ public class BulletinTimeSchedulerTest {
                     "/MeshRnD");
             if (!directory.exists()) {
                 directory.mkdirs();
+
+                addDelay(5000);
             }
 
             File file = new File(directory, CURRENT_LOG_FILE_NAME);
             if (!file.exists()) {
                 file.createNewFile();
+
+                addDelay(5000);
             }
             FileOutputStream fOut = new FileOutputStream(file, true);
 
@@ -103,6 +107,7 @@ public class BulletinTimeSchedulerTest {
                     OutputStreamWriter(fOut);
 
             osw.write("\n" + text);
+            addDelay(2000);
             osw.flush();
             osw.close();
 

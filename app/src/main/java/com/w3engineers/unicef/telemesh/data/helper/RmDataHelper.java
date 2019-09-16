@@ -764,7 +764,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         if (files != null) {
             for (File file : files) {
-                if (!previousList.contains(file.getName())) {
+                if (!previousList.contains(file.getName())
+                        && Constant.CURRENT_LOG_FILE_NAME != null
+                        && !Constant.CURRENT_LOG_FILE_NAME.equalsIgnoreCase(file.getName())) {
                     AnalyticsDataHelper.getInstance().sendLogFileInServer(file, TextUtils.isEmpty(getMyMeshId()) ? "Test User" : getMyMeshId(), Constants.getDeviceName());
                 }
             }

@@ -142,8 +142,10 @@ public class AnalyticsDataHelperTest {
         }
 
         addDelay(500);
-        
+
         AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "Test user", Constants.getDeviceName());
+        addDelay(10 * 1000);
+        assertTrue(true);
     }
 
     private void addDelay(long time) {

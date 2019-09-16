@@ -6,6 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import org.junit.After;
@@ -26,6 +27,8 @@ import static org.junit.Assert.assertTrue;
  * Proprietary and confidential
  * ============================================================================
  */
+
+
 @RunWith(AndroidJUnit4.class)
 public class SettingsViewModelTest {
 
@@ -33,7 +36,7 @@ public class SettingsViewModelTest {
     private SettingsViewModel SUT;
 
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -49,11 +52,7 @@ public class SettingsViewModelTest {
     @Test
     public void testSetLocale_success_setValidData() {
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -63,10 +62,14 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], languageList[dataIndex]);
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testSetLocale_notSuccess_setAsyncData() {
+        addDelay(1500);
+
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -76,10 +79,15 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], languageList[1]);
 
         assertNotEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
+
     }
 
     @Test
     public void testSetLocale_success_setEmptyData() {
+
+        addDelay(1500);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -89,10 +97,14 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], "");
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testSetLocale_success_setNullData() {
+
+        addDelay(3800);
 
         String[] languageList = context.getResources().getStringArray(R.array.language_list);//{"English", "Bangla"};
         String[] languageCodeList = context.getResources().getStringArray(R.array.language_code_list);
@@ -102,50 +114,56 @@ public class SettingsViewModelTest {
         SUT.setLocale(languageCodeList[dataIndex], null);
 
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnCheckedChanged_success_setBoolean() {
         boolean checkedStatus = true;
 
+        addDelay(1500);
+
         SUT.onCheckedChanged(checkedStatus);
 
         assertTrue(SUT.getCheckedStatus());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         SUT.onCheckedChanged(checkedStatus);
 
         assertFalse(SUT.getCheckedStatus());
+
+        addDelay(700);
     }
 
     @Test
     public void testOnAppShareCount() {
         boolean checkedStatus = false;
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
         SUT.successShared();
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(1500);
 
         SUT.onCheckedChanged(checkedStatus);
 
         assertFalse(SUT.getCheckedStatus());
+
+        addDelay(700);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

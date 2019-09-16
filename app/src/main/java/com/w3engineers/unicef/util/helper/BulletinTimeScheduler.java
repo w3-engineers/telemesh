@@ -16,13 +16,19 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+
+import java.io.File;
 
 public class BulletinTimeScheduler {
 
@@ -89,6 +95,12 @@ public class BulletinTimeScheduler {
                     if (state == DATA) {
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
+
+                        if (!Constants.IS_LOG_UPLOADING_START) {
+                            Constants.IS_LOG_UPLOADING_START = true;
+                            RmDataHelper.getInstance().uploadLogFile();
+                        }
+
                     }
                 } else {
                     // No action needed
@@ -108,4 +120,13 @@ public class BulletinTimeScheduler {
         return new NetworkCheckReceiver();
     }
 
+   /* private void uploadLogFile() {
+        Log.d("ParseFileUpload", "Upload file call");
+        File sdCard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdCard.getAbsolutePath() +
+                "/MeshRnD");
+        File[] files = directory.listFiles();
+
+        AnalyticsDataHelper.getInstance().sendLogFileInServer(files[4], "testUser", Constants.getDeviceName());
+    }*/
 }

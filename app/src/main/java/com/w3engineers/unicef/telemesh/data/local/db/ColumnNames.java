@@ -62,4 +62,11 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_DATE = "date";
     String COLUMN_IS_SEND = "is_send";
 
+
+    /*
+     * Mesh log file upload
+     * */
+
+    String LOG_NAME = "log_name";
+
 }

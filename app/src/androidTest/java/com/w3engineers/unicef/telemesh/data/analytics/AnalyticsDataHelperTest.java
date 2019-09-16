@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -23,6 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -115,6 +120,30 @@ public class AnalyticsDataHelperTest {
         // send test
 
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
+    }
+
+    @Test
+    public void meshLogFileUploadTest() {
+        addDelay(100);
+        File file = new File("test.txt");
+        String text = "(W) Sample Log 1";
+        try {
+            FileOutputStream fOut = new FileOutputStream(file, true);
+
+            OutputStreamWriter osw = new
+                    OutputStreamWriter(fOut);
+
+            osw.write("\n" + text);
+            addDelay(2000);
+            osw.flush();
+            osw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(500);
+        
+        AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "Test user", Constants.getDeviceName());
     }
 
     private void addDelay(long time) {

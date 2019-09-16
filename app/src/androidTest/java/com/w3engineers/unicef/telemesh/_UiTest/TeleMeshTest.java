@@ -52,12 +52,16 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 
 @LargeTest
@@ -82,6 +86,7 @@ public class TeleMeshTest {
     private RandomEntityGenerator randomEntityGenerator;
     private SharedPref sharedPref;
     private AppDatabase appDatabase;
+    private Context context;
 
     @Before
     public void setUp() {
@@ -99,7 +104,7 @@ public class TeleMeshTest {
 
         randomEntityGenerator = new RandomEntityGenerator();
 
-        Context context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getTargetContext();
         sharedPref = SharedPref.getSharedPref(context);
     }
 
@@ -404,29 +409,37 @@ public class TeleMeshTest {
 
         ViewInteraction openWallet = onView(allOf(withId(R.id.layout_open_wallet),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
-//        openWallet.perform(scrollTo(), click());
+        openWallet.perform(scrollTo(), click());
 
-        // addDelay(700);
+        addDelay(700);
 
-        // pressBack();
-
-//        mDevice.pressBack();
-
-        //   addDelay(700);
+        if (Constants.IsMeshInit) {
+            pressBack();
+            addDelay(700);
+        }
 
         ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
 
+
+        constraintLayout2.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        if (Constants.IsMeshInit) {
+            pressBack();
+            addDelay(700);
+        }
+
         // commented  below two line for ignoring unwanted crash issue in Emulator
         // We will re -enable the code after cod fix
 
-        // constraintLayout2.perform(scrollTo(), click());
+      /*  ViewInteraction meshLogOpen = onView(allOf(withId(R.id.layout_show_log),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 6)));
 
-        //  addDelay(700);
-        //  pressBack();
-
-
-        addDelay(700);
+        meshLogOpen.perform(scrollTo(), click());
+        pressBack();
+        addDelay(700);*/
 
         ViewInteraction chooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),

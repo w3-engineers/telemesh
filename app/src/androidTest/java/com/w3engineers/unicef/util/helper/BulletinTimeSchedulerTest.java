@@ -58,7 +58,7 @@ public class BulletinTimeSchedulerTest {
         intent.putExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        addDelay(2000);
+        addDelay(10*1000);
 
         // SO here we think we got data
         BulletinTimeScheduler.getInstance().resetScheduler(context);

@@ -80,6 +80,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private MeshDataSource rightMeshDataSource;
 
     private DataSource dataSource;
+    public int userCount;
 
     @SuppressLint("UseSparseArrays")
     @NonNull
@@ -639,7 +640,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setLatitude(lat).setLongitude(lang);
 
         payload.setGeoLocation(geoLocation);
-        payload.setConnectedClients("2");
+        payload.setConnectedClients(String.valueOf(userCount));
 
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)

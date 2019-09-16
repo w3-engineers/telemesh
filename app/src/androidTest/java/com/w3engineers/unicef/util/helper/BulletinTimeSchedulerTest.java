@@ -58,7 +58,7 @@ public class BulletinTimeSchedulerTest {
         intent.putExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        addDelay(10*1000);
+        addDelay(10 * 1000);
 
         // SO here we think we got data
         BulletinTimeScheduler.getInstance().resetScheduler(context);
@@ -66,6 +66,9 @@ public class BulletinTimeSchedulerTest {
         // now job already scheduled. But in instrumental test we cannot test Job scheduler.
         // so we can call the method which is located in start job section
         RmDataHelper.getInstance().requestWsMessage();
+        if (LocationUtil.getInstance().getLocationListener() != null) {
+            LocationUtil.getInstance().getLocationListener().onGetLocation("22.8456", "89.5403");
+        }
 
 
         // now we have no internet.

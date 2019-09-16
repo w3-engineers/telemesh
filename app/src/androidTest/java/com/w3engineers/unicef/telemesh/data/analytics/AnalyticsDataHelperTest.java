@@ -125,7 +125,15 @@ public class AnalyticsDataHelperTest {
     @Test
     public void meshLogFileUploadTest() {
         addDelay(100);
-        File file = new File("test.txt");
+
+        File dir = new File(context.getFilesDir(), "mydir");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        addDelay(5000);
+
+        File file = new File(dir, "test.txt");
         String text = "(W) Sample Log 1";
         try {
             FileOutputStream fOut = new FileOutputStream(file, true);

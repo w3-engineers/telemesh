@@ -172,29 +172,13 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         }
     };
 
-
-    @Override
-    @NonNull
-    public String toString() {
-        return "FeedEntity{" +
-                "feedId='" + feedId + '\'' +
-                ", feedProviderName='" + feedProviderName + '\'' +
-                ", feedProviderLogo='" + feedProviderLogo + '\'' +
-                ", feedTitle='" + feedTitle + '\'' +
-                ", feedDetail='" + feedDetail + '\'' +
-                ", feedTime=" + feedTime +
-                ", feedReadStatus=" + feedReadStatus +
-                ", id=" + mId +
-                '}';
-    }
-
-    @NonNull
+    /*@NonNull
     public BulletinFeed toBulletinFeed() {
         return new BulletinFeed()
                 .setMessageBody(getFeedDetail())
                 .setMessageId(getFeedId())
                 .setCreatedAt(getFeedTime());
-    }
+    }*/
 
     @NonNull
     public FeedEntity toFeedEntity(@NonNull BulletinFeed bulletinFeed) {

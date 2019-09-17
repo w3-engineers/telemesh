@@ -50,6 +50,12 @@ public class ExceptionTrackerTest {
 
         File crashFile = new File(directory, Constants.AppConstant.CRASH_REPORT_FILE_NAME);
 
+        // for writing exception when file already created
+
+        LogProcessUtil.getInstance().writeCrash("Test exception 3");
+
+        addDelay(5 * 1000);
+
         assertTrue(crashFile.exists());
     }
 

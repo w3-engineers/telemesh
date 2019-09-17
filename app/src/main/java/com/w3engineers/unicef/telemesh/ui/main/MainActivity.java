@@ -237,7 +237,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     // Again this api will be enable when its functionality will be added
     public void createBadgeCount(int latestCount, int menuItemPosition) {
-        RmDataHelper.getInstance().userCount = latestCount;
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
 

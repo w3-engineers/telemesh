@@ -35,7 +35,7 @@ import io.reactivex.Single;
  * Using the Room database as a data source.
  */
 
-public class UserDataSource{
+public class UserDataSource {
 
     private static UserDataSource userDataSource;
     private final UserDao mUserDao;
@@ -48,6 +48,7 @@ public class UserDataSource{
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param userDao -> provide dao from unit test class
      */
     public UserDataSource(@NonNull UserDao userDao) {
@@ -64,6 +65,7 @@ public class UserDataSource{
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param userDao -> provide dao from unit test class
      */
     @NonNull
@@ -118,7 +120,7 @@ public class UserDataSource{
 
     @SuppressLint("LintError")
     @NonNull
-    public List<UserEntity> getLivePeers(){
+    public List<UserEntity> getLivePeers() {
 
         return mUserDao.getLivePeers();
 
@@ -138,5 +140,10 @@ public class UserDataSource{
     @NonNull
     public LiveData<List<UserEntity>> getActiveUser() {
         return mUserDao.getActiveUser();
+    }
+
+    @NonNull
+    public int getLocalUserCount() {
+        return mUserDao.getLocalUserCount();
     }
 }

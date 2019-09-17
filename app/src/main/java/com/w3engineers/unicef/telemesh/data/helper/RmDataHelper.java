@@ -80,7 +80,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private MeshDataSource rightMeshDataSource;
 
     private DataSource dataSource;
-    public int userCount;
+
+    private String mLatitude;
+    private String mLongitude;
 
     @SuppressLint("UseSparseArrays")
     @NonNull
@@ -508,15 +510,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 LocationUtil.getInstance().removeListener();
 
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
-                BroadcastWebSocket listener = new BroadcastWebSocket();
-                listener.setBroadcastCommand(getBroadcastCommand(lat, lang));
-                client.newWebSocket(request, listener);
-                client.dispatcher().executorService().shutdown();
+                mLatitude = lat;
+                mLongitude = lang;
+
+                getLocalUserCount();
             }
         });
 
+    }
+
+    private void requestWsMessageWithUserCount(int localUserCount) {
+        Log.d("UserCountTest", "user: " + localUserCount);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localUserCount));
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
     }
 
     private String getMyMeshId() {
@@ -633,14 +643,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private BroadcastCommand getBroadcastCommand(String lat, String lang) {
+    private BroadcastCommand getBroadcastCommand(String lat, String lang, int localUserCount) {
         Payload payload = new Payload();
 
         GeoLocation geoLocation = new GeoLocation()
                 .setLatitude(lat).setLongitude(lang);
 
         payload.setGeoLocation(geoLocation);
-        payload.setConnectedClients(String.valueOf(userCount));
+        payload.setConnectedClients(String.valueOf(localUserCount));
 
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)
@@ -772,6 +782,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
             }
         }
+    }
+
+    private void getLocalUserCount() {
+        compositeDisposable.add(Single.fromCallable(() ->
+                UserDataSource.getInstance().getLocalUserCount())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::requestWsMessageWithUserCount, Throwable::printStackTrace));
     }
 
     @Override

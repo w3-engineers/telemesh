@@ -32,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /*
  * ============================================================================
@@ -62,8 +63,8 @@ public class RightMeshDataSourceTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-       // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
-       // messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
+        // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        // messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
 
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
@@ -163,9 +164,59 @@ public class RightMeshDataSourceTest {
         SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
     }
 
+    @Test
+    public void onlyNodeAddedTest() {
+        addDelay();
+
+        String nodeId = "0x3988dbfkjdf984rc9";
+        SUT.nodeIdDiscovered(nodeId);
+
+        addDelay(3000);
+
+        UserEntity userEntity = userDataSource.getSingleUserById(nodeId);
+        addDelay(1000);
+        assertEquals(userEntity.getMeshId(), nodeId);
+
+        addDelay();
+    }
+
+    @Test
+    public void nodeAvailableTest(){
+        addDelay();
+
+        // create a user first
+        String meshId = "0x3988dbfkjdf984rc9";
+        UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
+        addDelay(700);
+
+        userDataSource.insertOrUpdateData(userEntity);
+        addDelay(1000);
+
+        SUT.isNodeAvailable(userEntity.getMeshId(),Constants.UserStatus.BLE_ONLINE);
+
+        addDelay(4000);
+
+        UserEntity updatedUserEntity = userDataSource.getSingleUserById(userEntity.getMeshId());
+
+        addDelay(1000);
+
+        assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.BLE_ONLINE);
+
+        addDelay();
+    }
+
     private void addDelay() {
         try {
             Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -139,6 +139,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void onlyNodeAdd(String nodeId) {
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);

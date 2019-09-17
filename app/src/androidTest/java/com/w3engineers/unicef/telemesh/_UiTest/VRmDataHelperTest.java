@@ -11,8 +11,12 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
+import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +35,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 /*
@@ -47,6 +53,7 @@ public class VRmDataHelperTest {
     private String createdAt;
     private String date;
     private String meshId;
+    private RandomEntityGenerator randomEntityGenerator;
 
     @Before
     public void setUp() {
@@ -54,6 +61,8 @@ public class VRmDataHelperTest {
         createdAt = "2019-07-19T06:02:30.628Z";
         date = "16-07-2019";
         meshId = "0xuodnaiabd1983nd";
+
+        randomEntityGenerator = new RandomEntityGenerator();
     }
 
     @Test
@@ -153,6 +162,35 @@ public class VRmDataHelperTest {
 
         assertTrue(true);
 
+    }
+
+    @Test
+    public void broadcastCommandModelsTest() {
+        addDelay(500);
+
+        String event = "connect";
+        GeoLocation geoLocation = randomEntityGenerator.createGeoLocation();
+
+        Payload payLoad = randomEntityGenerator.createPayload(geoLocation);
+
+        BroadcastCommand command = new BroadcastCommand().setEvent(event)
+                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setBaseStationId(meshId)
+                .setClientId(meshId)
+                .setPayload(payLoad);
+
+        // now testing getter value of value
+
+        assertThat(command.getEvent(), is(event));
+        assertThat(command.getToken(), is(BuildConfig.BROADCAST_TOKEN));
+        assertThat(command.getClientId(), is(meshId));
+        assertThat(command.getBaseStationId(), is(meshId));
+        assertThat(command.getPayload().getMessageId(), is(payLoad.getMessageId()));
+        assertThat(command.getPayload().getConnectedClients(), is(payLoad.getConnectedClients()));
+        assertThat(command.getPayload().getGeoLocation().getLatitude(), is(geoLocation.getLatitude()));
+        assertThat(command.getPayload().getGeoLocation().getLongitude(), is(geoLocation.getLongitude()));
+
+        addDelay(500);
     }
 
     @After

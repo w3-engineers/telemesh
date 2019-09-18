@@ -44,7 +44,7 @@ public class MeshProvider implements LinkStateListener {
     private byte[] myProfileInfo;
     private String myUserId;
     //BT NAME
-    private String WIFI_PREFIX = "bna.1";
+    private String WIFI_PREFIX = "bn_2";
     private String BLE_PREFIX = "que";
 
     private MeshProvider() {
@@ -78,7 +78,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
 //        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, BuildConfig.MULTIVERSE_URL, this);
+        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 
@@ -131,7 +131,13 @@ public class MeshProvider implements LinkStateListener {
 
             Log.v("MIMO_SAHA::", "Length: " + myProfileInfo.length + " Id: " + nodeId);
 
-            transportManager.configTransport(nodeId, publicKey, config.mPort, myProfileInfo);
+            MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
+            if (meshData == null)
+                return;
+
+            byte[] profileData = MeshDataProcessor.getInstance().getDataFormatToJson(meshData);
+
+            transportManager.configTransport(nodeId, publicKey, config.mPort, profileData);
 
             if (transportManager != null) {
                 transportManager.startMesh();

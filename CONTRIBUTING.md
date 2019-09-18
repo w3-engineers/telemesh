@@ -33,7 +33,7 @@
 
 First off, thank you for considering contributing to Telemesh. It's people like you that make Telemesh such a great tool.
 
-When contributing to this repository, please first discuss the change you wish to make via issue ticket ([sample](https://github.com/w3-engineers/telemesh/issues/51)), [discord](https://discord.gg/dqsJwC) with the owners of this repository before making a change.
+When contributing to this repository, please first discuss the change you wish to make via issue ticket ([sample](https://github.com/w3-engineers/telemesh/issues/51)), [discord](https://discord.gg/SHG4qrH) with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
@@ -145,7 +145,7 @@ If a maintainer asks you to "rebase" your PR, they're saying that a lot of code 
 Please, don't use the issue tracker for this. Use one of the following
 resources for questions about your own code:
 
-* The ``#get-help`` channel on our [Discord chat](https://discord.gg/dqsJwC)
+* The ``#get-help`` channel on our [Discord chat](https://discord.gg/SHG4qrH)
 
 * The mailing list media@telemesh.net for long term discussion or larger issues.
 

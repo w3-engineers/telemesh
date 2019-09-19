@@ -7,6 +7,8 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -205,6 +207,21 @@ public class RandomEntityGenerator {
         MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(String.valueOf(transferId));
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;
+    }
+
+    public GeoLocation createGeoLocation() {
+        GeoLocation geoLocation = new GeoLocation();
+        geoLocation.setLatitude("22.8456");
+        geoLocation.setLongitude("89.5403");
+        return geoLocation;
+    }
+
+    public Payload createPayload(GeoLocation location) {
+        Payload payload = new Payload();
+        payload.setMessageId(UUID.randomUUID().toString());
+        payload.setGeoLocation(location);
+        payload.setConnectedClients(String.valueOf(2));
+        return payload;
     }
 
 }

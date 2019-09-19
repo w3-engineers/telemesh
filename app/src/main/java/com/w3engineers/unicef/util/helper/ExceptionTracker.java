@@ -43,6 +43,7 @@ public class ExceptionTracker implements Thread.UncaughtExceptionHandler {
         LogProcessUtil.getInstance().writeCrash(stacktrace);
 
         defaultUEH.uncaughtException(thread, throwable);
+
     }
 
 }

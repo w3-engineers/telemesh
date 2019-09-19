@@ -24,9 +24,11 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.util.DiagramUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -131,6 +133,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             list.add(entity);
             AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
         }, 10000);*/
+        DiagramUtil.on(this).start();
     }
 
     private MainActivityViewModel getViewModel() {
@@ -236,7 +239,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     // Again this api will be enable when its functionality will be added
     public void createBadgeCount(int latestCount, int menuItemPosition) {
-
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
 

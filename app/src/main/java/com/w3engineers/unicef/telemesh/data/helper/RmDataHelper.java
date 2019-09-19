@@ -477,6 +477,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * i.e. update user status to offline successfully then called this method
      */
     private void stopMeshProcess() {
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
         rightMeshDataSource.stopMeshProcess();
     }
 
@@ -695,6 +698,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
         String messageCountString = new Gson().toJson(messageCount);
+
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);

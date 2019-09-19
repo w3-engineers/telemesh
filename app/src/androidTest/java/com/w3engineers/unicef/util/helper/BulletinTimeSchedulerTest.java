@@ -3,12 +3,14 @@ package com.w3engineers.unicef.util.helper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.google.android.gms.location.LocationResult;
 import com.w3engineers.mesh.MeshApp;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 
@@ -22,7 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import okhttp3.WebSocketListener;
@@ -66,9 +70,19 @@ public class BulletinTimeSchedulerTest {
         // now job already scheduled. But in instrumental test we cannot test Job scheduler.
         // so we can call the method which is located in start job section
         RmDataHelper.getInstance().requestWsMessage();
-        if (LocationUtil.getInstance().getLocationListener() != null) {
+       /* if (LocationUtil.getInstance().getLocationListener() != null) {
             LocationUtil.getInstance().getLocationListener().onGetLocation("22.8456", "89.5403");
-        }
+        }*/
+
+        Location location = new Location("");
+        location.setLatitude(22.8456);
+        location.setLongitude(89.5403);
+        List<Location> locationList = new ArrayList<>();
+        locationList.add(location);
+
+        LocationResult locationResult = LocationResult.create(locationList);
+
+        LocationUtil.getInstance().getLocationCallback().onLocationResult(locationResult);
 
 
         // now we have no internet.

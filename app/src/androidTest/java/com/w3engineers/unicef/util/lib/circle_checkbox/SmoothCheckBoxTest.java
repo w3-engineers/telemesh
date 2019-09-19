@@ -57,19 +57,16 @@ public class SmoothCheckBoxTest {
     public void uncheckEventOfBoxTest(){
         addDelay();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SmoothCheckBox entity = new SmoothCheckBox(mContext);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            SmoothCheckBox entity = new SmoothCheckBox(mContext);
 
-                entity.setChecked(false,true);
+            entity.setChecked(false,true);
 
-                assertFalse(entity.isChecked());
+            assertFalse(entity.isChecked());
 
-                addDelay();
-                addDelay();
-                addDelay();
-            }
+            addDelay();
+            addDelay();
+            addDelay();
         },1);
 
     }

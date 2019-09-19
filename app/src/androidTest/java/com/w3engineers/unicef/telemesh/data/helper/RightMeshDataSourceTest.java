@@ -311,5 +311,11 @@ public class RightMeshDataSourceTest {
 
     }
 
+    @Test
+    public void meshOfTest() {
+        addDelay(1000);
+        SUT.onRmOff();
+        addDelay(1000);
+    }
 
 }

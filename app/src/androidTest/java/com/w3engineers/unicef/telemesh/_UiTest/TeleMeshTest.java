@@ -267,6 +267,20 @@ public class TeleMeshTest {
 
         addDelay(700);
 
+        ViewInteraction meshLogOpen = onView(allOf(withId(R.id.layout_show_log),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 6)));
+
+        meshLogOpen.perform(scrollTo(), click());
+        pressBack();
+        addDelay(700);
+
+       /* ViewInteraction connectivityDiagram = onView(allOf(withId(R.id.layout_diagram_map),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 5)));
+
+        connectivityDiagram.perform(scrollTo(), click());
+        pressBack();
+        addDelay(700);*/
+
         mDevice.pressBack();
 
         addDelay(500);
@@ -430,16 +444,6 @@ public class TeleMeshTest {
             pressBack();
             addDelay(700);
         }
-
-        // commented  below two line for ignoring unwanted crash issue in Emulator
-        // We will re -enable the code after cod fix
-
-      /*  ViewInteraction meshLogOpen = onView(allOf(withId(R.id.layout_show_log),
-                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 6)));
-
-        meshLogOpen.perform(scrollTo(), click());
-        pressBack();
-        addDelay(700);*/
 
         ViewInteraction chooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),

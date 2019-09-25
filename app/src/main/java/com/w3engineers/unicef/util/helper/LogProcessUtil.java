@@ -47,7 +47,10 @@ public class LogProcessUtil {
 
             File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
                     context.getString(R.string.app_name));
-            file.mkdirs();
+
+            if(!file.exists()){
+                file.mkdirs();
+            }
 
             File directory = new File(file, Constants.AppConstant.LOG_FOLDER);
             if (!directory.exists()) {

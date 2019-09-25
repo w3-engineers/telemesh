@@ -44,8 +44,10 @@ public class MeshProvider implements LinkStateListener {
     private byte[] myProfileInfo;
     private String myUserId;
     //BT NAME
-    private String WIFI_PREFIX = "bna.1";
-    private String BLE_PREFIX = "que";
+    /*private String WIFI_PREFIX = "bna.1";
+    private String BLE_PREFIX = "que";*/
+
+    private String NETWORK_PREFIX = "tomato";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -78,7 +80,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
 //        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), WIFI_PREFIX, BLE_PREFIX, BuildConfig.MULTIVERSE_URL, this);
+        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 
@@ -131,7 +133,13 @@ public class MeshProvider implements LinkStateListener {
 
             Log.v("MIMO_SAHA::", "Length: " + myProfileInfo.length + " Id: " + nodeId);
 
-            transportManager.configTransport(nodeId, publicKey, config.mPort, myProfileInfo);
+            MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
+            if (meshData == null)
+                return;
+
+            byte[] profileData = MeshDataProcessor.getInstance().getDataFormatToJson(meshData);
+
+            transportManager.configTransport(nodeId, publicKey, config.mPort, profileData);
 
             if (transportManager != null) {
                 transportManager.startMesh();
@@ -143,15 +151,97 @@ public class MeshProvider implements LinkStateListener {
     }
 
     @Override
-    public void linkConnected(String nodeId) {
+    public void onLocalUserConnected(String nodeId, byte[] frameData) {
+        Log.d("MeshSdkIntegration","onLocalUserConnected call");
+        if (frameData != null) {
+            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
+
+            if (meshData != null) {
+                Log.d("MeshSdkIntegration","mesh data not null");
+                meshData.mMeshPeer = new MeshPeer(nodeId);
+
+                if (MeshDataManager.getInstance().isProfileData(meshData)) {
+                    Log.d("MeshSdkIntegration","profile data call");
+                    if (providerCallback != null) {
+                        providerCallback.connectionAdd(meshData);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRemoteUserConnected(String nodeId) {
+        Log.d("MeshSdkIntegration","onRemoteUserConnected call");
         peerDiscoveryProcess(nodeId, true);
     }
 
     @Override
-    public void onMeshLinkFound(String nodeId) {
-        peerDiscoveryProcess(nodeId, true);
+    public void onUserDisconnected(String nodeId) {
+        peerDiscoveryProcess(nodeId, false);
     }
 
+    @Override
+    public void onMessageReceived(String senderId, byte[] frameData) {
+        Log.d("MeshSdkIntegration","onMessageReceived call");
+        if (frameData != null) {
+
+            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
+
+            if (meshData != null) {
+
+                meshData.mMeshPeer = new MeshPeer(senderId);
+
+                if (MeshDataManager.getInstance().isProfilePing(meshData)) {
+                    myProfileSend(senderId);
+
+                } else if (MeshDataManager.getInstance().isProfileData(meshData)) {
+                    if (providerCallback != null) {
+                        providerCallback.connectionAdd(meshData);
+                    }
+                } else {
+                    if (meshData.mData != null && providerCallback != null) {
+                        providerCallback.receiveData(meshData);
+                    }
+                }
+            }
+        }
+    }
+
+    /* */
+
+    /**
+     * When any kind of message data we received
+     *
+     * @param msgOwner  - Get my id
+     * @param frameData frame data received from remote device
+     *//*
+    @Override
+    public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
+        if (frameData != null) {
+
+            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
+
+            if (meshData != null) {
+
+                meshData.mMeshPeer = new MeshPeer(msgOwner);
+
+                if (MeshDataManager.getInstance().isProfilePing(meshData)) {
+                    myProfileSend(msgOwner);
+
+                } else if (MeshDataManager.getInstance().isProfileData(meshData)) {
+                    if (providerCallback != null) {
+                        providerCallback.connectionAdd(meshData);
+                    }
+                } else {
+                    if (meshData.mData != null && providerCallback != null) {
+                        providerCallback.receiveData(meshData);
+                    }
+                }
+            }
+        }
+    }
+*/
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
 
         HandlerUtil.postBackground(() -> {
@@ -218,6 +308,7 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * Send my info after discovering him
+     *
      * @param nodeId - The discovered node id
      */
     private void sendMyInfo(String nodeId) {
@@ -240,18 +331,6 @@ public class MeshProvider implements LinkStateListener {
         transportManager.sendMessage(myUserId, nodeId, sendId, data);
     }
 
-    /**
-     * When a node id or peer link is removed we get those callback
-     */
-    @Override
-    public void linkDisconnected(String nodeId) {
-        peerDiscoveryProcess(nodeId, false);
-    }
-
-    @Override
-    public void onMeshLinkDisconnect(String nodeId) {
-        peerDiscoveryProcess(nodeId, false);
-    }
 
     private void peerRemoved(String peerId) {
         if (providerCallback != null)
@@ -260,6 +339,7 @@ public class MeshProvider implements LinkStateListener {
 
     /**
      * By default data sent from Remote Service Binder thread
+     *
      * @param meshData - message send
      * @return - get the message send id
      */
@@ -278,41 +358,12 @@ public class MeshProvider implements LinkStateListener {
         return null;
     }
 
-    /**
-     * When any kind of message data we received
-     * @param msgOwner - Get my id
-     * @param frameData frame data received from remote device
-     */
-    @Override
-    public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
-        if (frameData != null) {
-
-            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
-
-            if (meshData != null) {
-
-                meshData.mMeshPeer = new MeshPeer(msgOwner);
-
-                if (MeshDataManager.getInstance().isProfilePing(meshData)) {
-                    myProfileSend(msgOwner);
-
-                } else if (MeshDataManager.getInstance().isProfileData(meshData)) {
-                    if (providerCallback != null) {
-                        providerCallback.connectionAdd(meshData);
-                    }
-                } else {
-                    if (meshData.mData != null && providerCallback != null) {
-                        providerCallback.receiveData(meshData);
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * After successful deliver a frame we get message delivery id
+     *
      * @param messageId : Long message sent id
-     * @param status : boolean status true of success false otherwise
+     * @param status    : boolean status true of success false otherwise
      */
     @Override
     public void onMessageDelivered(String messageId, int status) {

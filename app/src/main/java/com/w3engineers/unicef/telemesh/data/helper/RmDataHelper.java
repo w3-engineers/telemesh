@@ -81,6 +81,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private DataSource dataSource;
 
+    private String mLatitude;
+    private String mLongitude;
+
     @SuppressLint("UseSparseArrays")
     @NonNull
     public HashMap<String, DataModel> rmDataMap = new HashMap<>();
@@ -136,6 +139,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void onlyNodeAdd(String nodeId) {
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
@@ -471,6 +477,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * i.e. update user status to offline successfully then called this method
      */
     private void stopMeshProcess() {
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
         rightMeshDataSource.stopMeshProcess();
     }
 
@@ -507,15 +516,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 LocationUtil.getInstance().removeListener();
 
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
-                BroadcastWebSocket listener = new BroadcastWebSocket();
-                listener.setBroadcastCommand(getBroadcastCommand(lat, lang));
-                client.newWebSocket(request, listener);
-                client.dispatcher().executorService().shutdown();
+                mLatitude = lat;
+                mLongitude = lang;
+
+                getLocalUserCount();
             }
         });
 
+    }
+
+    private void requestWsMessageWithUserCount(int localUserCount) {
+        Log.d("UserCountTest", "user: " + localUserCount);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localUserCount));
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
     }
 
     private String getMyMeshId() {
@@ -632,14 +649,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private BroadcastCommand getBroadcastCommand(String lat, String lang) {
+    private BroadcastCommand getBroadcastCommand(String lat, String lang, int localUserCount) {
         Payload payload = new Payload();
 
         GeoLocation geoLocation = new GeoLocation()
                 .setLatitude(lat).setLongitude(lang);
 
         payload.setGeoLocation(geoLocation);
-        payload.setConnectedClients("2");
+        payload.setConnectedClients(String.valueOf(localUserCount));
 
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)
@@ -681,6 +698,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
         String messageCountString = new Gson().toJson(messageCount);
+
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);
@@ -762,13 +783,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 "/MeshRnD");
         File[] files = directory.listFiles();
 
-        if(files!=null){
+        if (files != null) {
             for (File file : files) {
-                if (!previousList.contains(file.getName())) {
-                    AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "testUser", Constants.getDeviceName());
+                if (!previousList.contains(file.getName())
+                        && Constant.CURRENT_LOG_FILE_NAME != null
+                        && !Constant.CURRENT_LOG_FILE_NAME.equalsIgnoreCase(file.getName())) {
+                    AnalyticsDataHelper.getInstance().sendLogFileInServer(file, TextUtils.isEmpty(getMyMeshId()) ? "Test User" : getMyMeshId(), Constants.getDeviceName());
                 }
             }
         }
+    }
+
+    private void getLocalUserCount() {
+        compositeDisposable.add(Single.fromCallable(() ->
+                UserDataSource.getInstance().getLocalUserCount())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::requestWsMessageWithUserCount, Throwable::printStackTrace));
     }
 
     @Override
@@ -777,6 +807,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void showMeshLog(String log) {
-       // LogProcessUtil.getInstance().writeLog(log);
+        // LogProcessUtil.getInstance().writeLog(log);
     }
 }

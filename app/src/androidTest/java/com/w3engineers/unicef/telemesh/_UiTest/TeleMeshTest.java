@@ -52,12 +52,16 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 
 @LargeTest
@@ -82,6 +86,7 @@ public class TeleMeshTest {
     private RandomEntityGenerator randomEntityGenerator;
     private SharedPref sharedPref;
     private AppDatabase appDatabase;
+    private Context context;
 
     @Before
     public void setUp() {
@@ -89,7 +94,7 @@ public class TeleMeshTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-       // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        // userDataSource = UserDataSource.getInstance(appDatabase.userDao());
         userDataSource = UserDataSource.getInstance();
 
         feedDataSource = FeedDataSource.getInstance();
@@ -99,7 +104,7 @@ public class TeleMeshTest {
 
         randomEntityGenerator = new RandomEntityGenerator();
 
-        Context context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getTargetContext();
         sharedPref = SharedPref.getSharedPref(context);
     }
 
@@ -120,7 +125,10 @@ public class TeleMeshTest {
                                         withId(R.id.name_layout),
                                         0),
                                 0)));
+        addDelay(500);
         baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+        addDelay(500);
 
         ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
@@ -258,172 +266,32 @@ public class TeleMeshTest {
         bottomNavigationSettings.perform(click());
 
         addDelay(700);
+
+        ViewInteraction meshLogOpen = onView(allOf(withId(R.id.layout_show_log),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 6)));
+
+        meshLogOpen.perform(scrollTo(), click());
+        pressBack();
+        addDelay(700);
+
+       /* ViewInteraction connectivityDiagram = onView(allOf(withId(R.id.layout_diagram_map),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 5)));
+
+        connectivityDiagram.perform(scrollTo(), click());
+        pressBack();
+        addDelay(700);*/
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        mDevice.pressBack();
     }
 
     // Settings properties test
     @Test
     public void uiTest_3() {
         addDelay(3800);
-
-        ViewInteraction bottomNavigationSettings = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                2),
-                        isDisplayed()));
-        bottomNavigationSettings.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction viewProfile = onView(allOf(withId(R.id.layout_view_profile),
-                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
-        viewProfile.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction baseButton = onView(
-                allOf(withId(R.id.op_back), childAtPosition(
-                        withId(R.id.view_profile_layout),
-                        1)));
-        baseButton.perform(click());
-
-        addDelay(700);
-
-
-        ViewInteraction openWallet = onView(allOf(withId(R.id.layout_open_wallet),
-                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
-//        openWallet.perform(scrollTo(), click());
-
-        // addDelay(700);
-
-        // pressBack();
-
-//        mDevice.pressBack();
-
-        //   addDelay(700);
-
-        ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
-                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
-
-        // commented  below two line for ignoring unwanted crash issue in Emulator
-        // We will re -enable the code after cod fix
-
-        // constraintLayout2.perform(scrollTo(), click());
-
-        //  addDelay(700);
-        //  pressBack();
-
-
-        addDelay(700);
-
-        ViewInteraction chooseLanguage = onView(
-                allOf(withId(R.id.layout_choose_language),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                4)));
-        chooseLanguage.perform(scrollTo(), click());
-
-
-        ViewInteraction appCompatRadioButton = onView(
-                allOf(withId(R.id.radio_bangla), withText("বাংলা"),
-                        childAtPosition(
-                                allOf(withId(R.id.radio_group_language),
-                                        childAtPosition(
-                                                withId(R.id.alert_buy_sell_dialog_layout),
-                                                1)),
-                                1),
-                        isDisplayed()));
-        appCompatRadioButton.perform(click());
-
-        addDelay(2000);
-
-        ViewInteraction bottomNavigationItemView2 = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                2),
-                        isDisplayed()));
-        bottomNavigationItemView2.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction constraintLayoutCooseLanguage = onView(
-                allOf(withId(R.id.layout_choose_language),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                4)));
-        constraintLayoutCooseLanguage.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction appCompatRadioButton2 = onView(
-                allOf(withId(R.id.radio_english), withText("English"),
-                        childAtPosition(
-                                allOf(withId(R.id.radio_group_language),
-                                        childAtPosition(
-                                                withId(R.id.alert_buy_sell_dialog_layout),
-                                                1)),
-                                0),
-                        isDisplayed()));
-        appCompatRadioButton2.perform(click());
-
-        addDelay(2000);
-
-        ViewInteraction bottomNavigationItemViewSettings = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.bottom_navigation),
-                                        0),
-                                2),
-                        isDisplayed()));
-        bottomNavigationItemViewSettings.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction constraintLayout3 = onView(
-                allOf(withId(R.id.layout_about_us),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_settings),
-                                        childAtPosition(
-                                                withId(R.id.layout_scroll),
-                                                0)),
-                                7)));
-        constraintLayout3.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        pressBack();
-
-        addDelay(700);
-
-        ViewInteraction againLayoutShareApp = onView(allOf(withId(R.id.layout_share_app),
-                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
-        againLayoutShareApp.perform(scrollTo(), click());
-
-        addDelay(5000);
-
-        mActivityAppShareRule.finishActivity();
-
-        addDelay(700);
-    }
-
-    // Message and mesh contact test
-   /* @Test
-    public void uiTest_4() {
-        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED,true);
-
-        addDelay(5*1000);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
@@ -524,31 +392,161 @@ public class TeleMeshTest {
 
         addDelay(500);
 
-        mDevice.pressBack();
+        // message and contact test end
 
-        addDelay(500);
+        ViewInteraction bottomNavigationSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationSettings.perform(click());
 
-        mDevice.pressBack();
+        addDelay(700);
+
+        ViewInteraction viewProfile = onView(allOf(withId(R.id.layout_view_profile),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        viewProfile.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        ViewInteraction baseButton = onView(
+                allOf(withId(R.id.op_back), childAtPosition(
+                        withId(R.id.view_profile_layout),
+                        1)));
+        baseButton.perform(click());
+
+        addDelay(700);
+
+
+        ViewInteraction openWallet = onView(allOf(withId(R.id.layout_open_wallet),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
+        openWallet.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        if (Constants.IsMeshInit) {
+            pressBack();
+            addDelay(700);
+        }
+
+        ViewInteraction constraintLayout2 = onView(allOf(withId(R.id.layout_data_plan),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
+
+
+        constraintLayout2.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        if (Constants.IsMeshInit) {
+            pressBack();
+            addDelay(700);
+        }
+
+        ViewInteraction chooseLanguage = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                4)));
+        chooseLanguage.perform(scrollTo(), click());
+
+
+        ViewInteraction appCompatRadioButton = onView(
+                allOf(withId(R.id.radio_bangla), withText("বাংলা"),
+                        childAtPosition(
+                                allOf(withId(R.id.radio_group_language),
+                                        childAtPosition(
+                                                withId(R.id.alert_buy_sell_dialog_layout),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatRadioButton.perform(click());
 
         addDelay(2000);
 
-        try {
-            mDevice.pressBack();
-            RmDataHelper.getInstance().stopRmService();
-        } catch (NoActivityResumedException e) {
-            e.printStackTrace();
-        }
-    }*/
+        ViewInteraction bottomNavigationItemView2 = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationItemView2.perform(click());
 
-    /**
-     * Testing Message/Bulletin Feed
-     * This test also cover {@link com.w3engineers.unicef.telemesh.data.helper.RmDataHelper}
-     * This test send fake bulletin and receive the bulletin
-     * message also show the message in UI
-     * So this test also Message Bulletin UI element also
-     */
-    @Test
-    public void unit_test_5() {
+        addDelay(700);
+
+        ViewInteraction constraintLayoutCooseLanguage = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                4)));
+        constraintLayoutCooseLanguage.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        ViewInteraction appCompatRadioButton2 = onView(
+                allOf(withId(R.id.radio_english), withText("English"),
+                        childAtPosition(
+                                allOf(withId(R.id.radio_group_language),
+                                        childAtPosition(
+                                                withId(R.id.alert_buy_sell_dialog_layout),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatRadioButton2.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction bottomNavigationItemViewSettings = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.bottom_navigation),
+                                        0),
+                                2),
+                        isDisplayed()));
+        bottomNavigationItemViewSettings.perform(click());
+
+        addDelay(700);
+
+        ViewInteraction constraintLayout3 = onView(
+                allOf(withId(R.id.layout_about_us),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                7)));
+        constraintLayout3.perform(scrollTo(), click());
+
+        addDelay(700);
+
+        pressBack();
+
+        addDelay(700);
+
+        ViewInteraction againLayoutShareApp = onView(allOf(withId(R.id.layout_share_app),
+                childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
+        againLayoutShareApp.perform(scrollTo(), click());
+
+        addDelay(5000);
+
+        mActivityAppShareRule.finishActivity();
+
+        addDelay(700);
+
+
+        // ----------------- unit test 5 part ----------------------
+
         addDelay(3800);
 
         // Prepare bulletin
@@ -580,26 +578,24 @@ public class TeleMeshTest {
 
         addDelay(700);
 
-        ViewInteraction contactLayout = onView(
+        ViewInteraction contactLayout1 = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.message_recycler_view),
                                 childAtPosition(withId(R.id.message_feed_layout),
                                         0)),
                         0),
                         isDisplayed()));
-        contactLayout.perform(click());
+        contactLayout1.perform(click());
 
         addDelay(700);
 
         onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
 
-    }
-    //User company test
-    @Test
-    public void user_company_test() {
+        // ---------------------  user company test -----------------------
+
         addDelay(3800);
 
-        ViewInteraction bottomNavigationSettings = onView(
+        ViewInteraction bottomNavigationSettings1 = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(
                                 childAtPosition(
@@ -607,7 +603,7 @@ public class TeleMeshTest {
                                         0),
                                 2),
                         isDisplayed()));
-        bottomNavigationSettings.perform(click());
+        bottomNavigationSettings1.perform(click());
 
         addDelay(700);
 
@@ -615,9 +611,9 @@ public class TeleMeshTest {
         sharedPref.write(Constants.preferenceKey.COMPANY_ID, "ahukoip1890");
         sharedPref.write(Constants.preferenceKey.COMPANY_NAME, "Refugi Camp 1");
 
-        ViewInteraction viewProfile = onView(allOf(withId(R.id.layout_view_profile),
+        ViewInteraction viewProfile1 = onView(allOf(withId(R.id.layout_view_profile),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
-        viewProfile.perform(scrollTo(), click());
+        viewProfile1.perform(scrollTo(), click());
 
         addDelay(700);
 
@@ -639,6 +635,23 @@ public class TeleMeshTest {
         addDelay(1000);
 
         try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+
+        // for chat and user search test
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        addDelay(2000);
+
+        try {
+            RmDataHelper.getInstance().stopRmService();
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();

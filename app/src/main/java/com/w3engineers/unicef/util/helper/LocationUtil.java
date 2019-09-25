@@ -48,6 +48,14 @@ public class LocationUtil {
         this.callback = callback;
     }
 
+    public LocationRequestCallback getLocationListener() {
+        return callback;
+    }
+
+    public LocationCallback getLocationCallback() {
+        return locationCallback;
+    }
+
     public LocationUtil init(Context context) {
         this.mContext = context;
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);

@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 
 import java.util.List;
+
 import io.reactivex.Flowable;
 
 @Dao
@@ -70,9 +71,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     abstract Flowable<List<UserEntity>> getAllUsers();
 
 
-    @Query("SELECT * FROM "+ TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
             + Constants.UserStatus.WIFI_ONLINE + " OR " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
-            + Constants.UserStatus.BLE_ONLINE )
+            + Constants.UserStatus.BLE_ONLINE)
     @NonNull
     public abstract List<UserEntity> getLivePeers();
 
@@ -94,6 +95,13 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_MESH_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_MESH_ONLINE + " OR "
-            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE )
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
     abstract LiveData<List<UserEntity>> getActiveUser();
+
+    @Query("SELECT COUNT(*) FROM " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_MESH_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_MESH_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
+    abstract int getLocalUserCount();
 }

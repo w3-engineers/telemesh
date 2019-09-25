@@ -59,7 +59,7 @@ public class BroadcastWebSocket extends WebSocketListener {
 
     @Override
     public void onMessage(@NonNull WebSocket webSocket, @NonNull okio.ByteString bytes) {
-        Timber.tag("MIMO_SAHA:").v("Message: %s", bytes);
+        //Timber.tag("MIMO_SAHA:").v("Message: %s", bytes);
     }
     @Override
     public void onClosing(@NonNull WebSocket webSocket, int code, @Nullable String reason) {

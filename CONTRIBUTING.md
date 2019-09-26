@@ -1,180 +1,421 @@
-# Introduction
+# Contributing
 
-### Write something nice here!
 
->First off, thank you for considering contributing to Active Admin. It's people like you that make Active Admin such a great tool.
+# Table of contents
+1. [Introduction](#introduction)
+2. [Community Code of Conduct](#codeofconduct)
+    1. [Be considerate](#beconsiderate)
+    2. [Be respectful](#berespectful)
+    3. [Be collaborative](#becollaborative)
+    4. [When you disagree, consult others](#disagree)
+    5. [When you're unsure, ask for help](#unsure)
+    6. [Step down considerately](#stepdown)
+        
+3. [Your First Contribution](#firstcontribution)
+4. [Support questions](#supportquestions)
+5. [Reporting issues](#reportissue)
+6. [Fix Bugs](#fixbugs)
+7. [Implement Features](#features)
+8. [Submitting an Issue](#submitissue)
+9. [Feature requests](#featurereq)
+10. [Code review process](#codereview)
+11. [Community](#community)
+12. [Pull Requests](#pullreq)
+     1. [How to create PR](#howpullreq)
+13. [Git Commit Guidelines](#gitcommit) 
+14. [Coding style guide](#codingstyle) 
+15. [Organize github issues](#organize) 
+16. [Issue Referencing on Github](#issuereference) 
+    
 
-[source: [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Read The Docs](http://read-the-docs.readthedocs.org/en/latest/contribute.html) [2] [Mustache.js](https://github.com/janl/mustache.js/#contributing)
 
-### Tell them why they should read your guidelines.
+## Introduction <a name="introduction"></a>
 
->Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
+First off, thank you for considering contributing to Telemesh. It's people like you that make Telemesh such a great tool.
 
-[source: [Hoodie](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md)]
+When contributing to this repository, please first discuss the change you wish to make via issue ticket ([sample](https://github.com/w3-engineers/telemesh/issues/51)), [discord](https://discord.gg/SHG4qrH) with the owners of this repository before making a change.
 
-### Explain what kinds of contributions you are looking for.
+Please note we have a code of conduct, please follow it in all your interactions with the project.
 
-Keep an open mind! Improving documentation, bug triaging, or writing tutorials are all examples of helpful contributions that mean less work for you.
+When contributing to Telemesh, we ask that you:
 
-> Elasticsearch is an open source project and we love to receive contributions from our community — you! There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into Elasticsearch itself.
+- let us know what you plan in the [GitHub Issue tracker](https://github.com/w3-engineers/telemesh/projects/1) so we can provide feedback.
 
-[source: [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Devise](https://github.com/plataformatec/devise/wiki/Contributing) [2] [Geocoder](https://github.com/alexreisner/geocoder#known-issue) (“known issue”)
+- provide tests and documentation whenever possible. It is very unlikely that we will accept new features or functionality into Telemesh without the proper testing and documentation. When fixing a bug, provide a failing test case that your patch solves.
 
-### Explain contributions you are NOT looking for (if any).
+- open a GitHub Pull Request with your patches and we will review your contribution and respond as quickly as possible. Keep in mind that this is an open source project, and it may take us some time to get back to you. Your patience is very much appreciated.
 
-Again, defining this up front means less work for you. If someone ignores your guide and submits something you don’t want, you can simply close it and point to your policy.
 
-> Please, don't use the issue tracker for [support questions]. Check whether the #pocoo IRC channel on Freenode can help with your issue. If your problem is not strictly Werkzeug or Flask specific, #python is generally more active. Stack Overflow is also worth considering.
 
-[source: [Flask](https://github.com/pallets/flask/blob/master/CONTRIBUTING.rst)] **Need more inspiration?** [1] [cucumber-ruby](https://github.com/cucumber/cucumber-ruby/blob/master/CONTRIBUTING.md#about-to-create-a-new-github-issue) [2] [Read the Docs](http://read-the-docs.readthedocs.org/en/latest/open-source-philosophy.html#unsupported)
+## Community Code of Conduct <a name="codeofconduct"></a>
 
-# Ground Rules
-### Set expectations for behavior (yours, and theirs).
-This includes not just how to communicate with others (being respectful, considerate, etc) but also technical responsibilities (importance of testing, project dependencies, etc). Mention and link to your code of conduct, if you have one.
 
-> Responsibilities
-> * Ensure cross-platform compatibility for every change that's accepted. Windows, Mac, Debian & Ubuntu Linux.
-> * Ensure that code that goes into core meets all requirements in this checklist: https://gist.github.com/audreyr/4feef90445b9680475f2
-> * Create issues for any major changes and enhancements that you wish to make. Discuss things transparently and get community feedback.
-> * Don't add any classes to the codebase unless absolutely needed. Err on the side of using functions.
-> * Keep feature versions as small as possible, preferably one new feature per version.
-> * Be welcoming to newcomers and encourage diverse new contributors from all backgrounds. See the [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
+The goal is to maintain a Telemesh community that's pleasant for everyone.
+That's why we would greatly appreciate it if everyone contributing to and
+interacting with the community also followed this Code of Conduct.
 
-[source: [cookiecutter](https://github.com/audreyr/cookiecutter/blob/master/CONTRIBUTING.rst)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#community-code-of-conduct) [2] [geocoder](https://github.com/alexreisner/geocoder#contributing)
 
-# Your First Contribution
-Help people who are new to your project understand where they can be most helpful. This is also a good time to let people know if you follow a label convention for flagging beginner issues.
+### Be considerate <a name="beconsiderate"></a>
 
-> Unsure where to begin contributing to Atom? You can start by looking through these beginner and help-wanted issues:
-> Beginner issues - issues which should only require a few lines of code, and a test or two.
-> Help wanted issues - issues which should be a bit more involved than beginner issues.
-> Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
-[source: [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#your-first-code-contribution)] **Need more inspiration?** [1] [Read the Docs](http://docs.readthedocs.org/en/latest/contribute.html#contributing-to-development) [2] [Django](https://docs.djangoproject.com/en/dev/internals/contributing/new-contributors/#first-steps) (scroll down to "Guidelines" as well)
+Your work will be used by other people, and you in turn will depend on the
+work of others. Any decision you take will affect users and colleagues, and
+we expect you to take those consequences into account when making decisions.
+Even if it's not obvious at the time, our contributions to Telemesh will impact
+the work of others. For example, changes to code, infrastructure, policy,
+documentation and translations during a release may negatively impact
+others work.
 
-### Bonus points: Add a link to a resource for people who have never contributed to open source before.
-Here are a couple of friendly tutorials you can include: http://makeapullrequest.com/ and http://www.firsttimersonly.com/
+### Be respectful <a name="berespectful"></a>
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]  
+The Telemesh community and its members treat one another with respect. Everyone
+can make a valuable contribution to Telemesh. We may not always agree, but
+disagreement is no excuse for poor behavior and poor manners. We might all
+experience some frustration now and then, but we cannot allow that frustration
+to turn into a personal attack. It's important to remember that a community
+where people feel uncomfortable or threatened isn't a productive one. We
+expect members of the Telemesh community to be respectful when dealing with
+other contributors as well as with people outside the Telemesh project and with
+users of Telemesh.
 
-As a side note, it helps to use newcomer-friendly language throughout the rest of your document. Here are a couple of examples from [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md):
+### Be collaborative <a name="becollaborative"></a>
 
->At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
->
->If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
 
-# Getting started
-### Give them a quick walkthrough of how to submit a contribution.
-How you write this is up to you, but some things you may want to include:
+Collaboration is central to Telemesh and to the larger free software community.
+We should always be open to collaboration. Your work should be done
+transparently and patches from Telemesh should be given back to the community
+when they're made, not just when the distribution releases. If you wish
+to work on new code for existing upstream projects, at least keep those
+projects informed of your ideas and progress. It many not be possible to
+get consensus from upstream, or even from your colleagues about the correct
+implementation for an idea, so don't feel obliged to have that agreement
+before you begin, but at least keep the outside world informed of your work,
+and publish your work in a way that allows outsiders to test, discuss, and
+contribute to your efforts.
 
-* Let them know if they need to sign a CLA, agree to a DCO, or get any other legal stuff out of the way
-* If tests are required for contributions, let them know, and explain how to run the tests
-* If you use anything other than GitHub to manage issues (ex. JIRA or Trac), let them know which tools they’ll need to contribute
+### When you disagree, consult others <a name="disagree"></a>
 
->For something that is bigger than a one or two line fix:
 
->1. Create your own fork of the code
->2. Do the changes in your fork
->3. If you like the change and think the project could use it:
-    * Be sure you have followed the code style for the project.
-    * Sign the Contributor License Agreement, CLA, with the jQuery Foundation.
-    * Note the jQuery Foundation Code of Conduct.
-    * Send a pull request indicating that you have a CLA on file.
+Disagreements, both political and technical, happen all the time and
+the Telemesh community is no exception. It's important that we resolve
+disagreements and differing views constructively and with the help of the
+community and community process. If you really want to go a different
+way, then we encourage you to make a derivative distribution or alternate
+set of packages that still build on the work we've done to utilize as common
+of a core as possible.
 
-[source: [Requirejs](http://requirejs.org/docs/contributing.html)] **Need more inspiration?** [1] [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md#1-where-do-i-go-from-here) [2] [Node.js](https://github.com/nodejs/node/blob/master/CONTRIBUTING.md#code-contributions) [3] [Ember.js](https://github.com/emberjs/ember.js/blob/master/CONTRIBUTING.md#pull-requests)
+### When you're unsure, ask for help <a name="unsure"></a>
 
-### If you have a different process for small or "obvious" fixes, let them know.
 
-> Small contributions such as fixing spelling errors, where the content is small enough to not be considered intellectual property, can be submitted by a contributor as a patch, without a CLA.
->
->As a rule of thumb, changes are obvious fixes if they do not introduce any new functionality or creative thinking. As long as the change does not affect functionality, some likely examples include the following:
->* Spelling / grammar fixes
->* Typo correction, white space and formatting changes
->* Comment clean up
->* Bug fixes that change default return values or error codes stored in constants
->* Adding logging messages or debugging output
->* Changes to ‘metadata’ files like Gemfile, .gitignore, build scripts, etc.
->* Moving source files from one directory or package to another
+Nobody knows everything, and nobody is expected to be perfect. Asking
+questions avoids many problems down the road, and so questions are
+encouraged. Those who are asked questions should be responsive and helpful.
+However, when asking a question, care must be taken to do so in an appropriate
+forum.
 
-[source: [Chef](https://github.com/chef/chef/blob/master/CONTRIBUTING.md#chef-obvious-fix-policy)] **Need more inspiration?** [1] [Puppet](https://github.com/puppetlabs/puppet/blob/master/CONTRIBUTING.md#making-trivial-changes)
+### Step down considerately <a name="stepdown"></a>
 
-# How to report a bug
-### Explain security disclosures first!
-At bare minimum, include this sentence:
-> If you find a security vulnerability, do NOT open an issue. Email XXXX instead.
+Developers on every project come and go and Telemesh is no different. When you
+leave or disengage from the project, in whole or in part, we ask that you do
+so in a way that minimizes disruption to the project. This means you should
+tell people you're leaving and take the proper steps to ensure that others
+can pick up where you leave off.
 
-If you don’t want to use your personal contact information, set up a “security@” email address. Larger projects might have more formal processes for disclosing security, including encrypted communication. (Disclosure: I am not a security expert.)
 
-> Any security issues should be submitted directly to security@travis-ci.org
-> In order to determine whether you are dealing with a security issue, ask yourself these two questions:
-> * Can I access something that's not mine, or something I shouldn't have access to?
-> * Can I disable something for other people?
->
-> If the answer to either of those two questions are "yes", then you're probably dealing with a security issue. Note that even if you answer "no" to both questions, you may still be dealing with a security issue, so if you're unsure, just email us at security@travis-ci.org.
+## Your First Contribution <a name="firstcontribution"></a>
 
-[source: [Travis CI](https://github.com/travis-ci/travis-ci/blob/master/CONTRIBUTING.md)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#security) [2] [Express.js](https://github.com/expressjs/express/blob/master/Security.md)
+Unsure where to begin contributing to Telemesh? You can start by looking through these `good-first` and `help-wanted` issues:
 
-### Tell your contributors how to file a bug report.
-You can even include a template so people can just copy-paste (again, less work for you).
+* [Good first issues](https://github.com/w3-engineers/telemesh/labels/good%20first%20issue) - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues](https://github.com/w3-engineers/telemesh/labels/help%20wanted) - issues which should be a bit more involved than `good-first` issues.
 
-> When filing an issue, make sure to answer these five questions:
->
-> 1. What version of Go are you using (go version)?
-> 2. What operating system and processor architecture are you using?
-> 3. What did you do?
-> 4. What did you expect to see?
-> 5. What did you see instead?
-> General questions should go to the golang-nuts mailing list instead of the issue tracker. The gophers there will answer or ask you to file an issue if you've tripped over a bug.
+Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
-[source: [Go](https://github.com/golang/go/blob/master/CONTRIBUTING.md#filing-issues)] **Need more inspiration?** [1] [Celery](https://github.com/celery/celery/blob/master/CONTRIBUTING.rst#other-bugs ) [2] [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#reporting-bugs) (includes template)
+Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-# How to suggest a feature or enhancement
-### If you have a particular roadmap, goals, or philosophy for development, share it here.
-This information will give contributors context before they make suggestions that may not align with the project’s needs.
+At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
 
-> The Express philosophy is to provide small, robust tooling for HTTP servers, making it a great solution for single page applications, web sites, hybrids, or public HTTP APIs.
->
-> Express does not force you to use any specific ORM or template engine. With support for over 14 template engines via Consolidate.js, you can quickly craft your perfect framework.
+If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
 
-[source: [Express](https://github.com/expressjs/express#philosophy)] **Need more inspiration?** [Active Admin](https://github.com/activeadmin/activeadmin#goals)
 
-### Explain your desired process for suggesting a feature.
-If there is back-and-forth or signoff required, say so. Ask them to scope the feature, thinking through why it’s needed and how it might work.
+## Support questions <a name="supportquestions"></a>
 
-> If you find yourself wishing for a feature that doesn't exist in Elasticsearch, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Elasticsearch has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
 
-[source: [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#feature-requests)] **Need more inspiration?** [1] [Hoodie](https://github.com/hoodiehq/hoodie/blob/master/CONTRIBUTING.md#feature-requests) [2] [Ember.js](https://github.com/emberjs/ember.js/blob/master/CONTRIBUTING.md#requesting-a-feature)
+Please, don't use the issue tracker for this. Use one of the following
+resources for questions about your own code:
 
-# Code review process
-### Explain how a contribution gets accepted after it’s been submitted.
-Who reviews it? Who needs to sign off before it’s accepted? When should a contributor expect to hear from you? How can contributors get commit access, if at all?
+* The ``#get-help`` channel on our [Discord chat](https://discord.gg/SHG4qrH)
 
-> The core team looks at Pull Requests on a regular basis in a weekly triage meeting that we hold in a public Google Hangout. The hangout is announced in the weekly status updates that are sent to the puppet-dev list. Notes are posted to the Puppet Community community-triage repo and include a link to a YouTube recording of the hangout.
-> After feedback has been given we expect responses within two weeks. After two weeks we may close the pull request if it isn't showing any activity.
+* The mailing list media@telemesh.net for long term discussion or larger issues.
 
-[source: [Puppet](https://github.com/puppetlabs/puppet/blob/master/CONTRIBUTING.md#submitting-changes)] **Need more inspiration?** [1] [Meteor](https://meteor.hackpad.com/Responding-to-GitHub-Issues-SKE2u3tkSiH ) [2] [Express.js](https://github.com/expressjs/express/blob/master/Contributing.md#becoming-a-committer)
 
-# Community
-If there are other channels you use besides GitHub to discuss contributions, mention them here. You can also list the author, maintainers, and/or contributors here, or set expectations for response time.
+## Reporting issues <a name="reportissue"></a>
 
-> You can chat with the core team on https://gitter.im/cucumber/cucumber. We try to have office hours on Fridays.
+Report bugs at https://github.com/w3-engineers/telemesh/issues.
 
-[source: [cucumber-ruby](https://github.com/cucumber/cucumber-ruby/blob/master/CONTRIBUTING.md#talking-with-other-devs)] **Need more inspiration?**
- [1] [Chef](https://github.com/chef/chef/blob/master/CONTRIBUTING.md#-developer-office-hours) [2] [Cookiecutter](https://github.com/audreyr/cookiecutter#community)
+We have different templates for bug report and feature request which you can find during issue creation.
 
-# BONUS: Code, commit message and labeling conventions
-These sections are not necessary, but can help streamline the contributions you receive.
+```text
 
-### Explain your preferred style for code, if you have any.
+<!--- Provide a general summary of the issue in the Title above -->
 
-**Need inspiration?** [1] [Requirejs](http://requirejs.org/docs/contributing.html#codestyle) [2] [Elasticsearch](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#contributing-to-the-elasticsearch-codebase)
+### Description
+<!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
 
-### Explain if you use any commit message conventions.
+### Expected Behavior
+<!--- Tell us what should happen -->
 
-**Need inspiration?** [1] [Angular](https://github.com/angular/material/blob/master/.github/CONTRIBUTING.md#submit) [2] [Node.js](https://github.com/nodejs/node/blob/master/CONTRIBUTING.md#step-3-commit)
+### Actual Behavior
+<!--- Tell us what happens instead -->
 
-### Explain if you use any labeling conventions for issues.
+### Possible Fix
+<!--- Not obligatory, but suggest a fix or reason for the bug -->
 
-**Need inspiration?** [1] [StandardIssueLabels](https://github.com/wagenet/StandardIssueLabels#standardissuelabels) [2] [Atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#issue-and-pull-request-labels)
+### Steps to Reproduce
+<!--- Provide a link to a live example, or an unambiguous set of steps to -->
+<!--- reproduce this bug. Include code to reproduce, if relevant -->
+1.
+2.
+3.
+4.
+
+### Context
+<!--- How has this bug affected you? What were you trying to accomplish? -->
+
+### Your Environment
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+* App version used:
+* Device Name and version:
+* Operating System and version:
+
+```
+
+
+## Fix Bugs <a name="fixbugs"></a>
+
+Look through the GitHub issues for bugs. Anything tagged with "bug"
+is open to whoever wants to implement it.
+[Sample issue](https://github.com/w3-engineers/telemesh/issues/51)
+
+
+## Implement Features <a name="features"></a>
+
+
+Look through the GitHub issues for features. Anything tagged with "enhancement"
+and "optimization" is open to whoever wants to implement it.
+
+Please do not combine multiple feature enhancements into a single pull request.
+
+Note: We're trying to keep the code base
+small, extensible, and streamlined. Whenever possible, it's best to try and
+implement feature ideas as separate projects outside of the core codebase.
+
+
+
+## Submitting an Issue <a name="submitissue"></a>
+
+Before you submit an issue,
+**[search](https://github.com/w3-engineers/telemesh/issues)** the issues archive;
+maybe the issue has already been submitted or considered. If the issue appears to be a bug,
+and hasn't been reported, open a [new issue](https://github.com/w3-engineers/telemesh/issues/new/choose).
+
+> Please **do not report duplicate issues**; help us maximize the effort we can spend fixing
+issues and adding enhancements.
+
+Providing the following information will increase the chances of your issue being dealt with
+quickly:
+
+* **Issue Title** - provide a concise issue title prefixed with a snake-case name of the
+                    associated service or component (if any): `<component>: <issue title>`.
+                    Adding the `md-` prefix should be avoided.
+
+  > e.g.
+  > *  menu-bar: does not support dark mode themes [#51](https://github.com/w3-engineers/telemesh/issues/51)
+ 
+
+* **Complete the full Issue Template** - You will get the issue template where we put some predefined rules to create an issue.
+  Moreover we are always open to make any changes according contributor's feedback.
+
+* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
+  causing the problem (line of code or commit).
+
+#### <a name="submitpr"></a>Submitting Pull Requests
+
+**Important**: We are not accepting major feature requests or PRs that contain major new features
+ or breaking changes at this time but we are welcoming to plan it for future or, we can discuss further offline.
+
+
+## Feature requests <a name="featurereq"></a>
+
+If you find yourself wishing for a feature that doesn't exist in Telemesh, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Telemesh has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
+
+## Code review process <a name="codereview"></a>
+
+The core team looks at Pull Requests on a regular basis.Each code review should aim to achieve one or more of these goals; however, not all code reviews need to aim for all goals.
+
+Code review goals: 
+
+- Finding bugs
+- Bugs found in code review require much less effort to find & fix than bugs found in QA/testing.
+- Coding style. Ensure that [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7) are followed.
+- Improving code quality
+- Teaching best practices
+- Code consistency (can't tell the author from the code)
+- Learning code
+- Efficiency (getting pull requests reviewed quickly)
+- Ensuring that the pull request guidelines are followed.
+
+
+Code review processes:
+
+- Issue a pull request with a full link to your ticket in the description.
+- Click the "Request Review" option on the ticket to move into the "Code Review (pre commit)" state.
+- Add a comment linking to your pull request by its url.
+
+Code review checklists :
+
+- Variable naming convention.
+- Method naming convention.
+- is the Class file is written in suitable package that is defined in guideline.
+- Override methods should be listed upper and then the private methods.
+- xml naming convention.
+- Layout design.
+- Unit test check.
+- Proper commenting on each method.
+- Method body and if any logical improvement is needed.
+- If any 3rd party library used then is it good to use or not
+- No sophisticated url access/data on git commit
+
+## Community <a name="community"></a>
+
+We will finalise our contributors community and list down their details soon
+
+## Pull Requests <a name="pullreq"></a>
+
+Follow all instructions in [the template](https://github.com/w3-engineers/telemesh/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+The process described here has several goals:
+
+- Maintain Telemesh's code quality
+- Fix problems that are important to users
+- Engage the community in working toward the best possible Telemesh
+- Enable a sustainable system for Telemesh's maintainers to review contributions
+
+### How to create PR <a name="howpullreq"></a>
+
+[How to create PR on Github](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github)
+
+[How to update existing PR](https://www.digitalocean.com/community/tutorials/how-to-rebase-and-update-a-pull-request)
+
+
+## Git Commit Guidelines <a name="gitcommit"></a>
+
+We have very precise rules over how our git commit messages can be formatted. This leads to **more
+readable messages** that are easy to follow when looking through the **project history**. 
+
+
+### <a name="commit-message-format"></a> Commit Message Format
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
+format that includes a **type**, a **scope** and a **subject**:
+
+```html
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+> Any line of the commit message cannot be longer 100 characters!<br/>
+  This allows the message to be easier to read on GitHub as well as in various Git tools.
+
+##### Type
+Must be one of the following:
+
+* **feat**: A new feature
+* **fix**: A bug fix
+* **docs**: Documentation only changes
+* **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
+  semi-colons, etc)
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **perf**: A code change that improves performance
+* **test**: Adding missing tests
+* **chore**: Changes to the build process or auxiliary tools and libraries such as documentation
+  generation
+
+##### Scope
+The scope could be anything that helps specifying the scope (or feature) that is changing.
+
+Examples
+- select(multiple): 
+- dialog(alert): 
+
+##### Subject
+The subject contains a succinct description of the change:
+
+* use the imperative, present tense: "change" not "changed" nor "changes"
+* don't capitalize first letter
+* no dot (.) at the end
+
+##### Body
+Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes"
+The body should include the motivation for the change and contrast this with previous behavior.
+
+##### Footer
+The footer should contain any information about **Breaking Changes** and is also the place to
+reference GitHub issues that this commit **Closes**, **Fixes**, or **Relates to**.
+
+> Breaking Changes are intended to be highlighted in the ChangeLog as changes that will require
+  community users to modify their code after updating to a version that contains this commit.
+
+##### Sample Commit messages:
+```text
+fix(autocomplete): don't show the menu panel when readonly
+
+this could sometimes happen when no value was selected
+
+Fixes #11231
+```
+```text
+feat(chips): trigger ng-change on chip addition/removal
+
+* add test of `ng-change` for `md-chips`
+* add docs regarding `ng-change` for `md-chips` and `md-contact-chips`
+* add demo for ng-change on `md-chips`
+* add demo for ng-change on `md-contact-chips`
+
+Fixes #11161 Fixes #3857
+```
+
+```text
+refactor(content): prefix mdContent scroll- attributes
+
+    BREAKING CHANGE: md-content's `scroll-` attributes are now prefixed with `md-`.
+
+    Change your code from this:
+
+    ```html
+    <md-content scroll-x scroll-y scroll-xy>
+    ```
+
+    To this:
+
+    ```html
+    <md-content md-scroll-x md-scroll-y md-scroll-xy>
+    ```
+```
+
+## Coding style guide <a name="codingstyle"></a>
+
+We are following this [Android coding standard](https://github.com/ustwo/android-coding-standards) and [Coding Pattern](https://blog.mindorks.com/android-code-style-and-guidelines-d5f80453d5c7)
+for our coding.
+
+
+## Organize github issues <a name="organize"></a>
+
+We are following this guideline [Style Guide](https://robinpowered.com/blog/best-practice-system-for-organizing-and-tagging-github-issues/)
+
+## Issue Referencing on Github <a name="issuereference"></a>
+
+You can include keywords in your pull request descriptions, as well as commit messages, to automatically close issues in GitHub.
+[About issue reference](https://help.github.com/en/articles/closing-issues-using-keywords#about-issue-references)

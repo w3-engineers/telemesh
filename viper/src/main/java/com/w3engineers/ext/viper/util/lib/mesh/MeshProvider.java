@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "tomato";
+    private String NETWORK_PREFIX = "khuln";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -80,7 +80,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
 //        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
+        transportManager = TransportManager.on(App.getContext(),App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 
@@ -206,6 +206,16 @@ public class MeshProvider implements LinkStateListener {
                 }
             }
         }
+    }
+
+    @Override
+    public void onLocalMessageReceived(String senderId, byte[] frameData) {
+
+    }
+
+    @Override
+    public void onInternetMessageReceived(String senderId, byte[] frameData) {
+
     }
 
     /* */

@@ -510,18 +510,24 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void requestWsMessage() {
-        LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener(new LocationUtil.LocationRequestCallback() {
-            @Override
-            public void onGetLocation(String lat, String lang) {
+        if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
+            LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener(new LocationUtil.LocationRequestCallback() {
+                @Override
+                public void onGetLocation(String lat, String lang) {
 
-                LocationUtil.getInstance().removeListener();
+                    LocationUtil.getInstance().removeListener();
 
-                mLatitude = lat;
-                mLongitude = lang;
+                    mLatitude = lat;
+                    mLongitude = lang;
+                    Log.d("UserCountTest", "Location called");
 
-                getLocalUserCount();
-            }
-        });
+                    getLocalUserCount();
+                }
+            });
+        } else {
+            getLocalUserCount();
+        }
+
 
     }
 

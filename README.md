@@ -92,8 +92,8 @@ If everything is ok then sync and build should work as it should be. If not plea
 **Step 4: Test on device:**
 [TBD]
 
-## Development Guideline
-Please follow this link https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2hU16V2bgQ92V4VJDg_2tmlsE/edit?usp=sharing to get an overview of telemesh app architecture
+## Development Guideline 
+Please follow this link https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2hU16V2bgQ92V4VJDg_2tmlsE/edit?usp=sharing to get an overview of telemesh app architecture and how the specific module should be designed.
 
 ## Test Coverage
 * This repo is configured with [Travis][travis] and [coverall][coverall]. Every merge with *master* produced a test coverage report. Latest coverage report is available [here](https://coveralls.io/github/w3-engineers/telemesh?branch=master). [This](#Telemesh) badge here shows coverage status.

@@ -63,6 +63,24 @@ public class MeshDataProcessor {
         return null;
     }
 
+    public String getStringDataFormatToJson(MeshData meshData) {
+        byte type = meshData.mType;
+        byte[] rawData = meshData.mData;
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(TYPE, type);
+            jsonObject.put(DATA, new String(rawData));
+
+            return jsonObject.toString();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public byte[] getPingFormat(MeshData meshData) {
         byte type = meshData.mType;
 

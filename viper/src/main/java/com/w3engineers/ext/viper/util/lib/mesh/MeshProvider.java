@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "khuln";
+    private String NETWORK_PREFIX = "bangl";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -80,7 +80,7 @@ public class MeshProvider implements LinkStateListener {
             return;
 
 //        setLogBroadcastRegister();
-        transportManager = TransportManager.on(App.getContext(),App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
+        transportManager = TransportManager.on(App.getContext(), App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
 
@@ -137,7 +137,7 @@ public class MeshProvider implements LinkStateListener {
             if (meshData == null)
                 return;
 
-            byte[] profileData = MeshDataProcessor.getInstance().getDataFormatToJson(meshData);
+            String profileData = MeshDataProcessor.getInstance().getStringDataFormatToJson(meshData);
 
             transportManager.configTransport(nodeId, publicKey, config.mPort, profileData);
 
@@ -152,16 +152,16 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onLocalUserConnected(String nodeId, byte[] frameData) {
-        Log.d("MeshSdkIntegration","onLocalUserConnected call");
+        Log.d("MeshSdkIntegration", "onLocalUserConnected call");
         if (frameData != null) {
             MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
 
             if (meshData != null) {
-                Log.d("MeshSdkIntegration","mesh data not null");
+                Log.d("MeshSdkIntegration", "mesh data not null");
                 meshData.mMeshPeer = new MeshPeer(nodeId);
 
                 if (MeshDataManager.getInstance().isProfileData(meshData)) {
-                    Log.d("MeshSdkIntegration","profile data call");
+                    Log.d("MeshSdkIntegration", "profile data call");
                     if (providerCallback != null) {
                         providerCallback.connectionAdd(meshData);
                     }
@@ -172,7 +172,7 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onRemoteUserConnected(String nodeId) {
-        Log.d("MeshSdkIntegration","onRemoteUserConnected call");
+        Log.d("MeshSdkIntegration", "onRemoteUserConnected call");
         peerDiscoveryProcess(nodeId, true);
     }
 
@@ -183,7 +183,7 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onMessageReceived(String senderId, byte[] frameData) {
-        Log.d("MeshSdkIntegration","onMessageReceived call");
+        Log.d("MeshSdkIntegration", "onMessageReceived call");
         if (frameData != null) {
 
             MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);

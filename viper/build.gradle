@@ -82,7 +82,7 @@ dependencies {
 
     //debug database to manipulate
     if(isDebugDatabaseEnabled) {
-        //debugImplementation 'com.awesomedroidapps:inappstoragereader:1.0.2'
+        debugImplementation 'com.awesomedroidapps:inappstoragereader:1.0.2'
     }
 
     if(isToastyEnabled) {

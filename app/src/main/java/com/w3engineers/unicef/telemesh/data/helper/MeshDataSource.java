@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSourceWithoutAidl;
 import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
@@ -31,7 +32,7 @@ import java.util.List;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshDataSource extends BaseMeshDataSource {
+public class MeshDataSource extends BaseMeshDataSourceWithoutAidl {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;

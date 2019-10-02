@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSourceWithoutAidl;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 
 import java.lang.ref.WeakReference;
@@ -24,15 +25,15 @@ public class SendDataTask implements Callable {
     // message. Use of weak reference is not a must here because CustomThreadPoolManager lives
     // across the whole application lifecycle
     private MeshData mMeshData;
-    private BaseMeshDataSource baseRmDataSource;
+    private BaseMeshDataSourceWithoutAidl baseRmDataSource;
 
     @Nullable
-    public BaseMeshDataSource getBaseRmDataSource() {
+    public BaseMeshDataSourceWithoutAidl getBaseRmDataSource() {
         return baseRmDataSource;
     }
 
     @NonNull
-    public SendDataTask setBaseRmDataSource(@NonNull BaseMeshDataSource baseRmDataSource) {
+    public SendDataTask setBaseRmDataSource(@NonNull BaseMeshDataSourceWithoutAidl baseRmDataSource) {
         this.baseRmDataSource = baseRmDataSource;
         return this;
     }

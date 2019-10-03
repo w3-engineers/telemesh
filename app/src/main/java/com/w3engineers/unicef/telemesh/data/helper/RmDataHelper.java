@@ -511,18 +511,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void requestWsMessage() {
         if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
-            LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener(new LocationUtil.LocationRequestCallback() {
-                @Override
-                public void onGetLocation(String lat, String lang) {
+            LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {
 
-                    LocationUtil.getInstance().removeListener();
+                LocationUtil.getInstance().removeListener();
 
-                    mLatitude = lat;
-                    mLongitude = lang;
-                    Log.d("UserCountTest", "Location called");
+                mLatitude = lat;
+                mLongitude = lang;
+                Log.d("UserCountTest", "Location called");
 
-                    getLocalUserCount();
-                }
+                getLocalUserCount();
             });
         } else {
             getLocalUserCount();
@@ -531,12 +528,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
-    private void requestWsMessageWithUserCount(int localUserCount) {
-        Log.d("UserCountTest", "user: " + localUserCount);
+    private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
+        Log.d("UserCountTest", "user: " + localActiveUsers.size());
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localUserCount));
+        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
         client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
     }
@@ -655,14 +652,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private BroadcastCommand getBroadcastCommand(String lat, String lang, int localUserCount) {
+    private BroadcastCommand getBroadcastCommand(String lat, String lang, List<String> localActiveUsers) {
         Payload payload = new Payload();
 
         GeoLocation geoLocation = new GeoLocation()
                 .setLatitude(lat).setLongitude(lang);
 
         payload.setGeoLocation(geoLocation);
-        payload.setConnectedClients(String.valueOf(localUserCount));
+
+        if (localActiveUsers != null) {
+            payload.setConnectedClients(String.valueOf(localActiveUsers.size()));
+            payload.setConnectedClientEthIds(localActiveUsers);
+        } else {
+            payload.setConnectedClients("0");
+            payload.setConnectedClientEthIds(new ArrayList<>());
+        }
 
         return new BroadcastCommand().setEvent("connect")
                 .setToken(BuildConfig.BROADCAST_TOKEN)

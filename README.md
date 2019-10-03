@@ -127,7 +127,7 @@ Please follow this link https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2h
             implementation deps.support.recyclerview
             implementation deps.support.cardview
             
-3. How to use custom ui components of **Viper** to reduce some repeated works            
+3. Below you will get the reference of how to use custom ui components of **Viper** to reduce some repeated works            
 
 ### RecyclerView
 ------------------------------------------------------------------------

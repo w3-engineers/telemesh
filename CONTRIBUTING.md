@@ -3,14 +3,7 @@
 
 # Table of contents
 1. [Introduction](#introduction)
-2. [Community Code of Conduct](#codeofconduct)
-    1. [Be considerate](#beconsiderate)
-    2. [Be respectful](#berespectful)
-    3. [Be collaborative](#becollaborative)
-    4. [When you disagree, consult others](#disagree)
-    5. [When you're unsure, ask for help](#unsure)
-    6. [Step down considerately](#stepdown)
-        
+2. [Community Code of Conduct](#codeofconduct)   
 3. [Your First Contribution](#firstcontribution)
 4. [Support questions](#supportquestions)
 5. [Reporting issues](#reportissue)
@@ -49,78 +42,9 @@ When contributing to Telemesh, we ask that you:
 
 ## Community Code of Conduct <a name="codeofconduct"></a>
 
-
-The goal is to maintain a Telemesh community that's pleasant for everyone.
-That's why we would greatly appreciate it if everyone contributing to and
-interacting with the community also followed this Code of Conduct.
-
-
-### Be considerate <a name="beconsiderate"></a>
-
-
-Your work will be used by other people, and you in turn will depend on the
-work of others. Any decision you take will affect users and colleagues, and
-we expect you to take those consequences into account when making decisions.
-Even if it's not obvious at the time, our contributions to Telemesh will impact
-the work of others. For example, changes to code, infrastructure, policy,
-documentation and translations during a release may negatively impact
-others work.
-
-### Be respectful <a name="berespectful"></a>
-
-
-The Telemesh community and its members treat one another with respect. Everyone
-can make a valuable contribution to Telemesh. We may not always agree, but
-disagreement is no excuse for poor behavior and poor manners. We might all
-experience some frustration now and then, but we cannot allow that frustration
-to turn into a personal attack. It's important to remember that a community
-where people feel uncomfortable or threatened isn't a productive one. We
-expect members of the Telemesh community to be respectful when dealing with
-other contributors as well as with people outside the Telemesh project and with
-users of Telemesh.
-
-### Be collaborative <a name="becollaborative"></a>
-
-
-Collaboration is central to Telemesh and to the larger free software community.
-We should always be open to collaboration. Your work should be done
-transparently and patches from Telemesh should be given back to the community
-when they're made, not just when the distribution releases. If you wish
-to work on new code for existing upstream projects, at least keep those
-projects informed of your ideas and progress. It many not be possible to
-get consensus from upstream, or even from your colleagues about the correct
-implementation for an idea, so don't feel obliged to have that agreement
-before you begin, but at least keep the outside world informed of your work,
-and publish your work in a way that allows outsiders to test, discuss, and
-contribute to your efforts.
-
-### When you disagree, consult others <a name="disagree"></a>
-
-
-Disagreements, both political and technical, happen all the time and
-the Telemesh community is no exception. It's important that we resolve
-disagreements and differing views constructively and with the help of the
-community and community process. If you really want to go a different
-way, then we encourage you to make a derivative distribution or alternate
-set of packages that still build on the work we've done to utilize as common
-of a core as possible.
-
-### When you're unsure, ask for help <a name="unsure"></a>
-
-
-Nobody knows everything, and nobody is expected to be perfect. Asking
-questions avoids many problems down the road, and so questions are
-encouraged. Those who are asked questions should be responsive and helpful.
-However, when asking a question, care must be taken to do so in an appropriate
-forum.
-
-### Step down considerately <a name="stepdown"></a>
-
-Developers on every project come and go and Telemesh is no different. When you
-leave or disengage from the project, in whole or in part, we ask that you do
-so in a way that minimizes disruption to the project. This means you should
-tell people you're leaving and take the proper steps to ensure that others
-can pick up where you leave off.
+We adopted a code of conduct. Please read [CODE_OF_CONDUCT.md](https://github.com/w3-engineers/telemesh/blob/master/CODE-OF-CONDUCT.md)
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported by contacting the project team at [info@telemesh.net].
 
 
 ## Your First Contribution <a name="firstcontribution"></a>
@@ -147,7 +71,7 @@ resources for questions about your own code:
 
 * The ``#get-help`` channel on our [Discord chat](https://discord.gg/SHG4qrH)
 
-* The mailing list media@telemesh.net for long term discussion or larger issues.
+* The mailing list [media@telemesh.net] for long term discussion or larger issues.
 
 
 ## Reporting issues <a name="reportissue"></a>

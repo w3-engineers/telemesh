@@ -40,7 +40,7 @@ public class MeshProviderWithoutAidl implements LinkStateListener {
     private MeshConfig config;
     private byte[] myProfileInfo;
     private String myUserId;
-    private String NETWORK_PREFIX = "pqwer";
+    private String NETWORK_PREFIX = "asdew";
 
     private MeshProviderWithoutAidl() {
         this.context = App.getContext();
@@ -190,16 +190,6 @@ public class MeshProviderWithoutAidl implements LinkStateListener {
                 }
             }
         }
-    }
-
-    @Override
-    public void onLocalMessageReceived(String senderId, byte[] frameData) {
-
-    }
-
-    @Override
-    public void onInternetMessageReceived(String senderId, byte[] frameData) {
-
     }
 
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {

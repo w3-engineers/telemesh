@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
+import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSourceWithoutAidl;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -94,7 +95,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     @Override
-    public BaseMeshDataSource getRmDataSource() {
+    public BaseMeshDataSourceWithoutAidl getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 

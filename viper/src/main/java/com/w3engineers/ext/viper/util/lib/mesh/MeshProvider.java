@@ -208,40 +208,6 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
-    /* */
-
-    /**
-     * When any kind of message data we received
-     *
-     *
-     *
-     *//*
-    @Override
-    public void linkDidReceiveFrame(String msgOwner, byte[] frameData) {
-        if (frameData != null) {
-
-            MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
-
-            if (meshData != null) {
-
-                meshData.mMeshPeer = new MeshPeer(msgOwner);
-
-                if (MeshDataManager.getInstance().isProfilePing(meshData)) {
-                    myProfileSend(msgOwner);
-
-                } else if (MeshDataManager.getInstance().isProfileData(meshData)) {
-                    if (providerCallback != null) {
-                        providerCallback.connectionAdd(meshData);
-                    }
-                } else {
-                    if (meshData.mData != null && providerCallback != null) {
-                        providerCallback.receiveData(meshData);
-                    }
-                }
-            }
-        }
-    }
-*/
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
 
         HandlerUtil.postBackground(() -> {

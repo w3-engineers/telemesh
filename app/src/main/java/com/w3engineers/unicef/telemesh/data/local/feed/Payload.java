@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Payload {
 
     @SerializedName("messageId")
@@ -18,6 +20,10 @@ public class Payload {
     @SerializedName("connectedClients")
     @Expose
     private String connectedClients;
+
+    @SerializedName("connectedClientEthIds")
+    @Expose
+    private List<String> connectedClientEthIds = null;
 
     @Nullable
     public String getMessageId() {
@@ -46,4 +52,11 @@ public class Payload {
         this.connectedClients = connectedClients;
     }
 
+    public List<String> getConnectedClientEthIds() {
+        return connectedClientEthIds;
+    }
+
+    public void setConnectedClientEthIds(List<String> connectedClientEthIds) {
+        this.connectedClientEthIds = connectedClientEthIds;
+    }
 }

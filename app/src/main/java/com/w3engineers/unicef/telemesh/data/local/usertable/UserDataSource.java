@@ -143,7 +143,7 @@ public class UserDataSource {
     }
 
     @NonNull
-    public int getLocalUserCount() {
-        return mUserDao.getLocalUserCount();
+    public List<String> getLocalUserCount() {
+        return mUserDao.getLocalActiveUsers();
     }
 }

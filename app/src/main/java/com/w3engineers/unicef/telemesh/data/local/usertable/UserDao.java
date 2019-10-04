@@ -98,10 +98,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
     abstract LiveData<List<UserEntity>> getActiveUser();
 
-    @Query("SELECT COUNT(*) FROM " + TableNames.USERS + " WHERE "
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_MESH_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_MESH_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
-    abstract int getLocalUserCount();
+    abstract List<String> getLocalActiveUsers();
 }

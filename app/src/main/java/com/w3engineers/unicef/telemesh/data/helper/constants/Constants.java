@@ -117,6 +117,13 @@ public class Constants {
         int DATE = 5;
     }
 
+    public interface InAppUpdate {
+        String LATEST_VERSION_KEY = "latestVersion";
+        String LATEST_VERSION_CODE_KEY = "latestVersionCode";
+        String URL_KEY = "url";
+        String RELEASE_NOTE_KEY = "releaseNotes";
+    }
+
     /**
      * Purpose: Get device name.
      *

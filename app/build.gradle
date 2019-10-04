@@ -149,6 +149,8 @@ dependencies {
 
     implementation deps.location.service
 
+    implementation deps.appupdater.update
+
     api deps.framework
     api deps.mesh
     api deps.pay

@@ -22,6 +22,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
+import com.w3engineers.mesh.wifi.util.BnjUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.net.InetAddress;
 import java.util.List;
 
 public class InAppUpdate {
@@ -43,6 +45,7 @@ public class InAppUpdate {
     private final String LIVE_JSON_URL = "demo.com/jsonfile"; // Configure json file that was uploaded in Main server
     private final String MAIN_JSON = "updatedJSon.json";
     private final String MAIN_APK = "updatedApk.apk";
+    private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
     private static Context mContext;
     private static final int PORT = 8990;
@@ -93,6 +96,8 @@ public class InAppUpdate {
                     .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false));
 
             appUpdater.start();
+        } else {
+            Log.e("InAppUpdateTest", "App update process running");
         }
     }
 
@@ -116,7 +121,19 @@ public class InAppUpdate {
     }
 
     private void startLocalServer() {
-        String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+
+        InetAddress tempAddress;
+
+        final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+
+        if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
+            tempAddress = myAddress;
+        } else {
+            tempAddress = BnjUtil.getLocalIpAddress();
+
+        }
+
+        String myIpAddress = tempAddress.getHostAddress();
         mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
 
         if (!mServer.isAlive()) {
@@ -170,8 +187,15 @@ public class InAppUpdate {
     }
 
     public String getMyLocalServerLink() {
-        if (IpAddressHelper.getLocalIpAddress() != null) {
-            String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+        InetAddress tempAddress;
+        final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+        if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
+            tempAddress = myAddress;
+        } else {
+            tempAddress = BnjUtil.getLocalIpAddress();
+        }
+        if (tempAddress != null) {
+            String myIpAddress = tempAddress.getHostAddress();
             myIpAddress = "http://" + myIpAddress + ":" + PORT + "/" + MAIN_JSON;
             return myIpAddress;
         } else {
@@ -212,7 +236,18 @@ public class InAppUpdate {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             String version = pInfo.versionName;
 
-            String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+            InetAddress tempAddress;
+
+            final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+
+            if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
+                tempAddress = myAddress;
+            } else {
+                tempAddress = BnjUtil.getLocalIpAddress();
+
+            }
+
+            String myIpAddress = tempAddress.getHostAddress();
             myIpAddress = "http://" + myIpAddress + ":" + PORT + "/";
 
             Log.e("InAppUpdateTest", "My ip address: " + myIpAddress);

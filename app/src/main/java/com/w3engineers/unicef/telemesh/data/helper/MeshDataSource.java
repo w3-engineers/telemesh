@@ -115,8 +115,6 @@ public class MeshDataSource extends BaseMeshDataSource {
             if (userModel != null) {
                 userModel.setUserId(userId);
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
-
-                RmDataHelper.getInstance().versionMessageHandshaking(userId);
             }
         } catch (Exception e) {
             e.printStackTrace();

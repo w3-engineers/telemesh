@@ -13,6 +13,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.local.service.MeshService;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.mesh.wifi.protocol.Link;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -139,6 +140,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("InAppUpdateTest", "user id: " + userId);
+                versionMessageHandshaking(userId);
+            }
+        }, 10 * 1000);
+
     }
 
     public void onlyNodeAdd(String nodeId) {
@@ -839,10 +849,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
-        if (!isAckSuccess) return;
+        if (isAckSuccess) return;
 
         String appVersionData = new String(rawData);
-        Log.d("InAppUpdateTest", "version rcv: " + appVersionData);
+        Log.d("InAppUpdateTest", "version rcv: " + appVersionData + " userId: " + userId);
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
         InAppUpdateModel myVersionModel = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
@@ -871,10 +881,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void startAppUpdate(byte[] rawData, boolean isAckSuccess) {
-        if (!isAckSuccess) return;
+        if (isAckSuccess) return;
         String appVersionData = new String(rawData);
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
+        Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
         InAppUpdate.getInstance(TeleMeshApplication.getContext()).appUpdateFromLocal(versionModel.getUpdateLink());
     }
 }

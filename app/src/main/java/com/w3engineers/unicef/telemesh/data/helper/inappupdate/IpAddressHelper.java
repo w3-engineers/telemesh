@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -34,5 +35,40 @@ public class IpAddressHelper {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public static InetAddress getMyDeviceInetAddress(boolean isLocalAddress) {
+        String my_ip = null;
+        InetAddress inetAddress = null;
+        try {
+            Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (enumNetworkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = enumNetworkInterfaces.nextElement();
+                Enumeration<InetAddress> enumInetAddress = networkInterface.getInetAddresses();
+                while (enumInetAddress.hasMoreElements()) {
+                    inetAddress = enumInetAddress.nextElement();
+                    if (inetAddress.isSiteLocalAddress()) {
+                        if (isLocalAddress) {
+                            my_ip = inetAddress.getHostAddress();
+                        }
+                    }else {
+                        if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                            my_ip = inetAddress.getHostAddress();
+                        }
+                    }
+                }
+            }
+            //Generate Inetaddress from host Ip address
+
+            if(my_ip != null) {
+                InetAddress myInetAddress = InetAddress.getByName(my_ip);
+                return myInetAddress;
+            }
+            return null;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

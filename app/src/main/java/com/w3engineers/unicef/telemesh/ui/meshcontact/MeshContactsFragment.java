@@ -21,10 +21,12 @@ import android.widget.TextView;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.lang.reflect.Field;
@@ -76,6 +78,7 @@ public class MeshContactsFragment extends BaseFragment {
         userDataOperation();
 
         openUserMessage();
+
     }
 
     private void userDataOperation() {

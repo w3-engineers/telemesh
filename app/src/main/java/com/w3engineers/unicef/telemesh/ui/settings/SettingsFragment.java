@@ -22,6 +22,7 @@ import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
 import com.w3engineers.mesh.meshlog.ui.meshloghistory.MeshLogHistoryActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;

@@ -9,18 +9,23 @@ package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Environment;
+import android.util.Log;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
+import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,6 +45,10 @@ public class InAppUpdate {
     private final String MAIN_APK = "updatedApk.apk";
     private static File rootFile;
     private static Context mContext;
+    private static final int PORT = 8990;
+    private NanoHTTPD mServer;
+    private static boolean isServerRunning;
+    private static boolean isAppUpdateProcessStart;
 
     // lock the default constructor
     private InAppUpdate() {
@@ -69,9 +78,22 @@ public class InAppUpdate {
         appUpdater.start();
     }
 
-    //TODO this task is still pending
-    public void appUpdateFromLocal() {
+    /**
+     * This method is responsible for updating app from local Server
+     *
+     * @param localLink String (Local server link)
+     */
+    public void appUpdateFromLocal(String localLink) {
+        if (!isAppUpdateProcessStart) {
+            setAppUpdateProcess(true);
+            AppUpdater appUpdater = new AppUpdater(mContext) // This context may be Activity context
+                    .setDisplay(Display.DIALOG)
+                    .setUpdateFrom(UpdateFrom.JSON)
+                    .setUpdateJSON(localLink)
+                    .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false));
 
+            appUpdater.start();
+        }
     }
 
     /**
@@ -89,6 +111,72 @@ public class InAppUpdate {
         copyFile(jsonFile, f1);
         File f2 = new File(rootFile, MAIN_APK);
         copyFile(apkFile, f2);
+
+        startLocalServer();
+    }
+
+    private void startLocalServer() {
+        String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+        mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
+
+        if (!mServer.isAlive()) {
+            try {
+                mServer.start();
+                isServerRunning = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("InAppUpdateTest", "Server error: " + e.getMessage());
+            }
+        }
+    }
+
+    public boolean isServerRunning() {
+        return isServerRunning;
+    }
+
+    public void stopServer() {
+        if (mServer != null) {
+            try {
+                mServer.stop();
+                isServerRunning = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public void setAppUpdateProcess(boolean isUpdating) {
+        isAppUpdateProcessStart = isUpdating;
+    }
+
+    public boolean isAppUpdating() {
+        return isAppUpdateProcessStart;
+    }
+
+    public InAppUpdateModel getAppVersion() {
+        try {
+            PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+            String version = pInfo.versionName;
+            int versionCode = pInfo.versionCode;
+            InAppUpdateModel model = new InAppUpdateModel();
+            model.setVersionName(version);
+            model.setVersionCode(versionCode);
+            return model;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getMyLocalServerLink() {
+        if (IpAddressHelper.getLocalIpAddress() != null) {
+            String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/" + MAIN_JSON;
+            return myIpAddress;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -124,10 +212,15 @@ public class InAppUpdate {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             String version = pInfo.versionName;
 
+            String myIpAddress = IpAddressHelper.getLocalIpAddress().getHostAddress();
+            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/";
+
+            Log.e("InAppUpdateTest", "My ip address: " + myIpAddress);
+
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_KEY, version);
             jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, "" + pInfo.versionCode);
-            jsonObject.addProperty(Constants.InAppUpdate.URL_KEY, "http://192.168.43.1:8990/" + MAIN_APK); // TODO change correct url
+            jsonObject.addProperty(Constants.InAppUpdate.URL_KEY, myIpAddress + MAIN_APK); // TODO change correct url
             jsonObject.addProperty(Constants.InAppUpdate.RELEASE_NOTE_KEY, "Some feature added and bug fixed");
 
             File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +

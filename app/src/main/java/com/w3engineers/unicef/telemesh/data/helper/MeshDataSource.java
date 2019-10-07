@@ -115,6 +115,8 @@ public class MeshDataSource extends BaseMeshDataSource {
             if (userModel != null) {
                 userModel.setUserId(userId);
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+
+                RmDataHelper.getInstance().versionMessageHandshaking(userId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +147,7 @@ public class MeshDataSource extends BaseMeshDataSource {
                 .setRawData(meshData.mData)
                 .setDataType(meshData.mType);
 
-        HandlerUtil.postBackground(()-> RmDataHelper.getInstance().dataReceive(rmDataModel, true));
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().dataReceive(rmDataModel, true));
     }
 
     /**
@@ -160,7 +162,7 @@ public class MeshDataSource extends BaseMeshDataSource {
                 .setDataTransferId(meshAcknowledgement.id)
                 .setAckSuccess(meshAcknowledgement.isSuccess);
 
-        HandlerUtil.postBackground(()-> RmDataHelper.getInstance().ackReceive(rmDataModel));
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().ackReceive(rmDataModel));
     }
 
     @Override
@@ -176,7 +178,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
     @Override
     protected void showLog(String log) {
-       // RmDataHelper.getInstance().showMeshLog(log);
+        // RmDataHelper.getInstance().showMeshLog(log);
     }
 
     @Override

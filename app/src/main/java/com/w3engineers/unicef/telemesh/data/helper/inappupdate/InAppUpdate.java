@@ -352,8 +352,12 @@ public class InAppUpdate {
     }
 
     public void checkForUpdate(Context context,String url){
+        if (isAppUpdating()) return;
 
-    };
+        setAppUpdateProcess(true);
+
+
+    }
 
     private class JsonTask extends AsyncTask<String, String, String> {
         protected void onPreExecute() {

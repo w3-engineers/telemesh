@@ -47,7 +47,7 @@ import retrofit2.Retrofit;
 public class AppInstaller {
     private static DownloadZipFileTask downloadZipFileTask;
     private static final String TAG = "InAppUpdateTest";
-    private static boolean isAppUpdating;
+    public static boolean isAppUpdating;
     private static DialogAppInstallProgressBinding binding;
     private static AlertDialog dialog;
 

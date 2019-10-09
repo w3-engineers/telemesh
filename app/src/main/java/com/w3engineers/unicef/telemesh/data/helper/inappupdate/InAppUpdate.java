@@ -145,13 +145,18 @@ public class InAppUpdate {
                 setAppUpdateProcess(false);
             });
 
+            url = url.replace(MAIN_APK,"");
+            String finalUrl = url;
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
-                AppInstaller.downloadApkFile(url, context);
+
+                AppInstaller.downloadApkFile(finalUrl, context);
             });
 
+            dialog.show();
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.d("InAppUpdateTest", "Error: " + e.getMessage());
         }
     }
 
@@ -250,7 +255,7 @@ public class InAppUpdate {
         }
         if (tempAddress != null) {
             String myIpAddress = tempAddress.getHostAddress();
-            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/"; // we just replace MAIN_JSON for testing
+            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/" + MAIN_JSON; // we just replace MAIN_JSON for testing
             return myIpAddress;
         } else {
             return null;
@@ -359,7 +364,7 @@ public class InAppUpdate {
 
         setAppUpdateProcess(true);
 
-        new JsonTask(context).equals(url);
+        new JsonTask(context).execute(url);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {

@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.remote.RetrofitInterface;
 import com.w3engineers.unicef.telemesh.data.remote.RetrofitService;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppInstallProgressBinding;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -81,6 +82,7 @@ public class AppInstaller {
                 t.printStackTrace();
                 Log.e(TAG, t.getMessage());
                 isAppUpdating = false;
+                InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(false);
             }
         });
     }
@@ -160,6 +162,7 @@ public class AppInstaller {
             context.startActivity(intent);
 
             isAppUpdating = false;
+            InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(false);
         }
     }
 

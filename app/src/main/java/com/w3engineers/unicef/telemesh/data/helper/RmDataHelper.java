@@ -862,6 +862,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         InAppUpdate instance = InAppUpdate.getInstance(TeleMeshApplication.getContext());
 
         String myServerLink = instance.getMyLocalServerLink();
+        Log.d("InAppUpdateTest", "My version Code: "+myVersionModel.getVersionCode());
         if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
                 myServerLink != null) {
 

@@ -92,7 +92,8 @@ public class InAppUpdate {
                     .setDisplay(Display.DIALOG)
                     .setUpdateFrom(UpdateFrom.JSON)
                     .setUpdateJSON(localLink)
-                    .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false));
+                    .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false))
+                    .setButtonUpdateClickListener((dialog, which) -> setAppUpdateProcess(false));
 
             appUpdater.start();
         } else {

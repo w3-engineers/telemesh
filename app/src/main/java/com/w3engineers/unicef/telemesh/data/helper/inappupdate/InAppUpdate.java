@@ -1,21 +1,18 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
@@ -26,7 +23,13 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
+import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,10 +37,21 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public class InAppUpdate {
 
@@ -85,7 +99,7 @@ public class InAppUpdate {
      *
      * @param localLink String (Local server link)
      */
-    public void appUpdateFromLocal(String localLink,Context context) {
+    public void appUpdateFromLocal(String localLink, Context context) {
         if (!isAppUpdateProcessStart) {
             setAppUpdateProcess(true);
             AppUpdater appUpdater = new AppUpdater(context) // This context may be Activity context
@@ -97,6 +111,44 @@ public class InAppUpdate {
             appUpdater.start();
         } else {
             Log.e("InAppUpdateTest", "App update process running");
+        }
+    }
+
+    public void showAppInstallDialog(String json, Context context) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            long versionCode = jsonObject.optLong(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY);
+
+            if (versionCode < getAppVersion().getVersionCode()) return;
+
+            String version = jsonObject.optString(Constants.InAppUpdate.LATEST_VERSION_KEY);
+            String releaseNote = jsonObject.optString(Constants.InAppUpdate.RELEASE_NOTE_KEY);
+            String url = jsonObject.optString(Constants.InAppUpdate.URL_KEY);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+            LayoutInflater inflater = LayoutInflater.from(context);
+            DialogAppUpdateWarningBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_app_update_warning, null, false);
+
+            builder.setView(binding.getRoot());
+
+            String message = "A new version " + version + " is available for Telemesh\n";
+
+            binding.textViewMessage.setText(message);
+            binding.textViewReleaseNote.setText(releaseNote);
+
+            AlertDialog dialog = builder.create();
+            dialog.setCancelable(false);
+
+            binding.buttonCancel.setOnClickListener(v -> dialog.dismiss());
+
+            binding.buttonUpdate.setOnClickListener(v -> {
+                dialog.dismiss();
+                AppInstaller.downloadApkFile(url, context);
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -195,7 +247,7 @@ public class InAppUpdate {
         }
         if (tempAddress != null) {
             String myIpAddress = tempAddress.getHostAddress();
-            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/" + MAIN_JSON;
+            myIpAddress = "http://" + myIpAddress + ":" + PORT + "/"; // we just replace MAIN_JSON for testing
             return myIpAddress;
         } else {
             return null;
@@ -297,5 +349,55 @@ public class InAppUpdate {
             e.printStackTrace();
         }
 
+    }
+
+    public void checkForUpdate(Context context,String url){
+
+    };
+
+    private class JsonTask extends AsyncTask<String, String, String> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        protected String doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                InputStream stream = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+                }
+                return buffer.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+        }
     }
 }

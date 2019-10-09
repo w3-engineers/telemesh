@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
@@ -887,6 +888,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
         Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
-        InAppUpdate.getInstance(TeleMeshApplication.getContext()).appUpdateFromLocal(versionModel.getUpdateLink(), MainActivity.getInstance());
+
+        AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
+
+        /*if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+            InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+            AppInstaller.downloadZipFile(versionModel.getUpdateLink(), MainActivity.getInstance());
+        }*/
+
     }
 }

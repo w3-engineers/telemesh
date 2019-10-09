@@ -52,6 +52,7 @@
       tools:ignore="UnusedAttribute"
       tools:replace="android:name">
 
+
     <activity
         android:name=".ui.main.MainActivity"
         android:configChanges="orientation|screenSize" />

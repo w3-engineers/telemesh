@@ -73,10 +73,14 @@ public class InAppUpdate {
      * Yo
      */
     public void appUpdateFromInternet() {
+        if (isAppUpdateProcessStart) return;
         AppUpdater appUpdater = new AppUpdater(mContext) // This context may be Activity context
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON(LIVE_JSON_URL);
+                .setUpdateJSON(LIVE_JSON_URL)
+                .setCancelable(false)
+                .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false))
+                .setButtonUpdateClickListener((dialog, which) -> setAppUpdateProcess(false));
         appUpdater.start();
     }
 
@@ -85,12 +89,13 @@ public class InAppUpdate {
      *
      * @param localLink String (Local server link)
      */
-    public void appUpdateFromLocal(String localLink,Context context) {
+    public void appUpdateFromLocal(String localLink, Context context) {
         if (!isAppUpdateProcessStart) {
             setAppUpdateProcess(true);
             AppUpdater appUpdater = new AppUpdater(context) // This context may be Activity context
                     .setDisplay(Display.DIALOG)
                     .setUpdateFrom(UpdateFrom.JSON)
+                    .setCancelable(false)
                     .setUpdateJSON(localLink)
                     .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false))
                     .setButtonUpdateClickListener((dialog, which) -> setAppUpdateProcess(false));

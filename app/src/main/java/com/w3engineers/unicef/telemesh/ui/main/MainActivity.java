@@ -55,6 +55,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private Menu bottomMenu;
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
+    private static MainActivity sInstance;
 
     @Nullable
     public static MainActivity mainActivity;
@@ -77,7 +78,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
-
+        sInstance = this;
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -139,6 +140,10 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         DiagramUtil.on(this).start();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
+    }
+
+    public static MainActivity getInstance() {
+        return sInstance;
     }
 
     private MainActivityViewModel getViewModel() {

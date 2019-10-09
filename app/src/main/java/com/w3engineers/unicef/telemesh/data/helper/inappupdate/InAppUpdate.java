@@ -22,7 +22,6 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
-import com.w3engineers.mesh.wifi.util.BnjUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
@@ -86,10 +85,10 @@ public class InAppUpdate {
      *
      * @param localLink String (Local server link)
      */
-    public void appUpdateFromLocal(String localLink) {
+    public void appUpdateFromLocal(String localLink,Context context) {
         if (!isAppUpdateProcessStart) {
             setAppUpdateProcess(true);
-            AppUpdater appUpdater = new AppUpdater(mContext) // This context may be Activity context
+            AppUpdater appUpdater = new AppUpdater(context) // This context may be Activity context
                     .setDisplay(Display.DIALOG)
                     .setUpdateFrom(UpdateFrom.JSON)
                     .setUpdateJSON(localLink)
@@ -124,12 +123,12 @@ public class InAppUpdate {
 
         InetAddress tempAddress;
 
-        final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+        final InetAddress myAddress = IpAddressHelper.getMyDeviceInetAddress(true);
 
         if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
             tempAddress = myAddress;
         } else {
-            tempAddress = BnjUtil.getLocalIpAddress();
+            tempAddress = IpAddressHelper.getLocalIpAddress();
 
         }
 
@@ -188,11 +187,11 @@ public class InAppUpdate {
 
     public String getMyLocalServerLink() {
         InetAddress tempAddress;
-        final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+        final InetAddress myAddress = IpAddressHelper.getMyDeviceInetAddress(true);
         if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
             tempAddress = myAddress;
         } else {
-            tempAddress = BnjUtil.getLocalIpAddress();
+            tempAddress = IpAddressHelper.getLocalIpAddress();
         }
         if (tempAddress != null) {
             String myIpAddress = tempAddress.getHostAddress();
@@ -238,12 +237,12 @@ public class InAppUpdate {
 
             InetAddress tempAddress;
 
-            final InetAddress myAddress = BnjUtil.getMyDeviceInetAddress(true);
+            final InetAddress myAddress = IpAddressHelper.getMyDeviceInetAddress(true);
 
             if (myAddress != null && myAddress.toString().contains(LOCAL_IP_FIRST_PORTION)) {
                 tempAddress = myAddress;
             } else {
-                tempAddress = BnjUtil.getLocalIpAddress();
+                tempAddress = IpAddressHelper.getLocalIpAddress();
 
             }
 

@@ -45,6 +45,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
@@ -886,6 +887,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
         Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
-        InAppUpdate.getInstance(TeleMeshApplication.getContext()).appUpdateFromLocal(versionModel.getUpdateLink());
+        InAppUpdate.getInstance(TeleMeshApplication.getContext()).appUpdateFromLocal(versionModel.getUpdateLink(), MainActivity.getInstance());
     }
 }

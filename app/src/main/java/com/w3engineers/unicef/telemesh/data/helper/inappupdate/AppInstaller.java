@@ -100,7 +100,6 @@ public class AppInstaller {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.show();
         }
 
         @Override
@@ -221,6 +220,7 @@ public class AppInstaller {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_app_install_progress, null, false);
         builder.setView(binding.getRoot());
         dialog = builder.create();
+        dialog.setCancelable(false);
         dialog.show();
     }
 }

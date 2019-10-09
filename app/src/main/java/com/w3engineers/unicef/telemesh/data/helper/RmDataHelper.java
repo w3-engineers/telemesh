@@ -889,12 +889,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
 
-        AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
+        //AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
 
-        /*if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-            InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-            AppInstaller.downloadZipFile(versionModel.getUpdateLink(), MainActivity.getInstance());
-        }*/
+        if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+            //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+            InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
+        }
 
     }
 }

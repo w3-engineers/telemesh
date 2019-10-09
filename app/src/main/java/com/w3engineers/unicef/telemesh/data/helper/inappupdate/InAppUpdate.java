@@ -140,7 +140,10 @@ public class InAppUpdate {
             AlertDialog dialog = builder.create();
             dialog.setCancelable(false);
 
-            binding.buttonCancel.setOnClickListener(v -> dialog.dismiss());
+            binding.buttonCancel.setOnClickListener(v -> {
+                dialog.dismiss();
+                setAppUpdateProcess(false);
+            });
 
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -351,15 +354,21 @@ public class InAppUpdate {
 
     }
 
-    public void checkForUpdate(Context context,String url){
+    public void checkForUpdate(Context context, String url) {
         if (isAppUpdating()) return;
 
         setAppUpdateProcess(true);
 
-
+        new JsonTask(context).equals(url);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
+        Context context;
+
+        public JsonTask(Context context) {
+            this.context = context;
+        }
+
         protected void onPreExecute() {
             super.onPreExecute();
 
@@ -402,6 +411,7 @@ public class InAppUpdate {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
+            showAppInstallDialog(result, context);
         }
     }
 }

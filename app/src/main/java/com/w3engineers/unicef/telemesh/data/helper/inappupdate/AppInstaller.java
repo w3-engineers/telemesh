@@ -80,6 +80,7 @@ public class AppInstaller {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
                 Log.e(TAG, t.getMessage());
+                isAppUpdating = false;
             }
         });
     }

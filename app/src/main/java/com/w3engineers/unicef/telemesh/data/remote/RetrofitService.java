@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.remote;
 
+import com.w3engineers.unicef.telemesh.BuildConfig;
+
 import java.io.IOException;
 
 import okhttp3.Credentials;
@@ -27,7 +29,7 @@ public class RetrofitService {
                 Request request = chain.request();
                 request = request
                         .newBuilder()
-                        .addHeader("Authorization", Credentials.basic("superadminformeshlib","jAJsb78dvw68C"))
+                        .addHeader("Authorization", Credentials.basic(BuildConfig.AUTH_USER_NAME,BuildConfig.AUTH_PASSWORD))
                         .build();
                 return chain.proceed(request);
             }

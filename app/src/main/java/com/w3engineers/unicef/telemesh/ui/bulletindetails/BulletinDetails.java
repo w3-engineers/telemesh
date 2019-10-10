@@ -12,11 +12,14 @@ import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
+import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBinding;
 
-public class BulletinDetails extends BaseActivity {
+public class BulletinDetails extends RmBaseActivity {
 
     @Override
     protected int getToolbarId() {
@@ -54,5 +57,10 @@ public class BulletinDetails extends BaseActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected BaseServiceLocator getServiceLocator() {
+        return ServiceLocator.getInstance();
     }
 }

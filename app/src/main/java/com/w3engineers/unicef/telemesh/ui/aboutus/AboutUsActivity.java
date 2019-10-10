@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
+import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
@@ -18,7 +20,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  * Proprietary and confidential
  * ============================================================================
  */
-public class AboutUsActivity extends BaseActivity {
+public class AboutUsActivity extends RmBaseActivity {
 
 
     @Override
@@ -60,5 +62,10 @@ public class AboutUsActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getAboutUsViewModel(getApplication());
             }
         }).get(AboutUsViewModel.class);
+    }
+
+    @Override
+    protected BaseServiceLocator getServiceLocator() {
+        return ServiceLocator.getInstance();
     }
 }

@@ -24,7 +24,7 @@ public class Constants {
     public interface preferenceKey {
         String USER_NAME = "first_name";
         String IMAGE_INDEX = "image_index";
-        String MY_USER_ID = Constant.KEY_USER_ID;
+        String MY_USER_ID = Constant.KEY_USER_ID; // We will change later hot fix by Azim vai.
         String IS_USER_REGISTERED = "user_registered";
         String IS_NOTIFICATION_ENABLED = "notification_enable";
         String APP_LANGUAGE = "app_language";

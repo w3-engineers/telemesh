@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "dream";
+    private String NETWORK_PREFIX = "vjikl";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -208,7 +208,6 @@ public class MeshProvider implements LinkStateListener {
         }
     }
 
-
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
 
         HandlerUtil.postBackground(() -> {
@@ -261,7 +260,6 @@ public class MeshProvider implements LinkStateListener {
             sendDataToMesh(nodeId, meshData, sendId);
         }
     }
-
 
     private void myProfileSend(String nodeId) {
 

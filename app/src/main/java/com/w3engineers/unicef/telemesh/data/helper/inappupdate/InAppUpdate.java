@@ -62,7 +62,7 @@ import java.util.List;
 
 public class InAppUpdate {
 
-    public static final String LIVE_JSON_URL = "https://meshlib.w3engineers.com/app/updatedJSon.json"; // Configure json file that was uploaded in Main server
+    public static final String LIVE_JSON_URL = BuildConfig.APP_UPDATE_LINK; // Configure json file that was uploaded in Main server
     private final String MAIN_JSON = "updatedJSon.json";
     private final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
@@ -408,7 +408,7 @@ public class InAppUpdate {
 
                 Authenticator.setDefault (new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication ("superadminformeshlib", "jAJsb78dvw68C".toCharArray());
+                        return new PasswordAuthentication (BuildConfig.AUTH_USER_NAME, BuildConfig.AUTH_PASSWORD.toCharArray());
                     }
                 });
 

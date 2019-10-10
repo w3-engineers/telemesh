@@ -806,7 +806,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
                     //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
                     if (MainActivity.getInstance() == null) return;
-                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+
+                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+                        long dif = System.currentTimeMillis() - saveTime;
+                        long days = dif / (24 * 60 * 60 * 1000);
+
+                        if (days <= 2) return;
+                    }
+
+                    InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
                     Log.d("InAppUpdateTest","update process start");
                 }
             }

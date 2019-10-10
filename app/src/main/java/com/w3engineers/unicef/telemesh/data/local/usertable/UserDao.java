@@ -56,8 +56,8 @@ public abstract class UserDao extends BaseDao<UserEntity> {
      * SELECT * FROM user LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE message_status WHEN 1 THEN 1 ELSE 0 END)
      * AS hasUnreadMessage, MAX(id) AS MAXID FROM message GROUP BY friends_id) AS M INNER JOIN message AS MSG ON
      * MSG.friends_id = M.friends_id WHERE MSG.id = M.MAXID) AS MESS ON user.mesh_id = MESS.friends_id ORDER BY
-     * CASE message_status WHEN NULL THEN 2 ELSE (CASE message_status WHEN 1 THEN 1 ELSE 2 END) END ASC, is_online DESC,
-     * user.user_name COLLATE NOCASE ASC
+     * CASE message_status WHEN NULL THEN 2 ELSE (CASE message_status WHEN 1 THEN 1 ELSE 2 END) END ASC,
+     * CASE is_online WHEN 0 THEN 0 ELSE 1 END DESC, user.user_name COLLATE NOCASE ASC
      *
      * @return
      */
@@ -75,8 +75,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " ELSE " + Constants.MessageStatus.STATUS_READ
-            + " END) END ASC, " + ColumnNames.COLUMN_USER_IS_ONLINE + " DESC, " + TableNames.USERS + "."
-            + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
+            + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
+            + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsers();
 
 

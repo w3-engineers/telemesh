@@ -276,6 +276,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     protected void onDestroy() {
         super.onDestroy();
 //        mViewModel.userOfflineProcess();
+        sInstance = null;
     }
 
     @NonNull

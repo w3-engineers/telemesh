@@ -33,6 +33,8 @@ public class Constants {
         String COMPANY_ID = "company_id";
         String MY_REGISTRATION_TIME = "registration_time";
         String MY_SYNC_IS_DONE = "my_sync_is_done";
+        String ASK_ME_LATER = "ask_me_later";
+        String ASK_ME_LATER_TIME = "ask_me_later_time";
     }
 
     public interface MenuItemPosition {

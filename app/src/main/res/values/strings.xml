@@ -68,5 +68,9 @@
     <string name="settings_open_log">Device Log</string>
     <string name="badge_count_more_than_99">99+</string>
     <string name="diagram_map">Diagram Map</string>
+    <string name="do_you_want_to_update">Do you want to update?</string>
+    <string name="update">Update</string>
+    <string name="app_update">App Update</string>
+    <string name="ask_me_later">Ask me later</string>
 
 </resources>

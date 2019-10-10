@@ -58,6 +58,13 @@ public class AppInstaller {
 
         isAppUpdating = true;
 
+        if (baseUrl.contains("@")) {
+            String url[] = baseUrl.split("@");
+            baseUrl = "https://" + url[1];
+        }
+
+        Log.d(TAG, "File url: " + baseUrl);
+
         RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl);
         Call<ResponseBody> call = downloadService.downloadFileByUrl("updatedApk.apk");
 
@@ -148,9 +155,11 @@ public class AppInstaller {
             Intent intent;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destinationFile);
-                intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(apkUri);
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                Log.d("InAppUpdateTest", "app uri: " + apkUri.getPath());
+                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                Log.d("InAppUpdateTest", "app install process start");
             } else {
                 Uri apkUri = Uri.fromFile(destinationFile);
                 intent = new Intent(Intent.ACTION_VIEW);

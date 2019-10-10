@@ -13,12 +13,15 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -41,10 +44,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 /*
  * ============================================================================
@@ -56,7 +62,7 @@ import java.util.List;
 
 public class InAppUpdate {
 
-    private final String LIVE_JSON_URL = "demo.com/jsonfile"; // Configure json file that was uploaded in Main server
+    public static final String LIVE_JSON_URL = "https://meshlib.w3engineers.com/app/updatedJSon.json"; // Configure json file that was uploaded in Main server
     private final String MAIN_JSON = "updatedJSon.json";
     private final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
@@ -117,6 +123,7 @@ public class InAppUpdate {
 
     public void showAppInstallDialog(String json, Context context) {
         try {
+            if (json == null) return;
             JSONObject jsonObject = new JSONObject(json);
             long versionCode = jsonObject.optLong(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY);
 
@@ -146,7 +153,18 @@ public class InAppUpdate {
                 setAppUpdateProcess(false);
             });
 
-            url = url.replace(MAIN_APK,"");
+            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+
+
+            binding.checkboxAskMeLater.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    sharedPref.write(Constants.preferenceKey.ASK_ME_LATER, isChecked);
+                    sharedPref.write(Constants.preferenceKey.ASK_ME_LATER_TIME, System.currentTimeMillis());
+                }
+            });
+
+            url = url.replace(MAIN_APK, "");
             String finalUrl = url;
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -194,6 +212,7 @@ public class InAppUpdate {
         }
 
         String myIpAddress = tempAddress.getHostAddress();
+        mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
         mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
 
         if (!mServer.isAlive()) {
@@ -386,6 +405,13 @@ public class InAppUpdate {
             try {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
+
+                Authenticator.setDefault (new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication ("superadminformeshlib", "jAJsb78dvw68C".toCharArray());
+                    }
+                });
+
                 connection.connect();
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));

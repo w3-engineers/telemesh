@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="App Update"
+            android:text="@string/app_update"
             android:textAllCaps="true"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -43,11 +43,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Do you want to update?"
+            android:text="@string/do_you_want_to_update"
             app:layout_constraintEnd_toEndOf="@+id/text_view_release_note"
             app:layout_constraintStart_toStartOf="@+id/text_view_release_note"
             app:layout_constraintTop_toBottomOf="@+id/text_view_release_note" />
 
+
+        <CheckBox
+            android:id="@+id/checkbox_ask_me_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ask_me_later"
+            app:layout_constraintStart_toStartOf="@+id/text_view_warning"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_warning" />
 
         <com.w3engineers.ext.strom.application.ui.widget.BaseButton
             android:id="@+id/button_update"
@@ -56,12 +64,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:text="Update"
+            android:text="@string/update"
             android:textAllCaps="false"
             app:bb_drawable="@drawable/ractangular_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_warning" />
+            app:layout_constraintTop_toBottomOf="@+id/checkbox_ask_me_later" />
 
         <com.w3engineers.ext.strom.application.ui.widget.BaseButton
             android:id="@+id/button_cancel"

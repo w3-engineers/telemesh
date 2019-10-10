@@ -60,6 +60,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -797,6 +798,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void uploadLogFile() {
+
+        Log.d("InAppUpdateTest","Upload file call");
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+                    if (MainActivity.getInstance() == null) return;
+                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+                    Log.d("InAppUpdateTest","update process start");
+                }
+            }
+        }, TimeUnit.MINUTES.toMillis(1));
+        // check app update for internet;
+
         compositeDisposable.add(Single.fromCallable(() ->
                 MeshLogDataSource.getInstance().getAllUploadedLogList())
                 .subscribeOn(Schedulers.newThread())
@@ -862,7 +878,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         InAppUpdate instance = InAppUpdate.getInstance(TeleMeshApplication.getContext());
 
         String myServerLink = instance.getMyLocalServerLink();
-        Log.d("InAppUpdateTest", "My version Code: "+myVersionModel.getVersionCode());
+        Log.d("InAppUpdateTest", "My version Code: " + myVersionModel.getVersionCode());
         if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
                 myServerLink != null) {
 
@@ -885,6 +901,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void startAppUpdate(byte[] rawData, boolean isAckSuccess) {
         if (isAckSuccess) return;
+
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+            long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+            long dif = System.currentTimeMillis() - saveTime;
+            long days = dif / (24 * 60 * 60 * 1000);
+
+            if (days <= 2) return;
+        }
+
         String appVersionData = new String(rawData);
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
@@ -894,6 +920,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
             //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+            if (MainActivity.getInstance() == null) return;
             InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
         }
 

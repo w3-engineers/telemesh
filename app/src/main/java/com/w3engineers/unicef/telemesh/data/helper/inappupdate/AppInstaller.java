@@ -148,7 +148,7 @@ public class AppInstaller {
             Intent intent;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destinationFile);
-                intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(apkUri);
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {

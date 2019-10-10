@@ -19,6 +19,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
@@ -234,7 +235,7 @@ public class InAppUpdate {
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             String version = pInfo.versionName;
-            int versionCode = pInfo.versionCode;
+            int versionCode = BuildConfig.VERSION_CODE;
             InAppUpdateModel model = new InAppUpdateModel();
             model.setVersionName(version);
             model.setVersionCode(versionCode);
@@ -313,7 +314,7 @@ public class InAppUpdate {
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_KEY, version);
-            jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, "" + pInfo.versionCode);
+            jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, "" + BuildConfig.VERSION_CODE);
             jsonObject.addProperty(Constants.InAppUpdate.URL_KEY, myIpAddress + MAIN_APK); // TODO change correct url
             jsonObject.addProperty(Constants.InAppUpdate.RELEASE_NOTE_KEY, "Some feature added and bug fixed");
 

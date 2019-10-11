@@ -32,7 +32,7 @@
                 android:layout_width="@dimen/width_250"
                 android:layout_height="@dimen/height_200"
                 android:contentDescription="@string/logo_image"
-                android:src="@mipmap/splash_logo" />
+                android:src="@mipmap/ic_splash_logo_dark" />
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <TextView

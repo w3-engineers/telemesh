@@ -72,5 +72,6 @@
     <string name="update">Update</string>
     <string name="app_update">App Update</string>
     <string name="ask_me_later">Ask me later</string>
+    <string name="update_app">Update App</string>
 
 </resources>

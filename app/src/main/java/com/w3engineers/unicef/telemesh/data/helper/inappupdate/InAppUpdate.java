@@ -64,7 +64,7 @@ public class InAppUpdate {
 
     public static final String LIVE_JSON_URL = BuildConfig.APP_UPDATE_LINK; // Configure json file that was uploaded in Main server
     private final String MAIN_JSON = "updatedJSon.json";
-    private final String MAIN_APK = "updatedApk.apk";
+    public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
     private static Context mContext;
@@ -148,9 +148,16 @@ public class InAppUpdate {
             AlertDialog dialog = builder.create();
             dialog.setCancelable(false);
 
+            String finalUrl1 = url;
             binding.buttonCancel.setOnClickListener(v -> {
                 dialog.dismiss();
                 setAppUpdateProcess(false);
+
+                if (finalUrl1.contains("meshlib")) {
+                    SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, versionCode);
+                    SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_URL, finalUrl1);
+                }
+
             });
 
             SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
@@ -406,9 +413,9 @@ public class InAppUpdate {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
 
-                Authenticator.setDefault (new Authenticator() {
+                Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication (BuildConfig.AUTH_USER_NAME, BuildConfig.AUTH_PASSWORD.toCharArray());
+                        return new PasswordAuthentication(BuildConfig.AUTH_USER_NAME, BuildConfig.AUTH_PASSWORD.toCharArray());
                     }
                 });
 

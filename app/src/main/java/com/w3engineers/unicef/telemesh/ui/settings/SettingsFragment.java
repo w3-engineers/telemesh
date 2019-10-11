@@ -20,8 +20,10 @@ import com.w3engineers.mesh.connectivitydiagram.ConnectivityDiagramActiviy;
 import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
 import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
 import com.w3engineers.mesh.meshlog.ui.meshloghistory.MeshLogHistoryActivity;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -34,6 +36,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private Context mActivity;
     private SettingsViewModel settingsViewModel;
+    private FragmentSettingsNewBinding mBinding;
 
     public SettingsFragment() {
 
@@ -50,7 +53,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mActivity = getContext();
         settingsViewModel = getViewModel();
 
-        FragmentSettingsNewBinding mBinding = (FragmentSettingsNewBinding) getViewDataBinding();
+        mBinding = (FragmentSettingsNewBinding) getViewDataBinding();
 
         mBinding.setSettingsVM(settingsViewModel);
 
@@ -62,6 +65,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutOpenWallet.setOnClickListener(this);
         mBinding.layoutShowLog.setOnClickListener(this);
         mBinding.layoutDiagramMap.setOnClickListener(this);
+        mBinding.layoutAppUpdate.setOnClickListener(this);
+
+        showInAppUpdateButton();
     }
 
     @Override
@@ -128,6 +134,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_diagram_map:
                 startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
+                break;
+            case R.id.layout_app_update:
+                String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
+                url = url.replace(InAppUpdate.MAIN_APK, "");
+                AppInstaller.downloadApkFile(url, MainActivity.getInstance());
                 break;
             default:
                 break;
@@ -202,4 +213,14 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }).get(SettingsViewModel.class);
     }
 
+    private void showInAppUpdateButton() {
+        mBinding.layoutAppUpdate.setVisibility(View.GONE);
+        if (Constants.IS_DATA_ON) {
+            long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
+            if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
+                mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
+                mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 }

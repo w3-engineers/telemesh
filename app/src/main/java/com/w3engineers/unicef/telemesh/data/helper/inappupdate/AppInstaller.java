@@ -74,7 +74,7 @@ public class AppInstaller {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Got the body for the file");
 
-                    Toast.makeText(TeleMeshApplication.getContext(), "Downloading...", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(TeleMeshApplication.getContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
                     downloadZipFileTask = new DownloadZipFileTask(context);
                     downloadZipFileTask.execute(response.body());
@@ -135,6 +135,9 @@ public class AppInstaller {
 
             if (progress[0].first == -1) {
                 Toast.makeText(TeleMeshApplication.getContext(), "Download failed", Toast.LENGTH_SHORT).show();
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
 
         }

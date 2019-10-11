@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "vjikl";
+    private String NETWORK_PREFIX = "hello";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -126,7 +126,7 @@ public class MeshProvider implements LinkStateListener {
     public void onTransportInit(String nodeId, String publicKey, TransportState transportState, String msg) {
         boolean isSuccess = transportState == TransportState.SUCCESS;
         if (isSuccess) {
-            SharedPref.write(Constant.KEY_USER_ID, nodeId);
+            //SharedPref.write(Constant.KEY_USER_ID, nodeId);
             myUserId = nodeId;
 
             MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);

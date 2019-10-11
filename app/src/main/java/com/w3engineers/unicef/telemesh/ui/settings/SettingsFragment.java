@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
@@ -136,6 +137,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
                 break;
             case R.id.layout_app_update:
+                if (MainActivity.getInstance() == null) return;
                 String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
                 url = url.replace(InAppUpdate.MAIN_APK, "");
                 AppInstaller.downloadApkFile(url, MainActivity.getInstance());
@@ -215,6 +217,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
+        Log.d("InAppUpdateTest","is data on: "+Constants.IS_DATA_ON);
         if (Constants.IS_DATA_ON) {
             long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
             if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {

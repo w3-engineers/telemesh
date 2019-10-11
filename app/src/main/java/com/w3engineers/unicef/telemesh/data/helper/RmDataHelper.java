@@ -13,12 +13,16 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.local.service.MeshService;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.mesh.wifi.protocol.Link;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
@@ -42,6 +46,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
@@ -52,8 +57,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -136,6 +143,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("InAppUpdateTest", "user id: " + userId);
+                versionMessageHandshaking(userId);
+            }
+        }, 10 * 1000);
+
     }
 
     public void onlyNodeAdd(String nodeId) {
@@ -285,6 +301,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
             case Constants.DataType.APP_SHARE_COUNT:
                 saveAppShareCount(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.VERSION_HANDSHAKING:
+                versionCrossMatching(rawData, userId, isAckSuccess);
+                break;
+            case Constants.DataType.SERVER_LINK:
+                startAppUpdate(rawData, isAckSuccess);
                 break;
         }
     }
@@ -776,6 +798,31 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void uploadLogFile() {
+
+        Log.d("InAppUpdateTest","Upload file call");
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+                    if (MainActivity.getInstance() == null) return;
+
+                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+                        long dif = System.currentTimeMillis() - saveTime;
+                        long days = dif / (24 * 60 * 60 * 1000);
+
+                        if (days <= 2) return;
+                    }
+
+                    InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+                    Log.d("InAppUpdateTest","update process start");
+                }
+            }
+        }, TimeUnit.MINUTES.toMillis(1));
+        // check app update for internet;
+
         compositeDisposable.add(Single.fromCallable(() ->
                 MeshLogDataSource.getInstance().getAllUploadedLogList())
                 .subscribeOn(Schedulers.newThread())
@@ -818,5 +865,74 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
+    }
+
+    // APP update process
+
+    public void versionMessageHandshaking(String userId) {
+        InAppUpdateModel model = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
+        String data = new Gson().toJson(model);
+        dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId);
+
+    }
+
+    private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+
+        String appVersionData = new String(rawData);
+        Log.d("InAppUpdateTest", "version rcv: " + appVersionData + " userId: " + userId);
+        InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
+
+        InAppUpdateModel myVersionModel = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
+
+        InAppUpdate instance = InAppUpdate.getInstance(TeleMeshApplication.getContext());
+
+        String myServerLink = instance.getMyLocalServerLink();
+        Log.d("InAppUpdateTest", "My version Code: " + myVersionModel.getVersionCode());
+        if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
+                myServerLink != null) {
+
+
+            // start my server
+            if (!instance.isServerRunning()) {
+                instance.prepareLocalServer();
+            }
+
+            InAppUpdateModel model = new InAppUpdateModel();
+            model.setUpdateLink(myServerLink);
+            String data = new Gson().toJson(model);
+            dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId);
+
+            Log.d("InAppUpdateTest", "My version is Big: ");
+        } else {
+            Log.d("InAppUpdateTest", "My version is same: ");
+        }
+    }
+
+    private void startAppUpdate(byte[] rawData, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+            long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+            long dif = System.currentTimeMillis() - saveTime;
+            long days = dif / (24 * 60 * 60 * 1000);
+
+            if (days <= 2) return;
+        }
+
+        String appVersionData = new String(rawData);
+        InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
+
+        Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
+
+        //AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
+
+        if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+            //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+            if (MainActivity.getInstance() == null) return;
+            InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
+        }
+
     }
 }

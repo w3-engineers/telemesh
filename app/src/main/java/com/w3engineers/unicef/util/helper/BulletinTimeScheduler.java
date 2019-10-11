@@ -93,6 +93,7 @@ public class BulletinTimeScheduler {
                 if (!noConnectivity) {
                     int state = getNetworkState();
                     if (state == DATA) {
+                        Constants.IS_DATA_ON = true;
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
 
@@ -101,9 +102,12 @@ public class BulletinTimeScheduler {
                             RmDataHelper.getInstance().uploadLogFile();
                         }
 
+                    } else {
+                        Constants.IS_DATA_ON = false;
                     }
                 } else {
                     // No action needed
+                    Constants.IS_DATA_ON = false;
                 }
             }
         }

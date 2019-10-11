@@ -70,6 +70,7 @@ versions.appshare = "1.3.3"
 versions.parse = "1.17.3"
 versions.work = "1.0.1"
 versions.location = "16.0.0"
+versions.appupdater = "2.7"
 ext.versions = versions
 
 def deps = [:]
@@ -244,6 +245,10 @@ deps.parse = parse
 def location = [:]
 location.service = "com.google.android.gms:play-services-location:$versions.location"
 deps.location = location
+
+def appupdater = [:]
+appupdater.update = "com.github.javiersantos:AppUpdater:$versions.appupdater"
+deps.appupdater = appupdater
 
 ext.deps = deps
 

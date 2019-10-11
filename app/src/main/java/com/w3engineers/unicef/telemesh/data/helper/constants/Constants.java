@@ -9,6 +9,7 @@ public class Constants {
     public static boolean IS_LOADING_ENABLE = false;
     public static boolean IsMeshInit;
     public static boolean IS_LOG_UPLOADING_START = false;
+    public static boolean IS_DATA_ON = false;
 
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
@@ -24,7 +25,7 @@ public class Constants {
     public interface preferenceKey {
         String USER_NAME = "first_name";
         String IMAGE_INDEX = "image_index";
-        String MY_USER_ID = Constant.KEY_USER_ID; // We will change later hot fix by Azim vai.
+        String MY_USER_ID = "my_user_id";//Constant.KEY_USER_ID; // We will change later hot fix by Azim vai.
         String IS_USER_REGISTERED = "user_registered";
         String IS_NOTIFICATION_ENABLED = "notification_enable";
         String APP_LANGUAGE = "app_language";
@@ -33,6 +34,10 @@ public class Constants {
         String COMPANY_ID = "company_id";
         String MY_REGISTRATION_TIME = "registration_time";
         String MY_SYNC_IS_DONE = "my_sync_is_done";
+        String ASK_ME_LATER = "ask_me_later";
+        String ASK_ME_LATER_TIME = "ask_me_later_time";
+        String UPDATE_APP_VERSION = "update_app_version";
+        String UPDATE_APP_URL = "update_app_url";
     }
 
     public interface MenuItemPosition {
@@ -61,6 +66,8 @@ public class Constants {
         byte MESSAGE_COUNT = 0x5;
         byte MESSAGE_FEED = 0x4;
         byte APP_SHARE_COUNT = 0x6;
+        byte VERSION_HANDSHAKING = 0x7;
+        byte SERVER_LINK = 0x8;
     }
 
     public interface MessageType {
@@ -117,6 +124,13 @@ public class Constants {
         int INFO = 3;
         int ERROR = 4;
         int DATE = 5;
+    }
+
+    public interface InAppUpdate {
+        String LATEST_VERSION_KEY = "latestVersion";
+        String LATEST_VERSION_CODE_KEY = "latestVersionCode";
+        String URL_KEY = "url";
+        String RELEASE_NOTE_KEY = "releaseNotes";
     }
 
     /**

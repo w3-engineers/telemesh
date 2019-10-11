@@ -27,6 +27,10 @@ android {
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
+
+            buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
+            buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
+            buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
         }
         release {
 
@@ -37,6 +41,10 @@ android {
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
+
+            buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
+            buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
+            buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
         }
 
     }
@@ -148,6 +156,8 @@ dependencies {
     implementation deps.work.testing
 
     implementation deps.location.service
+
+    implementation deps.appupdater.update
 
     api deps.framework
     api deps.mesh

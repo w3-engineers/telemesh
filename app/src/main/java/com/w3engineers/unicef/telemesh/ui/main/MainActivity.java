@@ -25,11 +25,13 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.DiagramUtil;
+import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -44,6 +46,7 @@ import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
@@ -52,6 +55,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private Menu bottomMenu;
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
+    private static MainActivity sInstance;
 
     @Nullable
     public static MainActivity mainActivity;
@@ -74,7 +78,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
-
+        sInstance = this;
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -134,6 +138,12 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
         }, 10000);*/
         DiagramUtil.on(this).start();
+
+        InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
+    }
+
+    public static MainActivity getInstance() {
+        return sInstance;
     }
 
     private MainActivityViewModel getViewModel() {
@@ -266,6 +276,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     protected void onDestroy() {
         super.onDestroy();
 //        mViewModel.userOfflineProcess();
+        sInstance = null;
     }
 
     @NonNull

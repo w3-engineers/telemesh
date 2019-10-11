@@ -193,7 +193,7 @@ public class MeshDataSource extends BaseMeshDataSource {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     protected void resetMeshService() {
-//        restartMesh();
-        rightMeshDataSource = null;
+        restartMesh();
+//        rightMeshDataSource = null;
     }
 }

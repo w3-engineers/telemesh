@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "hello";
+    private String NETWORK_PREFIX = "gdlsj";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -97,7 +97,7 @@ public class MeshProvider implements LinkStateListener {
 
     public void restartMesh() {
         if (transportManager != null) {
-            transportManager.startMesh();
+            transportManager.restart();
         }
     }
 

@@ -100,7 +100,7 @@ public class ServiceLocator extends BaseServiceLocator {
 
     public void resetMesh() {
         RmDataHelper.getInstance().restartMesh();
-        restartRmService();
+//        restartRmService();
     }
 
     public void restartRmService() {

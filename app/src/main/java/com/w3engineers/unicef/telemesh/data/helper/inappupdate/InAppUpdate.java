@@ -127,7 +127,7 @@ public class InAppUpdate {
             JSONObject jsonObject = new JSONObject(json);
             long versionCode = jsonObject.optLong(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY);
 
-            if (versionCode < getAppVersion().getVersionCode()) return;
+            if (versionCode <= getAppVersion().getVersionCode()) return;
 
             String version = jsonObject.optString(Constants.InAppUpdate.LATEST_VERSION_KEY);
             String releaseNote = jsonObject.optString(Constants.InAppUpdate.RELEASE_NOTE_KEY);

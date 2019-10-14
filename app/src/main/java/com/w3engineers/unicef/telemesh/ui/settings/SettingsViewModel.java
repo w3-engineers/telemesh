@@ -70,6 +70,8 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
 
     public void startInAppShareProcess() {
 
+//        RmDataHelper.getInstance().stopRmService();
+
         InAppShareControl.getInstance().startInAppShareProcess(getApplication().getApplicationContext(), this);
     }
 
@@ -98,6 +100,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
 
     @Override
     public void closeInAppShare() {
-        ServiceLocator.getInstance().resetMesh();
+        HandlerUtil.postBackground(()-> ServiceLocator.getInstance().resetMesh(), 2000);
+//        ServiceLocator.getInstance().resetMesh();
     }
 }

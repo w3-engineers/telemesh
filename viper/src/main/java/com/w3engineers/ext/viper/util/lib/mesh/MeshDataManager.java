@@ -8,6 +8,10 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 
@@ -20,6 +24,9 @@ public class MeshDataManager {
     private byte[] myProfileInfo = null;
     private String myPeerId;
     public static final byte TYPE_PING = 1, TYPE_PROFILE = 3;
+    private String VERSION_KEY = "version";
+    private String VERSION_CODER_KEY = "version_code";
+    private String SERVER_LINK_KEY = "server_link";
 
     public static MeshDataManager getInstance() {
         return meshLibManager;
@@ -80,4 +87,5 @@ public class MeshDataManager {
         else
             return false;
     }
+
 }

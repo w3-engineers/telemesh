@@ -13,6 +13,8 @@ import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
+import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -20,7 +22,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
-public class UserProfileActivity extends BaseActivity {
+public class UserProfileActivity extends RmBaseActivity {
 
     @Override
     protected int getLayoutId() {
@@ -96,5 +98,10 @@ public class UserProfileActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getUserProfileViewModel(getApplication());
             }
         }).get(UserProfileViewModel.class);
+    }
+
+    @Override
+    protected BaseServiceLocator getServiceLocator() {
+        return ServiceLocator.getInstance();
     }
 }

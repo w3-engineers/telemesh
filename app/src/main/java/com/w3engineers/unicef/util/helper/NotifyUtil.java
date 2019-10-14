@@ -95,7 +95,7 @@ public class NotifyUtil {
                 .setSmallIcon(R.mipmap.ic_app_launcher)
                 .setLargeIcon(imageBitmap);
 
-        if(SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)){
+        if (SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)) {
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
         }

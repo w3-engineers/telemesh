@@ -16,6 +16,7 @@ import android.view.View;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.DiagramUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -108,6 +109,7 @@ public class ChatActivity extends RmBaseActivity {
         super.onResume();
         if (mUserEntity != null) {
             mChatViewModel.setCurrentUser(mUserEntity.meshId);
+            DiagramUtil.on(this).start();
         }
 
     }
@@ -155,7 +157,7 @@ public class ChatActivity extends RmBaseActivity {
      * Remove current user notification
      */
     private void clearNotification() {
-        if (mUserEntity.meshId != null) {
+        if (mUserEntity!=null && mUserEntity.meshId != null) {
             int notificationId = Math.abs(mUserEntity.meshId.hashCode());
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancel(notificationId);
@@ -187,7 +189,7 @@ public class ChatActivity extends RmBaseActivity {
                 });
             }
 
-            if (mUserEntity.meshId != null) {
+            if (mUserEntity!=null && mUserEntity.meshId != null) {
                 mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
                         mChatViewModel.prepareDateSpecificChat(chatEntities);
                 });
@@ -238,7 +240,7 @@ public class ChatActivity extends RmBaseActivity {
             case R.id.image_view_send:
                 if (mViewBinging != null) {
                     String value = mViewBinging.editTextMessage.getText().toString().trim();
-                    if (!TextUtils.isEmpty(value) && mUserEntity.meshId != null) {
+                    if (!TextUtils.isEmpty(value) && mUserEntity!=null && mUserEntity.meshId != null) {
                         mChatViewModel.sendMessage(mUserEntity.meshId, value, true);
                         mViewBinging.editTextMessage.setText("");
                     }

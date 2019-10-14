@@ -77,6 +77,11 @@ public class ChatActivity extends RmBaseActivity {
         Intent intent = getIntent();
         mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
 
+        if(mUserEntity == null) {
+            finish();
+            return;
+        }
+
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 

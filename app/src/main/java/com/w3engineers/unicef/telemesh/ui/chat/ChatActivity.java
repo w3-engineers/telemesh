@@ -80,7 +80,7 @@ public class ChatActivity extends RmBaseActivity {
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
-        if(mUserEntity == null) {
+        if(TextUtils.isEmpty(userId)) {
             finish();
             return;
         }

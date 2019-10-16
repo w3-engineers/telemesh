@@ -80,6 +80,11 @@ public class ChatActivity extends RmBaseActivity {
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
+        if(mUserEntity == null) {
+            finish();
+            return;
+        }
+
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 

@@ -11,6 +11,7 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.util.helper.ExceptionTracker;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.LogProcessUtil;
@@ -28,7 +29,6 @@ public class TeleMeshApplication extends MeshApp {
     @Override
     protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
-
         // Set app language based on user
         String language = SharedPref.getSharedPref(base).read(Constants.preferenceKey.APP_LANGUAGE);
         if (language.equals("")) {
@@ -40,6 +40,12 @@ public class TeleMeshApplication extends MeshApp {
 //        LogProcessUtil.getInstance().loadAllLogs();
         AnalyticsApi.init(base);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AppDatabase.getInstance();
     }
 
     private void initCredential() {

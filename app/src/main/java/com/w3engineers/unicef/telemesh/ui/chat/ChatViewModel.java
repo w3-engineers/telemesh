@@ -60,7 +60,7 @@ public class ChatViewModel extends AndroidViewModel {
 
 
     private CompositeDisposable compositeDisposable;
-    private  MutableLiveData<PagedList<ChatEntity>> mutableMovieList = new MutableLiveData<>();
+    private  MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -197,7 +197,7 @@ public class ChatViewModel extends AndroidViewModel {
 
     @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
-        return mutableMovieList;
+        return mutableChatList;
     }
 
     public void messageOperation(@NonNull ChatEntity chatEntity) {
@@ -236,7 +236,7 @@ public class ChatViewModel extends AndroidViewModel {
                     .build();
 
             // here mutable live data is used to pass the updated value
-            mutableMovieList.postValue(pagedStrings);
+            mutableChatList.postValue(pagedStrings);
         }
     }
 

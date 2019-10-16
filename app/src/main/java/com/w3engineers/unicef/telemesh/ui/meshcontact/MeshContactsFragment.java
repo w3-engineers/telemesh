@@ -132,11 +132,11 @@ public class MeshContactsFragment extends BaseFragment {
         if (meshContactViewModel != null) {
             meshContactViewModel.openUserMessage().observe(this, userEntity -> {
 
-                if (mSearchItem != null) {
+                if (mSearchItem != null && userEntity != null) {
                     mSearchItem.getActionView().clearFocus();
 
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    intent.putExtra(UserEntity.class.getName(), userEntity);
+                    intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
                     startActivity(intent);
                 }
 
@@ -193,8 +193,8 @@ public class MeshContactsFragment extends BaseFragment {
         if (getActivity() != null) {
             getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
-        mSearchItem = menu.findItem(R.id.action_search);
-        // Resolve search option visibility problem when contact is appeared from starting point
+            mSearchItem = menu.findItem(R.id.action_search);
+            // Resolve search option visibility problem when contact is appeared from starting point
             searchViewControl(userEntityList);
 
             SearchView mSearchView = (SearchView) mSearchItem.getActionView();

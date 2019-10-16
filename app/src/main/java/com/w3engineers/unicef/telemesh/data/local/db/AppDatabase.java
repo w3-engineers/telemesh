@@ -1,13 +1,18 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseMigration;
+import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDao;
@@ -22,6 +27,11 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 /*
@@ -68,11 +78,98 @@ public abstract class AppDatabase extends BaseDatabase {
                 if (sInstance == null) {
                     Context context = App.getContext();
                     sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                            , 1, new BaseMigration(1, null));//normally initial version is always 1
+                            , 21, new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 1
                 }
             }
         }
         return (AppDatabase) sInstance;
+    }
+
+
+    // FIXME Here is for testing migration we copy the library module DB. After after library db we will remove ite
+    protected static <T extends RoomDatabase> T createDb(Context context, String dbName,
+                                                         Class<T> dbService, int initialVersion,
+                                                         BaseMigration... baseMigrations) {
+
+        RoomDatabase.Builder<T> builder = Room.databaseBuilder(context, dbService, dbName);
+
+        //handle migrations
+        List<Migration> migrations = getMigrations(initialVersion, baseMigrations);
+        if(migrations != null) {
+            for (Migration migration : migrations) {
+                builder.addMigrations(migration);
+            }
+        }
+
+        //DB created and opened call back
+        builder.addCallback(new Callback() {
+            @Override
+            public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                super.onCreate(db);
+                if(mIDbCreate != null) {
+                    mIDbCreate.onDbCreated();
+                }
+            }
+
+            @Override
+            public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                super.onOpen(db);
+                if(mIDbopened != null) {
+                    mIDbopened.onDbOpened();
+                }
+            }
+        });
+
+        return builder.build();
+    }
+
+    /**
+     * Receive {@link BaseMigration} objects to generate corresponding {@link Migration}
+     * @param initialVersion database's initial version
+     * @param baseMigrations all base migration objects
+     * @return list of Room migration to add
+     */
+    private static List<Migration> getMigrations(int initialVersion, BaseMigration... baseMigrations) {
+
+        if(initialVersion < 1 || baseMigrations == null || baseMigrations.length < 1) {
+
+            return null;
+        }
+
+        List<BaseMigration> baseMigrationList = Arrays.asList(baseMigrations);
+        Collections.sort(baseMigrationList, (o1, o2) -> {
+
+            if(o1 == null || o2 == null) {
+                return -1;
+            }
+
+            //Sorts in ascending order
+            return o1.getTargetedVersion() - o2.getTargetedVersion();
+        });//Sorts whole list in ascending order based on version number
+
+        List<Migration> migrationList = new ArrayList<>();
+
+        Migration migration;
+        int lastVersion = initialVersion;
+
+        for (final BaseMigration baseMigration : baseMigrationList) {
+
+            if(baseMigration != null) {
+                migration = new Migration(lastVersion, baseMigration.getTargetedVersion()) {
+                    @Override
+                    public void migrate(@NonNull SupportSQLiteDatabase database) {
+                        if(Text.isNotEmpty(baseMigration.getQueryScript())) {
+                            database.execSQL(baseMigration.getQueryScript());
+                        }
+                    }
+                };
+
+                migrationList.add(migration);
+                lastVersion = baseMigration.getTargetedVersion();
+            }
+        }
+
+        return migrationList;
     }
 
 }

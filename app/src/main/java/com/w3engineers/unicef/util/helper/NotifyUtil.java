@@ -34,7 +34,7 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 
 public class NotifyUtil {
     private static final String CHANNEL_NAME = "tele_mesh";
-    private static final String CHANNEL_ID = "notification_channel";
+    private static final String CHANNEL_ID = "notification_channel_3";
     private static final UserDataSource userDataSource = UserDataSource.getInstance();
 
     public static void showNotification(@NonNull ChatEntity chatEntity) {
@@ -42,13 +42,14 @@ public class NotifyUtil {
 
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setAction(Long.toString(TimeUtil.toCurrentTime()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         UserEntity userEntity = userDataSource.getSingleUserById(chatEntity.getFriendsId());
 
         if (userEntity != null) {
-            intent.putExtra(UserEntity.class.getName(), userEntity);
+            intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
+
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder builder = getNotificationBuilder(context);

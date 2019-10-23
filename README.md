@@ -376,9 +376,9 @@ For item long click listener implement this interface in UI (Activity or Fragmen
 
 <kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
 
-<kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/lCNV" width="175" height="300"></kbd>
+<kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/cUI2" width="175" height="300"></kbd>
 
-<kbd><img src="http://gdurl.com/cUI2" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
+<kbd><img src="http://gdurl.com/cDhEu" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/xEb6" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/59rC" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/A2Qj" width="175" height="300"></kbd>
 
 
 

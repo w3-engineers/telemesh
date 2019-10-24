@@ -59,7 +59,7 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         meshProvider.startMesh();
     }
 
-    private void startInForeground(){
+    private void startInForeground() {
         new BaseRmServiceNotificationHelper(MeshService.this).startForegroundService();
     }
 
@@ -78,9 +78,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null) {
+        if (intent != null) {
             String action = intent.getAction();
-            if(Text.isNotEmpty(action)) {
+            if (Text.isNotEmpty(action)) {
                 if (BaseRmServiceNotificationHelper.ACTION_STOP_SERVICE.equals(action)) {
                     closeProcess();
                 }
@@ -140,9 +140,9 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
 
         @Override
         public void setServiceForeground(boolean isForeGround) throws RemoteException {
-            if(isForeGround){
+            if (isForeGround) {
                 startInForeground();
-            }else {
+            } else {
                 stopInForeground();
             }
         }
@@ -196,6 +196,14 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         public int getUserLinkType(String userId) throws RemoteException {
             if (meshProvider != null) {
                 return meshProvider.getUserActiveStatus(userId);
+            }
+            return 0;
+        }
+
+        @Override
+        public int getMyMode() throws RemoteException {
+            if (meshProvider != null) {
+                return meshProvider.getMyCurrentMode();
             }
             return 0;
         }
@@ -308,6 +316,18 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         try {
             if (getInfo != null) {
                 getInfo.nodeDiscovered(nodeId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onGetUserMode(int userMode) {
+        try {
+            if (getInfo != null) {
+                getInfo.getMyMode(userMode);
+                Log.d("ModeTest","Mode mesh provider: "+userMode);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

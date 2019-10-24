@@ -11,6 +11,9 @@ public class Constants {
     public static boolean IS_LOG_UPLOADING_START = false;
     public static boolean IS_DATA_ON = false;
 
+    public static int INTERNET_ONLY = 3;
+    public static int SELLER_MODE = 1;
+
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
@@ -38,6 +41,7 @@ public class Constants {
         String ASK_ME_LATER_TIME = "ask_me_later_time";
         String UPDATE_APP_VERSION = "update_app_version";
         String UPDATE_APP_URL = "update_app_url";
+        String MY_MODE = "my_mode";
     }
 
     public interface MenuItemPosition {

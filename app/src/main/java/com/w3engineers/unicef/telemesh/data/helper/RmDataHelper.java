@@ -203,6 +203,18 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     /**
+     * If user mode change then we can get here call back of current mode
+     * Even we get mode if we want to call
+     *
+     * @param mode Integer
+     */
+    public void onGetMyMode(int mode) {
+        // Here we will get callback
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
+        dataSource.setMyMode(mode);
+    }
+
+    /**
      * This api is responsible for update user info in database
      * when users is gone in mesh network
      *
@@ -809,7 +821,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void uploadLogFile() {
 
-        Log.d("InAppUpdateTest","Upload file call");
+        Log.d("InAppUpdateTest", "Upload file call");
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
@@ -827,7 +839,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                     InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-                    Log.d("InAppUpdateTest","update process start");
+                    Log.d("InAppUpdateTest", "update process start");
                 }
             }
         }, TimeUnit.MINUTES.toMillis(1));
@@ -945,4 +957,5 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
 
     }
+
 }

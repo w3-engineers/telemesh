@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 /*
  * ============================================================================
@@ -35,4 +36,7 @@ public interface DataSource {
     @Nullable
     Flowable<ChatEntity> getReSendMessage();
 
+    void setMyMode(int mode);
+
+    Observable<Integer> getMyMode();
 }

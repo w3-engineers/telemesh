@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "gdlsj";
+    private String NETWORK_PREFIX = "boom";
 
     private MeshProvider() {
         this.context = App.getContext();
@@ -70,6 +70,14 @@ public class MeshProvider implements LinkStateListener {
 
     public void setProviderCallback(ProviderCallback providerCallback) {
         this.providerCallback = providerCallback;
+    }
+
+    public int getMyCurrentMode() {
+        if (transportManager != null && providerCallback != null) {
+            return transportManager.getUserMode();
+        }
+
+        return 0;
     }
 
     /**
@@ -99,6 +107,7 @@ public class MeshProvider implements LinkStateListener {
         if (transportManager != null) {
             transportManager.restart();
         }
+
     }
 
     public interface ProviderCallback {
@@ -120,6 +129,8 @@ public class MeshProvider implements LinkStateListener {
         void showMeshLog(String log);
 
         void onlyNodeDiscover(String nodeId);
+
+        void onGetUserMode(int userMode);
     }
 
     @Override
@@ -206,6 +217,16 @@ public class MeshProvider implements LinkStateListener {
                 }
             }
         }
+    }
+
+    @Override
+    public void onModeChange(int userMode) {
+        // Here Service will be restart
+        if (providerCallback != null) {
+            providerCallback.onGetUserMode(userMode);
+        }
+
+
     }
 
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {

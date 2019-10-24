@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.w3engineers.ext.viper.IRmCommunicator;
 import com.w3engineers.ext.viper.IRmServiceConnection;
@@ -36,7 +37,7 @@ public abstract class BaseMeshDataSource {
     protected BaseMeshDataSource(Context context, byte[] profileInfo) {
 
         //intentional hard string
-        if(context == null)
+        if (context == null)
             throw new NullPointerException("Context can not be null");
 
         this.context = context;
@@ -63,7 +64,7 @@ public abstract class BaseMeshDataSource {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 iSetInfo = null;
             }
         }
@@ -71,7 +72,7 @@ public abstract class BaseMeshDataSource {
 
     public String sendMeshData(MeshData meshData) {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 return iSetInfo.sendMeshData(meshData);
             }
         } catch (RemoteException e) {
@@ -82,7 +83,7 @@ public abstract class BaseMeshDataSource {
 
     public void stopMeshService() {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 iSetInfo.stopRmService();
             }
         } catch (RemoteException e) {
@@ -92,7 +93,7 @@ public abstract class BaseMeshDataSource {
 
     public void stopMeshProcess() {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 iSetInfo.stopMeshProcess();
             }
         } catch (RemoteException e) {
@@ -102,7 +103,7 @@ public abstract class BaseMeshDataSource {
 
     public String getMyMeshId() {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 return iSetInfo.getMyId();
             }
         } catch (RemoteException e) {
@@ -111,9 +112,20 @@ public abstract class BaseMeshDataSource {
         return null;
     }
 
+    public int getMyMode() {
+        try {
+            if (iSetInfo != null) {
+                return iSetInfo.getMyMode();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public void restartMesh() {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 iSetInfo.restartMeshService();
             }
         } catch (RemoteException e) {
@@ -123,7 +135,7 @@ public abstract class BaseMeshDataSource {
 
     public List<String> getAllSellers() {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 return iSetInfo.getCurrentSellers();
             }
         } catch (RemoteException e) {
@@ -134,7 +146,7 @@ public abstract class BaseMeshDataSource {
 
     public int getUserActiveStatus(String userId) {
         try {
-            if(iSetInfo != null){
+            if (iSetInfo != null) {
                 return iSetInfo.getUserLinkType(userId);
             }
         } catch (RemoteException e) {
@@ -145,6 +157,7 @@ public abstract class BaseMeshDataSource {
 
     /**
      * To check underlying service properly initiated or not
+     *
      * @return true if connected
      */
     public boolean isServiceConnected() {
@@ -154,11 +167,12 @@ public abstract class BaseMeshDataSource {
     /**
      * If service is not initiated properly then this method throws {@link IllegalStateException}.
      * Before using the method check service initiation through {@link #isServiceConnected()}
+     *
      * @param isForeGround - set boolean for foreground mode
      */
     public void setServiceForeground(boolean isForeGround) {
 
-        if(iSetInfo == null) {
+        if (iSetInfo == null) {
             throw new IllegalStateException("Service not initiated properly");
         }
 
@@ -180,30 +194,35 @@ public abstract class BaseMeshDataSource {
 
     /**
      * Overridable method to receive the event of Library init
+     *
      * @throws RemoteException
      */
     protected abstract void onRmOn();
 
     /**
      * Called upon receiving any Peer data
+     *
      * @param profileInfo
      */
     protected abstract void onPeer(BaseMeshData profileInfo);
 
     /**
      * Calls upon disappearing of peers
+     *
      * @param meshPeer
      */
     protected abstract void onPeerGone(MeshPeer meshPeer);
 
     /**
      * Upon receiving any data from any peer
+     *
      * @param meshData
      */
     protected abstract void onData(MeshData meshData);
 
     /**
      * Upon receiving Data delivery acknowledgement
+     *
      * @param meshAcknowledgement
      */
     protected abstract void onAcknowledgement(MeshAcknowledgement meshAcknowledgement);
@@ -216,8 +235,11 @@ public abstract class BaseMeshDataSource {
 
     protected abstract void nodeIdDiscovered(String nodeId);
 
+    protected abstract void onGetMyMode(int mode);
+
     /**
      * Overridable method to receive the event of library destroy
+     *
      * @throws RemoteException
      */
     protected abstract void onRmOff();
@@ -267,5 +289,12 @@ public abstract class BaseMeshDataSource {
         public void nodeDiscovered(String nodeId) throws RemoteException {
             nodeIdDiscovered(nodeId);
         }
+
+        @Override
+        public void getMyMode(int mode) throws RemoteException {
+            Log.d("ModeTest","Mode mesh Data source: "+mode);
+            onGetMyMode(mode);
+        }
+
     };
 }

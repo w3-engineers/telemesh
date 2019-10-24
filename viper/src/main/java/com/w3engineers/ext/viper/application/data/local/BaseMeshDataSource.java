@@ -112,6 +112,16 @@ public abstract class BaseMeshDataSource {
         return null;
     }
 
+    public void stopAllService() {
+        try {
+            if (iSetInfo != null) {
+                 iSetInfo.stopAllService();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getMyMode() {
         try {
             if (iSetInfo != null) {
@@ -292,7 +302,7 @@ public abstract class BaseMeshDataSource {
 
         @Override
         public void getMyMode(int mode) throws RemoteException {
-            Log.d("ModeTest","Mode mesh Data source: "+mode);
+            Log.d("ModeTest", "Mode mesh Data source: " + mode);
             onGetMyMode(mode);
         }
 

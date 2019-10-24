@@ -71,6 +71,10 @@ public class MeshDataSource extends BaseMeshDataSource {
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, getMyMeshId());
     }
 
+    public void stopAllServices() {
+        stopAllService();
+    }
+
     /**
      * During send data to peer
      *
@@ -190,7 +194,7 @@ public class MeshDataSource extends BaseMeshDataSource {
 
     @Override
     protected void onGetMyMode(int mode) {
-        Log.d("ModeTest","Mesh data source: "+mode);
+        Log.d("ModeTest", "Mesh data source: " + mode);
         RmDataHelper.getInstance().onGetMyMode(mode);
     }
 

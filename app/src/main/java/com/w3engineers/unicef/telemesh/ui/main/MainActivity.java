@@ -81,9 +81,16 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+
         bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
         mViewModel = getViewModel();
+
+
+        /*if (isRestart) {
+            View view = binding.bottomNavigation.findViewById(R.id.action_contact);
+            view.performClick();
+        }*/
 
         // set new user count analytics so that the work manager will trigger
         mViewModel.setUserCountWorkRequest();
@@ -164,6 +171,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private void initBottomBar() {
 
         boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        Log.d("BottomTest", "settings: " + fromSettings);
+
+        /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
+        if (isRestart) {
+            fromSettings = true;
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, false);
+        }*/
+
         Fragment mFragment = null;
         if (fromSettings) {
             MenuItem menuItem = bottomMenu.findItem(R.id.action_setting);

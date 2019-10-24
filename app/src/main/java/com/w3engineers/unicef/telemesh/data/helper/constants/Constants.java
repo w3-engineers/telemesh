@@ -42,6 +42,7 @@ public class Constants {
         String UPDATE_APP_VERSION = "update_app_version";
         String UPDATE_APP_URL = "update_app_url";
         String MY_MODE = "my_mode";
+        String IS_RESTART = "is_restart";
     }
 
     public interface MenuItemPosition {

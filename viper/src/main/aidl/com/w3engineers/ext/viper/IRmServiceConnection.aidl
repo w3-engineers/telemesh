@@ -40,4 +40,6 @@ interface IRmServiceConnection {
     int getUserLinkType(in String userId);
 
     int getMyMode();
+
+    void stopAllService();
 }

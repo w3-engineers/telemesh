@@ -10,6 +10,7 @@ Proprietary and confidential
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
@@ -207,6 +208,11 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
             }
             return 0;
         }
+
+        @Override
+        public void stopAllService() throws RemoteException {
+            closeProcess();
+        }
     };
 
     @Nullable
@@ -327,7 +333,8 @@ public class MeshService extends Service implements MeshProvider.ProviderCallbac
         try {
             if (getInfo != null) {
                 getInfo.getMyMode(userMode);
-                Log.d("ModeTest","Mode mesh provider: "+userMode);
+                Log.d("ModeTest", "Mode mesh provider: " + userMode);
+
             }
         } catch (RemoteException e) {
             e.printStackTrace();

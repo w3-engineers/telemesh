@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -212,6 +213,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // Here we will get callback
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
         dataSource.setMyMode(mode);
+
+        if (MainActivity.getInstance() != null) {
+           // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
+            MainActivity.getInstance().finish();
+            Intent intent = MainActivity.getInstance().getIntent();
+            intent.putExtra(MainActivity.class.getSimpleName(), false);
+            MainActivity.getInstance().startActivity(intent);
+        }
+
+        rightMeshDataSource.stopAllServices();
+
+
+        //initRM(dataSource);
     }
 
     /**

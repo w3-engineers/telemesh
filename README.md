@@ -372,18 +372,31 @@ For item long click listener implement this interface in UI (Activity or Fragmen
 **NOTE:** You must have a connected device or emulator as it runs instrumentation tests. You will find the coverage report at *telemesh/app/build/reports/coverage*
 
 ## User Interface (UI)
-<kbd><img src="http://gdurl.com/eghW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Tjfb" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/mHBU0" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/vxRe" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/CxzW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Znvi" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/exAY" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Q0-C" width="175" height="300"></kbd> 
 
 <kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
 
-<kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/lCNV" width="175" height="300"></kbd>
+<kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/cUI2" width="175" height="300"></kbd>
 
-<kbd><img src="http://gdurl.com/B3v8" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/eQcm" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/7C7Z" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/AbPW" width="175" height="300"></kbd>
+<kbd><img src="http://gdurl.com/cDhEu" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/xEb6" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/59rC" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/A2Qj" width="175" height="300"></kbd>
 
 
 
 ## License
-**[Apache License 2.0]**
+
+       Copyright 2019 W3 Engineers
+    
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+    
+           http://www.apache.org/licenses/LICENSE-2.0
+    
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
 
 ## Contributing Guideline
 

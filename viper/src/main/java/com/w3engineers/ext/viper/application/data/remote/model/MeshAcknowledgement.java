@@ -14,6 +14,7 @@ public class MeshAcknowledgement implements Parcelable {
 
     public String id;
     public MeshPeer mMeshPeer;
+    public int status;
 
     public boolean isSuccess;
 
@@ -31,12 +32,14 @@ public class MeshAcknowledgement implements Parcelable {
         dest.writeString(this.id);
         dest.writeParcelable(this.mMeshPeer, flags);
         dest.writeByte((byte) (isSuccess ? 1 : 0));
+        dest.writeInt(status);
     }
 
     protected MeshAcknowledgement(Parcel in) {
         this.id = in.readString();
         this.mMeshPeer = in.readParcelable(MeshPeer.class.getClassLoader());
         this.isSuccess = in.readByte() != 0;
+        this.status = in.readInt();
     }
 
     public boolean isSuccess() {
@@ -45,6 +48,15 @@ public class MeshAcknowledgement implements Parcelable {
 
     public MeshAcknowledgement setSuccess(boolean success) {
         isSuccess = success;
+        return this;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public MeshAcknowledgement setStatus(int status) {
+        this.status = status;
         return this;
     }
 

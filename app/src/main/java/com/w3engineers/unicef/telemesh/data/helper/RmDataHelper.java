@@ -312,10 +312,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         byte[] rawData = dataModel.getRawData();
         String userId = dataModel.getUserId();
         boolean isAckSuccess = dataModel.isAckSuccess();
+        int ackStatus = dataModel.getDataAckStatus();
 
         switch (dataType) {
             case Constants.DataType.MESSAGE:
-                setChatMessage(rawData, userId, isNewMessage, isAckSuccess);
+                setChatMessage(rawData, userId, isNewMessage, isAckSuccess, ackStatus);
                 break;
 
             case Constants.DataType.MESSAGE_FEED:
@@ -337,7 +338,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess) {
+    private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
 
             String messageModelText = new String(rawChatData);
@@ -368,8 +369,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                  * for delivery status update we don't need to replace the message and insert again.
                  * If we do so then paging library Diff Callback can't properly work
                  */
-                chatEntity.setStatus(isAckSuccess ? Constants.MessageStatus.STATUS_DELIVERED
-                        : Constants.MessageStatus.STATUS_FAILED).setIncoming(false);
+
+                chatEntity.setStatus(ackStatus).setIncoming(false);
                 Timber.e("Delivered :: %s", chatEntity.getMessageId());
                 dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
             }
@@ -478,19 +479,28 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      *
      * @param dataModel -> Contains received message id
      */
-    public void ackReceive(@NonNull DataModel dataModel) {
+    public void ackReceive(@NonNull DataModel dataModel, int status) {
 
         String dataSendId = dataModel.getDataTransferId();
 
         if (dataSendId != null && rmDataMap.get(dataSendId) != null) {
 
             DataModel prevRMDataModel = rmDataMap.get(dataSendId);
+
             if (prevRMDataModel != null) {
 
                 prevRMDataModel.setAckSuccess(dataModel.isAckSuccess());
 
+                if (status == Constant.MessageStatus.SEND) {
+                    prevRMDataModel.setDataAckStatus(Constants.MessageStatus.STATUS_SEND);
+                } else if (status == Constant.MessageStatus.DELIVERED) {
+                    prevRMDataModel.setDataAckStatus(Constants.MessageStatus.STATUS_DELIVERED);
+                } else if (status == Constant.MessageStatus.RECEIVED) {
+                    prevRMDataModel.setDataAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                    rmDataMap.remove(dataSendId);
+                }
+
                 dataReceive(prevRMDataModel, false);
-                rmDataMap.remove(dataSendId);
             }
         }
     }

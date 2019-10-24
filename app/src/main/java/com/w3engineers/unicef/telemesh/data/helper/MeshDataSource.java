@@ -168,7 +168,7 @@ public class MeshDataSource extends BaseMeshDataSource {
                 .setDataTransferId(meshAcknowledgement.id)
                 .setAckSuccess(meshAcknowledgement.isSuccess);
 
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().ackReceive(rmDataModel));
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().ackReceive(rmDataModel, meshAcknowledgement.getStatus()));
     }
 
     @Override

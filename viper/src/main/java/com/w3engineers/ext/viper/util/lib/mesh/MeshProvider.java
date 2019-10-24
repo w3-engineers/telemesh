@@ -356,11 +356,11 @@ public class MeshProvider implements LinkStateListener {
     public void onMessageDelivered(String messageId, int status) {
         if (providerCallback != null) {
 
-            if (/*status == Constant.MessageStatus.SEND
+            if (status == Constant.MessageStatus.SEND
                     || status == Constant.MessageStatus.DELIVERED
-                    || */status == Constant.MessageStatus.RECEIVED) {
+                    || status == Constant.MessageStatus.RECEIVED) {
                 MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(messageId)
-                        .setSuccess(true);
+                        .setSuccess(true).setStatus(status);
                 providerCallback.receiveAck(meshAcknowledgement);
             }
         }

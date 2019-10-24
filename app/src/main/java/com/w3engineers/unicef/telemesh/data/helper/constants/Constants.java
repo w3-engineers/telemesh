@@ -62,6 +62,8 @@ public class Constants {
         int STATUS_SENDING = 3;
         int STATUS_DELIVERED = 4;
         int STATUS_FAILED = 5;
+        int STATUS_SEND = 6;
+        int STATUS_RECEIVED = 7;
     }
 
     public interface DataType {

@@ -49,8 +49,12 @@ public class UIHelper {
         //AppLog.v("Image status resource id ="+resourceId);
         int statusId;
         if (resourceId == Constants.MessageStatus.STATUS_SENDING) {
+            statusId = R.mipmap.ic_dot_grey;
+        }else if (resourceId == Constants.MessageStatus.STATUS_SEND) {
             statusId = R.mipmap.ic_sending_grey;
         }else if (resourceId == Constants.MessageStatus.STATUS_DELIVERED) {
+            statusId = R.mipmap.ic_deliverd_grey;
+        }else if (resourceId == Constants.MessageStatus.STATUS_RECEIVED) {
             statusId = R.mipmap.ic_deliverd;
         }else {
             statusId = R.mipmap.ic_alert;

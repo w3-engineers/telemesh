@@ -14,6 +14,7 @@ public class DataModel {
     private byte[] rawData;
     private byte dataType;
     private boolean isAckSuccess;
+    private int dataAckStatus;
 
     public String getUserId() {
         return userId;
@@ -57,6 +58,15 @@ public class DataModel {
 
     public DataModel setAckSuccess(boolean ackSuccess) {
         isAckSuccess = ackSuccess;
+        return this;
+    }
+
+    public int getDataAckStatus() {
+        return dataAckStatus;
+    }
+
+    public DataModel setDataAckStatus(int dataAckStatus) {
+        this.dataAckStatus = dataAckStatus;
         return this;
     }
 }

@@ -72,6 +72,14 @@ public class MeshProvider implements LinkStateListener {
         this.providerCallback = providerCallback;
     }
 
+    public int getMyCurrentMode() {
+        if (transportManager != null && providerCallback != null) {
+            return transportManager.getUserMode();
+        }
+
+        return 0;
+    }
+
     /**
      * Start the mesh communication process
      */
@@ -120,6 +128,8 @@ public class MeshProvider implements LinkStateListener {
         void showMeshLog(String log);
 
         void onlyNodeDiscover(String nodeId);
+
+        void onGetUserMode(int userMode);
     }
 
     @Override
@@ -205,6 +215,14 @@ public class MeshProvider implements LinkStateListener {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void onModeChange(int userMode) {
+        // Here Service will be restart
+        if (providerCallback != null) {
+            providerCallback.onGetUserMode(userMode);
         }
     }
 

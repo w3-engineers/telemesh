@@ -8,12 +8,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/text_view_no_internet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/no_internet_color"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/no_internet_connection"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <include
             android:id="@+id/toolbar_main"
             layout="@layout/app_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/text_view_no_internet" />
 
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -37,12 +53,12 @@
             android:background="@color/white"
             android:elevation="@dimen/elevation_6"
             android:paddingBottom="@dimen/margin_5"
+            app:itemIconSize="50dp"
             app:itemIconTint="@drawable/bottom_navigation_color_selector"
             app:itemTextColor="@drawable/bottom_navigation_color_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:itemIconSize="50dp"
             app:menu="@menu/menu_bottom_navigation"
             tools:ignore="UnusedAttribute" />
 

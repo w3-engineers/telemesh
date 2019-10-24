@@ -40,4 +40,6 @@
     <color name="color_special">#46c1d3</color>
     <color name="color_date">#18BC4E</color>
 
+    <color name="no_internet_color">#FF3F34</color>
+
 </resources>

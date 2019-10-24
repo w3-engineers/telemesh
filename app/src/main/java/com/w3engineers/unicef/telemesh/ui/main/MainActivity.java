@@ -12,6 +12,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,21 +20,15 @@ import android.widget.TextView;
 
 import androidx.work.WorkInfo;
 
-import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.DiagramUtil;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
-import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
-import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
@@ -41,12 +36,8 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
-import com.w3engineers.unicef.util.helper.LocationUtil;
-import com.w3engineers.unicef.util.helper.TimeUtil;
+import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
@@ -56,6 +47,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
     private static MainActivity sInstance;
+    private BulletinTimeScheduler sheduler;
 
     @Nullable
     public static MainActivity mainActivity;
@@ -86,7 +78,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         Constants.IS_LOADING_ENABLE = false;
         mainActivity = this;
 
-        BulletinTimeScheduler.getInstance().connectivityRegister();
+        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         bottomMenu = binding.bottomNavigation.getMenu();
@@ -111,6 +103,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             boolean finished = workInfo.getState().isFinished();
 
 
+        });
+
+        mViewModel.getMyUserMode().observe(this, integer -> {
+            if (integer == null) return;
+            showHideInternetWarning(integer, Constants.IS_DATA_ON);
         });
 
         subscribeForActiveUser();
@@ -144,6 +141,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     public static MainActivity getInstance() {
         return sInstance;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+        initNoNetworkCallback(myMode);
+        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
     private MainActivityViewModel getViewModel() {
@@ -304,6 +309,24 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                 runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
             });
         }
+    }
+
+    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
+            if (isMobileDataOn) {
+                binding.textViewNoInternet.setVisibility(View.GONE);
+            } else {
+                binding.textViewNoInternet.setVisibility(View.VISIBLE);
+            }
+        } else {
+            binding.textViewNoInternet.setVisibility(View.GONE);
+        }
+    }
+
+    private void initNoNetworkCallback(int myMode) {
+        sheduler.initNoInternetCallback(isMobileDataOn -> {
+            showHideInternetWarning(myMode, isMobileDataOn);
+        });
     }
 
     /*@Override

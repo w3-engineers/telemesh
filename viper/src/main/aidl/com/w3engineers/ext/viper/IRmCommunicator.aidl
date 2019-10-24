@@ -25,4 +25,6 @@ interface IRmCommunicator {
     void showMeshLog(in String log);
 
     void nodeDiscovered(in String nodeId);
+
+    void getMyMode(int mode);
 }

@@ -99,6 +99,10 @@ public class MeshDataSource extends BaseMeshDataSource {
         return new SendDataTask().setMeshData(meshData).setBaseRmDataSource(this);
     }
 
+    public void getMyCurrentMode() {
+        RmDataHelper.getInstance().onGetMyMode(getMyMode());
+    }
+
     /**
      * During receive a peer this time onPeer api is execute
      *
@@ -182,6 +186,12 @@ public class MeshDataSource extends BaseMeshDataSource {
     @Override
     protected void nodeIdDiscovered(String nodeId) {
         RmDataHelper.getInstance().onlyNodeAdd(nodeId);
+    }
+
+    @Override
+    protected void onGetMyMode(int mode) {
+        Log.d("ModeTest","Mesh data source: "+mode);
+        RmDataHelper.getInstance().onGetMyMode(mode);
     }
 
     @Override

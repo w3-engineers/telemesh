@@ -38,4 +38,6 @@ interface IRmServiceConnection {
     List<String> getCurrentSellers();
 
     int getUserLinkType(in String userId);
+
+    int getMyMode();
 }

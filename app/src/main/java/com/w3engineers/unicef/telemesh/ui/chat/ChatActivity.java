@@ -15,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.w3engineers.ext.strom.util.Text;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.DiagramUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -29,6 +31,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 import java.util.List;
 
@@ -80,7 +84,7 @@ public class ChatActivity extends RmBaseActivity {
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
-        if(TextUtils.isEmpty(userId)) {
+        if (TextUtils.isEmpty(userId)) {
             finish();
             return;
         }
@@ -109,6 +113,10 @@ public class ChatActivity extends RmBaseActivity {
         if (Text.isNotEmpty(userId)) {
             mChatViewModel.updateAllMessageStatus(userId);
         }
+
+        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+        BulletinTimeScheduler.getInstance().initNoInternetCallback(isMobileDataOn -> showHideInternetWarning(myMode, isMobileDataOn));
+        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
 
@@ -134,6 +142,7 @@ public class ChatActivity extends RmBaseActivity {
 
         mChatViewModel.setCurrentUser(null);
     }
+
 
     /**
      * <h1>Init view model and recycler view</h1>
@@ -177,6 +186,7 @@ public class ChatActivity extends RmBaseActivity {
      * from local db.
      * if any new message get inserted into db with the help of LifeData
      * here we can listen that message
+     *
      * @param userId
      */
     private void subscribeForMessages(String userId) {
@@ -311,6 +321,18 @@ public class ChatActivity extends RmBaseActivity {
                 return (T) ServiceLocator.getInstance().getChatViewModel(getApplication());
             }
         }).get(ChatViewModel.class);
+    }
+
+    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
+            if (isMobileDataOn) {
+                mViewBinging.textViewNoInternet.setVisibility(View.GONE);
+            } else {
+                mViewBinging.textViewNoInternet.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mViewBinging.textViewNoInternet.setVisibility(View.GONE);
+        }
     }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {

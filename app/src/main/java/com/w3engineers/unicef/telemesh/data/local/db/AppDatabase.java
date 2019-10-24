@@ -78,7 +78,9 @@ public abstract class AppDatabase extends BaseDatabase {
                 if (sInstance == null) {
                     Context context = App.getContext();
                     sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                            , 21, new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 1
+                            , 21,
+                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 1
                 }
             }
         }
@@ -95,7 +97,7 @@ public abstract class AppDatabase extends BaseDatabase {
 
         //handle migrations
         List<Migration> migrations = getMigrations(initialVersion, baseMigrations);
-        if(migrations != null) {
+        if (migrations != null) {
             for (Migration migration : migrations) {
                 builder.addMigrations(migration);
             }
@@ -106,7 +108,7 @@ public abstract class AppDatabase extends BaseDatabase {
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
-                if(mIDbCreate != null) {
+                if (mIDbCreate != null) {
                     mIDbCreate.onDbCreated();
                 }
             }
@@ -114,7 +116,7 @@ public abstract class AppDatabase extends BaseDatabase {
             @Override
             public void onOpen(@NonNull SupportSQLiteDatabase db) {
                 super.onOpen(db);
-                if(mIDbopened != null) {
+                if (mIDbopened != null) {
                     mIDbopened.onDbOpened();
                 }
             }
@@ -125,13 +127,14 @@ public abstract class AppDatabase extends BaseDatabase {
 
     /**
      * Receive {@link BaseMigration} objects to generate corresponding {@link Migration}
+     *
      * @param initialVersion database's initial version
      * @param baseMigrations all base migration objects
      * @return list of Room migration to add
      */
     private static List<Migration> getMigrations(int initialVersion, BaseMigration... baseMigrations) {
 
-        if(initialVersion < 1 || baseMigrations == null || baseMigrations.length < 1) {
+        if (initialVersion < 1 || baseMigrations == null || baseMigrations.length < 1) {
 
             return null;
         }
@@ -139,7 +142,7 @@ public abstract class AppDatabase extends BaseDatabase {
         List<BaseMigration> baseMigrationList = Arrays.asList(baseMigrations);
         Collections.sort(baseMigrationList, (o1, o2) -> {
 
-            if(o1 == null || o2 == null) {
+            if (o1 == null || o2 == null) {
                 return -1;
             }
 
@@ -154,11 +157,11 @@ public abstract class AppDatabase extends BaseDatabase {
 
         for (final BaseMigration baseMigration : baseMigrationList) {
 
-            if(baseMigration != null) {
+            if (baseMigration != null) {
                 migration = new Migration(lastVersion, baseMigration.getTargetedVersion()) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
-                        if(Text.isNotEmpty(baseMigration.getQueryScript())) {
+                        if (Text.isNotEmpty(baseMigration.getQueryScript())) {
                             database.execSQL(baseMigration.getQueryScript());
                         }
                     }

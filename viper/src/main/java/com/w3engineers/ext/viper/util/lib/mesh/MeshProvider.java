@@ -107,6 +107,7 @@ public class MeshProvider implements LinkStateListener {
         if (transportManager != null) {
             transportManager.restart();
         }
+
     }
 
     public interface ProviderCallback {
@@ -224,6 +225,8 @@ public class MeshProvider implements LinkStateListener {
         if (providerCallback != null) {
             providerCallback.onGetUserMode(userMode);
         }
+
+
     }
 
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {

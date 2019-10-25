@@ -234,9 +234,9 @@ public class ChatActivity extends RmBaseActivity {
     private int activeStatusResource(int userActiveStatus) {
 
         if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
-            return R.mipmap.ic_wifi;
+            return R.mipmap.ic_mesh_online;
         } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
-            return R.mipmap.empty_mesh;
+            return R.mipmap.ic_mesh_online;
         } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
             return R.mipmap.ic_internet;
         } else {

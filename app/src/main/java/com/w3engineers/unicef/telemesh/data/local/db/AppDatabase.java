@@ -79,7 +79,8 @@ public abstract class AppDatabase extends BaseDatabase {
                     Context context = App.getContext();
                     sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
                             , 21,
-                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE-1, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 21
                 }
             }

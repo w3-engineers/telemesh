@@ -129,8 +129,7 @@ Please follow this link https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2h
             
 3. Below you will get the reference of how to use custom ui components of **Viper** to reduce some repeated works            
 
-### RecyclerView
-------------------------------------------------------------------------
+***RecyclerView***
 
 ***Example of how to use BaseRecyclerView:***
 
@@ -206,8 +205,7 @@ private class Viewholder extends BaseAdapterViewHolder<User>{
 ```
 This is generic view holder class. Developer needs to implement **bind()** method.
 
-### BaseToolBar
-------------------------------------------------------------------------
+***BaseToolBar***
 
 `activity_home.xml`
 
@@ -227,8 +225,6 @@ This is generic view holder class. Developer needs to implement **bind()** metho
              return R.id.home_toolbar;
          }
 
-### Widget
-------------------------------------------------------------------------
 
 ***BaseButton:***
 
@@ -307,8 +303,6 @@ Use this class and its necessary properties.
             app:bb_drawable="@drawable/button_gradient_blue"/>
 ```
 
-### Dialog
-------------------------------------------------------------------------
 
 ***BaseDialog***
 
@@ -329,9 +323,6 @@ public static void showDialog(Context context, String title, String message, Str
 
 ```
 Developer can call any one as his/her needs. It will show a default dialog
-
-### Interface
-------------------------------------------------------------------------
 
 ***ItemClickListener:***
 ```

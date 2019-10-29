@@ -129,9 +129,7 @@ Please follow this link https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2h
             
 3. Below you will get the reference of how to use custom ui components of **Viper** to reduce some repeated works            
 
-***RecyclerView***
-
-***Example of how to use BaseRecyclerView:***
+***BaseRecyclerView***
 
 BaseRecyclerView is a wrapper class of android RecyclerView
 

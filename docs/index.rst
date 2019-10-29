@@ -166,10 +166,7 @@ Developers Guideline step by step
 3. Below you will get the reference of how to use custom ui components
    of **Viper** to reduce some repeated works
 
-### RecyclerView
-----------------
-
-**Example of how to use BaseRecyclerView:**
+**BaseRecyclerView**
 
 BaseRecyclerView is a wrapper class of android RecyclerView
 
@@ -228,8 +225,7 @@ with all types of data model.
 Child class needs to implement *isEqual() and newViewHolder()* methods.
 No needs to override **onBindViewHolder()**
 
-### BaseToolBar
----------------
+**BaseToolBar**
 
 ``activity_home.xml``
 
@@ -252,8 +248,6 @@ No needs to override **onBindViewHolder()**
             return R.id.home_toolbar;
         }
 
-### Widget
-----------
 
 **BaseButton:**
 
@@ -339,8 +333,6 @@ Use this class and its necessary properties.
                app:layout_constraintRight_toRightOf="parent"
                app:bb_drawable="@drawable/button_gradient_blue"/>
 
-### Dialog
-----------
 
 **BaseDialog**
 

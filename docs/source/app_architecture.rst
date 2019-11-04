@@ -46,7 +46,7 @@ app’s requirements.
 
 
 
-.. figure:: diagram/app_architecture.png
+.. figure:: app_architecture.png
    :scale: 50 %
    :alt: map to buried treasure
 

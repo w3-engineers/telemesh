@@ -141,7 +141,8 @@ Minimum API: 19 (KitKat - 4.4.x)
 Development Guideline
 ---------------------
 
-:ref:`app_architecture`
+:doc:`App architecture <../app_architecture>`
+
 
 Developers Guideline step by step
 ---------------------------------

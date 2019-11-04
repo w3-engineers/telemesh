@@ -9,8 +9,8 @@ We can use the ``Message Module`` to explain this App architecture.
 
 1. In case of an Outgoing message, a message data will be sent from ``ChatActivity`` to
 the ``ChatViewModel`` directly.
-2. Then the message data will be saved in
-``MessageSourceData`` .
+
+2. Then the message data will be saved in ``MessageSourceData`` .
 
 3. We are using `Room`_ for storing data. As Room operate in background thread that’s why the message data will
 be sent using `RxJava`_. Because it manages both background and foreground

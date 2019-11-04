@@ -143,8 +143,7 @@ Minimum API: 19 (KitKat - 4.4.x)
 Development Guideline
 ---------------------
 
-
-Hey, read the :ref:`app_architecture:TeleMesh App Architecture` section.
+Hey, read the `App Architecture`_ section.
 
 
 Developers Guideline step by step
@@ -452,5 +451,6 @@ our community manager through [media@telemesh.net] & [info@telemesh.net]
 
 .. _Contributing Guideline: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md
 .. _here: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue
+.. _App Architecture: app_architecture.rst
 
 

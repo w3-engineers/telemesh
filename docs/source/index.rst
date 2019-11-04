@@ -143,10 +143,8 @@ Minimum API: 19 (KitKat - 4.4.x)
 Development Guideline
 ---------------------
 
-.. toctree::
 
-   app_architecture
-
+Hey, read the :ref:`app_architecture:TeleMesh App Architecture` section.
 
 
 Developers Guideline step by step

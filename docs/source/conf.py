@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.viewcode',
 ]
 

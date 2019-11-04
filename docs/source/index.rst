@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. _app_architecture:
+
 Project Overview
 ----------------
 
@@ -449,5 +451,5 @@ our community manager through [media@telemesh.net] & [info@telemesh.net]
 
 .. _Contributing Guideline: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md
 .. _here: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue
-.. _app_architecture:
+
 

@@ -38,7 +38,7 @@ app’s requirements.
 
 
 
-.. image:: app architecture.jpg
+.. image:: /diagram/app_architecture.jpg
     :width: 200px
     :align: center
     :height: 100px

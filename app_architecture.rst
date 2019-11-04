@@ -1,3 +1,4 @@
+.. _TeleMesh App Architecture:
 .. _Room: https://developer.android.com/topic/libraries/architecture/room
 .. _RxJava: https://www.toptal.com/android/functional-reactive-android-rxjava
 .. _SQL: https://www.khanacademy.org/computing/computer-programming/sql-documentation
@@ -48,3 +49,4 @@ app’s requirements.
 .. figure:: diagram/app_architecture.png
    :scale: 50 %
    :alt: map to buried treasure
+

@@ -25,21 +25,21 @@ because **RxJava(Flowable)** is being used for getting last inserted data.
 5. ``RmDataHelper`` will send the message to MeshDataSource and this will
 prepare this message data into JSON data to pass via the Mesh Network.
 
-In the case of an Incoming message, when any message will be available
+6. In the case of an Incoming message, when any message will be available
 in this network, it will be discovered in the application’s
-Communication Layer. MeshDataSource will receive this message data and
-send to RmDataHelper directly. .Source will receive the data from
-RmDataHelper. Now message data will be saved in Message table using
+Communication Layer. ``MeshDataSource`` will receive this message data and
+send to ``RmDataHelper`` directly. ``Source`` will receive the data from
+``RmDataHelper``. Now message data will be saved in Message table using
 MessageDao.
 
-Now, View Layer will get the event of the message data.
-MessageSourceData will get the message data from MessageDao as RxJava
-observer is attached to it. To show message in view level, the message
-data will be provided to ChatViewModel automatically using
-RxJava(Flowable). After that, message will be seen in UI i.e.:
+7. Now, View Layer will get the event of the message data.
+``MessageSourceData`` will get the message data from MessageDao as **RxJava observer**
+is attached to it. To show message in view level, the message
+data will be provided to ``ChatViewModel`` automatically using
+**RxJava(Flowable)**. After that, message will be seen in UI i.e.:
 ChatActivity, through LiveData.
 
-RMDataHelper is directly connected with NotificationUtil. When any data
+8. ``RMDataHelper`` is directly connected with ``NotificationUtil``. When any data
 is available to RMDataHelper, notification will be triggered as per
 app’s requirements.
 

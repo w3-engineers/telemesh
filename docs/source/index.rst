@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. _app_architecture:
+
 Project Overview
 ----------------
 
@@ -141,10 +143,8 @@ Minimum API: 19 (KitKat - 4.4.x)
 Development Guideline
 ---------------------
 
-Please follow this link
-https://docs.google.com/document/d/1W8joisx_mD6Rpa5aS-2hU16V2bgQ92V4VJDg_2tmlsE/edit?usp=sharing
-to get an overview of telemesh app architecture and how the specific
-module should be designed.
+Hey, read the `App Architecture`_ section.
+
 
 Developers Guideline step by step
 ---------------------------------
@@ -451,4 +451,6 @@ our community manager through [media@telemesh.net] & [info@telemesh.net]
 
 .. _Contributing Guideline: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md
 .. _here: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue
+.. _App Architecture: app_architecture.rst
+
 

@@ -1,7 +1,0 @@
-siteUrl = <https://github.com/mimosaha/app-share>
-gitUrl = <https://github.com/mimosaha/app-share.git>
-version = 1.3.5
-groupId = <com.github.mimosaha>
-licenses = ['Apache-2.0'] // or something else
-id = <com.w3engineers.appshare>
-name = <app-share> // actually not used

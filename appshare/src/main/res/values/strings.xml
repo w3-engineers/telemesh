@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AppShare</string>
+
+    <string name="text_1">1</string>
+    <string name="text_2">2</string>
+    <string name="text_or">OR</string>
+    <string name="turn_on_hotspot">To get this app on your Android device,\nplease connect to hotspot</string>
+    <string name="using_password">using the password %s</string>
+    <string name="hotspot_id_pass">ID: %s\nPassword: %s</string>
+    <string name="qr_code_text">If your device has a QR scanner,\nscan the QR code bellow to get this app</string>
+    <string name="qr_code_wifi_text">If your device has a QR scanner,\nscan the QR code to connect the network</string>
+    <string name="enter_url_text">Enter the following URL into the browser</string>
+
+    <string name="qr_content_description">QR Code</string>
+    <string name="url_loading">Your URl is loading....</string>
+    <string name="settings_share_app">Share App</string>
+</resources>

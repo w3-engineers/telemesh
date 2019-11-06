@@ -18,6 +18,6 @@ about services like vaccination clinics, maternity clinics and schools.
 The app would also allow refugees to message one another even if they do
 not have a SIM card or cellular data.
 
-.. figure:: mesh.png
+.. figure:: img/mesh.png
    :scale: 50 %
    :alt: telemesh ecosystem

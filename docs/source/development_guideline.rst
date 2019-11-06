@@ -3,3 +3,6 @@
 
    app_architecture
    development_step_by_step
+
+Development Guideline
+---------------------

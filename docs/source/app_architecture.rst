@@ -47,6 +47,6 @@ app’s requirements.
 
 
 .. figure:: img/app_architecture.png
-   :scale: 90 %
+   :scale: 100 %
    :alt: app architecture
 

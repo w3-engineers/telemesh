@@ -7,7 +7,7 @@ Telemesh Documentation
    contain the root `toctree` directive.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    background
    project_goal

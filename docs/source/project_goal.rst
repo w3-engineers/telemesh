@@ -19,5 +19,5 @@ The app would also allow refugees to message one another even if they do
 not have a SIM card or cellular data.
 
 .. figure:: img/mesh.png
-   :scale: 50 %
+   :scale: 90 %
    :alt: telemesh ecosystem

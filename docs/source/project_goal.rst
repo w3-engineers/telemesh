@@ -1,5 +1,5 @@
 Project’s Goal
-----------
+--------------
 
 We intend to make use of mesh network. It allows for multi-hop,
 peer-to-peer connectivity directly between smartphones, instead of

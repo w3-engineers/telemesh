@@ -11,6 +11,7 @@
    features
    project_structure
    prerequisities
+   get_started
    project_dependencies
    development_guideline
    test_coverage

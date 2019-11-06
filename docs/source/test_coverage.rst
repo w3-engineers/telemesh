@@ -1,3 +1,5 @@
+.. test_coverage:
+
 Test Coverage
 -------------
 

@@ -1,3 +1,5 @@
+.. community_manager:
+
 Community manager
 -----------------
 

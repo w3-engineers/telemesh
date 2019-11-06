@@ -1,3 +1,5 @@
+.. project_structure:
+
 Project’s Structure
 -------------------
 

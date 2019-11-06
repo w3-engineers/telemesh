@@ -1,3 +1,5 @@
+.. project_goal:
+
 Project’s Goal
 --------------
 

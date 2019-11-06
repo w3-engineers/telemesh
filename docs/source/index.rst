@@ -1,3 +1,5 @@
+.. index:
+
 ======================
 Telemesh Documentation
 ======================
@@ -34,32 +36,5 @@ Telemesh Documentation
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Contributing Guideline
-----------------------
-
-Please find here `Contributing Guideline`_
-
-Reporting Issues
-----------------
-
-If you face any bug or have any particular feature request please go
-`here`_
-
-
-
-.. _Contributing Guideline: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md
-.. _here: https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue
-.. _App Architecture: app_architecture.rst
 
 

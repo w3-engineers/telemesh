@@ -1,3 +1,5 @@
+.. development_step_by_step:
+
 Developers Guideline step by step
 ---------------------------------
 

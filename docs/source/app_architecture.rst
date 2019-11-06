@@ -1,3 +1,5 @@
+.. app_architecture:
+
 TeleMesh App Architecture
 -------------------------
 

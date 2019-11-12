@@ -1,3 +1,4 @@
 /build
 /src/main/native/native-lib.cpp
-/assets/*
+src/main/assets/config.json
+src/main/assets/blockchainnetworkinfo.xml

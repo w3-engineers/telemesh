@@ -11,10 +11,9 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.View;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -22,7 +21,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
-public class UserProfileActivity extends RmBaseActivity {
+public class UserProfileActivity extends TelemeshBaseActivity {
 
     @Override
     protected int getLayoutId() {
@@ -32,6 +31,11 @@ public class UserProfileActivity extends RmBaseActivity {
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
     }
 
     @SuppressLint("SetTextI18n")
@@ -100,8 +104,8 @@ public class UserProfileActivity extends RmBaseActivity {
         }).get(UserProfileViewModel.class);
     }
 
-    @Override
+    /*@Override
     protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
-    }
+    }*/
 }

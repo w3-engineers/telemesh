@@ -11,17 +11,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.local.service.MeshService;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.HandlerUtil;
-import com.w3engineers.mesh.wifi.protocol.Link;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
@@ -49,7 +45,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LocationUtil;
-import com.w3engineers.unicef.util.helper.LogProcessUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -58,7 +53,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -148,7 +142,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
-                Log.d("InAppUpdateTest", "user id: " + userId);
                 versionMessageHandshaking(userId);
             }
         }, 10 * 1000);
@@ -188,7 +181,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public int getActiveStatus(int userActiveStatus) {
 
-        if (userActiveStatus == Link.Type.WIFI.getValue()) {
+        switch (userActiveStatus) {
+            case 1:
+                return Constants.UserStatus.WIFI_ONLINE;
+            case 2:
+                return Constants.UserStatus.BLE_ONLINE;
+            case 3:
+                return Constants.UserStatus.WIFI_MESH_ONLINE;
+            case 4:
+                return Constants.UserStatus.BLE_MESH_ONLINE;
+            case 5:
+                return Constants.UserStatus.INTERNET_ONLINE;
+            default:
+                return Constants.UserStatus.OFFLINE;
+        }
+
+        /*if (userActiveStatus == Link.Type.WIFI.getValue()) {
             return Constants.UserStatus.WIFI_ONLINE;
         } else if (userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
             return Constants.UserStatus.WIFI_MESH_ONLINE;
@@ -200,7 +208,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             return Constants.UserStatus.INTERNET_ONLINE;
         } else {
             return Constants.UserStatus.OFFLINE;
-        }
+        }*/
     }
 
     /**
@@ -232,13 +240,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * This api is responsible for update user info in database
      * when users is gone in mesh network
      *
-     * @param meshPeer -> contains peer id
+     * @param peerId -> network peer id
      */
 
-    public void userLeave(@NonNull MeshPeer meshPeer) {
+    public void userLeave(@NonNull String peerId) {
 
-        String userId = meshPeer.getPeerId();
-        UserDataSource.getInstance().updateUserStatus(userId, Constants.UserStatus.OFFLINE);
+        UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
     }
 
     /**
@@ -527,7 +534,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * Concern for this api stopping RM service from app layer
      */
     public void stopRmService() {
-        rightMeshDataSource.stopMeshService();
+        // TODO need to stop the only mesh during the start of app share
+//        rightMeshDataSource.stopMeshService();
     }
 
     /**
@@ -538,7 +546,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
-        rightMeshDataSource.stopMeshProcess();
+        // TODO app needed to stop full process when close the service from library
+//        rightMeshDataSource.stopMeshProcess();
     }
 
     public void resetUserToOfflineBasedOnService() {
@@ -553,9 +562,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         Context context = TeleMeshApplication.getContext();
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (MeshService.class.getName().equals(service.service.getClassName())) {
+            // TODO need to check mesh service is running or not, if not then reset all users info in view level
+            /*if (MeshService.class.getName().equals(service.service.getClassName())) {
                 return true;
-            }
+            }*/
         }
         return false;
     }
@@ -564,7 +574,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     public void restartMesh() {
-        rightMeshDataSource.resetMeshService();
+        // TODO reset needed during app share closing process
+//        rightMeshDataSource.resetMeshService();
     }
 
     public void requestWsMessage() {
@@ -771,9 +782,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
 
-        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+        // TODO now all internet sellers are prepared from viper client
+        /*for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);
-        }
+        }*/
 
     }
 
@@ -798,9 +810,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             if (rightMeshDataSource == null) {
                 rightMeshDataSource = MeshDataSource.getRmDataSource();
             }
-            for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            // TODO now all internet sellers are prepared from viper client
+            /*for (String sellersId : rightMeshDataSource.getAllSellers()) {
                 dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId);
-            }
+            }*/
         }
     }
 

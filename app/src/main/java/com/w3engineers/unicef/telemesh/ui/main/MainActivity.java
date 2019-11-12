@@ -22,9 +22,8 @@ import androidx.work.WorkInfo;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
-import com.w3engineers.mesh.util.DiagramUtil;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -39,7 +38,7 @@ import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 
-public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
@@ -65,6 +64,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
     }
 
     @Override
@@ -141,7 +145,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             list.add(entity);
             AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
         }, 10000);*/
-        DiagramUtil.on(this).start();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
     }
@@ -298,13 +301,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 //        mViewModel.userOfflineProcess();
         sInstance = null;
     }
-
-    @NonNull
-    @Override
-    protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
-    }
-
 
     @Override
     public void onBackPressed() {

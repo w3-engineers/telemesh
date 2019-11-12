@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.viper.BuildConfig;
@@ -87,7 +86,6 @@ public class MeshProvider implements LinkStateListener {
         if (config == null || myProfileInfo == null)
             return;
 
-//        setLogBroadcastRegister();
         transportManager = TransportManager.on(App.getContext(), App.getContext(), NETWORK_PREFIX, BuildConfig.MULTIVERSE_URL, this);
     }
 
@@ -97,7 +95,6 @@ public class MeshProvider implements LinkStateListener {
             transportManager.stopMesh();
 
             if (providerCallback != null && isStopProcess) {
-//                setLogBroadcastUnregister();
                 providerCallback.meshStop();
             }
         }
@@ -142,8 +139,6 @@ public class MeshProvider implements LinkStateListener {
 
             MeshDataManager.getInstance().setMyProfileInfo(myProfileInfo).setMyPeerId(myUserId);
 
-            Log.v("MIMO_SAHA::", "Length: " + myProfileInfo.length + " Id: " + nodeId);
-
             MeshData meshData = MeshDataManager.getInstance().getMyProfileMeshData();
             if (meshData == null)
                 return;
@@ -163,16 +158,13 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onLocalUserConnected(String nodeId, byte[] frameData) {
-        Log.d("MeshSdkIntegration", "onLocalUserConnected call");
         if (frameData != null) {
             MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
 
             if (meshData != null) {
-                Log.d("MeshSdkIntegration", "mesh data not null");
                 meshData.mMeshPeer = new MeshPeer(nodeId);
 
                 if (MeshDataManager.getInstance().isProfileData(meshData)) {
-                    Log.d("MeshSdkIntegration", "profile data call");
                     if (providerCallback != null) {
                         providerCallback.connectionAdd(meshData);
                     }
@@ -183,7 +175,6 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onRemoteUserConnected(String nodeId) {
-        Log.d("MeshSdkIntegration", "onRemoteUserConnected call");
         peerDiscoveryProcess(nodeId, true);
     }
 
@@ -194,7 +185,6 @@ public class MeshProvider implements LinkStateListener {
 
     @Override
     public void onMessageReceived(String senderId, byte[] frameData) {
-        Log.d("MeshSdkIntegration", "onMessageReceived call");
         if (frameData != null) {
 
             MeshData meshData = MeshDataProcessor.getInstance().setDataFormatFromJson(frameData);
@@ -258,13 +248,13 @@ public class MeshProvider implements LinkStateListener {
         });
     }
 
-    private void directSend(String nodeId, boolean isActive) {
+    /*private void directSend(String nodeId, boolean isActive) {
         if (isActive) {
             sendMyInfo(nodeId);
         } else {
             peerRemoved(nodeId);
         }
-    }
+    }*/
 
     private void pingedNodeId(String nodeId) {
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
@@ -386,38 +376,5 @@ public class MeshProvider implements LinkStateListener {
             return transportManager.getLinkTypeById(userId);
         }
         return 0;
-    }
-
-    private BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (intent != null && intent.getAction() != null) {
-                if (intent.getAction().equals("com.w3engineers.meshrnd.DEBUG_MESSAGE")) {
-                    String text = intent.getStringExtra("value");
-                    showMeshLog(text);
-                }
-            }
-        }
-    };
-
-    private void setLogBroadcastRegister() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.w3engineers.meshrnd.DEBUG_MESSAGE");
-        context.registerReceiver(logBroadcastReceiver, intentFilter);
-    }
-
-    private void setLogBroadcastUnregister() {
-        try {
-            context.unregisterReceiver(logBroadcastReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showMeshLog(String meshLog) {
-        if (providerCallback != null) {
-            providerCallback.showMeshLog(meshLog);
-        }
     }
 }

@@ -10,19 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.DiagramUtil;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -32,7 +28,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
-import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 import java.util.List;
 
@@ -46,7 +41,7 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends RmBaseActivity {
+public class ChatActivity extends TelemeshBaseActivity {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -77,6 +72,11 @@ public class ChatActivity extends RmBaseActivity {
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
     }
 
     @Override
@@ -125,15 +125,7 @@ public class ChatActivity extends RmBaseActivity {
         super.onResume();
         if (Text.isNotEmpty(userId)) {
             mChatViewModel.setCurrentUser(userId);
-            DiagramUtil.on(this).start();
         }
-
-    }
-
-    @NonNull
-    @Override
-    protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
     }
 
     @Override

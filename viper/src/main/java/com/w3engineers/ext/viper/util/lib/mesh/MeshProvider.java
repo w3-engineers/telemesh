@@ -47,7 +47,7 @@ public class MeshProvider implements LinkStateListener {
     /*private String WIFI_PREFIX = "bna.1";
     private String BLE_PREFIX = "que";*/
 
-    private String NETWORK_PREFIX = "halum";
+    private String NETWORK_PREFIX = "meso";
 
     private MeshProvider() {
         this.context = App.getContext();

@@ -46,7 +46,6 @@ android {
             buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
             buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
         }
-
     }
     lintOptions {
 

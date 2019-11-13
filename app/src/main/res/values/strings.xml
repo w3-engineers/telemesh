@@ -9,7 +9,7 @@
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select photo</string>
-    <string name="title_contacts_fragment">Contacts</string>
+    <string name="title_contacts_fragment">Nearby Users</string>
     <string name="title_message_feed_fragment">Message Feed</string>
     <string name="title_settings_fragment">Settings</string>
 
@@ -24,7 +24,7 @@
     <string name="no_contact_available">There are no Telemesh users nearby.</string>
     <string name="no_message_available">No broadcasting message available</string>
 
-    <string name="search">Search</string>
+    <string name="search">Search people</string>
     <string name="type_message">Type your message…</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
@@ -74,5 +74,8 @@
     <string name="ask_me_later">Ask me later</string>
     <string name="update_app">Update App</string>
     <string name="no_internet_connection">No internet connection</string>
+
+    <string name="active_online">Active now</string>
+    <string name="active_offline">Offline</string>
 
 </resources>

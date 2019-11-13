@@ -21,7 +21,7 @@
         android:id="@+id/chat_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/overlay_light_60">
+        android:background="@color/chat_background">
 
         <TextView
             android:id="@+id/text_view_no_internet"
@@ -41,7 +41,7 @@
             android:id="@+id/toolbar_chat"
             android:layout_width="0dp"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/white"
+            android:background="@color/toolbar_color"
             android:theme="@style/ToolbarTheme"
             app:contentInsetStartWithNavigation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
                     android:id="@+id/image_profile"
                     android:layout_width="@dimen/width_40"
                     android:layout_height="@dimen/height_40"
-                    app:civ_circle_background_color="@color/out_coming_message_color"
+                    app:civ_circle_background_color="@color/white"
                     app:imageResource="@{userEntity.avatarIndex}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -68,31 +68,41 @@
                 <TextView
                     android:id="@+id/text_view_last_name"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/height_40"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginEnd="@dimen/margin_8"
                     android:ellipsize="end"
                     android:ems="@integer/three_dot_ems"
-                    android:fontFamily="@font/poppins_regular"
                     android:maxLines="1"
-                    android:paddingTop="@dimen/margin_5"
                     android:text="@{userEntity.fullName}"
-                    android:textColor="@color/select_photo_text_color"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_size_18"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/image_profile"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/text_view_active_now"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{userEntity.onlineStatus>0?@string/active_online:@string/active_offline}"
+                    android:textColor="@color/subtitle_color"
+                    android:textSize="@dimen/text_size_12"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_last_name"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_last_name" />
+
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="@dimen/height_30"
-                    android:layout_height="@dimen/height_30"
+                    android:layout_width="@dimen/height_20"
+                    android:layout_height="@dimen/height_20"
+                    android:layout_marginStart="@dimen/margin_4"
                     android:layout_marginEnd="@dimen/margin_10"
                     android:contentDescription="@string/logo_image"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/text_view_last_name"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@+id/text_view_active_now"
+                    app:layout_constraintStart_toEndOf="@+id/text_view_active_now"
+                    app:layout_constraintTop_toTopOf="@+id/text_view_active_now" />
+
             </android.support.constraint.ConstraintLayout>
         </com.w3engineers.ext.strom.application.ui.base.BaseToolBar>
 
@@ -160,7 +170,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/chat_message_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/height_55"
             android:background="@color/white"
             android:paddingStart="@dimen/margin_16"
             android:paddingLeft="@dimen/margin_16"
@@ -174,18 +184,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_16"
+                android:background="@null"
                 android:ems="10"
                 android:hint="@string/type_message"
                 android:inputType="textCapSentences|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_send"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="Autofill" />
 
             <ImageButton
                 android:id="@+id/image_view_send"
-                android:layout_width="@dimen/margin_40"
-                android:layout_height="@dimen/margin_40"
+                android:layout_width="@dimen/margin_25"
+                android:layout_height="@dimen/margin_25"
                 android:autoMirrored="true"
                 android:background="@color/white"
                 android:contentDescription="@string/chat_send_button_description"
@@ -194,6 +206,7 @@
                 android:src="@mipmap/ic_send_cyan"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
                 tools:targetApi="kitkat" />
         </android.support.constraint.ConstraintLayout>

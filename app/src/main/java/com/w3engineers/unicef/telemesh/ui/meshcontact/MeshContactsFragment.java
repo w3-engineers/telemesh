@@ -8,8 +8,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -57,6 +59,8 @@ public class MeshContactsFragment extends BaseFragment {
     public MenuItem mSearchItem;
     private String title;
     private boolean isLoaded = false;
+    private SearchView mSearchView;
+
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -197,8 +201,13 @@ public class MeshContactsFragment extends BaseFragment {
             // Resolve search option visibility problem when contact is appeared from starting point
             searchViewControl(userEntityList);
 
-            SearchView mSearchView = (SearchView) mSearchItem.getActionView();
+            mSearchView = mSearchItem.getActionView().findViewById(R.id.search_view);
+
+
+            // mSearchView = (SearchView) mSearchItem.getActionView();
             mSearchView.setQueryHint(getString(R.string.search));
+
+            mSearchView.setIconified(true);
 
             ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
             searchClose.setImageResource(R.mipmap.ic_cross_grey);
@@ -214,9 +223,41 @@ public class MeshContactsFragment extends BaseFragment {
                 e.printStackTrace();
             }
 
+            searchCollapseListener(mSearchItem, mSearchView);
+
             initSearchView(mSearchView);
         }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            mSearchView.setBackgroundColor(getResources().getColor(R.color.white));
+            Log.d("UiTest", "Search click call");
+            //mSearchView.onActionViewExpanded();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                searchView.setBackgroundColor(getResources().getColor(R.color.white));
+                searchView.setMaxWidth(Integer.MAX_VALUE);
+                Log.d("UiTest", "Search expand");
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                //searchView.setBackgroundColor(-1);
+                Log.d("UiTest", "Search collapse");
+                return true;
+            }
+        });
     }
 
     private void searchViewControl(List<UserEntity> userEntities) {

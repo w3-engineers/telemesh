@@ -8,6 +8,7 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
         <item name="actionMenuTextColor">@color/colorPrimary</item>
+        <item name="android:homeAsUpIndicator">@mipmap/ic_back_white</item>
 
     </style>
 

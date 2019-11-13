@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -26,6 +27,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private final int TEXT_MESSAGE_IN = 0;
     private final int TEXT_MESSAGE_OUT = 1;
+    private int avatarIndex;
 
     @NonNull
     public Context mContext;
@@ -89,6 +91,10 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     }
 
+    void addAvatarIndex(int index) {
+        this.avatarIndex = index;
+        notifyDataSetChanged();
+    }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {
@@ -108,7 +114,10 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageInBinding) viewDataBinding;
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.incoming_message_color));
+                    ContextCompat.getColor(mContext, R.color.white));
+
+            binding.imageProfile.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(avatarIndex));
+
         }
 
         @Override
@@ -128,8 +137,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         public TextMessageOutHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageOutBinding) viewDataBinding;
-            ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.out_coming_message_color));
+           /* ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
+                    ContextCompat.getColor(mContext, R.color.white));*/
         }
 
         @Override

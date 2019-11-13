@@ -226,6 +226,11 @@ public class ChatActivity extends RmBaseActivity {
                 if (userEntity != null && mViewBinging != null) {
                     mViewBinging.setUserEntity(userEntity);
                     mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.getOnlineStatus()));
+
+                    if (mChatPagedAdapter != null) {
+                        mChatPagedAdapter.addAvatarIndex(mUserEntity.getAvatarIndex());
+                        Log.d("UiTest", "Avatar sending process: " + mUserEntity.getAvatarIndex());
+                    }
                 }
             });
         }

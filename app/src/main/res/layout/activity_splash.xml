@@ -14,7 +14,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/drawable_reg_page_shape"
+        android:background="@color/toolbar_color"
         tools:context=".ui.splashscreen.SplashActivity">
 
         <com.facebook.shimmer.ShimmerFrameLayout
@@ -32,20 +32,20 @@
                 android:layout_width="@dimen/width_250"
                 android:layout_height="@dimen/height_200"
                 android:contentDescription="@string/logo_image"
-                android:src="@drawable/test_logo" />
+                android:src="@drawable/splash_logo" />
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_20"
             android:padding="@dimen/margin_5"
             android:text="@{splashViewModel.getAppVersion()}"
             android:textColor="@color/white"
             android:textSize="17sp"
-            android:layout_marginBottom="@dimen/margin_20"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

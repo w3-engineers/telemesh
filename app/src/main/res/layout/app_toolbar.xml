@@ -11,6 +11,7 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/toolbar_color"
         android:theme="@style/ToolbarTheme"
+
         app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

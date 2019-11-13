@@ -10,13 +10,13 @@
 
         <TextView
             android:id="@+id/text_view_badge_count"
-            android:layout_width="@dimen/width_25"
-            android:layout_height="@dimen/height_25"
+            android:layout_width="@dimen/width_20"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_30"
             android:background="@drawable/circular_badge"
             android:gravity="center"
             android:maxLines="@integer/max_line_1"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginEnd="@dimen/margin_25"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_12"
             app:layout_constraintEnd_toEndOf="parent"

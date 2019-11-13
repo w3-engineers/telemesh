@@ -158,13 +158,9 @@ dependencies {
 
     implementation deps.appupdater.update
 
-    /*api deps.framework
-    api deps.mesh
-    api deps.pay*/
     api deps.app_share
-
-    implementation 'com.github.w3-engineers:viper:1.0.9'
-    debugImplementation 'com.awesomedroidapps:inappstoragereader:1.0.2'
+    implementation deps.viper
+    debugImplementation deps.inappstoragereader
 }
 
 coveralls {

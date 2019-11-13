@@ -13,6 +13,7 @@ import android.text.TextUtils;
 
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerAdd;
@@ -31,6 +32,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class ViperUtil {
@@ -224,7 +227,24 @@ public abstract class ViperUtil {
         return null;
     }
 
+    public List<String> getAllSellers() {
+        List<String> allInternetSellers = viperClient.getInternetSellers();
 
+        if (allInternetSellers == null || allInternetSellers.size() == 0) {
+            return new ArrayList<>();
+        } else {
+            return viperClient.getInternetSellers();
+        }
+    }
+
+    public void stopMeshService() {
+        viperClient.stopMesh();
+    }
+
+    public void restartMeshService() {
+        int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
+        viperClient.restartMesh(myCurrentRole);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////
 

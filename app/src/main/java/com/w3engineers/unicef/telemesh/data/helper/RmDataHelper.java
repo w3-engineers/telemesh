@@ -534,8 +534,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * Concern for this api stopping RM service from app layer
      */
     public void stopRmService() {
-        // TODO need to stop the only mesh during the start of app share
-//        rightMeshDataSource.stopMeshService();
+        rightMeshDataSource.stopMeshService();
     }
 
     /**
@@ -552,7 +551,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void resetUserToOfflineBasedOnService() {
         boolean isServiceEnable = isMeshServiceRunning();
-        Log.v("MIMO_SAHA:", "PP: " + isServiceEnable);
         if (!isServiceEnable) {
             updateUserStatus(false);
         }
@@ -562,10 +560,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         Context context = TeleMeshApplication.getContext();
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            // TODO need to check mesh service is running or not, if not then reset all users info in view level
-            /*if (MeshService.class.getName().equals(service.service.getClassName())) {
+            if (service.service.getClassName().equals("com.w3engineers.meshrnd.TeleMeshService")) {
                 return true;
-            }*/
+            }
         }
         return false;
     }
@@ -574,8 +571,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     public void restartMesh() {
-        // TODO reset needed during app share closing process
-//        rightMeshDataSource.resetMeshService();
+        rightMeshDataSource.restartMeshService();
     }
 
     public void requestWsMessage() {
@@ -782,11 +778,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
 
-        // TODO now all internet sellers are prepared from viper client
-        /*for (String sellersId : rightMeshDataSource.getAllSellers()) {
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);
-        }*/
-
+        }
     }
 
     public void sendAppShareCount() {
@@ -810,10 +804,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             if (rightMeshDataSource == null) {
                 rightMeshDataSource = MeshDataSource.getRmDataSource();
             }
-            // TODO now all internet sellers are prepared from viper client
-            /*for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            for (String sellersId : rightMeshDataSource.getAllSellers()) {
                 dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId);
-            }*/
+            }
         }
     }
 

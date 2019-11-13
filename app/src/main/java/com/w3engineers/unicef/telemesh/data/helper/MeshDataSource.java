@@ -17,8 +17,6 @@ import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.List;
 
-//import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
-
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -175,6 +173,4 @@ public class MeshDataSource extends ViperUtil {
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
-
-
 }

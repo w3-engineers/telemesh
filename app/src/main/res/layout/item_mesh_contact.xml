@@ -55,7 +55,6 @@
             android:layout_marginTop="@dimen/margin_20"
             android:layout_marginEnd="@dimen/margin_10"
             android:contentDescription="@string/image"
-            android:src="@mipmap/ic_mesh_online"
             app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
             app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
             app:layout_constraintStart_toEndOf="@+id/user_avatar_background"

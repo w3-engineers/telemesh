@@ -61,8 +61,8 @@
     </style>
 
     <style name="image_style_settings_page">
-        <item name="android:layout_width">@dimen/width_40</item>
-        <item name="android:layout_height">@dimen/height_40</item>
+        <item name="android:layout_width">@dimen/width_30</item>
+        <item name="android:layout_height">@dimen/height_30</item>
         <item name="android:layout_marginTop">@dimen/margin_15</item>
         <item name="android:layout_marginBottom">@dimen/margin_15</item>
     </style>
@@ -73,6 +73,7 @@
         <item name="android:layout_marginLeft">@dimen/margin_15</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
         <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="shadow_style_settings_page">
@@ -95,7 +96,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginTop">@dimen/margin_10</item>
-        <item name="android:background">@color/grey_300</item>
+        <item name="android:background">@color/divider_color</item>
     </style>
 
 </resources>

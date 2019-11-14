@@ -11,7 +11,7 @@
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">Nearby Users</string>
     <string name="title_message_feed_fragment">Broadcast</string>
-    <string name="title_settings_fragment">Settings</string>
+    <string name="title_settings_fragment">My Telemesh</string>
 
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">Please click BACK again to exit.</string>

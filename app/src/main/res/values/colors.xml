@@ -29,6 +29,7 @@
     <color name="deep_layer_grey">#535353</color>
     <color name="deep_layer_grey_text">#313131</color>
     <color name="grey_bb">#666666</color>
+    <color name="divider_color">#E0E0E0</color>
     <!--<color name="dark_blue">#01434F</color>-->
 
     <!--<color name="light_yellow">#FFFCED</color>-->

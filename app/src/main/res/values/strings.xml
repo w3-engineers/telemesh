@@ -21,7 +21,7 @@
     <string name="activity_about_us">About Telemesh</string>
     <string name="app_version">Version:</string>
 
-    <string name="no_contact_available">There are no Telemesh users nearby.</string>
+    <string name="no_contact_available">OOPS!\nNo one is around</string>
     <string name="no_message_available">No broadcasting message available</string>
 
     <string name="search">Search people</string>

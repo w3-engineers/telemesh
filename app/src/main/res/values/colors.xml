@@ -28,6 +28,7 @@
     <color name="light_grey">#ACACAC</color>
     <color name="deep_layer_grey">#535353</color>
     <color name="deep_layer_grey_text">#313131</color>
+    <color name="grey_bb">#666666</color>
     <!--<color name="dark_blue">#01434F</color>-->
 
     <!--<color name="light_yellow">#FFFCED</color>-->
@@ -54,5 +55,6 @@
     <color name="account_text_color">#61212121</color>
     <color name="hint_text_color">#9E9E9E</color>
     <color name="next_button_color">#EBEBEB</color>
+    <color name="not_found_color">#212121</color>
 
 </resources>

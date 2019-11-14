@@ -85,15 +85,23 @@
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
+                <android.support.constraint.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.5" />
+
                 <ImageView
                     android:id="@+id/empty_image_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/width_200"
+                    android:layout_height="@dimen/height_200"
                     android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginTop="@dimen/margin_30"
+                    android:layout_marginTop="@dimen/margin_50"
                     android:layout_marginRight="@dimen/margin_20"
                     android:contentDescription="@string/no_contact_available"
                     android:src="@mipmap/ic_no_contact"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -105,10 +113,24 @@
                     android:layout_marginTop="@dimen/margin_20"
                     android:gravity="center"
                     android:text="@string/no_contact_available"
-                    android:textSize="@dimen/text_size_18"
+                    android:textColor="@color/not_found_color"
+                    android:textSize="@dimen/text_size_20"
+                    android:textStyle="bold"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+
+                <TextView
+                    android:id="@+id/text_view_searching"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:text="@string/searching"
+                    android:textColor="@color/grey_bb"
+                    android:textSize="@dimen/text_size_20"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_message"
+                    app:layout_constraintStart_toStartOf="@+id/tv_message"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
             </android.support.constraint.ConstraintLayout>
 

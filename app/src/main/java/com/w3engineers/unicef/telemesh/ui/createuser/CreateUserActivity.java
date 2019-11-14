@@ -56,6 +56,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
 
+        setClickListener(mBinding.imageViewBack);
+
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
         mBinding.imageViewCamera.setOnClickListener(this);
@@ -80,7 +82,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         } else {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
-            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.deep_grey));
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.new_user_button_color));
             mBinding.buttonSignup.setClickable(false);
         }
     }
@@ -140,6 +142,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 Intent intent = new Intent(this, ProfileImageActivity.class);
                 intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
                 startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
+                break;
+            case R.id.image_view_back:
+                finish();
                 break;
 
         }

@@ -2,7 +2,7 @@
     <string name="app_name">TeleMesh</string>
     <string name="activity_view_profile">My Profile</string>
     <string name="enter_first_name">Type Your Name</string>
-    <string name="signup">Sign Up</string>
+    <string name="signup">Next</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
@@ -80,5 +80,7 @@
     <string name="onboard_image">Onboard image</string>
     <string name="i_m_a_new_user">I\'m a new user</string>
     <string name="i_m_a_returning_user">I\'m a returning user</string>
+    <string name="profile_selection_image">Profile selection image</string>
+    <string name="name_field_icon">Name field icon</string>
 
 </resources>

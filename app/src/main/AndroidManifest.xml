@@ -50,6 +50,9 @@
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
         <activity
+            android:name=".ui.importprofile.ImportProfileActivity"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
             android:name=".ui.profilechoice.ProfileChoiceActivity"
             android:theme="@style/NoActionBarTheme" />
         <activity

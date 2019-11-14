@@ -96,5 +96,8 @@
     <string name="terms_of_use"><a href="https://telemesh.net/">Terms of Use</a></string>
     <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
+    <string name="welcome_back">welcome back</string>
+    <string name="import_my_profile">import my profile</string>
+    <string name="scan_my_profile_qr">scan my profile qr</string>
 
 </resources>

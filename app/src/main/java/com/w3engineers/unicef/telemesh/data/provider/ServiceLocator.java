@@ -12,6 +12,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
+import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
@@ -30,12 +31,12 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 public class ServiceLocator extends BaseServiceLocator {
 
     // SingleTon
-    protected ServiceLocator(){
+    protected ServiceLocator() {
 
     }
 
     // to manage proper singleton that will remained singleton during multi-thread instance
-    public static class ServiceLocatorHolder{
+    public static class ServiceLocatorHolder {
         @NonNull
         public static ServiceLocator serviceLocator = new ServiceLocator();
     }
@@ -67,13 +68,13 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
     @NonNull
-    public MainActivityViewModel getMainActivityViewModel(){
+    public MainActivityViewModel getMainActivityViewModel() {
         restartRmService();
         return new MainActivityViewModel();
     }
 
     @NonNull
-    public SettingsViewModel getSettingsViewModel(@NonNull Application application){
+    public SettingsViewModel getSettingsViewModel(@NonNull Application application) {
         return new SettingsViewModel(application);
     }
 
@@ -88,13 +89,18 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
     @NonNull
-    public ChatViewModel getChatViewModel(@NonNull Application application){
+    public ChatViewModel getChatViewModel(@NonNull Application application) {
         return new ChatViewModel(application);
     }
 
     @NonNull
     public ProfileChoiceViewModel getProfileChoiceViewModel(@NonNull Application application) {
         return new ProfileChoiceViewModel(application);
+    }
+
+    @NonNull
+    public ImportProfileViewModel getImportProfileViewModel(@NonNull Application application) {
+        return new ImportProfileViewModel(application);
     }
 
 

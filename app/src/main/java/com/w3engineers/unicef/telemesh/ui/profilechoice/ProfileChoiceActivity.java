@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileChoiceBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 
 /*
  * ============================================================================
@@ -49,7 +50,7 @@ public class ProfileChoiceActivity extends BaseActivity {
         if (view.getId() == R.id.button_create_account) {
             startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
         } else if (view.getId() == R.id.button_import_account) {
-            // Todo goto Import profile page
+            startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
         }
     }
 

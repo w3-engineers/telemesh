@@ -3,96 +3,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.w3engineers.unicef.telemesh">
 
-  <uses-permission
-      android:name="android.permission.INTERNET"
-      android:required="true" />
-  <!-- WIFI Direct, Ethernet, Multicast- and Bonjour-Beacon -->
-  <uses-permission
-      android:name="android.permission.ACCESS_WIFI_STATE"
-      android:required="true" />
-  <uses-permission
-      android:name="android.permission.CHANGE_WIFI_STATE"
-      android:required="true" />
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="true" /> <!-- WIFI Direct, Ethernet, Multicast- and Bonjour-Beacon -->
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-  <uses-permission android:name="android.permission.BLUETOOTH" />
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
-  <uses-feature
-      android:name="android.hardware.bluetooth_le"
-      android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.REQUEST_INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
 
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <uses-permission
-      android:name="android.permission.WRITE_SETTINGS"
-      tools:ignore="ProtectedPermissions" />
-  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"
-      tools:ignore="ProtectedPermissions"/>
-
-  <application
-      android:name="com.w3engineers.unicef.TeleMeshApplication"
-      android:allowBackup="true"
-      android:configChanges="locale"
-      android:extractNativeLibs="false"
-      android:fullBackupContent="@xml/my_backup_rules"
-      android:icon="@mipmap/ic_app_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme"
-      android:usesCleartextTraffic="true"
-      tools:ignore="UnusedAttribute"
-      tools:replace="android:name">
-
-
-    <activity
-        android:name=".ui.main.MainActivity"
-        android:configChanges="orientation|screenSize">
-
-      <meta-data android:name="android.app.searchable"
-          android:resource="@xml/searchable"/>
-    </activity>
-
-    <activity
-        android:name=".ui.createuser.CreateUserActivity"
+    <application
+        android:name="com.w3engineers.unicef.TeleMeshApplication"
+        android:allowBackup="true"
+        android:configChanges="locale"
+        android:extractNativeLibs="false"
+        android:fullBackupContent="@xml/my_backup_rules"
+        android:icon="@mipmap/ic_app_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:windowSoftInputMode="adjustResize" />
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute"
+        tools:replace="android:name">
+        <activity
+            android:name=".ui.profilechoice.ProfileChoiceActivity"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".ui.createuser.CreateUserActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.splashscreen.SplashActivity"
+            android:theme="@style/NoActionBarTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity
-        android:name=".ui.splashscreen.SplashActivity"
-        android:theme="@style/NoActionBarTheme">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.chooseprofileimage.ProfileImageActivity" />
+        <activity android:name=".ui.userprofile.UserProfileActivity" />
+        <activity android:name=".ui.aboutus.AboutUsActivity" />
+        <activity android:name=".ui.bulletindetails.BulletinDetails" />
+        <activity
+            android:name=".ui.chat.ChatActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-
-    <activity android:name=".ui.chooseprofileimage.ProfileImageActivity" />
-    <activity android:name=".ui.userprofile.UserProfileActivity" />
-    <activity android:name=".ui.aboutus.AboutUsActivity" />
-
-    <activity android:name=".ui.bulletindetails.BulletinDetails" />
-    <activity
-        android:name=".ui.chat.ChatActivity"
-        android:windowSoftInputMode="adjustResize|stateHidden" />
-
-    <service
-        android:name="com.w3engineers.unicef.util.helper.BulletinJobService"
-        android:label="Word service"
-        android:permission="android.permission.BIND_JOB_SERVICE" />
-
-  </application>
+        <service
+            android:name="com.w3engineers.unicef.util.helper.BulletinJobService"
+            android:label="Word service"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+    </application>
 
 </manifest>

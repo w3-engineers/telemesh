@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/toolbar_color"
+        tools:context=".ui.profilechoice.ProfileChoiceActivity">
+
+        <ImageView
+            android:id="@+id/image_view_logo"
+            android:layout_width="@dimen/width_250"
+            android:layout_height="@dimen/height_200"
+            android:src="@drawable/splash_logo"
+            app:layout_constraintBottom_toTopOf="@+id/image_view_onboard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_view_onboard"
+            android:layout_width="@dimen/width_250"
+            android:layout_height="@dimen/height_205"
+            android:contentDescription="@string/onboard_image"
+            android:src="@drawable/profile_choice_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+            android:id="@+id/button_create_account"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:text="@string/i_m_a_new_user"
+            android:textColor="@color/white"
+            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            app:layout_constraintBottom_toTopOf="@+id/button_import_account"
+            app:layout_constraintEnd_toEndOf="@+id/button_import_account"
+            app:layout_constraintStart_toStartOf="@+id/button_import_account" />
+
+        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+            android:id="@+id/button_import_account"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginEnd="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:elevation="@dimen/margin_5"
+            android:text="@string/i_m_a_returning_user"
+            android:textColor="@color/white"
+            app:bb_drawable="@drawable/drawable_button_bg_with_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

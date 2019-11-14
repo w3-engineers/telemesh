@@ -13,6 +13,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
 
 import timber.log.Timber;
 
@@ -45,7 +46,7 @@ public class SplashActivity extends BaseActivity {
                 intent = new Intent(SplashActivity.this, MainActivity.class);
             } else {
                 Timber.e("User not created. Go User create page");
-                intent = new Intent(SplashActivity.this, CreateUserActivity.class);
+                intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
             }
             startActivity(intent);
             finish();

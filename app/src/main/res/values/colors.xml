@@ -48,4 +48,6 @@
     <color name="chat_background">#F5F5F5</color>
     <color name="chat_sub_item_color">#0000008A</color>
 
+    <color name="new_user_button_color">#008DFF</color>
+
 </resources>

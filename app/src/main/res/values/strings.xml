@@ -77,5 +77,8 @@
 
     <string name="active_online">Active now</string>
     <string name="active_offline">Offline</string>
+    <string name="onboard_image">Onboard image</string>
+    <string name="i_m_a_new_user">I\'m a new user</string>
+    <string name="i_m_a_returning_user">I\'m a returning user</string>
 
 </resources>

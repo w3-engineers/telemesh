@@ -17,8 +17,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <View
             android:layout_width="0dp"
@@ -26,6 +25,7 @@
             android:layout_marginLeft="@dimen/margin_10"
             android:layout_marginRight="@dimen/margin_10"
             android:background="@color/grey_message_separator"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -35,7 +35,6 @@
             android:id="@+id/textViewSeprator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:paddingLeft="@dimen/margin_8"
             android:paddingRight="@dimen/margin_8"
             android:text="@{UIHelper.getSeparatorDate(separatorMessage)}"

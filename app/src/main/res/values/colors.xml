@@ -47,9 +47,9 @@
     <color name="badge_color">#019AE8</color>
     <color name="toolbar_color">#083480</color>
     <color name="background_color">#083480</color>
-    <color name="subtitle_color">#FFFFFFB3</color>
+    <color name="subtitle_color">#B3FFFFFF</color>
     <color name="chat_background">#F5F5F5</color>
-    <color name="chat_sub_item_color">#0000008A</color>
+    <color name="chat_sub_item_color">#757575</color>
 
     <color name="new_user_button_color">#008DFF</color>
 
@@ -57,6 +57,8 @@
     <color name="hint_text_color">#9E9E9E</color>
     <color name="next_button_color">#EBEBEB</color>
     <color name="not_found_color">#212121</color>
+
+    <color name="message_text_color">#212121</color>
 
     <color name="eth_id_text_color">#E6000000</color>
 

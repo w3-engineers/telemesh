@@ -60,4 +60,8 @@
 
     <color name="eth_id_text_color">#E6000000</color>
 
+    <color name="about_us_description_color">#333333</color>
+
+    <color name="about_us_link_color">#1473E6</color>
+
 </resources>

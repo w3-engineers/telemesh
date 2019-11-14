@@ -75,6 +75,8 @@
     <string name="update_app">Update App</string>
     <string name="no_internet_connection">No internet connection</string>
 
+    <string name="build_version">Build Version:</string>
+
     <string name="active_online">Active now</string>
     <string name="active_offline">Offline</string>
     <string name="onboard_image">Onboard image</string>
@@ -86,5 +88,13 @@
     <string name="user_id_qr_image">User id qr Image</string>
     <string name="export_my_profile">export my profile</string>
     <string name="copied">Copied</string>
+    <string name="open_source_edition">Open Source Edition</string>
+    <string name="about_description">Telemesh is a messaging app designed with Blockchain and Mesh networking. Unlike traditional messaging app Telemesh works with both internet and without internet connectivity. Telemesh is actively maintained by W3 Engineers Ltd.</string>
+    <string name="copyright_text">Copyright 2019 W3 Engineers Ltd. Licensed under the Apache License, Version 2.0</string>
+
+    <string name="privacy_policy"><a href="https://telemesh.net/">Privacy Policy</a></string>
+    <string name="terms_of_use"><a href="https://telemesh.net/">Terms of Use</a></string>
+    <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
+    <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
 
 </resources>

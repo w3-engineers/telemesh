@@ -13,7 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/chat_background">
 
         <include
             android:id="@+id/main_toolbar"
@@ -22,16 +22,124 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <ScrollView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_15"
-            android:gravity="center"
-            android:text="@{aboutViewModel.getAppVersion()}"
-            android:textSize="@dimen/text_size_18"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_view_logo"
+                    android:layout_width="@dimen/width_250"
+                    android:layout_height="@dimen/height_100"
+                    android:contentDescription="@string/logo_image"
+                    android:src="@drawable/about_logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_view_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_16"
+                    android:text="@string/open_source_edition"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_20"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_view_logo" />
+
+                <TextView
+                    android:id="@+id/text_view_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/about_description"
+                    android:textColor="@color/about_us_description_color"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+
+                <TextView
+                    android:id="@+id/text_view_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:gravity="center"
+                    android:text="@{@string/build_version+` `+aboutViewModel.getAppVersion()}"
+                    android:textColor="@color/about_us_description_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_description" />
+
+                <TextView
+                    android:id="@+id/text_view_copy_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/copyright_text"
+                    android:textColor="@color/about_us_description_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_version" />
+
+                <TextView
+                    android:id="@+id/text_view_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/about_us_link_color"
+                    android:textColorLink="@color/about_us_link_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_copy_right" />
+
+                <TextView
+                    android:id="@+id/text_view_terms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/terms_of_use"
+                    android:textColor="@color/about_us_link_color"
+                    android:textColorLink="@color/about_us_link_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_privacy" />
+
+                <TextView
+                    android:id="@+id/text_view_telemesh_web"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/telemesh_website"
+                    android:textColor="@color/about_us_link_color"
+                    android:textColorLink="@color/about_us_link_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_terms" />
+
+                <TextView
+                    android:id="@+id/text_view_w3_web"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:text="@string/w3_engineers_website"
+                    android:textColor="@color/about_us_link_color"
+                    android:textColorLink="@color/about_us_link_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_telemesh_web" />
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
 
 
     </android.support.constraint.ConstraintLayout>

@@ -3,7 +3,14 @@ package com.w3engineers.unicef.telemesh.ui.aboutus;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
@@ -22,6 +29,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  */
 public class AboutUsActivity extends RmBaseActivity {
 
+    private ActivityAboutUsBinding mBinding;
 
     @Override
     protected int getLayoutId() {
@@ -43,7 +51,7 @@ public class AboutUsActivity extends RmBaseActivity {
     protected void startUI() {
 
         AboutUsViewModel aboutUsViewModel = getViewModel();
-        ActivityAboutUsBinding mBinding = (ActivityAboutUsBinding) getViewDataBinding();
+        mBinding = (ActivityAboutUsBinding) getViewDataBinding();
         setTitle(getString(R.string.activity_about_us));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,8 +59,21 @@ public class AboutUsActivity extends RmBaseActivity {
 
         mBinding.setAboutViewModel(aboutUsViewModel);
 
-
+        initView();
     }
+
+    private void initView() {
+        mBinding.textViewPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewTerms.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewTelemeshWeb.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewW3Web.setMovementMethod(LinkMovementMethod.getInstance());
+
+        stripUnderlines(mBinding.textViewPrivacy);
+        stripUnderlines(mBinding.textViewTerms);
+        stripUnderlines(mBinding.textViewTelemeshWeb);
+        stripUnderlines(mBinding.textViewW3Web);
+    }
+
 
     private AboutUsViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
@@ -67,5 +88,31 @@ public class AboutUsActivity extends RmBaseActivity {
     @Override
     protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
+    }
+
+
+    private void stripUnderlines(TextView textView) {
+        Spannable s = new SpannableString(textView.getText());
+        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+        for (URLSpan span : spans) {
+            int start = s.getSpanStart(span);
+            int end = s.getSpanEnd(span);
+            s.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            s.setSpan(span, start, end, 0);
+        }
+        textView.setText(s);
+    }
+
+    private class URLSpanNoUnderline extends URLSpan {
+        public URLSpanNoUnderline(String url) {
+            super(url);
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
     }
 }

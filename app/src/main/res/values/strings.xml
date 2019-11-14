@@ -10,7 +10,7 @@
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select photo</string>
     <string name="title_contacts_fragment">Nearby Users</string>
-    <string name="title_message_feed_fragment">Message Feed</string>
+    <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">Settings</string>
 
     <string name="logo_image">logo image</string>
@@ -22,7 +22,7 @@
     <string name="app_version">Version:</string>
 
     <string name="no_contact_available">OOPS!\nNo one is around</string>
-    <string name="no_message_available">No broadcasting message available</string>
+    <string name="no_message_available">No broadcast to show</string>
 
     <string name="search">Search people</string>
     <string name="type_message">Type your message…</string>

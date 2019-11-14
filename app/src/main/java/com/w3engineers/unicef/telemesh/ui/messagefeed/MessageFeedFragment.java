@@ -70,6 +70,7 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
 
     /**
      * Get the view model from the view model factory
+     *
      * @return ViewModel
      */
 
@@ -94,7 +95,6 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
     public void onItemClick(@NonNull View view, @NonNull FeedEntity item) {
 
     }
-
 
 
 }

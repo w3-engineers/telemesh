@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,6 +15,7 @@ import android.text.style.StyleSpan;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
@@ -23,6 +27,10 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
 public class UserProfileActivity extends RmBaseActivity {
+
+    private final String LABEL = "Address";
+
+    private ActivityUserProfileBinding mBinding;
 
     @Override
     protected int getLayoutId() {
@@ -44,25 +52,29 @@ public class UserProfileActivity extends RmBaseActivity {
         }
         //    private ServiceLocator serviceLocator;
         UserProfileViewModel userProfileViewModel = getViewModel();
-        ActivityUserProfileBinding mBinding = (ActivityUserProfileBinding) getViewDataBinding();
+        mBinding = (ActivityUserProfileBinding) getViewDataBinding();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         boolean isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
 
-        setClickListener(mBinding.opBack);
+        setClickListener(mBinding.opBack, mBinding.imageViewIdCopy,mBinding.buttonExportProfile);
 
         if (isMyProfile) {
             SharedPref sharedPref = SharedPref.getSharedPref(this);
             String companyId = sharedPref.read(Constants.preferenceKey.COMPANY_ID);
             String companyName = sharedPref.read(Constants.preferenceKey.COMPANY_NAME);
 
-            if (!TextUtils.isEmpty(companyId)) {
+           /* if (!TextUtils.isEmpty(companyId)) {
                 mBinding.userId.setText(getResources().getString(R.string.id) + ": " + companyId);
                 mBinding.userCompany.setText(getCompanyName(companyName));
                 mBinding.icValid.setVisibility(View.VISIBLE);
             } else {
                 mBinding.icValid.setVisibility(View.GONE);
-            }
+            }*/
+
+            mBinding.buttonExportProfile.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.buttonExportProfile.setVisibility(View.GONE);
         }
     }
 
@@ -87,7 +99,21 @@ public class UserProfileActivity extends RmBaseActivity {
             case R.id.op_back:
                 finish();
                 break;
+            case R.id.image_view_id_copy:
+                copyEthAddress();
+                break;
+            case R.id.button_export_profile:
+                // Todo Export profile option
+                break;
         }
+    }
+
+    private void copyEthAddress() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(LABEL, mBinding.userId.getText().toString());
+        clipboard.setPrimaryClip(clip);
+
+        Toaster.showShort(getResources().getString(R.string.copied));
     }
 
     private UserProfileViewModel getViewModel() {

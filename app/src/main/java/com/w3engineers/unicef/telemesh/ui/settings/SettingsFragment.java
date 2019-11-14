@@ -83,6 +83,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 UserEntity userEntity = new UserEntity();
                 userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
                 userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+                userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);
                 intent.putExtra(UserEntity.class.getName(), userEntity);
                 intent.putExtra(SettingsFragment.class.getName(), true);

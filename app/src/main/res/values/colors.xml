@@ -58,4 +58,6 @@
     <color name="next_button_color">#EBEBEB</color>
     <color name="not_found_color">#212121</color>
 
+    <color name="eth_id_text_color">#E6000000</color>
+
 </resources>

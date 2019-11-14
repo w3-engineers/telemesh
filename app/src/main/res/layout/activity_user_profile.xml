@@ -17,7 +17,7 @@
         android:id="@+id/view_profile_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/chat_background">
 
         <!--<include
             android:id="@+id/main_toolbar"
@@ -30,7 +30,7 @@
             android:id="@+id/top_gradient"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_150"
-            android:background="@drawable/drawable_reg_page_shape"
+            android:background="@color/background_color"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,8 +41,8 @@
             android:layout_height="@dimen/height_40"
             android:layout_marginStart="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_5"
-            android:padding="@dimen/padding_10"
             android:contentDescription="@string/app_name"
+            android:padding="@dimen/padding_10"
             android:src="@mipmap/ic_back_white"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -50,41 +50,14 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_15"
             android:gravity="center"
             android:text="@string/profile"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22"
-            android:layout_marginStart="@dimen/margin_15"
+            app:layout_constraintBottom_toBottomOf="@+id/op_back"
             app:layout_constraintLeft_toRightOf="@+id/op_back"
-            app:layout_constraintTop_toTopOf="@+id/op_back"
-            app:layout_constraintBottom_toBottomOf="@+id/op_back"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            app:layout_constraintBottom_toBottomOf="@id/divider"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                android:background="@mipmap/shape"
-                android:scaleType="fitXY"
-                android:scaleX="-1" />
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                android:background="@mipmap/shape"
-                android:scaleType="fitXY" />
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="@+id/op_back" />
 
         <View
             android:id="@+id/divider"
@@ -96,12 +69,12 @@
             android:id="@+id/image_profile_background"
             android:layout_width="@dimen/width_120"
             android:layout_height="@dimen/height_120"
-            android:contentDescription="@string/logo_image"
             android:background="@drawable/circular_white"
+            android:contentDescription="@string/logo_image"
             android:padding="@dimen/margin_15"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintTop_toTopOf="@+id/divider" />
 
 
@@ -111,9 +84,9 @@
             android:layout_height="@dimen/height_120"
             android:padding="@dimen/margin_15"
             app:imageResource="@{userEntity.avatarIndex}"
+            app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintTop_toTopOf="@+id/divider" />
 
         <ImageView
@@ -123,8 +96,8 @@
             android:layout_marginBottom="12dp"
             android:contentDescription="@string/logo_image"
             android:scaleType="centerCrop"
-            android:visibility="gone"
             android:src="@mipmap/ic_verified"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/image_profile"
             app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
@@ -132,9 +105,10 @@
             android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_20"
             android:gravity="center"
             android:text="@{userEntity.getFullName()}"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_25"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -143,26 +117,66 @@
         <TextView
             android:id="@+id/user_id"
             android:layout_width="0dp"
-            android:textIsSelectable="true"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_40"
             android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_40"
             android:gravity="center"
+            android:text="@{userEntity.meshId}"
+            android:textColor="@color/eth_id_text_color"
+            android:textIsSelectable="true"
             android:textSize="@dimen/text_size_16"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+        <ImageView
+            android:id="@+id/image_view_id_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_5"
+            android:contentDescription="@string/user_id_copy"
+            android:padding="@dimen/padding_5"
+            android:src="@mipmap/ic_copy_text"
+            app:layout_constraintBottom_toBottomOf="@+id/user_id"
+            app:layout_constraintStart_toEndOf="@+id/user_id" />
 
         <TextView
             android:id="@+id/user_company"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
-            android:textIsSelectable="true"
             android:gravity="center"
+            android:textIsSelectable="true"
             android:textSize="@dimen/text_size_16"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_id" />
+
+        <ImageView
+            android:id="@+id/image_view_qr"
+            android:layout_width="@dimen/width_100"
+            android:layout_height="@dimen/height_100"
+            android:contentDescription="@string/user_id_qr_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/user_id" />
+
+        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+            android:id="@+id/button_export_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_30"
+            android:text="@string/export_my_profile"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_qr" />
 
 
     </android.support.constraint.ConstraintLayout>

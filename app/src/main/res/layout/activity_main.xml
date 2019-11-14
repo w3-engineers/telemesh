@@ -10,9 +10,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/main_view"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/text_view_no_internet"
@@ -113,6 +113,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_8"
+                android:drawableEnd="@mipmap/ic_arrow_forward"
+                android:gravity="center"
                 android:padding="@dimen/padding_5"
                 android:text="@string/search_background"
                 android:textAllCaps="true"

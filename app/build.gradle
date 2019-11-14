@@ -158,6 +158,8 @@ dependencies {
 
     implementation deps.appupdater.update
 
+    implementation deps.ripplebg.ripple
+
     api deps.framework
     api deps.mesh
     api deps.pay

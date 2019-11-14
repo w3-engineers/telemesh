@@ -99,5 +99,6 @@
     <string name="welcome_back">welcome back</string>
     <string name="import_my_profile">import my profile</string>
     <string name="scan_my_profile_qr">scan my profile qr</string>
+    <string name="search_background">search background</string>
 
 </resources>

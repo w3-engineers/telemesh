@@ -97,6 +97,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         mViewModel.setServerAppShareCountWorkerRequest();
         mViewModel.setLocalAppShareCountWorkerRequest();
 
+        setClickListener(binding.textViewBackground);
+
         mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
 
             // If there are no matching work info, do nothing
@@ -131,16 +133,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 //        mViewModel.makeSendingMessageAsFailed();
 
 
-       /* new Handler().postDelayed(() -> {
-            AppShareCountEntity entity = new AppShareCountEntity();
-            entity.setCount(1);
-            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-            entity.setUserId(myId);
-            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
-            List<AppShareCountEntity> list = new ArrayList<>();
-            list.add(entity);
-            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
-        }, 10000);*/
         DiagramUtil.on(this).start();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
@@ -156,6 +148,14 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
         initNoNetworkCallback(myMode);
         showHideInternetWarning(myMode, Constants.IS_DATA_ON);
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.text_view_background) {
+            disableLoading();
+        }
     }
 
     private MainActivityViewModel getViewModel() {
@@ -290,6 +290,16 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         } else {
             constraintLayoutContainer.setVisibility(View.GONE);
         }
+    }
+
+    public void enableLoading() {
+        binding.searchingView.setVisibility(View.VISIBLE);
+        binding.mainView.setVisibility(View.GONE);
+    }
+
+    public void disableLoading() {
+        binding.searchingView.setVisibility(View.GONE);
+        binding.mainView.setVisibility(View.VISIBLE);
     }
 
     @Override

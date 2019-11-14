@@ -118,6 +118,10 @@ public class MeshContactsFragment extends BaseFragment {
                             fragmentMeshcontactBinding.tvMessage.setText("No User Found");
                             enableEmpty();
                             fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+
+                            if (getActivity() != null) {
+                                ((MainActivity) getActivity()).disableLoading();
+                            }
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
                     }
@@ -298,11 +302,19 @@ public class MeshContactsFragment extends BaseFragment {
         fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
         fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
         fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).enableLoading();
+        }
     }
 
     private void enableEmpty() {
         fragmentMeshcontactBinding.notFoundView.setVisibility(View.VISIBLE);
         fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).disableLoading();
+        }
     }
 
     protected void searchLoading() {
@@ -311,6 +323,8 @@ public class MeshContactsFragment extends BaseFragment {
                 fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
                 fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
                 fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+
+                ((MainActivity) getActivity()).enableLoading();
             });
         }
     }

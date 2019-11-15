@@ -21,6 +21,15 @@ The freedom of connectivity to the edge of the world
 
 Please follow this [Technical documentation](https://telemesh.readthedocs.io/en/latest/index.html) to get detail about Telemesh
 
+
+## Contributing Guideline
+
+Please find here [Contributing Guideline](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md)
+
+## Reporting Issues 
+
+If you face any bug or have any particular feature request please go [here](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue)
+
     
 
 ## Test Coverage
@@ -57,14 +66,6 @@ Please follow this [Technical documentation](https://telemesh.readthedocs.io/en/
        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        See the License for the specific language governing permissions and
        limitations under the License.
-
-## Contributing Guideline
-
-Please find here [Contributing Guideline](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md)
-
-## Reporting Issues 
-
-If you face any bug or have any particular feature request please go [here](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue)
 
 
 ## Community manager 

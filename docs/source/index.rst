@@ -15,12 +15,11 @@ Telemesh Documentation
    project_structure
    prerequisities
    get_started
+   create_branch
    project_dependencies
    local_dev_env
    development_guideline
-   test_coverage
-   license
-   community_manager
+
 
 
 

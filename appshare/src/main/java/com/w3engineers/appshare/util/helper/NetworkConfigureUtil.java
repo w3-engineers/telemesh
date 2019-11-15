@@ -236,7 +236,7 @@ public class NetworkConfigureUtil {
         }
     }
 
-    private void triggerNetworkFailed(String error) {
+    public void triggerNetworkFailed(String error) {
         if (networkCallback != null) {
             networkCallback.networkFailed(error);
         }

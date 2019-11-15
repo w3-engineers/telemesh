@@ -40,13 +40,26 @@
                 if (xhttp.readyState == 4 && xhttp.status == 200) {
                     document.getElementById("content").innerHTML = "";
                     document.getElementById("content").innerHTML = xhttp.responseText;
-                    window.location = "TeleMesh.apk";
+                    window.location = "TelemeshService.apk";
                 }
             };
             xhttp.open("GET", "#", true);
             xhttp.send();
         }
 
+        function openTeleMeshApk(event){
+            event.preventDefault();
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    document.getElementById("content").innerHTML = "";
+                    document.getElementById("content").innerHTML = xhttp.responseText;
+                    window.location = "TeleMesh.apk";
+                }
+            };
+            xhttp.open("GET", "#", true);
+            xhttp.send();
+        }
 
 </script>
 
@@ -55,18 +68,31 @@
     <div class="page-wrapper text-center">
         <div class="home-logo">
             <a href="/" class="">
-                <img src="img_view/logo.png" width="294" height="189" alt="telemesh"/>
+                <img src="img_view/logo_new.png" width="294" height="189" alt="telemesh"/>
             </a>
         </div>
         <div class="home-slogan">Connecting the unconnected</div>
-        <a href="javascript:void(0);" onclick="openApk(event);" class="home-download-btn">
-            Download
-        </a>
+        <div class="download">Download</div>
+        <div class="buttons">
+            <a href="javascript:void(0);" onclick="openApk(event);" class="home-download-btn btn-first">
+                Telemesh-Service
+            </a>
+
+            <div class="and-div">And</div>
+
+            <a href="javascript:void(1);" onclick="openTeleMeshApk(event);" class="app-download-btn btn-second">
+                Telemesh
+            </a>
+        </div>
     </div>
 </section>
 
 <script type="text/javascipt">
-function startDownload() {
+    function startDownload() {
+         window.open('TelemeshService.apk');
+    }
+
+    function startDownload() {
          window.open('TeleMesh.apk');
     }
 

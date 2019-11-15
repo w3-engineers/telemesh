@@ -110,14 +110,20 @@ public class InAppShareUtil {
 
         String backApkPath = getBackUpApkPath();
 
-        InstantServer.getInstance().setPort(httpPort).setFilePath(backApkPath).startServer();
+        String backServiceApkPath = getServiceApkPath();
 
-        wifiAddressBitmap = getQrBitmap("WIFI:S:" + NetworkConfigureUtil.getInstance().getNetworkName() + ";T:WPA;P:" + NetworkConfigureUtil.getInstance().getNetworkPass() + ";");
+        if (backApkPath != null && backServiceApkPath != null) {
+            InstantServer.getInstance().setPort(httpPort).setFilePath(backApkPath).setServiceFilePath(backServiceApkPath).startServer();
 
-        serverAddressBitmap = getQrBitmap(serverAddress);
+            wifiAddressBitmap = getQrBitmap("WIFI:S:" + NetworkConfigureUtil.getInstance().getNetworkName() + ";T:WPA;P:" + NetworkConfigureUtil.getInstance().getNetworkPass() + ";");
 
-        if (inAppShareCallback != null) {
-            inAppShareCallback.inAppShareAssets(true);
+            serverAddressBitmap = getQrBitmap(serverAddress);
+
+            if (inAppShareCallback != null) {
+                inAppShareCallback.inAppShareAssets(true);
+            }
+        } else {
+            NetworkConfigureUtil.getInstance().triggerNetworkFailed("Storage problem occurred");
         }
 
         return serverAddressBitmap;
@@ -134,35 +140,20 @@ public class InAppShareUtil {
     public String getBackUpApkPath() {
         Context context = InAppShareControl.getInstance().getAppShareContext();
 
-        // This part is check the apk is available and also check the existing version
+        String myApplicationName = context.getResources().getString(R.string.app_name);
+        String myApplicationPackageName = context.getPackageName();
 
-        /*try {
-            String myApplicationName = context.getResources().getString(R.string.app_name) + ".apk";
-            String backupFolder = ".backup";
+        return backupApkAndGetPath(context, myApplicationName, myApplicationPackageName);
+    }
 
-            File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                    context.getString(R.string.app_name) + "/" + backupFolder + "/" + myApplicationName);
+    @Nullable
+    public String getServiceApkPath() {
+        Context context = InAppShareControl.getInstance().getAppShareContext();
 
-            if (file.exists()) {
+        String myServiceAppPackageName = "com.w3engineers.meshrnd";
+        String myServiceAppName = "TelemeshService";
 
-                PackageInfo myPackageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-
-                PackageManager packageManager = context.getPackageManager();
-                PackageInfo packageInfo = packageManager.getPackageArchiveInfo(file.getAbsolutePath(), 0);
-                int versionCode = packageInfo.versionCode;
-
-                if (versionCode != myPackageInfo.versionCode) {
-                    return backupApkAndGetPath(context);
-                } else {
-                    return file.getAbsolutePath();
-                }
-            } else {
-                return backupApkAndGetPath(context);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        return backupApkAndGetPath(context);
+        return backupApkAndGetPath(context, myServiceAppName, myServiceAppPackageName);
     }
 
     /**
@@ -171,15 +162,13 @@ public class InAppShareUtil {
      * @return - saved apk path
      */
     @Nullable
-    public String backupApkAndGetPath(@NonNull Context context) {
+    public String backupApkAndGetPath(@NonNull Context context, String appName, String packageName) {
 
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         List pkgAppsList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
-        String myApplicationPackageName = context.getPackageName();
-        String myApplicationName = context.getResources().getString(R.string.app_name);
         String backupFolder = ".backup";
 
         for (Object object : pkgAppsList) {
@@ -191,8 +180,8 @@ public class InAppShareUtil {
 
                 String file_name = resolveInfo.loadLabel(context.getPackageManager()).toString();
 
-                if (file_name.equalsIgnoreCase(myApplicationName) &&
-                        appFile.toString().contains(myApplicationPackageName)) {
+                if (file_name.equalsIgnoreCase(appName) &&
+                        appFile.toString().contains(packageName)) {
 
                     File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
                             context.getString(R.string.app_name));

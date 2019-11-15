@@ -41,6 +41,7 @@ public class InstantServer {
      * Response status type
      */
     private String filePath;
+    private String serviceApkPath;
 
     /**
      * Response mime type
@@ -78,6 +79,11 @@ public class InstantServer {
         return this;
     }
 
+    public InstantServer setServiceFilePath(@NonNull String serviceApkPath) {
+        this.serviceApkPath = serviceApkPath;
+        return this;
+    }
+
     /**
      * Purpose of this callback is
      * How amount of data has been passed
@@ -100,17 +106,15 @@ public class InstantServer {
         try {
             final ServerSocket serverSocket = new ServerSocket(port);
             final String fileLocation = filePath;
-            thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            Socket socket = serverSocket.accept();
-                            new HTTPRequestSession(socket, fileLocation);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            final String serviceFileLocation = serviceApkPath;
+            thread = new Thread(() -> {
+                try {
+                    while (true) {
+                        Socket socket = serverSocket.accept();
+                        new HTTPRequestSession(socket, fileLocation, serviceFileLocation);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
 
@@ -152,7 +156,7 @@ public class InstantServer {
          */
         private String HTTP_OK = "200 OK", HTTP_RANGE_NOT_SATISFIABLE = "416 Requested Range Not Satisfiable",
                 HTTP_PARTIALCONTENT = "206 Partial Content",
-                HTTP_NOTMODIFIED = "304 Not Modified", filePath;
+                HTTP_NOTMODIFIED = "304 Not Modified", filePath, serviceApkPath;
 
         /**
          * Response mime type
@@ -178,9 +182,10 @@ public class InstantServer {
          * When server got any type of information
          * then it starts its session
          */
-        HTTPRequestSession(Socket socket, String filePath) {
+        HTTPRequestSession(Socket socket, String filePath, String serviceApkPath) {
             this.filePath = filePath;
             this.socket = socket;
+            this.serviceApkPath = serviceApkPath;
             Thread thread = new Thread(this);
             thread.setDaemon(true);
             thread.start();
@@ -263,7 +268,9 @@ public class InstantServer {
             try {
 
                 if (uri.contains("TeleMesh")) {
-                    response = prepareFile(header);
+                    response = prepareFile(header, false);
+                } else if(uri.contains("TelemeshService")) {
+                    response = prepareFile(header, true);
                 } else {
                     if (uri.contains(FILE_TYPE_CSS)) {
                         response = new Response(HTTP_OK, MIME_CSS, InAppShareWebController.getInAppShareWebController().getWebSupportFile(uri));
@@ -294,15 +301,18 @@ public class InstantServer {
          * @return a response which contains the input stream of selected file,
          * status and mime type also
          */
-        private Response prepareFile(Properties header) {
+        private Response prepareFile(Properties header, boolean isServiceApk) {
             Response response = null;
             String mime = MIME_DEFAULT_BINARY;
 
             try {
-                File f = new File(filePath);
+
+                String filePath = isServiceApk ? this.serviceApkPath : this.filePath;
+
+                File file = new File(filePath);
 
                 // Calculate etag
-                String etag = Integer.toHexString((f.getAbsolutePath() + f.lastModified() + "" + f.length()).hashCode());
+                String etag = Integer.toHexString((file.getAbsolutePath() + file.lastModified() + "" + file.length()).hashCode());
 
                 // Support (simple) skipping:
                 long startFrom = 0;
@@ -324,7 +334,7 @@ public class InstantServer {
                 }
 
                 // Change return code and add Content-Range header when skipping is requested
-                long fileLen = f.length();
+                long fileLen = file.length();
                 if (range != null && startFrom >= 0) {
                     if (startFrom >= fileLen) {
                         response = new Response(HTTP_RANGE_NOT_SATISFIABLE, MIME_PLAINTEXT, "");
@@ -337,7 +347,7 @@ public class InstantServer {
                         if (newLen < 0) newLen = 0;
 
                         final long dataLen = newLen;
-                        FileInputStream fis = new FileInputStream(f) {
+                        FileInputStream fis = new FileInputStream(file) {
                             public int available() throws IOException {
                                 return (int) dataLen;
                             }
@@ -353,7 +363,7 @@ public class InstantServer {
                     if (etag.equals(header.getProperty("if-none-match")))
                         response = new Response(HTTP_NOTMODIFIED, mime, "");
                     else {
-                        response = new Response(HTTP_OK, mime, new FileInputStream(f));
+                        response = new Response(HTTP_OK, mime, new FileInputStream(file));
                         response.addHeader("Content-Length", "" + fileLen);
                         response.addHeader("ETag", etag);
                     }

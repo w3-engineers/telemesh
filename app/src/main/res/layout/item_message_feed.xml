@@ -28,8 +28,8 @@
             android:layout_width="@dimen/width_10"
             android:layout_height="@dimen/height_10"
             android:layout_marginStart="@dimen/margin_10"
-            android:visibility="@{feedEntity.feedReadStatus ? View.INVISIBLE : View.VISIBLE}"
             android:background="@drawable/circle_primary_dark"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +55,9 @@
             android:layout_marginStart="@dimen/margin_10"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/unicef"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_18"
+            android:textColor="@color/message_text_color"
+            android:textSize="@dimen/text_size_16"
+            android:typeface='@{feedEntity.feedReadStatus ?"bold" : "normal"}'
             app:layout_constraintLeft_toRightOf="@+id/sender_icon"
             app:layout_constraintStart_toEndOf="@+id/sender_icon"
             app:layout_constraintTop_toTopOf="@+id/sender_icon" />
@@ -69,7 +70,7 @@
             android:layout_marginBottom="@dimen/margin_5"
             android:fontFamily="@font/poppins_regular"
             android:text="@{TimeUtil.getBroadcastTime(feedEntity.feedTime)}"
-            android:textColor="@color/light_grey"
+            android:textColor="@color/message_text_color"
             android:textSize="@dimen/text_size_12"
             app:layout_constraintBottom_toBottomOf="@+id/sender_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,8 +86,8 @@
             android:fontFamily="@font/poppins_regular"
             android:maxLines="2"
             android:text="@{feedEntity.feedDetail}"
-            android:textColor="@color/deep_layer_grey"
-            android:textSize="@dimen/text_size_12"
+            android:textColor="@{feedEntity.feedReadStatus?@color/hint_text_color:@color/message_text_color}"
+            android:textSize="@dimen/text_size_14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/sender_icon"
             app:layout_constraintRight_toRightOf="parent"
@@ -97,16 +98,10 @@
             android:id="@+id/bottom_divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginStart="@dimen/margin_15"
-            android:layout_marginLeft="@dimen/margin_15"
-            android:layout_marginEnd="@dimen/margin_15"
-            android:layout_marginRight="@dimen/margin_15"
-            android:background="@color/grey_300"
+            android:background="@color/divider_color"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/sender_time"
+            app:layout_constraintStart_toStartOf="@+id/sender_name" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

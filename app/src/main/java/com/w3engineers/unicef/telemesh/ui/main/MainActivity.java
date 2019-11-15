@@ -154,7 +154,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.text_view_background) {
-            disableLoading();
+           // disableLoading();
         }
     }
 

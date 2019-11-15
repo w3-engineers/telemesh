@@ -100,5 +100,8 @@
     <string name="import_my_profile">import my profile</string>
     <string name="scan_my_profile_qr">scan my profile qr</string>
     <string name="search_background">search background</string>
+    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit PIN for your account security.</string>
+    <string name="pin_instruction">Please keep your PIN in a safe place. It is essential for recovering your account.</string>
+    <string name="skip">Skip</string>
 
 </resources>

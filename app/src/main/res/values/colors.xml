@@ -68,4 +68,12 @@
 
     <color name="divider_same_color">#0E3B88</color>
 
+    <color name="password_border_color">#E4E4E4</color>
+
+    <color name="instruction_background">#FFF2B5</color>
+
+    <color name="skip_text_color">#7F7F7F</color>
+
+    <color name="profile_bg">#E6EAF2</color>
+
 </resources>

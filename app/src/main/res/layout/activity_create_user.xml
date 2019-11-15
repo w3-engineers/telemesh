@@ -172,7 +172,6 @@
                     android:clickable="false"
                     android:text="@string/signup"
                     android:textColor="@color/new_user_button_color"
-                    android:textSize="@dimen/text_size_18"
                     app:bb_drawable="@drawable/ractangular_white"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />

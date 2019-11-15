@@ -19,6 +19,7 @@ public class Constants {
         int DELAY_INTERVAL = 3000;
         int DOUBLE_PRESS_INTERVAL = 2000;
         int MINIMUM_TEXT_LIMIT = 2;
+        int MINIMUM_PASSWORD_LIMIT = 8;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
         int INTEGER_VALUE_ZERO = 0;
@@ -54,6 +55,11 @@ public class Constants {
     public interface drawables {
         String AVATAR_IMAGE = "avatar";
         String AVATAR_DRAWABLE_DIRECTORY = "mipmap";
+    }
+
+    public interface IntentKeys {
+        String USER_NAME = "user_name";
+        String AVATAR_INDEX = "avatar_index";
     }
 
     public interface MessageStatus {

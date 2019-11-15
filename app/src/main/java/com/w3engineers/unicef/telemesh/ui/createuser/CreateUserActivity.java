@@ -24,6 +24,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
@@ -34,6 +35,10 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
+
+    public static CreateUserActivity sInstance;
+    private boolean isLoadAccount;
+
     @NonNull
     public static String IMAGE_POSITION = "image_position";
 
@@ -69,6 +74,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextName);
+
+        sInstance = this;
     }
 
     private void nextButtonControl(String nameText) {
@@ -135,7 +142,11 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         switch (id) {
             case R.id.button_signup:
-                saveData();
+                if (isLoadAccount) {
+                    saveData();
+                } else {
+                    goToPasswordPage();
+                }
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
@@ -164,6 +175,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sInstance = null;
+    }
+
     private void saveData() {
         if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
             requestMultiplePermissions();
@@ -180,5 +197,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             startActivity(intent);
             finish();
         }
+    }
+
+    private void goToPasswordPage() {
+        Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
+        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText());
+        intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
+        startActivity(intent);
     }
 }

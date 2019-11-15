@@ -76,20 +76,21 @@ public class MeshDataSource extends ViperUtil {
      * @param dataModel -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
-    public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId) {
+    public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId, boolean isNotificationEnable) {
 
         dataModel.setUserId(receiverId);
 
         ViperData viperData = new ViperData();
         viperData.rawData = dataModel.getRawData();
         viperData.dataType = dataModel.getDataType();
+        viperData.isNotificationEnable = isNotificationEnable;
 
         broadcastManager.addBroadCastMessage(getMeshDataTask(viperData, receiverId));
     }
 
-    public void DataSend(@NonNull DataModel rmDataModelBuilder, @NonNull List<String> receiverIds) {
+    public void DataSend(@NonNull DataModel rmDataModelBuilder, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
         for (String receiverId : receiverIds) {
-            DataSend(rmDataModelBuilder, receiverId);
+            DataSend(rmDataModelBuilder, receiverId, isNotificationEnable);
         }
     }
 

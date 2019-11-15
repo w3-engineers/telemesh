@@ -10,6 +10,7 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
@@ -211,7 +212,16 @@ public abstract class ViperUtil {
 
     private void sendDataToMesh(String nodeId, ViperData viperData, String sendId) {
         byte[] data = ViperDataProcessor.getInstance().getDataFormatToJson(viperData);
-        viperClient.sendMessage(myUserId, nodeId, sendId, data);
+
+        boolean isNotificationEnable = viperData.isNotificationEnable;
+
+        Log.v("MIMO_SAHA:", "Notification enable " + isNotificationEnable);
+
+        if (isNotificationEnable) {
+            viperClient.sendMessage(myUserId, nodeId, sendId, data);
+        } else {
+            viperClient.sendMessage(myUserId, nodeId, sendId, data);
+        }
     }
 
     public int getUserActiveStatus(String nodeId) {

@@ -271,7 +271,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
                         dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId());
+                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                     }
                 }, Throwable::printStackTrace));
 
@@ -286,7 +286,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
                         dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId());
+                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                     }
                 }, Throwable::printStackTrace));
     }
@@ -297,14 +297,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * @param data -> raw data
      * @param type -> data type
      */
-    private void dataSend(@NonNull byte[] data, byte type, String userId) {
+    private void dataSend(@NonNull byte[] data, byte type, String userId, boolean isNotificationEnable) {
 
-        DataModel rmDataModel = new DataModel()
+        DataModel dataModel = new DataModel()
                 .setRawData(data)
                 .setDataType(type);
 
         ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, userId));
+        service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
     }
 
     /**
@@ -669,7 +669,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
-        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList));
+        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList, false));
     }
 
     private void syncUserWithBroadcastMessage(String userId) {
@@ -689,7 +689,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             getOthersTrackEntity(feedEntity.getFeedId(), userId));
                 }
                 String bulletinString = new Gson().toJson(feedEntity.toTelemeshBulletin());
-                dataSend(bulletinString.getBytes(), Constants.DataType.MESSAGE_FEED, userId);
+                dataSend(bulletinString.getBytes(), Constants.DataType.MESSAGE_FEED, userId, false);
             }
         }
     }
@@ -779,7 +779,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
-            dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId);
+            dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId, false);
         }
     }
 
@@ -805,7 +805,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 rightMeshDataSource = MeshDataSource.getRmDataSource();
             }
             for (String sellersId : rightMeshDataSource.getAllSellers()) {
-                dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId);
+                dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId, false);
             }
         }
     }
@@ -914,7 +914,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void versionMessageHandshaking(String userId) {
         InAppUpdateModel model = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
         String data = new Gson().toJson(model);
-        dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId);
+        dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
 
     }
 
@@ -943,7 +943,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             InAppUpdateModel model = new InAppUpdateModel();
             model.setUpdateLink(myServerLink);
             String data = new Gson().toJson(model);
-            dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId);
+            dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
 
             Log.d("InAppUpdateTest", "My version is Big: ");
         } else {

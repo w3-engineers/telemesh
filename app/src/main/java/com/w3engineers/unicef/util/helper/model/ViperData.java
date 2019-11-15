@@ -12,5 +12,5 @@ public class ViperData {
 
     public byte dataType;
     public byte[] rawData;
-
+    public boolean isNotificationEnable;
 }

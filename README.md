@@ -19,7 +19,7 @@ The freedom of connectivity to the edge of the world
 
 ## Telemesh Documentation
 
-Please follow this [wiki documentation](https://telemesh.readthedocs.io/en/latest/index.html) to get detail about Telemesh
+Please follow this [Technical documentation](https://telemesh.readthedocs.io/en/latest/index.html) to get detail about Telemesh
 
     
 

@@ -160,7 +160,7 @@ public class MeshContactsFragment extends BaseFragment {
 
     }
 
-    private DisposableObserver<String> searchContacts() {
+    public DisposableObserver<String> searchContacts() {
         return new DisposableObserver<String>() {
 
             boolean isSearchStart = false;
@@ -200,7 +200,7 @@ public class MeshContactsFragment extends BaseFragment {
 
             mSearchItem = menu.findItem(R.id.action_search);
             // Resolve search option visibility problem when contact is appeared from starting point
-            searchViewControl(userEntityList);
+ /*           searchViewControl(userEntityList);
 
             mSearchView = mSearchItem.getActionView().findViewById(R.id.search_view);
 
@@ -226,7 +226,7 @@ public class MeshContactsFragment extends BaseFragment {
 
             searchCollapseListener(mSearchItem, mSearchView);
 
-            initSearchView(mSearchView);
+            initSearchView(mSearchView);*/
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -234,9 +234,9 @@ public class MeshContactsFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            mSearchView.setBackgroundColor(getResources().getColor(R.color.white));
-            Log.d("UiTest", "Search click call");
-            //mSearchView.onActionViewExpanded();
+            if (getActivity() != null) {
+                ((MainActivity) getActivity()).showSearchBar();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

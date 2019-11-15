@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.work.WorkInfo;
@@ -25,6 +27,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
 import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
 import com.w3engineers.mesh.util.DiagramUtil;
+import com.w3engineers.mesh.util.ViewUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -37,6 +40,12 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +57,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     NotificationBadgeBinding notificationBadgeBinding;
     private static MainActivity sInstance;
     private BulletinTimeScheduler sheduler;
+    private Fragment mCurrentFragment;
 
     @Nullable
     public static MainActivity mainActivity;
@@ -97,7 +107,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         mViewModel.setServerAppShareCountWorkerRequest();
         mViewModel.setLocalAppShareCountWorkerRequest();
 
-        setClickListener(binding.textViewBackground);
+        setClickListener(binding.textViewBackground, binding.searchBar.imageViewBack, binding.searchBar.imageViewCross);
 
         mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
 
@@ -136,6 +146,8 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         DiagramUtil.on(this).start();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
+
+        initSearchListener();
     }
 
     public static MainActivity getInstance() {
@@ -153,8 +165,16 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.text_view_background) {
-           // disableLoading();
+        switch (view.getId()) {
+            case R.id.text_view_background:
+                // disableLoading();
+                break;
+            case R.id.image_view_cross:
+                binding.searchBar.editTextSearch.setText("");
+                break;
+            case R.id.image_view_back:
+                hideSearchBar();
+                break;
         }
     }
 
@@ -189,6 +209,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
             menuItem.setChecked(true);
             mFragment = new MeshContactsFragment();
         }
+        mCurrentFragment = mFragment;
         loadFragment(mFragment, getString(R.string.title_contacts_fragment));
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
@@ -248,6 +269,7 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
               /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
                         , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
+
                 break;
             case R.id.action_setting:
                 toolbarTitle = getString(R.string.title_settings_fragment);
@@ -255,6 +277,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
                 break;
         }
         if (mFragment != null && !toolbarTitle.equals("")) {
+            mCurrentFragment = mFragment;
+
+            binding.searchBar.editTextSearch.setText("");
+            hideSearchBar();
+
             loadFragment(mFragment, toolbarTitle);
         }
     }
@@ -302,6 +329,21 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         binding.mainView.setVisibility(View.VISIBLE);
     }
 
+    public void showSearchBar() {
+        binding.toolbarMain.setVisibility(View.INVISIBLE);
+        binding.searchBar.getRoot().setVisibility(View.VISIBLE);
+
+        binding.searchBar.editTextSearch.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(binding.searchBar.editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public void hideSearchBar() {
+        binding.toolbarMain.setVisibility(View.VISIBLE);
+        binding.searchBar.getRoot().setVisibility(View.INVISIBLE);
+        UIHelper.hideKeyboardFrom(this, binding.searchBar.editTextSearch);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -318,7 +360,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
+            binding.searchBar.editTextSearch.setText("");
+            hideSearchBar();
+            return;
+        } else if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
         }
@@ -352,6 +398,17 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
         sheduler.initNoInternetCallback(isMobileDataOn -> {
             showHideInternetWarning(myMode, isMobileDataOn);
         });
+    }
+
+    private void initSearchListener() {
+        if (mCurrentFragment != null
+                && mCurrentFragment instanceof MeshContactsFragment) {
+            getCompositeDisposable().add(UIHelper.fromSearchEditText(binding.searchBar.editTextSearch)
+                    .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
+                    .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
+                    .distinctUntilChanged()
+                    .subscribeWith(((MeshContactsFragment) mCurrentFragment).searchContacts()));
+        }
     }
 
     /*@Override

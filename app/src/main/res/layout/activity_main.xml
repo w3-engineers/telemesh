@@ -33,9 +33,19 @@
                 layout="@layout/app_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_no_internet" />
+
+            <include
+                android:id="@+id/search_bar"
+                layout="@layout/search_page"
+                android:visibility="invisible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_no_internet" />
+
 
             <FrameLayout
                 android:id="@+id/fragment_container"

@@ -1,8 +1,25 @@
 .. prerequisities:
 
+=============
 Prerequisites
--------------
+=============
 
--  Mesh networking technology.
--  Android device with Wifi, WifiDirect, Bluetooth or Bluetooth Low
-   Energy (BLE) support.
+.. toctree::
+   :maxdepth: 2
+
+   android_core
+   user_interface
+   data_management
+   testing
+
+
+
+
+
+
+
+
+
+
+
+

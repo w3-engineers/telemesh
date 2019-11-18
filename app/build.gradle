@@ -160,6 +160,8 @@ dependencies {
 
     implementation deps.ripplebg.ripple
 
+    implementation deps.qrgenerator.qr
+
     api deps.framework
     api deps.mesh
     api deps.pay

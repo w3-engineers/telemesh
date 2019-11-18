@@ -71,6 +71,7 @@ versions.work = "1.0.1"
 versions.location = "16.0.0"
 versions.appupdater = "2.7"
 versions.ripplebg = "1.0.1"
+versions.qrgenerator = "1.0.3"
 ext.versions = versions
 
 def deps = [:]
@@ -250,6 +251,10 @@ deps.appupdater = appupdater
 def ripplebg = [:]
 ripplebg.ripple = "com.skyfishjy.ripplebackground:library:$versions.ripplebg"
 deps.ripplebg = ripplebg
+
+def qrgenerator = [:]
+qrgenerator.qr = "androidmads.library.qrgenearator:QRGenearator:$versions.qrgenerator"
+deps.qrgenerator = qrgenerator
 
 ext.deps = deps
 

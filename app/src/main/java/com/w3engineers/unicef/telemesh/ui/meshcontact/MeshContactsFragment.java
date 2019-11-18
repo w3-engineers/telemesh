@@ -169,7 +169,7 @@ public class MeshContactsFragment extends BaseFragment {
             public void onNext(String string) {
 
                 if (!isSearchStart) {
-                    searchLoading();
+                    //searchLoading();
                     isSearchStart = true;
                 }
 

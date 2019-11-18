@@ -47,6 +47,7 @@ public class Constants {
         String MY_MODE = "my_mode";
         String MY_PASSWORD = "my_password";
         String MY_WALLET_PATH = "my_wallet_path";
+        String MY_WALLET_IMAGE = "my_wallet_image";
         String IS_RESTART = "is_restart";
     }
 

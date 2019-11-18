@@ -156,8 +156,8 @@
 
         <ImageView
             android:id="@+id/image_view_qr"
-            android:layout_width="@dimen/width_100"
-            android:layout_height="@dimen/height_100"
+            android:layout_width="@dimen/width_150"
+            android:layout_height="@dimen/height_150"
             android:layout_marginTop="@dimen/margin_16"
             android:contentDescription="@string/user_id_qr_image"
             app:layout_constraintEnd_toEndOf="parent"

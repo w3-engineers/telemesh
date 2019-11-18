@@ -22,7 +22,6 @@ import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.TransportManager;
 import com.w3engineers.mesh.TransportState;
-import com.w3engineers.mesh.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.HandlerUtil;
 import com.w3engineers.mesh.wifi.dispatch.LinkStateListener;

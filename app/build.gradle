@@ -159,6 +159,7 @@ dependencies {
     implementation deps.appupdater.update
 
     implementation deps.ripplebg.ripple
+    implementation deps.qrgenerator.qr
 
     api deps.app_share
     implementation deps.viper

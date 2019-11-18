@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#06AEC6</color>
-    <color name="colorPrimaryDark">#06AEC6</color>
+    <color name="colorPrimary">#083480</color>
+    <color name="colorPrimaryDark">#052459</color>
     <color name="colorAccent">#06AEC6</color>
     <color name="title_color">#3C3C3C</color>
+    <color name="toolbar_color">#083480</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="colorGradientPrimary">#18BC4E</color>
+    <color name="link_color">#008DFF</color>
+
+    <color name="description_color">#E6212121</color>
+
+    <color name="or_text_color">#B3212121</color>
+
+    <color name="app_share_background_color">#F5F5F5</color>
+
+    <color name="horizontal_line">#E0E0E0</color>
+
+    <color name="profile_bg">#E6EAF2</color>
 
 </resources>

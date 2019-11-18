@@ -58,7 +58,7 @@ public class InAppShareActivity extends AppCompatActivity {
 
         setStatusBarColor();
 
-        setTitle(getString(R.string.settings_share_app));
+        setTitle(getString(R.string.share_app_title));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -159,7 +159,7 @@ public class InAppShareActivity extends AppCompatActivity {
 
         int startIndex = passText.length() - pass.length();
 
-        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorGradientPrimary)),
+        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.link_color)),
                 startIndex, passText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spannableString;

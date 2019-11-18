@@ -27,13 +27,14 @@ public class SecurityViewModel extends BaseRxAndroidViewModel {
         super(application);
     }
 
-    boolean storeData(@Nullable String userName, int imageIndex) {
+    boolean storeData(@Nullable String userName, int imageIndex, String password) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
         sharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 

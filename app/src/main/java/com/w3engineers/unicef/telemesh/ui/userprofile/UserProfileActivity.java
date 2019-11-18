@@ -7,11 +7,14 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Base64;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
@@ -19,6 +22,9 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
+import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -62,7 +68,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         boolean isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
 
-        setClickListener(mBinding.opBack, mBinding.imageViewIdCopy,mBinding.buttonExportProfile);
+        setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile);
 
         if (isMyProfile) {
             SharedPref sharedPref = SharedPref.getSharedPref(this);
@@ -77,9 +83,14 @@ public class UserProfileActivity extends TelemeshBaseActivity {
                 mBinding.icValid.setVisibility(View.GONE);
             }*/
 
-            mBinding.buttonExportProfile.setVisibility(View.VISIBLE);
+            mBinding.buttonExportProfile.setVisibility(View.INVISIBLE);
         } else {
             mBinding.buttonExportProfile.setVisibility(View.GONE);
+        }
+
+        Bitmap qrImage = getWalletQr();
+        if (qrImage != null) {
+            mBinding.imageViewQr.setImageBitmap(qrImage);
         }
     }
 
@@ -129,6 +140,13 @@ public class UserProfileActivity extends TelemeshBaseActivity {
                 return (T) ServiceLocator.getInstance().getUserProfileViewModel(getApplication());
             }
         }).get(UserProfileViewModel.class);
+    }
+
+    private Bitmap getWalletQr() {
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        String bitmapString = sharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE);
+        byte[] encodeByte = Base64.decode(bitmapString, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
     }
 
     /*@Override

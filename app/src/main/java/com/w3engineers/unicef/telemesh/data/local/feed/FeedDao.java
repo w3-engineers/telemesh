@@ -27,4 +27,7 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
     @Query("UPDATE " + TableNames.FEED + " SET " + ColumnNames.COLUMN_FEED_READ_STATUS + " = 1 WHERE "
             + ColumnNames.COLUMN_FEED_ID + " = :feedId")
     public abstract long updateFeedMessageReadStatusByMessageId(@NonNull String feedId);
+
+    @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_READ_STATUS + " = 0 ")
+    public abstract LiveData<List<FeedEntity>> getAllUnreadFeed();
 }

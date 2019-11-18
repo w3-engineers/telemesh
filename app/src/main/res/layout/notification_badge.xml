@@ -10,10 +10,10 @@
 
         <TextView
             android:id="@+id/text_view_badge_count"
-            android:layout_width="@dimen/width_20"
-            android:layout_height="@dimen/height_20"
+            android:layout_width="@dimen/width_15"
+            android:layout_height="@dimen/height_15"
             android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginEnd="@dimen/margin_30"
+            android:layout_marginEnd="@dimen/margin_35"
             android:background="@drawable/circular_badge"
             android:gravity="center"
             android:maxLines="@integer/max_line_1"

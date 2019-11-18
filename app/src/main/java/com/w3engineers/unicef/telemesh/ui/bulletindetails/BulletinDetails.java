@@ -11,15 +11,14 @@ Proprietary and confidential
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBinding;
 
-public class BulletinDetails extends RmBaseActivity {
+public class BulletinDetails extends TelemeshBaseActivity {
 
     @Override
     protected int getToolbarId() {
@@ -34,6 +33,11 @@ public class BulletinDetails extends RmBaseActivity {
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
     }
 
     @Override
@@ -59,8 +63,8 @@ public class BulletinDetails extends RmBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
-    }
+    }*/
 }

@@ -160,10 +160,9 @@ dependencies {
 
     implementation deps.ripplebg.ripple
 
-    api deps.framework
-    api deps.mesh
-    api deps.pay
     api deps.app_share
+    implementation deps.viper
+    debugImplementation deps.inappstoragereader
 }
 
 coveralls {

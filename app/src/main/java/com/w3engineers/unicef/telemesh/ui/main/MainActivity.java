@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -24,10 +23,8 @@ import androidx.work.WorkInfo;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
-import com.w3engineers.mesh.util.DiagramUtil;
-import com.w3engineers.mesh.util.ViewUtil;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -39,7 +36,6 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
-import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.concurrent.TimeUnit;
@@ -48,7 +44,7 @@ import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MainActivity extends RmBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
@@ -75,6 +71,11 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
     }
 
     @Override
@@ -143,7 +144,17 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 //        mViewModel.makeSendingMessageAsFailed();
 
 
-        DiagramUtil.on(this).start();
+       /* new Handler().postDelayed(() -> {
+            AppShareCountEntity entity = new AppShareCountEntity();
+            entity.setCount(1);
+            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            entity.setUserId(myId);
+            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
+            List<AppShareCountEntity> list = new ArrayList<>();
+            list.add(entity);
+            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
+        }, 10000);*/
+        /*DiagramUtil.on(this).start();*/
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
 
@@ -350,13 +361,6 @@ public class MainActivity extends RmBaseActivity implements NavigationView.OnNav
 //        mViewModel.userOfflineProcess();
         sInstance = null;
     }
-
-    @NonNull
-    @Override
-    protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
-    }
-
 
     @Override
     public void onBackPressed() {

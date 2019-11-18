@@ -12,9 +12,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
@@ -27,7 +26,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  * Proprietary and confidential
  * ============================================================================
  */
-public class AboutUsActivity extends RmBaseActivity {
+public class AboutUsActivity extends TelemeshBaseActivity {
 
     private ActivityAboutUsBinding mBinding;
 
@@ -46,6 +45,10 @@ public class AboutUsActivity extends RmBaseActivity {
         return R.color.colorPrimaryDark;
     }
 
+    @Override
+    protected BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
 
     @Override
     protected void startUI() {
@@ -84,12 +87,6 @@ public class AboutUsActivity extends RmBaseActivity {
             }
         }).get(AboutUsViewModel.class);
     }
-
-    @Override
-    protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
-    }
-
 
     private void stripUnderlines(TextView textView) {
         Spannable s = new SpannableString(textView.getText());

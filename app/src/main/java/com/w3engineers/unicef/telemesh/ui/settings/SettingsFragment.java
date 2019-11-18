@@ -17,11 +17,8 @@ import android.widget.RadioGroup;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.connectivitydiagram.ConnectivityDiagramActiviy;
-import com.w3engineers.mesh.datasharing.ui.dataplan.DataPlanActivity;
-import com.w3engineers.mesh.datasharing.ui.wallet.WalletActivity;
-import com.w3engineers.mesh.meshlog.ui.meshloghistory.MeshLogHistoryActivity;
-import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
+import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
@@ -118,7 +115,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_data_plan:
                 if (Constants.IsMeshInit) {
-                    startActivity(new Intent(getActivity(), DataPlanActivity.class));
+                    DataPlanManager.openActivity(mActivity);
                 } else {
                     Toaster.showShort(getString(R.string.mesh_not_initiated));
                 }
@@ -126,16 +123,16 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
             case R.id.layout_open_wallet:
                 if (Constants.IsMeshInit) {
-                    startActivity(new Intent(mActivity, WalletActivity.class));
+                    WalletManager.openActivity(mActivity);
                 } else {
                     Toaster.showShort(getString(R.string.mesh_not_initiated));
                 }
                 break;
             case R.id.layout_show_log:
-                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
+//                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
                 break;
             case R.id.layout_diagram_map:
-                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
+//                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
                 break;
             case R.id.layout_app_update:
                 if (MainActivity.getInstance() == null) return;

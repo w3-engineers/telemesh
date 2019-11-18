@@ -3,8 +3,8 @@ package com.w3engineers.unicef.telemesh.data.provider;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -44,7 +44,6 @@ public class ServiceLocator extends BaseServiceLocator {
 
     @NonNull
     public static ServiceLocator getInstance() {
-
         return ServiceLocatorHolder.serviceLocator;
     }
 
@@ -110,15 +109,19 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
 
-    @NonNull
+    /*@NonNull
     @Override
     public BaseMeshDataSource getRmDataSource() {
         return RmDataHelper.getInstance().initRM(Source.getDbSource());
+    }*/
+
+    @Override
+    public void initViper() {
+        RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
     public void resetMesh() {
         RmDataHelper.getInstance().restartMesh();
-//        restartRmService();
     }
 
     public void restartRmService() {

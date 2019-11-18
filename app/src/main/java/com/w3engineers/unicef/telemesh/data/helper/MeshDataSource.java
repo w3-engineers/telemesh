@@ -3,26 +3,19 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
-import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.List;
-
-//import com.w3engineers.unicef.telemesh.TeleMeshUser.RMDataModel;
 
 /*
  * ============================================================================
@@ -31,14 +24,14 @@ import java.util.List;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshDataSource extends BaseMeshDataSource {
+public class MeshDataSource extends ViperUtil {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;
     private BroadcastManager broadcastManager;
 
-    MeshDataSource(@NonNull byte[] profileInfo) {
-        super(App.getContext(), profileInfo);
+    MeshDataSource(@NonNull UserModel userModel) {
+        super(userModel);
         broadcastManager = BroadcastManager.getInstance();
     }
 
@@ -54,25 +47,27 @@ public class MeshDataSource extends BaseMeshDataSource {
                     .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                     .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
-            String userString = new Gson().toJson(userModel);
-
-            byte[] bytes = userString.getBytes();
-            rightMeshDataSource = new MeshDataSource(bytes);
+            rightMeshDataSource = new MeshDataSource(userModel);
         }
         return rightMeshDataSource;
     }
 
     @Override
-    protected void onRmOn() {
+    protected void onMesh(String myMeshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
 
         Constants.IsMeshInit = true;
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, getMyMeshId());
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myMeshId);
+    }
+
+    @Override
+    protected void offMesh() {
+
     }
 
     public void stopAllServices() {
-        stopAllService();
+        // TODO stop service during mode change from data plan mode
     }
 
     /**
@@ -81,47 +76,42 @@ public class MeshDataSource extends BaseMeshDataSource {
      * @param dataModel -> A generic data model which contains userData, type and peerId
      * @return return the send message id
      */
-    public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId) {
+    public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId, boolean isNotificationEnable) {
 
-        DataModel rmDataModel = dataModel.setUserId(receiverId);
+        dataModel.setUserId(receiverId);
 
-        MeshData meshData = new MeshData();
-        meshData.mType = rmDataModel.getDataType();
-        meshData.mData = rmDataModel.getRawData();
-        meshData.mMeshPeer = new MeshPeer(rmDataModel.getUserId());
+        ViperData viperData = new ViperData();
+        viperData.rawData = dataModel.getRawData();
+        viperData.dataType = dataModel.getDataType();
+        viperData.isNotificationEnable = isNotificationEnable;
 
-        broadcastManager.addBroadCastMessage(getMeshDataTask(meshData));
+        broadcastManager.addBroadCastMessage(getMeshDataTask(viperData, receiverId));
     }
 
-    public void DataSend(@NonNull DataModel rmDataModelBuilder, @NonNull List<String> receiverIds) {
+    public void DataSend(@NonNull DataModel rmDataModelBuilder, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
         for (String receiverId : receiverIds) {
-            DataSend(rmDataModelBuilder, receiverId);
+            DataSend(rmDataModelBuilder, receiverId, isNotificationEnable);
         }
     }
 
-    private SendDataTask getMeshDataTask(MeshData meshData) {
-        return new SendDataTask().setMeshData(meshData).setBaseRmDataSource(this);
-    }
-
-    public void getMyCurrentMode() {
-        RmDataHelper.getInstance().onGetMyMode(getMyMode());
+    private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
+        return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
     }
 
     /**
      * During receive a peer this time onPeer api is execute
      *
-     * @param profileInfo -> Got a peer data (profile information and meshId)
+     * @param peerData -> Got a peer data (profile information)
      */
-    protected void onPeer(@NonNull BaseMeshData profileInfo) {
+    protected void peerAdd(String peerId, byte[] peerData) {
 
         try {
-            String userId = profileInfo.mMeshPeer.getPeerId();
 
-            String userString = new String(profileInfo.mData);
+            String userString = new String(peerData);
             UserModel userModel = new Gson().fromJson(userString, UserModel.class);
 
             if (userModel != null) {
-                userModel.setUserId(userId);
+                userModel.setUserId(peerId);
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
             }
         } catch (Exception e) {
@@ -129,85 +119,59 @@ public class MeshDataSource extends BaseMeshDataSource {
         }
     }
 
+    @Override
+    protected void peerAdd(String peerId, UserModel userModel) {
+
+        if (userModel != null) {
+            userModel.setUserId(peerId);
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+        }
+    }
+
     /**
      * When a peer is gone or switched the another network
      * this time onPeerGone api is executed
      *
-     * @param meshPeer - > It contains the peer id which is currently inactive in mesh
+     * @param peerId - > It contains the peer id which is currently inactive in mesh
      */
     @Override
-    protected void onPeerGone(@NonNull MeshPeer meshPeer) {
+    protected void peerRemove(@NonNull String peerId) {
 
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(meshPeer));
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(peerId));
     }
 
     /**
      * This api execute during we receive data from network
      *
-     * @param meshData -> Contains data and peer info also
+     * @param viperData -> Contains data and peer info also
      */
     @Override
-    protected void onData(@NonNull MeshData meshData) {
-        DataModel rmDataModel = new DataModel()
-                .setUserId(meshData.mMeshPeer.getPeerId())
-                .setRawData(meshData.mData)
-                .setDataType(meshData.mType);
+    protected void onData(@NonNull String peerId, ViperData viperData) {
+        DataModel dataModel = new DataModel()
+                .setUserId(peerId)
+                .setRawData(viperData.rawData)
+                .setDataType(viperData.dataType);
 
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().dataReceive(rmDataModel, true));
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().dataReceive(dataModel, true));
     }
 
     /**
      * The sending data status is success this time we got a success ack using this api
      *
-     * @param meshAcknowledgement -> Contains the success data id and user id
+     * @param messageId -> Contains the success data id and user id
      */
     @Override
-    protected void onAcknowledgement(@NonNull MeshAcknowledgement meshAcknowledgement) {
+    protected void onAck(@NonNull String messageId, int status) {
 
         DataModel rmDataModel = new DataModel()
-                .setDataTransferId(meshAcknowledgement.id)
-                .setAckSuccess(meshAcknowledgement.isSuccess);
+                .setDataTransferId(messageId)
+                .setAckSuccess(true);
 
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().ackReceive(rmDataModel, meshAcknowledgement.getStatus()));
-    }
-
-    @Override
-    @NonNull
-    protected String getOwnUserId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().ackReceive(rmDataModel, status));
     }
 
     @Override
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
-    }
-
-    @Override
-    protected void showLog(String log) {
-        // RmDataHelper.getInstance().showMeshLog(log);
-    }
-
-    @Override
-    protected void nodeIdDiscovered(String nodeId) {
-        RmDataHelper.getInstance().onlyNodeAdd(nodeId);
-    }
-
-    @Override
-    protected void onGetMyMode(int mode) {
-        Log.d("ModeTest", "Mesh data source: " + mode);
-        RmDataHelper.getInstance().onGetMyMode(mode);
-    }
-
-    @Override
-    protected void onRmOff() {
-        RmDataHelper.getInstance().stopMeshService();
-    }
-
-    /**
-     * For ReInitiating RM service need to reset rightmesh data source instance
-     */
-    protected void resetMeshService() {
-        restartMesh();
-//        rightMeshDataSource = null;
     }
 }

@@ -71,6 +71,8 @@ versions.work = "1.0.1"
 versions.location = "16.0.0"
 versions.appupdater = "2.7"
 versions.ripplebg = "1.0.1"
+versions.viper = "1.0.9"
+versions.in_app_db = "1.0.2"
 ext.versions = versions
 
 def deps = [:]
@@ -156,9 +158,6 @@ def glide = [:]
 glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
 glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
 deps.glide = glide
-deps.framework = project(':viper')
-deps.mesh = project(':meshlib')
-deps.pay = project(':paylib')
 deps.app_share = project(':appshare')
 deps.leak_canary = "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
 //Strom remote dependency
@@ -179,6 +178,8 @@ deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 deps.glide = "com.github.bumptech.glide:glide:$versions.glide"
 deps.rxlint_checker = "nl.littlerobots.rxlint:rxlint:$versions.rx_lint"
 deps.right_mesh = "io.left.rightmesh:lib-rightmesh-android:$versions.right_mesh"
+deps.viper = "com.github.w3-engineers:viper:$versions.viper"
+deps.inappstoragereader = "com.awesomedroidapps:inappstoragereader:$versions.in_app_db"
 ext.deps = deps
 
 def build_versions = [:]

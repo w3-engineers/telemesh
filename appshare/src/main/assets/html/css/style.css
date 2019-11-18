@@ -47,25 +47,49 @@ body {
     margin-top: 70px;
     padding: 0 10px;
 }
+.download {
+    font-size: 20px;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+.and-div {
+    font-size: 20px;
+    margin-top: 10px;
+    padding: 0 10px;
+}
 .home-download-btn {
-    background: #17AC82;
     color: #fff;
-    display: inline-block;
-    font-size: 25px;
-    margin-top: 27px;
-    min-width: 190px;
+    display: block;
+    font-size: 20px;
+    margin: 27px auto 0;
+    width: 220px;
     padding: 10px 20px;
     text-decoration: none;
 
-    background: -moz-linear-gradient(left, rgba(6,174,198,1) 0%, rgba(24,188,78,1) 100%);
-    background: -webkit-linear-gradient(left, rgba(6,174,198,1) 0%, rgba(24,188,78,1) 100%);
-    background: -o-linear-gradient(left, rgba(6,174,198,1) 0%, rgba(24,188,78,1) 100%);
-    background: -ms-linear-gradient(left, rgba(6,174,198,1) 0%, rgba(24,188,78,1) 100%);
-    background: linear-gradient(to right, rgba(6,174,198,1) 0%, rgba(24,188,78,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#06aec6', endColorstr='#18bc4e', GradientType=1 );
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     -ms-border-radius: 8px;
     border-radius: 8px;
+}
+
+.app-download-btn {
+    color: #fff;
+    display: inline-block;
+    font-size: 20px;
+    margin-top: 10px;
+    width: 220px;
+    padding: 10px 20px;
+    text-decoration: none;
+
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    border-radius: 8px;
+}
+.btn-first {
+    background-color: #1473E6;
+}
+.btn-second {
+    background-color: #052459;
 }
 /*end home page*/

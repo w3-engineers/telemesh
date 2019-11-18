@@ -20,7 +20,6 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.util.lib.mesh.MeshConfig;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;

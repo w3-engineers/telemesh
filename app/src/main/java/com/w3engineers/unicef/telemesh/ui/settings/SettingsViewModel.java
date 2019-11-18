@@ -8,7 +8,7 @@ import com.w3engineers.appshare.application.ui.InAppShareControl;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;

@@ -137,9 +137,13 @@ public class MeshContactsFragment extends BaseFragment {
         if (meshContactViewModel != null) {
             meshContactViewModel.openUserMessage().observe(this, userEntity -> {
 
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
-                startActivity(intent);
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideSearchBar();
+
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
+                    startActivity(intent);
+                }
 
             });
         }

@@ -13,6 +13,14 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityImportWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+
 public class ImportWalletActivity extends BaseActivity {
 
     private ActivityImportWalletBinding mBinding;

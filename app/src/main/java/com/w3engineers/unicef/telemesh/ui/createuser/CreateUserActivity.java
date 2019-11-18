@@ -215,7 +215,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void goToPasswordPage() {
         Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
-        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText());
+        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
         intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
         startActivity(intent);
     }

@@ -133,7 +133,7 @@ public class InAppShareActivity extends AppCompatActivity {
                 scrollView.setVisibility(View.VISIBLE);
 
                 // Expose all server side info
-                wifiId.setText("\"" + NetworkConfigureUtil.getInstance().getNetworkName() + "\"");
+                wifiId.setText(getHotspotText());
                 wifiPass.setText(getPasswordText());
                 wifiUrl.setText(InAppShareUtil.getInstance().serverAddress);
                 qrCode.setImageBitmap(InAppShareUtil.getInstance().serverAddressBitmap);
@@ -152,8 +152,23 @@ public class InAppShareActivity extends AppCompatActivity {
         });
     }
 
+    private SpannableString getHotspotText() {
+        String hotspot = NetworkConfigureUtil.getInstance().getNetworkName();
+        String hotspotText = String.format(getResources().getString(R.string.wifi), hotspot);
+
+        SpannableString spannableString = new SpannableString(hotspotText);
+
+        int startIndex = hotspotText.length() - hotspot.length();
+
+        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.link_color)),
+                startIndex, hotspotText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+
+    }
+
     private SpannableString getPasswordText() {
-        String pass = NetworkConfigureUtil.getInstance().getNetworkPass();
+        String pass = "\"" + NetworkConfigureUtil.getInstance().getNetworkName() + "\"";
         String passText = String.format(getResources().getString(R.string.using_password), pass);
         SpannableString spannableString = new SpannableString(passText);
 

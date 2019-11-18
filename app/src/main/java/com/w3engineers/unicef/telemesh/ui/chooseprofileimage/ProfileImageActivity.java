@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileImageBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
@@ -66,10 +67,15 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
         switch (id) {
             case R.id.menu_done:
-                Intent intent = getIntent();
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (selectedItem == -1) {
+                    Toaster.showShort(getResources().getString(R.string.select_avatar));
+                } else {
+                    Intent intent = getIntent();
+                    intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }

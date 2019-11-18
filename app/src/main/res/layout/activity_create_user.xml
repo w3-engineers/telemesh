@@ -80,6 +80,18 @@
                     app:layout_constraintStart_toStartOf="@+id/top_gradient"
                     app:layout_constraintTop_toTopOf="@+id/top_gradient" />
 
+                <TextView
+                    android:id="@+id/text_view_create_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_20"
+                    android:text="@string/create_profile"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_view_back"
+                    app:layout_constraintStart_toEndOf="@+id/image_view_back"
+                    app:layout_constraintTop_toTopOf="@+id/image_view_back" />
+
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"

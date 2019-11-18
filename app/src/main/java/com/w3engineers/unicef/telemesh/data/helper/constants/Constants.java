@@ -14,6 +14,8 @@ public class Constants {
     public static int INTERNET_ONLY = 3;
     public static int SELLER_MODE = 1;
 
+    public static String FILE_TYPE = "application/*";
+
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
@@ -43,6 +45,8 @@ public class Constants {
         String UPDATE_APP_VERSION = "update_app_version";
         String UPDATE_APP_URL = "update_app_url";
         String MY_MODE = "my_mode";
+        String MY_PASSWORD = "my_password";
+        String MY_WALLET_PATH = "my_wallet_path";
         String IS_RESTART = "is_restart";
     }
 
@@ -60,6 +64,8 @@ public class Constants {
     public interface IntentKeys {
         String USER_NAME = "user_name";
         String AVATAR_INDEX = "avatar_index";
+        String PASSWORD = "password";
+        String WALLET_PATH = "wallet_path";
     }
 
     public interface MessageStatus {

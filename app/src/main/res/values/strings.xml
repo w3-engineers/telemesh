@@ -105,5 +105,12 @@
     <string name="skip">Skip</string>
     <string name="clear_search_text">Clear search text</string>
     <string name="close_search">Close search</string>
+    <string name="content_description_import_success">Import Success</string>
+    <string name="import_successful">Import successful</string>
+    <string name="pin_provide_instruction">Please provide your 8 digit PIN to continue.</string>
+    <string name="continue_button">continue</string>
+    <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
+    <string name="enter_password_here">Enter password here</string>
+    <string name="create_profile">Create Profile</string>
 
 </resources>

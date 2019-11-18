@@ -14,4 +14,15 @@
     <string name="qr_content_description">QR Code</string>
     <string name="url_loading">Your URl is loading....</string>
     <string name="settings_share_app">Share App</string>
+
+    <string name="wifi_connection_instruction">Scan the following QR code to connect with this phone.</string>
+    <string name="hotspot_connection_instruction">Please connect to this Wifi hotspot.</string>
+    <string name="qr_code_instruction">Scan the following QR code to get the app download link.</string>
+    <string name="url_instruction">Please enter the following URL into your browser.</string>
+
+    <string name="share_app_title">Share This App</string>
+    <string name="step_1">Step-1</string>
+    <string name="step_2">Step-2</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
 </resources>

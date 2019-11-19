@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.importwallet;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ public class ImportWalletActivity extends BaseActivity {
     private ActivityImportWalletBinding mBinding;
     private ImportWalletViewModel mViewModel;
     private String mWalletPath;
+    private Uri mWalletUri;
 
     @Override
     protected int getLayoutId() {

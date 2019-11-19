@@ -55,12 +55,21 @@ public class MeshDataSource extends ViperUtil {
 
     @Override
     protected void onMesh(String myMeshId) {
+        meshInited();
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myMeshId);
+        TextToImageHelper.writeWalletAddressToImage(myMeshId);
+    }
+
+    @Override
+    protected void onMeshPrepared() {
+        meshInited();
+    }
+
+    private void meshInited() {
         //when RM will be on then prepare this observer to listen the outgoing messages
         RmDataHelper.getInstance().prepareDataObserver();
 
         Constants.IsMeshInit = true;
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myMeshId);
-        TextToImageHelper.writeWalletAddressToImage(myMeshId);
     }
 
     @Override

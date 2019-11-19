@@ -158,6 +158,7 @@
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
                         android:singleLine="true"
                         android:textSize="@dimen/text_body"
+                        app:bet_primaryColor="@color/new_user_button_color"
                         app:bet_baseColor="@color/account_text_color"
                         app:bet_textColor="@color/account_text_color"
                         app:bet_underlineColor="@color/account_text_color">

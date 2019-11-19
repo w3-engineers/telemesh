@@ -47,6 +47,8 @@ To receive ``EVENTS`` from MeshService following Events are observed on Telemesh
 
 inside the package ``com.w3engineers.unicef.util.helper``.
 
+
+
 ``ApiEvent.TRANSPORT_INIT`` - After initializing mesh service this event provide mesh initialization state with own user/peer id
 
 ``ApiEvent.WALLET_LOADED`` - After successfully wallet get loaded this event provide wallet status
@@ -130,21 +132,20 @@ To receive data from Viper to Telemesh Android app following abstract methods ar
 inside the package ``com.w3engineers.unicef.telemesh.data.helper``.
 
 
- ::
 
-    ``protected abstract void onMesh(String myMeshId)`` - When observer receive ``ApiEvent.TRANSPORT_INIT`` EVENT then this method get called.
+``protected abstract void onMesh(String myMeshId)`` - When observer receive ``ApiEvent.TRANSPORT_INIT`` EVENT then this method get called.
 
-    ``protected abstract void peerAdd(String peerId, byte[] peerData)`` - When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
+``protected abstract void peerAdd(String peerId, byte[] peerData)`` - When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
 
-    ``protected abstract void peerAdd(String peerId, UserModel userModel)`` - When observer receive ``ApiEvent.USER_INFO`` EVENT then this method get called.
+``protected abstract void peerAdd(String peerId, UserModel userModel)`` - When observer receive ``ApiEvent.USER_INFO`` EVENT then this method get called.
 
-    ``protected abstract void peerRemove(String nodeId)`` - When observer receive ``ApiEvent.PEER_REMOVED`` EVENT then this method get called.
+``protected abstract void peerRemove(String nodeId)`` - When observer receive ``ApiEvent.PEER_REMOVED`` EVENT then this method get called.
 
-    ``protected abstract void onData(String peerId, ViperData viperData)`` -  When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
+``protected abstract void onData(String peerId, ViperData viperData)`` -  When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
 
-    ``protected abstract void onAck(String messageId, int status)`` - When observer receive ``ApiEvent.DATA_ACKNOWLEDGEMENT`` EVENT then this method get called.
+``protected abstract void onAck(String messageId, int status)`` - When observer receive ``ApiEvent.DATA_ACKNOWLEDGEMENT`` EVENT then this method get called.
 
-    ``protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus)`` - To check whether the user/peer is currently active/online
+``protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus)`` - To check whether the user/peer is currently active/online
 
 
 

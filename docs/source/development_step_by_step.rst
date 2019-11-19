@@ -22,19 +22,20 @@ Developers Guideline step by step
 
 4. Edit the file `~/.gradle/gradle.properties` and add the following credentials.
 
+   ::
         BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
         BROADCAST_URL = "<BROADCAST_URL>"
         PARSE_URL = "<PARSE_URL>"
         PARSE_APP_ID = "<PARSE_APP_ID>"
         MULTIVERSE_URL = "<MULTIVERSE_URL>"
 
-    For Unix based system the directory is `~/.gradle/gradle.properties`
+   For Unix based system the directory is `~/.gradle/gradle.properties`
 
-    For Windows system the directory is `C:\Users\username\.gradle\gradle.properties`
+   For Windows system the directory is `C:\Users\username\.gradle\gradle.properties`
 
-    If you don't find `gradle.properties` file then you can create your own.
+   If you don't find `gradle.properties` file then you can create your own.
 
-    For credentials please join our `Discord`_ channel.
+   For credentials please join our `Discord`_ channel.
 
 
 5. Prepare ``config.json`` file inside Android Studio and put it under the ``assets`` folder of your app module.
@@ -54,9 +55,7 @@ Developers Guideline step by step
 
 6. Now check the `ViperUtil.java` class and find the constructor `ViperUtil` where we use the above credentials
 
-    .. code-block:: JAVA
-       :linenos:
-       :emphasize-lines: 8,9,10,11
+    ::
 
        protected ViperUtil(UserModel userModel) {
 

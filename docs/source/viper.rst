@@ -14,6 +14,7 @@ Dependency
 
 Include the library in app level build.gradle
 
+ ::
     dependencies{
         implementation 'com.github.w3-engineers:viper:<version_number>'
     }
@@ -42,11 +43,13 @@ User Interface
 Mesh Support
 ------------
 
-To receive `EVENTS` from MeshService following Events are observed on Telemesh app end at  `ViperUtil.java` class
+To receive `EVENTS` from MeshService following Events are observed on Telemesh app end at `ViperUtil.java` class
 
 inside the package `com.w3engineers.unicef.util.helper`.
 
 ``ApiEvent.TRANSPORT_INIT`` - After initializing mesh service this event provide mesh initialization state with own user/peer id
+
+``ApiEvent.WALLET_LOADED`` - After successfully wallet get loaded this event provide wallet status
 
 ``ApiEvent.PEER_ADD`` - This event provide the new peer id when another user/peer get discovered through local mesh
 
@@ -59,8 +62,7 @@ inside the package `com.w3engineers.unicef.util.helper`.
 ``ApiEvent.USER_INFO`` - This event sends the connected peer’s info like peer name, peer image index, etc.
 
 
-.. code-block:: JAVA
-       :linenos:
+  ::
 
        private void initObservers() {
 
@@ -123,27 +125,24 @@ inside the package `com.w3engineers.unicef.util.helper`.
 
 
 
-
 To receive data from Viper to Telemesh Android app following abstract methods are used on Telemesh app end at `MeshDataSource.java` class
 
 inside the package `com.w3engineers.unicef.telemesh.data.helper`.
 
 
-`protected abstract void onMesh(String myMeshId)`
+``protected abstract void onMesh(String myMeshId)`` - When observer receive ``ApiEvent.TRANSPORT_INIT`` EVENT then this method get called.
 
-`protected abstract void offMesh()`
+protected abstract void peerAdd(String peerId, byte[] peerData) - When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
 
-`protected abstract void peerAdd(String peerId, byte[] peerData)`
+protected abstract void peerAdd(String peerId, UserModel userModel) - When observer receive ``ApiEvent.USER_INFO`` EVENT then this method get called.
 
-`protected abstract void peerAdd(String peerId, UserModel userModel)`
+protected abstract void peerRemove(String nodeId) - When observer receive ``ApiEvent.PEER_REMOVED`` EVENT then this method get called.
 
-`protected abstract void peerRemove(String nodeId)`
+protected abstract void onData(String peerId, ViperData viperData) -  When observer receive ``ApiEvent.DATA`` EVENT then this method get called.
 
-`protected abstract void onData(String peerId, ViperData viperData)`
+protected abstract void onAck(String messageId, int status) - When observer receive ``ApiEvent.DATA_ACKNOWLEDGEMENT`` EVENT then this method get called.
 
-`protected abstract void onAck(String messageId, int status)`
-
-`protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus)`
+protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus) - To check whether the user/peer is currently active/online
 
 
 

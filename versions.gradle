@@ -70,7 +70,7 @@ versions.parse = "1.17.3"
 versions.work = "1.0.1"
 versions.location = "16.0.0"
 versions.appupdater = "2.7"
-versions.viper = "1.0.9"
+versions.viper = "1.0.13"
 versions.in_app_db = "1.0.2"
 ext.versions = versions
 

@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.security;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.karumi.dexter.Dexter;
@@ -17,12 +19,18 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.mesh.util.DialogUtil;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySecurityBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
 
@@ -40,6 +48,7 @@ public class SecurityActivity extends BaseActivity {
     private SecurityViewModel mViewModel;
     private String mUserName;
     private int mAvatarIndex;
+    private ProgressDialog progressDialog;
 
     @Override
     protected int getLayoutId() {
@@ -59,6 +68,9 @@ public class SecurityActivity extends BaseActivity {
 
         parseIntent();
         initView();
+        progressDialog = new ProgressDialog(SecurityActivity.this);
+        progressDialog.setMessage("Please Wait...");
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -124,19 +136,51 @@ public class SecurityActivity extends BaseActivity {
     }
 
     protected void goNext() {
+
+        HandlerUtil.postForeground(() -> {
+            progressDialog.show();
+            Log.d("progress", "Progress show call");
+        }, 10);
+
+
         String password = mBinding.editTextBoxPassword.getText() + "";
 
-        if (mViewModel.storeData(mUserName, mAvatarIndex,password)) {
-
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-
-            if (CreateUserActivity.sInstance != null) {
-                CreateUserActivity.sInstance.finish();
-            }
+        if (TextUtils.isEmpty(password)) {
+            password = Constants.DEFAULT_PASSWORD;
         }
+
+        String finalPassword = password;
+        WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
+            @Override
+            public void onGetWalletInformation(String address, String publickKey) {
+
+                if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
+
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+
+                        Intent intent = new Intent(SecurityActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+
+                        if (CreateUserActivity.sInstance != null) {
+                            CreateUserActivity.sInstance.finish();
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onWalletLoadError(String errorMessage) {
+                Log.e("walletLoad", "Error: " + errorMessage);
+                runOnUiThread(() -> {
+                    progressDialog.dismiss();
+                    Toaster.showShort(errorMessage);
+                });
+            }
+        });
     }
 
     private void parseIntent() {

@@ -13,6 +13,7 @@ import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileViewModel;
+import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
@@ -106,6 +107,11 @@ public class ServiceLocator extends BaseServiceLocator {
     @NonNull
     public SecurityViewModel getSecurityViewModel(@NonNull Application application) {
         return new SecurityViewModel(application);
+    }
+
+    @NonNull
+    public ImportWalletViewModel getImportWalletViewModel(@NonNull Application application) {
+        return new ImportWalletViewModel(application);
     }
 
 

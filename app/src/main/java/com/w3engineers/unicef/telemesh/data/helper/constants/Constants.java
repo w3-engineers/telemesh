@@ -17,6 +17,8 @@ public class Constants {
 
     public static Uri WALLET_URI;
 
+    public static String DEFAULT_PASSWORD = "12345678";
+
     public static String FILE_TYPE = "application/*";
 
     public interface DefaultValue {
@@ -49,6 +51,8 @@ public class Constants {
         String UPDATE_APP_URL = "update_app_url";
         String MY_MODE = "my_mode";
         String MY_PASSWORD = "my_password";
+        String MY_WALLET_ADDRESS = "my_wallet_address";
+        String MY_PUBLIC_KEY = "my_public_key";
         String MY_WALLET_PATH = "my_wallet_path";
         String MY_WALLET_IMAGE = "my_wallet_image";
         String IS_RESTART = "is_restart";

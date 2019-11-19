@@ -76,7 +76,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected BaseServiceLocator a() {
+    protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
     }
 

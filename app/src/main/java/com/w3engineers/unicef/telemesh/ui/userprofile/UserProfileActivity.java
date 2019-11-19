@@ -47,7 +47,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected BaseServiceLocator a() {
+    protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
     }
 

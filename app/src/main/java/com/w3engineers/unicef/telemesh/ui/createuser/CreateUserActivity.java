@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.karumi.dexter.Dexter;
@@ -25,6 +26,8 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
+import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
@@ -40,7 +43,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private boolean isLoadAccount;
 
     private String mPassword;
-    private String mWalletPath;
 
     @NonNull
     public static String IMAGE_POSITION = "image_position";
@@ -199,14 +201,13 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (intent.hasExtra(Constants.IntentKeys.PASSWORD)) {
             isLoadAccount = true;
             mPassword = intent.getStringExtra(Constants.IntentKeys.PASSWORD);
-            mWalletPath = intent.getStringExtra(Constants.IntentKeys.WALLET_PATH);
         }
     }
 
     protected void goNext() {
-        if (mViewModel.storeData(mBinding.editTextName.getText() + "", mPassword, mWalletPath)) {
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "", mPassword)) {
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

@@ -13,9 +13,11 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
+import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerAdd;
@@ -27,6 +29,7 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
@@ -44,13 +47,16 @@ public abstract class ViperUtil {
 
     private ViperClient viperClient;
     private String myUserId;
+    private Context context;
 
     protected ViperUtil(UserModel userModel) {
 
         try {
 
-            Context context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
+            context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
             String appName = context.getResources().getString(R.string.app_name);
+
+            SharedPref sharedPref = SharedPref.getSharedPref(context);
 
             String jsonData = loadJSONFromAsset(context);
 
@@ -62,7 +68,8 @@ public abstract class ViperUtil {
                 String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
                 String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(), userModel.getImage(), userModel.getTime(), true)
+                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(),
+                        sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS), sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY), userModel.getImage(), userModel.getTime(), true)
                         .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
 
                 initObservers();
@@ -133,7 +140,7 @@ public abstract class ViperUtil {
     }
 
     private void peerDiscoveryProcess(String nodeId, boolean isActive) {
-        HandlerUtil.postBackground(()-> {
+        HandlerUtil.postBackground(() -> {
 
             int userConnectivityStatus = isActive ? getUserActiveStatus(nodeId) : 0;
             boolean isUserExist = isNodeAvailable(nodeId, userConnectivityStatus);
@@ -217,7 +224,6 @@ public abstract class ViperUtil {
             sendDataToMesh(nodeId, viperData, sendId);
         }
     }
-
 
 
     private void sendDataToMesh(String nodeId, ViperData viperData, String sendId) {

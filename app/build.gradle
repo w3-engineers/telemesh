@@ -162,8 +162,9 @@ dependencies {
     implementation deps.qrgenerator.qr
 
     api deps.app_share
-    implementation deps.viper
+    //implementation deps.viper
     debugImplementation deps.inappstoragereader
+    implementation project(path: ':viper')
 }
 
 coveralls {

@@ -77,9 +77,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     @Override
-    protected BaseServiceLocator a() {
+    protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
     }
+    
 
     @Override
     protected void startUI() {

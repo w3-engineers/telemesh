@@ -11,7 +11,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
 [![Lint tool: TeleMesh](https://img.shields.io/badge/Lint_tool-telemesh-2e99e9.svg?style=flat)](https://w3-engineers.github.io/telemesh/lint_reports/lint-report.html)
 
-A mesh network based off-grid messaging application supported by blockchain technology.
+A mesh network based off-grid messaging application powered by blockchain technology.
 
 ## Mission Statement
 The freedom of connectivity to the edge of the world

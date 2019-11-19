@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.net.LinkAddress;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -21,6 +22,8 @@ import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountS
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -46,14 +49,18 @@ public class MainActivityViewModel extends BaseRxViewModel {
     private PeriodicWorkRequest localUserCountRequest;
     private PeriodicWorkRequest sendCountToServerRequest;
 
+    // FeedDataSource instance
+    private FeedDataSource mFeedDataSource;
     private MessageSourceData messageSourceData;
     private UserDataSource userDataSource;
     private DataSource dataSource;
     private MutableLiveData<Integer> myModeLiveData;
+    private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
 
     public MainActivityViewModel() {
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
+        mFeedDataSource = FeedDataSource.getInstance();
         mWorkManager = WorkManager.getInstance();
         mNewUserCountWorkInfo = mWorkManager.getWorkInfosByTagLiveData(NEW_USER_COUNT);
         dataSource = Source.getDbSource();
@@ -142,5 +149,9 @@ public class MainActivityViewModel extends BaseRxViewModel {
     @NonNull
     public LiveData<List<UserEntity>> getActiveUser() {
         return userDataSource.getActiveUser();
+    }
+
+    public LiveData<List<FeedEntity>> getNewFeedsList() {
+        return mFeedDataSource.getAllUnreadFeeds();
     }
 }

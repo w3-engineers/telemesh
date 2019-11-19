@@ -39,6 +39,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     public static CreateUserActivity sInstance;
     private boolean isLoadAccount;
 
+    private String mPassword;
+    private String mWalletPath;
+
     @NonNull
     public static String IMAGE_POSITION = "image_position";
 
@@ -62,6 +65,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         mViewModel = getViewModel();
 
         setClickListener(mBinding.imageViewBack);
+
+        parseIntent();
 
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
@@ -189,8 +194,17 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    private void parseIntent() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.IntentKeys.PASSWORD)) {
+            isLoadAccount = true;
+            mPassword = intent.getStringExtra(Constants.IntentKeys.PASSWORD);
+            mWalletPath = intent.getStringExtra(Constants.IntentKeys.WALLET_PATH);
+        }
+    }
+
     protected void goNext() {
-        if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "", mPassword, mWalletPath)) {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -201,7 +215,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void goToPasswordPage() {
         Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
-        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText());
+        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
         intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
         startActivity(intent);
     }

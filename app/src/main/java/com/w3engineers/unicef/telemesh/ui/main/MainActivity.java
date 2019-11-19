@@ -55,6 +55,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private BulletinTimeScheduler sheduler;
     private Fragment mCurrentFragment;
 
+    private int latestUserCount;
+    private int latestMessageCount;
+
     @Nullable
     public static MainActivity mainActivity;
 
@@ -131,6 +134,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         });
 
         subscribeForActiveUser();
+        subscribeForNewFeedMessage();
 
         //when  counting need to add
         /*
@@ -227,6 +231,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
 
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
         /*binding.bottomNavigation
                 .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
@@ -274,13 +279,14 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_contact:
                 toolbarTitle = getString(R.string.title_contacts_fragment);
                 mFragment = new MeshContactsFragment();
+                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = getString(R.string.title_message_feed_fragment);
               /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
                         , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
-
+                hideFeedBadge();
                 break;
             case R.id.action_setting:
                 toolbarTitle = getString(R.string.title_settings_fragment);
@@ -307,16 +313,24 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     // Again this api will be enable when its functionality will be added
     public void createBadgeCount(int latestCount, int menuItemPosition) {
-        BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
+        ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
+        if (constraintLayoutContainer == null) return;
+        // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
-        if (itemView == null) {
-            return;
+        if (!(mCurrentFragment instanceof MeshContactsFragment)) {
+            if (latestCount > latestUserCount) {
+                constraintLayoutContainer.setVisibility(View.VISIBLE);
+            } else {
+                constraintLayoutContainer.setVisibility(View.GONE);
+            }
+        } else {
+            constraintLayoutContainer.setVisibility(View.GONE);
         }
-        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
-        TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
-        if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+
+        latestUserCount = latestCount;
+
+       /* if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
 
             constraintLayoutContainer.setVisibility(View.VISIBLE);
 
@@ -327,7 +341,59 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         } else {
             constraintLayoutContainer.setVisibility(View.GONE);
+        }*/
+    }
+
+    private void createFeedBadge(int latestCount, int menuItemPosition) {
+
+        ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
+        if (constraintLayoutContainer == null) return;
+        if (!(mCurrentFragment instanceof MessageFeedFragment)) {
+            if (latestCount > latestMessageCount) {
+                constraintLayoutContainer.setVisibility(View.VISIBLE);
+            } else {
+                constraintLayoutContainer.setVisibility(View.GONE);
+            }
+        } else {
+            constraintLayoutContainer.setVisibility(View.GONE);
         }
+
+
+        latestMessageCount = latestCount;
+    }
+
+    private ConstraintLayout getViewByMenu(int menuItem) {
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItem);
+
+        if (itemView == null) {
+            return null;
+        }
+        return itemView.findViewById(R.id.constraint_layout_badge);
+    }
+
+    private void hideUserBadge() {
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+
+        if (itemView == null) {
+            return;
+        }
+        ConstraintLayout userBadgeView = itemView.findViewById(R.id.constraint_layout_badge);
+
+        userBadgeView.setVisibility(View.GONE);
+    }
+
+    private void hideFeedBadge() {
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
+
+        if (itemView == null) {
+            return;
+        }
+        ConstraintLayout feedBadge = itemView.findViewById(R.id.constraint_layout_badge);
+
+        feedBadge.setVisibility(View.GONE);
     }
 
     public void enableLoading() {
@@ -382,6 +448,14 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (mViewModel != null) {
             mViewModel.getActiveUser().observe(this, userEntities -> {
                 runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+            });
+        }
+    }
+
+    private void subscribeForNewFeedMessage() {
+        if (mViewModel != null) {
+            mViewModel.getNewFeedsList().observe(this, feedList -> {
+                runOnUiThread(() -> createFeedBadge(feedList.size(), Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED));
             });
         }
     }

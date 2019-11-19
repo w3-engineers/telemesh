@@ -69,7 +69,7 @@ public class SecurityActivity extends BaseActivity {
                 requestMultiplePermissions();
                 break;
             case R.id.button_skip:
-                // Todo goto home page with other password
+                requestMultiplePermissions();
                 break;
         }
     }
@@ -126,7 +126,7 @@ public class SecurityActivity extends BaseActivity {
     protected void goNext() {
         String password = mBinding.editTextBoxPassword.getText() + "";
 
-        if (mViewModel.storeData(mUserName, mAvatarIndex)) {
+        if (mViewModel.storeData(mUserName, mAvatarIndex,password)) {
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

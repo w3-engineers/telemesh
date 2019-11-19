@@ -46,9 +46,14 @@ public class FeedDataSource {
         return feedDao.getAllFeed();
     }
 
+    @NonNull
+    public LiveData<List<FeedEntity>> getAllUnreadFeeds() {
+        return feedDao.getAllUnreadFeed();
+    }
+
     public long updateFeedMessageReadStatus(@NonNull String feedId) {
 
-        Callable<Long> updateFeed = ()-> feedDao.updateFeedMessageReadStatusByMessageId(feedId);
+        Callable<Long> updateFeed = () -> feedDao.updateFeedMessageReadStatusByMessageId(feedId);
 
         try {
             return mIoExecutor.submit(updateFeed).get();

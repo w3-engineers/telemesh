@@ -44,7 +44,7 @@
         android:configChanges="locale"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/my_backup_rules"
-        android:icon="@mipmap/ic_app_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -52,7 +52,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
-        <activity android:name=".ui.security.SecurityActivity"></activity>
+        <activity android:name=".ui.importwallet.ImportWalletActivity" />
+        <activity android:name=".ui.security.SecurityActivity" />
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"
             android:theme="@style/NoActionBarTheme" />

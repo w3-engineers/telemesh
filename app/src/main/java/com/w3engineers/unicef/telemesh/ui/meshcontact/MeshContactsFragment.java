@@ -137,8 +137,8 @@ public class MeshContactsFragment extends BaseFragment {
         if (meshContactViewModel != null) {
             meshContactViewModel.openUserMessage().observe(this, userEntity -> {
 
-                if (mSearchItem != null) {
-                    mSearchItem.getActionView().clearFocus();
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideSearchBar();
 
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
@@ -169,7 +169,7 @@ public class MeshContactsFragment extends BaseFragment {
             public void onNext(String string) {
 
                 if (!isSearchStart) {
-                    searchLoading();
+                    //searchLoading();
                     isSearchStart = true;
                 }
 

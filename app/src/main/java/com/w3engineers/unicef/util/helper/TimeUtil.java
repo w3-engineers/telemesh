@@ -161,4 +161,15 @@ public class TimeUtil {
         return null;
     }
 
+    public static String parsingDate(String fullTime) {
+        if (fullTime == null) return null;
+
+        return fullTime.split(",")[0].trim();
+    }
+
+    public static String parsingTime(String fullTime) {
+        if (fullTime == null) return null;
+
+        return fullTime.split(",")[1].trim();
+    }
 }

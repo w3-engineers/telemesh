@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 import com.w3engineers.unicef.util.helper.model.ViperData;
+import com.w3engineers.unicef.util.helper.TextToImageHelper;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class MeshDataSource extends ViperUtil {
     protected void onMesh(String myMeshId) {
         meshInited();
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myMeshId);
+        TextToImageHelper.writeWalletAddressToImage(myMeshId);
     }
 
     @Override

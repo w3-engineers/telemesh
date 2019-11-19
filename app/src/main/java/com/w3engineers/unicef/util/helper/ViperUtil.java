@@ -9,6 +9,7 @@ Proprietary and confidential
 */
 
 import android.content.Context;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -21,11 +22,13 @@ import com.w3engineers.mesh.application.data.model.PeerAdd;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.json.JSONException;
@@ -46,7 +49,7 @@ public abstract class ViperUtil {
 
         try {
 
-            Context context = TeleMeshApplication.getContext();
+            Context context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
             String appName = context.getResources().getString(R.string.app_name);
 
             String jsonData = loadJSONFromAsset(context);
@@ -81,7 +84,14 @@ public abstract class ViperUtil {
 
                 onMesh(myUserId);
             }
+        });
 
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_LOADED, event -> {
+            WalletLoaded walletLoaded = (WalletLoaded) event;
+
+            if (walletLoaded.success) {
+                onMeshPrepared();
+            }
         });
 
         AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
@@ -217,15 +227,20 @@ public abstract class ViperUtil {
 
         Log.v("MIMO_SAHA:", "Notification enable " + isNotificationEnable);
 
-        if (isNotificationEnable) {
-            viperClient.sendMessage(myUserId, nodeId, sendId, data);
-        } else {
-            viperClient.sendMessage(myUserId, nodeId, sendId, data);
+        try {
+            viperClient.sendMessage(myUserId, nodeId, sendId, data, isNotificationEnable);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public int getUserActiveStatus(String nodeId) {
-        return viperClient.getLinkTypeById(nodeId);
+        try {
+            return viperClient.getLinkTypeById(nodeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public String sendMeshData(String peerId, ViperData viperData) {
@@ -238,12 +253,17 @@ public abstract class ViperUtil {
     }
 
     public List<String> getAllSellers() {
-        List<String> allInternetSellers = viperClient.getInternetSellers();
+        List<String> allInternetSellers = null;
+        try {
+            allInternetSellers = viperClient.getInternetSellers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (allInternetSellers == null || allInternetSellers.size() == 0) {
             return new ArrayList<>();
         } else {
-            return viperClient.getInternetSellers();
+            return allInternetSellers;
         }
     }
 
@@ -259,6 +279,8 @@ public abstract class ViperUtil {
     ////////////////////////////////////////////////////////////////////////////////////
 
     protected abstract void onMesh(String myMeshId);
+
+    protected abstract void onMeshPrepared();
 
     protected abstract void offMesh();
 

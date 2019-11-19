@@ -1,6 +1,5 @@
 package com.w3engineers.appshare.application.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;

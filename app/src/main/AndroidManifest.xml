@@ -35,6 +35,9 @@
         android:name="android.permission.REQUEST_INSTALL_PACKAGES"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+
     <application
         android:name="com.w3engineers.unicef.TeleMeshApplication"
         android:allowBackup="true"
@@ -50,7 +53,6 @@
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
         <activity android:name=".ui.security.SecurityActivity"></activity>
-        <activity android:name=".ui.searching.SearchingActivity" />
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"
             android:theme="@style/NoActionBarTheme" />

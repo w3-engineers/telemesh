@@ -69,7 +69,7 @@ public class SecurityActivity extends BaseActivity {
                 requestMultiplePermissions();
                 break;
             case R.id.button_skip:
-                // Todo goto home page with other password
+                requestMultiplePermissions();
                 break;
         }
     }

@@ -49,9 +49,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
-        <activity android:name=".ui.importwallet.ImportWalletActivity"></activity>
+        <activity android:name=".ui.importwallet.ImportWalletActivity" />
         <activity android:name=".ui.security.SecurityActivity" />
-        <activity android:name=".ui.searching.SearchingActivity" />
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"
             android:theme="@style/NoActionBarTheme" />

@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.helper.constants;
 
+import android.net.Uri;
 import android.os.Build;
 
 import com.w3engineers.mesh.util.Constant;
@@ -13,6 +14,8 @@ public class Constants {
 
     public static int INTERNET_ONLY = 3;
     public static int SELLER_MODE = 1;
+
+    public static Uri WALLET_URI;
 
     public static String FILE_TYPE = "application/*";
 

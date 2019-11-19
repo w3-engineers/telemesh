@@ -62,11 +62,14 @@ public class ImportProfileActivity extends BaseActivity {
 
         if (resultCode == RESULT_OK && requestCode == PICKFILE_REQUEST_CODE) {
             String filePath;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Constants.WALLET_URI = data.getData();
+            filePath = data.getData().getPath();
+
+           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 filePath = data.getData().getPath();
             } else {
                 filePath = data.getData().getPath();
-            }
+            }*/
             Log.d("UiTest", "File path: " + data.getData());
 
             Intent intent = new Intent(ImportProfileActivity.this, ImportWalletActivity.class);

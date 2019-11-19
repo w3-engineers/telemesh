@@ -7,6 +7,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -29,6 +32,8 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+
+import java.io.ByteArrayOutputStream;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
@@ -115,7 +120,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_data_plan:
                 if (Constants.IsMeshInit) {
-                    DataPlanManager.openActivity(mActivity);
+                    DataPlanManager.openActivity(mActivity, 0);
                 } else {
                     Toaster.showShort(getString(R.string.mesh_not_initiated));
                 }
@@ -123,7 +128,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
             case R.id.layout_open_wallet:
                 if (Constants.IsMeshInit) {
-                    WalletManager.openActivity(mActivity);
+                    WalletManager.openActivity(mActivity, getImageByteArray());
                 } else {
                     Toaster.showShort(getString(R.string.mesh_not_initiated));
                 }
@@ -147,6 +152,15 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         super.onClick(view);
 
+    }
+
+    private byte[] getImageByteArray() {
+
+        int imageIndex = SharedPref.getSharedPref(getActivity()).readInt(Constants.preferenceKey.IMAGE_INDEX);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
     }
 
     private void showLanguageChangeDialog() {
@@ -215,7 +229,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
-        Log.d("InAppUpdateTest","is data on: "+Constants.IS_DATA_ON);
+        Log.d("InAppUpdateTest", "is data on: " + Constants.IS_DATA_ON);
         if (Constants.IS_DATA_ON) {
             long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
             if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {

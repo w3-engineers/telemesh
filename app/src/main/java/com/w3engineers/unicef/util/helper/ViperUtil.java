@@ -68,11 +68,14 @@ public abstract class ViperUtil {
                 String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
                 String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(),
-                        sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS), sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY), userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
+                String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
+                String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
 
                 initObservers();
+
+                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(),
+                        address, publicKey, userModel.getImage(), userModel.getTime(), true)
+                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
             }
 
         } catch (JSONException e) {

@@ -15,9 +15,9 @@ Dependency
 Include the library in app level build.gradle
 
  ::
-    dependencies{
-        implementation 'com.github.w3-engineers:viper:<version_number>'
-    }
+        dependencies{
+            implementation 'com.github.w3-engineers:viper:<version_number>'
+        }
 
 
 Usage

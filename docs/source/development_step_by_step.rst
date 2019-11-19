@@ -23,11 +23,11 @@ Developers Guideline step by step
 4. Edit the file `~/.gradle/gradle.properties` and add the following credentials.
 
     ::
-        BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
-        BROADCAST_URL = "<BROADCAST_URL>"
-        PARSE_URL = "<PARSE_URL>"
-        PARSE_APP_ID = "<PARSE_APP_ID>"
-        MULTIVERSE_URL = "<MULTIVERSE_URL>"
+            BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
+            BROADCAST_URL = "<BROADCAST_URL>"
+            PARSE_URL = "<PARSE_URL>"
+            PARSE_APP_ID = "<PARSE_APP_ID>"
+            MULTIVERSE_URL = "<MULTIVERSE_URL>"
 
    For Unix based system the directory is `~/.gradle/gradle.properties`
 
@@ -57,32 +57,32 @@ Developers Guideline step by step
 
     ::
 
-       protected ViperUtil(UserModel userModel) {
+           protected ViperUtil(UserModel userModel) {
 
-          try {
+              try {
 
-              Context context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
-              String appName = context.getResources().getString(R.string.app_name);
+                  Context context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
+                  String appName = context.getResources().getString(R.string.app_name);
 
-              String jsonData = loadJSONFromAsset(context);
+                  String jsonData = loadJSONFromAsset(context);
 
-              if (!TextUtils.isEmpty(jsonData)) {
-                  JSONObject jsonObject = new JSONObject(jsonData);
+                  if (!TextUtils.isEmpty(jsonData)) {
+                      JSONObject jsonObject = new JSONObject(jsonData);
 
-                  String AUTH_USER_NAME = jsonObject.optString("AUTH_USER_NAME");
-                  String AUTH_PASSWORD = jsonObject.optString("AUTH_PASSWORD");
-                  String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
-                  String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
+                      String AUTH_USER_NAME = jsonObject.optString("AUTH_USER_NAME");
+                      String AUTH_PASSWORD = jsonObject.optString("AUTH_PASSWORD");
+                      String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
+                      String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                  viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(), userModel.getImage(), userModel.getTime(), true)
-                          .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
+                      viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(), userModel.getImage(), userModel.getTime(), true)
+                              .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
 
-                  initObservers();
+                      initObservers();
+                  }
+              } catch (JSONException e) {
+                  e.printStackTrace();
               }
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-       }
+           }
 
 
 

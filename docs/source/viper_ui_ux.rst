@@ -11,16 +11,11 @@ We all do many activities which are common to the most of the screens. Most famo
 - Manage empty view on recycler view
 
 We don’t think its wise to write all the component each time we want to design the screen
-
 since these components need to be consistent on all screen.
-
-Even if you able to achieve it by separate implementation consistency is difficult to achieve and
-
-it’s not good idea to write this for each screen.
-
+Even if you able to achieve it by separate implementation consistency is difficult to achieve and it’s not good idea to write this for each screen.
 It’s at this point where we can think of moving this implementation to the Base class/ BaseActivity.
 
-Viper provides below supports
+**Viper provides below supports**
 
 - Custom components (``BaseActivity``, ``BaseFragment``, ``BaseAdapter`` etc.)
 - Custom Widgets (``BaseButton``, ``BaseRecyclerView``, ``BaseEditText`` etc.)

@@ -1,6 +1,6 @@
 .. development_step_by_step:
 
-Developers Guideline step by step
+Telemesh
 ---------------------------------
 
 1. Find the ``versions.gradle`` in the Telemesh root directory of the repo and
@@ -34,12 +34,11 @@ Developers Guideline step by step
        }
 
 
-   For Unix based system the directory is ``~/.gradle/gradle.properties``
+           For Unix based system the directory is ``~/.gradle/gradle.properties``
 
-   For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
+           For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
 
    If you don't find ``gradle.properties`` file then you can create your own.
-
    For credentials please join our `Discord`_ channel.
 
 

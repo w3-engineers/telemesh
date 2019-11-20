@@ -149,13 +149,19 @@ public class SecurityActivity extends BaseActivity {
 
         String password = mBinding.editTextBoxPassword.getText() + "";
 
+        if (TextUtils.isEmpty(password)) {
+            password = Constants.DEFAULT_PASSWORD;
+        }
+
+        String finalPassword = password;
+
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
 
                 CustomDialogUtil.dismissProgressDialog();
 
-                if (mViewModel.storeData(mUserName, mAvatarIndex, password, address, publickKey)) {
+                if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
 
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();

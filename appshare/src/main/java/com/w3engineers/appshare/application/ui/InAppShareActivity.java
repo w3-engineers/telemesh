@@ -152,7 +152,7 @@ public class InAppShareActivity extends AppCompatActivity {
     }
 
     private SpannableString getHotspotText() {
-        String hotspot = NetworkConfigureUtil.getInstance().getNetworkName();
+        String hotspot = "\"" + NetworkConfigureUtil.getInstance().getNetworkName() + "\"";
         String hotspotText = String.format(getResources().getString(R.string.wifi), hotspot);
 
         SpannableString spannableString = new SpannableString(hotspotText);
@@ -167,7 +167,7 @@ public class InAppShareActivity extends AppCompatActivity {
     }
 
     private SpannableString getPasswordText() {
-        String pass = "\"" + NetworkConfigureUtil.getInstance().getNetworkName() + "\"";
+        String pass = NetworkConfigureUtil.getInstance().getNetworkPass();
         String passText = String.format(getResources().getString(R.string.using_password), pass);
         SpannableString spannableString = new SpannableString(passText);
 

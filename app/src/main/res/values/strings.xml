@@ -86,7 +86,7 @@
     <string name="name_field_icon">Name field icon</string>
     <string name="user_id_copy">User id copy</string>
     <string name="user_id_qr_image">User id qr Image</string>
-    <string name="export_my_profile">export my profile</string>
+    <string name="export_my_profile">EXPORT MY PROFILE</string>
     <string name="copied">Copied</string>
     <string name="open_source_edition">Open Source Edition</string>
     <string name="about_description">Telemesh is a messaging app designed with Blockchain and Mesh networking. Unlike traditional messaging app Telemesh works with both internet and without internet connectivity. Telemesh is actively maintained by W3 Engineers Ltd.</string>

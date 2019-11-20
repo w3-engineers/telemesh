@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TeleMesh</string>
     <string name="activity_view_profile">My Profile</string>
-    <string name="enter_first_name">Type Your Name</string>
+    <string name="enter_first_name">Type your name</string>
     <string name="signup">Next</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
@@ -44,7 +44,7 @@
     <string name="id">ID</string>
 
     <string name="this_may_take_while">This may take a while…</string>
-    <string name="discovering_users">Discovering Users</string>
+    <string name="discovering_users">Searching Nearby</string>
     <string name="searching">Searching…</string>
     <string name="data_plan">My Data Plan</string>
     <string name="no_chat_available">Type your first message\nlet the story begin</string>

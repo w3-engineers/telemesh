@@ -227,6 +227,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layout_diagram_map"
                 style="@style/full_content_style_settings_page"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_choose_language">
@@ -275,8 +276,9 @@
                 <ImageView
                     android:id="@+id/image_view_log"
                     style="@style/image_style_settings_page"
+                    android:background="@mipmap/ic_show_log_active"
+                    android:backgroundTint="#0180E5"
                     android:contentDescription="@string/app_name"
-                    android:src="@mipmap/ic_show_log_active"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

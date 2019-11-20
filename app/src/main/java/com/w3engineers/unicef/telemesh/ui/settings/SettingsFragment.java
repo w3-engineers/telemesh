@@ -20,6 +20,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
+import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -135,6 +136,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_show_log:
 //                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
+                MeshLogManager.openActivity(getActivity());
                 break;
             case R.id.layout_diagram_map:
 //                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));

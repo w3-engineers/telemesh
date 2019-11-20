@@ -45,6 +45,7 @@
             android:layout_marginBottom="@dimen/margin_10"
             android:padding="@dimen/padding_5"
             android:src="@{contactViewModel.getUserAvatarByIndex(user.avatarIndex)}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -123,9 +124,9 @@
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_10"
             android:background="@color/divider_color"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_view_unread_message_count"
-            app:layout_constraintStart_toStartOf="@+id/user_name"
-            app:layout_constraintTop_toBottomOf="@id/user_address" />
+            app:layout_constraintStart_toStartOf="@+id/user_name" />
 
 
     </android.support.constraint.ConstraintLayout>

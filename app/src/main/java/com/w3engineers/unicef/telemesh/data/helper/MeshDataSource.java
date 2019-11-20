@@ -61,8 +61,10 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void onMeshPrepared() {
+    protected void onMeshPrepared(String myWalletAddress) {
         meshInited();
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myWalletAddress);
+        TextToImageHelper.writeWalletAddressToImage(myWalletAddress);
     }
 
     private void meshInited() {

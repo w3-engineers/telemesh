@@ -3,9 +3,11 @@ package com.w3engineers.unicef;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -43,6 +45,7 @@ public class TeleMeshApplication extends MeshApp {
     public void onCreate() {
         super.onCreate();
         AppDatabase.getInstance();
+        Toaster.init(R.color.colorPrimary);
     }
 
     private void initCredential() {

@@ -100,7 +100,7 @@ public abstract class ViperUtil {
             WalletLoaded walletLoaded = (WalletLoaded) event;
 
             if (walletLoaded.success) {
-                onMeshPrepared();
+                onMeshPrepared(walletLoaded.walletAddress);
             }
         });
 
@@ -289,7 +289,7 @@ public abstract class ViperUtil {
 
     protected abstract void onMesh(String myMeshId);
 
-    protected abstract void onMeshPrepared();
+    protected abstract void onMeshPrepared(String myWalletAddress);
 
     protected abstract void offMesh();
 

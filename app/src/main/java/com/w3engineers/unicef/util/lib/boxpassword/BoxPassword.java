@@ -34,7 +34,7 @@ public class BoxPassword extends AppCompatEditText {
     }
 
     public BoxPassword(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, android.R.attr.editTextStyle);
         init(context, attrs);
     }
 
@@ -55,6 +55,8 @@ public class BoxPassword extends AppCompatEditText {
         mStrokePaint.setStrokeWidth(mLineStroke);
         mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setColor(getResources().getColor(R.color.password_border_color));
+
+        setFocusable(true);
 
         setBackgroundResource(0);
         mSpace = multi * mSpace; //convert to pixels for our density

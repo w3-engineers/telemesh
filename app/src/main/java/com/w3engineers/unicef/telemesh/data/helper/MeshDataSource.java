@@ -31,10 +31,11 @@ public class MeshDataSource extends ViperUtil {
     private static MeshDataSource rightMeshDataSource;
     private BroadcastManager broadcastManager;
 
-    MeshDataSource(@NonNull UserModel userModel) {
+    private MeshDataSource(@NonNull UserModel userModel) {
         super(userModel);
         broadcastManager = BroadcastManager.getInstance();
     }
+
 
     @NonNull
     static MeshDataSource getRmDataSource() {

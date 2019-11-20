@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.w3engineers.appshare.R;
 import com.w3engineers.appshare.util.helper.InAppShareUtil;
 import com.w3engineers.appshare.util.helper.NetworkConfigureUtil;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -145,7 +146,8 @@ public class InAppShareActivity extends AppCompatActivity {
 
         inAppShareViewModel.processFailedLiveData.observe(this, errorMessage -> {
             runOnUiThread(() -> {
-                Toast.makeText(InAppShareActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                Toaster.init(getResources().getColor(R.color.colorPrimary));
+                Toaster.showShort(errorMessage);
                 finish();
             });
         });

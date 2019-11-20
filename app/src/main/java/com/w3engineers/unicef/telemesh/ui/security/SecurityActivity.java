@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -91,6 +93,10 @@ public class SecurityActivity extends BaseActivity {
         setClickListener(mBinding.buttonNext, mBinding.buttonSkip);
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextBoxPassword);
+
+        mBinding.editTextBoxPassword.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void nextButtonControl(String nameText) {
@@ -143,13 +149,19 @@ public class SecurityActivity extends BaseActivity {
 
         String password = mBinding.editTextBoxPassword.getText() + "";
 
+        if (TextUtils.isEmpty(password)) {
+            password = Constants.DEFAULT_PASSWORD;
+        }
+
+        String finalPassword = password;
+
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
 
                 CustomDialogUtil.dismissProgressDialog();
 
-                if (mViewModel.storeData(mUserName, mAvatarIndex, password, address, publickKey)) {
+                if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
 
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();

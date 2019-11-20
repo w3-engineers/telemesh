@@ -30,6 +30,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivitySecurityBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
@@ -48,7 +49,6 @@ public class SecurityActivity extends BaseActivity {
     private SecurityViewModel mViewModel;
     private String mUserName;
     private int mAvatarIndex;
-    private ProgressDialog progressDialog;
 
     @Override
     protected int getLayoutId() {
@@ -72,9 +72,6 @@ public class SecurityActivity extends BaseActivity {
 
         parseIntent();
         initView();
-        progressDialog = new ProgressDialog(SecurityActivity.this);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -122,7 +119,10 @@ public class SecurityActivity extends BaseActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            goNext();
+
+                            CustomDialogUtil.showProgressDialog(SecurityActivity.this);
+
+                            HandlerUtil.postBackground(()-> goNext(), 100);
                         }
 
                         // check for permanent denial of any permission
@@ -141,27 +141,18 @@ public class SecurityActivity extends BaseActivity {
 
     protected void goNext() {
 
-        HandlerUtil.postForeground(() -> {
-            progressDialog.show();
-            Log.d("progress", "Progress show call");
-        }, 10);
-
-
         String password = mBinding.editTextBoxPassword.getText() + "";
 
-        if (TextUtils.isEmpty(password)) {
-            password = Constants.DEFAULT_PASSWORD;
-        }
-
-        String finalPassword = password;
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
 
-                if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
+                CustomDialogUtil.dismissProgressDialog();
+
+                if (mViewModel.storeData(mUserName, mAvatarIndex, password, address, publickKey)) {
 
                     runOnUiThread(() -> {
-                        progressDialog.dismiss();
+                        CustomDialogUtil.dismissProgressDialog();
 
                         Intent intent = new Intent(SecurityActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -180,7 +171,7 @@ public class SecurityActivity extends BaseActivity {
             public void onWalletLoadError(String errorMessage) {
                 Log.e("walletLoad", "Error: " + errorMessage);
                 runOnUiThread(() -> {
-                    progressDialog.dismiss();
+                    CustomDialogUtil.dismissProgressDialog();
                     Toaster.showShort(errorMessage);
                 });
             }

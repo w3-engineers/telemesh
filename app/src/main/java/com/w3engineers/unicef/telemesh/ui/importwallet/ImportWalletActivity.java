@@ -1,15 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.importwallet;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -20,16 +17,14 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
-import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
@@ -49,8 +44,6 @@ public class ImportWalletActivity extends BaseActivity {
     private String mWalletPath;
     private Uri mWalletUri;
 
-    private ProgressDialog progressDialog;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_import_wallet;
@@ -61,10 +54,6 @@ public class ImportWalletActivity extends BaseActivity {
         mBinding = (ActivityImportWalletBinding) getViewDataBinding();
         mViewModel = getViewModel();
         initView();
-
-        progressDialog = new ProgressDialog(ImportWalletActivity.this);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -92,10 +81,6 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     private void gotoProfileCreatePage() {
-        HandlerUtil.postForeground(() -> {
-            progressDialog.show();
-            Log.d("progress", "Progress show call");
-        }, 10);
 
         String password = mBinding.editTextPassword.getText().toString();
 
@@ -105,7 +90,8 @@ public class ImportWalletActivity extends BaseActivity {
                 if (mViewModel.storeData(address, password, publickKey)) {
 
                     runOnUiThread(() -> {
-                        progressDialog.dismiss();
+                        CustomDialogUtil.dismissProgressDialog();
+
                         Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
                         intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
                         startActivity(intent);
@@ -117,7 +103,7 @@ public class ImportWalletActivity extends BaseActivity {
             public void onWalletLoadError(String errorMessage) {
                 Log.e("walletLoad", "Error: " + errorMessage);
                 runOnUiThread(() -> {
-                    DialogUtil.dismissLoadingProgress();
+                    CustomDialogUtil.dismissProgressDialog();
                     Toaster.showShort(errorMessage);
                 });
             }
@@ -134,7 +120,10 @@ public class ImportWalletActivity extends BaseActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            gotoProfileCreatePage();
+
+                            CustomDialogUtil.showProgressDialog(ImportWalletActivity.this);
+
+                            HandlerUtil.postBackground(()-> gotoProfileCreatePage(), 100);
                         }
 
                         // check for permanent denial of any permission

@@ -60,6 +60,10 @@ public class SecurityActivity extends BaseActivity {
         return R.id.toolbar;
     }
 
+    @Override
+    protected int statusBarColor() {
+        return R.color.colorPrimaryDark;
+    }
 
     @Override
     protected void startUI() {

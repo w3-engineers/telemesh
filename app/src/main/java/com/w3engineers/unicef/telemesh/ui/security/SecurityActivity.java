@@ -128,7 +128,7 @@ public class SecurityActivity extends BaseActivity {
 
                             CustomDialogUtil.showProgressDialog(SecurityActivity.this);
 
-                            HandlerUtil.postBackground(()-> goNext(), 100);
+                            HandlerUtil.postBackground(() -> goNext(), 100);
                         }
 
                         // check for permanent denial of any permission

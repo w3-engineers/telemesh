@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -97,8 +98,10 @@ public class MeshContactViewModel extends BaseRxViewModel {
                 if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
                     filteredItemList.add(user);
             }
-
+            Log.d("SearchIssue", "user list post call");
             getFilteredList.postValue(filteredItemList);
+        } else {
+            Log.d("SearchIssue", "user list null");
         }
     }
 

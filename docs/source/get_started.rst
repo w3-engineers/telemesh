@@ -9,9 +9,8 @@ clone https://github.com/w3-engineers/telemesh.git
 
 Here you will found how to install Git and start contribute to `Open source`_
 
-**Step 2: Prepare gradle.properties file:** You need to request for mesh
-technology support and some credentials to the Telemesh team to build
-the project successfully.
+**Step 2: Prepare gradle.properties file:** You need to request some credentials
+to the Telemesh team to build the project successfully. Please follow the :ref:`Development Guideline <development_guideline>`
 
 Also you can use the following communication methods
 
@@ -28,3 +27,4 @@ Minimum API: 19 (KitKat - 4.4.x)
 
 .. _Discord chat: https://discord.gg/SHG4qrH
 .. _Open source: https://www.digitalocean.com/community/tutorial_series/an-introduction-to-open-source
+.. _Development Guideline: https://www.digitalocean.com/community/tutorial_series/an-introduction-to-open-source

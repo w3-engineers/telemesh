@@ -34,6 +34,7 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
 
@@ -81,9 +82,11 @@ public class SecurityActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.button_next:
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
                 requestMultiplePermissions();
                 break;
             case R.id.button_skip:
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
                 requestMultiplePermissions();
                 break;
         }

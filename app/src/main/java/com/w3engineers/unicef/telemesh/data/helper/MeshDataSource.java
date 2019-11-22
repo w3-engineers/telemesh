@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -180,7 +181,7 @@ public class MeshDataSource extends ViperUtil {
      */
     @Override
     protected void onAck(@NonNull String messageId, int status) {
-
+        Log.d("AclTest", "Ack status: " + status);
         DataModel rmDataModel = new DataModel()
                 .setDataTransferId(messageId)
                 .setAckSuccess(true);

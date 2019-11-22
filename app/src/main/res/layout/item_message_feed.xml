@@ -86,7 +86,7 @@
             android:fontFamily="@font/poppins_regular"
             android:maxLines="2"
             android:text="@{feedEntity.feedDetail}"
-            android:textColor="@{feedEntity.feedReadStatus?@color/hint_text_color:@color/message_text_color}"
+            android:textColor="@{feedEntity.feedReadStatus?@color/message_text_color:@color/hint_text_color}"
             android:textSize="@dimen/text_size_14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/sender_icon"

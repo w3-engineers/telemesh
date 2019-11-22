@@ -14,9 +14,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16"
+            android:contentDescription="@string/txt_description_back"
             android:padding="@dimen/padding_5"
             android:src="@mipmap/ic_back_white"
-            android:contentDescription="@string/txt_description_back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,9 +42,12 @@
 
         <TextView
             android:id="@+id/text_view_welcome"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_16"
+            android:gravity="center"
             android:text="@string/welcome_back"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20"
@@ -52,6 +55,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_onboard" />
+
+
+        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+            android:id="@+id/button_continue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_30"
+            android:text="CONTINUE"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            app:layout_constraintBottom_toTopOf="@+id/button_import_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_welcome"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <com.w3engineers.ext.strom.application.ui.widget.BaseButton
             android:id="@+id/button_import_profile"
@@ -63,29 +85,12 @@
             android:text="@string/import_my_profile"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
-            app:layout_constraintBottom_toTopOf="@+id/button_scan_profile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_welcome"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-            android:id="@+id/button_scan_profile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_30"
-            android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginEnd="@dimen/margin_30"
-            android:text="@string/scan_my_profile_qr"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:visibility="invisible"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            app:bb_drawable="@drawable/drawable_button_bg_with_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_import_profile" />
+            app:layout_constraintTop_toBottomOf="@+id/button_continue" />
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

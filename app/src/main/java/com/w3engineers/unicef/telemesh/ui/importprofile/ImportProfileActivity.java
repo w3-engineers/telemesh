@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.mesh.application.data.local.wallet.WalletService;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -49,9 +51,10 @@ public class ImportProfileActivity extends BaseActivity {
             case R.id.button_import_profile:
                 openFileChooser();
                 break;
-            case R.id.button_scan_profile:
+            case R.id.button_continue:
                 // Scan from qr.
                 // Now it is off
+                startActivity(new Intent(ImportProfileActivity.this, ImportWalletActivity.class));
                 break;
         }
     }
@@ -79,7 +82,15 @@ public class ImportProfileActivity extends BaseActivity {
     }
 
     private void initView() {
-        setClickListener(mBinding.imageViewBack, mBinding.buttonImportProfile, mBinding.buttonScanProfile);
+        setClickListener(mBinding.imageViewBack, mBinding.buttonImportProfile, mBinding.buttonContinue);
+
+        if (WalletService.getInstance(this).isWalletExists()) {
+            mBinding.buttonContinue.setVisibility(View.VISIBLE);
+            mBinding.textViewWelcome.setText(getResources().getString(R.string.file_exit));
+            mBinding.textViewWelcome.setTypeface(mBinding.textViewWelcome.getTypeface(), Typeface.NORMAL);
+        } else {
+            mBinding.buttonContinue.setVisibility(View.INVISIBLE);
+        }
     }
 
     private ImportProfileViewModel getViewModel() {

@@ -98,7 +98,7 @@
     <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
     <string name="welcome_back">Welcome back</string>
-    <string name="import_my_profile">import my profile</string>
+    <string name="import_my_profile">import another id</string>
     <string name="scan_my_profile_qr">scan my profile qr</string>
     <string name="search_background">search background</string>
     <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit PIN for your account security.</string>
@@ -113,5 +113,6 @@
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
     <string name="enter_password_here">Enter password here</string>
     <string name="create_profile">Create Profile</string>
+    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this?</string>
 
 </resources>

@@ -17,6 +17,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.mesh.application.data.local.wallet.WalletService;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -84,10 +86,10 @@ public class ImportWalletActivity extends BaseActivity {
 
         String password = mBinding.editTextPassword.getText().toString();
 
-        WalletUtil.getInstance(this).importWallet(Constants.WALLET_URI, password, new WalletPrepareListener() {
-            @Override
-            public void onGetWalletInformation(String address, String publickKey) {
-                if (mViewModel.storeData(address, password, publickKey)) {
+        if (WalletService.getInstance(this).isWalletExists()) {
+           /* WalletService.getInstance(this).createOrLoadWallet(password, new WalletService.WalletLoadListener() {
+                @Override
+                public void onWalletLoaded(String walletAddress, String publicKey) {
 
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();
@@ -97,17 +99,66 @@ public class ImportWalletActivity extends BaseActivity {
                         startActivity(intent);
                     });
                 }
-            }
 
-            @Override
-            public void onWalletLoadError(String errorMessage) {
-                Log.e("walletLoad", "Error: " + errorMessage);
-                runOnUiThread(() -> {
-                    CustomDialogUtil.dismissProgressDialog();
-                    Toaster.showShort(errorMessage);
-                });
-            }
-        });
+                @Override
+                public void onErrorOccurred(String message) {
+                    runOnUiThread(() -> {
+                        CustomDialogUtil.dismissProgressDialog();
+                        Toaster.showShort(message);
+                    });
+                }
+            });*/
+
+            WalletManager.getInstance().loadWallet(this, password, new WalletManager.WalletLoadListener() {
+                @Override
+                public void onWalletLoaded(String walletAddress, String publicKey) {
+                    if (mViewModel.storeData(walletAddress, password, publicKey)) {
+                        runOnUiThread(() -> {
+                            CustomDialogUtil.dismissProgressDialog();
+
+                            Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
+                            intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
+                            startActivity(intent);
+                        });
+                    }
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> {
+                        CustomDialogUtil.dismissProgressDialog();
+                        Toaster.showShort(message);
+                    });
+                }
+            });
+        } else {
+            WalletUtil.getInstance(this).importWallet(Constants.WALLET_URI, password, new WalletPrepareListener() {
+                @Override
+                public void onGetWalletInformation(String address, String publickKey) {
+                    if (mViewModel.storeData(address, password, publickKey)) {
+
+                        runOnUiThread(() -> {
+                            CustomDialogUtil.dismissProgressDialog();
+
+                            Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
+                            intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
+                            startActivity(intent);
+                        });
+                    }
+                }
+
+                @Override
+                public void onWalletLoadError(String errorMessage) {
+                    Log.e("walletLoad", "Error: " + errorMessage);
+                    runOnUiThread(() -> {
+                        CustomDialogUtil.dismissProgressDialog();
+                        Toaster.showShort(errorMessage);
+                    });
+                }
+            });
+
+        }
+
     }
 
     protected void requestMultiplePermissions() {
@@ -123,7 +174,7 @@ public class ImportWalletActivity extends BaseActivity {
 
                             CustomDialogUtil.showProgressDialog(ImportWalletActivity.this);
 
-                            HandlerUtil.postBackground(()-> gotoProfileCreatePage(), 100);
+                            HandlerUtil.postBackground(() -> gotoProfileCreatePage(), 100);
                         }
 
                         // check for permanent denial of any permission

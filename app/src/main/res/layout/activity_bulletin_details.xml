@@ -116,7 +116,7 @@
                     android:textColor="@color/chat_sub_item_color"
                     android:textSize="@dimen/text_small_body_14"
                     app:layout_constraintStart_toStartOf="@+id/text_view_name"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
                 <TextView
                     android:id="@+id/message"

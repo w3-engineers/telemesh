@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TeleMesh</string>
+    <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">My Profile</string>
     <string name="enter_first_name">Type your name</string>
     <string name="signup">Next</string>

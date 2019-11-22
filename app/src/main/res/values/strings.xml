@@ -8,7 +8,7 @@
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
-    <string name="select_photo">Select photo</string>
+    <string name="select_photo">Select Avatar</string>
     <string name="title_contacts_fragment">Nearby Users</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
@@ -90,13 +90,14 @@
     <string name="copied">Copied</string>
     <string name="open_source_edition">Open Source Edition</string>
     <string name="about_description">Telemesh is a messaging app designed with Blockchain and Mesh networking. Unlike traditional messaging app Telemesh works with both internet and without internet connectivity. Telemesh is actively maintained by W3 Engineers Ltd.</string>
-    <string name="copyright_text">Copyright 2019 W3 Engineers Ltd. Licensed under the Apache License, Version 2.0</string>
+    <string name="copyright_text">Copyright 2019 W3 Engineers Ltd.</string>
+    <string name="license_text">Licensed under the Apache License, Version 2.0</string>
 
     <string name="privacy_policy"><a href="https://telemesh.net/privacy-policy/">Privacy Policy</a></string>
     <string name="terms_of_use"><a href="https://telemesh.net/terms-of-use/">Terms of Use</a></string>
     <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
-    <string name="welcome_back">welcome back</string>
+    <string name="welcome_back">Welcome back</string>
     <string name="import_my_profile">import my profile</string>
     <string name="scan_my_profile_qr">scan my profile qr</string>
     <string name="search_background">search background</string>

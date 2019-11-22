@@ -29,12 +29,14 @@ public class MeshDataSource extends ViperUtil {
 
     @SuppressLint("StaticFieldLeak")
     private static MeshDataSource rightMeshDataSource;
+    public static boolean isPrepared = false;
     private BroadcastManager broadcastManager;
 
-    MeshDataSource(@NonNull UserModel userModel) {
+    private MeshDataSource(@NonNull UserModel userModel) {
         super(userModel);
         broadcastManager = BroadcastManager.getInstance();
     }
+
 
     @NonNull
     static MeshDataSource getRmDataSource() {
@@ -55,21 +57,24 @@ public class MeshDataSource extends ViperUtil {
 
     @Override
     protected void onMesh(String myMeshId) {
-        meshInited();
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myMeshId);
-        TextToImageHelper.writeWalletAddressToImage(myMeshId);
+        meshInited(myMeshId);
     }
 
     @Override
     protected void onMeshPrepared(String myWalletAddress) {
-        meshInited();
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, myWalletAddress);
-        TextToImageHelper.writeWalletAddressToImage(myWalletAddress);
+        meshInited(myWalletAddress);
     }
 
-    private void meshInited() {
+    private void meshInited(String meshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
-        RmDataHelper.getInstance().prepareDataObserver();
+
+        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
+
+        if (!isPrepared) {
+            RmDataHelper.getInstance().prepareDataObserver();
+            TextToImageHelper.writeWalletAddressToImage(meshId);
+            isPrepared = true;
+        }
 
         Constants.IsMeshInit = true;
     }

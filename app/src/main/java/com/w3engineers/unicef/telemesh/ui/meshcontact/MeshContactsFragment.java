@@ -101,8 +101,9 @@ public class MeshContactsFragment extends BaseFragment {
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(getResources().getString(R.string.title_contacts_fragment));
-
+                Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
+                    Log.d("SearchIssue", "Search result found");
                     fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
                     getAdapter().clear();
                     getAdapter().addItem(userEntities);
@@ -189,6 +190,13 @@ public class MeshContactsFragment extends BaseFragment {
                 Timber.e("onError: Complete");
             }
         };
+    }
+
+    public void searchContacts(String query){
+        if (meshContactViewModel != null) {
+            Timber.d("Search query: %s", query);
+            meshContactViewModel.startSearch(query, userEntityList);
+        }
     }
 
 

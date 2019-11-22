@@ -12,6 +12,8 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,7 +82,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     protected BaseServiceLocator getServiceLocator() {
         return ServiceLocator.getInstance();
     }
-    
+
 
     @Override
     protected void startUI() {
@@ -161,9 +163,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }, 10000);*/
         /*DiagramUtil.on(this).start();*/
 
+        initSearchListener();
+
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
 
-        initSearchListener();
     }
 
     public static MainActivity getInstance() {
@@ -189,6 +192,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 binding.searchBar.editTextSearch.setText("");
                 break;
             case R.id.image_view_back:
+                binding.searchBar.editTextSearch.setText("");
                 hideSearchBar();
                 break;
         }
@@ -482,12 +486,36 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void initSearchListener() {
         if (mCurrentFragment != null
                 && mCurrentFragment instanceof MeshContactsFragment) {
-            getCompositeDisposable().add(UIHelper.fromSearchEditText(binding.searchBar.editTextSearch)
+           /* getCompositeDisposable().add(UIHelper.fromSearchEditText(binding.searchBar.editTextSearch)
                     .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
                     .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
                     .distinctUntilChanged()
-                    .subscribeWith(((MeshContactsFragment) mCurrentFragment).searchContacts()));
+                    .subscribeWith(((MeshContactsFragment) mCurrentFragment).searchContacts()));*/
+
+
+        } else {
+            Log.d("SearchIssue", "Mesh contact fragment null");
         }
+
+        binding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mCurrentFragment != null
+                        && mCurrentFragment instanceof MeshContactsFragment) {
+                    ((MeshContactsFragment) mCurrentFragment).searchContacts(s.toString());
+                }
+            }
+        });
     }
 
     /*@Override

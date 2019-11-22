@@ -41,6 +41,7 @@
             android:gravity="center"
             android:inputType="number"
             android:maxLength="8"
+            android:focusable="true"
             android:textColor="@color/new_user_button_color"
             android:textIsSelectable="false"
             app:layout_constraintEnd_toEndOf="parent"

@@ -267,6 +267,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     if (!chatEntity.isIncoming()
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
 
+                        Log.v("MIMO_SAHA:", "Transport Send prev message");
+
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
@@ -281,6 +283,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                     if (!chatEntity.isIncoming()
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
+
+                        Log.v("MIMO_SAHA:", "Transport Send failed message");
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());

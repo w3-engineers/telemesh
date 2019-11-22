@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -32,6 +34,7 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
 
@@ -79,9 +82,11 @@ public class SecurityActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.button_next:
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
                 requestMultiplePermissions();
                 break;
             case R.id.button_skip:
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
                 requestMultiplePermissions();
                 break;
         }
@@ -91,6 +96,10 @@ public class SecurityActivity extends BaseActivity {
         setClickListener(mBinding.buttonNext, mBinding.buttonSkip);
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextBoxPassword);
+
+        mBinding.editTextBoxPassword.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void nextButtonControl(String nameText) {
@@ -122,7 +131,7 @@ public class SecurityActivity extends BaseActivity {
 
                             CustomDialogUtil.showProgressDialog(SecurityActivity.this);
 
-                            HandlerUtil.postBackground(()-> goNext(), 100);
+                            HandlerUtil.postBackground(() -> goNext(), 100);
                         }
 
                         // check for permanent denial of any permission
@@ -143,13 +152,19 @@ public class SecurityActivity extends BaseActivity {
 
         String password = mBinding.editTextBoxPassword.getText() + "";
 
+        if (TextUtils.isEmpty(password)) {
+            password = Constants.DEFAULT_PASSWORD;
+        }
+
+        String finalPassword = password;
+
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
 
                 CustomDialogUtil.dismissProgressDialog();
 
-                if (mViewModel.storeData(mUserName, mAvatarIndex, password, address, publickKey)) {
+                if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
 
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();

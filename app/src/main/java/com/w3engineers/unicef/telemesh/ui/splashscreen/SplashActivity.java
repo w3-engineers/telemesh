@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -31,6 +32,8 @@ public class SplashActivity extends BaseActivity {
         ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();
 
         activitySplashBinding.setSplashViewModel(splashViewModel);
+
+        MeshDataSource.isPrepared = false;
 
         splashViewModel.getUserRegistrationStatus();
         ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);

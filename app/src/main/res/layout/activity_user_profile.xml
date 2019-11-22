@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_15"
             android:gravity="center"
-            android:text="@string/profile"
+            android:text="@string/activity_view_profile"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22"
             app:layout_constraintBottom_toBottomOf="@+id/op_back"

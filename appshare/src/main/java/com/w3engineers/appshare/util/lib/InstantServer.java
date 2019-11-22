@@ -267,9 +267,9 @@ public class InstantServer {
             Response response = null;
             try {
 
-                if (uri.contains("TeleMesh")) {
+                if (uri.contains("Telemesh")) {
                     response = prepareFile(header, false);
-                } else if(uri.contains("TelemeshService")) {
+                } else if(uri.contains("TeleService")) {
                     response = prepareFile(header, true);
                 } else {
                     if (uri.contains(FILE_TYPE_CSS)) {

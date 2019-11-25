@@ -114,4 +114,8 @@
     <string name="enter_password_here">Enter password here</string>
     <string name="create_profile">Create Profile</string>
 
+    <string name="please_enter_your_name">Please enter your name</string>
+    <string name="enter_valid_name">Enter valid name</string>
+
+
 </resources>

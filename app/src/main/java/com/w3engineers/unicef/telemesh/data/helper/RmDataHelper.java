@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
@@ -93,6 +94,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private RmDataHelper() {
+        dataSource = Source.getDbSource();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
 

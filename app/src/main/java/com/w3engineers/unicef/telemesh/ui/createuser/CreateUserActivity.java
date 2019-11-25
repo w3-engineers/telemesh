@@ -103,12 +103,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
-            mBinding.buttonSignup.setClickable(true);
+            //mBinding.buttonSignup.setClickable(true);
         } else {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.new_user_button_color));
-            mBinding.buttonSignup.setClickable(false);
+            //mBinding.buttonSignup.setClickable(false);
         }
     }
 
@@ -200,11 +200,16 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void saveData() {
-        if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
-            requestMultiplePermissions();
+        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
+            Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
+        } else if (mBinding.editTextName.getText().toString().length() < 2) {
+            Toaster.showShort(getResources().getString(R.string.enter_valid_name));
+        } else if (mViewModel.getImageIndex() < 0) {
+            Toaster.showShort(getString(R.string.select_avatar));
         } else {
-            Toaster.showLong(getString(R.string.select_avatar));
+            requestMultiplePermissions();
         }
+
     }
 
     private void parseIntent() {
@@ -228,10 +233,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void goToPasswordPage() {
-        Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
-        intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
-        intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
-        startActivity(intent);
+
+        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
+            Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
+        } else if (mBinding.editTextName.getText().toString().length() < 2) {
+            Toaster.showShort(getResources().getString(R.string.enter_valid_name));
+        } else if (mViewModel.getImageIndex() < 0) {
+            Toaster.showShort(getString(R.string.select_avatar));
+        } else {
+            Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
+            intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
+            intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
+            startActivity(intent);
+        }
+
     }
 
     private void showWarningDialog() {

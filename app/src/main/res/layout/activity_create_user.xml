@@ -182,7 +182,7 @@
                 <com.w3engineers.ext.strom.application.ui.widget.BaseButton
                     android:id="@+id/button_signup"
                     style="@style/CustomButton"
-                    android:clickable="false"
+                    android:clickable="true"
                     android:text="@string/signup"
                     android:textColor="@color/new_user_button_color"
                     app:bb_drawable="@drawable/ractangular_white"

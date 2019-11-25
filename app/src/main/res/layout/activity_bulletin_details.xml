@@ -115,8 +115,9 @@
                     android:text="@{TimeUtil.parsingTime(TimeUtil.getBroadcastFullTime(feedEntity.feedTime))}"
                     android:textColor="@color/chat_sub_item_color"
                     android:textSize="@dimen/text_small_body_14"
+                    android:layout_marginTop="@dimen/margin_3"
                     app:layout_constraintStart_toStartOf="@+id/text_view_name"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
                 <TextView
                     android:id="@+id/message"

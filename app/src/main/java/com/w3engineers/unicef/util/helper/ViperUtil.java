@@ -103,6 +103,7 @@ public abstract class ViperUtil {
             Log.v("MIMO_SAHA:", "Wallet loaded");
 
             if (walletLoaded.success) {
+                myUserId = walletLoaded.walletAddress;
                 onMeshPrepared(walletLoaded.walletAddress);
             }
         });

@@ -276,9 +276,8 @@
                 <ImageView
                     android:id="@+id/image_view_log"
                     style="@style/image_style_settings_page"
-                    android:background="@mipmap/ic_show_log_active"
-                    android:backgroundTint="#0180E5"
                     android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_show_log_active"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

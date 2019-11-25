@@ -6,7 +6,8 @@
 
 
     <data>
-
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
         <variable
             name="userEntity"
             type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
@@ -136,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_5"
             android:contentDescription="@string/user_id_copy"
+            android:visibility="@{userEntity.meshId.empty?View.GONE:View.VISIBLE}"
             android:padding="@dimen/padding_5"
             android:src="@mipmap/ic_copy_text"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"

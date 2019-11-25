@@ -43,7 +43,7 @@ public class NotifyUtil {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setAction(Long.toString(TimeUtil.toCurrentTime()));
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         UserEntity userEntity = userDataSource.getSingleUserById(chatEntity.getFriendsId());
 
@@ -93,7 +93,7 @@ public class NotifyUtil {
                 .setAutoCancel(true)
                 .setPriority(Notification.PRIORITY_HIGH).setVibrate(new long[0])
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                .setSmallIcon(R.mipmap.ic_app_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(imageBitmap);
 
         if (SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)) {

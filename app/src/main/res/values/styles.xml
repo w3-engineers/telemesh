@@ -28,7 +28,7 @@
 
     <style name="CustomButton">
         <item name="android:layout_width">@dimen/width_100</item>
-        <item name="android:layout_height">@dimen/height_40</item>
+        <item name="android:layout_height">@dimen/height_50</item>
         <item name="android:layout_marginStart">@dimen/margin_15</item>
         <item name="android:layout_marginEnd">@dimen/margin_15</item>
         <item name="android:fontFamily">@font/poppins_regular</item>

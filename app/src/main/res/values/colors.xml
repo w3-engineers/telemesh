@@ -76,4 +76,5 @@
 
     <color name="profile_bg">#E6EAF2</color>
 
+    <color name="wallet_highlight_color">#F9CE06</color>
 </resources>

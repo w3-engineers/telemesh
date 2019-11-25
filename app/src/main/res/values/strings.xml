@@ -113,6 +113,11 @@
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
     <string name="enter_password_here">Enter password here</string>
     <string name="create_profile">Create Profile</string>
-    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this?</string>
+    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
+    <string name="or">or</string>
+    <string name="warning">WARNING!!</string>
+    <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

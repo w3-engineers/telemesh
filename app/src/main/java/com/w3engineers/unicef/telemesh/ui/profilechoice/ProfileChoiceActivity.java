@@ -39,6 +39,7 @@ public class ProfileChoiceActivity extends BaseActivity {
 
     private ActivityProfileChoiceBinding mBinding;
     private ProfileChoiceViewModel mViewModel;
+    private boolean isCreateProfileCall;
 
     @Override
     protected int getLayoutId() {
@@ -59,8 +60,10 @@ public class ProfileChoiceActivity extends BaseActivity {
         super.onClick(view);
 
         if (view.getId() == R.id.button_create_account) {
-            startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
+            isCreateProfileCall = true;
+            requestMultiplePermissions();
         } else if (view.getId() == R.id.button_import_account) {
+            isCreateProfileCall = false;
             requestMultiplePermissions();
         }
     }
@@ -89,7 +92,11 @@ public class ProfileChoiceActivity extends BaseActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
 
                         if (report.areAllPermissionsGranted()) {
-                            startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
+                            if (isCreateProfileCall) {
+                                startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
+                            } else {
+                                startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
+                            }
                         }
 
                         // check for permanent denial of any permission

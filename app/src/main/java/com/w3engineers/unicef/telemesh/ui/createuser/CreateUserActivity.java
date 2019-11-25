@@ -19,18 +19,29 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
+import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
+
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
@@ -201,6 +212,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (intent.hasExtra(Constants.IntentKeys.PASSWORD)) {
             isLoadAccount = true;
             mPassword = intent.getStringExtra(Constants.IntentKeys.PASSWORD);
+        } else {
+            showWarningDialog();
         }
     }
 
@@ -219,5 +232,28 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
         intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
         startActivity(intent);
+    }
+
+    private void showWarningDialog() {
+        DialogUtil.showConfirmationDialog(this,
+                getResources().getString(R.string.warning),
+                WalletAddressHelper.getWalletSpannableString(this).toString(),
+                getResources().getString(R.string.cancel),
+                getResources().getString(R.string.ok), new DialogUtil.DialogButtonListener() {
+                    @Override
+                    public void onClickPositive() {
+                        startActivity(new Intent(CreateUserActivity.this, ImportWalletActivity.class));
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onClickNegative() {
+
+                    }
+                });
     }
 }

@@ -27,6 +27,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
+import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,14 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public class ImportProfileActivity extends BaseActivity {
 
@@ -52,7 +61,6 @@ public class ImportProfileActivity extends BaseActivity {
     protected void startUI() {
         mBinding = (ActivityImportProfileBinding) getViewDataBinding();
         mViewModel = getViewModel();
-        walletSuffixDir = "wallet/" + getResources().getString(com.w3engineers.mesh.R.string.app_name);
         initView();
     }
 
@@ -105,7 +113,7 @@ public class ImportProfileActivity extends BaseActivity {
 
         if (WalletService.getInstance(this).isWalletExists()) {
             mBinding.buttonContinue.setVisibility(View.VISIBLE);
-            mBinding.textViewWelcome.setText(getWalletSpannableString());
+            mBinding.textViewWelcome.setText(WalletAddressHelper.getWalletSpannableString(this));
             mBinding.textViewWelcome.setTypeface(mBinding.textViewWelcome.getTypeface(), Typeface.NORMAL);
             mBinding.textViewWelcome.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         } else {
@@ -115,66 +123,6 @@ public class ImportProfileActivity extends BaseActivity {
         }
     }
 
-    private SpannableString getWalletSpannableString() {
-        String walletText = getResources().getString(R.string.file_exit);
-        String address = readWalletAddress();
-
-        String walletExistMessage = String.format(walletText, address);
-        SpannableString spannableString = new SpannableString(walletExistMessage);
-
-
-        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.wallet_highlight_color)),
-                1, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        int startIndex = walletExistMessage.length() - address.length();
-
-        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.wallet_highlight_color)),
-                startIndex, walletExistMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return spannableString;
-    }
-
-    private String readWalletAddress() {
-        String filePath = Web3jWalletHelper.onInstance(this).getWalletDir(walletSuffixDir);
-        File directory = new File(filePath);
-        StringBuilder result = new StringBuilder();
-        File[] list = directory.listFiles();
-        if (list != null) {
-            File walletFile = list[0];
-            if (walletFile.exists()) {
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(walletFile);
-                    char current;
-                    while (fis.available() > 0) {
-                        current = (char) fis.read();
-                        result.append(current);
-                    }
-                } catch (Exception e) {
-                    Log.e("WalletRead", "Error: " + e.getMessage());
-                } finally {
-                    if (fis != null)
-                        try {
-                            fis.close();
-                        } catch (IOException ignored) {
-                        }
-                }
-            }
-        }
-
-        if (TextUtils.isEmpty(result.toString())) {
-            return result.toString();
-        }
-
-        try {
-            JSONObject walletObj = new JSONObject(result.toString());
-            result = new StringBuilder("0x" + walletObj.optString("address"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return result.toString();
-    }
 
     private ImportProfileViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {

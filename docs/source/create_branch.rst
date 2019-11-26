@@ -1,4 +1,4 @@
-.. create_branch:
+.. _create_branch:
 
 Create branch
 -------------

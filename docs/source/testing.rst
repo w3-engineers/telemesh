@@ -1,4 +1,4 @@
-.. testing:
+.. _testing:
 
 Testing
 -------

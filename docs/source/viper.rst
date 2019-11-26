@@ -1,4 +1,4 @@
-.. viper:
+.. _viper:
 
 =====
 Viper

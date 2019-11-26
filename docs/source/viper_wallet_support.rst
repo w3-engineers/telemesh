@@ -1,4 +1,4 @@
-.. viper_wallet_support:
+.. _viper_wallet_support:
 
 
 Wallet Support

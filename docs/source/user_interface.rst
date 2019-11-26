@@ -1,4 +1,4 @@
-.. user_interface:
+.. _user_interface:
 
 User Interface
 --------------

@@ -1,4 +1,4 @@
-.. local_dev_env:
+.. _local_dev_env:
 
 Local development environments
 ------------------------------

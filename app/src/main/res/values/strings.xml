@@ -119,8 +119,6 @@
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="please_enter_your_name">Please enter your name</string>
-    <string name="enter_valid_name">Enter valid name</string>
 
     <string name="please_enter_your_name">Please enter your name</string>
     <string name="enter_valid_name">Enter valid name</string>

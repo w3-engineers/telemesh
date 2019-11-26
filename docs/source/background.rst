@@ -1,4 +1,4 @@
-.. background:
+.. _background:
 
 
 Background

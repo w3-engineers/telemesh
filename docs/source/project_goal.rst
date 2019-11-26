@@ -1,4 +1,4 @@
-.. project_goal:
+.. _project_goal:
 
 Project’s Goal
 --------------

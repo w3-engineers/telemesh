@@ -14,9 +14,9 @@ Telemesh Documentation
    features
    project_structure
    prerequisities
+   project_dependencies
    get_started
    create_branch
-   project_dependencies
    local_dev_env
    development_guideline
 

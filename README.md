@@ -10,6 +10,7 @@
 [![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
 [![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
 [![Lint tool: TeleMesh](https://img.shields.io/badge/Lint_tool-telemesh-2e99e9.svg?style=flat)](https://w3-engineers.github.io/telemesh/lint_reports/lint-report.html)
+[![docs](https://readthedocs.org/projects/pip/badge/?version=latest&style=plastic)](https://readthedocs.org/projects/telemesh/)
 
 A mesh network based off-grid messaging application powered by blockchain technology.
 
@@ -41,14 +42,8 @@ If you face any bug or have any particular feature request please go [here](http
 **NOTE:** You must have a connected device or emulator as it runs instrumentation tests. You will find the coverage report at *telemesh/app/build/reports/coverage*
 
 ## User Interface (UI)
-<kbd><img src="http://gdurl.com/CxzW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Znvi" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/exAY" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Q0-C" width="175" height="300"></kbd> 
 
-<kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
-
-<kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/cUI2" width="175" height="300"></kbd>
-
-<kbd><img src="http://gdurl.com/cDhEu" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/xEb6" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/59rC" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/A2Qj" width="175" height="300"></kbd>
-
+Please find here the [Telemesh UI](https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/grid)
 
 
 ## License

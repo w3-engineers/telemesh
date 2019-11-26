@@ -1,4 +1,4 @@
-.. get_started:
+.. _get_started:
 
 Get started
 -----------

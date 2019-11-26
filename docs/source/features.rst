@@ -1,4 +1,4 @@
-.. features:
+.. _features:
 
 Features
 --------

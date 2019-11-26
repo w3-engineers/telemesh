@@ -1,4 +1,4 @@
-.. android_core:
+.. _android_core:
 
 Android Core
 ------------

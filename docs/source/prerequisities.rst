@@ -1,8 +1,8 @@
-.. prerequisities:
+.. _prerequisities:
 
-=============
-Prerequisites
-=============
+=========================
+Development Prerequisites
+=========================
 
 .. toctree::
    :maxdepth: 2

@@ -13,6 +13,7 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -189,7 +190,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 // disableLoading();
                 break;
             case R.id.image_view_cross:
-                binding.searchBar.editTextSearch.setText("");
+                if(TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())){
+                    hideSearchBar();
+                }else{
+                    binding.searchBar.editTextSearch.setText("");
+                }
                 break;
             case R.id.image_view_back:
                 binding.searchBar.editTextSearch.setText("");

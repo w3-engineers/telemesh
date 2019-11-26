@@ -47,10 +47,10 @@ If you face any bug or have any particular feature request please go [here](http
 
 Please find here the complete UI flow [Telemesh UI](https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/grid)
 
-<kbd><img src="https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/screen/5a5aab18-78d0-4e8e-a64c-423d7eecc3d8/On-boarding-1" width="175" height="300"></kbd> 
-<kbd><img src="https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/screen/3ad77b30-fb40-428e-ac88-b890aaaa850b/On-boarding-2" width="175" height="300"></kbd> 
-<kbd><img src="https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/screen/3f4c8810-8ef4-4b53-97d5-6540468680a9/Sign-up" width="175" height="300"></kbd> 
-<kbd><img src="https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/screen/7d5fefae-e2a4-43db-b367-1dcc29d53438/Discovery" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/cDhEu" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/uZ08" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/TMGD" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/9oMM" width="175" height="300"></kbd> 
 
 
 

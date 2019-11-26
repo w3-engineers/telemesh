@@ -19,6 +19,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.application.data.local.wallet.WalletService;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -218,7 +219,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             isLoadAccount = true;
             mPassword = intent.getStringExtra(Constants.IntentKeys.PASSWORD);
         } else {
-            showWarningDialog();
+            if (WalletService.getInstance(this).isWalletExists()) {
+                showWarningDialog();
+            }
         }
     }
 

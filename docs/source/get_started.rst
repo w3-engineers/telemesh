@@ -21,8 +21,11 @@ Edit the file `~/.gradle/gradle.properties` and add the following credentials.
 
 
           BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
+
           BROADCAST_URL = "<BROADCAST_URL>"
+
           PARSE_URL = "<PARSE_URL>"
+
           PARSE_APP_ID = "<PARSE_APP_ID>"
 
 

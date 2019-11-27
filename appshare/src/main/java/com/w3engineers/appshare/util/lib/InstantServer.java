@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
+import com.w3engineers.appshare.util.helper.InAppShareUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -37,6 +38,7 @@ public class InstantServer {
 
     private int port;
     private static InstantServer instantServer = new InstantServer();
+    private int downloadContent = 0;
     /**
      * Response status type
      */
@@ -96,6 +98,10 @@ public class InstantServer {
     private ServerSocket serverSocket;
     private Thread thread;
 
+    private void resetAll() {
+        downloadContent = 0;
+    }
+
     /**
      * The purpose of this API is socket initialize
      * and ready for accepting any type of request
@@ -104,6 +110,8 @@ public class InstantServer {
      */
     public void startServer(){
         try {
+            resetAll();
+
             final ServerSocket serverSocket = new ServerSocket(port);
             final String fileLocation = filePath;
             final String serviceFileLocation = serviceApkPath;
@@ -248,6 +256,14 @@ public class InstantServer {
                 Response response = serveFile(methods.getProperty(URI), header);
 
                 if (response != null) {
+
+                    if (TextUtils.equals(response.mimeType, MIME_DEFAULT_BINARY)) {
+                        downloadContent++;
+
+                        InAppShareUtil.getInstance().setDownloadCount(downloadContent);
+
+                    }
+
                     sendResponse(response);
                 }
 
@@ -430,6 +446,13 @@ public class InstantServer {
                         total += read;
                         int responsePercentage = (int) ((total * 100) / lengthOfFile);
                         if (responsePercentage > 99 && TextUtils.equals(mimeType, MIME_DEFAULT_BINARY)) {
+
+                            downloadContent--;
+
+                            InAppShareUtil.getInstance().setDownloadCount(downloadContent);
+
+                            Log.v("MIMO_SAHA::", "Pending download: " + downloadContent);
+
                             InAppShareControl.AppShareCallback appShareCallback = InAppShareControl.getInstance().getAppShareCallback();
                             if (appShareCallback != null) {
                                 appShareCallback.successShared();

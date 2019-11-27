@@ -11,11 +11,13 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -23,7 +25,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.w3engineers.appshare.R;
 import com.w3engineers.appshare.util.helper.InAppShareUtil;
@@ -46,6 +47,7 @@ public class InAppShareActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private TextView wifiId, wifiPass, wifiUrl;
     private ImageView qrCode, wifiQrCode;
+    private int downloadingCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +153,10 @@ public class InAppShareActivity extends AppCompatActivity {
                 finish();
             });
         });
+
+        inAppShareViewModel.getPendingDownloadState().observe(this, downloadingNumber -> {
+            this.downloadingCount = downloadingNumber;
+        });
     }
 
     private SpannableString getHotspotText() {
@@ -211,16 +217,46 @@ public class InAppShareActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        openExitAlert();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            openExitAlert();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openExitAlert() {
+
+        if (downloadingCount > 0) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(InAppShareActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogLayout = inflater.inflate(R.layout.alert_exit, null);
+
+            TextView dialogText = dialogLayout.findViewById(R.id.alert_message);
+
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.dismiss();
+                finish();
+            });
+            builder.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
+
+            dialogText.setText(getResources().getString(R.string.exit_message));
+
+            builder.setView(dialogLayout);
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+
+        } else {
+            finish();
+        }
     }
 
     private InAppShareViewModel getViewModel() {

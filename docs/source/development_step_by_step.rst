@@ -22,15 +22,14 @@ Telemesh
 
 4. Edit the file `~/.gradle/gradle.properties` and add the following credentials.
 
-    .. code-block:: JSON
+    ..
 
-       {
           BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
           BROADCAST_URL = "<BROADCAST_URL>"
           PARSE_URL = "<PARSE_URL>"
           PARSE_APP_ID = "<PARSE_APP_ID>"
 
-       }
+
 
     ..
         For Unix based system the directory is ``~/.gradle/gradle.properties``

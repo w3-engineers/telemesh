@@ -4,24 +4,27 @@ Get started
 -----------
 
 **Step 1: Clone repository:** Navigate to directory where you want to
-keep source code. Open command prompt. Execute below command: > git
-clone https://github.com/w3-engineers/telemesh.git
+keep source code. Open command prompt. Execute below command:
 
-Here you will found how to install Git and start contribute to `Open source`_
+ ..
+
+     git clone https://github.com/w3-engineers/telemesh.git
+
+Here you will get how to install Git and start contribute to `Open source`_
 
 **Step 2: Prepare gradle.properties file:** You need to request some credentials
 to the Telemesh team to build the project successfully.
 
 Edit the file `~/.gradle/gradle.properties` and add the following credentials.
 
-    .. code-block:: JSON
+    ..
 
-       {
+
           BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
           BROADCAST_URL = "<BROADCAST_URL>"
           PARSE_URL = "<PARSE_URL>"
           PARSE_APP_ID = "<PARSE_APP_ID>"
-       }
+
 
     ..
 

@@ -29,14 +29,13 @@ Telemesh
           BROADCAST_URL = "<BROADCAST_URL>"
           PARSE_URL = "<PARSE_URL>"
           PARSE_APP_ID = "<PARSE_APP_ID>"
-          MULTIVERSE_URL = "<MULTIVERSE_URL>"
 
        }
 
+    ..
+        For Unix based system the directory is ``~/.gradle/gradle.properties``
 
-           For Unix based system the directory is ``~/.gradle/gradle.properties``
-
-           For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
+        For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
 
    If you don't find ``gradle.properties`` file then you can create your own.
    For credentials please join our `Discord`_ channel.

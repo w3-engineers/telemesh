@@ -26,6 +26,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.subjects.BehaviorSubject;
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
@@ -38,6 +42,9 @@ public class InAppShareUtil {
     private static InAppShareUtil inAppShareUtil = new InAppShareUtil();
     private Random random = new Random();
     private InAppShareCallback inAppShareCallback = null;
+
+    private BehaviorSubject<Integer> downloadedStateCount = BehaviorSubject.create();
+
     @NonNull
     public String serverAddress = "";
     @Nullable
@@ -225,5 +232,13 @@ public class InAppShareUtil {
         serverAddress = "";
         serverAddressBitmap = null;
         wifiAddressBitmap = null;
+    }
+
+    public void setDownloadCount(int pendingDownloadCount) {
+        downloadedStateCount.onNext(pendingDownloadCount);
+    }
+
+    public Flowable<Integer> getDownloadStateCount() {
+        return downloadedStateCount.toFlowable(BackpressureStrategy.LATEST);
     }
 }

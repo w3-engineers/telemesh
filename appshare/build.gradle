@@ -38,6 +38,7 @@ dependencies {
 
     implementation 'com.google.zxing:core:3.3.3'
     implementation deps.strom_remote
+    implementation deps.livedata_reactive
 
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"

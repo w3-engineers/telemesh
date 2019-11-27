@@ -2,6 +2,8 @@ package com.w3engineers.appshare.application.ui;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -83,6 +85,10 @@ public class InAppShareViewModel extends AndroidViewModel implements InAppShareU
     @Override
     public void inAppShareAssets(boolean isServerReady) {
         appShareStateLiveData.postValue(isServerReady);
+    }
+
+    public LiveData<Integer> getPendingDownloadState() {
+        return LiveDataReactiveStreams.fromPublisher(InAppShareUtil.getInstance().getDownloadStateCount());
     }
 
     /**

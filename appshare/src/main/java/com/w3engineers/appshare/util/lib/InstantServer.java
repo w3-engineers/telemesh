@@ -285,7 +285,7 @@ public class InstantServer {
 
                 if (uri.contains("Telemesh")) {
                     response = prepareFile(header, false);
-                } else if(uri.contains("RightMeshService")) {
+                } else if(uri.contains("TeleService")) {
                     response = prepareFile(header, true);
                 } else {
                     if (uri.contains(FILE_TYPE_CSS)) {

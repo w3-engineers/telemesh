@@ -20,25 +20,27 @@ Telemesh
 
 3. ``Viper`` dependency should be added in the same way inside app level ``build.gradle``
 
-4. Edit the file `~/.gradle/gradle.properties` and add the following credentials.
+4. Edit the file ``~/.gradle/gradle.properties`` and add the
 
-    .. code-block:: JSON
+   following credentials::
 
-       {
-          BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
-          BROADCAST_URL = "<BROADCAST_URL>"
-          PARSE_URL = "<PARSE_URL>"
-          PARSE_APP_ID = "<PARSE_APP_ID>"
+                 BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
+                 BROADCAST_URL = "<BROADCAST_URL>"
+                 PARSE_URL = "<PARSE_URL>"
+                 PARSE_APP_ID = "<PARSE_APP_ID>"
 
-       }
 
-    ..
-        For Unix based system the directory is ``~/.gradle/gradle.properties``
 
-        For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
 
-   If you don't find ``gradle.properties`` file then you can create your own.
-   For credentials please join our `Discord`_ channel.
+   Directory::
+
+      For Unix based system the directory is ``~/.gradle/gradle.properties``
+
+      For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
+
+  If you don't find ``gradle.properties`` file then you can create your own.
+
+  For credentials please join our `Discord`_ channel.
 
 
 5. Prepare ``config.json`` file inside Android Studio and put it under the ``assets`` folder of your app module.

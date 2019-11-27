@@ -4,30 +4,32 @@ Get started
 -----------
 
 **Step 1: Clone repository:** Navigate to directory where you want to
-keep source code. Open command prompt. Execute below command: > git
-clone https://github.com/w3-engineers/telemesh.git
+keep source code. Open command prompt.
 
-Here you will found how to install Git and start contribute to `Open source`_
+  Execute below command::
+
+     git clone https://github.com/w3-engineers/telemesh.git
+
+Here you will get how to install Git and start contribute to `Open source`_
 
 **Step 2: Prepare gradle.properties file:** You need to request some credentials
 to the Telemesh team to build the project successfully.
 
-Edit the file `~/.gradle/gradle.properties` and add the following credentials.
+Edit the file ``~/.gradle/gradle.properties`` and add the
 
-    .. code-block:: JSON
+ following credentials::
 
-       {
-          BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
-          BROADCAST_URL = "<BROADCAST_URL>"
-          PARSE_URL = "<PARSE_URL>"
-          PARSE_APP_ID = "<PARSE_APP_ID>"
-       }
+              BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
+              BROADCAST_URL = "<BROADCAST_URL>"
+              PARSE_URL = "<PARSE_URL>"
+              PARSE_APP_ID = "<PARSE_APP_ID>"
 
-    ..
 
-        For Unix based system the directory is ``~/.gradle/gradle.properties``
+ Directory ::
 
-        For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
+    For Unix based system the directory is ``~/.gradle/gradle.properties``
+
+    For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
 
 If you don't find ``gradle.properties`` file then you can create your own.
 

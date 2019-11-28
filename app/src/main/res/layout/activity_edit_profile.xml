@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.createuser.CreateUserActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
+        <variable
+            name="user"
+            type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/chat_background">
-
+        android:background="@color/chat_background"
+        tools:context=".ui.editprofile.EditProfileActivity">
 
         <ScrollView
             android:id="@+id/scrollview"
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_20"
-                    android:text="@string/create_profile"
+                    android:text="@string/update_profile"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_20"
                     app:layout_constraintBottom_toBottomOf="@+id/image_view_back"
@@ -116,7 +116,7 @@
                     android:layout_height="@dimen/height_120"
                     android:contentDescription="@string/profile_selection_image"
                     android:padding="@dimen/margin_20"
-                    android:src="@mipmap/ic_avatar_grey"
+                    app:imageResource="@{userEntity.avatarIndex}"
                     app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -157,6 +157,7 @@
                         android:inputType="text"
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
                         android:singleLine="true"
+                        android:text="@{userEntity.getFullName()}"
                         android:textSize="@dimen/text_body"
                         app:bet_baseColor="@color/message_text_color"
                         app:bet_primaryColor="@color/new_user_button_color"
@@ -180,18 +181,17 @@
 
 
                 <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-                    android:id="@+id/button_signup"
+                    android:id="@+id/button_update"
                     style="@style/CustomButton"
-                    android:clickable="true"
-                    android:text="@string/signup"
-                    android:textColor="@color/new_user_button_color"
-                    app:bb_drawable="@drawable/ractangular_white"
+                    android:text="@string/update"
+                    android:textColor="@color/white"
+                    app:bb_drawable="@drawable/ractangular_gradient"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />
             </android.support.constraint.ConstraintLayout>
 
         </ScrollView>
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>
-

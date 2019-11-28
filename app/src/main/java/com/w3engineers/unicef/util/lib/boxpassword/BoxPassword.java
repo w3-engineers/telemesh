@@ -5,6 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.View;
@@ -73,6 +77,7 @@ public class BoxPassword extends AppCompatEditText {
                 }
             }
         });
+
     }
 
     @Override
@@ -122,5 +127,8 @@ public class BoxPassword extends AppCompatEditText {
                 startX += mCharSize + mSpace;
             }
         }
+
+
     }
+
 }

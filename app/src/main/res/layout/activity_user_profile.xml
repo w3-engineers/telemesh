@@ -6,8 +6,11 @@
 
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="android.text.TextUtils" />
+
         <variable
             name="userEntity"
             type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
@@ -49,6 +52,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/text_view_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_15"
@@ -59,6 +63,19 @@
             app:layout_constraintBottom_toBottomOf="@+id/op_back"
             app:layout_constraintLeft_toRightOf="@+id/op_back"
             app:layout_constraintTop_toTopOf="@+id/op_back" />
+
+        <TextView
+            android:id="@+id/text_view_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:padding="@dimen/padding_5"
+            android:text="@string/edit"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_title" />
 
         <View
             android:id="@+id/divider"
@@ -137,9 +154,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_5"
             android:contentDescription="@string/user_id_copy"
-            android:visibility="@{userEntity.meshId.empty?View.GONE:View.VISIBLE}"
             android:padding="@dimen/padding_5"
             android:src="@mipmap/ic_copy_text"
+            android:visibility="@{userEntity.meshId.empty?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"
             app:layout_constraintStart_toEndOf="@+id/user_id" />
 

@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.createuser;
+package com.w3engineers.unicef.telemesh.ui.editprofile;
 
 import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
@@ -17,19 +17,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+public class EditProfileViewModel extends BaseRxAndroidViewModel {
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class CreateUserViewModel extends BaseRxAndroidViewModel {
+    private int imageIndex = EditProfileActivity.INITIAL_IMAGE_INDEX;
 
-    private int imageIndex = CreateUserActivity.INITIAL_IMAGE_INDEX;
-
-    public CreateUserViewModel(@NonNull Application application) {
+    public EditProfileViewModel(@NonNull Application application) {
         super(application);
     }
 
@@ -44,7 +36,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String userName, String password) {
+    boolean storeData(@Nullable String userName) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
@@ -55,8 +47,6 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
-        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
-        sharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;

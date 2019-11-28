@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_discover"
+        android:checked="true"
+        android:icon="@drawable/contact_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_contact"
         android:checked="true"

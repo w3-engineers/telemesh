@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.meshcontact;
+package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -16,22 +15,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
+import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactAdapter;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,19 +36,11 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+public class DiscoverFragment extends BaseFragment {
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class MeshContactsFragment extends BaseFragment {
-
-    private FragmentMeshcontactBinding fragmentMeshcontactBinding;
+    private FragmentDiscoverBinding fragmentDiscoverBinding;
     @Nullable
-    public MeshContactViewModel meshContactViewModel;
+    public DiscoverViewModel discoverViewModel;
     @Nullable
     public List<UserEntity> userEntityList;
     @Nullable
@@ -65,12 +53,12 @@ public class MeshContactsFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_meshcontact;
+        return R.layout.fragment_discover;
     }
 
     @Override
     protected void startUI() {
-        fragmentMeshcontactBinding = (FragmentMeshcontactBinding)
+        fragmentDiscoverBinding = (FragmentDiscoverBinding)
                 getViewDataBinding();
 
         setHasOptionsMenu(true);
@@ -87,9 +75,9 @@ public class MeshContactsFragment extends BaseFragment {
 
     private void userDataOperation() {
 
-        if (meshContactViewModel != null) {
+        if (discoverViewModel != null) {
 
-            meshContactViewModel.allUserEntity.observe(this, userEntities -> {
+            discoverViewModel.allUserEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().resetWithList(userEntities);
                     userEntityList = userEntities;
@@ -98,27 +86,27 @@ public class MeshContactsFragment extends BaseFragment {
                     searchViewControl(userEntities);
             });
 
-            meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
+            discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(getResources().getString(R.string.title_personal_fragment));
                 Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
-                    fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
+                    fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     getAdapter().clear();
                     getAdapter().addItem(userEntities);
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+                        fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         enableLoading();
 
                         isLoaded = true;
                         Runnable runnable = () -> {
-                            fragmentMeshcontactBinding.tvMessage.setText("No User Found");
+                            fragmentDiscoverBinding.tvMessage.setText("No User Found");
                             enableEmpty();
-                            fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+                            fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
 
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
@@ -126,17 +114,17 @@ public class MeshContactsFragment extends BaseFragment {
                 }
             });
 
-            meshContactViewModel.backUserEntity.observe(this, userEntities -> {
+            discoverViewModel.backUserEntity.observe(this, userEntities -> {
                 userEntityList = userEntities;
             });
 
-            meshContactViewModel.startUserObserver();
+            discoverViewModel.startUserObserver();
         }
     }
 
     private void openUserMessage() {
-        if (meshContactViewModel != null) {
-            meshContactViewModel.openUserMessage().observe(this, userEntity -> {
+        if (discoverViewModel != null) {
+            discoverViewModel.openUserMessage().observe(this, userEntity -> {
 
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
@@ -174,9 +162,9 @@ public class MeshContactsFragment extends BaseFragment {
                     isSearchStart = true;
                 }
 
-                if (meshContactViewModel != null) {
+                if (discoverViewModel != null) {
                     Timber.d("Search query: %s", string);
-                    meshContactViewModel.startSearch(string, userEntityList);
+                    discoverViewModel.startSearch(string, userEntityList);
                 }
             }
 
@@ -193,9 +181,9 @@ public class MeshContactsFragment extends BaseFragment {
     }
 
     public void searchContacts(String query){
-        if (meshContactViewModel != null) {
+        if (discoverViewModel != null) {
             Timber.d("Search query: %s", query);
-            meshContactViewModel.startSearch(query, userEntityList);
+            discoverViewModel.startSearch(query, userEntityList);
         }
     }
 
@@ -285,7 +273,7 @@ public class MeshContactsFragment extends BaseFragment {
             title = getResources().getString(R.string.discovering_users);
 
             Runnable runnable = () -> {
-                if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
+                if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
                         setTitle(getResources().getString(R.string.title_personal_fragment));
@@ -305,9 +293,9 @@ public class MeshContactsFragment extends BaseFragment {
 
     private void enableLoading() {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
-        fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
-        fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-        fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+        fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
+        fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
+        fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).enableLoading();
@@ -315,9 +303,9 @@ public class MeshContactsFragment extends BaseFragment {
     }
 
     private void enableEmpty() {
-        fragmentMeshcontactBinding.notFoundView.setVisibility(View.VISIBLE);
-        fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-        fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
+        fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
+        fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
+        fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();
@@ -328,9 +316,9 @@ public class MeshContactsFragment extends BaseFragment {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
-                fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-                fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+                fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
+                fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
+                fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
 
                 // ((MainActivity) getActivity()).enableLoading();
             });
@@ -340,28 +328,29 @@ public class MeshContactsFragment extends BaseFragment {
     // General API's and initialization area
     private void init() {
 
-        meshContactViewModel = getViewModel();
+        discoverViewModel = getViewModel();
 
-        fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-        fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
-        fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
+        fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
-        fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);
+        DiscoverAdapter meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 
-    private MeshContactAdapter getAdapter() {
-        return (MeshContactAdapter) fragmentMeshcontactBinding
+    private DiscoverAdapter getAdapter() {
+        return (DiscoverAdapter) fragmentDiscoverBinding
                 .contactRecyclerView.getAdapter();
     }
 
-    private MeshContactViewModel getViewModel() {
+    private DiscoverViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getMeshContactViewModel();
+                return (T) ServiceLocator.getInstance().getDiscoveViewModel();
             }
-        }).get(MeshContactViewModel.class);
+        }).get(DiscoverViewModel.class);
     }
+
 }

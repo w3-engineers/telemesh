@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 
 import androidx.work.WorkInfo;
 
@@ -36,15 +35,11 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
+import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -230,12 +225,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             menuItem.setChecked(true);
             mFragment = new SettingsFragment();
         } else {
-            MenuItem menuItem = bottomMenu.findItem(R.id.action_contact);
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
-            mFragment = new MeshContactsFragment();
+            mFragment = new DiscoverFragment();
         }
         mCurrentFragment = mFragment;
-        loadFragment(mFragment, getString(R.string.title_contacts_fragment));
+        loadFragment(mFragment, getString(R.string.title_discoverd_fragment));
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
                 .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
@@ -286,8 +281,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Fragment mFragment = null;
         String toolbarTitle = "";
         switch (item.getItemId()) {
+            case R.id.action_discover:
+                toolbarTitle = getString(R.string.title_discoverd_fragment);
+                mFragment = new DiscoverFragment();
+                hideUserBadge();
+                break;
             case R.id.action_contact:
-                toolbarTitle = getString(R.string.title_contacts_fragment);
+                toolbarTitle = getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
                 hideUserBadge();
                 break;
@@ -327,7 +327,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (constraintLayoutContainer == null) return;
         // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
-        if (!(mCurrentFragment instanceof MeshContactsFragment)) {
+        if (!(mCurrentFragment instanceof DiscoverFragment)) {
             if (latestCount > latestUserCount) {
                 constraintLayoutContainer.setVisibility(View.VISIBLE);
             } else {

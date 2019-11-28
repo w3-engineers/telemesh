@@ -4,7 +4,6 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.data.local.BaseMeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -16,6 +15,7 @@ import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileViewModel;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
+import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
 import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceViewModel;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityViewModel;
@@ -82,6 +82,11 @@ public class ServiceLocator extends BaseServiceLocator {
     @NonNull
     public MeshContactViewModel getMeshContactViewModel() {
         return new MeshContactViewModel(UserDataSource.getInstance());
+    }
+
+    @NonNull
+    public DiscoverViewModel getDiscoveViewModel() {
+        return new DiscoverViewModel(UserDataSource.getInstance());
     }
 
     @NonNull

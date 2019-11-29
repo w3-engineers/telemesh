@@ -65,6 +65,8 @@
 
     <string name="mesh_not_initiated">Mesh is not initialized yet</string>
 
+    <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
+
     <string name="settings_open_log">Device Log</string>
     <string name="badge_count_more_than_99">99+</string>
     <string name="diagram_map">Diagram Map</string>

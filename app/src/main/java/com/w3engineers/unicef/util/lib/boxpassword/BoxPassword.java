@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.View;
@@ -73,6 +74,8 @@ public class BoxPassword extends AppCompatEditText {
                 }
             }
         });
+
+        setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
     }
 
     @Override
@@ -123,4 +126,16 @@ public class BoxPassword extends AppCompatEditText {
             }
         }
     }
+
+    InputFilter filter = (source, start, end, dest, dstart, dend) -> {
+        StringBuilder filtered = new StringBuilder();
+        for (int i = start; i < end; i++) {
+            char character = source.charAt(i);
+            if (!Character.isWhitespace(character)) {
+                filtered.append(character);
+            }
+        }
+
+        return filtered.toString().trim();
+    };
 }

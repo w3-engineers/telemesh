@@ -13,6 +13,8 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -50,5 +52,57 @@ public class SecurityViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
                 .subscribe(text -> textChangeLiveData.postValue(text), Throwable::printStackTrace));
+    }
+
+    boolean isValidPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[@$%&#_()=+?»«<>£§€{}\\\\[\\\\]-]).{8,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
+
+    boolean isValidChar(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*?[A-Za-z]).{8,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
+
+    boolean isDigitPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*?[0-9]).{8,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
+
+    boolean isValidSpecial(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+
+        final String PASSWORD_PATTERN = "^(?=.*?[@$%&#_()=+?»«<>£§€{}\\\\[\\\\]-]).{8,}$";
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
     }
 }

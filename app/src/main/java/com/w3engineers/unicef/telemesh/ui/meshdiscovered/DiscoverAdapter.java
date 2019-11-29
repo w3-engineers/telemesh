@@ -30,7 +30,7 @@ public class DiscoverAdapter extends BaseAdapter<UserEntity> {
         String rightUserId = right.getMeshId();
 
 
-        return !TextUtils.isEmpty(leftUserId) && leftUserId != null
+        return !TextUtils.isEmpty(leftUserId)
                 && !TextUtils.isEmpty(rightUserId)
                 && leftUserId.equals(rightUserId);
 

@@ -46,6 +46,9 @@ public class UserEntity extends DbBaseEntity {
 
     public int hasUnreadMessage;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_IS_FAVOURITE)
+    public int isFavourite;
+
     //@Ignore
     //private String userLastName;
     public UserEntity() {
@@ -124,7 +127,17 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
-   /* public boolean isUserSynced() {
+    public int getIsFavourite() {
+        return isFavourite;
+    }
+
+    @NonNull
+    public UserEntity setIsFavourite(int isFavourite) {
+        this.isFavourite = isFavourite;
+        return this;
+    }
+
+    /* public boolean isUserSynced() {
         return isUserSynced;
     }
 
@@ -143,6 +156,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeInt(this.avatarIndex);
         dest.writeLong(this.lastOnlineTime);
         dest.writeInt(isOnline);
+        dest.writeInt(isFavourite);
         dest.writeLong(this.registrationTime);
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
@@ -156,6 +170,7 @@ public class UserEntity extends DbBaseEntity {
         this.avatarIndex = in.readInt();
         this.lastOnlineTime = in.readLong();
         this.isOnline = in.readInt();
+        this.isFavourite = in.readInt();
         this.registrationTime = in.readLong();
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();

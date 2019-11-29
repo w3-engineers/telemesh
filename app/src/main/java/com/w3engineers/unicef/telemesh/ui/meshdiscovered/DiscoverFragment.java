@@ -24,8 +24,6 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactAdapter;
-import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
@@ -180,7 +178,7 @@ public class DiscoverFragment extends BaseFragment {
         };
     }
 
-    public void searchContacts(String query){
+    public void searchContacts(String query) {
         if (discoverViewModel != null) {
             Timber.d("Search query: %s", query);
             discoverViewModel.startSearch(query, userEntityList);

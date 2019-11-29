@@ -80,6 +80,24 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsers();
 
+    @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
+            + " THEN 1 ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
+            + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID + ") AS M INNER JOIN "
+            + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
+            + ColumnNames.COLUMN_FRIENDS_ID + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
+            + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " ELSE " + Constants.MessageStatus.STATUS_READ
+            + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
+            + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
+    abstract Flowable<List<UserEntity>> getAllOnlineUsers();
+
 
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
             + Constants.UserStatus.WIFI_ONLINE + " OR " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "

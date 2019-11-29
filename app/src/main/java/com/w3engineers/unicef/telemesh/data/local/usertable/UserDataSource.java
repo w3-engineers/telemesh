@@ -24,12 +24,8 @@ import android.support.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 /**
  * Using the Room database as a data source.

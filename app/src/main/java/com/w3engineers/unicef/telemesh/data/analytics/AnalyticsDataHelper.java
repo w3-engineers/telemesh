@@ -17,6 +17,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
@@ -46,10 +47,11 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private int trackMessageCount = 0;
     private List<AppShareCountEntity> countSentList;
     private static FileUploadResponseCallback fileUploadResponseCallback;
+    private static FeedbackSendCallback feedbackSendCallback;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
-        
+
         fileUploadResponseCallback = (isSuccessful, name) -> {
             if (isSuccessful) {
                 AsyncTask.execute(() -> {
@@ -58,6 +60,12 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
                     MeshLogDataSource.getInstance().insertOrUpdateData(entity);
                 });
+            }
+        };
+
+        feedbackSendCallback = (isSuccess, userId, feedbackId) -> {
+            if (isSuccess) {
+                // TODO: 11/29/2019 Send local user if it is not
             }
         };
     }
@@ -164,6 +172,10 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void sendLogFileInServer(File file, String userId, String deviceName) {
         AnalyticsApi.on().sendLogFileInServer(file, userId, deviceName, fileUploadResponseCallback);
+    }
+
+    public void sendFeedback(String userId, String userName, String feedbackText, String feedBackId) {
+        AnalyticsApi.on().sendFeedback(userId, userName, feedbackText, feedBackId, feedbackSendCallback);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

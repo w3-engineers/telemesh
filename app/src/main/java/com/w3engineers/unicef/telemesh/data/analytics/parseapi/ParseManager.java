@@ -4,12 +4,15 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
@@ -143,6 +146,34 @@ public class ParseManager {
                 Log.e("ParseFileUpload", "Error: " + e.getMessage());
             }
         });
+    }
+
+    public void sendFeedback(String userId, String userName, String feedbackText, String feedBackId, FeedbackSendCallback callback) {
+        ParseObject parseObject = new ParseObject(ParseConstant.Feedback.TABLE);
+        parseObject.put(ParseConstant.Feedback.USER_ID, userId);
+        parseObject.put(ParseConstant.Feedback.USER_NAME, userName);
+        parseObject.put(ParseConstant.Feedback.USER_FEEDBACK, feedbackText);
+        parseObject.put(ParseConstant.Feedback.FEEDBACK_ID, feedBackId);
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
+
+        parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, feedBackId);
+        parseQuery.whereEqualTo(ParseConstant.Feedback.USER_ID, userId);
+
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects != null && objects.isEmpty()) {
+                    parseObject.saveInBackground(e1 -> {
+                        if (callback != null) {
+                            callback.onGetFeedbackSendResponse(e1 == null, userId, feedBackId);
+                        }
+                    });
+                }
+            } else {
+                Log.e("ParseFeedback", "Feed back query Error: " + e.getMessage());
+            }
+        });
+
     }
 
     private void sendResponse(boolean isSuccess) {

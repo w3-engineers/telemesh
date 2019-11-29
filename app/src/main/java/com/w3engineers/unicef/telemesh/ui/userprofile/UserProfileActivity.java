@@ -36,6 +36,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     private final String LABEL = "Address";
 
     private ActivityUserProfileBinding mBinding;
+    private boolean isMyProfile;
 
     @Override
     protected int getLayoutId() {
@@ -64,7 +65,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         UserProfileViewModel userProfileViewModel = getViewModel();
         mBinding = (ActivityUserProfileBinding) getViewDataBinding();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
-        boolean isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
+        isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
 
         setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile, mBinding.textViewEdit);
@@ -92,6 +93,20 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         Bitmap qrImage = getWalletQr();
         if (qrImage != null) {
             mBinding.imageViewQr.setImageBitmap(qrImage);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isMyProfile) {
+            UserEntity userEntity = new UserEntity();
+            SharedPref sharedPref = SharedPref.getSharedPref(this);
+            userEntity.userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+            userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+            userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            mBinding.setUserEntity(userEntity);
         }
     }
 

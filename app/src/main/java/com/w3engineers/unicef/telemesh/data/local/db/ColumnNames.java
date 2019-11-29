@@ -69,4 +69,9 @@ public interface ColumnNames extends BaseColumnNames {
 
     String LOG_NAME = "log_name";
 
+    // Feedback
+
+    String COLUMN_FEEDBACK = "feedback";
+    String COLUMN_FEEDBACK_ID = "feedback_id";
+    String TIMESTAMP = "timestamp";
 }

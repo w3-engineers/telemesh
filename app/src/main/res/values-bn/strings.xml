@@ -58,4 +58,6 @@
     <string name="badge_count_more_than_99">99+</string>
     <string name="diagram_map">Diagram Map</string>
 
+    <string name="send_feedback">মতামত পাঠান</string>
+
 </resources>

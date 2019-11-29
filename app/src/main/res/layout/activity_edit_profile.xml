@@ -8,6 +8,8 @@
         <variable
             name="user"
             type="com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity" />
+
+        <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -116,7 +118,7 @@
                     android:layout_height="@dimen/height_120"
                     android:contentDescription="@string/profile_selection_image"
                     android:padding="@dimen/margin_20"
-                    app:imageResource="@{userEntity.avatarIndex}"
+                    app:imageResource="@{user.avatarIndex}"
                     app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -157,7 +159,7 @@
                         android:inputType="text"
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
                         android:singleLine="true"
-                        android:text="@{userEntity.getFullName()}"
+                        android:text="@{user.getFullName()}"
                         android:textSize="@dimen/text_body"
                         app:bet_baseColor="@color/message_text_color"
                         app:bet_primaryColor="@color/new_user_button_color"

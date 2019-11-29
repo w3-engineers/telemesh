@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -16,83 +17,112 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/text_view_title"
-            android:layout_width="@dimen/width_0"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_16"
-            android:layout_marginTop="@dimen/margin_30"
-            android:layout_marginEnd="@dimen/margin_16"
-            android:text="@string/please_set_up_an_8_digit_pin_for_your_account_security"
-            android:textColor="@color/message_text_color"
-            android:textSize="@dimen/text_size_16"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
-        <com.w3engineers.unicef.util.lib.boxpassword.BoxPassword
-            android:id="@+id/edit_text_box_password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginEnd="@dimen/margin_16"
-            android:cursorVisible="false"
-            android:gravity="center"
-            android:maxLength="8"
-            android:focusable="true"
-            android:textColor="@color/new_user_button_color"
-            android:textIsSelectable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/text_view_title"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/instruction_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
-            app:cardBackgroundColor="@color/instruction_background"
-            app:layout_constraintEnd_toEndOf="@+id/edit_text_box_password"
-            app:layout_constraintStart_toStartOf="@+id/edit_text_box_password"
-            app:layout_constraintTop_toBottomOf="@+id/edit_text_box_password">
+                <TextView
+                    android:id="@+id/text_view_title"
+                    android:layout_width="@dimen/width_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_16"
+                    android:layout_marginTop="@dimen/margin_30"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:text="@string/please_set_up_an_8_digit_pin_for_your_account_security"
+                    android:textColor="@color/message_text_color"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_12"
-                android:text="@string/pin_instruction"
-                android:textColor="@color/background_color"
-                android:textSize="@dimen/text_size_14" />
+                <com.w3engineers.unicef.util.lib.boxpassword.BoxPassword
+                    android:id="@+id/edit_text_box_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:cursorVisible="false"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:maxLength="8"
+                    android:maxLines="@integer/max_line_1"
+                    android:textColor="@color/new_user_button_color"
+                    android:textIsSelectable="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/text_view_title"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
 
-        </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/password_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_16"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:gravity="center"
+                    android:text="@string/pin_instruction"
+                    android:textColor="@color/background_color"
+                    android:textSize="@dimen/text_size_12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_box_password" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-            android:id="@+id/button_next"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_40"
-            android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginEnd="0dp"
-            android:text="@string/signup"
-            android:textColor="@color/new_user_button_color"
-            app:bb_drawable="@drawable/ractangular_white"
-            app:layout_constraintEnd_toEndOf="@+id/instruction_container"
-            app:layout_constraintTop_toBottomOf="@+id/instruction_container" />
+                <android.support.v7.widget.CardView
+                    android:id="@+id/instruction_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
+                    app:cardBackgroundColor="@color/instruction_background"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_box_password"
+                    app:layout_constraintStart_toStartOf="@+id/edit_text_box_password"
+                    app:layout_constraintTop_toBottomOf="@+id/password_message">
 
-        <TextView
-            android:id="@+id/button_skip"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/height_40"
-            android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginEnd="0dp"
-            android:gravity="center"
-            android:text="@string/skip"
-            android:textAllCaps="true"
-            android:textColor="@color/skip_text_color"
-            android:textSize="@dimen/text_size_14"
-            app:bb_drawable="@null"
-            app:layout_constraintEnd_toEndOf="@+id/button_next"
-            app:layout_constraintStart_toStartOf="@+id/button_next"
-            app:layout_constraintTop_toBottomOf="@+id/button_next" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_12"
+                        android:text="@string/pin_instruction"
+                        android:textColor="@color/background_color"
+                        android:textSize="@dimen/text_size_14" />
+
+                </android.support.v7.widget.CardView>
+
+                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                    android:id="@+id/button_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="0dp"
+                    android:text="@string/signup"
+                    android:textColor="@color/new_user_button_color"
+                    app:bb_drawable="@drawable/ractangular_white"
+                    app:layout_constraintEnd_toEndOf="@+id/instruction_container"
+                    app:layout_constraintTop_toBottomOf="@+id/instruction_container" />
+
+                <TextView
+                    android:id="@+id/button_skip"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="0dp"
+                    android:gravity="center"
+                    android:text="@string/skip"
+                    android:textAllCaps="true"
+                    android:textColor="@color/skip_text_color"
+                    android:textSize="@dimen/text_size_14"
+                    app:bb_drawable="@null"
+                    app:layout_constraintEnd_toEndOf="@+id/button_next"
+                    app:layout_constraintStart_toStartOf="@+id/button_next"
+                    app:layout_constraintTop_toBottomOf="@+id/button_next" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
 
 
     </android.support.constraint.ConstraintLayout>

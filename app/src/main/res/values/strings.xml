@@ -123,9 +123,10 @@
 
     <string name="please_enter_your_name">Please enter your name</string>
     <string name="enter_valid_name">Enter valid name</string>
-    <string name="update">UPDATE</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>
     <string name="edit">EDIT</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="add_your_feedback">Add your feedback</string>
 
 
 </resources>

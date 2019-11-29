@@ -13,6 +13,8 @@ import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -21,7 +23,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 
-public class EditProfileActivity extends BaseActivity {
+public class EditProfileActivity extends TelemeshBaseActivity {
 
     private ActivityEditProfileBinding mBinding;
     private EditProfileViewModel mViewModel;
@@ -38,6 +40,11 @@ public class EditProfileActivity extends BaseActivity {
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected BaseServiceLocator getServiceLocator() {
+        return null;
     }
 
     @Override

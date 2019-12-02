@@ -104,6 +104,11 @@ public class Constants {
         int MESSAGE_OUTGOING = 0;
     }
 
+    public interface FavouriteStatus{
+        int UNFAVOURITE = 0;
+        int FAVOURITE = 1;
+    }
+
     public interface UserStatus {
         int OFFLINE = 0;
         int WIFI_ONLINE = 5;

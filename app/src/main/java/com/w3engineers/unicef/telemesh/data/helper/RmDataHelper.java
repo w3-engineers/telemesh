@@ -807,6 +807,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     .subscribeOn(Schedulers.newThread())
                     .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
         }
+
+        compositeDisposable
+                .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
+                        .subscribe(feedback -> {
+                            AnalyticsDataHelper.getInstance().sendFeedback(feedback);
+                        }, Throwable::printStackTrace));
     }
 
     /**

@@ -94,7 +94,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
             </android.support.constraint.ConstraintLayout>
-        
+
 
     </android.support.constraint.ConstraintLayout>
 

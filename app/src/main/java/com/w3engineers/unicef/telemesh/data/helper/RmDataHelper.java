@@ -181,6 +181,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return updateId > 0;
     }
 
+    public boolean updateFavouriteStatus(String userId, int favouriteStatus) {
+
+        int updateId = UserDataSource.getInstance()
+                .updateFavouriteStatus(userId, favouriteStatus);
+
+        return updateId > 0;
+    }
+
     public int getActiveStatus(int userActiveStatus) {
 
         switch (userActiveStatus) {

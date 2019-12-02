@@ -117,6 +117,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")
     abstract int updateUserStatus(String meshId, int activityStatus);
 
+    @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " = :favouriteStatus"
+            + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")
+    abstract int updateFavouriteStatus(String meshId, int favouriteStatus);
+
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.INTERNET_ONLINE + " OR "

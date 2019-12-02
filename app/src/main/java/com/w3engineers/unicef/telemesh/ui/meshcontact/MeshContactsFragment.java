@@ -15,6 +15,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
@@ -26,6 +30,7 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +47,7 @@ import timber.log.Timber;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshContactsFragment extends BaseFragment {
+public class MeshContactsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
     private FragmentMeshcontactBinding fragmentMeshcontactBinding;
     @Nullable
@@ -72,6 +77,7 @@ public class MeshContactsFragment extends BaseFragment {
         setTitle(title);
 
         init();
+        initSpinner();
 
         userDataOperation();
 
@@ -82,8 +88,8 @@ public class MeshContactsFragment extends BaseFragment {
     private void userDataOperation() {
 
         if (meshContactViewModel != null) {
-
-            meshContactViewModel.allUserEntity.observe(this, userEntities -> {
+            meshContactViewModel.stopAllMessageWithObserver();
+            meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().resetWithList(userEntities);
                     userEntityList = userEntities;
@@ -124,7 +130,7 @@ public class MeshContactsFragment extends BaseFragment {
                 userEntityList = userEntities;
             });
 
-            meshContactViewModel.startUserObserver();
+            meshContactViewModel.startFavouriteObserver();
         }
     }
 
@@ -318,6 +324,27 @@ public class MeshContactsFragment extends BaseFragment {
         }*/
     }
 
+    private void initSpinner(){
+
+        // Spinner click listener
+        fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
+
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Favourite");
+        categories.add("Messaged with");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        fragmentMeshcontactBinding.spinnerView.setAdapter(dataAdapter);
+    }
+
     protected void searchLoading() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
@@ -357,5 +384,49 @@ public class MeshContactsFragment extends BaseFragment {
                 return (T) ServiceLocator.getInstance().getMeshContactViewModel();
             }
         }).get(MeshContactViewModel.class);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        if (position == 0){
+            if (meshContactViewModel != null){
+                meshContactViewModel.stopAllMessageWithObserver();
+                meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
+                    if (userEntities != null) {
+                        getAdapter().resetWithList(userEntities);
+                        userEntityList = userEntities;
+                    }
+                    if (mSearchItem != null)
+                        searchViewControl(userEntities);
+                });
+
+                meshContactViewModel.startFavouriteObserver();
+            }
+        }else if (position == 1){
+            if (meshContactViewModel !=null){
+                meshContactViewModel.stopFavouriteObserver();
+                meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
+                    if (userEntities != null) {
+                        getAdapter().resetWithList(userEntities);
+                        userEntityList = userEntities;
+                    }
+                    if (mSearchItem != null)
+                        searchViewControl(userEntities);
+                });
+            }
+
+            meshContactViewModel.startAllMessagedWithObserver();
+        }
+
+        // Showing selected spinner item
+       // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

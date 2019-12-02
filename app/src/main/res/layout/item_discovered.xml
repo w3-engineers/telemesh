@@ -95,6 +95,7 @@
 
         <ImageView
             android:id="@+id/image_view_favourite"
+            android:onClick="@{() -> discoverViewModel.changeFavouriteStatus(user)}"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="@dimen/margin_5"

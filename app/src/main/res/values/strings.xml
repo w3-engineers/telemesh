@@ -124,5 +124,7 @@
     <string name="please_enter_your_name">Please enter your name</string>
     <string name="enter_valid_name">Enter valid name</string>
 
+     <string name="spinner_title">Favourite</string>
+
 
 </resources>

@@ -41,8 +41,14 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
+        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
         if (imageIndex < 0) {
-            imageIndex = 1;
+            if (currentImageIndex == Constants.DEFAULT_AVATAR) {
+                imageIndex = Constants.DEFAULT_AVATAR;
+            } else {
+                imageIndex = currentImageIndex;
+            }
         }
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);

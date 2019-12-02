@@ -22,6 +22,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 public class EditProfileActivity extends TelemeshBaseActivity {
 
@@ -59,6 +60,8 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextName);
+
+        mBinding.editTextName.setSelection(mBinding.editTextName.getText().toString().length());
     }
 
     @Override
@@ -112,6 +115,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     protected void goNext() {
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
         if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
             Toaster.showShort(getResources().getString(R.string.profile_updated_successfully));
         }

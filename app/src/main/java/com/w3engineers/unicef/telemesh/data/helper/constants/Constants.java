@@ -21,6 +21,8 @@ public class Constants {
 
     public static String FILE_TYPE = "application/*";
 
+    public static int DEFAULT_AVATAR = 21;
+
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
@@ -95,6 +97,8 @@ public class Constants {
         byte APP_SHARE_COUNT = 0x6;
         byte VERSION_HANDSHAKING = 0x7;
         byte SERVER_LINK = 0x8;
+        byte FEEDBACK_TEXT = 0x9;
+        byte FEEDBACK_ACK = 0x10;
     }
 
     public interface MessageType {

@@ -35,6 +35,9 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -225,7 +228,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         dataSource.setMyMode(mode);
 
         if (MainActivity.getInstance() != null) {
-           // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
+            // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
             MainActivity.getInstance().finish();
             Intent intent = MainActivity.getInstance().getIntent();
             intent.putExtra(MainActivity.class.getSimpleName(), false);
@@ -347,6 +350,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
             case Constants.DataType.SERVER_LINK:
                 startAppUpdate(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.FEEDBACK_TEXT:
+                parseFeedbackText(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.FEEDBACK_ACK:
+                deleteSentFeedback(rawData, isAckSuccess);
                 break;
         }
     }
@@ -845,9 +854,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }, Throwable::printStackTrace));
     }
 
+    public void sendFeedbackToInternetUser(FeedbackEntity entity) {
+        FeedbackModel model = entity.toFeedbackModel();
+        String feedbackJson = new Gson().toJson(model);
+
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_TEXT, sellersId, false);
+        }
+    }
+
+    public void sendFeedbackAck(FeedbackModel model) {
+        String feedbackJson = new Gson().toJson(model);
+        dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_ACK, model.getUserId(), false);
+    }
+
     public void uploadLogFile() {
 
-        Log.d("InAppUpdateTest", "Upload file call");
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
@@ -865,7 +887,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                     InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-                    Log.d("InAppUpdateTest", "update process start");
                 }
             }
         }, TimeUnit.MINUTES.toMillis(1));
@@ -882,7 +903,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             previousList = new ArrayList<>();
         }
 
-        Log.d("ParseFileUpload", "Upload file call");
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() +
                 "/MeshRnD");
@@ -923,6 +943,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
 
     }
+
 
     private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
         if (isAckSuccess) return;
@@ -982,6 +1003,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
         }
 
+    }
+
+    private void parseFeedbackText(byte[] rawData, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+        String feedbackRawData = new String(rawData);
+        FeedbackModel feedbackModel = new Gson().fromJson(feedbackRawData, FeedbackModel.class);
+
+        AnalyticsDataHelper.getInstance().sendFeedbackToInternet(FeedbackEntity.toFeedbackEntity(feedbackModel), false);
+    }
+
+    private void deleteSentFeedback(byte[] rawData, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+        String feedbackRawData = new String(rawData);
+        FeedbackModel feedbackModel = new Gson().fromJson(feedbackRawData, FeedbackModel.class);
+        FeedbackDataSource.getInstance().deleteFeedbackById(feedbackModel.getFeedbackId());
     }
 
 }

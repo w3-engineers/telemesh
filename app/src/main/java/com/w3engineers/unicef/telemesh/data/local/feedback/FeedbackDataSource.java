@@ -4,6 +4,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+
 public class FeedbackDataSource {
     private FeedbackDao mFeedbackDao;
     private ExecutorService mIoExecutor;
@@ -32,7 +40,7 @@ public class FeedbackDataSource {
         return mFeedbackDao.getFeedbackById(feedbackId);
     }
 
-    public int deleteFeedback(FeedbackEntity entity) {
-        return mFeedbackDao.delete(entity);
+    public int deleteFeedbackById(String feedbackId) {
+        return mFeedbackDao.deleteFeedbackById(feedbackId);
     }
 }

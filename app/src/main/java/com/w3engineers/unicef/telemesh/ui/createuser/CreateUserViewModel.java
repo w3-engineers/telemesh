@@ -50,7 +50,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
         if (imageIndex < 0) {
-            imageIndex = 1;
+            imageIndex = Constants.DEFAULT_AVATAR;
         }
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);

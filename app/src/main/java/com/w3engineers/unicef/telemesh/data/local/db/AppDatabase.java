@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackDao
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
@@ -46,7 +47,7 @@ import java.util.List;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class, AppShareCountEntity.class, MeshLogEntity.class},
+        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class, AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
@@ -80,8 +81,8 @@ public abstract class AppDatabase extends BaseDatabase {
                     sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
                             , 21,
                             new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE-2, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE-1, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 21
                 }
             }

@@ -20,12 +20,16 @@ import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponse
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -63,9 +67,18 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             }
         };
 
-        feedbackSendCallback = (isSuccess, userId, feedbackId) -> {
+        feedbackSendCallback = (isSuccess, model) -> {
             if (isSuccess) {
-                // TODO: 11/29/2019 Send local user if it is not
+                if (model.isDirectSend()) {
+                    FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId());
+                } else {
+                    FeedbackModel feedbackModel = new FeedbackModel();
+                    feedbackModel.setUserId(model.getUserId());
+                    feedbackModel.setUserName(model.getUserName());
+                    feedbackModel.setFeedback(model.getFeedback());
+                    feedbackModel.setFeedbackId(model.getFeedbackId());
+                    RmDataHelper.getInstance().sendFeedbackAck(feedbackModel);
+                }
             }
         };
     }
@@ -174,8 +187,23 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         AnalyticsApi.on().sendLogFileInServer(file, userId, deviceName, fileUploadResponseCallback);
     }
 
-    public void sendFeedback(String userId, String userName, String feedbackText, String feedBackId) {
-        AnalyticsApi.on().sendFeedback(userId, userName, feedbackText, feedBackId, feedbackSendCallback);
+    public void sendFeedback(FeedbackEntity entity) {
+        if (isMobileDataEnable()) {
+            sendFeedbackToInternet(entity, true);
+        } else {
+            RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
+        }
+    }
+
+    public void sendFeedbackToInternet(FeedbackEntity entity, boolean isDirectSend) {
+        FeedbackParseModel model = new FeedbackParseModel();
+        model.setUserId(entity.getUserId());
+        model.setUserName(entity.getUserName());
+        model.setFeedback(entity.getFeedback());
+        model.setFeedbackId(entity.getUserId());
+        model.setDirectSend(isDirectSend);
+
+        AnalyticsApi.on().sendFeedback(model, feedbackSendCallback);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -202,7 +230,6 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                             Log.d("AppShareTest", "Delete id " + id);
                         }
                     }
-
                 }
             });
         }

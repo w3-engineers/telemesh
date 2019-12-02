@@ -127,6 +127,8 @@
     <string name="edit">EDIT</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="add_your_feedback">Add your feedback</string>
+    <string name="feedback_submitted_successfully">Feedback submitted successfully</string>
+    <string name="please_write_your_feedback">Please write your feedback</string>
 
 
 </resources>

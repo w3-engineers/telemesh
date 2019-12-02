@@ -1,20 +1,31 @@
 package com.w3engineers.unicef.telemesh.ui.feedback;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityFeedbackBinding;
+
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public class FeedbackActivity extends TelemeshBaseActivity {
 
@@ -60,12 +71,21 @@ public class FeedbackActivity extends TelemeshBaseActivity {
 
     private void initView() {
         setClickListener(mBinding.buttonFeedBack);
+
+        mViewModel.feedbackResponse().observe(this, isSuccess -> {
+            if (isSuccess != null && isSuccess) {
+                Toaster.showShort(getResources().getString(R.string.feedback_submitted_successfully));
+                mBinding.editTextFeedback.setText("");
+            }
+        });
     }
 
     private void sendFeedBack() {
         String feedBackText = mBinding.editTextFeedback.getText().toString();
         if (!TextUtils.isEmpty(feedBackText)) {
             mViewModel.sendFeedback(feedBackText);
+        } else {
+            Toaster.showShort(getResources().getString(R.string.please_write_your_feedback));
         }
     }
 

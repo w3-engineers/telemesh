@@ -27,11 +27,11 @@ import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
-import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
@@ -150,7 +150,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 AppInstaller.downloadApkFile(url, MainActivity.getInstance());
                 break;
             case R.id.layout_feedback:
-                startActivity(new Intent(getActivity(), FeedbackEntity.class));
+                startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
             default:
                 break;

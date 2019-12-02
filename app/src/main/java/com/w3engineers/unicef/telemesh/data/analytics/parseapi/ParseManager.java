@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponse
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
@@ -148,24 +149,24 @@ public class ParseManager {
         });
     }
 
-    public void sendFeedback(String userId, String userName, String feedbackText, String feedBackId, FeedbackSendCallback callback) {
+    public void sendFeedback(FeedbackParseModel model, FeedbackSendCallback callback) {
         ParseObject parseObject = new ParseObject(ParseConstant.Feedback.TABLE);
-        parseObject.put(ParseConstant.Feedback.USER_ID, userId);
-        parseObject.put(ParseConstant.Feedback.USER_NAME, userName);
-        parseObject.put(ParseConstant.Feedback.USER_FEEDBACK, feedbackText);
-        parseObject.put(ParseConstant.Feedback.FEEDBACK_ID, feedBackId);
+        parseObject.put(ParseConstant.Feedback.USER_ID, model.getUserId());
+        parseObject.put(ParseConstant.Feedback.USER_NAME, model.getUserName());
+        parseObject.put(ParseConstant.Feedback.USER_FEEDBACK, model.getFeedback());
+        parseObject.put(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
 
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
 
-        parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, feedBackId);
-        parseQuery.whereEqualTo(ParseConstant.Feedback.USER_ID, userId);
+        parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
+        parseQuery.whereEqualTo(ParseConstant.Feedback.USER_ID, model.getUserId());
 
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
                 if (objects != null && objects.isEmpty()) {
                     parseObject.saveInBackground(e1 -> {
                         if (callback != null) {
-                            callback.onGetFeedbackSendResponse(e1 == null, userId, feedBackId);
+                            callback.onGetFeedbackSendResponse(e1 == null, model);
                         }
                     });
                 }

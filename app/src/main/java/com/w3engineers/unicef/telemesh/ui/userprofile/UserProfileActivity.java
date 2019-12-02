@@ -29,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
+import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
 public class UserProfileActivity extends TelemeshBaseActivity {
@@ -174,7 +175,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
         userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
-        Intent intent = new Intent(this, UserProfileActivity.class);
+        Intent intent = new Intent(this, EditProfileActivity.class);
         intent.putExtra(UserEntity.class.getName(), userEntity);
         startActivity(intent);
     }

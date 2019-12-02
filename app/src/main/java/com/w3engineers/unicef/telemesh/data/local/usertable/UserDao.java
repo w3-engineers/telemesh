@@ -135,7 +135,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
             + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract Flowable<List<UserEntity>> getAllFavouriteAndChattedContactUsers();
+    abstract Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers();
 
 
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
@@ -159,6 +159,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " = :favouriteStatus"
             + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")
     abstract int updateFavouriteStatus(String meshId, int favouriteStatus);
+
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE "

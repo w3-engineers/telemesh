@@ -1,7 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -20,7 +19,6 @@ import java.util.Locale;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 
 /*
@@ -62,12 +60,14 @@ public class MeshContactViewModel extends BaseRxViewModel {
         return openUserMessage;
     }
 
-    public void startAllMessagedWithObserver() {
+    public void startAllMessagedWithFavouriteObserver() {
         mCompositeDisposable = getCompositeDisposable();
-        mCompositeDisposable.add(userDataSource.getAllMessagedWithUsers()
+        mCompositeDisposable.add(userDataSource.getAllMessagedWithFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
+
+                    MeshLog.v("all message data");
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
@@ -76,7 +76,9 @@ public class MeshContactViewModel extends BaseRxViewModel {
                         allMessagedWithEntity.postValue(userEntities);
                     }
 
-                }, Throwable::printStackTrace));
+                }, throwable -> {
+                    throwable.printStackTrace();
+                }));
     }
 
     public void startFavouriteObserver() {

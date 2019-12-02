@@ -89,7 +89,7 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(getResources().getString(R.string.title_personal_fragment));
+                setTitle(getResources().getString(R.string.title_discoverd_fragment));
                 Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
@@ -144,9 +144,9 @@ public class DiscoverFragment extends BaseFragment {
         if (discoverViewModel != null) {
             discoverViewModel.changeFavourite().observe(this, userEntity -> {
                 if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE){
-                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
+                   discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
                 }else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE){
-                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
+                    discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
 
             });
@@ -277,7 +277,7 @@ public class DiscoverFragment extends BaseFragment {
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(getResources().getString(R.string.title_personal_fragment));
+            setTitle(getResources().getString(R.string.title_discoverd_fragment));
         }
     }
 
@@ -291,7 +291,7 @@ public class DiscoverFragment extends BaseFragment {
                 if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(getResources().getString(R.string.title_personal_fragment));
+                        setTitle(getResources().getString(R.string.title_discoverd_fragment));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -302,7 +302,7 @@ public class DiscoverFragment extends BaseFragment {
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title = getResources().getString(R.string.title_personal_fragment);
+            title = getResources().getString(R.string.title_discoverd_fragment);
         }
     }
 

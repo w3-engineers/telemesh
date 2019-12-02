@@ -9,7 +9,7 @@
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
-    <string name="title_discoverd_fragment">Discovered Users</string>
+    <string name="title_discoverd_fragment">Nearby Users</string>
     <string name="title_personal_fragment">Personal contact</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>

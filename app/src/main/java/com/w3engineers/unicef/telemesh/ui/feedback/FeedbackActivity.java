@@ -18,6 +18,7 @@ import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityFeedbackBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 /*
  * ============================================================================
@@ -82,6 +83,7 @@ public class FeedbackActivity extends TelemeshBaseActivity {
 
     private void sendFeedBack() {
         String feedBackText = mBinding.editTextFeedback.getText().toString();
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextFeedback);
         if (!TextUtils.isEmpty(feedBackText)) {
             mViewModel.sendFeedback(feedBackText);
         } else {

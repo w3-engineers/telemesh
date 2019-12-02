@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -32,8 +33,10 @@ import timber.log.Timber;
 public class MeshContactViewModel extends BaseRxViewModel {
 
     private UserDataSource userDataSource;
+    private CompositeDisposable mCompositeDisposable;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> allUserEntity = new MutableLiveData<>();
+    MutableLiveData<List<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
+    MutableLiveData<List<UserEntity>> favouriteEntity = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
 
@@ -59,8 +62,9 @@ public class MeshContactViewModel extends BaseRxViewModel {
         return openUserMessage;
     }
 
-    public void startUserObserver() {
-        getCompositeDisposable().add(userDataSource.getAllUsers()
+    public void startAllMessagedWithObserver() {
+        mCompositeDisposable = getCompositeDisposable();
+        mCompositeDisposable.add(userDataSource.getAllMessagedWithUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
@@ -69,10 +73,39 @@ public class MeshContactViewModel extends BaseRxViewModel {
                         backUserEntity.postValue(userEntities);
                         startSearch(searchableText, userEntities);
                     } else {
-                        allUserEntity.postValue(userEntities);
+                        allMessagedWithEntity.postValue(userEntities);
                     }
 
                 }, Throwable::printStackTrace));
+    }
+
+    public void startFavouriteObserver() {
+        mCompositeDisposable = getCompositeDisposable();
+        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntities -> {
+
+                    if (!TextUtils.isEmpty(searchableText)) {
+                        backUserEntity.postValue(userEntities);
+                        startSearch(searchableText, userEntities);
+                    } else {
+                        favouriteEntity.postValue(userEntities);
+                    }
+
+                }, Throwable::printStackTrace));
+    }
+
+    public void stopAllMessageWithObserver() {
+        if(mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+        }
+    }
+
+    public void stopFavouriteObserver() {
+        if(mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+        }
     }
 
     /*LiveData<List<UserEntity>> getAllUsers() {

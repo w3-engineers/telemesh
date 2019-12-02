@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.w3engineers.unicef.telemesh.R" />
     </data>
 
@@ -13,16 +12,32 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+        <Spinner
+            android:id="@+id/spinner_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/colorAccent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_view"
             app:brv_emptyLayoutId="@id/empty_layout" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/empty_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:background="@color/white">
 
             <android.support.constraint.ConstraintLayout

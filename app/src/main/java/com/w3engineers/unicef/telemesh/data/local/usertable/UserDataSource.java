@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 
 import java.util.List;
 
@@ -87,6 +89,16 @@ public class UserDataSource {
         return mUserDao.getAllUsers();
     }
 
+    @NonNull
+    public Flowable<List<UserEntity>> getAllMessagedWithUsers() {
+        return mUserDao.getAllUsers();
+    }
+
+    @NonNull
+    public Flowable<List<UserEntity>> getFavouriteUsers() {
+        return mUserDao.getAllUsers();
+    }
+
     @Nullable
     public UserEntity getSingleUserById(@NonNull String userId) {
         return mUserDao.getSingleUserById(userId);
@@ -132,6 +144,11 @@ public class UserDataSource {
     public int updateUserStatus(String userId, int activityStatus) {
         return mUserDao.updateUserStatus(userId, activityStatus);
     }
+
+    public int updateFavouriteStatus(String userId, int favouriteStatus) {
+        return mUserDao.updateFavouriteStatus(userId, favouriteStatus);
+    }
+
 
     @NonNull
     public LiveData<List<UserEntity>> getActiveUser() {

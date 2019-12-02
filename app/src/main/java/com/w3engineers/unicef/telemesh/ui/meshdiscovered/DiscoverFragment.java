@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -68,6 +69,8 @@ public class DiscoverFragment extends BaseFragment {
         userDataOperation();
 
         openUserMessage();
+
+        changeFavouriteStatus();
 
     }
 
@@ -130,6 +133,20 @@ public class DiscoverFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
                     startActivity(intent);
+                }
+
+            });
+        }
+    }
+
+
+    private void changeFavouriteStatus() {
+        if (discoverViewModel != null) {
+            discoverViewModel.changeFavourite().observe(this, userEntity -> {
+                if (userEntity.getIsFavourite() == Constant.FavouriteStatus.UNFAVOURITE){
+                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constant.FavouriteStatus.FAVOURITE);
+                }else if (userEntity.getIsFavourite() == Constant.FavouriteStatus.FAVOURITE){
+                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constant.FavouriteStatus.UNFAVOURITE);
                 }
 
             });

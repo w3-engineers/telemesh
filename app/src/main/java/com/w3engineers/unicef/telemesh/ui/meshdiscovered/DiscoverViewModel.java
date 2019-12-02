@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -22,6 +23,7 @@ public class DiscoverViewModel extends BaseRxViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
+    private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> allUserEntity = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
@@ -36,6 +38,10 @@ public class DiscoverViewModel extends BaseRxViewModel {
         openUserMessage.postValue(userEntity);
     }
 
+    public void changeFavouriteStatus(@NonNull UserEntity userEntity){
+        changeFavouriteStatus.postValue(userEntity);
+    }
+
     public void setSearchText(String searchText) {
         this.searchableText = searchText;
     }
@@ -46,6 +52,14 @@ public class DiscoverViewModel extends BaseRxViewModel {
 
     MutableLiveData<UserEntity> openUserMessage() {
         return openUserMessage;
+    }
+
+    MutableLiveData<UserEntity> changeFavourite() {
+        return changeFavouriteStatus;
+    }
+
+    public boolean updateFavouriteStatus(String meshId, int favouriteStatus){
+      return RmDataHelper.getInstance().updateFavouriteStatus(meshId, favouriteStatus);
     }
 
     public void startUserObserver() {

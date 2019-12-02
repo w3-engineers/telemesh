@@ -16,6 +16,7 @@
             android:id="@+id/spinner_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
             android:paddingStart="@dimen/margin_10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,39 +33,6 @@
             android:background="@color/colorAccent"
             app:layout_constraintTop_toBottomOf="@+id/spinner_view"
             app:brv_emptyLayoutId="@id/empty_layout" />
-
-<!--
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/empty_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            android:background="@color/white">-->
-
-<!--            <android.support.constraint.ConstraintLayout
-                android:id="@+id/loading_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
-
-                <com.skyfishjy.library.RippleBackground
-                    android:id="@+id/ripple_background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:rb_color="@color/new_user_button_color"
-                    app:rb_duration="3000"
-                    app:rb_radius="32dp"
-                    app:rb_rippleAmount="4"
-                    app:rb_scale="6">
-
-                </com.skyfishjy.library.RippleBackground>
-
-
-            </android.support.constraint.ConstraintLayout>-->
 
 
             <android.support.constraint.ConstraintLayout
@@ -126,16 +94,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
             </android.support.constraint.ConstraintLayout>
-
-<!--
-        </android.support.constraint.ConstraintLayout>-->
-
-        <!--<include
-            android:id="@+id/empty_layout"
-            layout="@layout/list_empty_layout"
-            android:visibility="visible"
-            app:emptyImage="@{R.drawable.img_contact_empty}"
-            app:emptyMessage="@{@string/no_contact_available}" />-->
+        
 
     </android.support.constraint.ConstraintLayout>
 

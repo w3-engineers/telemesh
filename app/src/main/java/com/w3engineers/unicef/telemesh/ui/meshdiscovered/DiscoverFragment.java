@@ -143,10 +143,10 @@ public class DiscoverFragment extends BaseFragment {
     private void changeFavouriteStatus() {
         if (discoverViewModel != null) {
             discoverViewModel.changeFavourite().observe(this, userEntity -> {
-                if (userEntity.getIsFavourite() == Constant.FavouriteStatus.UNFAVOURITE){
-                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constant.FavouriteStatus.FAVOURITE);
-                }else if (userEntity.getIsFavourite() == Constant.FavouriteStatus.FAVOURITE){
-                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constant.FavouriteStatus.UNFAVOURITE);
+                if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE){
+                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
+                }else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE){
+                    boolean status = discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
 
             });

@@ -69,7 +69,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         super.onClick(view);
 
         int id = view.getId();
-
         switch (id) {
             case R.id.button_update:
                 goNext();

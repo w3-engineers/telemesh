@@ -808,11 +808,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
         }
 
-        compositeDisposable
-                .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
-                        .subscribe(feedback -> {
-                            AnalyticsDataHelper.getInstance().sendFeedback(feedback);
-                        }, Throwable::printStackTrace));
+        sendPendingFeedback();
     }
 
     /**
@@ -872,6 +868,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void sendFeedbackAck(FeedbackModel model) {
         String feedbackJson = new Gson().toJson(model);
         dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_ACK, model.getUserId(), false);
+    }
+
+    public void sendPendingFeedback() {
+        compositeDisposable
+                .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
+                        .subscribe(feedback -> {
+                            AnalyticsDataHelper.getInstance().sendFeedback(feedback);
+                        }, Throwable::printStackTrace));
     }
 
     public void uploadLogFile() {

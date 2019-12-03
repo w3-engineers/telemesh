@@ -381,7 +381,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getMeshContactViewModel();
+                return (T) ServiceLocator.getInstance().getMeshContactViewModel(getActivity().getApplication());
             }
         }).get(MeshContactViewModel.class);
     }

@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -30,7 +32,7 @@ import timber.log.Timber;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshContactViewModel extends BaseRxViewModel {
+public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private CompositeDisposable mCompositeDisposable;
@@ -42,8 +44,11 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
     private String searchableText;
 
-    public MeshContactViewModel(@NonNull UserDataSource userDataSource) {
-        this.userDataSource = userDataSource;
+
+
+    public MeshContactViewModel(@NonNull Application application) {
+        super(application);
+        this.userDataSource = UserDataSource.getInstance();
     }
 
     public void openMessage(@NonNull UserEntity userEntity) {

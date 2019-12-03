@@ -80,8 +80,8 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
     @NonNull
-    public MeshContactViewModel getMeshContactViewModel() {
-        return new MeshContactViewModel(UserDataSource.getInstance());
+    public MeshContactViewModel getMeshContactViewModel(Application application) {
+        return new MeshContactViewModel(application);
     }
 
     @NonNull

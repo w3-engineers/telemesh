@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -56,6 +57,13 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;
+    }
+
+    void sendUserInfoToAll() {
+        SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
+        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        RmDataHelper.getInstance().sendUpdatedInfoToAll(name, currentImageIndex);
     }
 
     boolean isNameValid(@Nullable String name) {

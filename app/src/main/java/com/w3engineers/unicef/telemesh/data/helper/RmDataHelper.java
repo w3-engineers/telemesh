@@ -357,6 +357,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.FEEDBACK_ACK:
                 deleteSentFeedback(rawData, isAckSuccess);
                 break;
+            case Constants.DataType.USER_UPDATE_INFO:
+                parseUpdatedInformation(rawData, userId, isAckSuccess);
+                break;
         }
     }
 
@@ -871,7 +874,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendPendingFeedback() {
-        Log.d("FeedbackTest","Pending feedback called");
+        Log.d("FeedbackTest", "Pending feedback called");
         compositeDisposable
                 .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
                         .subscribeOn(Schedulers.newThread())
@@ -943,8 +946,31 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 
+    private void parseUpdatedInformation(byte[] rawData, String userId, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+
+        String data = new String(rawData);
+        UserModel model = new Gson().fromJson(data, UserModel.class);
+        model.setUserId(userId);
+
+        //Todo update user info in table
+    }
+
     public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
+    }
+
+    public void sendUpdatedInfoToAll(String userName, int imageIndex) {
+        UserModel model = new UserModel();
+        model.setImage(imageIndex);
+        model.setName(userName);
+
+        String updatedInformation = new Gson().toJson(model);
+
+        // TODO: 12/3/2019 Send updated info to specific user list
+        String userId = "";
+
+        dataSend(updatedInformation.getBytes(), Constants.DataType.USER_UPDATE_INFO, userId, false);
     }
 
     // APP update process

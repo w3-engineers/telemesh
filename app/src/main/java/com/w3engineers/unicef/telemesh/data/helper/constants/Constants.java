@@ -99,6 +99,7 @@ public class Constants {
         byte SERVER_LINK = 0x8;
         byte FEEDBACK_TEXT = 0x9;
         byte FEEDBACK_ACK = 0x10;
+        byte USER_UPDATE_INFO = 0x11;
     }
 
     public interface MessageType {

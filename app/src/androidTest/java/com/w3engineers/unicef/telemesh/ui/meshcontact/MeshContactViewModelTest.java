@@ -94,11 +94,11 @@ public class MeshContactViewModelTest {
     @Test
     public void testGetAllUsers_forFirstTime_getEmptyUserList() throws InterruptedException {
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        MutableLiveData<List<UserEntity>> allUserList = SUT.favouriteEntity;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
@@ -114,11 +114,11 @@ public class MeshContactViewModelTest {
         userEntity.setMeshId(userMeshId);
         userDataSource.insertOrUpdateData(userEntity);
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        MutableLiveData<List<UserEntity>> allUserList = SUT.favouriteEntity;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
@@ -135,11 +135,11 @@ public class MeshContactViewModelTest {
         userEntity.setMeshId(UUID.randomUUID().toString());
         userDataSource.insertOrUpdateData(userEntity);
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        MutableLiveData<List<UserEntity>> allUserList = SUT.favouriteEntity;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 

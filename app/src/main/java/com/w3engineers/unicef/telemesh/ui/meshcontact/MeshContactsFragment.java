@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
@@ -88,7 +86,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private void userDataOperation() {
 
         if (meshContactViewModel != null) {
-            meshContactViewModel.stopAllMessageWithObserver();
+         //   meshContactViewModel.stopAllMessageWithObserver();
             meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().resetWithList(userEntities);
@@ -104,21 +102,21 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
-                    fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
+                    fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
                     getAdapter().clear();
                     getAdapter().addItem(userEntities);
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+                        fragmentMeshcontactBinding. emptyLayout.setVisibility(View.VISIBLE);
                         enableLoading();
 
                         isLoaded = true;
                         Runnable runnable = () -> {
                             fragmentMeshcontactBinding.tvMessage.setText("No User Found");
                             enableEmpty();
-                            fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+                          //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
 
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
@@ -282,7 +280,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (!Constants.IS_LOADING_ENABLE) {
             Handler handler = new Handler(Looper.getMainLooper());
             enableLoading();
-            title = getResources().getString(R.string.discovering_users);
+            title = getResources().getString(R.string.title_personal_fragment);
 
             Runnable runnable = () -> {
                 if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
@@ -305,9 +303,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void enableLoading() {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
-        fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
-        fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-        fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+       // fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+       // fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).enableLoading();
@@ -315,9 +313,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void enableEmpty() {
-        fragmentMeshcontactBinding.notFoundView.setVisibility(View.VISIBLE);
-        fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-        fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
+        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+      //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+     //   fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();
@@ -333,7 +331,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
         categories.add("Favourite");
-        categories.add("Messaged with");
+        categories.add("All");
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
@@ -349,9 +347,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentMeshcontactBinding.notFoundView.setVisibility(View.GONE);
-                fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-                fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+             //   fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+             //   fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
 
                 // ((MainActivity) getActivity()).enableLoading();
             });
@@ -389,11 +387,11 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
+   //     String item = parent.getItemAtPosition(position).toString();
 
         if (position == 0){
             if (meshContactViewModel != null){
-                meshContactViewModel.stopAllMessageWithObserver();
+              //  meshContactViewModel.stopAllMessageWithObserver();
                 meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
                     if (userEntities != null) {
                         getAdapter().resetWithList(userEntities);
@@ -407,18 +405,24 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             }
         }else if (position == 1){
             if (meshContactViewModel !=null){
-                meshContactViewModel.stopFavouriteObserver();
+               // meshContactViewModel.stopFavouriteObserver();
                 meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                     if (userEntities != null) {
                         getAdapter().resetWithList(userEntities);
                         userEntityList = userEntities;
+
+                        if (userEntityList !=null && userEntityList.size() > 0){
+                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+                            }
+                        }
                     }
                     if (mSearchItem != null)
                         searchViewControl(userEntities);
                 });
-            }
 
-            meshContactViewModel.startAllMessagedWithObserver();
+                meshContactViewModel.startAllMessagedWithFavouriteObserver();
+            }
         }
 
         // Showing selected spinner item

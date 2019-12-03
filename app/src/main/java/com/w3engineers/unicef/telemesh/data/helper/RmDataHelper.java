@@ -134,9 +134,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
-        UserEntity userEntity = new UserEntity()
-                .toUserEntity(userModel)
-                .setOnlineStatus(userConnectivityStatus);
+        UserEntity previousEntity = UserDataSource.getInstance().getSingleUserById(userId);
+
+        UserEntity userEntity;
+
+        if (previousEntity != null) {
+
+            userEntity = previousEntity
+                    .toUserEntity(userModel)
+                    .setOnlineStatus(userConnectivityStatus);
+
+        } else {
+            userEntity = new UserEntity()
+                    .toUserEntity(userModel)
+                    .setOnlineStatus(userConnectivityStatus);
+        }
+
+
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
@@ -177,14 +191,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
             syncUserWithBroadcastMessage(userId);
         }
-
-        return updateId > 0;
-    }
-
-    public boolean updateFavouriteStatus(String userId, int favouriteStatus) {
-
-        int updateId = UserDataSource.getInstance()
-                .updateFavouriteStatus(userId, favouriteStatus);
 
         return updateId > 0;
     }

@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -58,8 +59,14 @@ public class DiscoverViewModel extends BaseRxViewModel {
         return changeFavouriteStatus;
     }
 
-    public boolean updateFavouriteStatus(String meshId, int favouriteStatus){
-      return RmDataHelper.getInstance().updateFavouriteStatus(meshId, favouriteStatus);
+    public void updateFavouriteStatus(String userId, int favouriteStatus) {
+        AsyncTask.execute(() -> {
+            int updateId = userDataSource
+                    .updateFavouriteStatus(userId, favouriteStatus);
+        });
+
+
+      //  return updateId > 0;
     }
 
     public void startUserObserver() {

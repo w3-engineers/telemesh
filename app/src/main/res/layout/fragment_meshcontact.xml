@@ -23,16 +23,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/colorAccent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_view"
-            app:brv_emptyLayoutId="@id/empty_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner_view"/>
 
 
             <android.support.constraint.ConstraintLayout

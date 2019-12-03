@@ -1,45 +1,52 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
+import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.paging.PagedList;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.UserSearchDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-
-public class DiscoverViewModel extends BaseRxViewModel {
+public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> allUserEntity = new MutableLiveData<>();
+    LiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
-    private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
+    private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+
+    private static final int INITIAL_LOAD_KEY = 0;
+    private static final int PAGE_SIZE = 50;
+    private static final int PREFETCH_DISTANCE = 30;
 
     private String searchableText;
 
-    public DiscoverViewModel(@NonNull UserDataSource userDataSource) {
-        this.userDataSource = userDataSource;
+    public DiscoverViewModel(@NonNull Application application) {
+        super(application);
+        this.userDataSource = UserDataSource.getInstance();
     }
 
     public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
     }
 
-    public void changeFavouriteStatus(@NonNull UserEntity userEntity){
+    public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
         changeFavouriteStatus.postValue(userEntity);
     }
 
@@ -65,34 +72,17 @@ public class DiscoverViewModel extends BaseRxViewModel {
                     .updateFavouriteStatus(userId, favouriteStatus);
         });
 
-
-      //  return updateId > 0;
+        //  return updateId > 0;
     }
 
     public void startUserObserver() {
-        getCompositeDisposable().add(userDataSource.getAllUsers()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userEntities -> {
-
-                    if (!TextUtils.isEmpty(searchableText)) {
-                        backUserEntity.postValue(userEntities);
-                        startSearch(searchableText, userEntities);
-                    } else {
-                        allUserEntity.postValue(userEntities);
-                    }
-
-                }, Throwable::printStackTrace));
+        nearbyUsers = userDataSource.getAllUsers();
     }
 
-    /*LiveData<List<UserEntity>> getAllUsers() {
-//        Timber.e("Get all user called");
-        return LiveDataReactiveStreams.fromPublisher(userDataSource.getAllUsers());
-    }*/
 
     @NonNull
-    public MutableLiveData<List<UserEntity>> getGetFilteredList() {
-        return getFilteredList;
+    public LiveData<PagedList<UserEntity>> getGetFilteredList() {
+        return filterUserList;
     }
 
 
@@ -109,7 +99,25 @@ public class DiscoverViewModel extends BaseRxViewModel {
                     filteredItemList.add(user);
             }
             Log.d("SearchIssue", "user list post call");
-            getFilteredList.postValue(filteredItemList);
+
+            UserSearchDataSource userSearchDataSource = new UserSearchDataSource(filteredItemList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
+
+
+            PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
+
+
+            filterUserList.postValue(pagedStrings);
+
         } else {
             Log.d("SearchIssue", "user list null");
         }

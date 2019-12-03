@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -78,10 +77,18 @@ public class DiscoverFragment extends BaseFragment {
 
         if (discoverViewModel != null) {
 
-            discoverViewModel.allUserEntity.observe(this, userEntities -> {
+            discoverViewModel.startUserObserver();
+
+            discoverViewModel.nearbyUsers.observe(this, userEntities -> {
                 if (userEntities != null) {
-                    getAdapter().resetWithList(userEntities);
+                    getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
+
+                    if (userEntityList !=null && userEntityList.size() > 0){
+                        if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                            fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
+                        }
+                    }
                 }
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
@@ -94,8 +101,8 @@ public class DiscoverFragment extends BaseFragment {
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
-                    getAdapter().clear();
-                    getAdapter().addItem(userEntities);
+                  //  getAdapter().clear();
+                    getAdapter().submitList(userEntities);
                     isLoaded = false;
 
                 } else {
@@ -119,7 +126,6 @@ public class DiscoverFragment extends BaseFragment {
                 userEntityList = userEntities;
             });
 
-            discoverViewModel.startUserObserver();
         }
     }
 
@@ -179,7 +185,7 @@ public class DiscoverFragment extends BaseFragment {
 
                 if (discoverViewModel != null) {
                     Timber.d("Search query: %s", string);
-                    discoverViewModel.startSearch(string, userEntityList);
+                    discoverViewModel.startSearch(string, getAdapter().getCurrentList());
                 }
             }
 
@@ -198,7 +204,7 @@ public class DiscoverFragment extends BaseFragment {
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
             Timber.d("Search query: %s", query);
-            discoverViewModel.startSearch(query, userEntityList);
+            discoverViewModel.startSearch(query, getAdapter().getCurrentList());
         }
     }
 
@@ -346,7 +352,7 @@ public class DiscoverFragment extends BaseFragment {
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
-        fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
+     //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         DiscoverAdapter meshContactAdapter = new DiscoverAdapter(discoverViewModel);
@@ -363,7 +369,7 @@ public class DiscoverFragment extends BaseFragment {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getDiscoveViewModel();
+                return (T) ServiceLocator.getInstance().getDiscoveViewModel(getActivity().getApplication());
             }
         }).get(DiscoverViewModel.class);
     }

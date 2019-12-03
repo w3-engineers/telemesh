@@ -6,11 +6,13 @@ import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 
 @Entity(tableName = TableNames.USERS,
@@ -146,6 +148,9 @@ public class UserEntity extends DbBaseEntity {
         isUserSynced = userSynced;
         return this;
     }*/
+
+
+
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {

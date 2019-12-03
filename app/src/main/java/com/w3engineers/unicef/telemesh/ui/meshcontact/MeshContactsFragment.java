@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -87,10 +89,16 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
         if (meshContactViewModel != null) {
          //   meshContactViewModel.stopAllMessageWithObserver();
-            meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
+            meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                 if (userEntities != null) {
-                    getAdapter().resetWithList(userEntities);
+                    getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
+
+                    if (userEntityList !=null && userEntityList.size() > 0){
+                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+                        }
+                    }
                 }
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
@@ -103,11 +111,12 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
                     fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-                    getAdapter().clear();
-                    getAdapter().addItem(userEntities);
+
+                    getAdapter().submitList(userEntities);
+
                     isLoaded = false;
 
-                } else {
+                }else {
                     if (!isLoaded) {
                         fragmentMeshcontactBinding. emptyLayout.setVisibility(View.VISIBLE);
                         enableLoading();
@@ -129,6 +138,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             });
 
             meshContactViewModel.startFavouriteObserver();
+            meshContactViewModel.startAllMessagedWithFavouriteObserver();
         }
     }
 
@@ -174,7 +184,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
                 if (meshContactViewModel != null) {
                     Timber.d("Search query: %s", string);
-                    meshContactViewModel.startSearch(string, userEntityList);
+                    meshContactViewModel.startSearch(string, getAdapter().getCurrentList());
                 }
             }
 
@@ -193,7 +203,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     public void searchContacts(String query){
         if (meshContactViewModel != null) {
             Timber.d("Search query: %s", query);
-            meshContactViewModel.startSearch(query, userEntityList);
+            meshContactViewModel.startSearch(query, getAdapter().getCurrentList());
         }
     }
 
@@ -362,7 +372,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         meshContactViewModel = getViewModel();
 
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-        fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
+     //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
@@ -379,7 +389,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getMeshContactViewModel();
+                return (T) ServiceLocator.getInstance().getMeshContactViewModel(getActivity().getApplication());
             }
         }).get(MeshContactViewModel.class);
     }
@@ -392,10 +402,18 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (position == 0){
             if (meshContactViewModel != null){
               //  meshContactViewModel.stopAllMessageWithObserver();
-                meshContactViewModel.favouriteEntity.observe(this, userEntities -> {
+                meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                     if (userEntities != null) {
-                        getAdapter().resetWithList(userEntities);
+                       getAdapter().submitList(userEntities);
                         userEntityList = userEntities;
+
+                        if (userEntityList !=null && userEntityList.size() > 0){
+                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+                            }
+                        }
+
+                       MeshLog.e("list_size ::" + getAdapter().getCurrentList().size());
                     }
                     if (mSearchItem != null)
                         searchViewControl(userEntities);
@@ -408,7 +426,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                // meshContactViewModel.stopFavouriteObserver();
                 meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                     if (userEntities != null) {
-                        getAdapter().resetWithList(userEntities);
+                       getAdapter().submitList(userEntities);
                         userEntityList = userEntities;
 
                         if (userEntityList !=null && userEntityList.size() > 0){

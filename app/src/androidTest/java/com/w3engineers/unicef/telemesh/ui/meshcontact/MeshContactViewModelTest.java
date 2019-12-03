@@ -67,7 +67,7 @@ public class MeshContactViewModelTest {
 
         userDataSource = new UserDataSource(appDatabase.userDao());
 
-        SUT = new MeshContactViewModel(userDataSource);
+        SUT = new MeshContactViewModel(appDatabase);
 
         // Region constant
         String FIRST_NAME = "Danial";

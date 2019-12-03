@@ -1,20 +1,28 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,21 +36,28 @@ import io.reactivex.schedulers.Schedulers;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshContactViewModel extends BaseRxViewModel {
+public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private CompositeDisposable mCompositeDisposable;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> favouriteEntity = new MutableLiveData<>();
+    LiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
+    LiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
-    private MutableLiveData<List<UserEntity>> getFilteredList = new MutableLiveData<>();
+    private  MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+
+    private static final int INITIAL_LOAD_KEY = 0;
+    private static final int PAGE_SIZE = 50;
+    private static final int PREFETCH_DISTANCE = 30;
 
     private String searchableText;
 
-    public MeshContactViewModel(@NonNull UserDataSource userDataSource) {
-        this.userDataSource = userDataSource;
+    public MeshContactViewModel(@NonNull Application application) {
+        super(application);
+        // mCompositeDisposable = new CompositeDisposable();
+        userDataSource = UserDataSource.getInstance();
     }
+
 
     public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
@@ -61,8 +76,7 @@ public class MeshContactViewModel extends BaseRxViewModel {
     }
 
     public void startAllMessagedWithFavouriteObserver() {
-        mCompositeDisposable = getCompositeDisposable();
-        mCompositeDisposable.add(userDataSource.getAllMessagedWithFavouriteUsers()
+/*        getCompositeDisposable().add(userDataSource.getAllMessagedWithFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
@@ -78,12 +92,13 @@ public class MeshContactViewModel extends BaseRxViewModel {
 
                 }, throwable -> {
                     throwable.printStackTrace();
-                }));
+                }));*/
+
+        allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
     public void startFavouriteObserver() {
-        mCompositeDisposable = getCompositeDisposable();
-        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
+/*        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
@@ -95,17 +110,20 @@ public class MeshContactViewModel extends BaseRxViewModel {
                         favouriteEntity.postValue(userEntities);
                     }
 
-                }, Throwable::printStackTrace));
+                }, Throwable::printStackTrace));*/
+
+        favoriteEntityList = userDataSource.getFavouriteUsers();
+
     }
 
     public void stopAllMessageWithObserver() {
-        if(mCompositeDisposable != null) {
+        if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
         }
     }
 
     public void stopFavouriteObserver() {
-        if(mCompositeDisposable != null) {
+        if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
         }
     }
@@ -116,8 +134,8 @@ public class MeshContactViewModel extends BaseRxViewModel {
     }*/
 
     @NonNull
-    public MutableLiveData<List<UserEntity>> getGetFilteredList() {
-        return getFilteredList;
+    public LiveData<PagedList<UserEntity>> getGetFilteredList() {
+        return filterUserList;
     }
 
 
@@ -134,7 +152,25 @@ public class MeshContactViewModel extends BaseRxViewModel {
                     filteredItemList.add(user);
             }
             Log.d("SearchIssue", "user list post call");
-            getFilteredList.postValue(filteredItemList);
+
+            UserSearchDataSource userSearchDataSource = new UserSearchDataSource(filteredItemList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
+
+
+            PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
+
+
+            filterUserList.postValue(pagedStrings);
+
         } else {
             Log.d("SearchIssue", "user list null");
         }

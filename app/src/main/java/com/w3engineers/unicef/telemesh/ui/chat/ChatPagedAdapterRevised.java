@@ -81,7 +81,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     @Override
     public void onBindViewHolder(@NonNull GenericViewHolder baseViewHolder, int position) {
 
-
         MessageEntity messageEntity = (MessageEntity) getItem(position);
         if (messageEntity != null) {
             baseViewHolder.bindView(messageEntity);

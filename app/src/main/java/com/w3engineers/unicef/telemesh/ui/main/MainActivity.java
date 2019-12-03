@@ -518,6 +518,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 if (mCurrentFragment != null
                         && mCurrentFragment instanceof MeshContactsFragment) {
                     ((MeshContactsFragment) mCurrentFragment).searchContacts(s.toString());
+                }else if (mCurrentFragment != null
+                        && mCurrentFragment instanceof DiscoverFragment){
+                    ((DiscoverFragment) mCurrentFragment).searchContacts(s.toString());
                 }
             }
         });

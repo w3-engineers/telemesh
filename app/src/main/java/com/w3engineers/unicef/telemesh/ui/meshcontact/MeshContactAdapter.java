@@ -1,19 +1,22 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
+import android.arch.paging.PagedListAdapter;
 import android.databinding.BindingAdapter;
+import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
 
-import java.util.List;
 
 
 /*
@@ -23,63 +26,99 @@ import java.util.List;
  * Proprietary and confidential
  * ============================================================================
  */
-public class MeshContactAdapter extends BaseAdapter<UserEntity> {
+public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContactAdapter.GenericViewHolder> {
 
     @NonNull
     public MeshContactViewModel meshContactViewModel;
 
     MeshContactAdapter(@NonNull MeshContactViewModel meshContactViewModel) {
+        super(DIFF_CALLBACK);
         this.meshContactViewModel = meshContactViewModel;
     }
 
-    @Override
-    public boolean isEqual(@NonNull UserEntity left, @NonNull UserEntity right) {
-        String leftUserId = left.getMeshId();
-        String rightUserId = right.getMeshId();
+    public static final DiffUtil.ItemCallback<UserEntity> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<UserEntity>() {
+                @Override
+                public boolean areItemsTheSame(
+                        @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
+                    return oldItem.getMeshId() == newItem.getMeshId() ;
+                }
+                @Override
+                public boolean areContentsTheSame(
+                        @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
+                    // NOTE: if you use equals, your object must properly override Object#equals()
+                    // Incorrectly returning false here will result in too many animations.
+                    return oldItem.equals(newItem);
+                }
+            };
 
-
-        return !TextUtils.isEmpty(leftUserId) && leftUserId != null
-                && !TextUtils.isEmpty(rightUserId)
-                && leftUserId.equals(rightUserId);
-
-    }
-
-    @NonNull
-    @Override
-    public BaseAdapterViewHolder<UserEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MeshContactViewHolder(inflate(parent, R.layout.item_mesh_contact));
-    }
 
     @BindingAdapter({"android:src"})
     public static void setImageViewResource(@NonNull ImageView imageView, int imageResourceId) {
         imageView.setImageResource(imageResourceId);
     }
 
-    public void resetWithList(@NonNull List<UserEntity> items) {
 
-        List<UserEntity> userEntities = getItems();
-        userEntities.clear();
-        notifyDataSetChanged();
-        addItem(items);
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
     }
 
-    private class MeshContactViewHolder extends BaseAdapterViewHolder<UserEntity> {
+    @NonNull
+    @Override
+    public MeshContactViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        //   LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        //  ItemMeshContactBinding itemMeshContactBinding = ItemMeshContactBinding.inflate(inflater, viewGroup, false);
+
+        return new MeshContactViewHolder(DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_mesh_contact, viewGroup, false));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull GenericViewHolder baseViewHolder, int position) {
+        UserEntity userEntity = getItem(position);
+        if (userEntity != null) {
+            baseViewHolder.bindView(userEntity);
+        } else {
+            // Null defines a placeholder item - PagedListAdapter automatically
+            // invalidates this row when the actual object is loaded from the
+            // database.
+            baseViewHolder.clearView();
+        }
+    }
+
+    public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+        public GenericViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        protected abstract void bindView(@NonNull UserEntity item);
+
+        protected abstract void clearView();
+    }
+
+    private class MeshContactViewHolder extends GenericViewHolder {
         private ItemMeshContactBinding itemMeshContactBinding;
 
         MeshContactViewHolder(@NonNull ViewDataBinding viewDataBinding) {
-            super(viewDataBinding);
+            super(viewDataBinding.getRoot());
             this.itemMeshContactBinding = (ItemMeshContactBinding) viewDataBinding;
         }
 
-        @Override
-        public void bind(@NonNull UserEntity item) {
 
+        @Override
+        protected void bindView(@NonNull UserEntity item) {
             itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             itemMeshContactBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
         }
+
+        @Override
+        protected void clearView() {
+            itemMeshContactBinding.invalidateAll();
+        }
+
 
         private String getHopIndicator(int userActiveStatus) {
             if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE
@@ -109,5 +148,7 @@ public class MeshContactAdapter extends BaseAdapter<UserEntity> {
                 return R.drawable.circle_offline;
             }*/
         }
+
+
     }
 }

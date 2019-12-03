@@ -871,8 +871,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendPendingFeedback() {
+        Log.d("FeedbackTest","Pending feedback called");
         compositeDisposable
                 .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
+                        .subscribeOn(Schedulers.newThread())
                         .subscribe(feedback -> {
                             AnalyticsDataHelper.getInstance().sendFeedback(feedback);
                         }, Throwable::printStackTrace));

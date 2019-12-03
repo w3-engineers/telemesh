@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackDao
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDao;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
@@ -68,6 +69,8 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract BulletinTrackDao bulletinTrackDao();
 
     public abstract AppShareCountDao appShareCountDao();
+
+    public abstract FeedbackDao feedbackDao();
 
     @NonNull
     public abstract MeshLogDao meshLogDao();

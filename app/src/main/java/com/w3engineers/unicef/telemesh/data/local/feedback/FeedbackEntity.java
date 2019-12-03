@@ -21,7 +21,7 @@ public class FeedbackEntity {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = ColumnNames.COLUMN_FEED_ID)
+    @ColumnInfo(name = ColumnNames.COLUMN_FEEDBACK_ID)
     private String feedbackId;
 
     @ColumnInfo(name = ColumnNames.COLUMN_FEEDBACK)
@@ -88,10 +88,10 @@ public class FeedbackEntity {
 
     public static FeedbackEntity toFeedbackEntity(FeedbackModel model) {
         FeedbackEntity entity = new FeedbackEntity();
-        entity.setUserId(entity.getUserId());
-        entity.setUserName(entity.getUserName());
-        entity.setFeedback(entity.getFeedback());
-        entity.setFeedbackId(entity.getFeedbackId());
+        entity.setUserId(model.getUserId());
+        entity.setUserName(model.getUserName());
+        entity.setFeedback(model.getFeedback());
+        entity.setFeedbackId(model.getFeedbackId());
         return entity;
     }
 }

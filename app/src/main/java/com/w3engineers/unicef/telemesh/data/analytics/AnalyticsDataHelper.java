@@ -41,13 +41,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     private static AnalyticsDataHelper analyticsDataHelper;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private static CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int trackMessageCount = 0;
     private List<AppShareCountEntity> countSentList;
     private static FileUploadResponseCallback fileUploadResponseCallback;
@@ -70,7 +71,12 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         feedbackSendCallback = (isSuccess, model) -> {
             if (isSuccess) {
                 if (model.isDirectSend()) {
-                    FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId());
+                    compositeDisposable
+                            .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId()))
+                                    .subscribeOn(Schedulers.newThread())
+                            .subscribe((result) -> {
+                                Log.d("FeedbackTest", "Delete result: " + result);
+                            }, Throwable::printStackTrace));
                 } else {
                     FeedbackModel feedbackModel = new FeedbackModel();
                     feedbackModel.setUserId(model.getUserId());
@@ -189,8 +195,10 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void sendFeedback(FeedbackEntity entity) {
         if (isMobileDataEnable()) {
+            Log.d("FeedbackTest","Feedback send directly");
             sendFeedbackToInternet(entity, true);
         } else {
+            Log.d("FeedbackTest","Feedback send via seller");
             RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
         }
     }
@@ -200,7 +208,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         model.setUserId(entity.getUserId());
         model.setUserName(entity.getUserName());
         model.setFeedback(entity.getFeedback());
-        model.setFeedbackId(entity.getUserId());
+        model.setFeedbackId(entity.getFeedbackId());
         model.setDirectSend(isDirectSend);
 
         AnalyticsApi.on().sendFeedback(model, feedbackSendCallback);

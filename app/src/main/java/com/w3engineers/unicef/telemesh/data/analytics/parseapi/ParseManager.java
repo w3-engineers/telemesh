@@ -159,19 +159,27 @@ public class ParseManager {
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
 
         parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
-        parseQuery.whereEqualTo(ParseConstant.Feedback.USER_ID, model.getUserId());
+
+        Log.d("FeedbackTest", "Feedback Id:  " + model.getFeedbackId());
 
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
-                if (objects != null && objects.isEmpty()) {
+                if (objects == null || objects.isEmpty()) {
                     parseObject.saveInBackground(e1 -> {
                         if (callback != null) {
-                            callback.onGetFeedbackSendResponse(e1 == null, model);
+                            if (e1 == null) {
+                                callback.onGetFeedbackSendResponse(true, model);
+                                Log.e("FeedbackTest", "Feedback send Successfully");
+                            } else {
+                                Log.e("FeedbackTest", "Feedback send Failed: " + e1.getMessage());
+                            }
                         }
                     });
+                } else {
+                    Log.e("FeedbackTest", "Feed back already exist");
                 }
             } else {
-                Log.e("ParseFeedback", "Feed back query Error: " + e.getMessage());
+                Log.e("FeedbackTest", "Feed back query Error: " + e.getMessage());
             }
         });
 

@@ -1,8 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.local.feedback;
 
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * ============================================================================
@@ -19,6 +22,11 @@ public class FeedbackDataSource {
 
     public static FeedbackDataSource getInstance() {
         return feedbackDataSource;
+    }
+
+    private FeedbackDataSource() {
+        mFeedbackDao = AppDatabase.getInstance().feedbackDao();
+        mIoExecutor = Executors.newSingleThreadExecutor();
     }
 
     public long insertOrUpdate(FeedbackEntity entity) {

@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import java.util.UUID;
 
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 /*
  * ============================================================================
@@ -38,14 +39,15 @@ public class FeedbackViewModel extends BaseRxAndroidViewModel {
         FeedbackEntity entity = prepareFeedbackModel(feedBackText);
         getCompositeDisposable()
                 .add(Single.fromCallable(() -> feedbackDataSource.insertOrUpdate(entity))
-                .subscribe(result -> {
-                    feedbackLiveData.postValue(result > 0);
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(result -> {
+                            feedbackLiveData.postValue(result > 0);
 
-                    if (result > 0) {
-                        AnalyticsDataHelper.getInstance().sendFeedback(entity);
-                    }
+                            if (result > 0) {
+                                AnalyticsDataHelper.getInstance().sendFeedback(entity);
+                            }
 
-                }, Throwable::printStackTrace));
+                        }, Throwable::printStackTrace));
     }
 
     MutableLiveData<Boolean> feedbackResponse() {

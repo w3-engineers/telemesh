@@ -107,9 +107,9 @@ public class MeshDataSource extends ViperUtil {
         broadcastManager.addBroadCastMessage(getMeshDataTask(viperData, receiverId));
     }
 
-    public void DataSend(@NonNull DataModel rmDataModelBuilder, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
+    public void DataSend(@NonNull DataModel dataModel, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
         for (String receiverId : receiverIds) {
-            DataSend(rmDataModelBuilder, receiverId, isNotificationEnable);
+            DataSend(dataModel, receiverId, isNotificationEnable);
         }
     }
 

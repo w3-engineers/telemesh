@@ -63,7 +63,7 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
         int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
-        RmDataHelper.getInstance().sendUpdatedInfoToAll(name, currentImageIndex);
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(name, currentImageIndex);
     }
 
     boolean isNameValid(@Nullable String name) {

@@ -195,6 +195,13 @@ public class UserEntity extends DbBaseEntity {
                 .setMeshId(userModel.getUserId());
     }
 
+    @NonNull
+    public UserEntity updateUserEntity(@NonNull UserModel userModel) {
+        return setUserName(userModel.getName())
+                .setAvatarIndex(userModel.getImage())
+                .setMeshId(userModel.getUserId());
+    }
+
     public static class NewMeshUserCount {
 
         @Nullable

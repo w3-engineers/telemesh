@@ -358,7 +358,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 deleteSentFeedback(rawData, isAckSuccess);
                 break;
             case Constants.DataType.USER_UPDATE_INFO:
-                parseUpdatedInformation(rawData, userId, isAckSuccess);
+                parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
         }
     }
@@ -946,31 +946,51 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 
-    private void parseUpdatedInformation(byte[] rawData, String userId, boolean isAckSuccess) {
-        if (isAckSuccess) return;
+    private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {
+        if (!isNewMessage) return;
 
-        String data = new String(rawData);
-        UserModel model = new Gson().fromJson(data, UserModel.class);
-        model.setUserId(userId);
+        String updatedUserData = new String(rawData);
+        UserModel userModel = new Gson().fromJson(updatedUserData, UserModel.class);
+        userModel.setUserId(userId);
 
-        //Todo update user info in table
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+
+        if (userEntity != null) {
+
+            userEntity = userEntity.updateUserEntity(userModel);
+
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
     }
 
     public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
     }
 
-    public void sendUpdatedInfoToAll(String userName, int imageIndex) {
-        UserModel model = new UserModel();
-        model.setImage(imageIndex);
-        model.setName(userName);
+    public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
 
-        String updatedInformation = new Gson().toJson(model);
+        UserModel userModel = new UserModel();
+        userModel.setImage(imageIndex);
+        userModel.setName(userName);
 
-        // TODO: 12/3/2019 Send updated info to specific user list
-        String userId = "";
+        String updateInfo = new Gson().toJson(userModel);
 
-        dataSend(updatedInformation.getBytes(), Constants.DataType.USER_UPDATE_INFO, userId, false);
+        DataModel dataModel = new DataModel()
+                .setRawData(updateInfo.getBytes())
+                .setDataType(Constants.DataType.USER_UPDATE_INFO);
+
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
+
+        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(users -> {
+
+                    ExecutorService service = Executors.newSingleThreadExecutor();
+                    service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
+
+                }, Throwable::printStackTrace));
     }
 
     // APP update process

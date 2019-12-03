@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -51,7 +50,6 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:maxLength="8"
-                    android:maxLines="@integer/max_line_1"
                     android:textColor="@color/new_user_button_color"
                     android:textIsSelectable="false"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +63,7 @@
                     android:layout_marginStart="@dimen/margin_16"
                     android:layout_marginEnd="@dimen/margin_16"
                     android:gravity="center"
-                    android:text="@string/pin_instruction"
+                    android:text="@string/password_message"
                     android:textColor="@color/background_color"
                     android:textSize="@dimen/text_size_12"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -113,6 +111,7 @@
                     android:gravity="center"
                     android:text="@string/skip"
                     android:textAllCaps="true"
+                    android:visibility="invisible"
                     android:textColor="@color/skip_text_color"
                     android:textSize="@dimen/text_size_14"
                     app:bb_drawable="@null"

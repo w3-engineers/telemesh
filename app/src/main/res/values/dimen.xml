@@ -27,6 +27,7 @@
     <dimen name="text_size_25">25sp</dimen>
     <dimen name="text_body">16sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_small_body_14">14sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
 

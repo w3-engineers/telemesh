@@ -6,12 +6,7 @@ import android.graphics.Paint;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.View;
 
@@ -34,8 +29,6 @@ public class BoxPassword extends AppCompatEditText {
     private Paint mFillPaint;
     private Paint mStrokePaint;
     private OnClickListener mClickListener;
-
-    StringBuilder filtered = new StringBuilder();
 
     public BoxPassword(Context context) {
         super(context);
@@ -132,17 +125,7 @@ public class BoxPassword extends AppCompatEditText {
                 startX += mCharSize + mSpace;
             }
         }
-
     }
-
-   /* @Override
-    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (!TextUtils.isEmpty(text) && !TextUtils.equals((text + "").trim(), " ") && text.length() < 9) {
-            setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
-        }
-    }*/
-
 
     InputFilter filter = (source, start, end, dest, dstart, dend) -> {
         StringBuilder filtered = new StringBuilder();
@@ -155,5 +138,4 @@ public class BoxPassword extends AppCompatEditText {
 
         return filtered.toString().trim();
     };
-
 }

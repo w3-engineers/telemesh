@@ -87,7 +87,7 @@ public class SecurityActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.button_next:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
-                requestMultiplePermissions();
+                isValidPassword(mBinding.editTextBoxPassword.getText().toString());
                 break;
             case R.id.button_skip:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
@@ -202,6 +202,28 @@ public class SecurityActivity extends BaseActivity {
         if (intent.hasExtra(Constants.IntentKeys.USER_NAME)) {
             mUserName = intent.getStringExtra(Constants.IntentKeys.USER_NAME);
             mAvatarIndex = intent.getIntExtra(Constants.IntentKeys.AVATAR_INDEX, 0);
+        }
+    }
+
+    public void isValidPassword(final String password) {
+
+        if (mViewModel.isValidPassword(password)) {
+            requestMultiplePermissions();
+        } else {
+            if (!mViewModel.isValidChar(password)) {
+                Toaster.showShort("Letter missing in password");
+                return;
+            }
+
+            if (!mViewModel.isDigitPassword(password)) {
+                Toaster.showShort("Digit missing in password");
+                return;
+            }
+
+            if (!mViewModel.isValidSpecial(password)) {
+                Toaster.showShort("Special character missing");
+                return;
+            }
         }
     }
 

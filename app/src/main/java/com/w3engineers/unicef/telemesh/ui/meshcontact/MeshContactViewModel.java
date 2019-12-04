@@ -46,7 +46,12 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     private static final int PAGE_SIZE = 50;
     private static final int PREFETCH_DISTANCE = 30;
 
-    private List<UserEntity> userList;
+    private List<UserEntity> favouriteList;
+    private List<UserEntity> msgWithFavList;
+
+    public int FAVOURITE_SEARCH = 0;
+    public int ALL_SEARCH = 1;
+
 
     private String searchableText;
 
@@ -96,6 +101,8 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
+                    msgWithFavList = userEntities;
+
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
                         startSearch(searchableText, userEntities);
@@ -133,7 +140,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    userList = userEntities;
+                    favouriteList = userEntities;
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
@@ -166,10 +173,20 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     }
 
-    public List<UserEntity> getCurrentUserList() {
-        if (userList == null) {
-            userList = new ArrayList<>();
+    public List<UserEntity> getCurrentUserList(int searchType) {
+        List<UserEntity> userList;
+        if (searchType == FAVOURITE_SEARCH) {
+            if (favouriteList == null) {
+                favouriteList = new ArrayList<>();
+            }
+            userList = favouriteList;
+        } else {
+            if (msgWithFavList == null) {
+                msgWithFavList = new ArrayList<>();
+            }
+            userList = msgWithFavList;
         }
+
         return userList;
     }
 

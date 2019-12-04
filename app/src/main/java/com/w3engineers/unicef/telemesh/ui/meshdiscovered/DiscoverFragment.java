@@ -85,6 +85,8 @@ public class DiscoverFragment extends BaseFragment {
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
 
+                    isLoaded = false;
+
                     if (userEntityList != null && userEntityList.size() > 0) {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
@@ -187,7 +189,7 @@ public class DiscoverFragment extends BaseFragment {
 
                 if (discoverViewModel != null) {
                     Timber.d("Search query: %s", string);
-                    discoverViewModel.startSearch(string, getAdapter().getCurrentList());
+                    discoverViewModel.startSearch(string, discoverViewModel.getCurrentUserList());
                 }
             }
 

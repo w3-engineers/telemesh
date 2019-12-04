@@ -93,7 +93,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         startSearch(searchableText, userEntities);
                     } else {
 
-                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+/*                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
 
                         PagedList.Config myConfig = new PagedList.Config.Builder()
                                 .setEnablePlaceholders(true)
@@ -108,13 +108,35 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                                 .setFetchExecutor(Executors.newSingleThreadExecutor())
                                 .build();
 
-                        nearbyUsers.postValue(pagedStrings);
+                        nearbyUsers.postValue(pagedStrings);*/
+
+                        setUserData(userEntities);
+
                     }
 
                 }, throwable -> {
                     throwable.printStackTrace();
                 }));
 
+    }
+
+    public void setUserData(List<UserEntity> userEntities){
+        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+        PagedList.Config myConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(PREFETCH_DISTANCE)
+                .setPageSize(PAGE_SIZE)
+                .build();
+
+
+        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                .setInitialKey(INITIAL_LOAD_KEY)
+                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .build();
+
+        nearbyUsers.postValue(pagedStrings);
     }
 
     public List<UserEntity> getCurrentUserList() {
@@ -136,12 +158,21 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
         searchableText = searchText;
 
         if (userEntities != null) {
+
+            if (TextUtils.isEmpty(searchText)){
+                setUserData(userEntities);
+                return;
+            }
+
             List<UserEntity> filteredItemList = new ArrayList<>();
 
             for (UserEntity user : userEntities) {
 
-                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+               if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                    Log.d("SearchIssue", "user list post call 1");
                     filteredItemList.add(user);
+                }
+
             }
             Log.d("SearchIssue", "user list post call");
 

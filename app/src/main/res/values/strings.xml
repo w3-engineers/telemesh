@@ -128,5 +128,7 @@
 
      <string name="spinner_title">Favourite</string>
 
+    <string name="no_favorite">No favorite user found</string>
+
 
 </resources>

@@ -100,7 +100,7 @@
             android:layout_height="24dp"
             android:layout_marginTop="@dimen/margin_5"
             android:layout_marginEnd="@dimen/margin_15"
-            android:src="@{user.isFavourite>0?@drawable/ic_favourite:@drawable/ic_fav_grey}"
+            android:src="@{user.isFavourite>0?@drawable/ic_favourite:@drawable/ic_un_favourite}"
             android:gravity="center"
             android:maxLines="@integer/max_line_1"
             app:layout_constraintBottom_toBottomOf="parent"

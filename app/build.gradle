@@ -34,7 +34,7 @@ android {
         }
         release {
 
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')

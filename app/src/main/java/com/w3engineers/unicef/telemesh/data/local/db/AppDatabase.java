@@ -81,12 +81,16 @@ public abstract class AppDatabase extends BaseDatabase {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
                     Context context = App.getContext();
-                    sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                            , 21,
-                            new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE, ""));//normally initial version is always 21
+
+                    int initialVersion = 21;
+
+                    BaseMigration[] baseMigrations = new BaseMigration[(BuildConfig.VERSION_CODE - initialVersion)];
+
+                    for (int i = 0; i < baseMigrations.length; i++) {
+                        baseMigrations[i] = new BaseMigration((initialVersion + (i + 1)), "");
+                    }
+
+                    sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class, initialVersion, baseMigrations); //normally initial version is always 21
                 }
             }
         }

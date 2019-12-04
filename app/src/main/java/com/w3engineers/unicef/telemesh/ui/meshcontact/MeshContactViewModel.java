@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
+    private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
@@ -64,8 +66,25 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);
     }
 
+    public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
+        changeFavouriteStatus.postValue(userEntity);
+    }
+
+    MutableLiveData<UserEntity> changeFavourite() {
+        return changeFavouriteStatus;
+    }
+
     MutableLiveData<UserEntity> openUserMessage() {
         return openUserMessage;
+    }
+
+    public void updateFavouriteStatus(String userId, int favouriteStatus) {
+        AsyncTask.execute(() -> {
+            int updateId = userDataSource
+                    .updateFavouriteStatus(userId, favouriteStatus);
+        });
+
+        //  return updateId > 0;
     }
 
     public void startAllMessagedWithFavouriteObserver() {

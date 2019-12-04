@@ -89,6 +89,21 @@
             android:textSize="@dimen/text_size_12"
             android:visibility="@{user.hasUnreadMessage>0?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image_view_favourite"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="99" />
+
+        <ImageView
+            android:id="@+id/image_view_favourite"
+            android:onClick="@{() -> contactViewModel.changeFavouriteStatus(user)}"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:src="@{user.isFavourite>0?@drawable/ic_favourite:@drawable/ic_fav_grey}"
+            android:gravity="center"
+            android:maxLines="@integer/max_line_1"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="99" />

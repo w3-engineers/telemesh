@@ -83,6 +83,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
         openUserMessage();
 
+        changeFavouriteStatus();
+
     }
 
     private void userDataOperation() {
@@ -152,6 +154,19 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
                     startActivity(intent);
+                }
+
+            });
+        }
+    }
+
+        private void changeFavouriteStatus() {
+        if (meshContactViewModel != null) {
+            meshContactViewModel.changeFavourite().observe(this, userEntity -> {
+                if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE){
+                    meshContactViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
+                }else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE){
+                    meshContactViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
 
             });

@@ -3,17 +3,16 @@ package com.w3engineers.unicef.telemesh.ui.meshcontact;
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
 
-import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserSearchDataSource extends PositionalDataSource<UserEntity> {
+public class UserPositionalDataSource extends PositionalDataSource<UserEntity> {
 
     private List<UserEntity> userEntities;
 
-    public UserSearchDataSource(@NonNull List<UserEntity> list){
+    public UserPositionalDataSource(@NonNull List<UserEntity> list){
         this.userEntities = list;
 
     }

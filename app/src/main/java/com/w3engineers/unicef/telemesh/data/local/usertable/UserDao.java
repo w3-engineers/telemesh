@@ -98,7 +98,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
             + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract DataSource.Factory<Integer, UserEntity> getAllOnlineUsers();
+    abstract Flowable<List<UserEntity>> getAllOnlineUsers();
 
 /*    @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -136,7 +136,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
             + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract DataSource.Factory<Integer, UserEntity> getAllFavouriteContactUsers();
+    abstract Flowable<List<UserEntity>> getAllFavouriteContactUsers();
 
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -155,7 +155,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
             + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract DataSource.Factory<Integer, UserEntity> getAllMessagedWithFavouriteUsers();
+    abstract Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers();
 
 
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "

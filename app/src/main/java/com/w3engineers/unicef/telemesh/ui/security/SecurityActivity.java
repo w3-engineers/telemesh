@@ -83,7 +83,8 @@ public class SecurityActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.button_next:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
-                isValidPassword(mBinding.editTextBoxPassword.getText().toString());
+                requestMultiplePermissions();
+//                isValidPassword(mBinding.editTextBoxPassword.getText().toString());
                 break;
             case R.id.button_skip:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);

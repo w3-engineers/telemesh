@@ -18,8 +18,6 @@ package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -84,41 +82,27 @@ public class UserDataSource {
         return mUserDao.writeUser(userEntity);
     }
 
-/*    @NonNull
-    public Flowable<List<UserEntity>> getAllUsers() {
-        return mUserDao.getAllOnlineUsers();
-    }   */
-
     @NonNull
-    public LiveData<PagedList<UserEntity>> getAllUsers() {
-        return new LivePagedListBuilder<>(
-                mUserDao.getAllOnlineUsers(), /* page size */ 50).build();
+    public Flowable<List<UserEntity>> getAllOnlineUsers() {
+        return mUserDao.getAllOnlineUsers();
     }
 
-/*    @NonNull
+
+    @NonNull
     public Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers() {
         return mUserDao.getAllMessagedWithFavouriteUsers();
     }
-    */
-
-    @NonNull
-    public LiveData<PagedList<UserEntity>> getAllMessagedWithFavouriteUsers() {
-        return new LivePagedListBuilder<>(
-                mUserDao.getAllMessagedWithFavouriteUsers(), /* page size */ 50).build();
-    }
 
 /*    @NonNull
-    public Flowable<List<UserEntity>> getFavouriteUsers() {
-        return mUserDao.getAllFavouriteContactUsers();
+    public LiveData<PagedList<UserEntity>> getAllMessagedWithFavouriteUsers() {
+        return new LivePagedListBuilder<>(
+                mUserDao.getAllMessagedWithFavouriteUsers(), *//* page size *//* 50).build();
     }*/
 
-
     @NonNull
-    public LiveData<PagedList<UserEntity>> getFavouriteUsers() {
-        return new LivePagedListBuilder<>(
-                mUserDao.getAllFavouriteContactUsers(), /* page size */ 50).build();
+    public Flowable<List<UserEntity>> getFavouriteUsers() {
+        return mUserDao.getAllFavouriteContactUsers();
     }
-
 
 
     @Nullable

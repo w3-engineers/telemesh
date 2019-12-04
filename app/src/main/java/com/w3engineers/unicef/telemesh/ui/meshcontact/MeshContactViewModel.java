@@ -1,7 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
@@ -11,10 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
@@ -25,7 +21,6 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -39,10 +34,9 @@ import io.reactivex.schedulers.Schedulers;
 public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
-    private CompositeDisposable mCompositeDisposable;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
-    LiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
-    LiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
+    MutableLiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
+    MutableLiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private  MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
 
@@ -54,7 +48,6 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     public MeshContactViewModel(@NonNull Application application) {
         super(application);
-        // mCompositeDisposable = new CompositeDisposable();
         userDataSource = UserDataSource.getInstance();
     }
 
@@ -76,62 +69,81 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     }
 
     public void startAllMessagedWithFavouriteObserver() {
-/*        getCompositeDisposable().add(userDataSource.getAllMessagedWithFavouriteUsers()
+        getCompositeDisposable().add(userDataSource.getAllMessagedWithFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    MeshLog.v("all message data");
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
                         startSearch(searchableText, userEntities);
                     } else {
-                        allMessagedWithEntity.postValue(userEntities);
+
+                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+                        PagedList.Config myConfig = new PagedList.Config.Builder()
+                                .setEnablePlaceholders(true)
+                                .setPrefetchDistance(PREFETCH_DISTANCE)
+                                .setPageSize(PAGE_SIZE)
+                                .build();
+
+
+                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                                .setInitialKey(INITIAL_LOAD_KEY)
+                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                                .build();
+
+                        allMessagedWithEntity.postValue(pagedStrings);
                     }
 
                 }, throwable -> {
                     throwable.printStackTrace();
-                }));*/
+                }));
 
-        allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
+      //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
     public void startFavouriteObserver() {
-/*        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
+
+        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
+
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
                         startSearch(searchableText, userEntities);
                     } else {
-                        favouriteEntity.postValue(userEntities);
+
+                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+                        PagedList.Config myConfig = new PagedList.Config.Builder()
+                                .setEnablePlaceholders(true)
+                                .setPrefetchDistance(PREFETCH_DISTANCE)
+                                .setPageSize(PAGE_SIZE)
+                                .build();
+
+
+                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                                .setInitialKey(INITIAL_LOAD_KEY)
+                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                                .build();
+
+                        favoriteEntityList.postValue(pagedStrings);
                     }
 
-                }, Throwable::printStackTrace));*/
+                }, throwable -> {
+                    throwable.printStackTrace();
+                }));
 
-        favoriteEntityList = userDataSource.getFavouriteUsers();
+      //  favoriteEntityList = userDataSource.getFavouriteUsers();
 
     }
 
-    public void stopAllMessageWithObserver() {
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-        }
-    }
-
-    public void stopFavouriteObserver() {
-        if (mCompositeDisposable != null) {
-            mCompositeDisposable.dispose();
-        }
-    }
-
-    /*LiveData<List<UserEntity>> getAllUsers() {
-//        Timber.e("Get all user called");
-        return LiveDataReactiveStreams.fromPublisher(userDataSource.getAllUsers());
-    }*/
 
     @NonNull
     public LiveData<PagedList<UserEntity>> getGetFilteredList() {
@@ -153,7 +165,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
             }
             Log.d("SearchIssue", "user list post call");
 
-            UserSearchDataSource userSearchDataSource = new UserSearchDataSource(filteredItemList);
+            UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(filteredItemList);
 
             PagedList.Config myConfig = new PagedList.Config.Builder()
                     .setEnablePlaceholders(true)

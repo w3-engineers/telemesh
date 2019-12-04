@@ -7,27 +7,30 @@ import android.arch.paging.PagedList;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
-import com.w3engineers.unicef.telemesh.ui.meshcontact.UserSearchDataSource;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
-    LiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
+    MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
 
@@ -76,7 +79,39 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     }
 
     public void startUserObserver() {
-        nearbyUsers = userDataSource.getAllUsers();
+        getCompositeDisposable().add(userDataSource.getAllOnlineUsers()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntities -> {
+
+
+                    if (!TextUtils.isEmpty(searchableText)) {
+                        backUserEntity.postValue(userEntities);
+                        startSearch(searchableText, userEntities);
+                    } else {
+
+                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+                        PagedList.Config myConfig = new PagedList.Config.Builder()
+                                .setEnablePlaceholders(true)
+                                .setPrefetchDistance(PREFETCH_DISTANCE)
+                                .setPageSize(PAGE_SIZE)
+                                .build();
+
+
+                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                                .setInitialKey(INITIAL_LOAD_KEY)
+                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                                .build();
+
+                        nearbyUsers.postValue(pagedStrings);
+                    }
+
+                }, throwable -> {
+                    throwable.printStackTrace();
+                }));
+
     }
 
 
@@ -100,7 +135,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             }
             Log.d("SearchIssue", "user list post call");
 
-            UserSearchDataSource userSearchDataSource = new UserSearchDataSource(filteredItemList);
+            UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(filteredItemList);
 
             PagedList.Config myConfig = new PagedList.Config.Builder()
                     .setEnablePlaceholders(true)

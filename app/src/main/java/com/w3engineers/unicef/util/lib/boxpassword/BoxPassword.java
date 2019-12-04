@@ -75,7 +75,7 @@ public class BoxPassword extends AppCompatEditText {
             }
         });
 
-        setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
+//        setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
     }
 
     @Override

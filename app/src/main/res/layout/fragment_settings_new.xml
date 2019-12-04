@@ -360,7 +360,7 @@
                     android:id="@+id/image_view_feedback"
                     style="@style/image_style_settings_page"
                     android:contentDescription="@string/app_name"
-                    android:src="@mipmap/ic_about_cyan"
+                    android:src="@mipmap/ic_feedback"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

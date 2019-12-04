@@ -289,7 +289,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_contact:
                 toolbarTitle = getString(R.string.title_contacts_fragment);
                 mFragment = new MeshContactsFragment();
-                hideUserBadge();
+//                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = getString(R.string.title_message_feed_fragment);

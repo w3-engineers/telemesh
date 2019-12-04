@@ -88,14 +88,14 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private void userDataOperation() {
 
         if (meshContactViewModel != null) {
-         //   meshContactViewModel.stopAllMessageWithObserver();
+            //   meshContactViewModel.stopAllMessageWithObserver();
             meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
 
-                    if (userEntityList !=null && userEntityList.size() > 0){
-                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                    if (userEntityList != null && userEntityList.size() > 0) {
+                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
                         }
                     }
@@ -116,16 +116,16 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
                     isLoaded = false;
 
-                }else {
+                } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding. emptyLayout.setVisibility(View.VISIBLE);
+                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
                         enableLoading();
 
                         isLoaded = true;
                         Runnable runnable = () -> {
                             fragmentMeshcontactBinding.tvMessage.setText("No User Found");
                             enableEmpty();
-                          //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+                            //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
 
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
@@ -200,10 +200,10 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         };
     }
 
-    public void searchContacts(String query){
+    public void searchContacts(String query) {
         if (meshContactViewModel != null) {
             Timber.d("Search query: %s", query);
-            meshContactViewModel.startSearch(query, getAdapter().getCurrentList());
+            meshContactViewModel.startSearch(query, meshContactViewModel.getCurrentUserList());
         }
     }
 
@@ -264,14 +264,12 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             public boolean onMenuItemActionExpand(MenuItem item) {
                 searchView.setBackgroundColor(getResources().getColor(R.color.white));
                 searchView.setMaxWidth(Integer.MAX_VALUE);
-                Log.d("UiTest", "Search expand");
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 //searchView.setBackgroundColor(-1);
-                Log.d("UiTest", "Search collapse");
                 return true;
             }
         });
@@ -314,8 +312,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private void enableLoading() {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
         fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-       // fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-       // fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+        // fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+        // fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).enableLoading();
@@ -324,15 +322,15 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void enableEmpty() {
         fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-      //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-     //   fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
+        //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+        //   fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();
         }*/
     }
 
-    private void initSpinner(){
+    private void initSpinner() {
 
         // Spinner click listener
         fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
@@ -358,8 +356,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
                 fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-             //   fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-             //   fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+                //   fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
+                //   fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
 
                 // ((MainActivity) getActivity()).enableLoading();
             });
@@ -372,7 +370,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         meshContactViewModel = getViewModel();
 
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-     //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
+        //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
@@ -397,23 +395,23 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
-   //     String item = parent.getItemAtPosition(position).toString();
+        //     String item = parent.getItemAtPosition(position).toString();
 
-        if (position == 0){
-            if (meshContactViewModel != null){
-              //  meshContactViewModel.stopAllMessageWithObserver();
+        if (position == 0) {
+            if (meshContactViewModel != null) {
+                //  meshContactViewModel.stopAllMessageWithObserver();
                 meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                     if (userEntities != null) {
-                       getAdapter().submitList(userEntities);
+                        getAdapter().submitList(userEntities);
                         userEntityList = userEntities;
 
-                        if (userEntityList !=null && userEntityList.size() > 0){
-                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                        if (userEntityList != null && userEntityList.size() > 0) {
+                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                                 fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
                             }
                         }
 
-                       MeshLog.e("list_size ::" + getAdapter().getCurrentList().size());
+                        MeshLog.e("list_size ::" + getAdapter().getCurrentList().size());
                     }
                     if (mSearchItem != null)
                         searchViewControl(userEntities);
@@ -421,16 +419,16 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
                 meshContactViewModel.startFavouriteObserver();
             }
-        }else if (position == 1){
-            if (meshContactViewModel !=null){
-               // meshContactViewModel.stopFavouriteObserver();
+        } else if (position == 1) {
+            if (meshContactViewModel != null) {
+                // meshContactViewModel.stopFavouriteObserver();
                 meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                     if (userEntities != null) {
-                       getAdapter().submitList(userEntities);
+                        getAdapter().submitList(userEntities);
                         userEntityList = userEntities;
 
-                        if (userEntityList !=null && userEntityList.size() > 0){
-                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                        if (userEntityList != null && userEntityList.size() > 0) {
+                            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                                 fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
                             }
                         }
@@ -444,7 +442,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
 
         // Showing selected spinner item
-       // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -489,18 +489,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     private void initSearchListener() {
-        if (mCurrentFragment != null
-                && mCurrentFragment instanceof MeshContactsFragment) {
-           /* getCompositeDisposable().add(UIHelper.fromSearchEditText(binding.searchBar.editTextSearch)
-                    .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
-                    .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                    .distinctUntilChanged()
-                    .subscribeWith(((MeshContactsFragment) mCurrentFragment).searchContacts()));*/
-
-
-        } else {
-            Log.d("SearchIssue", "Mesh contact fragment null");
-        }
 
         binding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override

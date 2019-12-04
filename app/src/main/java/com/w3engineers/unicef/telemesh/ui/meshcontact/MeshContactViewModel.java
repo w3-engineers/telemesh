@@ -38,13 +38,16 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     MutableLiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
-    private  MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+    private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 50;
     private static final int PREFETCH_DISTANCE = 30;
 
+    private List<UserEntity> userList;
+
     private String searchableText;
+
 
     public MeshContactViewModel(@NonNull Application application) {
         super(application);
@@ -74,7 +77,6 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
                         startSearch(searchableText, userEntities);
@@ -102,7 +104,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                     throwable.printStackTrace();
                 }));
 
-      //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
+        //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
     public void startFavouriteObserver() {
@@ -112,6 +114,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
+                    userList = userEntities;
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
@@ -140,8 +143,15 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                     throwable.printStackTrace();
                 }));
 
-      //  favoriteEntityList = userDataSource.getFavouriteUsers();
+        //  favoriteEntityList = userDataSource.getFavouriteUsers();
 
+    }
+
+    public List<UserEntity> getCurrentUserList() {
+        if (userList == null) {
+            userList = new ArrayList<>();
+        }
+        return userList;
     }
 
 

@@ -46,6 +46,7 @@ public class DiscoverFragment extends BaseFragment {
     private String title;
     private boolean isLoaded = false;
     private SearchView mSearchView;
+    private DiscoverAdapter meshContactAdapter;
 
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
@@ -84,8 +85,8 @@ public class DiscoverFragment extends BaseFragment {
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
 
-                    if (userEntityList !=null && userEntityList.size() > 0){
-                        if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE){
+                    if (userEntityList != null && userEntityList.size() > 0) {
+                        if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
                     }
@@ -97,18 +98,19 @@ public class DiscoverFragment extends BaseFragment {
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(getResources().getString(R.string.title_discoverd_fragment));
-                Log.d("SearchIssue", "Search result");
+                Log.d("SearchIssue", "Discover Search result");
                 if (userEntities != null && userEntities.size() > 0) {
-                    Log.d("SearchIssue", "Search result found");
+                    Log.d("SearchIssue", "Discover Search result found");
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
-                  //  getAdapter().clear();
-                    getAdapter().submitList(userEntities);
+                    fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
+                    //  getAdapter().clear();
+                    meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
-                        enableLoading();
+                        //enableLoading();
 
                         isLoaded = true;
                         Runnable runnable = () -> {
@@ -149,9 +151,9 @@ public class DiscoverFragment extends BaseFragment {
     private void changeFavouriteStatus() {
         if (discoverViewModel != null) {
             discoverViewModel.changeFavourite().observe(this, userEntity -> {
-                if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE){
-                   discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
-                }else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE){
+                if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE) {
+                    discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
+                } else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE) {
                     discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
 
@@ -203,8 +205,8 @@ public class DiscoverFragment extends BaseFragment {
 
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
-            Timber.d("Search query: %s", query);
-            discoverViewModel.startSearch(query, getAdapter().getCurrentList());
+            Log.d("SearchIssue","Discover page Search query: "+query);
+            discoverViewModel.startSearch(query, discoverViewModel.getCurrentUserList());
         }
     }
 
@@ -352,10 +354,10 @@ public class DiscoverFragment extends BaseFragment {
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
-     //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
+        //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        DiscoverAdapter meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel);
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 

@@ -40,6 +40,8 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private String searchableText;
 
+    private List<UserEntity> userList;
+
     public DiscoverViewModel(@NonNull Application application) {
         super(application);
         this.userDataSource = UserDataSource.getInstance();
@@ -84,6 +86,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
+                    userList = userEntities;
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
@@ -114,6 +117,13 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     }
 
+    public List<UserEntity> getCurrentUserList() {
+        if (userList == null) {
+            userList = new ArrayList<>();
+            Log.d("SearchIssue", "Discover search list null");
+        }
+        return userList;
+    }
 
     @NonNull
     public LiveData<PagedList<UserEntity>> getGetFilteredList() {

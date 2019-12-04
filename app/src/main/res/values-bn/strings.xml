@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
-    <string name="enter_first_name">Type Your Name</string>
+    <string name="enter_first_name">আপনার নাম লিখুন</string>
     <string name="signup">Next</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
@@ -17,7 +17,7 @@
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">Please click BACK again to exit.</string>
 
-    <string name="search">Search</string>
+    <string name="search">খুঁজুন</string>
     <string name="type_message">আপনার বার্তা লিখুন &#8230;</string>
 
     <string name="demo_language">English</string>
@@ -61,5 +61,15 @@
     <string name="send_feedback">মতামত পাঠান</string>
 
     <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
+    <string name="add_your_feedback">মতামত লিখুন</string>
 
+    <string name="update_profile">Update Profile</string>
+
+    <string name="update">আপডেট</string>
+
+    <string name="profile_updated_successfully">প্রোফাইল আপডেট সম্পূর্ণ হয়েছে</string>
+
+    <string name="feedback_submitted_successfully">মতামত পাঠানো হয়েছে</string>
+
+    <string name="please_write_your_feedback">আপনার মতামত লিখুন</string>
 </resources>

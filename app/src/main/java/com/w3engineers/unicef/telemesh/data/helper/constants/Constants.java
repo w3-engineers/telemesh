@@ -58,6 +58,7 @@ public class Constants {
         String MY_WALLET_PATH = "my_wallet_path";
         String MY_WALLET_IMAGE = "my_wallet_image";
         String IS_RESTART = "is_restart";
+        String NETWORK_PREFIX = "NETWORK_PREFIX";
     }
 
     public interface MenuItemPosition {

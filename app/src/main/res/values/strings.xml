@@ -111,7 +111,7 @@
     <string name="close_search">Close search</string>
     <string name="content_description_import_success">Import Success</string>
     <string name="import_successful">Import successful</string>
-    <string name="pin_provide_instruction">Please provide your 8 digit PIN to continue.</string>
+    <string name="pin_provide_instruction">Please provide your password to continue.</string>
     <string name="continue_button">continue</string>
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
     <string name="enter_password_here">Enter password here</string>
@@ -132,6 +132,10 @@
     <string name="add_your_feedback">Add your feedback</string>
     <string name="feedback_submitted_successfully">Feedback submitted successfully</string>
     <string name="please_write_your_feedback">Please write your feedback</string>
+    <string name="set_new_network_prefix">Set new network prefix</string>
+    <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
+    <string name="set_ssid">Set SSID</string>
+    <string name="def_ssid">captor</string>
 
      <string name="spinner_title">Favourite</string>
 

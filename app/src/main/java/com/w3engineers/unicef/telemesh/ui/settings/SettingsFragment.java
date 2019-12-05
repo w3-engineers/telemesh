@@ -9,12 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Process;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
@@ -22,6 +26,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -72,6 +77,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutDiagramMap.setOnClickListener(this);
         mBinding.layoutAppUpdate.setOnClickListener(this);
         mBinding.layoutFeedback.setOnClickListener(this);
+        mBinding.layoutSsid.setOnClickListener(this);
 
         showInAppUpdateButton();
     }
@@ -152,6 +158,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             case R.id.layout_feedback:
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
+
+            case R.id.layout_ssid:
+                showAlertForSSID();
+                break;
+
             default:
                 break;
 
@@ -244,5 +255,47 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void showAlertForSSID() {
+        // create an alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final View customLayout = getLayoutInflater().inflate(R.layout.alert_change_ssid, null);
+        builder.setView(customLayout);
+
+        String networkSSID = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.NETWORK_PREFIX);
+
+        if (TextUtils.isEmpty(networkSSID)) {
+            networkSSID = getResources().getString(R.string.def_ssid);
+        }
+
+        TextView infoText = customLayout.findViewById(R.id.info);
+        EditText ssidName = customLayout.findViewById(R.id.network_name);
+
+        infoText.setText(String.format(getString(R.string.your_current_network_prefix), networkSSID));
+
+        // add a button
+        builder.setPositiveButton("Change", (dialog, which) -> {
+
+            String ssid = ssidName.getText().toString();
+
+            if (TextUtils.isEmpty(ssid) || ssid.length() < 3) {
+                Toaster.showShort("Minimum character limit is 3");
+            } else {
+                SharedPref.getSharedPref(mActivity).write(Constants.preferenceKey.NETWORK_PREFIX, ssid);
+
+                settingsViewModel.destroyMeshService();
+            }
+
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
     }
 }

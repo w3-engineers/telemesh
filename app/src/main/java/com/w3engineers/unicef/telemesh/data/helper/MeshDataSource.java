@@ -193,4 +193,8 @@ public class MeshDataSource extends ViperUtil {
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
+
+    public void resetInstance() {
+        rightMeshDataSource = null;
+    }
 }

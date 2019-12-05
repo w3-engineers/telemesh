@@ -98,9 +98,17 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         });
     }
 
+    public void restartMesh() {
+        ServiceLocator.getInstance().resetMesh();
+    }
+
+    public void destroyMeshService() {
+        RmDataHelper.getInstance().destroyMeshService();
+    }
+
     @Override
     public void closeInAppShare() {
-        HandlerUtil.postBackground(()-> ServiceLocator.getInstance().resetMesh(), 5000);
+        HandlerUtil.postBackground(this::restartMesh, 5000);
 //        ServiceLocator.getInstance().resetMesh();
     }
 }

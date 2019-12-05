@@ -73,7 +73,13 @@ public abstract class ViperUtil {
 
                 initObservers();
 
-                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(),
+                String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
+
+                if (TextUtils.isEmpty(networkSSID)) {
+                    networkSSID = context.getResources().getString(R.string.def_ssid);
+                }
+
+                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                         address, publicKey, userModel.getImage(), userModel.getTime(), true)
                         .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
             }
@@ -288,6 +294,18 @@ public abstract class ViperUtil {
     public void restartMeshService() {
         int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
         viperClient.restartMesh(myCurrentRole);
+    }
+
+    public void destroyMeshService() {
+        if (viperClient != null) {
+            viperClient.destroyMeshService();
+        }
+    }
+
+    public void resetViperInstance() {
+        if (viperClient != null) {
+            viperClient.resetViperInstance();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////

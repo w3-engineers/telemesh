@@ -592,6 +592,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.restartMeshService();
     }
 
+    public void destroyMeshService() {
+        rightMeshDataSource.destroyMeshService();
+        rightMeshDataSource.resetViperInstance();
+
+        rightMeshDataSource.resetInstance();
+
+        rightMeshDataSource = MeshDataSource.getRmDataSource();
+
+    }
+
     public void requestWsMessage() {
         if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
             LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {

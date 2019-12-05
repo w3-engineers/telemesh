@@ -61,5 +61,9 @@
     <string name="send_feedback">মতামত পাঠান</string>
 
     <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
+    <string name="set_new_network_prefix">Set new network prefix</string>
+    <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
+    <string name="set_ssid">Set SSID</string>
+    <string name="def_ssid">captor</string>
 
 </resources>

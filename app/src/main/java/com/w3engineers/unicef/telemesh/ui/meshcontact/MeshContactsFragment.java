@@ -124,7 +124,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(getResources().getString(R.string.title_personal_fragment));
+                setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
                 Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Search result found");
@@ -309,7 +309,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(getResources().getString(R.string.title_personal_fragment));
+            setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
         }
     }
 
@@ -317,13 +317,13 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (!Constants.IS_LOADING_ENABLE) {
             Handler handler = new Handler(Looper.getMainLooper());
             enableLoading();
-            title = getResources().getString(R.string.title_personal_fragment);
+            title = LanguageUtil.getString(R.string.title_personal_fragment);
 
             Runnable runnable = () -> {
                 if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(getResources().getString(R.string.title_personal_fragment));
+                        setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -334,7 +334,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title = getResources().getString(R.string.title_personal_fragment);
+            title = LanguageUtil.getString(R.string.title_personal_fragment);
         }
     }
 
@@ -423,7 +423,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void initAllText(){
         fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
-        fragmentMeshcontactBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
     }
 
     @Override

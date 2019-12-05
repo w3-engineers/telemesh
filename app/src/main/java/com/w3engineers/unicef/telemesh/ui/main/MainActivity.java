@@ -233,7 +233,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             mFragment = new DiscoverFragment();
         }
         mCurrentFragment = mFragment;
-        loadFragment(mFragment, getString(R.string.title_discoverd_fragment));
+        loadFragment(mFragment, LanguageUtil.getString(R.string.title_discoverd_fragment));
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
                 .getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
@@ -285,12 +285,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         String toolbarTitle = "";
         switch (item.getItemId()) {
             case R.id.action_discover:
-                toolbarTitle = getString(R.string.title_discoverd_fragment);
+                toolbarTitle = LanguageUtil.getString(R.string.title_discoverd_fragment);
                 mFragment = new DiscoverFragment();
                 //hideUserBadge();
                 break;
             case R.id.action_contact:
-                toolbarTitle = getString(R.string.title_personal_fragment);
+                toolbarTitle = LanguageUtil.getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
 //                hideUserBadge();
                 break;
@@ -547,7 +547,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }*/
 
     private void initAllText() {
-        binding.searchBar.editTextSearch.setText(R.string.search);
+        binding.searchBar.editTextSearch.setHint(R.string.search);
     }
 
 }

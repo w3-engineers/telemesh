@@ -24,6 +24,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
@@ -99,7 +100,7 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(getResources().getString(R.string.title_discoverd_fragment));
+                setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
                 Log.d("SearchIssue", "Discover Search result");
                 if (userEntities != null && userEntities.size() > 0) {
                     Log.d("SearchIssue", "Discover Search result found");
@@ -287,7 +288,7 @@ public class DiscoverFragment extends BaseFragment {
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(getResources().getString(R.string.title_discoverd_fragment));
+            setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
         }
     }
 
@@ -295,13 +296,13 @@ public class DiscoverFragment extends BaseFragment {
         if (!Constants.IS_LOADING_ENABLE) {
             Handler handler = new Handler(Looper.getMainLooper());
             enableLoading();
-            title = getResources().getString(R.string.discovering_users);
+            title = LanguageUtil.getString(R.string.discovering_users);
 
             Runnable runnable = () -> {
                 if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(getResources().getString(R.string.title_discoverd_fragment));
+                        setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -312,7 +313,7 @@ public class DiscoverFragment extends BaseFragment {
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title = getResources().getString(R.string.title_discoverd_fragment);
+            title =LanguageUtil.getString(R.string.title_discoverd_fragment);
         }
     }
 

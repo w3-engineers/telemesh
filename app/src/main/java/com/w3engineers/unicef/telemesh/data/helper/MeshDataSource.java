@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -97,6 +98,9 @@ public class MeshDataSource extends ViperUtil {
      */
     public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId, boolean isNotificationEnable) {
 
+        if (TextUtils.isEmpty(receiverId))
+            return;
+
         dataModel.setUserId(receiverId);
 
         ViperData viperData = new ViperData();
@@ -126,6 +130,9 @@ public class MeshDataSource extends ViperUtil {
 
         try {
 
+            if (TextUtils.isEmpty(peerId))
+                return;
+
             String userString = new String(peerData);
             UserModel userModel = new Gson().fromJson(userString, UserModel.class);
 
@@ -140,6 +147,9 @@ public class MeshDataSource extends ViperUtil {
 
     @Override
     protected void peerAdd(String peerId, UserModel userModel) {
+
+        if (TextUtils.isEmpty(peerId))
+            return;
 
         if (userModel != null) {
             userModel.setUserId(peerId);
@@ -156,6 +166,9 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void peerRemove(@NonNull String peerId) {
 
+        if (TextUtils.isEmpty(peerId))
+            return;
+
         HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(peerId));
     }
 
@@ -166,6 +179,10 @@ public class MeshDataSource extends ViperUtil {
      */
     @Override
     protected void onData(@NonNull String peerId, ViperData viperData) {
+
+        if (TextUtils.isEmpty(peerId))
+            return;
+
         DataModel dataModel = new DataModel()
                 .setUserId(peerId)
                 .setRawData(viperData.rawData)

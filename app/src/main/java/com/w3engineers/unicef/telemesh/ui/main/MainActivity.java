@@ -547,7 +547,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }*/
 
     private void initAllText() {
-        binding.searchBar.editTextSearch.setHint(R.string.search);
+        binding.searchBar.editTextSearch.setHint(LanguageUtil.getString(R.string.search));
     }
 
 }

@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -62,8 +63,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private PagedList<UserEntity> favouriteList;
     private PagedList<UserEntity> msgWithFavList;
-
     private int currentSelection = 0;
+
 
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
@@ -93,7 +94,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void userDataOperation() {
-
         if (meshContactViewModel != null) {
             //   meshContactViewModel.stopAllMessageWithObserver();
             /*meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
@@ -115,6 +115,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     searchViewControl(userEntities);
             });
 */
+
+            meshContactViewModel.startFavouriteObserver();
+            meshContactViewModel.startAllMessagedWithFavouriteObserver();
 
             initDataObserver();
 
@@ -151,8 +154,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 userEntityList = userEntities;
             });
 
-            meshContactViewModel.startFavouriteObserver();
-            meshContactViewModel.startAllMessagedWithFavouriteObserver();
         }
     }
 
@@ -421,19 +422,12 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        //     String item = parent.getItemAtPosition(position).toString();
-
         currentSelection = position;
-
-        if (position == 0) {
-            updateAdapterByFavouriteList(favouriteList);
-        } else if (position == 1) {
-            updateAdapterByAllList(msgWithFavList);
+        if (position == Constants.SpinnerItem.FAVOURITE) {
+            updateAdapterByData(favouriteList);
+        } else if (position == Constants.SpinnerItem.ALL) {
+            updateAdapterByData(msgWithFavList);
         }
-
-        // Showing selected spinner item
-        // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -443,34 +437,28 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void initDataObserver() {
         if (meshContactViewModel != null) {
-            //  meshContactViewModel.stopAllMessageWithObserver();
             meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                 if (userEntities != null) {
-
+                    isLoaded = false;
                     favouriteList = userEntities;
 
-                    if (currentSelection == 0) {
-                        updateAdapterByFavouriteList(userEntities);
+                    if (currentSelection == Constants.SpinnerItem.FAVOURITE) {
+                        updateAdapterByData(userEntities);
                     }
-
-                    MeshLog.e("list_size ::" + getAdapter().getCurrentList().size());
                 }
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
             });
 
-            meshContactViewModel.startFavouriteObserver();
-        }
+        //    meshContactViewModel.startFavouriteObserver();
 
-
-        if (meshContactViewModel != null) {
-            // meshContactViewModel.stopFavouriteObserver();
             meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
+                    isLoaded = false;
                     msgWithFavList = userEntities;
 
-                    if (currentSelection == 1) {
-                        updateAdapterByAllList(userEntities);
+                    if (currentSelection == Constants.SpinnerItem.ALL) {
+                        updateAdapterByData(userEntities);
                     }
 
                 }
@@ -478,11 +466,11 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     searchViewControl(userEntities);
             });
 
-            meshContactViewModel.startAllMessagedWithFavouriteObserver();
+          //  meshContactViewModel.startAllMessagedWithFavouriteObserver();
         }
     }
 
-    private void updateAdapterByFavouriteList(PagedList<UserEntity> userEntities) {
+    private void updateAdapterByData(PagedList<UserEntity> userEntities) {
         getAdapter().submitList(userEntities);
         userEntityList = userEntities;
 
@@ -497,7 +485,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
-    private void updateAdapterByAllList(PagedList<UserEntity> userEntities) {
+/*    private void updateAdapterByAllList(PagedList<UserEntity> userEntities) {
         getAdapter().submitList(userEntities);
         userEntityList = userEntities;
 
@@ -506,5 +494,5 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
             }
         }
-    }
+    }*/
 }

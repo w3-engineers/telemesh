@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
@@ -49,11 +50,11 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     private List<UserEntity> favouriteList;
     private List<UserEntity> msgWithFavList;
 
-    public int FAVOURITE_SEARCH = 0;
     public int ALL_SEARCH = 1;
 
-
     private String searchableText;
+
+    private int searchType;
 
 
     public MeshContactViewModel(@NonNull Application application) {
@@ -105,25 +106,12 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
-                        startSearch(searchableText, userEntities);
+                        if (searchType == Constants.SpinnerItem.ALL){
+                            startSearch(searchableText, userEntities);
+                        }
                     } else {
 
-                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
-
-                        PagedList.Config myConfig = new PagedList.Config.Builder()
-                                .setEnablePlaceholders(true)
-                                .setPrefetchDistance(PREFETCH_DISTANCE)
-                                .setPageSize(PAGE_SIZE)
-                                .build();
-
-
-                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
-                                .setInitialKey(INITIAL_LOAD_KEY)
-                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
-                                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                                .build();
-
-                        allMessagedWithEntity.postValue(pagedStrings);
+                        setUserMessageWithFavouriteData(userEntities);
                     }
 
                 }, throwable -> {
@@ -131,6 +119,25 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 }));
 
         //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
+    }
+
+    public void setUserMessageWithFavouriteData(List<UserEntity> userEntities) {
+        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+        PagedList.Config myConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(PREFETCH_DISTANCE)
+                .setPageSize(PAGE_SIZE)
+                .build();
+
+
+        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                .setInitialKey(INITIAL_LOAD_KEY)
+                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .build();
+
+        allMessagedWithEntity.postValue(pagedStrings);
     }
 
     public void startFavouriteObserver() {
@@ -144,25 +151,11 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
-                        startSearch(searchableText, userEntities);
+                        if (searchType == Constants.SpinnerItem.FAVOURITE){
+                            startSearch(searchableText, userEntities);
+                        }
                     } else {
-
-                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
-
-                        PagedList.Config myConfig = new PagedList.Config.Builder()
-                                .setEnablePlaceholders(true)
-                                .setPrefetchDistance(PREFETCH_DISTANCE)
-                                .setPageSize(PAGE_SIZE)
-                                .build();
-
-
-                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
-                                .setInitialKey(INITIAL_LOAD_KEY)
-                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
-                                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                                .build();
-
-                        favoriteEntityList.postValue(pagedStrings);
+                        setUserFavouriteData(userEntities);
                     }
 
                 }, throwable -> {
@@ -170,21 +163,44 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 }));
 
         //  favoriteEntityList = userDataSource.getFavouriteUsers();
-
     }
 
-    public List<UserEntity> getCurrentUserList(int searchType) {
+
+
+    public void setUserFavouriteData(List<UserEntity> userEntities) {
+        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+        PagedList.Config myConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(PREFETCH_DISTANCE)
+                .setPageSize(PAGE_SIZE)
+                .build();
+
+
+        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                .setInitialKey(INITIAL_LOAD_KEY)
+                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .build();
+
+        favoriteEntityList.postValue(pagedStrings);
+    }
+
+    public List<UserEntity> getCurrentUserList(int srchType) {
+        searchType = srchType;
         List<UserEntity> userList;
-        if (searchType == FAVOURITE_SEARCH) {
+        if (searchType == Constants.SpinnerItem.FAVOURITE) {
             if (favouriteList == null) {
                 favouriteList = new ArrayList<>();
             }
             userList = favouriteList;
-        } else {
+        } else if (searchType == Constants.SpinnerItem.ALL){
             if (msgWithFavList == null) {
                 msgWithFavList = new ArrayList<>();
             }
             userList = msgWithFavList;
+        }else {
+            userList = new ArrayList<>();
         }
 
         return userList;
@@ -202,6 +218,13 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         searchableText = searchText;
 
         if (userEntities != null) {
+
+            if (TextUtils.isEmpty(searchText)) {
+                setUserFavouriteData(favouriteList);
+                setUserMessageWithFavouriteData(msgWithFavList);
+                return;
+            }
+
             List<UserEntity> filteredItemList = new ArrayList<>();
 
             for (UserEntity user : userEntities) {

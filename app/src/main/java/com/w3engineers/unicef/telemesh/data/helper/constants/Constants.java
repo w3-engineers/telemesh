@@ -109,6 +109,11 @@ public class Constants {
         int FAVOURITE = 1;
     }
 
+    public interface SpinnerItem{
+        int FAVOURITE = 0;
+        int ALL = 1;
+    }
+
     public interface UserStatus {
         int OFFLINE = 0;
         int WIFI_ONLINE = 5;

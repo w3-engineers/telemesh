@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 /**
  * Using the Room database as a data source.

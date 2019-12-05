@@ -147,6 +147,8 @@
     <string name="no_favorite">No favorite user found</string>
     <string name="minimu_ssid_character">Minimum character limit is 3</string>
     <string name="change">Change</string>
+    <string name="a_new_version">A new version </string>
+    <string name="is_available_for_telemesh">is available for Telemesh</string>
 
 
 </resources>

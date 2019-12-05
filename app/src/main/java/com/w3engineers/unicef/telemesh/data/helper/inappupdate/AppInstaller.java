@@ -23,6 +23,7 @@ import com.w3engineers.unicef.telemesh.data.remote.RetrofitInterface;
 import com.w3engineers.unicef.telemesh.data.remote.RetrofitService;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppInstallProgressBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -233,6 +234,7 @@ public class AppInstaller {
         LayoutInflater inflater = LayoutInflater.from(context);
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_app_install_progress, null, false);
         builder.setView(binding.getRoot());
+        binding.textViewTitle.setText(LanguageUtil.getString(R.string.app_updating_please_wait));
         dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();

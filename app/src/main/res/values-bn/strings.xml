@@ -89,4 +89,10 @@
     <string name="feedback">মতামত</string>
     <string name="change">পরিবর্তন</string>
     <string name="cancel">বাতিল</string>
+    <string name="app_updating_please_wait" translatable="false">অ্যাপ আপডেট হচ্ছে। অপেক্ষা করুন..</string>
+    <string name="ask_me_later">পরে জিজ্ঞাসা করুন</string>
+    <string name="do_you_want_to_update">আপনি কি আপডেট চান?</string>
+    <string name="app_update">অ্যাপ আপডেট</string>
+    <string name="a_new_version">একটি নতুন ভার্সন </string>
+    <string name="is_available_for_telemesh">Telemesh এর জন্য পাওয়া গেছে</string>
 </resources>

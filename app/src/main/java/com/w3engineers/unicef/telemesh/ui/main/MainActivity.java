@@ -234,9 +234,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         loadFragment(mFragment, getString(R.string.title_discoverd_fragment));
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
-                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
 
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
         /*binding.bottomNavigation
@@ -409,7 +409,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     private void hideUserBadge() {
         BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
 
         if (itemView == null) {
             return;
@@ -482,7 +482,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void subscribeForActiveUser() {
         if (mViewModel != null) {
             mViewModel.getActiveUser().observe(this, userEntities -> {
-                runOnUiThread(() -> createUserBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+                runOnUiThread(() -> createUserBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_DISCOVER));
             });
         }
     }

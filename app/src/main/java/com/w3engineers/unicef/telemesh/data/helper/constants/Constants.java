@@ -61,8 +61,9 @@ public class Constants {
     }
 
     public interface MenuItemPosition {
-        int POSITION_FOR_CONTACT = 0;
-        int POSITION_FOR_MESSAGE_FEED = 1;
+        int POSITION_FOR_DISCOVER = 0;
+        int POSITION_FOR_FAVORITE = 1;
+        int POSITION_FOR_MESSAGE_FEED = 2;
         int POSITION_FOR_MESSAGE_SETTINGS = 2;
     }
 

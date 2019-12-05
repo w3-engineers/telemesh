@@ -208,7 +208,7 @@ public class DiscoverFragment extends BaseFragment {
 
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
-            Log.d("SearchIssue","Discover page Search query: "+query);
+            Log.d("SearchIssue", "Discover page Search query: " + query);
             discoverViewModel.startSearch(query, discoverViewModel.getCurrentUserList());
         }
     }
@@ -313,7 +313,7 @@ public class DiscoverFragment extends BaseFragment {
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title =LanguageUtil.getString(R.string.title_discoverd_fragment);
+            title = LanguageUtil.getString(R.string.title_discoverd_fragment);
         }
     }
 
@@ -353,7 +353,7 @@ public class DiscoverFragment extends BaseFragment {
 
     // General API's and initialization area
     private void init() {
-
+        initAllText();
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
@@ -379,4 +379,8 @@ public class DiscoverFragment extends BaseFragment {
         }).get(DiscoverViewModel.class);
     }
 
+    private void initAllText() {
+        fragmentDiscoverBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
+        fragmentDiscoverBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
+    }
 }

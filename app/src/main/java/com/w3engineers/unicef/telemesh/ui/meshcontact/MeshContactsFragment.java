@@ -80,7 +80,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 getViewDataBinding();
 
         setHasOptionsMenu(true);
-        controlEmptyLayout();
+        // controlEmptyLayout();
+        title = LanguageUtil.getString(R.string.title_personal_fragment);
         setTitle(title);
 
         init();
@@ -421,7 +422,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }).get(MeshContactViewModel.class);
     }
 
-    private void initAllText(){
+    private void initAllText() {
         fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
     }
 
@@ -455,7 +456,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     searchViewControl(userEntities);
             });
 
-        //    meshContactViewModel.startFavouriteObserver();
+            //    meshContactViewModel.startFavouriteObserver();
 
             meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
@@ -471,7 +472,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     searchViewControl(userEntities);
             });
 
-          //  meshContactViewModel.startAllMessagedWithFavouriteObserver();
+            //  meshContactViewModel.startAllMessagedWithFavouriteObserver();
         }
     }
 

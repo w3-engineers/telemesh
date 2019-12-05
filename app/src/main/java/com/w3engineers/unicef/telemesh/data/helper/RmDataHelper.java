@@ -161,7 +161,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
-                versionMessageHandshaking(userId);
+                if (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE) {
+                    versionMessageHandshaking(userId);
+                }
             }
         }, 10 * 1000);
 

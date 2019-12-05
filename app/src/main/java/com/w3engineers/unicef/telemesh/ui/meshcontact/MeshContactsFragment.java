@@ -423,7 +423,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void initAllText() {
-        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
+        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
     }
 
     @Override

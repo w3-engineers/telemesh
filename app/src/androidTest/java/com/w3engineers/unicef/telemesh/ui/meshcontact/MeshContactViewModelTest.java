@@ -1,19 +1,21 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
+import android.app.Application;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.util.LiveDataTestUtil;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
-import com.w3engineers.unicef.telemesh.util.TestObserver;
 
 import org.junit.After;
 import org.junit.Before;
@@ -67,7 +69,7 @@ public class MeshContactViewModelTest {
 
         userDataSource = new UserDataSource(appDatabase.userDao());
 
-        SUT = new MeshContactViewModel(userDataSource);
+        SUT = new MeshContactViewModel((Application) InstrumentationRegistry.getContext().getApplicationContext());
 
         // Region constant
         String FIRST_NAME = "Danial";
@@ -94,11 +96,11 @@ public class MeshContactViewModelTest {
     @Test
     public void testGetAllUsers_forFirstTime_getEmptyUserList() throws InterruptedException {
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        LiveData<PagedList<UserEntity>> allUserList = SUT.favoriteEntityList;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
@@ -114,11 +116,11 @@ public class MeshContactViewModelTest {
         userEntity.setMeshId(userMeshId);
         userDataSource.insertOrUpdateData(userEntity);
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        LiveData<PagedList<UserEntity>> allUserList = SUT.favoriteEntityList;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
@@ -135,11 +137,11 @@ public class MeshContactViewModelTest {
         userEntity.setMeshId(UUID.randomUUID().toString());
         userDataSource.insertOrUpdateData(userEntity);
 
-        MutableLiveData<List<UserEntity>> allUserList = SUT.allUserEntity;
+        LiveData<PagedList<UserEntity>> allUserList = SUT.favoriteEntityList;
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startUserObserver();
+        SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
@@ -169,7 +171,7 @@ public class MeshContactViewModelTest {
         //arrange
         String SMALL_SEARCH_TEXT = "or";
         int itemCount = getItemCountInList(mUserEntities, SMALL_SEARCH_TEXT);
-        LiveData<List<UserEntity>> listLiveData = SUT.getGetFilteredList();
+        LiveData<PagedList<UserEntity>> listLiveData = SUT.getGetFilteredList();
 
         //action
         SUT.startSearch(SMALL_SEARCH_TEXT, mUserEntities);
@@ -215,7 +217,7 @@ public class MeshContactViewModelTest {
     public void meshContactViewModelSearch_emptyText_retrieveAllUsers() throws InterruptedException {
 
         //arrange
-        LiveData<List<UserEntity>> listLiveData = SUT.getGetFilteredList();
+        LiveData<PagedList<UserEntity>> listLiveData = SUT.getGetFilteredList();
 
         //action
         String EMPTY_SEARCH_TEXT = "";

@@ -9,7 +9,8 @@
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
-    <string name="title_contacts_fragment">Nearby Users</string>
+    <string name="title_discoverd_fragment">Nearby Users</string>
+    <string name="title_personal_fragment">Personal contact</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
 
@@ -136,6 +137,10 @@
     <string name="please_wait">Please Wait…</string>
     <string name="app_updating_please_wait" translatable="false">App Updating please wait..</string>
     <string name="feedback">Feedback</string>
+
+     <string name="spinner_title">Favourite</string>
+
+    <string name="no_favorite">No favorite user found</string>
 
 
 </resources>

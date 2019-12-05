@@ -1,9 +1,8 @@
-package com.w3engineers.unicef.telemesh.ui.meshcontact;
+package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,23 +15,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
+import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -41,19 +34,11 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+public class DiscoverFragment extends BaseFragment {
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class MeshContactsFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
-
-    private FragmentMeshcontactBinding fragmentMeshcontactBinding;
+    private FragmentDiscoverBinding fragmentDiscoverBinding;
     @Nullable
-    public MeshContactViewModel meshContactViewModel;
+    public DiscoverViewModel discoverViewModel;
     @Nullable
     public List<UserEntity> userEntityList;
     @Nullable
@@ -61,22 +46,18 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private String title;
     private boolean isLoaded = false;
     private SearchView mSearchView;
-
-    private PagedList<UserEntity> favouriteList;
-    private PagedList<UserEntity> msgWithFavList;
-    private int currentSelection = 0;
-
+    private DiscoverAdapter meshContactAdapter;
 
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_meshcontact;
+        return R.layout.fragment_discover;
     }
 
     @Override
     protected void startUI() {
-        fragmentMeshcontactBinding = (FragmentMeshcontactBinding)
+        fragmentDiscoverBinding = (FragmentDiscoverBinding)
                 getViewDataBinding();
 
         setHasOptionsMenu(true);
@@ -84,7 +65,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         setTitle(title);
 
         init();
-        initSpinner();
 
         userDataOperation();
 
@@ -95,55 +75,50 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void userDataOperation() {
-        if (meshContactViewModel != null) {
-            //   meshContactViewModel.stopAllMessageWithObserver();
-            /*meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
+
+        if (discoverViewModel != null) {
+
+            discoverViewModel.startUserObserver();
+
+            discoverViewModel.nearbyUsers.observe(this, userEntities -> {
                 if (userEntities != null) {
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
 
+                    isLoaded = false;
+
                     if (userEntityList != null && userEntityList.size() > 0) {
-                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-                        }
-                    } else {
-                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.GONE) {
-                            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+                        if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
+                            fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
                     }
                 }
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
             });
-*/
 
-            meshContactViewModel.startFavouriteObserver();
-            meshContactViewModel.startAllMessagedWithFavouriteObserver();
+            discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-            initDataObserver();
-
-            meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
-
-                setTitle(getResources().getString(R.string.title_personal_fragment));
-                Log.d("SearchIssue", "Search result");
+                setTitle(getResources().getString(R.string.title_discoverd_fragment));
+                Log.d("SearchIssue", "Discover Search result");
                 if (userEntities != null && userEntities.size() > 0) {
-                    Log.d("SearchIssue", "Search result found");
-                    fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-
-                    getAdapter().submitList(userEntities);
-
+                    Log.d("SearchIssue", "Discover Search result found");
+                    fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
+                    fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
+                    //  getAdapter().clear();
+                    meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-                        enableLoading();
+                        fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
+                        //enableLoading();
 
                         isLoaded = true;
                         Runnable runnable = () -> {
-                            fragmentMeshcontactBinding.tvMessage.setText("No User Found");
+                            fragmentDiscoverBinding.tvMessage.setText("No User Found");
                             enableEmpty();
-                            //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
+                            fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
 
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
@@ -151,7 +126,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 }
             });
 
-            meshContactViewModel.backUserEntity.observe(this, userEntities -> {
+            discoverViewModel.backUserEntity.observe(this, userEntities -> {
                 userEntityList = userEntities;
             });
 
@@ -159,8 +134,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void openUserMessage() {
-        if (meshContactViewModel != null) {
-            meshContactViewModel.openUserMessage().observe(this, userEntity -> {
+        if (discoverViewModel != null) {
+            discoverViewModel.openUserMessage().observe(this, userEntity -> {
 
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
@@ -174,13 +149,14 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
+
     private void changeFavouriteStatus() {
-        if (meshContactViewModel != null) {
-            meshContactViewModel.changeFavourite().observe(this, userEntity -> {
+        if (discoverViewModel != null) {
+            discoverViewModel.changeFavourite().observe(this, userEntity -> {
                 if (userEntity.getIsFavourite() == Constants.FavouriteStatus.UNFAVOURITE) {
-                    meshContactViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
+                    discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.FAVOURITE);
                 } else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE) {
-                    meshContactViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
+                    discoverViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
 
             });
@@ -211,9 +187,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                     isSearchStart = true;
                 }
 
-                if (meshContactViewModel != null) {
+                if (discoverViewModel != null) {
                     Timber.d("Search query: %s", string);
-                    meshContactViewModel.startSearch(string, meshContactViewModel.getCurrentUserList(currentSelection));
+                    discoverViewModel.startSearch(string, discoverViewModel.getCurrentUserList());
                 }
             }
 
@@ -230,9 +206,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     public void searchContacts(String query) {
-        if (meshContactViewModel != null) {
-            Timber.d("Search query: %s", query);
-            meshContactViewModel.startSearch(query, meshContactViewModel.getCurrentUserList(currentSelection));
+        if (discoverViewModel != null) {
+            Log.d("SearchIssue","Discover page Search query: "+query);
+            discoverViewModel.startSearch(query, discoverViewModel.getCurrentUserList());
         }
     }
 
@@ -293,12 +269,14 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             public boolean onMenuItemActionExpand(MenuItem item) {
                 searchView.setBackgroundColor(getResources().getColor(R.color.white));
                 searchView.setMaxWidth(Integer.MAX_VALUE);
+                Log.d("UiTest", "Search expand");
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 //searchView.setBackgroundColor(-1);
+                Log.d("UiTest", "Search collapse");
                 return true;
             }
         });
@@ -309,7 +287,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(getResources().getString(R.string.title_personal_fragment));
+            setTitle(getResources().getString(R.string.title_discoverd_fragment));
         }
     }
 
@@ -317,13 +295,13 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (!Constants.IS_LOADING_ENABLE) {
             Handler handler = new Handler(Looper.getMainLooper());
             enableLoading();
-            title = getResources().getString(R.string.title_personal_fragment);
+            title = getResources().getString(R.string.discovering_users);
 
             Runnable runnable = () -> {
-                if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
+                if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(getResources().getString(R.string.title_personal_fragment));
+                        setTitle(getResources().getString(R.string.title_discoverd_fragment));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -334,15 +312,15 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title = getResources().getString(R.string.title_personal_fragment);
+            title = getResources().getString(R.string.title_discoverd_fragment);
         }
     }
 
     private void enableLoading() {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-        // fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-        // fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+        fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
+        fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
+        fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).enableLoading();
@@ -350,43 +328,22 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     }
 
     private void enableEmpty() {
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-        //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-        //   fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
+        fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
+        fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
+        fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();
         }*/
     }
 
-    private void initSpinner() {
-
-        // Spinner click listener
-        fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
-
-
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<String>();
-        categories.add("Favourite");
-        categories.add("All");
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        fragmentMeshcontactBinding.spinnerView.setAdapter(dataAdapter);
-    }
-
     protected void searchLoading() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-                //   fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-                //   fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
+                fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
+                fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
+                fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
 
                 // ((MainActivity) getActivity()).enableLoading();
             });
@@ -395,110 +352,30 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     // General API's and initialization area
     private void init() {
-        initAllText();
-        meshContactViewModel = getViewModel();
 
-        fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-        //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
-        fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        discoverViewModel = getViewModel();
 
-        MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
-        fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);
+        fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
+        fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 
-    private MeshContactAdapter getAdapter() {
-        return (MeshContactAdapter) fragmentMeshcontactBinding
+    private DiscoverAdapter getAdapter() {
+        return (DiscoverAdapter) fragmentDiscoverBinding
                 .contactRecyclerView.getAdapter();
     }
 
-    private MeshContactViewModel getViewModel() {
+    private DiscoverViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getMeshContactViewModel(getActivity().getApplication());
+                return (T) ServiceLocator.getInstance().getDiscoveViewModel(getActivity().getApplication());
             }
-        }).get(MeshContactViewModel.class);
+        }).get(DiscoverViewModel.class);
     }
 
-    private void initAllText(){
-        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
-        fragmentMeshcontactBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        currentSelection = position;
-        if (position == Constants.SpinnerItem.FAVOURITE) {
-            updateAdapterByData(favouriteList);
-        } else if (position == Constants.SpinnerItem.ALL) {
-            updateAdapterByData(msgWithFavList);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    private void initDataObserver() {
-        if (meshContactViewModel != null) {
-            meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
-                if (userEntities != null) {
-                    isLoaded = false;
-                    favouriteList = userEntities;
-
-                    if (currentSelection == Constants.SpinnerItem.FAVOURITE) {
-                        updateAdapterByData(userEntities);
-                    }
-                }
-                if (mSearchItem != null)
-                    searchViewControl(userEntities);
-            });
-
-        //    meshContactViewModel.startFavouriteObserver();
-
-            meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
-                if (userEntities != null) {
-                    isLoaded = false;
-                    msgWithFavList = userEntities;
-
-                    if (currentSelection == Constants.SpinnerItem.ALL) {
-                        updateAdapterByData(userEntities);
-                    }
-
-                }
-                if (mSearchItem != null)
-                    searchViewControl(userEntities);
-            });
-
-          //  meshContactViewModel.startAllMessagedWithFavouriteObserver();
-        }
-    }
-
-    private void updateAdapterByData(PagedList<UserEntity> userEntities) {
-        getAdapter().submitList(userEntities);
-        userEntityList = userEntities;
-
-        if (userEntityList != null && userEntityList.size() > 0) {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-            }
-        } else {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.GONE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-/*    private void updateAdapterByAllList(PagedList<UserEntity> userEntities) {
-        getAdapter().submitList(userEntities);
-        userEntityList = userEntities;
-
-        if (userEntityList != null && userEntityList.size() > 0) {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-            }
-        }
-    }*/
 }

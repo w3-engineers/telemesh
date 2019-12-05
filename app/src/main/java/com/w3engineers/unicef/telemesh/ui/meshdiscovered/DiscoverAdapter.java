@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.meshcontact;
+package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.arch.paging.PagedListAdapter;
 import android.databinding.BindingAdapter;
@@ -15,25 +15,16 @@ import android.widget.ImageView;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
-import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
+import com.w3engineers.unicef.telemesh.databinding.ItemDiscoveredBinding;
 
-
-
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContactAdapter.GenericViewHolder> {
+public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapter.GenericViewHolder> {
 
     @NonNull
-    public MeshContactViewModel meshContactViewModel;
+    public DiscoverViewModel discoverViewModel;
 
-    MeshContactAdapter(@NonNull MeshContactViewModel meshContactViewModel) {
+    DiscoverAdapter(@NonNull DiscoverViewModel discoverViewModel) {
         super(DIFF_CALLBACK);
-        this.meshContactViewModel = meshContactViewModel;
+        this.discoverViewModel = discoverViewModel;
     }
 
     public static final DiffUtil.ItemCallback<UserEntity> DIFF_CALLBACK =
@@ -66,11 +57,11 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
 
     @NonNull
     @Override
-    public MeshContactViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public DiscoverViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //   LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         //  ItemMeshContactBinding itemMeshContactBinding = ItemMeshContactBinding.inflate(inflater, viewGroup, false);
 
-        return new MeshContactViewHolder(DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_mesh_contact, viewGroup, false));
+        return new DiscoverViewHolder(DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_discovered, viewGroup, false));
     }
 
     @Override
@@ -96,27 +87,27 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
         protected abstract void clearView();
     }
 
-    private class MeshContactViewHolder extends GenericViewHolder {
-        private ItemMeshContactBinding itemMeshContactBinding;
+    private class DiscoverViewHolder extends GenericViewHolder {
+        private ItemDiscoveredBinding itemDiscoveredBinding;
 
-        MeshContactViewHolder(@NonNull ViewDataBinding viewDataBinding) {
+        DiscoverViewHolder(@NonNull ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
-            this.itemMeshContactBinding = (ItemMeshContactBinding) viewDataBinding;
+            this.itemDiscoveredBinding = (ItemDiscoveredBinding) viewDataBinding;
         }
 
 
         @Override
         protected void bindView(@NonNull UserEntity item) {
-            itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
-            itemMeshContactBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
+            itemDiscoveredBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
+            itemDiscoveredBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
-            itemMeshContactBinding.setUser(item);
-            itemMeshContactBinding.setContactViewModel(meshContactViewModel);
+            itemDiscoveredBinding.setUser(item);
+            itemDiscoveredBinding.setDiscoverViewModel(discoverViewModel);
         }
 
         @Override
         protected void clearView() {
-            itemMeshContactBinding.invalidateAll();
+            itemDiscoveredBinding.invalidateAll();
         }
 
 
@@ -148,7 +139,6 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
                 return R.drawable.circle_offline;
             }*/
         }
-
 
     }
 }

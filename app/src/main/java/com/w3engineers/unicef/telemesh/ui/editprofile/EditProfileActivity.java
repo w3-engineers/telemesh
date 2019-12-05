@@ -122,6 +122,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         } else if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
             Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
             mViewModel.sendUserInfoToAll();
+            finish();
         }
     }
 

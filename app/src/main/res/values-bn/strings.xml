@@ -11,6 +11,7 @@
 
     <string name="select_photo">ছবি পছন্দ করুন</string>
     <string name="title_contacts_fragment">নিকটবর্তী ব্যবহারকারী</string>
+    <string name="title_personal_fragment">ব্যক্তিগত যোগাযোগ</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_settings_fragment">সেটিংস</string>
 

@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.meshcontact;
+package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -12,10 +12,10 @@ import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +25,12 @@ import java.util.concurrent.Executors;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class MeshContactViewModel extends BaseRxAndroidViewModel {
+public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
-    MutableLiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
-    MutableLiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
+    MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
 
@@ -47,24 +38,21 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     private static final int PAGE_SIZE = 50;
     private static final int PREFETCH_DISTANCE = 30;
 
-    private List<UserEntity> favouriteList;
-    private List<UserEntity> msgWithFavList;
-
-    public int ALL_SEARCH = 1;
-
     private String searchableText;
 
-    private int searchType;
+    private List<UserEntity> userList;
 
-
-    public MeshContactViewModel(@NonNull Application application) {
+    public DiscoverViewModel(@NonNull Application application) {
         super(application);
-        userDataSource = UserDataSource.getInstance();
+        this.userDataSource = UserDataSource.getInstance();
     }
-
 
     public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
+    }
+
+    public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
+        changeFavouriteStatus.postValue(userEntity);
     }
 
     public void setSearchText(String searchText) {
@@ -75,16 +63,12 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);
     }
 
-    public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
-        changeFavouriteStatus.postValue(userEntity);
+    MutableLiveData<UserEntity> openUserMessage() {
+        return openUserMessage;
     }
 
     MutableLiveData<UserEntity> changeFavourite() {
         return changeFavouriteStatus;
-    }
-
-    MutableLiveData<UserEntity> openUserMessage() {
-        return openUserMessage;
     }
 
     public void updateFavouriteStatus(String userId, int favouriteStatus) {
@@ -96,32 +80,47 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         //  return updateId > 0;
     }
 
-    public void startAllMessagedWithFavouriteObserver() {
-        getCompositeDisposable().add(userDataSource.getAllMessagedWithFavouriteUsers()
+    public void startUserObserver() {
+        getCompositeDisposable().add(userDataSource.getAllOnlineUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    msgWithFavList = userEntities;
+                    userList = userEntities;
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userEntities);
-                        if (searchType == Constants.SpinnerItem.ALL){
-                            startSearch(searchableText, userEntities);
-                        }
+                        startSearch(searchableText, userEntities);
                     } else {
 
-                        setUserMessageWithFavouriteData(userEntities);
+/*                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
+
+                        PagedList.Config myConfig = new PagedList.Config.Builder()
+                                .setEnablePlaceholders(true)
+                                .setPrefetchDistance(PREFETCH_DISTANCE)
+                                .setPageSize(PAGE_SIZE)
+                                .build();
+
+
+                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                                .setInitialKey(INITIAL_LOAD_KEY)
+                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                                .build();
+
+                        nearbyUsers.postValue(pagedStrings);*/
+
+                        setUserData(userEntities);
+
                     }
 
                 }, throwable -> {
                     throwable.printStackTrace();
                 }));
 
-        //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
-    public void setUserMessageWithFavouriteData(List<UserEntity> userEntities) {
+    public void setUserData(List<UserEntity> userEntities){
         UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
 
         PagedList.Config myConfig = new PagedList.Config.Builder()
@@ -137,75 +136,16 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 .setFetchExecutor(Executors.newSingleThreadExecutor())
                 .build();
 
-        allMessagedWithEntity.postValue(pagedStrings);
+        nearbyUsers.postValue(pagedStrings);
     }
 
-    public void startFavouriteObserver() {
-
-        getCompositeDisposable().add(userDataSource.getFavouriteUsers()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userEntities -> {
-
-                    favouriteList = userEntities;
-
-                    if (!TextUtils.isEmpty(searchableText)) {
-                        backUserEntity.postValue(userEntities);
-                        if (searchType == Constants.SpinnerItem.FAVOURITE){
-                            startSearch(searchableText, userEntities);
-                        }
-                    } else {
-                        setUserFavouriteData(userEntities);
-                    }
-
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
-
-        //  favoriteEntityList = userDataSource.getFavouriteUsers();
-    }
-
-
-
-    public void setUserFavouriteData(List<UserEntity> userEntities) {
-        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
-
-        PagedList.Config myConfig = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setPrefetchDistance(PREFETCH_DISTANCE)
-                .setPageSize(PAGE_SIZE)
-                .build();
-
-
-        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
-                .setInitialKey(INITIAL_LOAD_KEY)
-                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
-                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                .build();
-
-        favoriteEntityList.postValue(pagedStrings);
-    }
-
-    public List<UserEntity> getCurrentUserList(int srchType) {
-        searchType = srchType;
-        List<UserEntity> userList;
-        if (searchType == Constants.SpinnerItem.FAVOURITE) {
-            if (favouriteList == null) {
-                favouriteList = new ArrayList<>();
-            }
-            userList = favouriteList;
-        } else if (searchType == Constants.SpinnerItem.ALL){
-            if (msgWithFavList == null) {
-                msgWithFavList = new ArrayList<>();
-            }
-            userList = msgWithFavList;
-        }else {
+    public List<UserEntity> getCurrentUserList() {
+        if (userList == null) {
             userList = new ArrayList<>();
+            Log.d("SearchIssue", "Discover search list null");
         }
-
         return userList;
     }
-
 
     @NonNull
     public LiveData<PagedList<UserEntity>> getGetFilteredList() {
@@ -219,9 +159,8 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
         if (userEntities != null) {
 
-            if (TextUtils.isEmpty(searchText)) {
-                setUserFavouriteData(favouriteList);
-                setUserMessageWithFavouriteData(msgWithFavList);
+            if (TextUtils.isEmpty(searchText)){
+                setUserData(userEntities);
                 return;
             }
 
@@ -229,8 +168,11 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
             for (UserEntity user : userEntities) {
 
-                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
+               if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                    Log.d("SearchIssue", "user list post call 1");
                     filteredItemList.add(user);
+                }
+
             }
             Log.d("SearchIssue", "user list post call");
 

@@ -61,8 +61,9 @@ public class Constants {
     }
 
     public interface MenuItemPosition {
-        int POSITION_FOR_CONTACT = 0;
-        int POSITION_FOR_MESSAGE_FEED = 1;
+        int POSITION_FOR_DISCOVER = 0;
+        int POSITION_FOR_FAVORITE = 1;
+        int POSITION_FOR_MESSAGE_FEED = 2;
         int POSITION_FOR_MESSAGE_SETTINGS = 2;
     }
 
@@ -107,6 +108,16 @@ public class Constants {
         int DATE_MESSAGE = 101;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
+    }
+
+    public interface FavouriteStatus{
+        int UNFAVOURITE = 0;
+        int FAVOURITE = 1;
+    }
+
+    public interface SpinnerItem{
+        int FAVOURITE = 0;
+        int ALL = 1;
     }
 
     public interface UserStatus {

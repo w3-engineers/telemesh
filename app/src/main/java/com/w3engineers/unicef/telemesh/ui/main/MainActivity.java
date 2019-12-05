@@ -36,16 +36,12 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
+import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -232,17 +228,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             menuItem.setChecked(true);
             mFragment = new SettingsFragment();
         } else {
-            MenuItem menuItem = bottomMenu.findItem(R.id.action_contact);
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
-            mFragment = new MeshContactsFragment();
+            mFragment = new DiscoverFragment();
         }
         mCurrentFragment = mFragment;
-        loadFragment(mFragment, getString(R.string.title_contacts_fragment));
+        loadFragment(mFragment, getString(R.string.title_discoverd_fragment));
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
-                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+                .getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
 
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
         /*binding.bottomNavigation
@@ -288,10 +284,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Fragment mFragment = null;
         String toolbarTitle = "";
         switch (item.getItemId()) {
+            case R.id.action_discover:
+                toolbarTitle = getString(R.string.title_discoverd_fragment);
+                mFragment = new DiscoverFragment();
+                //hideUserBadge();
+                break;
             case R.id.action_contact:
-                toolbarTitle = LanguageUtil.getString(R.string.title_contacts_fragment);
+                toolbarTitle = getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
-                hideUserBadge();
+//                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = LanguageUtil.getString(R.string.title_message_feed_fragment);
@@ -323,13 +324,37 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         setTitle(title);
     }
 
+    public void createUserBadgeCount(int latestCount, int menuItemPosition) {
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
+
+        if (itemView == null)
+            return;
+
+        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
+        TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
+
+        if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+
+            constraintLayoutContainer.setVisibility(View.VISIBLE);
+
+            if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
+                textViewBadgeCount.setText(String.valueOf(latestCount));
+            } else {
+                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
+            }
+        } else {
+            constraintLayoutContainer.setVisibility(View.GONE);
+        }
+    }
+
     // Again this api will be enable when its functionality will be added
     public void createBadgeCount(int latestCount, int menuItemPosition) {
         ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
         if (constraintLayoutContainer == null) return;
         // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
-        if (!(mCurrentFragment instanceof MeshContactsFragment)) {
+        if (!(mCurrentFragment instanceof DiscoverFragment)) {
             if (latestCount > latestUserCount) {
                 constraintLayoutContainer.setVisibility(View.VISIBLE);
             } else {
@@ -386,7 +411,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     private void hideUserBadge() {
         BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_CONTACT);
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
 
         if (itemView == null) {
             return;
@@ -459,7 +484,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void subscribeForActiveUser() {
         if (mViewModel != null) {
             mViewModel.getActiveUser().observe(this, userEntities -> {
-                runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+                runOnUiThread(() -> createUserBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_DISCOVER));
             });
         }
     }
@@ -491,18 +516,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     private void initSearchListener() {
-        if (mCurrentFragment != null
-                && mCurrentFragment instanceof MeshContactsFragment) {
-           /* getCompositeDisposable().add(UIHelper.fromSearchEditText(binding.searchBar.editTextSearch)
-                    .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
-                    .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                    .distinctUntilChanged()
-                    .subscribeWith(((MeshContactsFragment) mCurrentFragment).searchContacts()));*/
-
-
-        } else {
-            Log.d("SearchIssue", "Mesh contact fragment null");
-        }
 
         binding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -520,6 +533,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 if (mCurrentFragment != null
                         && mCurrentFragment instanceof MeshContactsFragment) {
                     ((MeshContactsFragment) mCurrentFragment).searchContacts(s.toString());
+                }else if (mCurrentFragment != null
+                        && mCurrentFragment instanceof DiscoverFragment){
+                    ((DiscoverFragment) mCurrentFragment).searchContacts(s.toString());
                 }
             }
         });

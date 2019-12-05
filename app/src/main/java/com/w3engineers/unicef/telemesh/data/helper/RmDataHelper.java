@@ -137,9 +137,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
-        UserEntity userEntity = new UserEntity()
-                .toUserEntity(userModel)
-                .setOnlineStatus(userConnectivityStatus);
+        UserEntity previousEntity = UserDataSource.getInstance().getSingleUserById(userId);
+
+        UserEntity userEntity;
+
+        if (previousEntity != null) {
+
+            userEntity = previousEntity
+                    .toUserEntity(userModel)
+                    .setOnlineStatus(userConnectivityStatus);
+
+        } else {
+            userEntity = new UserEntity()
+                    .toUserEntity(userModel)
+                    .setOnlineStatus(userConnectivityStatus);
+        }
+
+
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);

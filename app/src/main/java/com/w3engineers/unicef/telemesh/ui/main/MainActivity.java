@@ -285,7 +285,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_discover:
                 toolbarTitle = getString(R.string.title_discoverd_fragment);
                 mFragment = new DiscoverFragment();
-                hideUserBadge();
+                //hideUserBadge();
                 break;
             case R.id.action_contact:
                 toolbarTitle = getString(R.string.title_personal_fragment);

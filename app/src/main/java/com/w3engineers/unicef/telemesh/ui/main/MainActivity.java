@@ -39,6 +39,7 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.concurrent.TimeUnit;
@@ -102,6 +103,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         bottomMenu = binding.bottomNavigation.getMenu();
         initBottomBar();
+        initAllText();
         mViewModel = getViewModel();
 
 
@@ -190,9 +192,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 // disableLoading();
                 break;
             case R.id.image_view_cross:
-                if(TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())){
+                if (TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())) {
                     hideSearchBar();
-                }else{
+                } else {
                     binding.searchBar.editTextSearch.setText("");
                 }
                 break;
@@ -287,19 +289,19 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         String toolbarTitle = "";
         switch (item.getItemId()) {
             case R.id.action_contact:
-                toolbarTitle = getString(R.string.title_contacts_fragment);
+                toolbarTitle = LanguageUtil.getString(R.string.title_contacts_fragment);
                 mFragment = new MeshContactsFragment();
                 hideUserBadge();
                 break;
             case R.id.action_message_feed:
-                toolbarTitle = getString(R.string.title_message_feed_fragment);
+                toolbarTitle = LanguageUtil.getString(R.string.title_message_feed_fragment);
               /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
                         , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
                 hideFeedBadge();
                 break;
             case R.id.action_setting:
-                toolbarTitle = getString(R.string.title_settings_fragment);
+                toolbarTitle = LanguageUtil.getString(R.string.title_settings_fragment);
                 mFragment = new SettingsFragment();
                 break;
         }
@@ -450,7 +452,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toaster.showShort(getString(R.string.double_press_exit));
+        Toaster.showShort(LanguageUtil.getString(R.string.double_press_exit));
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
     }
 
@@ -527,5 +529,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void sendToUi(String message) {
         Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
     }*/
+
+    private void initAllText() {
+        binding.searchBar.editTextSearch.setText(R.string.search);
+    }
 
 }

@@ -22,6 +22,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -34,6 +35,7 @@ import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.io.ByteArrayOutputStream;
 
@@ -62,16 +64,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mBinding.setSettingsVM(settingsViewModel);
 
-        mBinding.layoutViewProfile.setOnClickListener(this);
-        mBinding.layoutChooseLanguage.setOnClickListener(this);
-        mBinding.layoutShareApp.setOnClickListener(this);
-        mBinding.layoutAboutUs.setOnClickListener(this);
-        mBinding.layoutDataPlan.setOnClickListener(this);
-        mBinding.layoutOpenWallet.setOnClickListener(this);
-        mBinding.layoutShowLog.setOnClickListener(this);
-        mBinding.layoutDiagramMap.setOnClickListener(this);
-        mBinding.layoutAppUpdate.setOnClickListener(this);
-        mBinding.layoutFeedback.setOnClickListener(this);
+        initView();
 
         showInAppUpdateButton();
     }
@@ -216,6 +209,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                         Intent intent = getActivity().getIntent();
                         intent.putExtra(MainActivity.class.getSimpleName(), true);
                         startActivity(intent);
+
                     }
                     break;
             }
@@ -245,4 +239,28 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             }
         }
     }
+
+    private void initView() {
+        mBinding.layoutViewProfile.setOnClickListener(this);
+        mBinding.layoutChooseLanguage.setOnClickListener(this);
+        mBinding.layoutShareApp.setOnClickListener(this);
+        mBinding.layoutAboutUs.setOnClickListener(this);
+        mBinding.layoutDataPlan.setOnClickListener(this);
+        mBinding.layoutOpenWallet.setOnClickListener(this);
+        mBinding.layoutShowLog.setOnClickListener(this);
+        mBinding.layoutDiagramMap.setOnClickListener(this);
+        mBinding.layoutAppUpdate.setOnClickListener(this);
+        mBinding.layoutFeedback.setOnClickListener(this);
+
+        mBinding.titleViewProfile.setText(LanguageUtil.getString(R.string.activity_view_profile));
+        mBinding.titleViewWallet.setText(LanguageUtil.getString(R.string.settings_open_wallet));
+        mBinding.titleViewDataPlan.setText(LanguageUtil.getString(R.string.data_plan));
+        mBinding.titleViewShare.setText(LanguageUtil.getString(R.string.settings_share_app));
+        mBinding.titleViewLanguage.setText(LanguageUtil.getString(R.string.settings_choose_language));
+        mBinding.titleViewLog.setText(LanguageUtil.getString(R.string.settings_open_log));
+        mBinding.titleViewAbout.setText(LanguageUtil.getString(R.string.activity_about_us));
+        mBinding.titleViewFeedback.setText(LanguageUtil.getString(R.string.send_feedback));
+        mBinding.titleViewAppUpdate.setText(LanguageUtil.getString(R.string.update_app));
+    }
+
 }

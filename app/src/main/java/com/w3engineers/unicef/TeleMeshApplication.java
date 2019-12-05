@@ -25,10 +25,13 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  */
 public class TeleMeshApplication extends MeshApp {
 
+    private static Context mContext;
+
     @Override
     protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
         // Set app language based on user
+        mContext = this;
         String language = SharedPref.getSharedPref(base).read(Constants.preferenceKey.APP_LANGUAGE);
         if (language.equals("")) {
             language = "en";
@@ -50,5 +53,9 @@ public class TeleMeshApplication extends MeshApp {
 
     private void initCredential() {
         CredentialHolder.getInStance().init(BuildConfig.PARSE_APP_ID, "", BuildConfig.PARSE_URL);
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
 }

@@ -6,7 +6,10 @@ import android.graphics.Paint;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.View;
 
@@ -75,7 +78,40 @@ public class BoxPassword extends AppCompatEditText {
             }
         });
 
-        setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
+        // setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(mMaxLength)});
+
+        //setFilters(new InputFilter[]{new InputFilter.LengthFilter(mMaxLength)});
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String result = s.toString().replaceAll(" ", "");
+
+                Log.d("FiterTest", "text length: " + result.length());
+
+                if (!s.toString().equals(result)) {
+                    setText(result);
+                    setSelection(result.length());
+                }
+
+                if (result.length() > mMaxLength) {
+                    Log.d("FiterTest", "before text: " + result);
+                    result = result.substring(0, mMaxLength);
+                    Log.d("FiterTest", "after text: " + result);
+                    setText(result);
+                    setSelection(result.length());
+                }
+            }
+        });
     }
 
     @Override
@@ -103,6 +139,7 @@ public class BoxPassword extends AppCompatEditText {
 
         int top = getPaddingTop() - 10;
 
+
         //Text Width
         Editable text = getText();
         int textLength = text.length();
@@ -126,16 +163,4 @@ public class BoxPassword extends AppCompatEditText {
             }
         }
     }
-
-    InputFilter filter = (source, start, end, dest, dstart, dend) -> {
-        StringBuilder filtered = new StringBuilder();
-        for (int i = start; i < end; i++) {
-            char character = source.charAt(i);
-            if (!Character.isWhitespace(character)) {
-                filtered.append(character);
-            }
-        }
-
-        return filtered.toString().trim();
-    };
 }

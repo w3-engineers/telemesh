@@ -135,6 +135,7 @@
     <string name="clear_button">Clear</string>
     <string name="please_wait">Please Wait…</string>
     <string name="app_updating_please_wait" translatable="false">App Updating please wait..</string>
+    <string name="feedback">Feedback</string>
 
 
 </resources>

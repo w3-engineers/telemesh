@@ -9,6 +9,7 @@ import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -65,7 +66,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
 
-        LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
+        LanguageUtil.setAppLanguage(TeleMeshApplication.getContext(), lang);
     }
 
     public void startInAppShareProcess() {

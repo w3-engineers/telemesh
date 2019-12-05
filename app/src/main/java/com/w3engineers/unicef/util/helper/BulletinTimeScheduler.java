@@ -107,6 +107,8 @@ public class BulletinTimeScheduler {
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;
                             RmDataHelper.getInstance().uploadLogFile();
+
+                            RmDataHelper.getInstance().sendPendingFeedback();
                         }
 
                     } else {

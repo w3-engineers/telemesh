@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.ui.createuser;
+package com.w3engineers.unicef.telemesh.ui.editprofile;
 
 import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -17,19 +18,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+public class EditProfileViewModel extends BaseRxAndroidViewModel {
 
-/*
- * ============================================================================
- * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- * ============================================================================
- */
-public class CreateUserViewModel extends BaseRxAndroidViewModel {
+    private int imageIndex = EditProfileActivity.INITIAL_IMAGE_INDEX;
 
-    private int imageIndex = CreateUserActivity.INITIAL_IMAGE_INDEX;
-
-    public CreateUserViewModel(@NonNull Application application) {
+    public EditProfileViewModel(@NonNull Application application) {
         super(application);
     }
 
@@ -44,22 +37,33 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String userName, String password) {
+    boolean storeData(@Nullable String userName) {
 
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 
+        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
         if (imageIndex < 0) {
-            imageIndex = Constants.DEFAULT_AVATAR;
+            if (currentImageIndex == Constants.DEFAULT_AVATAR) {
+                imageIndex = Constants.DEFAULT_AVATAR;
+            } else {
+                imageIndex = currentImageIndex;
+            }
         }
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
-        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
-        sharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
         sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;
+    }
+
+    void sendUserInfoToAll() {
+        SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
+        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(name, currentImageIndex);
     }
 
     boolean isNameValid(@Nullable String name) {

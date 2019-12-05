@@ -18,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 @Dao
 public abstract class UserDao extends BaseDao<UserEntity> {
@@ -196,4 +197,17 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_MESH_ONLINE + " OR "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
     abstract List<String> getLocalActiveUsers();
+
+
+    @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID +" FROM " + TableNames.USERS
+            + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + " WHEN " + Constants.MessageStatus.STATUS_UNREAD + " THEN 1 ELSE 0 END) AS hasUnreadMessage, MAX("
+            + ColumnNames.ID + ") AS MAXID FROM " + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID
+            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
+            + ColumnNames.COLUMN_FRIENDS_ID)
+    abstract Single<List<String>> getFavMessageUserIds();
 }

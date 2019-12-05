@@ -16,4 +16,5 @@ public interface TableNames {
     String BULLETIN_TRACK = "bulletin_track";
     String APP_SHARE_COUNT = "AppShareCount";
     String MESH_LOG = "MeshLog";
+    String FEEDBACK = "Feedback";
 }

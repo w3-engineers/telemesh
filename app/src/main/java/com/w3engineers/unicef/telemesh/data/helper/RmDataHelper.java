@@ -35,6 +35,9 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -239,7 +242,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         dataSource.setMyMode(mode);
 
         if (MainActivity.getInstance() != null) {
-           // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
+            // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
             MainActivity.getInstance().finish();
             Intent intent = MainActivity.getInstance().getIntent();
             intent.putExtra(MainActivity.class.getSimpleName(), false);
@@ -361,6 +364,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
             case Constants.DataType.SERVER_LINK:
                 startAppUpdate(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.FEEDBACK_TEXT:
+                parseFeedbackText(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.FEEDBACK_ACK:
+                deleteSentFeedback(rawData, isAckSuccess);
+                break;
+            case Constants.DataType.USER_UPDATE_INFO:
+                parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
         }
     }
@@ -812,6 +824,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     .subscribeOn(Schedulers.newThread())
                     .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
         }
+
+        sendPendingFeedback();
     }
 
     /**
@@ -859,9 +873,32 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }, Throwable::printStackTrace));
     }
 
+    public void sendFeedbackToInternetUser(FeedbackEntity entity) {
+        FeedbackModel model = entity.toFeedbackModel();
+        String feedbackJson = new Gson().toJson(model);
+
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_TEXT, sellersId, false);
+        }
+    }
+
+    public void sendFeedbackAck(FeedbackModel model) {
+        String feedbackJson = new Gson().toJson(model);
+        dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_ACK, model.getUserId(), false);
+    }
+
+    public void sendPendingFeedback() {
+        Log.d("FeedbackTest", "Pending feedback called");
+        compositeDisposable
+                .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(feedback -> {
+                            AnalyticsDataHelper.getInstance().sendFeedback(feedback);
+                        }, Throwable::printStackTrace));
+    }
+
     public void uploadLogFile() {
 
-        Log.d("InAppUpdateTest", "Upload file call");
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
@@ -879,7 +916,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                     InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-                    Log.d("InAppUpdateTest", "update process start");
                 }
             }
         }, TimeUnit.MINUTES.toMillis(1));
@@ -896,7 +932,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             previousList = new ArrayList<>();
         }
 
-        Log.d("ParseFileUpload", "Upload file call");
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() +
                 "/MeshRnD");
@@ -925,8 +960,51 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rmDataMap.put(dataSendId, rmDataModel);
     }
 
+    private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {
+        if (!isNewMessage) return;
+
+        String updatedUserData = new String(rawData);
+        UserModel userModel = new Gson().fromJson(updatedUserData, UserModel.class);
+        userModel.setUserId(userId);
+
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+
+        if (userEntity != null) {
+
+            userEntity = userEntity.updateUserEntity(userModel);
+
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
+    }
+
     public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
+    }
+
+    public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
+
+        UserModel userModel = new UserModel();
+        userModel.setImage(imageIndex);
+        userModel.setName(userName);
+
+        String updateInfo = new Gson().toJson(userModel);
+
+        DataModel dataModel = new DataModel()
+                .setRawData(updateInfo.getBytes())
+                .setDataType(Constants.DataType.USER_UPDATE_INFO);
+
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
+
+        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(users -> {
+
+                    ExecutorService service = Executors.newSingleThreadExecutor();
+                    service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
+
+                }, Throwable::printStackTrace));
     }
 
     // APP update process
@@ -937,6 +1015,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
 
     }
+
 
     private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
         if (isAckSuccess) return;
@@ -996,6 +1075,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
         }
 
+    }
+
+    private void parseFeedbackText(byte[] rawData, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+        String feedbackRawData = new String(rawData);
+        FeedbackModel feedbackModel = new Gson().fromJson(feedbackRawData, FeedbackModel.class);
+
+        AnalyticsDataHelper.getInstance().sendFeedbackToInternet(FeedbackEntity.toFeedbackEntity(feedbackModel), false);
+    }
+
+    private void deleteSentFeedback(byte[] rawData, boolean isAckSuccess) {
+        if (isAckSuccess) return;
+        String feedbackRawData = new String(rawData);
+        FeedbackModel feedbackModel = new Gson().fromJson(feedbackRawData, FeedbackModel.class);
+        FeedbackDataSource.getInstance().deleteFeedbackById(feedbackModel.getFeedbackId());
     }
 
 }

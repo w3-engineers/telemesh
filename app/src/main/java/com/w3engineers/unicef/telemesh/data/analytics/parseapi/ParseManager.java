@@ -4,14 +4,18 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
@@ -143,6 +147,42 @@ public class ParseManager {
                 Log.e("ParseFileUpload", "Error: " + e.getMessage());
             }
         });
+    }
+
+    public void sendFeedback(FeedbackParseModel model, FeedbackSendCallback callback) {
+        ParseObject parseObject = new ParseObject(ParseConstant.Feedback.TABLE);
+        parseObject.put(ParseConstant.Feedback.USER_ID, model.getUserId());
+        parseObject.put(ParseConstant.Feedback.USER_NAME, model.getUserName());
+        parseObject.put(ParseConstant.Feedback.USER_FEEDBACK, model.getFeedback());
+        parseObject.put(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
+
+        parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
+
+        Log.d("FeedbackTest", "Feedback Id:  " + model.getFeedbackId());
+
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects == null || objects.isEmpty()) {
+                    parseObject.saveInBackground(e1 -> {
+                        if (callback != null) {
+                            if (e1 == null) {
+                                callback.onGetFeedbackSendResponse(true, model);
+                                Log.e("FeedbackTest", "Feedback send Successfully");
+                            } else {
+                                Log.e("FeedbackTest", "Feedback send Failed: " + e1.getMessage());
+                            }
+                        }
+                    });
+                } else {
+                    Log.e("FeedbackTest", "Feed back already exist");
+                }
+            } else {
+                Log.e("FeedbackTest", "Feed back query Error: " + e.getMessage());
+            }
+        });
+
     }
 
     private void sendResponse(boolean isSuccess) {

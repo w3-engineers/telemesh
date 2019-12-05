@@ -289,7 +289,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_contact:
                 toolbarTitle = getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
-                hideUserBadge();
+//                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = getString(R.string.title_message_feed_fragment);
@@ -319,6 +319,30 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 .replace(R.id.fragment_container, fragment)
                 .commit();
         setTitle(title);
+    }
+
+    public void createUserBadgeCount(int latestCount, int menuItemPosition) {
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
+
+        if (itemView == null)
+            return;
+
+        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
+        TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
+
+        if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+
+            constraintLayoutContainer.setVisibility(View.VISIBLE);
+
+            if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
+                textViewBadgeCount.setText(String.valueOf(latestCount));
+            } else {
+                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
+            }
+        } else {
+            constraintLayoutContainer.setVisibility(View.GONE);
+        }
     }
 
     // Again this api will be enable when its functionality will be added
@@ -457,7 +481,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void subscribeForActiveUser() {
         if (mViewModel != null) {
             mViewModel.getActiveUser().observe(this, userEntities -> {
-                runOnUiThread(() -> createBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
+                runOnUiThread(() -> createUserBadgeCount(userEntities.size(), Constants.MenuItemPosition.POSITION_FOR_CONTACT));
             });
         }
     }

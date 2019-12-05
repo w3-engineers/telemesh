@@ -31,6 +31,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentSettingsNewBinding;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 
@@ -70,6 +71,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutShowLog.setOnClickListener(this);
         mBinding.layoutDiagramMap.setOnClickListener(this);
         mBinding.layoutAppUpdate.setOnClickListener(this);
+        mBinding.layoutFeedback.setOnClickListener(this);
 
         showInAppUpdateButton();
     }
@@ -146,6 +148,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
                 url = url.replace(InAppUpdate.MAIN_APK, "");
                 AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+                break;
+            case R.id.layout_feedback:
+                startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
             default:
                 break;

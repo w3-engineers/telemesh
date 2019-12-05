@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
+import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 
 public class UserProfileActivity extends TelemeshBaseActivity {
@@ -35,6 +37,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     private final String LABEL = "Address";
 
     private ActivityUserProfileBinding mBinding;
+    private boolean isMyProfile;
 
     @Override
     protected int getLayoutId() {
@@ -63,10 +66,10 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         UserProfileViewModel userProfileViewModel = getViewModel();
         mBinding = (ActivityUserProfileBinding) getViewDataBinding();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
-        boolean isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
+        isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
 
-        setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile);
+        setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile, mBinding.textViewEdit);
 
         if (isMyProfile) {
             SharedPref sharedPref = SharedPref.getSharedPref(this);
@@ -82,13 +85,29 @@ public class UserProfileActivity extends TelemeshBaseActivity {
             }*/
 
             mBinding.buttonExportProfile.setVisibility(View.INVISIBLE);
+            mBinding.textViewEdit.setVisibility(View.VISIBLE);
         } else {
             mBinding.buttonExportProfile.setVisibility(View.GONE);
+            mBinding.textViewEdit.setVisibility(View.GONE);
         }
 
         Bitmap qrImage = getWalletQr();
         if (qrImage != null) {
             mBinding.imageViewQr.setImageBitmap(qrImage);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isMyProfile) {
+            UserEntity userEntity = new UserEntity();
+            SharedPref sharedPref = SharedPref.getSharedPref(this);
+            userEntity.userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+            userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+            userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            mBinding.setUserEntity(userEntity);
         }
     }
 
@@ -119,6 +138,9 @@ public class UserProfileActivity extends TelemeshBaseActivity {
             case R.id.button_export_profile:
                 // Todo Export profile option
                 break;
+            case R.id.text_view_edit:
+                gotoEditPage();
+                break;
         }
     }
 
@@ -145,6 +167,17 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         String bitmapString = sharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE);
         byte[] encodeByte = Base64.decode(bitmapString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+    }
+
+    private void gotoEditPage() {
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        intent.putExtra(UserEntity.class.getName(), userEntity);
+        startActivity(intent);
     }
 
     /*@Override

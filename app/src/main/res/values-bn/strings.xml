@@ -59,6 +59,8 @@
     <string name="badge_count_more_than_99">99+</string>
     <string name="diagram_map">Diagram Map</string>
 
+    <string name="send_feedback">মতামত পাঠান</string>
+
     <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
 
 </resources>

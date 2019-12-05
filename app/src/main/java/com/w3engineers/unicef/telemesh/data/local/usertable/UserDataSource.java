@@ -165,4 +165,8 @@ public class UserDataSource {
     public List<String> getLocalUserCount() {
         return mUserDao.getLocalActiveUsers();
     }
+
+    public Single<List<String>> getAllFabMessagedUserIds() {
+        return mUserDao.getFavMessageUserIds();
+    }
 }

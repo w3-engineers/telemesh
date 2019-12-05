@@ -116,6 +116,7 @@
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
     <string name="enter_password_here">Enter password here</string>
     <string name="create_profile">Create Profile</string>
+    <string name="update_profile">Update Profile</string>
     <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
     <string name="or">or</string>
     <string name="warning">WARNING!!</string>
@@ -125,6 +126,12 @@
 
     <string name="please_enter_your_name">Please enter your name</string>
     <string name="enter_valid_name">Enter valid name</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="edit">EDIT</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="add_your_feedback">Add your feedback</string>
+    <string name="feedback_submitted_successfully">Feedback submitted successfully</string>
+    <string name="please_write_your_feedback">Please write your feedback</string>
 
      <string name="spinner_title">Favourite</string>
 

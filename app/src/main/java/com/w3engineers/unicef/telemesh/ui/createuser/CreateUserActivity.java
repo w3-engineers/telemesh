@@ -98,8 +98,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void nextButtonControl(String nameText) {
-        if (mViewModel.getImageIndex() >= 0 &&
-                !TextUtils.isEmpty(nameText) &&
+        if (!TextUtils.isEmpty(nameText) &&
                 nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
@@ -205,9 +204,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
         } else if (mBinding.editTextName.getText().toString().length() < 2) {
             Toaster.showShort(getResources().getString(R.string.enter_valid_name));
-        } else if (mViewModel.getImageIndex() < 0) {
+        } /*else if (mViewModel.getImageIndex() < 0) {
             Toaster.showShort(getString(R.string.select_avatar));
-        } else {
+        }*/ else {
             requestMultiplePermissions();
         }
 
@@ -241,9 +240,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
         } else if (mBinding.editTextName.getText().toString().length() < 2) {
             Toaster.showShort(getResources().getString(R.string.enter_valid_name));
-        } else if (mViewModel.getImageIndex() < 0) {
+        } /*else if (mViewModel.getImageIndex() < 0) {
             Toaster.showShort(getString(R.string.select_avatar));
-        } else {
+        } */else {
             Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
             intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
             intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());

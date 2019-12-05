@@ -343,6 +343,48 @@
                 <View
                     android:id="@+id/about_us_bottom"
                     style="@style/divider_style_settings_page"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_feedback"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_about_us">
+
+                <ImageView
+                    android:id="@+id/image_view_feedback"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_feedback"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_feedback"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/send_feedback"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_feedback"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/activity_about_us"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/feedback_bottom"
+                    style="@style/divider_style_settings_page"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent" />
@@ -355,7 +397,7 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_about_us">
+                app:layout_constraintTop_toBottomOf="@id/layout_feedback">
 
                 <ImageView
                     android:id="@+id/image_view_app_update"
@@ -390,6 +432,7 @@
                     app:layout_constraintLeft_toLeftOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
+
 
         </android.support.constraint.ConstraintLayout>
 

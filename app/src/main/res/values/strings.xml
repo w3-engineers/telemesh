@@ -145,6 +145,8 @@
      <string name="spinner_title">Favourite</string>
 
     <string name="no_favorite">No favorite user found</string>
+    <string name="minimu_ssid_character">Minimum character limit is 3</string>
+    <string name="change">Change</string>
 
 
 </resources>

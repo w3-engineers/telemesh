@@ -123,7 +123,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 if (Constants.IsMeshInit) {
                     DataPlanManager.openActivity(mActivity, 0);
                 } else {
-                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                    Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
                 }
                 break;
 
@@ -131,7 +131,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 if (Constants.IsMeshInit) {
                     WalletManager.openActivity(mActivity, getImageByteArray());
                 } else {
-                    Toaster.showShort(getString(R.string.mesh_not_initiated));
+                    Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
                 }
                 break;
             case R.id.layout_show_log:
@@ -272,6 +272,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewAbout.setText(LanguageUtil.getString(R.string.activity_about_us));
         mBinding.titleViewFeedback.setText(LanguageUtil.getString(R.string.send_feedback));
         mBinding.titleViewAppUpdate.setText(LanguageUtil.getString(R.string.update_app));
+        mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
     }
 
 
@@ -290,15 +291,17 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         TextView infoText = customLayout.findViewById(R.id.info);
         EditText ssidName = customLayout.findViewById(R.id.network_name);
 
-        infoText.setText(String.format(getString(R.string.your_current_network_prefix), networkSSID));
+        ssidName.setHint(LanguageUtil.getString(R.string.set_new_network_prefix));
+
+        infoText.setText(String.format(LanguageUtil.getString(R.string.your_current_network_prefix), networkSSID));
 
         // add a button
-        builder.setPositiveButton("Change", (dialog, which) -> {
+        builder.setPositiveButton(LanguageUtil.getString(R.string.change), (dialog, which) -> {
 
             String ssid = ssidName.getText().toString();
 
             if (TextUtils.isEmpty(ssid) || ssid.length() < 3) {
-                Toaster.showShort("Minimum character limit is 3");
+                Toaster.showShort(LanguageUtil.getString(R.string.minimu_ssid_character));
             } else {
                 SharedPref.getSharedPref(mActivity).write(Constants.preferenceKey.NETWORK_PREFIX, ssid);
 
@@ -307,7 +310,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
+        builder.setNegativeButton(LanguageUtil.getString(R.string.cancel), (dialog, which) -> {
             dialog.dismiss();
         });
 

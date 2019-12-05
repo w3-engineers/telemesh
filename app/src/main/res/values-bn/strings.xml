@@ -69,10 +69,11 @@
     <string name="update">আপডেট</string>
 
     <string name="profile_updated_successfully">প্রোফাইল আপডেট সম্পূর্ণ হয়েছে</string>
-    <string name="set_new_network_prefix">Set new network prefix</string>
-    <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
-    <string name="set_ssid">Set SSID</string>
+    <string name="set_new_network_prefix">নেটওয়ার্ক আইডি লিখুন</string>
+    <string name="your_current_network_prefix">আপনার বর্তমান নেটওয়ার্ক আইডি <b>%s</b>.</string>
+    <string name="set_ssid">SSID সেট করুন</string>
     <string name="def_ssid">captor</string>
+    <string name="minimu_ssid_character">সর্বনিম্ন ৩ অক্ষর হতে হবে</string>
 
     <string name="feedback_submitted_successfully">মতামত পাঠানো হয়েছে</string>
 
@@ -86,4 +87,6 @@
     <string name="please_enter_your_name">আপনার নাম লিখুন</string>
     <string name="enter_valid_name">সঠিক নাম লিখুন</string>
     <string name="feedback">মতামত</string>
+    <string name="change">পরিবর্তন</string>
+    <string name="cancel">বাতিল</string>
 </resources>

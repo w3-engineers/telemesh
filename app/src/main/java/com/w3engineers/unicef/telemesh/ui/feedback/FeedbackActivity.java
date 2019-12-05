@@ -18,6 +18,7 @@ import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityFeedbackBinding;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 /*
@@ -58,7 +59,7 @@ public class FeedbackActivity extends TelemeshBaseActivity {
     protected void startUI() {
         mBinding = (ActivityFeedbackBinding) getViewDataBinding();
         mViewModel = getViewModel();
-
+        setTitle(LanguageUtil.getString(R.string.feedback));
         initView();
     }
 
@@ -72,10 +73,10 @@ public class FeedbackActivity extends TelemeshBaseActivity {
 
     private void initView() {
         setClickListener(mBinding.buttonFeedBack);
-
+        initAllText();
         mViewModel.feedbackResponse().observe(this, isSuccess -> {
             if (isSuccess != null && isSuccess) {
-                Toaster.showShort(getResources().getString(R.string.feedback_submitted_successfully));
+                Toaster.showShort(LanguageUtil.getString(R.string.feedback_submitted_successfully));
                 mBinding.editTextFeedback.setText("");
             }
         });
@@ -87,7 +88,7 @@ public class FeedbackActivity extends TelemeshBaseActivity {
         if (!TextUtils.isEmpty(feedBackText)) {
             mViewModel.sendFeedback(feedBackText);
         } else {
-            Toaster.showShort(getResources().getString(R.string.please_write_your_feedback));
+            Toaster.showShort(LanguageUtil.getString(R.string.please_write_your_feedback));
         }
     }
 
@@ -101,4 +102,8 @@ public class FeedbackActivity extends TelemeshBaseActivity {
         }).get(FeedbackViewModel.class);
     }
 
+    private void initAllText() {
+        mBinding.buttonFeedBack.setText(LanguageUtil.getString(R.string.send_feedback));
+        mBinding.editTextFeedback.setHint(LanguageUtil.getString(R.string.add_your_feedback));
+    }
 }

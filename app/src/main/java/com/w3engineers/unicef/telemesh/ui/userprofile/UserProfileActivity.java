@@ -31,6 +31,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.LocationUtil;
 
 public class UserProfileActivity extends TelemeshBaseActivity {
 
@@ -58,13 +60,15 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     @Override
     protected void startUI() {
 
-        setTitle(getString(R.string.activity_view_profile));
+        setTitle(LanguageUtil.getString(R.string.activity_view_profile));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         //    private ServiceLocator serviceLocator;
+
         UserProfileViewModel userProfileViewModel = getViewModel();
         mBinding = (ActivityUserProfileBinding) getViewDataBinding();
+        initAllText();
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
@@ -149,7 +153,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         ClipData clip = ClipData.newPlainText(LABEL, mBinding.userId.getText().toString());
         clipboard.setPrimaryClip(clip);
 
-        Toaster.showShort(getResources().getString(R.string.copied));
+        Toaster.showShort(LanguageUtil.getString(R.string.copied));
     }
 
     private UserProfileViewModel getViewModel() {
@@ -178,6 +182,11 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         Intent intent = new Intent(this, EditProfileActivity.class);
         intent.putExtra(UserEntity.class.getName(), userEntity);
         startActivity(intent);
+    }
+
+    private void initAllText() {
+        mBinding.textViewEdit.setText(LanguageUtil.getString(R.string.edit));
+        mBinding.textViewTitle.setText(LanguageUtil.getString(R.string.activity_view_profile));
     }
 
     /*@Override

@@ -17,6 +17,7 @@ import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 
 /*
@@ -56,7 +57,7 @@ public class AboutUsActivity extends TelemeshBaseActivity {
 
         AboutUsViewModel aboutUsViewModel = getViewModel();
         mBinding = (ActivityAboutUsBinding) getViewDataBinding();
-        setTitle(getString(R.string.activity_about_us));
+        setTitle(LanguageUtil.getString(R.string.activity_about_us));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

@@ -32,7 +32,7 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
-                    return oldItem.getMeshId().equals(newItem.getMeshId()) ;
+                    return oldItem.getMeshId().equalsIgnoreCase(newItem.getMeshId()) ;
                 }
                 @Override
                 public boolean areContentsTheSame(

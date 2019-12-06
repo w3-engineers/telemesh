@@ -205,13 +205,14 @@
 
             <ImageButton
                 android:id="@+id/image_view_send"
-                android:layout_width="@dimen/margin_25"
-                android:layout_height="@dimen/margin_25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:autoMirrored="true"
                 android:background="@color/white"
                 android:contentDescription="@string/chat_send_button_description"
                 android:rotationY="@integer/locale_mirror_flip"
                 android:scaleType="fitCenter"
+                android:padding="@dimen/padding_8"
                 android:src="@mipmap/ic_send_cyan"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -400,6 +401,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
         //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+   //     ((SimpleItemAnimator)fragmentMeshcontactBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
 
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
         fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);

@@ -405,7 +405,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
    //     ((SimpleItemAnimator)fragmentMeshcontactBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
+    //    fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
 
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
         fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);

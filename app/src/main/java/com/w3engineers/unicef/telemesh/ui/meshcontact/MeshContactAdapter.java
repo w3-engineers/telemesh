@@ -41,7 +41,7 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
-                    return oldItem.getMeshId() == newItem.getMeshId() ;
+                    return oldItem.getMeshId().equals(newItem.getMeshId()) ;
                 }
                 @Override
                 public boolean areContentsTheSame(

@@ -94,11 +94,14 @@ public class SecurityActivity extends BaseActivity {
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
                 requestMultiplePermissions();
                 break;
+            case R.id.text_view_show_password:
+                updatePasswordVisibility();
+                break;
         }
     }
 
     private void initView() {
-        setClickListener(mBinding.buttonNext, mBinding.buttonSkip);
+        setClickListener(mBinding.buttonNext, mBinding.buttonSkip, mBinding.textViewShowPassword);
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextBoxPassword);
 
@@ -237,5 +240,16 @@ public class SecurityActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getSecurityViewModel(getApplication());
             }
         }).get(SecurityViewModel.class);
+    }
+
+    private void updatePasswordVisibility() {
+        String currentText = mBinding.textViewShowPassword.getText().toString();
+        if (currentText.equals(getResources().getString(R.string.show_password))) {
+            mBinding.textViewShowPassword.setText(getResources().getString(R.string.hide_password));
+            mBinding.editTextBoxPassword.setPasswordShow(true);
+        } else {
+            mBinding.textViewShowPassword.setText(getResources().getString(R.string.show_password));
+            mBinding.editTextBoxPassword.setPasswordShow(false);
+        }
     }
 }

@@ -10,7 +10,7 @@
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
     <string name="title_discoverd_fragment">Nearby Users</string>
-    <string name="title_personal_fragment">Personal contact</string>
+    <string name="title_personal_fragment">Personal Contact</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
 
@@ -136,10 +136,19 @@
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
     <string name="def_ssid">captor</string>
+    <string name="search_hint">Search</string>
+    <string name="clear_button">Clear</string>
+    <string name="please_wait">Please Wait…</string>
+    <string name="app_updating_please_wait" translatable="false">App Updating please wait..</string>
+    <string name="feedback">Feedback</string>
 
      <string name="spinner_title">Favourite</string>
 
     <string name="no_favorite">No favorite user found</string>
+    <string name="minimu_ssid_character">Minimum character limit is 3</string>
+    <string name="change">Change</string>
+    <string name="a_new_version">A new version </string>
+    <string name="is_available_for_telemesh">is available for Telemesh</string>
 
 
 </resources>

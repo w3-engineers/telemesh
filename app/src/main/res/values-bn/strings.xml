@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
-    <string name="enter_first_name">Type Your Name</string>
+    <string name="enter_first_name">আপনার নাম লিখুন</string>
     <string name="signup">Next</string>
     <string name="no_item_found">No item found</string>
     <string name="done">Done</string>
@@ -9,16 +9,16 @@
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
 
-    <string name="select_photo">Select photo</string>
+    <string name="select_photo">ছবি পছন্দ করুন</string>
     <string name="title_discoverd_fragment">নিকটবর্তী ব্যবহারকারী</string>
     <string name="title_personal_fragment">ব্যক্তিগত যোগাযোগ</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_settings_fragment">সেটিংস</string>
 
     <string name="logo_image">logo image</string>
-    <string name="double_press_exit">Please click BACK again to exit.</string>
+    <string name="double_press_exit">বেরিয়ে যাওয়ার জন্য ব্যাক বাটন আবার চাপুন</string>
 
-    <string name="search">Search</string>
+    <string name="search">খুঁজুন</string>
     <string name="type_message">আপনার বার্তা লিখুন &#8230;</string>
 
     <string name="demo_language">English</string>
@@ -46,7 +46,7 @@
     <string name="id">ID</string>
     <string name="this_may_take_while">This may take a while…</string>
     <string name="discovering_users">Discovering Users</string>
-    <string name="searching">Searching…</string>
+    <string name="searching">খোঁজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type your first message\nlet the story begin</string>
 
@@ -62,9 +62,38 @@
     <string name="send_feedback">মতামত পাঠান</string>
 
     <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
-    <string name="set_new_network_prefix">Set new network prefix</string>
-    <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
-    <string name="set_ssid">Set SSID</string>
-    <string name="def_ssid">captor</string>
+    <string name="add_your_feedback">মতামত লিখুন</string>
 
+    <string name="update_profile">আপডেট প্রোফাইল</string>
+
+    <string name="update">আপডেট</string>
+
+    <string name="profile_updated_successfully">প্রোফাইল আপডেট সম্পূর্ণ হয়েছে</string>
+    <string name="set_new_network_prefix">নেটওয়ার্ক আইডি লিখুন</string>
+    <string name="your_current_network_prefix">আপনার বর্তমান নেটওয়ার্ক আইডি <b>%s</b>.</string>
+    <string name="set_ssid">SSID সেট করুন</string>
+    <string name="def_ssid">captor</string>
+    <string name="minimu_ssid_character">সর্বনিম্ন ৩ অক্ষর হতে হবে</string>
+
+    <string name="feedback_submitted_successfully">মতামত পাঠানো হয়েছে</string>
+
+    <string name="please_write_your_feedback">আপনার মতামত লিখুন</string>
+
+    <string name="edit">লিখুন</string>
+
+    <string name="copied">কপি করা হয়েছে</string>
+
+    <string name="update_app">আপডেট আপ</string>
+    <string name="please_enter_your_name">আপনার নাম লিখুন</string>
+    <string name="enter_valid_name">সঠিক নাম লিখুন</string>
+    <string name="feedback">মতামত</string>
+    <string name="change">পরিবর্তন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="app_updating_please_wait" translatable="false">অ্যাপ আপডেট হচ্ছে। অপেক্ষা করুন..</string>
+    <string name="ask_me_later">পরে জিজ্ঞাসা করুন</string>
+    <string name="do_you_want_to_update">আপনি কি আপডেট চান?</string>
+    <string name="app_update">অ্যাপ আপডেট</string>
+    <string name="a_new_version">একটি নতুন ভার্সন </string>
+    <string name="is_available_for_telemesh">Telemesh এর জন্য পাওয়া গেছে</string>
+    <string name="no_favorite">কোনও প্রিয় ব্যবহারকারী পাওয়া যায় নি</string>
 </resources>

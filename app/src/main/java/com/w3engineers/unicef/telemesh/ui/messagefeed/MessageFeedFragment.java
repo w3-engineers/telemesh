@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class MessageFeedFragment extends BaseFragment implements ItemClickListener<FeedEntity> {
 
@@ -57,6 +58,7 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
      */
     private void initGui() {
         mMessageFeedViewModel = getViewModel();
+        initAllText();
 
         mMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
         mMessageFeedBinding.messageRecyclerView.setItemAnimator(null);
@@ -96,5 +98,8 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
 
     }
 
+    private void initAllText() {
+        mMessageFeedBinding.textNoBroadcast.setText(LanguageUtil.getString(R.string.no_message_available));
+    }
 
 }

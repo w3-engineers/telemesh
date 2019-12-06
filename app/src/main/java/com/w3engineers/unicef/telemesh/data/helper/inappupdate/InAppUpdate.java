@@ -27,6 +27,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,10 +140,16 @@ public class InAppUpdate {
 
             builder.setView(binding.getRoot());
 
-            String message = "A new version " + version + " is available for Telemesh\n";
+            String message = LanguageUtil.getString(R.string.a_new_version) + " " + version + " " + LanguageUtil.getString(R.string.is_available_for_telemesh);
 
             binding.textViewMessage.setText(message);
             binding.textViewReleaseNote.setText(releaseNote);
+
+            binding.buttonCancel.setText(LanguageUtil.getString(R.string.cancel));
+            binding.buttonUpdate.setText(LanguageUtil.getString(R.string.update));
+            binding.textViewWarning.setText(LanguageUtil.getString(R.string.do_you_want_to_update));
+            binding.checkboxAskMeLater.setText(LanguageUtil.getString(R.string.ask_me_later));
+            binding.textViewTitle.setText(LanguageUtil.getString(R.string.app_update));
 
             AlertDialog dialog = builder.create();
             dialog.setCancelable(false);

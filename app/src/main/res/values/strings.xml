@@ -35,6 +35,7 @@
     <string name="yesterday">Yesterday</string>
 
     // Settings title
+
     <string name="settings_choose_language">Language</string>
     <string name="settings_share_app">Share App</string>
     <string name="settings_open_wallet">My Wallet</string>
@@ -149,6 +150,9 @@
     <string name="change">Change</string>
     <string name="a_new_version">A new version </string>
     <string name="is_available_for_telemesh">is available for Telemesh</string>
+    <string name="favourite">Favourite</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
 
 
 </resources>

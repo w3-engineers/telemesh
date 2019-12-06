@@ -20,60 +20,109 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:onClick="@{() -> discoverViewModel.openMessage(user)}">
+        android:background="@color/white">
 
-        <View
-            android:id="@+id/user_avatar_background"
-            android:layout_width="@dimen/width_50"
-            android:layout_height="@dimen/height_50"
-            android:layout_marginLeft="@dimen/margin_15"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:background="@drawable/circle_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="@dimen/width_50"
-            android:layout_height="@dimen/height_50"
-            android:layout_marginLeft="@dimen/margin_15"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:padding="@dimen/padding_5"
-            android:src="@{discoverViewModel.getUserAvatarByIndex(user.avatarIndex)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/user_mesh_status"
-            android:layout_width="@dimen/width_25"
-            android:layout_height="@dimen/height_25"
-            android:layout_marginTop="@dimen/margin_20"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:contentDescription="@string/image"
-            app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
-            app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
-            app:layout_constraintStart_toEndOf="@+id/user_avatar_background"
-            app:layout_constraintTop_toTopOf="@+id/user_avatar_background" />
-
-        <TextView
-            android:id="@+id/user_name"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/user_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_18"
-            android:typeface='@{user.hasUnreadMessage > 0 ? "bold" : "normal"}'
-            app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
-            app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
-            app:layout_constraintStart_toEndOf="@id/user_avatar"
-            app:layout_constraintTop_toTopOf="@id/user_avatar" />
+            android:background="@color/white"
+            android:onClick="@{() -> discoverViewModel.openMessage(user)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text_view_unread_message_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/user_avatar_background"
+                android:layout_width="@dimen/width_50"
+                android:layout_height="@dimen/height_50"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:background="@drawable/circle_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="@dimen/width_50"
+                android:layout_height="@dimen/height_50"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:padding="@dimen/padding_5"
+                android:src="@{discoverViewModel.getUserAvatarByIndex(user.avatarIndex)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/user_mesh_status"
+                android:layout_width="@dimen/width_25"
+                android:layout_height="@dimen/height_25"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:contentDescription="@string/image"
+                app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
+                app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
+                app:layout_constraintStart_toEndOf="@+id/user_avatar_background"
+                app:layout_constraintTop_toTopOf="@+id/user_avatar_background" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18"
+                android:typeface='@{user.hasUnreadMessage > 0 ? "bold" : "normal"}'
+                app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintStart_toEndOf="@id/user_avatar"
+                app:layout_constraintTop_toTopOf="@id/user_avatar" />
+
+
+            <TextView
+                android:id="@+id/user_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:maxLines="2"
+                android:text="@{user.meshId}"
+                android:textColor="@color/light_grey"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+            <TextView
+                android:id="@+id/text_view_date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/divider_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/user_name" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/text_view_unread_message_count"
@@ -86,63 +135,25 @@
             android:maxLines="@integer/max_line_1"
             android:text="@{user.hasUnreadMessage+ ``}"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_12"
-            android:visibility="@{user.hasUnreadMessage>0?View.VISIBLE:View.GONE}"
+            android:textSize="9sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_view_favourite"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="99"/>
+            tools:text="10" />
 
         <ImageView
             android:id="@+id/image_view_favourite"
-            android:onClick="@{() -> discoverViewModel.changeFavouriteStatus(user)}"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="@dimen/margin_5"
             android:layout_marginEnd="@dimen/margin_15"
+            android:contentDescription="@string/favourite"
+            android:onClick="@{() -> discoverViewModel.changeFavouriteStatus(user)}"
             android:src="@{user.isFavourite>0?@drawable/ic_favourite:@drawable/ic_un_favourite}"
-            android:gravity="center"
-            android:maxLines="@integer/max_line_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="99" />
-
-        <TextView
-            android:id="@+id/user_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:maxLines="2"
-            android:text="@{user.meshId}"
-            android:textColor="@color/light_grey"
-            android:textSize="@dimen/text_size_14"
-            android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@id/user_avatar"
-            app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
-            app:layout_constraintTop_toBottomOf="@+id/user_name" />
-
-        <TextView
-            android:id="@+id/text_view_date_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@id/user_avatar"
-            app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
-            app:layout_constraintTop_toBottomOf="@id/user_name" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/divider_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/text_view_unread_message_count"
-            app:layout_constraintStart_toStartOf="@+id/user_name" />
-
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

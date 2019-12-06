@@ -57,6 +57,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
 
                 <TextView
+                    android:id="@+id/text_view_show_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_8"
+                    android:text="@string/show_password"
+                    android:textColor="@color/new_user_button_color"
+                    android:textSize="@dimen/text_size_12"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_box_password"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_box_password" />
+
+                <TextView
                     android:id="@+id/password_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -68,7 +79,7 @@
                     android:textSize="@dimen/text_size_12"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_text_box_password" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_show_password" />
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/instruction_container"
@@ -111,9 +122,9 @@
                     android:gravity="center"
                     android:text="@string/skip"
                     android:textAllCaps="true"
-                    android:visibility="invisible"
                     android:textColor="@color/skip_text_color"
                     android:textSize="@dimen/text_size_14"
+                    android:visibility="invisible"
                     app:bb_drawable="@null"
                     app:layout_constraintEnd_toEndOf="@+id/button_next"
                     app:layout_constraintStart_toStartOf="@+id/button_next"

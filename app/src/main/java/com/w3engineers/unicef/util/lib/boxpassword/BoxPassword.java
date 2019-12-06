@@ -32,6 +32,9 @@ public class BoxPassword extends AppCompatEditText {
     private Paint mFillPaint;
     private Paint mStrokePaint;
     private OnClickListener mClickListener;
+    private String hidedPasswordCharacter = "*"; // We can change the symbol of hide password
+
+    private boolean isPasswordShow;
 
     public BoxPassword(Context context) {
         super(context);
@@ -141,7 +144,12 @@ public class BoxPassword extends AppCompatEditText {
 
 
         //Text Width
-        Editable text = getText();
+        String text;
+        if (isPasswordShow) {
+            text = getText().toString();
+        } else {
+            text = convertStar();
+        }
         int textLength = text.length();
         float[] textWidths = new float[textLength];
         getPaint().getTextWidths(getText(), 0, textLength, textWidths);
@@ -163,4 +171,18 @@ public class BoxPassword extends AppCompatEditText {
             }
         }
     }
+
+    private String convertStar() {
+        StringBuilder start = new StringBuilder();
+        for (int i = 0; i < getText().length(); i++) {
+            start.append(hidedPasswordCharacter);
+        }
+        return start.toString();
+    }
+
+    public void setPasswordShow(boolean isPasswordShow) {
+        this.isPasswordShow = isPasswordShow;
+        invalidate();
+    }
+
 }

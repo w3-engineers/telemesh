@@ -110,6 +110,14 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
             itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             itemMeshContactBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
+            itemMeshContactBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
+
+            if (item.hasUnreadMessage > 0) {
+                itemMeshContactBinding.textViewUnreadMessageCount.setVisibility(View.VISIBLE);
+            } else {
+                itemMeshContactBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
+            }
+
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
         }

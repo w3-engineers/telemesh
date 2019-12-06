@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.w3engineers.unicef.telemesh.R" />
     </data>
 
@@ -12,83 +13,86 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <Spinner
-            android:id="@+id/spinner_view"
+        <RelativeLayout
+            android:id="@+id/spinner_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
-            android:paddingStart="@dimen/margin_10"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/margin_14"
+            android:layout_marginEnd="@dimen/margin_14"
+            android:background="@color/colorGradientPrimary"
+            android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/spinner_shadow"
-            android:layout_width="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="3dp"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@drawable/toolbar_shadow"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_view" />
+            <Spinner
+                android:id="@+id/spinner_view"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/margin_10"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_shadow"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_holder" />
 
 
         <android.support.constraint.ConstraintLayout
-                android:id="@+id/empty_layout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_shadow"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:background="@color/white">
+            android:id="@+id/empty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_60"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_holder">
 
-                <android.support.constraint.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.5" />
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
 
-                <ImageView
-                    android:id="@+id/empty_image_view"
-                    android:layout_width="@dimen/width_200"
-                    android:layout_height="@dimen/height_200"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginTop="@dimen/margin_50"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:contentDescription="@string/no_contact_available"
-                    android:src="@mipmap/ic_no_favorite"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/empty_image_view"
+                android:layout_width="@dimen/width_200"
+                android:layout_height="@dimen/height_200"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_50"
+                android:layout_marginRight="@dimen/margin_20"
+                android:contentDescription="@string/no_contact_available"
+                android:src="@mipmap/ic_no_favorite"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_message"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:gravity="center"
-                    android:text="@string/no_favorite"
-                    android:textColor="@color/not_found_color"
-                    android:textSize="@dimen/text_size_20"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"
+                android:text="@string/no_favorite"
+                android:textColor="@color/not_found_color"
+                android:textSize="@dimen/text_size_20"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
 
 
-            </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
     </android.support.constraint.ConstraintLayout>

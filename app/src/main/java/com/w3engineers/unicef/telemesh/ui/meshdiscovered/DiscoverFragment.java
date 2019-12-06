@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -359,6 +360,9 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+    //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
         meshContactAdapter = new DiscoverAdapter(discoverViewModel);
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);

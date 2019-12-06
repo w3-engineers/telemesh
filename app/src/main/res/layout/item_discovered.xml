@@ -136,7 +136,7 @@
             android:text="@{user.hasUnreadMessage+ ``}"
             android:textColor="@android:color/white"
             android:textSize="9sp"
-            android:visibility="@{user.hasUnreadMessage>0?View.VISIBLE:View.GONE}"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_view_favourite"
             app:layout_constraintTop_toTopOf="parent"

@@ -205,7 +205,7 @@ public class SecurityActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.IntentKeys.USER_NAME)) {
             mUserName = intent.getStringExtra(Constants.IntentKeys.USER_NAME);
-            mAvatarIndex = intent.getIntExtra(Constants.IntentKeys.AVATAR_INDEX, 0);
+            mAvatarIndex = intent.getIntExtra(Constants.IntentKeys.AVATAR_INDEX, -1);
         }
     }
 

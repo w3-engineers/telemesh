@@ -31,6 +31,10 @@ public class SecurityViewModel extends BaseRxAndroidViewModel {
 
     boolean storeData(@Nullable String userName, int imageIndex, String password, String address, String publickKey) {
 
+        if (imageIndex < 0) {
+            imageIndex = Constants.DEFAULT_AVATAR;
+        }
+
         // Store name and image on PrefManager
         SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
 

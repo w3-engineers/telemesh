@@ -22,23 +22,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/spinner_shadow"
+            android:layout_width="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@drawable/toolbar_shadow"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_view" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_view"/>
+            app:layout_constraintTop_toBottomOf="@+id/spinner_shadow"/>
 
 
-            <android.support.constraint.ConstraintLayout
+        <android.support.constraint.ConstraintLayout
                 android:id="@+id/empty_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_30"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_view"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_shadow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

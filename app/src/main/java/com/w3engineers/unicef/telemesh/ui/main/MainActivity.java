@@ -223,17 +223,20 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }*/
 
         Fragment mFragment = null;
+        String title;
         if (fromSettings) {
             MenuItem menuItem = bottomMenu.findItem(R.id.action_setting);
             menuItem.setChecked(true);
             mFragment = new SettingsFragment();
+            title = LanguageUtil.getString(R.string.title_settings_fragment);
         } else {
             MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
             mFragment = new DiscoverFragment();
+            title = LanguageUtil.getString(R.string.title_discoverd_fragment);
         }
         mCurrentFragment = mFragment;
-        loadFragment(mFragment, LanguageUtil.getString(R.string.title_discoverd_fragment));
+        loadFragment(mFragment, title);
 
         bottomNavigationMenuView = (BottomNavigationMenuView) binding.bottomNavigation
                 .getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);

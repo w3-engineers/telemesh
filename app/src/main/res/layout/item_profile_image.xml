@@ -27,7 +27,6 @@
             android:background="@drawable/circle_blue"
             android:contentDescription="@string/image"
             android:padding="@dimen/padding_5"
-            app:imageResource="@{itemIndex}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

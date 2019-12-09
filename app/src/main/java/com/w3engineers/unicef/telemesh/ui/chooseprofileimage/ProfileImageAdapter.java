@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
+import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.ItemProfileImageBinding;
 import com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox;
 
@@ -24,10 +26,12 @@ class ProfileImageAdapter extends BaseAdapter<Integer> {
     @Nullable
     public SmoothCheckBox previousSelectedItem;
     public int selectedPosition;
+    private Context mContext;
 
 
-    public ProfileImageAdapter(int selectedPosition) {
+    public ProfileImageAdapter(int selectedPosition, Context context) {
         this.selectedPosition = selectedPosition;
+        this.mContext = context;
     }
 
     @Override
@@ -62,7 +66,10 @@ class ProfileImageAdapter extends BaseAdapter<Integer> {
 
             mProfileImageBinding.setItemIndex(item);
 
-            if (item == selectedPosition){
+            int id = mContext.getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + item, Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, mContext.getPackageName());
+            mProfileImageBinding.imageViewProfile.setImageResource(id);
+
+            if (item == selectedPosition) {
                 previousSelectedItem = mProfileImageBinding.checkbox;
                 previousSelectedItem.setChecked(true, false);
             }

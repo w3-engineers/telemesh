@@ -55,4 +55,7 @@
     <dimen name="height_25">25dp</dimen>
     <dimen name="height_20">20dp</dimen>
 
+    <dimen name="circle_image_height">100dp</dimen>
+    <dimen name="circle_image_width">100dp</dimen>
+
 </resources>

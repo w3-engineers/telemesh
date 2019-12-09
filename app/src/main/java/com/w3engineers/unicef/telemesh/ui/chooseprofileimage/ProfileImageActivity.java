@@ -47,8 +47,9 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     private void initRecyclerView() {
-        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem,this);
+        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem, this);
         mAdapter.setItemClickListener(this);
+        mProfileImageBinding.recyclerView.setHasFixedSize(true);
         mProfileImageBinding.recyclerView.setAdapter(mAdapter);
         int ITEM_IN_ROW = 3;
         mProfileImageBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, ITEM_IN_ROW));

@@ -15,7 +15,9 @@ import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
+import com.w3engineers.unicef.util.helper.NotifyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +122,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     }
 
-    public void setUserData(List<UserEntity> userEntities){
+    public void setUserData(List<UserEntity> userEntities) {
         UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
 
         PagedList.Config myConfig = new PagedList.Config.Builder()
@@ -159,7 +161,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
         if (userEntities != null) {
 
-            if (TextUtils.isEmpty(searchText)){
+            if (TextUtils.isEmpty(searchText)) {
                 setUserData(userEntities);
                 return;
             }
@@ -168,7 +170,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
             for (UserEntity user : userEntities) {
 
-               if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)) {
                     Log.d("SearchIssue", "user list post call 1");
                     filteredItemList.add(user);
                 }

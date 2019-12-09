@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;

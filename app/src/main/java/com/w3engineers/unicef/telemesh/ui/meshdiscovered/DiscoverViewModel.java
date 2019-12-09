@@ -8,16 +8,13 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
-import com.w3engineers.unicef.util.helper.NotifyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,7 @@ import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
@@ -144,7 +142,6 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     public List<UserEntity> getCurrentUserList() {
         if (userList == null) {
             userList = new ArrayList<>();
-            Log.d("SearchIssue", "Discover search list null");
         }
         return userList;
     }
@@ -171,12 +168,10 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             for (UserEntity user : userEntities) {
 
                 if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)) {
-                    Log.d("SearchIssue", "user list post call 1");
                     filteredItemList.add(user);
                 }
 
             }
-            Log.d("SearchIssue", "user list post call");
 
             UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(filteredItemList);
 
@@ -197,7 +192,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Log.d("SearchIssue", "user list null");
+            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

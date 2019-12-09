@@ -222,7 +222,6 @@ public class ChatActivity extends TelemeshBaseActivity {
 
                     if (mChatPagedAdapter != null) {
                         mChatPagedAdapter.addAvatarIndex(mUserEntity.getAvatarIndex());
-                        Log.d("UiTest", "Avatar sending process: " + mUserEntity.getAvatarIndex());
                     }
                 }
             });

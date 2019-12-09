@@ -100,7 +100,6 @@ public class ImportProfileActivity extends BaseActivity {
             } else {
                 filePath = data.getData().getPath();
             }*/
-            Log.d("UiTest", "File path: " + data.getData());
 
             Intent intent = new Intent(ImportProfileActivity.this, ImportWalletActivity.class);
             intent.putExtra(Constants.IntentKeys.WALLET_PATH, filePath);

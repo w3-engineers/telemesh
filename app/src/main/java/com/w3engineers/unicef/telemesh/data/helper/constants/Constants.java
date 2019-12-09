@@ -5,6 +5,8 @@ import android.os.Build;
 
 import com.w3engineers.mesh.util.Constant;
 
+import java.util.Locale;
+
 public class Constants {
 
     public static boolean IS_LOADING_ENABLE = false;
@@ -185,7 +187,7 @@ public class Constants {
     public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
-        if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+        if (model.toLowerCase(Locale.getDefault()).startsWith(manufacturer.toLowerCase(Locale.getDefault()))) {
             return capitalize(model);
         } else {
             return capitalize(manufacturer) + " " + model;

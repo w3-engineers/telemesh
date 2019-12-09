@@ -44,6 +44,7 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
@@ -75,7 +76,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                             .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId()))
                                     .subscribeOn(Schedulers.newThread())
                             .subscribe((result) -> {
-                                Log.d("FeedbackTest", "Delete result: " + result);
+                                Timber.tag("FeedbackTest").d("Delete result: %s", result);
                             }, Throwable::printStackTrace));
                 } else {
                     FeedbackModel feedbackModel = new FeedbackModel();
@@ -118,7 +119,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     private void exception(Throwable tr) {
-        Log.e("MessageCountTest", "Error: " + tr.getMessage());
+        Timber.tag("MessageCountTest").e("Error: %s", tr.getMessage());
     }
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
@@ -195,10 +196,10 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void sendFeedback(FeedbackEntity entity) {
         if (isMobileDataEnable()) {
-            Log.d("FeedbackTest","Feedback send directly");
+            Timber.tag("FeedbackTest").d("Feedback send directly");
             sendFeedbackToInternet(entity, true);
         } else {
-            Log.d("FeedbackTest","Feedback send via seller");
+            Timber.tag("FeedbackTest").d("Feedback send via seller");
             RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
         }
     }
@@ -232,10 +233,10 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             HandlerUtil.postBackground(() -> {
                 if (countSentList != null) {
                     if (isSuccess) {
-                        Log.d("AppShareTest", "countSentList not null");
+                        Timber.tag("AppShareTest").d("countSentList not null");
                         for (AppShareCountEntity entity : countSentList) {
                             int id = AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getDate());
-                            Log.d("AppShareTest", "Delete id " + id);
+                            Timber.tag("AppShareTest").d("Delete id %s", id);
                         }
                     }
                 }

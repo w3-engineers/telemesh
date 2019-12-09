@@ -9,6 +9,7 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 
@@ -16,7 +17,9 @@ import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 public class WalletUtil {
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
+    @SuppressLint("StaticFieldLeak")
     private static WalletUtil sInstance;
     private WalletPrepareListener listener;
 

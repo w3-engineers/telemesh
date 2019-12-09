@@ -92,6 +92,9 @@ dependencies {
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
+    implementation deps.support.animated_vector_drawable
+    implementation deps.support.media_compact
+    implementation deps.support.v4
 
     //lifecycle
     implementation deps.lifecycle.runtime

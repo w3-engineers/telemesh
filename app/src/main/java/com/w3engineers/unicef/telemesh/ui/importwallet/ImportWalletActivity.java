@@ -7,7 +7,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 
 import com.karumi.dexter.Dexter;
@@ -30,6 +29,8 @@ import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -149,7 +150,7 @@ public class ImportWalletActivity extends BaseActivity {
 
                 @Override
                 public void onWalletLoadError(String errorMessage) {
-                    Log.e("walletLoad", "Error: " + errorMessage);
+                    Timber.tag("walletLoad").e("Error: %s", errorMessage);
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();
                         Toaster.showShort(errorMessage);

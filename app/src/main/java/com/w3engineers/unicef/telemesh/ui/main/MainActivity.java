@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -51,6 +52,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Menu bottomMenu;
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
+    @SuppressLint("StaticFieldLeak")
     private static MainActivity sInstance;
     private BulletinTimeScheduler sheduler;
     private Fragment mCurrentFragment;
@@ -58,6 +60,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private int latestUserCount;
     private int latestMessageCount;
 
+    @SuppressLint("StaticFieldLeak")
     @Nullable
     public static MainActivity mainActivity;
 
@@ -214,7 +217,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void initBottomBar() {
 
         boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
-        Log.d("BottomTest", "settings: " + fromSettings);
 
         /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
         if (isRestart) {

@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -10,10 +10,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -22,7 +20,6 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.remote.RetrofitInterface;
 import com.w3engineers.unicef.telemesh.data.remote.RetrofitService;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppInstallProgressBinding;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.io.File;
@@ -35,7 +32,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+import timber.log.Timber;
 
 
 /*
@@ -48,9 +45,11 @@ import retrofit2.Retrofit;
 
 
 public class AppInstaller {
+    @SuppressLint("StaticFieldLeak")
     private static DownloadZipFileTask downloadZipFileTask;
     private static final String TAG = "InAppUpdateTest";
     public static boolean isAppUpdating;
+    @SuppressLint("StaticFieldLeak")
     private static DialogAppInstallProgressBinding binding;
     private static AlertDialog dialog;
 
@@ -65,8 +64,6 @@ public class AppInstaller {
             baseUrl = "https://" + url[1];
         }
 
-        Log.d(TAG, "File url: " + baseUrl);
-
         RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl);
         Call<ResponseBody> call = downloadService.downloadFileByUrl("updatedApk.apk");
 
@@ -74,7 +71,6 @@ public class AppInstaller {
             @Override
             public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "Got the body for the file");
 
                     //Toast.makeText(TeleMeshApplication.getContext(), "Downloading...", Toast.LENGTH_SHORT).show();
 
@@ -82,14 +78,13 @@ public class AppInstaller {
                     downloadZipFileTask.execute(response.body());
 
                 } else {
-                    Log.d(TAG, "Connection failed " + response.errorBody());
+                    Timber.tag(TAG).d("Connection failed %s", response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-                Log.e(TAG, t.getMessage());
                 isAppUpdating = false;
                 InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(false);
             }
@@ -98,6 +93,7 @@ public class AppInstaller {
 
 
     private static class DownloadZipFileTask extends AsyncTask<ResponseBody, Pair<Integer, Long>, String> {
+        @SuppressLint("StaticFieldLeak")
         private Context context;
 
         public DownloadZipFileTask(Context context) {
@@ -119,8 +115,6 @@ public class AppInstaller {
         }
 
         protected void onProgressUpdate(Pair<Integer, Long>... progress) {
-
-            Log.d("API123", progress[0].second + " ");
 
             if (progress[0].first == 100) {
                 Toaster.showShort("Internet connection not available");
@@ -162,10 +156,8 @@ public class AppInstaller {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destinationFile);
                 intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                Log.d("InAppUpdateTest", "app uri: " + apkUri.getPath());
                 intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                Log.d("InAppUpdateTest", "app install process start");
             } else {
                 Uri apkUri = Uri.fromFile(destinationFile);
                 intent = new Intent(Intent.ACTION_VIEW);
@@ -196,18 +188,15 @@ public class AppInstaller {
                 int count;
                 int progress = 0;
                 long fileSize = body.contentLength();
-                Log.d(TAG, "File Size=" + fileSize);
                 while ((count = inputStream.read(data)) != -1) {
                     outputStream.write(data, 0, count);
                     progress += count;
                     Pair<Integer, Long> pairs = new Pair<>(progress, fileSize);
                     downloadZipFileTask.doProgress(pairs);
-                    Log.d(TAG, "Progress: " + progress + "/" + fileSize + " >>>> " + (float) progress / fileSize);
                 }
 
                 outputStream.flush();
 
-                Log.d(TAG, destinationFile.getParent());
                 Pair<Integer, Long> pairs = new Pair<>(100, 100L);
                 downloadZipFileTask.doProgress(pairs);
                 return;
@@ -215,7 +204,6 @@ public class AppInstaller {
                 e.printStackTrace();
                 Pair<Integer, Long> pairs = new Pair<>(-1, Long.valueOf(-1));
                 downloadZipFileTask.doProgress(pairs);
-                Log.d(TAG, "Failed to save the file!");
                 return;
             } finally {
                 if (inputStream != null) inputStream.close();
@@ -223,7 +211,6 @@ public class AppInstaller {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(TAG, "Failed to save the file!");
             return;
         }
     }

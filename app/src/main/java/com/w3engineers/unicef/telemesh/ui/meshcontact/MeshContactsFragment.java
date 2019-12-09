@@ -127,9 +127,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
-                Log.d("SearchIssue", "Search result");
                 if (userEntities != null && userEntities.size() > 0) {
-                    Log.d("SearchIssue", "Search result found");
                     fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
 
                     getAdapter().submitList(userEntities);

@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,7 +24,6 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
-import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
@@ -103,9 +100,7 @@ public class DiscoverFragment extends BaseFragment {
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
-                Log.d("SearchIssue", "Discover Search result");
                 if (userEntities != null && userEntities.size() > 0) {
-                    Log.d("SearchIssue", "Discover Search result found");
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                     //  getAdapter().clear();
@@ -210,7 +205,7 @@ public class DiscoverFragment extends BaseFragment {
 
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
-            Log.d("SearchIssue", "Discover page Search query: " + query);
+            Timber.tag("SearchIssue").d("Discover page Search query: %s", query);
             discoverViewModel.startSearch(query, discoverViewModel.getCurrentUserList());
         }
     }
@@ -272,14 +267,12 @@ public class DiscoverFragment extends BaseFragment {
             public boolean onMenuItemActionExpand(MenuItem item) {
                 searchView.setBackgroundColor(getResources().getColor(R.color.white));
                 searchView.setMaxWidth(Integer.MAX_VALUE);
-                Log.d("UiTest", "Search expand");
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 //searchView.setBackgroundColor(-1);
-                Log.d("UiTest", "Search collapse");
                 return true;
             }
         });

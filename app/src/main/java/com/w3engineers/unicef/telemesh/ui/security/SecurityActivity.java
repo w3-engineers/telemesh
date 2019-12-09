@@ -192,7 +192,6 @@ public class SecurityActivity extends BaseActivity {
 
             @Override
             public void onWalletLoadError(String errorMessage) {
-                Log.e("walletLoad", "Error: " + errorMessage);
                 runOnUiThread(() -> {
                     CustomDialogUtil.dismissProgressDialog();
                     Toaster.showShort(errorMessage);

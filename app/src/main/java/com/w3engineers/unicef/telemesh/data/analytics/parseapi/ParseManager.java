@@ -1,12 +1,10 @@
 package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
-import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -22,10 +20,10 @@ import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -39,8 +37,10 @@ import java.util.List;
 
 
 public class ParseManager {
+    @SuppressLint("StaticFieldLeak")
     private static volatile ParseManager sInstance;
     private static final Object mutex = new Object();
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static String TAG = ParseManager.class.getName();
     private byte analyticsType;
@@ -132,19 +132,16 @@ public class ParseManager {
                         if (callback != null) {
                             callback.onGetMeshLogUploadResponse(true, logFile.getName());
                         }
-                        Log.d("ParseFileUpload", "Save done ");
                     } else {
                         if (callback != null) {
                             callback.onGetMeshLogUploadResponse(false, "");
                         }
-                        Log.e("ParseFileUpload", "Error: " + e1.getMessage());
                     }
                 });
             } else {
                 if (callback != null) {
                     callback.onGetMeshLogUploadResponse(false, "");
                 }
-                Log.e("ParseFileUpload", "Error: " + e.getMessage());
             }
         });
     }
@@ -160,8 +157,6 @@ public class ParseManager {
 
         parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
 
-        Log.d("FeedbackTest", "Feedback Id:  " + model.getFeedbackId());
-
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
                 if (objects == null || objects.isEmpty()) {
@@ -169,17 +164,16 @@ public class ParseManager {
                         if (callback != null) {
                             if (e1 == null) {
                                 callback.onGetFeedbackSendResponse(true, model);
-                                Log.e("FeedbackTest", "Feedback send Successfully");
                             } else {
-                                Log.e("FeedbackTest", "Feedback send Failed: " + e1.getMessage());
+                                Timber.tag("FeedbackTest").e("Feedback send Failed: %s", e1.getMessage());
                             }
                         }
                     });
                 } else {
-                    Log.e("FeedbackTest", "Feed back already exist");
+                    Timber.tag("FeedbackTest").e("Feed back already exist");
                 }
             } else {
-                Log.e("FeedbackTest", "Feed back query Error: " + e.getMessage());
+                Timber.tag("FeedbackTest").e("Feed back query Error: %s", e.getMessage());
             }
         });
 

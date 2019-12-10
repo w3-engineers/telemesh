@@ -75,22 +75,27 @@ public abstract class AppDatabase extends BaseDatabase {
     @NonNull
     public abstract MeshLogDao meshLogDao();
 
+    private static String FEEDBACK_MIGRATION = "CREATE TABLE IF NOT EXIST " + TableNames.FEEDBACK +
+            " (" + ColumnNames.COLUMN_FEEDBACK_ID + " TEXT, " + ColumnNames.COLUMN_FEEDBACK +
+            " TEXT, " + ColumnNames.COLUMN_USER_ID + " TEXT, " + ColumnNames.COLUMN_USER_NAME +
+            " TEXT, " + ColumnNames.TIMESTAMP + " INTEGER, PRIMARY KEY(" + ColumnNames.COLUMN_FEEDBACK_ID + "))";
+
+    private static String USER_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " INTEGER";
+
     @NonNull
     public static AppDatabase getInstance() {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
                     Context context = App.getContext();
-
-                    int initialVersion = 21;
-
-                    BaseMigration[] baseMigrations = new BaseMigration[(BuildConfig.VERSION_CODE - initialVersion)];
-
-                    for (int i = 0; i < baseMigrations.length; i++) {
-                        baseMigrations[i] = new BaseMigration((initialVersion + (i + 1)), "");
-                    }
-
-                    sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class, initialVersion, baseMigrations); //normally initial version is always 21
+                    sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
+                            , 21,
+                            new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
+                            new BaseMigration(BuildConfig.VERSION_CODE, FEEDBACK_MIGRATION),
+                            new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_1));//normally initial version is always 21
                 }
             }
         }

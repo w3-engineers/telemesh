@@ -8,10 +8,10 @@ import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseMigration;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -75,12 +75,12 @@ public abstract class AppDatabase extends BaseDatabase {
     @NonNull
     public abstract MeshLogDao meshLogDao();
 
-    private static String FEEDBACK_MIGRATION = "CREATE TABLE IF NOT EXIST " + TableNames.FEEDBACK +
-            " (" + ColumnNames.COLUMN_FEEDBACK_ID + " TEXT, " + ColumnNames.COLUMN_FEEDBACK +
+    private static String FEEDBACK_MIGRATION = "CREATE TABLE IF NOT EXISTS " + TableNames.FEEDBACK +
+            " (" + ColumnNames.COLUMN_FEEDBACK_ID + " TEXT PRIMARY KEY NOT NULL, " + ColumnNames.COLUMN_FEEDBACK +
             " TEXT, " + ColumnNames.COLUMN_USER_ID + " TEXT, " + ColumnNames.COLUMN_USER_NAME +
-            " TEXT, " + ColumnNames.TIMESTAMP + " INTEGER, PRIMARY KEY(" + ColumnNames.COLUMN_FEEDBACK_ID + "))";
+            " TEXT, " + ColumnNames.TIMESTAMP + " INTEGER NOT NULL)";
 
-    private static String USER_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " INTEGER";
+    private static String USER_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " INTEGER NOT NULL DEFAULT 0";
 
     @NonNull
     public static AppDatabase getInstance() {
@@ -94,8 +94,7 @@ public abstract class AppDatabase extends BaseDatabase {
                             new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE, FEEDBACK_MIGRATION),
-                            new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_1));//normally initial version is always 21
+                            new BaseMigration(BuildConfig.VERSION_CODE, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1));//normally initial version is always 21
                 }
             }
         }
@@ -176,8 +175,13 @@ public abstract class AppDatabase extends BaseDatabase {
                 migration = new Migration(lastVersion, baseMigration.getTargetedVersion()) {
                     @Override
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
-                        if (Text.isNotEmpty(baseMigration.getQueryScript())) {
-                            database.execSQL(baseMigration.getQueryScript());
+                        if (baseMigration.getQueryScript().length > 0) {
+                            for (String query : baseMigration.getQueryScript()) {
+                                if (Text.isNotEmpty(query)) {
+                                    Log.d("DatabaseMigration", "Query: " + query);
+                                    database.execSQL(query);
+                                }
+                            }
                         }
                     }
                 };

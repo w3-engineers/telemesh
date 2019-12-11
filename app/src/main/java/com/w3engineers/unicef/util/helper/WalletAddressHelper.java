@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -9,13 +10,19 @@ import android.util.Log;
 
 import com.w3engineers.mesh.application.data.local.wallet.Web3jWalletHelper;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 /*
  * ============================================================================
@@ -72,9 +79,38 @@ public class WalletAddressHelper {
         return result.toString();
     }
 
+    private static String readDefaultAddress(Context context) {
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                context.getString(R.string.app_name) + "/" + Constants.AppConstant.DEFAULT_ADDRESS);
+        File addressFile = new File(file, Constants.AppConstant.DEFAULT_ADDRESS_FILE);
+
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(addressFile));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text.toString();
+    }
+
     public static SpannableString getWalletSpannableString(Context context) {
         String walletText = context.getResources().getString(R.string.file_exit);
         String address = WalletAddressHelper.readWalletAddress(context);
+
+        Constants.DEFAULT_ADDRESS = readDefaultAddress(context);
+        Constants.CURRENT_ADDRESS = address;
+
+        Log.d("DefaultAddres", "Address: " + Constants.DEFAULT_ADDRESS);
+        Log.d("DefaultAddres", "current Address: " + Constants.CURRENT_ADDRESS);
 
         String walletExistMessage = String.format(walletText, address);
         SpannableString spannableString = new SpannableString(walletExistMessage);
@@ -89,5 +125,34 @@ public class WalletAddressHelper {
                 startIndex, walletExistMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spannableString;
+    }
+
+    public static void writeDefaultAddress(String address, Context context) {
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                context.getString(R.string.app_name));
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        File directory = new File(file, Constants.AppConstant.DEFAULT_ADDRESS);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File defaultAddressFile = new File(directory, Constants.AppConstant.DEFAULT_ADDRESS_FILE);
+
+        try {
+            defaultAddressFile.createNewFile();
+            FileOutputStream fileOutputStream = new FileOutputStream(defaultAddressFile);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+
+            outputStreamWriter.append(address);
+            outputStreamWriter.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

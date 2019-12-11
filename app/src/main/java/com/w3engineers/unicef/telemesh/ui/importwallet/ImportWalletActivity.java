@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -80,34 +81,20 @@ public class ImportWalletActivity extends BaseActivity {
         parseIntent();
 
         setClickListener(mBinding.imageViewBack, mBinding.buttonContinue);
+
+        if (TextUtils.isEmpty(mWalletPath)
+                && !TextUtils.isEmpty(Constants.CURRENT_ADDRESS)
+                && !TextUtils.isEmpty(Constants.DEFAULT_ADDRESS)
+                && Constants.CURRENT_ADDRESS.equals(Constants.DEFAULT_ADDRESS.trim())) {
+            mBinding.textViewPinInstruction.setText("Your current password is:  " + Constants.DEFAULT_PASSWORD);
+        }
     }
 
     private void gotoProfileCreatePage() {
 
         String password = mBinding.editTextPassword.getText().toString();
 
-        if (WalletService.getInstance(this).isWalletExists()) {
-           /* WalletService.getInstance(this).createOrLoadWallet(password, new WalletService.WalletLoadListener() {
-                @Override
-                public void onWalletLoaded(String walletAddress, String publicKey) {
-
-                    runOnUiThread(() -> {
-                        CustomDialogUtil.dismissProgressDialog();
-
-                        Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
-                        intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
-                        startActivity(intent);
-                    });
-                }
-
-                @Override
-                public void onErrorOccurred(String message) {
-                    runOnUiThread(() -> {
-                        CustomDialogUtil.dismissProgressDialog();
-                        Toaster.showShort(message);
-                    });
-                }
-            });*/
+        if (TextUtils.isEmpty(mWalletPath)) {
 
             WalletManager.getInstance().loadWallet(this, password, new WalletManager.WalletLoadListener() {
                 @Override

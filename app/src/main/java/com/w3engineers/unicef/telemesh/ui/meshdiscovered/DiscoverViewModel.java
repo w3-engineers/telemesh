@@ -11,14 +11,20 @@ import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,11 +46,14 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private String searchableText;
 
+    private List<UserEntity> tempNearByList;
     private List<UserEntity> userList;
 
     public DiscoverViewModel(@NonNull Application application) {
         super(application);
         this.userDataSource = UserDataSource.getInstance();
+        userList = new ArrayList<>();
+        tempNearByList = new ArrayList<>();
     }
 
     public void openMessage(@NonNull UserEntity userEntity) {
@@ -86,38 +95,44 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    userList = userEntities;
+                    Set<String> set = new HashSet<String>();
+                    for (UserEntity o2 : userEntities) {
+                        set.add(o2.getMeshId());
+                    }
+                    Iterator<UserEntity> i = userList.iterator();
+                    while (i.hasNext()) {
+                        if (set.contains(i.next().getMeshId())) {
+                            i.remove();
+                        }
+                    }
+
+                    List<UserEntity> userEntityList = new ArrayList<>();
+                    for (UserEntity diffElement : userList) {
+                        UserEntity userEntity = new UserEntity();
+                        userEntity.setMeshId(diffElement.getMeshId());
+                        userEntity.setUserName(diffElement.getUserName());
+                        userEntity.setAvatarIndex(diffElement.getAvatarIndex());
+                        userEntity.setIsFavourite(diffElement.getIsFavourite());
+                        userEntity.setOnlineStatus(0);
+                        userEntity.hasUnreadMessage = diffElement.hasUnreadMessage;
+
+                        userEntityList.add(userEntity);
+                    }
+
+                    userList.clear();
+                    userList.addAll(userEntityList);
+                    userList.addAll(userEntities);
 
                     if (!TextUtils.isEmpty(searchableText)) {
-                        backUserEntity.postValue(userEntities);
-                        startSearch(searchableText, userEntities);
+                        backUserEntity.postValue(userList);
+                        startSearch(searchableText, userList);
                     } else {
-
-/*                        UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
-
-                        PagedList.Config myConfig = new PagedList.Config.Builder()
-                                .setEnablePlaceholders(true)
-                                .setPrefetchDistance(PREFETCH_DISTANCE)
-                                .setPageSize(PAGE_SIZE)
-                                .build();
-
-
-                        PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
-                                .setInitialKey(INITIAL_LOAD_KEY)
-                                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
-                                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                                .build();
-
-                        nearbyUsers.postValue(pagedStrings);*/
-
-                        setUserData(userEntities);
-
+                        setUserData(userList);
                     }
 
                 }, throwable -> {
                     throwable.printStackTrace();
                 }));
-
     }
 
     public void setUserData(List<UserEntity> userEntities) {
@@ -140,9 +155,9 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     }
 
     public List<UserEntity> getCurrentUserList() {
-        if (userList == null) {
+/*        if (userList == null) {
             userList = new ArrayList<>();
-        }
+        }*/
         return userList;
     }
 

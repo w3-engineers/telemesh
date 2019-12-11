@@ -161,18 +161,18 @@ public class DiscoverFragment extends BaseFragment {
         }
     }
 
-    private void initSearchView(SearchView searchView) {
+/*    private void initSearchView(SearchView searchView) {
 
         getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
                 .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
                 .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged()/*.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())*/
+                .distinctUntilChanged()*//*.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())*//*
                 .subscribeWith(searchContacts()));
 
-    }
+    }*/
 
-    public DisposableObserver<String> searchContacts() {
+/*    public DisposableObserver<String> searchContacts() {
         return new DisposableObserver<String>() {
 
             boolean isSearchStart = false;
@@ -201,7 +201,7 @@ public class DiscoverFragment extends BaseFragment {
                 Timber.e("onError: Complete");
             }
         };
-    }
+    }*/
 
     public void searchContacts(String query) {
         if (discoverViewModel != null) {

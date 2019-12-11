@@ -41,6 +41,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
@@ -165,6 +166,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         initSearchListener();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
+
+        StorageUtil.getFreeMemory();
 
     }
 

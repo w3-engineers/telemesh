@@ -26,6 +26,8 @@ public class Constants {
     public static String DEFAULT_ADDRESS;
     public static String CURRENT_ADDRESS;
 
+    public static long MINIMUM_SPACE = 50; // Initially checking 50 MB for downloading Telemesh and service App
+
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;

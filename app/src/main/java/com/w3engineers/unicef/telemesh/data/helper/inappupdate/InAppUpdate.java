@@ -19,6 +19,7 @@ import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -28,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTT
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.StorageUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,8 +183,13 @@ public class InAppUpdate {
             String finalUrl = url;
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
+                
+                if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
+                    AppInstaller.downloadApkFile(finalUrl, context);
+                } else {
+                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+                }
 
-                AppInstaller.downloadApkFile(finalUrl, context);
             });
 
             dialog.show();

@@ -153,6 +153,7 @@
     <string name="favourite">Favourite</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
+    <string name="phone_storage_not_enough">Your phone space not enough</string>
 
 
 </resources>

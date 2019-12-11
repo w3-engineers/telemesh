@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.settings;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
 import com.w3engineers.ext.strom.App;
@@ -86,6 +87,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         HandlerUtil.postBackground(() -> {
             String date = TimeUtil.getDateString(System.currentTimeMillis());
             String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            Log.d("WalletAddress", "My address: " + myId);
             boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
             if (isExist) {
                 AppShareCountDataService.getInstance().updateCount(myId, date);

@@ -70,6 +70,7 @@ public class MeshDataSource extends ViperUtil {
     private void meshInited(String meshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
 
+        Log.d("WalletAddress", "My wallet address: " + meshId);
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
 
         if (!isPrepared) {

@@ -37,6 +37,7 @@ import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
+import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
@@ -56,6 +57,7 @@ public class SecurityActivity extends BaseActivity {
     private SecurityViewModel mViewModel;
     private String mUserName;
     private int mAvatarIndex;
+    private boolean isDefaultPassword;
 
     @Override
     protected int getLayoutId() {
@@ -162,6 +164,7 @@ public class SecurityActivity extends BaseActivity {
 
         if (TextUtils.isEmpty(password)) {
             password = Constants.DEFAULT_PASSWORD;
+            isDefaultPassword = true;
         }
 
         String finalPassword = password;
@@ -175,6 +178,10 @@ public class SecurityActivity extends BaseActivity {
                 if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
 
                     runOnUiThread(() -> {
+                        if (isDefaultPassword) {
+                            WalletAddressHelper.writeDefaultAddress(address, SecurityActivity.this);
+                        }
+                        
                         CustomDialogUtil.dismissProgressDialog();
 
                         Intent intent = new Intent(SecurityActivity.this, MainActivity.class);

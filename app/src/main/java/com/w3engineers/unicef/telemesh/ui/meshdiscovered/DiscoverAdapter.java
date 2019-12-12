@@ -142,14 +142,6 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
             } else {
                 return R.mipmap.ic_offline;
             }
-
-            /*if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
-                return R.drawable.circle_online;
-            } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
-                return R.drawable.circle_internet;
-            } else {
-                return R.drawable.circle_offline;
-            }*/
         }
 
     }

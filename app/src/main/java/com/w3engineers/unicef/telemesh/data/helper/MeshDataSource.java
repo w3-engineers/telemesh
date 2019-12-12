@@ -199,7 +199,6 @@ public class MeshDataSource extends ViperUtil {
      */
     @Override
     protected void onAck(@NonNull String messageId, int status) {
-        Log.d("AclTest", "Ack status: " + status);
         DataModel rmDataModel = new DataModel()
                 .setDataTransferId(messageId)
                 .setAckSuccess(true);

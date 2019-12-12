@@ -3,7 +3,7 @@
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <string name="enter_first_name">আপনার নাম লিখুন</string>
     <string name="signup">Next</string>
-    <string name="no_item_found">No item found</string>
+<!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
@@ -29,7 +29,7 @@
     <string name="no_message_available">কোন বার্তা পাওয়া যায় নি</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
-    <string name="cursordrawable">mCursorDrawableRes</string>
+<!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     // Settings title
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
@@ -43,14 +43,14 @@
     <string name="settings_open_wallet">ওয়ালেট</string>
     <string name="image">Image</string>
 
-    <string name="id">ID</string>
-    <string name="this_may_take_while">This may take a while…</string>
+<!--    <string name="id">ID</string>-->
+<!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Discovering Users</string>
     <string name="searching">খোঁজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type your first message\nlet the story begin</string>
 
-    <string name="profile">Profile</string>
+<!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
 
     <string name="unicef">UNICEF</string>
@@ -89,7 +89,7 @@
     <string name="feedback">মতামত</string>
     <string name="change">পরিবর্তন</string>
     <string name="cancel">বাতিল</string>
-    <string name="app_updating_please_wait" translatable="false">অ্যাপ আপডেট হচ্ছে। অপেক্ষা করুন..</string>
+    <string name="app_updating_please_wait">অ্যাপ আপডেট হচ্ছে। অপেক্ষা করুন..</string>
     <string name="ask_me_later">পরে জিজ্ঞাসা করুন</string>
     <string name="do_you_want_to_update">আপনি কি আপডেট চান?</string>
     <string name="app_update">অ্যাপ আপডেট</string>
@@ -97,4 +97,61 @@
     <string name="is_available_for_telemesh">Telemesh এর জন্য পাওয়া গেছে</string>
     <string name="no_favorite">কোনও প্রিয় ব্যবহারকারী পাওয়া যায় নি</string>
     <string name="phone_storage_not_enough">আপনার মোবাইলে পর্যাপ্ত পরিমান জায়গা নেই</string>
+
+    <!--  No need those are in bangla because those are used in before registration  -->
+
+    <string name="no_internet_connection">No internet connection</string>
+
+    <string name="build_version">Build Version:</string>
+
+    <string name="active_online">Active now</string>
+    <string name="active_offline">Offline</string>
+    <string name="onboard_image">Onboard image</string>
+    <string name="i_m_a_new_user">I\'m a new user</string>
+    <string name="i_m_a_returning_user">I\'m a returning user</string>
+    <string name="profile_selection_image">Profile selection image</string>
+    <string name="name_field_icon">Name field icon</string>
+    <string name="user_id_copy">User id copy</string>
+    <string name="user_id_qr_image">User id qr Image</string>
+    <string name="export_my_profile">EXPORT MY PROFILE</string>
+    <string name="open_source_edition">Open Source Edition</string>
+    <string name="about_description">Telemesh is a messaging app designed with Blockchain and Mesh networking. Unlike traditional messaging app Telemesh works with both internet and without internet connectivity. Telemesh is actively maintained by W3 Engineers Ltd.</string>
+    <string name="copyright_text">Copyright 2019 W3 Engineers Ltd.</string>
+    <string name="license_text">Licensed under the Apache License, Version 2.0</string>
+
+    <string name="privacy_policy"><a href="https://telemesh.net/privacy-policy/">Privacy Policy</a></string>
+    <string name="terms_of_use"><a href="https://telemesh.net/terms-of-use/">Terms of Use</a></string>
+    <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
+    <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="import_my_profile">import another id</string>
+<!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
+    <string name="search_background">search background</string>
+    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit PIN for your account security.</string>
+    <string name="pin_instruction">Please keep your PIN in a safe place. It is essential for recovering your account.</string>
+    <string name="skip">Skip</string>
+    <string name="clear_search_text">Clear search text</string>
+    <string name="close_search">Close search</string>
+    <string name="content_description_import_success">Import Success</string>
+    <string name="import_successful">Import successful</string>
+    <string name="pin_provide_instruction">Please provide your password to continue.</string>
+    <string name="continue_button">continue</string>
+    <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
+    <string name="enter_password_here">Enter password here</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
+    <string name="or">or</string>
+    <string name="warning">WARNING!!</string>
+    <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
+    <string name="ok">OK</string>
+
+<!--    <string name="search_hint">Search</string>-->
+<!--    <string name="clear_button">Clear</string>-->
+    <string name="please_wait">Please Wait…</string>
+<!--    <string name="spinner_title">Favourite</string>-->
+
+    <string name="favourite">Favourite</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+
 </resources>

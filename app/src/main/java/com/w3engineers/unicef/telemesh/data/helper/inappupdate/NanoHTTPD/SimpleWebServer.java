@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -152,7 +153,7 @@ public class SimpleWebServer extends NanoHTTPD {
                 String mime = null;
                 int dot = f.getCanonicalPath().lastIndexOf('.');
                 if (dot >= 0) {
-                    mime = MIME_TYPES.get(f.getCanonicalPath().substring(dot + 1).toLowerCase());
+                    mime = MIME_TYPES.get(f.getCanonicalPath().substring(dot + 1).toLowerCase(Locale.getDefault()));
                 }
                 if (mime == null) {
                     mime = NanoHTTPD.MIME_DEFAULT_BINARY;

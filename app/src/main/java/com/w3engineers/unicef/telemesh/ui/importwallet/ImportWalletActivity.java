@@ -32,6 +32,8 @@ import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -136,7 +138,7 @@ public class ImportWalletActivity extends BaseActivity {
 
                 @Override
                 public void onWalletLoadError(String errorMessage) {
-                    Log.e("walletLoad", "Error: " + errorMessage);
+                    Timber.tag("walletLoad").e("Error: %s", errorMessage);
                     runOnUiThread(() -> {
                         CustomDialogUtil.dismissProgressDialog();
                         Toaster.showShort(errorMessage);

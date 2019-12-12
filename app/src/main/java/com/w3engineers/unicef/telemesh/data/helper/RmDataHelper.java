@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -187,8 +186,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
-        Log.v("MIMO_SAHA:", "Status: " + userConnectivityStatus);
-
         int updateId = UserDataSource.getInstance()
                 .updateUserStatus(userId, userConnectivityStatus);
 
@@ -288,8 +285,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     if (!chatEntity.isIncoming()
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
 
-                        Log.v("MIMO_SAHA:", "Transport Send prev message");
-
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
@@ -304,8 +299,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                     if (!chatEntity.isIncoming()
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
-
-                        Log.v("MIMO_SAHA:", "Transport Send failed message");
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
@@ -418,7 +411,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
 
         } catch (Exception e) {
-            Log.v("MIMO_SAHA:", "Error message: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -493,7 +485,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(longResult -> {
                             if (longResult > 1) {
-                                Log.d("AppShareCount", "Data saved");
+                                Timber.tag("AppShareCount").d("Data saved");
                             }
                         }, Throwable::printStackTrace));
 
@@ -504,7 +496,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(longResult -> {
                             if (longResult > 1) {
-                                Log.d("AppShareCount", "Data Deleted");
+                                Timber.tag("AppShareCount").d("Data Deleted");
                             }
                         }, Throwable::printStackTrace));
             }
@@ -626,7 +618,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 mLatitude = lat;
                 mLongitude = lang;
-                Log.d("UserCountTest", "Location called");
 
                 getLocalUserCount();
             });
@@ -638,7 +629,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
-        Log.d("UserCountTest", "user: " + localActiveUsers.size());
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
@@ -900,7 +890,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendPendingFeedback() {
-        Log.d("FeedbackTest", "Pending feedback called");
         compositeDisposable
                 .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().getFirstFeedback())
                         .subscribeOn(Schedulers.newThread())
@@ -1033,7 +1022,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (isAckSuccess) return;
 
         String appVersionData = new String(rawData);
-        Log.d("InAppUpdateTest", "version rcv: " + appVersionData + " userId: " + userId);
+        Timber.tag("InAppUpdateTest").d("version rcv: " + appVersionData + " userId: " + userId);
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
 
         InAppUpdateModel myVersionModel = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
@@ -1041,7 +1030,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         InAppUpdate instance = InAppUpdate.getInstance(TeleMeshApplication.getContext());
 
         String myServerLink = instance.getMyLocalServerLink();
-        Log.d("InAppUpdateTest", "My version Code: " + myVersionModel.getVersionCode());
+        Timber.tag("InAppUpdateTest").d("My version Code: %s", myVersionModel.getVersionCode());
         if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
                 myServerLink != null) {
 
@@ -1056,9 +1045,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             String data = new Gson().toJson(model);
             dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
 
-            Log.d("InAppUpdateTest", "My version is Big: ");
+            Timber.tag("InAppUpdateTest").d("My version is Big: ");
         } else {
-            Log.d("InAppUpdateTest", "My version is same: ");
+            Timber.tag("InAppUpdateTest").d("My version is same: ");
         }
     }
 
@@ -1076,8 +1065,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String appVersionData = new String(rawData);
         InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
-
-        Log.d("InAppUpdateTest", "Local server url: " + versionModel.getUpdateLink());
 
         //AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
 

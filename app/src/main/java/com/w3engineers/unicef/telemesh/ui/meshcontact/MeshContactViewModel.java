@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 
 /*
@@ -232,7 +233,6 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                 if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText))
                     filteredItemList.add(user);
             }
-            Log.d("SearchIssue", "user list post call");
 
             UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(filteredItemList);
 
@@ -253,7 +253,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Log.d("SearchIssue", "user list null");
+            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

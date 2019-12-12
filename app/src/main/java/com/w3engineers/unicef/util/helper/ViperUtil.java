@@ -96,7 +96,6 @@ public abstract class ViperUtil {
         AppDataObserver.on().startObserver(ApiEvent.TRANSPORT_INIT, event -> {
             TransportInit transportInit = (TransportInit) event;
 
-            Log.v("MIMO_SAHA:", "Transport init");
             if (transportInit.success) {
                 myUserId = transportInit.nodeId;
 
@@ -106,8 +105,6 @@ public abstract class ViperUtil {
 
         AppDataObserver.on().startObserver(ApiEvent.WALLET_LOADED, event -> {
             WalletLoaded walletLoaded = (WalletLoaded) event;
-
-            Log.v("MIMO_SAHA:", "Wallet loaded");
 
             if (walletLoaded.success) {
                 myUserId = walletLoaded.walletAddress;
@@ -245,8 +242,6 @@ public abstract class ViperUtil {
 
         boolean isNotificationEnable = viperData.isNotificationEnable;
 
-        Log.v("MIMO_SAHA:", "Notification enable " + isNotificationEnable);
-
         try {
             viperClient.sendMessage(myUserId, nodeId, sendId, data, isNotificationEnable);
         } catch (Exception e) {
@@ -266,7 +261,6 @@ public abstract class ViperUtil {
     public String sendMeshData(String peerId, ViperData viperData) {
         if (viperData != null) {
             String sendId = UUID.randomUUID().toString();
-            Log.v("MIMO_SAHA:", viperData.isNotificationEnable + " Message is generated id: " + sendId);
             sendDataToMesh(peerId, viperData, sendId);
             return sendId;
         }

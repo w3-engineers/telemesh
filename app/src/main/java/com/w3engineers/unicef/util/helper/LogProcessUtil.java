@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class LogProcessUtil {
 
@@ -100,7 +101,7 @@ public class LogProcessUtil {
 
     private String getCrashLogDateWise(String crashLog) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "HH:mm:ss dd-MMM-yy");
+                "HH:mm:ss dd-MMM-yy", Locale.getDefault());
         Date date = new Date();
         String currentTime = dateFormat.format(date);
         String dashes = "-------------------------------";

@@ -150,7 +150,7 @@
             android:layout_marginEnd="@dimen/margin_15"
             android:contentDescription="@string/favourite"
             android:onClick="@{() -> discoverViewModel.changeFavouriteStatus(user)}"
-            android:src="@{user.isFavourite>0?@drawable/ic_favourite:@drawable/ic_un_favourite}"
+            android:src="@{user.isFavourite>0?@drawable/user_favourite:@drawable/user_un_favourite}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

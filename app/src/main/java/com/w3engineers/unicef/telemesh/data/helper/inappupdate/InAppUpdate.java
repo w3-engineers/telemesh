@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,9 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CompoundButton;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -31,7 +29,6 @@ import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,11 +46,11 @@ import java.io.Writer;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.Base64;
 import java.util.List;
+
+import timber.log.Timber;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -69,6 +66,7 @@ public class InAppUpdate {
     public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static final int PORT = 8990;
     private NanoHTTPD mServer;
@@ -87,6 +85,7 @@ public class InAppUpdate {
     }
 
     private static class Singleton {
+        @SuppressLint("StaticFieldLeak")
         private static InAppUpdate INSTANCE = new InAppUpdate();
     }
 
@@ -119,7 +118,7 @@ public class InAppUpdate {
 
             appUpdater.start();
         } else {
-            Log.e("InAppUpdateTest", "App update process running");
+            Timber.tag("InAppUpdateTest").e("App update process running");
         }
     }
 
@@ -195,7 +194,6 @@ public class InAppUpdate {
             dialog.show();
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("InAppUpdateTest", "Error: " + e.getMessage());
         }
     }
 
@@ -241,7 +239,6 @@ public class InAppUpdate {
                 isServerRunning = true;
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("InAppUpdateTest", "Server error: " + e.getMessage());
             }
         }
     }
@@ -349,8 +346,6 @@ public class InAppUpdate {
             String myIpAddress = tempAddress.getHostAddress();
             myIpAddress = "http://" + myIpAddress + ":" + PORT + "/";
 
-            Log.e("InAppUpdateTest", "My ip address: " + myIpAddress);
-
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_KEY, version);
             jsonObject.addProperty(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, "" + BuildConfig.VERSION_CODE);
@@ -407,6 +402,7 @@ public class InAppUpdate {
         new JsonTask(context).execute(url);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class JsonTask extends AsyncTask<String, String, String> {
         Context context;
 
@@ -439,7 +435,7 @@ public class InAppUpdate {
                 String line = "";
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+                    //here u ll get whole response...... :-)
                 }
                 return buffer.toString();
             } catch (IOException e) {

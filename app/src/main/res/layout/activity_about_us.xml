@@ -39,7 +39,7 @@
                     android:layout_width="@dimen/width_250"
                     android:layout_height="@dimen/height_100"
                     android:contentDescription="@string/logo_image"
-                    android:src="@drawable/about_logo"
+                    android:src="@mipmap/about_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

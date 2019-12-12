@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.util.lib.boxpassword;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -99,17 +100,13 @@ public class BoxPassword extends AppCompatEditText {
             public void afterTextChanged(Editable s) {
                 String result = s.toString().replaceAll(" ", "");
 
-                Log.d("FiterTest", "text length: " + result.length());
-
                 if (!s.toString().equals(result)) {
                     setText(result);
                     setSelection(result.length());
                 }
 
                 if (result.length() > mMaxLength) {
-                    Log.d("FiterTest", "before text: " + result);
                     result = result.substring(0, mMaxLength);
-                    Log.d("FiterTest", "after text: " + result);
                     setText(result);
                     setSelection(result.length());
                 }
@@ -151,6 +148,7 @@ public class BoxPassword extends AppCompatEditText {
             text = convertStar();
         }
         int textLength = text.length();
+        @SuppressLint("DrawAllocation")
         float[] textWidths = new float[textLength];
         getPaint().getTextWidths(getText(), 0, textLength, textWidths);
         getPaint().setColor(getResources().getColor(R.color.new_user_button_color));

@@ -1,5 +1,6 @@
 package com.w3engineers.unicef;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -25,6 +26,7 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
  */
 public class TeleMeshApplication extends MeshApp {
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     @Override

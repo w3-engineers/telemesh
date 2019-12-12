@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.analytics;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -15,6 +16,7 @@ Proprietary and confidential
 
 
 public class InitParseManagerAsync extends AsyncTask<Void, Void, Void> {
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     public InitParseManagerAsync(Context context) {

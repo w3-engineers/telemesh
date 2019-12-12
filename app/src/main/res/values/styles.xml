@@ -17,9 +17,9 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
-    <style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
-        <item name="android:textColor">@color/white</item>
-    </style>
+<!--    <style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">-->
+<!--        <item name="android:textColor">@color/white</item>-->
+<!--    </style>-->
 
     <style name="NoActionBarTheme" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
@@ -99,8 +99,8 @@
         <item name="android:background">@color/divider_color</item>
     </style>
 
-    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">
-        <item name="android:paddingLeft">5dp</item>
-    </style>
+<!--    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">-->
+<!--        <item name="android:paddingLeft">5dp</item>-->
+<!--    </style>-->
 
 </resources>

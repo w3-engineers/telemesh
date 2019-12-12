@@ -54,7 +54,7 @@ public class WalletAddressHelper {
                         result.append(current);
                     }
                 } catch (Exception e) {
-                    Log.e("WalletRead", "Error: " + e.getMessage());
+                    e.printStackTrace();
                 } finally {
                     if (fis != null)
                         try {

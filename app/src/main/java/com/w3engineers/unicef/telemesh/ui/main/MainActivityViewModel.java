@@ -82,7 +82,6 @@ public class MainActivityViewModel extends BaseRxViewModel {
         getCompositeDisposable().add(dataSource.getMyMode()
                 .subscribeOn(Schedulers.io())
                 .subscribe(integer -> {
-                    Log.d("ModeTest", "Observer: " + integer.intValue());
                     myModeLiveData.postValue(integer);
                 }, Throwable::printStackTrace));
         return myModeLiveData;

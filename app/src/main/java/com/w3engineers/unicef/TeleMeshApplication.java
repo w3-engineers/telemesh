@@ -3,6 +3,7 @@ package com.w3engineers.unicef;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -32,24 +33,24 @@ public class TeleMeshApplication extends MeshApp {
     @Override
     protected void attachBaseContext(@NonNull Context base) {
         super.attachBaseContext(base);
-        // Set app language based on user
         mContext = this;
-        String language = SharedPref.getSharedPref(base).read(Constants.preferenceKey.APP_LANGUAGE);
-        if (language.equals("")) {
-            language = "en";
-        }
-        LanguageUtil.setAppLanguage(base, language);
-
-        initCredential();
-//        LogProcessUtil.getInstance().loadAllLogs();
-        AnalyticsApi.init(base);
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         AppDatabase.getInstance();
+        // Set app language based on user
+        String language =  SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
+        if (TextUtils.isEmpty(language)) {
+            language = "en";
+        }
+        LanguageUtil.setAppLanguage(mContext, language);
+
+        initCredential();
+//        LogProcessUtil.getInstance().loadAllLogs();
+        AnalyticsApi.init(mContext);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
         Toaster.init(R.color.colorPrimary);
     }
 

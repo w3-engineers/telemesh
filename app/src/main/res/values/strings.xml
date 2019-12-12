@@ -107,7 +107,7 @@
     <string name="search_background">search background</string>
     <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit PIN for your account security.</string>
     <string name="pin_instruction">Please keep your PIN in a safe place. It is essential for recovering your account.</string>
-    <string name="skip">Skip</string>
+    <string name="skip">Continue</string>
     <string name="clear_search_text">Clear search text</string>
     <string name="close_search">Close search</string>
     <string name="content_description_import_success">Import Success</string>
@@ -153,6 +153,7 @@
     <string name="favourite">Favourite</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
+    <string name="phone_storage_not_enough">Your phone space not enough</string>
 
 
 </resources>

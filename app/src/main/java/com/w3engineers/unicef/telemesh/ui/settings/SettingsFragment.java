@@ -37,6 +37,7 @@ import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.StorageUtil;
 
 import java.io.ByteArrayOutputStream;
 
@@ -107,8 +108,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 });*/
                 break;
             case R.id.layout_share_app:
-
-                settingsViewModel.startInAppShareProcess();
+                if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
+                    settingsViewModel.startInAppShareProcess();
+                } else {
+                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+                }
 //                RmDataHelper.getInstance().newUserAnalyticsSend();
                 break;
             case R.id.layout_about_us:
@@ -141,7 +145,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 if (MainActivity.getInstance() == null) return;
                 String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
                 url = url.replace(InAppUpdate.MAIN_APK, "");
-                AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+                if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
+                    AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+                } else {
+                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+                }
+
                 break;
             case R.id.layout_feedback:
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));

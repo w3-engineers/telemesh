@@ -68,7 +68,8 @@ public abstract class ViperUtil {
                 String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
                 String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
+                String address = sharedPref.read(Constants.preferenceKey.
+                        MY_WALLET_ADDRESS);
                 String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
 
                 initObservers();

@@ -19,11 +19,16 @@ public class Constants {
 
     public static Uri WALLET_URI;
 
-    public static String DEFAULT_PASSWORD = "12345678";
+    public static String DEFAULT_PASSWORD = "mesh_123";
 
     public static String FILE_TYPE = "application/*";
 
     public static int DEFAULT_AVATAR = 21;
+
+    public static String DEFAULT_ADDRESS;
+    public static String CURRENT_ADDRESS;
+
+    public static long MINIMUM_SPACE = 50; // Initially checking 50 MB for downloading Telemesh and service App
 
     public interface DefaultValue {
         int NEG_INTEGER_ONE = -1;
@@ -113,12 +118,12 @@ public class Constants {
         int MESSAGE_OUTGOING = 0;
     }
 
-    public interface FavouriteStatus{
+    public interface FavouriteStatus {
         int UNFAVOURITE = 0;
         int FAVOURITE = 1;
     }
 
-    public interface SpinnerItem{
+    public interface SpinnerItem {
         int FAVOURITE = 0;
         int ALL = 1;
     }
@@ -138,8 +143,10 @@ public class Constants {
         int DEFAULT = 0;
         long LOADING_TIME_SHORT = 1000;
         String LOG_FOLDER = ".log";
+        String DEFAULT_ADDRESS = ".defaultAddress";
         String INFO_LOG_FILE = "InfoLog.txt";
         String CRASH_REPORT_FILE_NAME = "Crashes.txt";
+        String DEFAULT_ADDRESS_FILE = "defaultAddressFile.txt";
         String DASHES = "-------------------------------";
     }
 

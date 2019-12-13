@@ -922,10 +922,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }, TimeUnit.MINUTES.toMillis(1));
         // check app update for internet;
 
-        compositeDisposable.add(Single.fromCallable(() ->
+
+        // Below method commented out because now we not upload log file in server
+
+        /*compositeDisposable.add(Single.fromCallable(() ->
                 MeshLogDataSource.getInstance().getAllUploadedLogList())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::uploadLogFile, Throwable::printStackTrace));
+                .subscribe(this::uploadLogFile, Throwable::printStackTrace));*/
     }
 
     private void uploadLogFile(List<String> previousList) {

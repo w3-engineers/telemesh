@@ -80,6 +80,11 @@ android {
         exclude 'META-INF/io.netty.versions.properties'
     }
 
+
+    aaptOptions {
+        cruncherEnabled = false
+    }
+
 //    externalNativeBuild {
 //        cmake {
 //            path 'src/CMakeLists.txt'

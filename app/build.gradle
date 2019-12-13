@@ -79,11 +79,7 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
-
-
-    aaptOptions {
-        cruncherEnabled = false
-    }
+    
 
 //    externalNativeBuild {
 //        cmake {

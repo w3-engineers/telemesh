@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_16"
                     android:contentDescription="@string/txt_description_back"
-                    android:padding="@dimen/padding_5"
+                    android:padding="@dimen/padding_14"
                     android:src="@mipmap/ic_back_white"
                     app:layout_constraintStart_toStartOf="@+id/top_gradient"
                     app:layout_constraintTop_toTopOf="@+id/top_gradient" />
@@ -114,9 +114,9 @@
                     android:id="@+id/image_profile"
                     android:layout_width="@dimen/width_120"
                     android:layout_height="@dimen/height_120"
-                    android:contentDescription="@string/profile_selection_image"
+                    android:contentDescription="@string/profile_image"
                     android:padding="@dimen/margin_20"
-                    android:src="@mipmap/ic_avatar_grey"
+                    android:src="@mipmap/ic_default_user"
                     app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -124,9 +124,9 @@
 
                 <ImageView
                     android:id="@+id/image_view_camera"
-                    android:layout_width="@dimen/width_40"
-                    android:layout_height="@dimen/height_40"
-                    android:contentDescription="@string/logo_image"
+                    android:layout_width="@dimen/width_48"
+                    android:layout_height="@dimen/height_48"
+                    android:contentDescription="@string/profile_selection_image"
                     android:padding="@dimen/padding_10"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/ic_profile_edit"
@@ -159,7 +159,7 @@
                         android:singleLine="true"
                         android:textSize="@dimen/text_body"
                         app:bet_baseColor="@color/message_text_color"
-                        app:bet_primaryColor="@color/new_user_button_color"
+                        app:bet_primaryColor="@color/background_color"
                         app:bet_textColor="@color/message_text_color"
                         app:bet_underlineColor="@color/message_text_color">
 
@@ -184,7 +184,7 @@
                     style="@style/CustomButton"
                     android:clickable="true"
                     android:text="@string/signup"
-                    android:textColor="@color/new_user_button_color"
+                    android:textColor="@color/background_color"
                     app:bb_drawable="@drawable/ractangular_white"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />

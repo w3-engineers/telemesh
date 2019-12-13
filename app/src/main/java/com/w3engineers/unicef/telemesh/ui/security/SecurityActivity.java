@@ -117,11 +117,11 @@ public class SecurityActivity extends BaseActivity {
                 nameText.length() >= Constants.DefaultValue.MINIMUM_PASSWORD_LIMIT) {
 
             mBinding.buttonNext.setBackgroundResource(R.drawable.ractangular_gradient);
-            mBinding.buttonNext.setTextColor(getResources().getColor(R.color.white));
+            mBinding.buttonNext.setTextColor(getResources().getColor(R.color.black));
             mBinding.buttonNext.setClickable(true);
         } else {
             mBinding.buttonNext.setBackgroundResource(R.drawable.ractangular_white);
-            mBinding.buttonNext.setTextColor(getResources().getColor(R.color.new_user_button_color));
+            mBinding.buttonNext.setTextColor(getResources().getColor(R.color.background_color));
             mBinding.buttonNext.setClickable(false);
         }
     }

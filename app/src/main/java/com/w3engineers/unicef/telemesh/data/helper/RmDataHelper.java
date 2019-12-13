@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -922,6 +923,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }, TimeUnit.MINUTES.toMillis(1));
         // check app update for internet;
 
+        Log.d("MeshLogError", "Mesh log sending");
+
         compositeDisposable.add(Single.fromCallable(() ->
                 MeshLogDataSource.getInstance().getAllUploadedLogList())
                 .subscribeOn(Schedulers.newThread())
@@ -935,7 +938,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() +
-                "/MeshRnD");
+                "/Telemesh/MeshLog");
         File[] files = directory.listFiles();
 
         if (files != null) {
@@ -943,6 +946,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 if (!previousList.contains(file.getName())
                         && Constant.CURRENT_LOG_FILE_NAME != null
                         && !Constant.CURRENT_LOG_FILE_NAME.equalsIgnoreCase(file.getName())) {
+
+                    Log.d("MeshLogError", "Mesh log sending");
                     AnalyticsDataHelper.getInstance().sendLogFileInServer(file, TextUtils.isEmpty(getMyMeshId()) ? "Test User" : getMyMeshId(), Constants.getDeviceName());
                 }
             }

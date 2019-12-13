@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import com.parse.Parse;
 import com.parse.ParseFile;
@@ -133,12 +134,14 @@ public class ParseManager {
                             callback.onGetMeshLogUploadResponse(true, logFile.getName());
                         }
                     } else {
+                        Log.e("MeshLogError","Error: "+e1.getMessage());
                         if (callback != null) {
                             callback.onGetMeshLogUploadResponse(false, "");
                         }
                     }
                 });
             } else {
+                Log.e("MeshLogError","Error: "+e.getMessage());
                 if (callback != null) {
                     callback.onGetMeshLogUploadResponse(false, "");
                 }

@@ -10,7 +10,7 @@
 
     <color name="tab_disable">#979797</color>
     <color name="out_coming_message_color">#F0F0F0</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
 <!--    <color name="incoming_message_color">#D6FDEE</color>-->
     <color name="grey_message_separator">#DDDDDD</color>
 <!--    <color name="select_photo_text_color">#3C3C3C</color>-->
@@ -77,4 +77,5 @@
     <color name="profile_bg">#E6EAF2</color>
 
     <color name="wallet_highlight_color">#F9CE06</color>
+    <color name="password_instruction_color">#8B0000</color>
 </resources>

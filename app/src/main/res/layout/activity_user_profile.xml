@@ -41,12 +41,12 @@
 
         <ImageView
             android:id="@+id/op_back"
-            android:layout_width="@dimen/width_40"
-            android:layout_height="@dimen/height_40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_5"
             android:contentDescription="@string/app_name"
-            android:padding="@dimen/padding_10"
+            android:padding="@dimen/padding_14"
             android:src="@mipmap/ic_back_white"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -66,10 +66,10 @@
 
         <TextView
             android:id="@+id/text_view_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/width_48"
+            android:layout_height="@dimen/height_48"
             android:layout_marginEnd="@dimen/margin_8"
-            android:padding="@dimen/padding_5"
+            android:gravity="center"
             android:text="@string/edit"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -143,9 +143,10 @@
             android:text="@{userEntity.meshId}"
             android:textColor="@color/eth_id_text_color"
             android:textIsSelectable="true"
+            android:padding="@dimen/padding_5"
             android:textSize="@dimen/text_size_16"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image_view_id_copy"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_name" />
 
         <ImageView
@@ -154,11 +155,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_5"
             android:contentDescription="@string/user_id_copy"
-            android:padding="@dimen/padding_5"
+            android:padding="@dimen/padding_14"
             android:src="@mipmap/ic_copy_text"
             android:visibility="@{userEntity.meshId.empty?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/user_id"
-            app:layout_constraintStart_toEndOf="@+id/user_id" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/user_id" />
 
         <TextView
             android:id="@+id/user_company"

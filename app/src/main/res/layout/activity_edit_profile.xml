@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_16"
                     android:contentDescription="@string/txt_description_back"
-                    android:padding="@dimen/padding_5"
+                    android:padding="@dimen/padding_14"
                     android:src="@mipmap/ic_back_white"
                     app:layout_constraintStart_toStartOf="@+id/top_gradient"
                     app:layout_constraintTop_toTopOf="@+id/top_gradient" />
@@ -126,8 +126,8 @@
 
                 <ImageView
                     android:id="@+id/image_view_camera"
-                    android:layout_width="@dimen/width_40"
-                    android:layout_height="@dimen/height_40"
+                    android:layout_width="@dimen/width_48"
+                    android:layout_height="@dimen/height_48"
                     android:contentDescription="@string/logo_image"
                     android:padding="@dimen/padding_10"
                     android:scaleType="centerCrop"
@@ -186,7 +186,7 @@
                     android:id="@+id/button_update"
                     style="@style/CustomButton"
                     android:text="@string/update"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     app:bb_drawable="@drawable/ractangular_gradient"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />

@@ -102,12 +102,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
-            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.black));
             //mBinding.buttonSignup.setClickable(true);
         } else {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
-            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.new_user_button_color));
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.background_color));
             //mBinding.buttonSignup.setClickable(false);
         }
     }

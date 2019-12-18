@@ -98,3 +98,12 @@
 #Don't warn about Web3j's java.lang.SafeVarargs
 #-dontwarn java.lang.SafeVarargs
 -dontwarn org.slf4j.**
+
+-assumenosideeffects class android.util.Log {
+  public static *** v(...);
+  public static *** d(...);
+  public static *** i(...);
+  public static *** w(...);
+  public static *** e(...);
+}
+

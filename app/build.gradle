@@ -21,6 +21,9 @@ android {
     }
     buildTypes {
         debug {
+            debuggable true
+            minifyEnabled false
+
             testCoverageEnabled true
 
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
@@ -33,9 +36,11 @@ android {
             buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
         }
         release {
-            debuggable true
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+          //  minifyEnabled true
+          //  shrinkResources true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
@@ -74,6 +79,7 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
+
 
 //    externalNativeBuild {
 //        cmake {

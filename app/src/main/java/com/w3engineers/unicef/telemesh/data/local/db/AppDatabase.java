@@ -29,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,21 +89,43 @@ public abstract class AppDatabase extends BaseDatabase {
 
     @NonNull
     public static AppDatabase getInstance() {
-        if (sInstance == null) {
-            synchronized (AppDatabase.class) {
+
+        if (BuildConfig.DEBUG){
+            if (sInstance == null) {
+                synchronized (AppDatabase.class) {
+                    if (sInstance == null) {
+                        Context context = App.getContext();
+                        sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
+                                , 21,
+                                new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
+                                new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
+                                new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
+                                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                                new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
+                                new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
+                    }
+                }
+            }
+        }else {
+            if (!CommonUtil.isEmulator()) {
                 if (sInstance == null) {
-                    Context context = App.getContext();
-                    sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                            , 21,
-                            new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
-                            new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
+                    synchronized (AppDatabase.class) {
+                        if (sInstance == null) {
+                            Context context = App.getContext();
+                            sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
+                                    , 21,
+                                    new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
+                                    new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
+                                    new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
+                                    new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                                    new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
+                                    new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
+                        }
+                    }
                 }
             }
         }
+
         return (AppDatabase) sInstance;
     }
 

@@ -4,16 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.MeshApp;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ExceptionTracker;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
@@ -41,17 +45,36 @@ public class TeleMeshApplication extends MeshApp {
         super.onCreate();
         AppDatabase.getInstance();
         // Set app language based on user
-        String language =  SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
-        if (TextUtils.isEmpty(language)) {
-            language = "en";
-        }
-        LanguageUtil.setAppLanguage(mContext, language);
+        if (BuildConfig.DEBUG) {
+            Log.e("biuld_type", "debug build");
+            MeshLog.i("from my self");
+            String language = SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
+            if (TextUtils.isEmpty(language)) {
+                language = "en";
+            }
+            LanguageUtil.setAppLanguage(mContext, language);
 
-        initCredential();
-//        LogProcessUtil.getInstance().loadAllLogs();
-        AnalyticsApi.init(mContext);
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
-        Toaster.init(R.color.colorPrimary);
+            initCredential();
+
+            AnalyticsApi.init(mContext);
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
+            Toaster.init(R.color.colorPrimary);
+        } else {
+            if (!CommonUtil.isEmulator()) {
+                Log.e("biuld_type", "relese build");
+                String language = SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
+                if (TextUtils.isEmpty(language)) {
+                    language = "en";
+                }
+                LanguageUtil.setAppLanguage(mContext, language);
+
+                initCredential();
+
+                AnalyticsApi.init(mContext);
+                Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
+                Toaster.init(R.color.colorPrimary);
+            }
+        }
     }
 
     private void initCredential() {

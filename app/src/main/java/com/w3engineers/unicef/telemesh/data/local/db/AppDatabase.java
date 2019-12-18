@@ -80,7 +80,11 @@ public abstract class AppDatabase extends BaseDatabase {
             " TEXT, " + ColumnNames.COLUMN_USER_ID + " TEXT, " + ColumnNames.COLUMN_USER_NAME +
             " TEXT, " + ColumnNames.TIMESTAMP + " INTEGER NOT NULL)";
 
-    private static String USER_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " INTEGER NOT NULL DEFAULT 0";
+    private static String USER_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
+            + ColumnNames.COLUMN_USER_IS_FAVOURITE + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String USER_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
+            + ColumnNames.COLUMN_USER_CONFIG_VERSION + " INTEGER NOT NULL DEFAULT 0";
 
     @NonNull
     public static AppDatabase getInstance() {
@@ -90,11 +94,12 @@ public abstract class AppDatabase extends BaseDatabase {
                     Context context = App.getContext();
                     sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
                             , 21,
+                            new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
                             new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                            new BaseMigration(BuildConfig.VERSION_CODE, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1));//normally initial version is always 21
+                            new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
+                            new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
                 }
             }
         }

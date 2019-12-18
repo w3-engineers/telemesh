@@ -66,6 +66,8 @@ public class Constants {
         String MY_WALLET_IMAGE = "my_wallet_image";
         String IS_RESTART = "is_restart";
         String NETWORK_PREFIX = "NETWORK_PREFIX";
+        String CONFIG_STATUS = "CONFIG_STATUS";
+        String CONFIG_VERSION_CODE = "CONFIG_VERSION_CODE";
     }
 
     public interface MenuItemPosition {
@@ -109,6 +111,7 @@ public class Constants {
         byte FEEDBACK_TEXT = 0x9;
         byte FEEDBACK_ACK = 0x10;
         byte USER_UPDATE_INFO = 0x11;
+        byte CONFIG_UPDATE_INFO = 0x12;
     }
 
     public interface MessageType {

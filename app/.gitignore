@@ -2,3 +2,5 @@
 /src/main/native/native-lib.cpp
 src/main/assets/config.json
 src/main/assets/blockchainnetworkinfo.xml
+src/main/assets/configuration.json
+src/main/assets/point_guide.json

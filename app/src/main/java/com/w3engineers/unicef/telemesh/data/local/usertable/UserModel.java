@@ -11,7 +11,7 @@ Proprietary and confidential
 public class UserModel {
 
     private String n, userId;
-    private int i;
+    private int i, cv;
     private long t;
 
     public String getName() {
@@ -50,5 +50,12 @@ public class UserModel {
         return this;
     }
 
+    public int getConfigVersion() {
+        return cv;
+    }
 
+    public UserModel setConfigVersion(int cv) {
+        this.cv = cv;
+        return this;
+    }
 }

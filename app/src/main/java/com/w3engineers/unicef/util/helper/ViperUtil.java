@@ -18,6 +18,7 @@ import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerAdd;
@@ -27,6 +28,7 @@ import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
+import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -143,9 +145,19 @@ public abstract class ViperUtil {
 
             UserModel userModel = new UserModel().setName(userInfoEvent.getUserName())
                     .setImage(userInfoEvent.getAvatar())
-                    .setTime(userInfoEvent.getRegTime());
+                    .setTime(userInfoEvent.getRegTime())
+                    .setConfigVersion(userInfoEvent.getConfigVersion());
 
             peerAdd(userInfoEvent.getAddress(), userModel);
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
+
+            ConfigSyncEvent configSyncEvent = (ConfigSyncEvent) event;
+
+            if (configSyncEvent != null) {
+                configSync(configSyncEvent.isUpdate(), configSyncEvent.getConfigurationCommand());
+            }
         });
 
     }
@@ -303,6 +315,14 @@ public abstract class ViperUtil {
         }
     }
 
+    public void sendConfigToViper(ConfigurationCommand configurationCommand) {
+        if (configurationCommand != null) {
+            if (viperClient != null) {
+                viperClient.sendConfigForUpdate(configurationCommand);
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////
 
     protected abstract void onMesh(String myMeshId);
@@ -322,6 +342,8 @@ public abstract class ViperUtil {
     protected abstract void onAck(String messageId, int status);
 
     protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
+
+    protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
 
 
     private String loadJSONFromAsset(Context context) {

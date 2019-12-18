@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
@@ -156,6 +157,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
+
+        configFileSendToOthers(userModel.getConfigVersion(), userId);
 
         HandlerUtil.postForeground(new Runnable() {
             @Override
@@ -368,6 +371,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
             case Constants.DataType.USER_UPDATE_INFO:
                 parseUpdatedInformation(rawData, userId, isNewMessage);
+                break;
+
+            case Constants.DataType.CONFIG_UPDATE_INFO:
+                configFileReceiveFromOthers(rawData, isNewMessage);
                 break;
         }
     }
@@ -1091,4 +1098,63 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         FeedbackDataSource.getInstance().deleteFeedbackById(feedbackModel.getFeedbackId());
     }
 
+    /////////////////////Broadcast config file/////////////////////////////
+
+    public void syncConfigFileAndBroadcast(boolean isUpdate, ConfigurationCommand configurationCommand) {
+        if (isUpdate) {
+            String configText = new Gson().toJson(configurationCommand);
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
+
+            DataModel dataModel = new DataModel()
+                    .setRawData(configText.getBytes())
+                    .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
+
+            compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
+                    .getLocalWithBackConfigUsers(configurationCommand.getConfigVersionCode()))
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(users -> {
+
+                        ExecutorService service = Executors.newSingleThreadExecutor();
+                        service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
+
+                    }, Throwable::printStackTrace));
+        }
+    }
+
+    public void configFileSendToOthers(int versionCode, String userId) {
+
+        int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
+
+        if (versionCode < myConfigVersion) {
+
+            String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
+
+            if (!TextUtils.isEmpty(configText)) {
+
+                DataModel dataModel = new DataModel()
+                        .setRawData(configText.getBytes())
+                        .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
+
+                ExecutorService service = Executors.newSingleThreadExecutor();
+                service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, false));
+            }
+        }
+    }
+
+    private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage) {
+        if (!isNewMessage)
+            return;
+
+        String configText = new String(rawData);
+        ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
+
+        int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
+
+        if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
+
+            rightMeshDataSource.sendConfigToViper(configurationCommand);
+        }
+    }
 }

@@ -198,6 +198,14 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE)
     abstract List<String> getLocalActiveUsers();
 
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE ("
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_MESH_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.WIFI_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_MESH_ONLINE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " = " + Constants.UserStatus.BLE_ONLINE + ") AND "
+            + ColumnNames.COLUMN_USER_CONFIG_VERSION + " < :updateVersionCode")
+    abstract List<String> getLocalWithBackConfigUsers(int updateVersionCode);
+
 
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

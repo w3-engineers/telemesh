@@ -51,6 +51,9 @@ public class UserEntity extends DbBaseEntity {
     @ColumnInfo(name = ColumnNames.COLUMN_USER_IS_FAVOURITE)
     public int isFavourite;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_CONFIG_VERSION)
+    public int configVersion;
+
     //@Ignore
     //private String userLastName;
     public UserEntity() {
@@ -139,6 +142,16 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
+    public int getConfigVersion() {
+        return configVersion;
+    }
+
+    @NonNull
+    public UserEntity setConfigVersion(int configVersion) {
+        this.configVersion = configVersion;
+        return this;
+    }
+
     /* public boolean isUserSynced() {
         return isUserSynced;
     }
@@ -165,6 +178,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeLong(this.registrationTime);
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
+        dest.writeInt(this.configVersion);
     }
 
     protected UserEntity(@NonNull Parcel in) {
@@ -179,6 +193,7 @@ public class UserEntity extends DbBaseEntity {
         this.registrationTime = in.readLong();
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();
+        this.configVersion = in.readInt();
     }
 
     public static final Creator<UserEntity> CREATOR = new Creator<UserEntity>() {
@@ -212,7 +227,8 @@ public class UserEntity extends DbBaseEntity {
         return setUserName(userModel.getName())
                 .setAvatarIndex(userModel.getImage())
                 .setRegistrationTime(userModel.getTime())
-                .setMeshId(userModel.getUserId());
+                .setMeshId(userModel.getUserId())
+                .setConfigVersion(userModel.getConfigVersion());
     }
 
     @NonNull

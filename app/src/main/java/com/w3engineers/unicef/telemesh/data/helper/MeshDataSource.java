@@ -8,7 +8,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
@@ -209,6 +211,11 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
+    }
+
+    @Override
+    protected void configSync(boolean isUpdate, ConfigurationCommand configurationCommand) {
+        RmDataHelper.getInstance().syncConfigFileAndBroadcast(isUpdate, configurationCommand);
     }
 
     public void resetInstance() {

@@ -22,6 +22,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.mesh.util.ConfigSyncUtil;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
@@ -103,6 +104,8 @@ public class BulletinTimeScheduler {
                         Constants.IS_DATA_ON = true;
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
+
+                        ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
 
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;

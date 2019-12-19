@@ -29,7 +29,7 @@ import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.TokenGuideLine;
+import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -325,16 +325,16 @@ public abstract class ViperUtil {
     }
 
 
-    public TokenGuideLine requestTokenGuideline() {
+    public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
-           return viperClient.requestTokenGuideline();
+           return viperClient.requestPointGuideline();
         }
         return null;
     }
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
         if(guideLine!=null && viperClient!=null){
-            viperClient.sendTokenGuidelineForUpdate(guideLine);
+            viperClient.sendPointGuidelineForUpdate(guideLine);
         }
     }
 

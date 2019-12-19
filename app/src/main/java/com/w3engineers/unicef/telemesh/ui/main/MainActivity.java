@@ -189,6 +189,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         StorageUtil.getFreeMemory();
 
+        if (!CommonUtil.isLocationGpsOn(this)){
+            CommonUtil.showGpsOrLocationOffPopup(this);
+        }
+
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
     }
@@ -509,6 +513,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         binding.searchBar.getRoot().setVisibility(View.INVISIBLE);
         UIHelper.hideKeyboardFrom(this, binding.searchBar.editTextSearch);
     }
+
 
     @Override
     protected void onDestroy() {

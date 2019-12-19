@@ -1136,6 +1136,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }, Throwable::printStackTrace));
     }
 
+    private void updateBroadcasterConfigVersion(int version, String userId) {
+        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
+                .updateBroadcastUserConfigVersion(version, userId))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(updatedUsersCount -> {
+                    Timber.e("broadcast user update %s", updatedUsersCount);
+                }, Throwable::printStackTrace));
+    }
+
     public void configFileSendToOthers(int versionCode, String userId) {
 
         int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
@@ -1166,6 +1175,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
 
         if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
             rightMeshDataSource.sendConfigToViper(configurationCommand);

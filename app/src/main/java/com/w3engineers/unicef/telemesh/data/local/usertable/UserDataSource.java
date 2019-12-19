@@ -178,4 +178,8 @@ public class UserDataSource {
     public int updateBackConfigUsers(int versionCode) {
         return mUserDao.updateBackConfigUsers(versionCode);
     }
+
+    public int updateBroadcastUserConfigVersion(int versionCode, String userId) {
+        return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
+    }
 }

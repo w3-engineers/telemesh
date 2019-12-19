@@ -215,6 +215,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     abstract int updateBackConfigUsers(int updateVersionCode);
 
 
+    @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_CONFIG_VERSION + " = :updateVersionCode"
+            + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :userId")
+    abstract int updateBroadcastUserConfigVersion(int updateVersionCode, String userId);
+
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID +" FROM " + TableNames.USERS

@@ -16,6 +16,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -23,6 +24,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityProfileChoiceBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 
 import java.util.List;
@@ -101,7 +103,7 @@ public class ProfileChoiceActivity extends BaseActivity {
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            requestMultiplePermissions();
+                            CommonUtil.showPermissionPopUp(ProfileChoiceActivity.this);
                         }
                     }
 
@@ -112,4 +114,5 @@ public class ProfileChoiceActivity extends BaseActivity {
                     }
                 }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
+
 }

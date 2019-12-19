@@ -36,6 +36,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivitySecurityBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
@@ -146,7 +147,7 @@ public class SecurityActivity extends BaseActivity {
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            requestMultiplePermissions();
+                            CommonUtil.showPermissionPopUp(SecurityActivity.this);
                         }
                     }
 
@@ -157,6 +158,8 @@ public class SecurityActivity extends BaseActivity {
                     }
                 }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
+
+
 
     protected void goNext() {
 

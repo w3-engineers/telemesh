@@ -154,4 +154,9 @@
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 
+    <string name="permission">Permission needed</string>
+    <string name="permission_for_signup">Need to allow permission on Telemesh app to work properly. You can give permission manually from setting</string>
+    <string name="gps_alert">Location or GPS</string>
+    <string name="for_better_performance">For better performance you need to keep on GPS or location</string>
+
 </resources>

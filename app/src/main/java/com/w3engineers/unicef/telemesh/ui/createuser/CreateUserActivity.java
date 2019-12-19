@@ -6,8 +6,11 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.util.WalletUtil;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -139,7 +143,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            requestMultiplePermissions();
+                           CommonUtil.showPermissionPopUp(CreateUserActivity.this);
                         }
                     }
 
@@ -149,6 +153,29 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                         token.continuePermissionRequest();
                     }
                 }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+    }
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int i = 0, len = permissions.length; i < len; i++) {
+            String permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                // user rejected the permission
+                boolean showRationale = shouldShowRequestPermissionRationale(permission);
+                if (!showRationale) {
+                    //  Toast.makeText(this,"Permission denaid", Toast.LENGTH_LONG).show();
+                 //   showPermissionPopUp();
+                } else {
+                  //  checkPermission();
+                }
+            } else {
+                //checkPermission();
+            }
+        }
     }
 
 

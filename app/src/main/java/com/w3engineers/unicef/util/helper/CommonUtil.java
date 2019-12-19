@@ -52,7 +52,8 @@ public class CommonUtil {
                 new DialogUtil.DialogButtonListener() {
                     @Override
                     public void onClickPositive() {
-                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+                        //mContext.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
 
                     @Override

@@ -13,7 +13,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.TokenGuideLine;
+import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
@@ -1191,7 +1191,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void sendTokenGuideInfo(String userId, boolean isNewMessage) {
         if (!isNewMessage) return;
 
-        TokenGuideLine guideLine = rightMeshDataSource.requestTokenGuideline();
+        PointGuideLine guideLine = rightMeshDataSource.requestTokenGuideline();
 
         if (guideLine != null) {
             String guidelineInfo = new Gson().toJson(guideLine);

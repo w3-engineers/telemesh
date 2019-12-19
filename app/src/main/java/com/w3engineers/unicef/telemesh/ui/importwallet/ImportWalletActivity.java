@@ -88,7 +88,7 @@ public class ImportWalletActivity extends BaseActivity {
                 && !TextUtils.isEmpty(Constants.CURRENT_ADDRESS)
                 && !TextUtils.isEmpty(Constants.DEFAULT_ADDRESS)
                 && Constants.CURRENT_ADDRESS.equals(Constants.DEFAULT_ADDRESS.trim())) {
-            mBinding.textViewPinInstruction.setText("Your current password is:  " + Constants.DEFAULT_PASSWORD);
+            mBinding.textViewPinInstruction.setText("Your default password is:  " + Constants.DEFAULT_PASSWORD);
         }
     }
 

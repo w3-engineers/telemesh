@@ -13,10 +13,12 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.TokenGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
@@ -374,10 +376,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
 
             case Constants.DataType.CONFIG_UPDATE_INFO:
-                configFileReceiveFromOthers(rawData, isNewMessage);
+                configFileReceiveFromOthers(rawData, isNewMessage, userId);
+                break;
+
+            case Constants.DataType.TOKEN_GUIDE_REQUEST:
+                sendTokenGuideInfo(userId, isNewMessage);
+                break;
+
+            case Constants.DataType.TOKEN_GUIDE_INFO:
+                tokenGuidelineReceivedFromOther(rawData, isNewMessage);
                 break;
         }
     }
+
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
@@ -1107,6 +1118,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (isUpdate) {
             String configText = new Gson().toJson(configurationCommand);
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
             DataModel dataModel = new DataModel()
@@ -1165,7 +1177,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage) {
+    private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage, String userId) {
         if (!isNewMessage)
             return;
 
@@ -1180,5 +1192,39 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             rightMeshDataSource.sendConfigToViper(configurationCommand);
         }
+
+        // check token guide version and request token_guide
+        int myTokenGuideVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE);
+        if (myTokenGuideVersion < configurationCommand.getTokenGuideVersion()) {
+            // request toke guide info
+            requestTokenGuideInfo(userId);
+        }
+    }
+
+    private void requestTokenGuideInfo(String userId) {
+        TokenGuideRequestModel model = new TokenGuideRequestModel();
+        model.setRequest("Request");
+        String jsonText = new Gson().toJson(model);
+
+        dataSend(jsonText.getBytes(), Constants.DataType.TOKEN_GUIDE_REQUEST, userId, false);
+    }
+
+    private void sendTokenGuideInfo(String userId, boolean isNewMessage) {
+        if (!isNewMessage) return;
+
+        TokenGuideLine guideLine = rightMeshDataSource.requestTokenGuideline();
+
+        if (guideLine != null) {
+            String guidelineInfo = new Gson().toJson(guideLine);
+
+            dataSend(guidelineInfo.getBytes(), Constants.DataType.TOKEN_GUIDE_INFO, userId, false);
+        }
+    }
+
+    private void tokenGuidelineReceivedFromOther(byte[] rawData, boolean isNewMessage) {
+        if (!isNewMessage) return;
+
+        String guidelineInfo = new String(rawData);
+        rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);
     }
 }

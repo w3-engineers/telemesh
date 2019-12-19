@@ -11,6 +11,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.TokenGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
@@ -218,7 +219,9 @@ public class MeshDataSource extends ViperUtil {
         RmDataHelper.getInstance().syncConfigFileAndBroadcast(isUpdate, configurationCommand);
     }
 
+
     public void resetInstance() {
         rightMeshDataSource = null;
     }
+
 }

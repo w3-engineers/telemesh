@@ -68,6 +68,7 @@ public class Constants {
         String NETWORK_PREFIX = "NETWORK_PREFIX";
         String CONFIG_STATUS = "CONFIG_STATUS";
         String CONFIG_VERSION_CODE = "CONFIG_VERSION_CODE";
+        String TOKEN_GUIDE_VERSION_CODE = "TOKEN_GUIDE_VERSION_CODE";
     }
 
     public interface MenuItemPosition {
@@ -112,6 +113,8 @@ public class Constants {
         byte FEEDBACK_ACK = 0x10;
         byte USER_UPDATE_INFO = 0x11;
         byte CONFIG_UPDATE_INFO = 0x12;
+        byte TOKEN_GUIDE_REQUEST = 0x13;
+        byte TOKEN_GUIDE_INFO = 0x14;
     }
 
     public interface MessageType {

@@ -29,6 +29,7 @@ import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.TokenGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -323,6 +324,20 @@ public abstract class ViperUtil {
         }
     }
 
+
+    public TokenGuideLine requestTokenGuideline() {
+        if (viperClient != null) {
+           return viperClient.requestTokenGuideline();
+        }
+        return null;
+    }
+
+    public void sendTokenGuidelineInfoToViper(String guideLine) {
+        if(guideLine!=null && viperClient!=null){
+            viperClient.sendTokenGuidelineForUpdate(guideLine);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////
 
     protected abstract void onMesh(String myMeshId);
@@ -344,6 +359,7 @@ public abstract class ViperUtil {
     protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
 
     protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
+
 
 
     private String loadJSONFromAsset(Context context) {

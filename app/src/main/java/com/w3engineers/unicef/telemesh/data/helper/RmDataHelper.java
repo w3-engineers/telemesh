@@ -160,7 +160,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         syncUserWithBroadcastMessage(userId);
 
-        configFileSendToOthers(userModel.getConfigVersion(), userId);
+        if (isLocalOnline(userActiveStatus)) {
+            configFileSendToOthers(userModel.getConfigVersion(), userId);
+        }
 
         HandlerUtil.postForeground(new Runnable() {
             @Override
@@ -218,20 +220,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             default:
                 return Constants.UserStatus.OFFLINE;
         }
+    }
 
-        /*if (userActiveStatus == Link.Type.WIFI.getValue()) {
-            return Constants.UserStatus.WIFI_ONLINE;
-        } else if (userActiveStatus == Link.Type.WIFI_MESH.getValue()) {
-            return Constants.UserStatus.WIFI_MESH_ONLINE;
-        } else if (userActiveStatus == Link.Type.BT.getValue()) {
-            return Constants.UserStatus.BLE_ONLINE;
-        } else if (userActiveStatus == Link.Type.BT_MESH.getValue()) {
-            return Constants.UserStatus.BLE_MESH_ONLINE;
-        } else if (userActiveStatus == Link.Type.INTERNET.getValue()) {
-            return Constants.UserStatus.INTERNET_ONLINE;
-        } else {
-            return Constants.UserStatus.OFFLINE;
-        }*/
+    public boolean isLocalOnline(int userActiveStatus) {
+
+        switch (userActiveStatus) {
+            case Constants.UserStatus.WIFI_ONLINE:
+            case Constants.UserStatus.BLE_ONLINE:
+            case Constants.UserStatus.WIFI_MESH_ONLINE:
+            case Constants.UserStatus.BLE_MESH_ONLINE:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -1191,6 +1192,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
             rightMeshDataSource.sendConfigToViper(configurationCommand);
+
+            updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
         }
 
         // check token guide version and request token_guide
@@ -1223,6 +1226,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void tokenGuidelineReceivedFromOther(byte[] rawData, boolean isNewMessage) {
         if (!isNewMessage) return;
+
+        String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
+        if (!TextUtils.isEmpty(configText)) {
+            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
+            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
+        }
 
         String guidelineInfo = new String(rawData);
         rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);

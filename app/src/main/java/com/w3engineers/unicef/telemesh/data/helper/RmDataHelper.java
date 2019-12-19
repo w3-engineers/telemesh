@@ -1121,8 +1121,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         ExecutorService service = Executors.newSingleThreadExecutor();
                         service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
 
+                        updateBackdatedConfigUsersVersion(configurationCommand.getConfigVersionCode());
+
                     }, Throwable::printStackTrace));
         }
+    }
+
+    private void updateBackdatedConfigUsersVersion(int version) {
+        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
+                .updateBackConfigUsers(version))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(updatedUsersCount -> {
+                    Timber.e("backdated user update %s", updatedUsersCount);
+                }, Throwable::printStackTrace));
     }
 
     public void configFileSendToOthers(int versionCode, String userId) {

@@ -174,4 +174,8 @@ public class UserDataSource {
     public List<String> getLocalWithBackConfigUsers(int versionCode) {
         return mUserDao.getLocalWithBackConfigUsers(versionCode);
     }
+
+    public int updateBackConfigUsers(int versionCode) {
+        return mUserDao.updateBackConfigUsers(versionCode);
+    }
 }

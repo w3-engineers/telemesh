@@ -1,10 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +30,11 @@ import android.widget.TextView;
 
 import androidx.work.WorkInfo;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
@@ -36,14 +46,18 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
+
+import java.util.List;
 
 
 public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,6 +108,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
+
+        requestMultiplePermissions();
+
         Constants.IS_LOADING_ENABLE = false;
         mainActivity = this;
 
@@ -172,6 +189,33 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         StorageUtil.getFreeMemory();
 
+        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
+    }
+
+    protected void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            CommonUtil.showPermissionPopUp(MainActivity.this);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(
+                            List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
 
     public static MainActivity getInstance() {
@@ -471,6 +515,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         super.onDestroy();
 //        mViewModel.userOfflineProcess();
         sInstance = null;
+
+        unregisterReceiver(mGpsSwitchStateReceiver);
     }
 
     @Override
@@ -557,5 +603,23 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void initAllText() {
         binding.searchBar.editTextSearch.setHint(LanguageUtil.getString(R.string.search));
     }
+
+    /**
+     * Following broadcast receiver is to listen the Location button toggle state in Android.
+     */
+    private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())){
+                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if (statusOfGPS){
+                    CommonUtil.dismissDialog();
+                }else {
+                    CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
+                }
+            }
+        }
+    };
 
 }

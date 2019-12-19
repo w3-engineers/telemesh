@@ -223,4 +223,19 @@ public class MeshDataSource extends ViperUtil {
         rightMeshDataSource = null;
     }
 
+    public void saveUpdateUserInfo() {
+
+        Context context = TeleMeshApplication.getContext();
+
+        SharedPref sharedPref = SharedPref.getSharedPref(context);
+
+        UserModel userModel = new UserModel()
+                .setName(sharedPref.read(Constants.preferenceKey.USER_NAME))
+                .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
+
+        saveUserInfo(userModel);
+
+    }
+
 }

@@ -324,6 +324,20 @@ public abstract class ViperUtil {
         }
     }
 
+    public void saveUserInfo(UserModel userModel) {
+
+        if (viperClient != null) {
+            SharedPref sharedPref = SharedPref.getSharedPref(context);
+
+            String address = sharedPref.read(Constants.preferenceKey.
+                    MY_WALLET_ADDRESS);
+            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+
+            viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
+                    userModel.getName(), publicKey, "com.w3engineers.unicef.telemesh");
+        }
+    }
+
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {

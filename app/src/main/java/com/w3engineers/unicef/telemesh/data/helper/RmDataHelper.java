@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -1122,6 +1123,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
+            rightMeshDataSource.saveUpdateUserInfo();
+
+            Log.v("MIMO_SAHA::", "Config version: " + configurationCommand.getConfigVersionCode());
+
             DataModel dataModel = new DataModel()
                     .setRawData(configText.getBytes())
                     .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
@@ -1192,6 +1197,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
             rightMeshDataSource.sendConfigToViper(configurationCommand);
+
+            rightMeshDataSource.saveUpdateUserInfo();
 
             updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
         }

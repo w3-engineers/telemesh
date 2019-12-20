@@ -70,6 +70,8 @@ public abstract class ViperUtil {
                 String AUTH_PASSWORD = jsonObject.optString("AUTH_PASSWORD");
                 String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
                 String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
+                String PARSE_APP_ID = jsonObject.optString("PARSE_APP_ID");
+                String PARSE_URL = jsonObject.optString("PARSE_URL");
 
                 String address = sharedPref.read(Constants.preferenceKey.
                         MY_WALLET_ADDRESS);
@@ -85,7 +87,7 @@ public abstract class ViperUtil {
 
                 viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                         address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
+                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK, PARSE_URL, PARSE_APP_ID);
             }
 
         } catch (JSONException e) {

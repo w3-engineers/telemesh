@@ -2,6 +2,7 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Build;
 
 import com.w3engineers.mesh.util.DialogUtil;
@@ -41,6 +42,12 @@ public class CommonUtil {
 
                     }
                 });
+    }
+
+    public static boolean isLocationGpsOn(Context context){
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return statusOfGPS;
     }
 
     public static void showGpsOrLocationOffPopup(Context mContext) {

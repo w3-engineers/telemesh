@@ -61,8 +61,9 @@ import timber.log.Timber;
 
 public class InAppUpdate {
 
-    public static final String LIVE_JSON_URL = BuildConfig.APP_UPDATE_LINK; // Configure json file that was uploaded in Main server
-    private final String MAIN_JSON = "updatedJSon.json";
+
+    private static final String MAIN_JSON = "updatedJSon.json";
+    public static final String LIVE_JSON_URL = BuildConfig.FILE_REPO_LINK + MAIN_JSON; // Configure json file that was uploaded in Main server
     public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;

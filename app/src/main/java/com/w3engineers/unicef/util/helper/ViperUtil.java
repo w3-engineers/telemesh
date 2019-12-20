@@ -31,6 +31,7 @@ import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
@@ -66,12 +67,13 @@ public abstract class ViperUtil {
             if (!TextUtils.isEmpty(jsonData)) {
                 JSONObject jsonObject = new JSONObject(jsonData);
 
-                String AUTH_USER_NAME = jsonObject.optString("AUTH_USER_NAME");
-                String AUTH_PASSWORD = jsonObject.optString("AUTH_PASSWORD");
-                String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
+                String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
+                String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
+                String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
+                String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
+                String PARSE_URL = BuildConfig.PARSE_URL;
+
                 String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
-                String PARSE_APP_ID = jsonObject.optString("PARSE_APP_ID");
-                String PARSE_URL = jsonObject.optString("PARSE_URL");
 
                 String address = sharedPref.read(Constants.preferenceKey.
                         MY_WALLET_ADDRESS);
@@ -87,7 +89,7 @@ public abstract class ViperUtil {
 
                 viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                         address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK, PARSE_URL, PARSE_APP_ID);
+                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, GIFT_DONATE_LINK, PARSE_URL, PARSE_APP_ID);
             }
 
         } catch (JSONException e) {

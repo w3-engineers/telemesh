@@ -69,6 +69,6 @@ fastlane/readme.md
 **rightmesh.json
 
 **config.json
-app/src/main/assets/blockchainnetworkinfo.xml
+app/src/main/assets/config.json
 app/src/main/assets/configuration.json
 app/src/main/assets/point_guide.json

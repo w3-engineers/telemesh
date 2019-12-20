@@ -33,7 +33,7 @@ android {
 
             buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
             buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
-            buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
         }
         release {
             debuggable false
@@ -49,7 +49,7 @@ android {
 
             buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
             buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
-            buildConfigField 'String', 'APP_UPDATE_LINK', System.getenv('APP_UPDATE_LINK').equals(null) ? APP_UPDATE_LINK : System.getenv('APP_UPDATE_LINK')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
         }
     }
     lintOptions {

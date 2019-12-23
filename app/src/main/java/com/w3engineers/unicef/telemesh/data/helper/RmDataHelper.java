@@ -644,8 +644,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         } else {
             getLocalUserCount();
         }
-
-
     }
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {

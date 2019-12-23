@@ -74,6 +74,9 @@ versions.ripplebg = "1.0.1"
 versions.qrgenerator = "1.0.3"
 versions.viper = "1.0.13"
 versions.in_app_db = "1.0.2"
+versions.web3j = "4.2.0-android"
+versions.bouncy = "1.61"
+versions.snatik = "2.1.0"
 ext.versions = versions
 
 def deps = [:]
@@ -240,6 +243,15 @@ deps.dexter = dexter
 def parse = [:]
 parse.server = "com.parse:parse-android:$versions.parse"
 deps.parse = parse
+
+deps.snatik = "com.snatik:storage:$versions.snatik"
+
+deps.web3j = "org.web3j:core:$versions.web3j"
+
+def bouncy = [:]
+bouncy.group = "org.bouncycastle"
+bouncy.castle = "org.bouncycastle:bcprov-jdk15on:$versions.bouncy"
+deps.bouncy = bouncy
 
 def location = [:]
 location.service = "com.google.android.gms:play-services-location:$versions.location"

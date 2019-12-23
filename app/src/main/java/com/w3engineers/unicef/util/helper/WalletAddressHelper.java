@@ -7,10 +7,9 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-
-import com.w3engineers.mesh.application.data.local.wallet.Web3jWalletHelper;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.walleter.wallet.Web3jWalletHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -154,6 +154,8 @@ public abstract class ViperUtil {
                     .setConfigVersion(userInfoEvent.getConfigVersion());
 
             peerAdd(userInfoEvent.getAddress(), userModel);
+
+            Log.e("user_info", "User info " + "id " +userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {

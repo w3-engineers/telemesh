@@ -16,21 +16,15 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
-import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
-import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
-
-import java.io.File;
 
 public class BulletinTimeScheduler {
 

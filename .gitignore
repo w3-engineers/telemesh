@@ -73,3 +73,6 @@ fastlane/readme.md
 app/src/main/assets/config.json
 app/src/main/assets/configuration.json
 app/src/main/assets/point_guide.json
+
+#output.json
+app/debug/output.json

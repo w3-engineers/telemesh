@@ -76,12 +76,12 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected BaseServiceLocator getServiceLocator() {
+    public BaseServiceLocator a() {
         return ServiceLocator.getInstance();
     }
 
     @Override
-    protected void startUI() {
+    public void startUI() {
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
@@ -122,7 +122,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (Text.isNotEmpty(userId)) {
             mChatViewModel.setCurrentUser(userId);
@@ -130,7 +130,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
 
         mChatViewModel.setCurrentUser(null);

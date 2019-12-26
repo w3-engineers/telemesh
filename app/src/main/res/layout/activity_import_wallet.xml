@@ -127,7 +127,7 @@
             android:layout_marginTop="@dimen/margin_16"
             android:layout_marginEnd="@dimen/margin_30"
             android:text="@string/continue_button"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             app:bb_drawable="@drawable/drawable_button_bg_with_color"
             app:layout_constraintEnd_toEndOf="parent"

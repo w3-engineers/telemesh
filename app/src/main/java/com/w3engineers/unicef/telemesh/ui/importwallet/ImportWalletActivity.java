@@ -61,6 +61,11 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     @Override
+    protected int statusBarColor() {
+        return R.color.colorPrimaryDark;
+    }
+
+    @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
@@ -183,8 +188,8 @@ public class ImportWalletActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.IntentKeys.WALLET_PATH)) {
             mWalletPath = intent.getStringExtra(Constants.IntentKeys.WALLET_PATH);
-            String filename = mWalletPath.substring(mWalletPath.lastIndexOf("/") + 1);
-            mBinding.textViewFileName.setText(filename);
+          //  String filename = mWalletPath.substring(mWalletPath.lastIndexOf("/") + 1);
+           // mBinding.textViewFileName.setText(filename);
         }
     }
 

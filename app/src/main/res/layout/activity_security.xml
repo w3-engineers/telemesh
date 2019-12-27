@@ -67,19 +67,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_box_password"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_box_password" />
 
-                <TextView
-                    android:id="@+id/password_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_16"
-                    android:layout_marginEnd="@dimen/margin_16"
-                    android:gravity="center"
-                    android:text="@string/password_message"
-                    android:textColor="@color/no_internet_color"
-                    android:textSize="@dimen/text_size_14"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_show_password" />
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/instruction_container"
@@ -89,7 +76,7 @@
                     app:cardBackgroundColor="@color/instruction_background"
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_box_password"
                     app:layout_constraintStart_toStartOf="@+id/edit_text_box_password"
-                    app:layout_constraintTop_toBottomOf="@+id/password_message">
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_show_password">
 
                     <TextView
                         android:layout_width="wrap_content"

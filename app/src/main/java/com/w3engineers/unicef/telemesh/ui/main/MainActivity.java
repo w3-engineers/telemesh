@@ -189,9 +189,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         StorageUtil.getFreeMemory();
 
-        if (!CommonUtil.isLocationGpsOn(this)){
+/*        if (!CommonUtil.isLocationGpsOn(this)){
             CommonUtil.showGpsOrLocationOffPopup(this);
-        }
+        }*/
 
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 

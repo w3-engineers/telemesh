@@ -10,7 +10,7 @@
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
     <string name="title_discoverd_fragment">Nearby Users</string>
-    <string name="title_personal_fragment">Personal Contact</string>
+    <string name="title_personal_fragment">Personal Contacts</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
 
@@ -105,7 +105,7 @@
     <string name="import_my_profile">import another id</string>
 <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
-    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security.</string>
+    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
     <string name="pin_instruction">Please keep your password in a safe place. It is essential for recovering your account.</string>
     <string name="skip">Continue</string>
     <string name="clear_search_text">Clear search text</string>
@@ -115,10 +115,11 @@
     <string name="pin_provide_instruction">Please provide your password to continue.</string>
     <string name="continue_button">continue</string>
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
-    <string name="enter_password_here">Enter password here</string>
+    <string name="enter_password_here">Enter password here:</string>
     <string name="create_profile">Create Profile</string>
     <string name="update_profile">Update Profile</string>
-    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
+    <!--<string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>-->
+    <string name="file_exit">A user account already exists in your device with address %s.\n\nWould you like to continue with that?</string>
     <string name="or">or</string>
     <string name="warning">WARNING!!</string>
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
@@ -157,8 +158,13 @@
 
     <string name="permission">Permission needed</string>
     <string name="permission_for_signup">Need to allow permission on Telemesh app to work properly. You can give permission manually from setting</string>
-    <string name="gps_alert">Location or GPS</string>
-    <string name="for_better_performance">For better performance you need to keep on GPS or location</string>
+
+    <string name="gps_alert">Turn on location</string>
+    <string name="for_better_performance">To get the best results please turn on your location service.</string>
+
+    <string name="negative_button"><![CDATA[<font color=\'#083480\'>I’m a new user</font>]]></string>
+    <string name="button_postivive"><![CDATA[<font color=\'#083480\'>Continue</font>]]></string>
+    <string name="alert_title_text"><![CDATA[<font color=\'#ff5f25\'>WARNING!!</font>]]></string>
 
 
 </resources>

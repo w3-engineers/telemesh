@@ -182,14 +182,28 @@
                     app:layout_constraintTop_toTopOf="@+id/name_layout" />
 
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+<!--                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
                     android:id="@+id/button_update"
                     style="@style/CustomButton"
                     android:text="@string/update"
                     android:textColor="@color/white"
                     app:bb_drawable="@drawable/ractangular_gradient"
                     app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />-->
+
+                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                    android:id="@+id/button_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="25dp"
+                    android:clickable="true"
+                    android:text="@string/update"
+                    android:textColor="@color/new_user_button_color"
+                    app:bb_drawable="@drawable/ractangular_white"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />
+
             </android.support.constraint.ConstraintLayout>
 
         </ScrollView>

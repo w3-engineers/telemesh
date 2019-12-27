@@ -5,14 +5,16 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.karumi.dexter.Dexter;
@@ -31,10 +33,8 @@ import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivit
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
-import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
-import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import com.w3engineers.walleter.wallet.WalletService;
 
@@ -279,25 +279,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showWarningDialog() {
-        DialogUtil.showConfirmationDialog(this,
-                getResources().getString(R.string.warning),
-                WalletAddressHelper.getWalletSpannableString(this).toString(),
-                getResources().getString(R.string.cancel),
-                getResources().getString(R.string.ok), new DialogUtil.DialogButtonListener() {
-                    @Override
-                    public void onClickPositive() {
-                        startActivity(new Intent(CreateUserActivity.this, ImportWalletActivity.class));
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-
-                    @Override
-                    public void onClickNegative() {
-
-                    }
-                });
+        AlertDialog.Builder builder  = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(Html.fromHtml("<b>" + getString(R.string.alert_title_text) + "</b>"));
+        builder.setMessage(WalletAddressHelper.getWalletSpannableString(this).toString());
+        builder.setPositiveButton(Html.fromHtml("<b>"  + getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                startActivity(new Intent(CreateUserActivity.this, ImportWalletActivity.class));
+            }
+        });
+        builder.setNegativeButton(Html.fromHtml("<b>" + getString(R.string.negative_button) + "<b>"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+            }
+        });
+        builder.create();
+        builder.show();
     }
 }

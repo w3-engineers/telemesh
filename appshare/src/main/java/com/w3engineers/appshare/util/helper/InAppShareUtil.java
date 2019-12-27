@@ -157,7 +157,7 @@ public class InAppShareUtil {
     public String getServiceApkPath() {
         Context context = InAppShareControl.getInstance().getAppShareContext();
 
-        String myServiceAppPackageName = "com.w3engineers.meshrnd";
+        String myServiceAppPackageName = "com.w3engineers.meshservice";
         String myServiceAppName = "TeleService";
 
         return backupApkAndGetPath(context, myServiceAppName, myServiceAppPackageName);

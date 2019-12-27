@@ -184,6 +184,7 @@
                     style="@style/CustomButton"
                     android:clickable="true"
                     android:text="@string/signup"
+                    android:textAllCaps="false"
                     android:textColor="@color/new_user_button_color"
                     app:bb_drawable="@drawable/ractangular_white"
                     app:layout_constraintRight_toRightOf="parent"

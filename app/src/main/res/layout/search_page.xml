@@ -39,6 +39,7 @@
                 android:inputType="text"
                 android:paddingStart="@dimen/padding_8"
                 android:paddingEnd="@dimen/padding_8"
+                android:textAllCaps="false"
                 android:textColor="@color/message_text_color"
                 android:textColorHint="@color/chat_sub_item_color"
                 app:layout_constraintBottom_toBottomOf="parent"

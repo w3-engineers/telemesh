@@ -47,13 +47,13 @@ public class AboutUsActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected BaseServiceLocator getServiceLocator() {
+    public BaseServiceLocator a() {
         return ServiceLocator.getInstance();
     }
 
 
     @Override
-    protected void startUI() {
+    public void startUI() {
 
         AboutUsViewModel aboutUsViewModel = getViewModel();
         mBinding = (ActivityAboutUsBinding) getViewDataBinding();

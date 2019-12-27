@@ -95,13 +95,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     @Override
-    protected BaseServiceLocator getServiceLocator() {
+    public BaseServiceLocator a() {
         return ServiceLocator.getInstance();
     }
 
 
     @Override
-    protected void startUI() {
+    public void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
         if (getSupportActionBar() != null) {
@@ -227,7 +227,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
         initNoNetworkCallback(myMode);

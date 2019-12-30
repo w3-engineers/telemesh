@@ -201,7 +201,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                5)));
+                                7)));
         appCompatImageView1.perform(scrollTo(), click());
 
         addDelay(700);

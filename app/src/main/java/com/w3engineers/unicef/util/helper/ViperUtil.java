@@ -62,37 +62,37 @@ public abstract class ViperUtil {
 
             SharedPref sharedPref = SharedPref.getSharedPref(context);
 
-            String jsonData = loadJSONFromAsset(context);
+//            String jsonData = loadJSONFromAsset(context);
 
-            if (!TextUtils.isEmpty(jsonData)) {
-                JSONObject jsonObject = new JSONObject(jsonData);
+            String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
+            String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
+            String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
+            String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
+            String PARSE_URL = BuildConfig.PARSE_URL;
 
-                String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
-                String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
-                String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
-                String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
-                String PARSE_URL = BuildConfig.PARSE_URL;
+//                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
+            String address = sharedPref.read(Constants.preferenceKey.
+                    MY_WALLET_ADDRESS);
+            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
 
-                String address = sharedPref.read(Constants.preferenceKey.
-                        MY_WALLET_ADDRESS);
-                String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+            initObservers();
 
-                initObservers();
+            String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
 
-                String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
-
-                if (TextUtils.isEmpty(networkSSID)) {
-                    networkSSID = context.getResources().getString(R.string.def_ssid);
-                }
-
-                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
-                        address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID);
+            if (TextUtils.isEmpty(networkSSID)) {
+                networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-        } catch (JSONException e) {
+            viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
+                    address, publicKey, userModel.getImage(), userModel.getTime(), true)
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID);
+
+            /*if (!TextUtils.isEmpty(jsonData)) {
+                JSONObject jsonObject = new JSONObject(jsonData);
+            }*/
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -155,7 +155,7 @@ public abstract class ViperUtil {
 
             peerAdd(userInfoEvent.getAddress(), userModel);
 
-            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
+            Log.e("user_info", "User info " + "id " +userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
@@ -347,13 +347,13 @@ public abstract class ViperUtil {
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
-            return viperClient.requestPointGuideline();
+           return viperClient.requestPointGuideline();
         }
         return null;
     }
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
-        if (guideLine != null && viperClient != null) {
+        if(guideLine!=null && viperClient!=null){
             viperClient.sendPointGuidelineForUpdate(guideLine);
         }
     }
@@ -381,7 +381,8 @@ public abstract class ViperUtil {
     protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
 
 
-    private String loadJSONFromAsset(Context context) {
+
+    /*private String loadJSONFromAsset(Context context) {
         String json = null;
         try {
             InputStream is = context.getAssets().open("config.json");
@@ -396,5 +397,5 @@ public abstract class ViperUtil {
         }
         return json;
 
-    }
+    }*/
 }

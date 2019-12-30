@@ -654,7 +654,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     };
 
     public void checkPlayStoreAppUpdate() {
-        mAppUpdateManager = AppUpdateManagerFactory.create(MainActivity.getInstance());
+        mAppUpdateManager = AppUpdateManagerFactory.create(this);
 
         mAppUpdateManager.registerListener(installStateUpdatedListener);
 
@@ -665,7 +665,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
                 try {
                     mAppUpdateManager.startUpdateFlowForResult(
-                            appUpdateInfo, AppUpdateType.FLEXIBLE, MainActivity.getInstance(), RC_APP_UPDATE);
+                            appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }

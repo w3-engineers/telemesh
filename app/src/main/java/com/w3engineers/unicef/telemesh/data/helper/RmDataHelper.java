@@ -113,7 +113,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public MeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
-        rightMeshDataSource = MeshDataSource.getRmDataSource();
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
 
         return rightMeshDataSource;
     }
@@ -327,6 +329,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         DataModel dataModel = new DataModel()
                 .setRawData(data)
                 .setDataType(type);
+
+        if (rightMeshDataSource == null) {
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        }
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));

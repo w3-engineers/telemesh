@@ -118,6 +118,11 @@ public class TeleMeshTest {
     public void uiTest_1() {
         addDelay(3200);
 
+        // first create new user.
+        onView(allOf(withId(R.id.button_create_account))).perform(click());
+
+        addDelay(500);
+
         ViewInteraction baseEditText = onView(
                 allOf(withId(R.id.edit_text_name),
                         childAtPosition(
@@ -148,7 +153,7 @@ public class TeleMeshTest {
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                5)));
+                                7)));
         appCompatImageView.perform(scrollTo(), click());
 
         addDelay(700);

@@ -52,7 +52,7 @@ public class CreateUserViewModelTest {
         int imageIndex = 1;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName);
+      //  SUT.storeData(firstName);
 
         checkValues(firstName, imageIndex);
     }
@@ -64,7 +64,7 @@ public class CreateUserViewModelTest {
         int imageIndex = 5;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName);
+        //SUT.storeData(firstName);
 
         checkValues(firstName, imageIndex);
     }
@@ -76,7 +76,7 @@ public class CreateUserViewModelTest {
         int imageIndex = -1;
 
         SUT.setImageIndex(imageIndex);
-        SUT.storeData(firstName);
+       // SUT.storeData(firstName);
 
         checkValues(firstName, imageIndex);
     }

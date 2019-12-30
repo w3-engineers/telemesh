@@ -89,7 +89,7 @@ public abstract class ViperUtil {
 
                 viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                         address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, GIFT_DONATE_LINK, PARSE_URL, PARSE_APP_ID);
+                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID);
             }
 
         } catch (JSONException e) {
@@ -155,7 +155,7 @@ public abstract class ViperUtil {
 
             peerAdd(userInfoEvent.getAddress(), userModel);
 
-            Log.e("user_info", "User info " + "id " +userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
+            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
@@ -347,13 +347,13 @@ public abstract class ViperUtil {
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
-           return viperClient.requestPointGuideline();
+            return viperClient.requestPointGuideline();
         }
         return null;
     }
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
-        if(guideLine!=null && viperClient!=null){
+        if (guideLine != null && viperClient != null) {
             viperClient.sendPointGuidelineForUpdate(guideLine);
         }
     }
@@ -379,7 +379,6 @@ public abstract class ViperUtil {
     protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
 
     protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
-
 
 
     private String loadJSONFromAsset(Context context) {

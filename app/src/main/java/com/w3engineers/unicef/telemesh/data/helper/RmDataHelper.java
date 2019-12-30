@@ -917,36 +917,35 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void uploadLogFile() {
-
-        HandlerUtil.postForeground(new Runnable() {
-            @Override
-            public void run() {
-                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-                    if (MainActivity.getInstance() == null) return;
-
-                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-                        long dif = System.currentTimeMillis() - saveTime;
-                        long days = dif / (24 * 60 * 60 * 1000);
-
-                        if (days <= 2) return;
-                    }
-
-                    InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-                }
-            }
-        }, TimeUnit.MINUTES.toMillis(1));
-        // check app update for internet;
-
-
         // Below method commented out because now we not upload log file in server
 
-        /*compositeDisposable.add(Single.fromCallable(() ->
+        compositeDisposable.add(Single.fromCallable(() ->
                 MeshLogDataSource.getInstance().getAllUploadedLogList())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::uploadLogFile, Throwable::printStackTrace));*/
+                .subscribe(this::uploadLogFile, Throwable::printStackTrace));
+    }
+
+    public void appUpdateFromOtherServer(){
+
+        // check app update for internet;
+
+        HandlerUtil.postForeground(() -> {
+            if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+                //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+                if (MainActivity.getInstance() == null) return;
+
+                SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                    long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+                    long dif = System.currentTimeMillis() - saveTime;
+                    long days = dif / (24 * 60 * 60 * 1000);
+
+                    if (days <= 2) return;
+                }
+
+                InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+            }
+        }, TimeUnit.MINUTES.toMillis(1));
     }
 
     private void uploadLogFile(List<String> previousList) {

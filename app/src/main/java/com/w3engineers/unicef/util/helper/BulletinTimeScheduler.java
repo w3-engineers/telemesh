@@ -24,6 +24,7 @@ import com.w3engineers.mesh.util.ConfigSyncUtil;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 public class BulletinTimeScheduler {
@@ -103,7 +104,11 @@ public class BulletinTimeScheduler {
 
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;
+
+                            MainActivity.getInstance().checkPlayStoreAppUpdate();
+
                             RmDataHelper.getInstance().uploadLogFile();
+
 
                             RmDataHelper.getInstance().sendPendingFeedback();
                         }

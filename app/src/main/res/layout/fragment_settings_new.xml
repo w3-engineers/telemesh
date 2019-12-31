@@ -270,6 +270,7 @@
                 android:id="@+id/layout_show_log"
                 style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_diagram_map">
 
@@ -385,7 +386,7 @@
                 <View
                     android:id="@+id/feedback_bottom"
                     style="@style/divider_style_settings_page"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -395,6 +396,7 @@
                 android:id="@+id/layout_ssid"
                 style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_feedback">
 

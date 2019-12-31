@@ -9,7 +9,11 @@ Proprietary and confidential
 */
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.RemoteException;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -23,9 +27,12 @@ import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerAdd;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
@@ -35,6 +42,8 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
@@ -62,37 +71,37 @@ public abstract class ViperUtil {
 
             SharedPref sharedPref = SharedPref.getSharedPref(context);
 
-            String jsonData = loadJSONFromAsset(context);
+//            String jsonData = loadJSONFromAsset(context);
 
-            if (!TextUtils.isEmpty(jsonData)) {
-                JSONObject jsonObject = new JSONObject(jsonData);
+            String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
+            String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
+            String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
+            String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
+            String PARSE_URL = BuildConfig.PARSE_URL;
 
-                String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
-                String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
-                String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
-                String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
-                String PARSE_URL = BuildConfig.PARSE_URL;
+//                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
+            String address = sharedPref.read(Constants.preferenceKey.
+                    MY_WALLET_ADDRESS);
+            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
 
-                String address = sharedPref.read(Constants.preferenceKey.
-                        MY_WALLET_ADDRESS);
-                String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+            initObservers();
 
-                initObservers();
+            String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
 
-                String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
-
-                if (TextUtils.isEmpty(networkSSID)) {
-                    networkSSID = context.getResources().getString(R.string.def_ssid);
-                }
-
-                viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
-                        address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, GIFT_DONATE_LINK, PARSE_URL, PARSE_APP_ID);
+            if (TextUtils.isEmpty(networkSSID)) {
+                networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-        } catch (JSONException e) {
+            viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
+                    address, publicKey, userModel.getImage(), userModel.getTime(), true)
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID);
+
+            /*if (!TextUtils.isEmpty(jsonData)) {
+                JSONObject jsonObject = new JSONObject(jsonData);
+            }*/
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -155,7 +164,7 @@ public abstract class ViperUtil {
 
             peerAdd(userInfoEvent.getAddress(), userModel);
 
-            Log.e("user_info", "User info " + "id " +userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
+            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
@@ -165,6 +174,15 @@ public abstract class ViperUtil {
             if (configSyncEvent != null) {
                 configSync(configSyncEvent.isUpdate(), configSyncEvent.getConfigurationCommand());
             }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.SERVICE_UPDATE, event -> {
+            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
+
+            if (serviceUpdate.isNeeded) {
+                showServiceUpdateAvailable();
+            }
+
         });
 
     }
@@ -347,15 +365,50 @@ public abstract class ViperUtil {
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
-           return viperClient.requestPointGuideline();
+            return viperClient.requestPointGuideline();
         }
         return null;
     }
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
-        if(guideLine!=null && viperClient!=null){
+        if (guideLine != null && viperClient != null) {
             viperClient.sendPointGuidelineForUpdate(guideLine);
         }
+    }
+
+    private void showServiceUpdateAvailable() {
+        if (MainActivity.getInstance() == null) return;
+
+        MainActivity.getInstance().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                builder.setCancelable(false);
+                builder.setTitle(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.service_app_alert_title_text) + "</b>"));
+                builder.setMessage(MainActivity.getInstance().getString(R.string.service_app_update_message));
+                builder.setPositiveButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.w3engineers.meshservice");
+                        if (intent != null) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_later) + "<b>"), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                    }
+                });
+
+                builder.setCancelable(false);
+                builder.create();
+                builder.show();
+            }
+        });
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -382,7 +435,7 @@ public abstract class ViperUtil {
 
 
 
-    private String loadJSONFromAsset(Context context) {
+    /*private String loadJSONFromAsset(Context context) {
         String json = null;
         try {
             InputStream is = context.getAssets().open("config.json");
@@ -397,5 +450,5 @@ public abstract class ViperUtil {
         }
         return json;
 
-    }
+    }*/
 }

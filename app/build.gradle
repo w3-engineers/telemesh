@@ -10,8 +10,8 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 27
-        versionName "0.2.7"
+        versionCode 10
+        versionName "0.1.0-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -169,6 +169,7 @@ dependencies {
 
     implementation deps.ripplebg.ripple
     implementation deps.qrgenerator.qr
+    implementation deps.playcore.core
 
     api deps.app_share
     debugImplementation deps.inappstoragereader

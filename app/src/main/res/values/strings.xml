@@ -164,6 +164,9 @@
     <string name="negative_button"><![CDATA[<font color=\'#083480\'>I’m a new user</font>]]></string>
     <string name="button_postivive"><![CDATA[<font color=\'#083480\'>Continue</font>]]></string>
     <string name="alert_title_text"><![CDATA[<font color=\'#ff5f25\'>WARNING!!</font>]]></string>
+    <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
+    <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
+    <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
 
 
 </resources>

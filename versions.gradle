@@ -72,11 +72,12 @@ versions.location = "16.0.0"
 versions.appupdater = "2.7"
 versions.ripplebg = "1.0.1"
 versions.qrgenerator = "1.0.3"
-versions.viper = "1.0.19"
+versions.viper = "1.0.20"
 versions.in_app_db = "1.0.2"
 versions.web3j = "4.2.0-android"
 versions.bouncy = "1.61"
 versions.snatik = "2.1.0"
+versions.playcore = "1.6.3"
 ext.versions = versions
 
 def deps = [:]
@@ -269,6 +270,10 @@ deps.ripplebg = ripplebg
 def qrgenerator = [:]
 qrgenerator.qr = "androidmads.library.qrgenearator:QRGenearator:$versions.qrgenerator"
 deps.qrgenerator = qrgenerator
+
+def playcore = [:]
+playcore.core = "com.google.android.play:core:$versions.playcore"
+deps.playcore = playcore;
 
 ext.deps = deps
 

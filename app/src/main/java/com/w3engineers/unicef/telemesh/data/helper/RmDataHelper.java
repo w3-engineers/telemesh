@@ -931,7 +931,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribe(this::uploadLogFile, Throwable::printStackTrace));
     }
 
-    public void appUpdateFromOtherServer(){
+    public void appUpdateFromOtherServer() {
 
         // check app update for internet;
 
@@ -961,7 +961,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() +
-                "/MeshRnD");
+                "/Telemesh/MeshLog");
         File[] files = directory.listFiles();
 
         if (files != null) {

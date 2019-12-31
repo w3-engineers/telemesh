@@ -164,7 +164,7 @@ public class InAppUpdate {
                 dialog.dismiss();
                 setAppUpdateProcess(false);
 
-                if (finalUrl1.contains("meshlib")) {
+                if (finalUrl1.contains("config")) {
                     SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, versionCode);
                     SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_URL, finalUrl1);
                 }

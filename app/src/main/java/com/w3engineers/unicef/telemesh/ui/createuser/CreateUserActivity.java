@@ -202,7 +202,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             case R.id.image_view_back:
                 finish();
                 break;
-
         }
     }
 
@@ -262,7 +261,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void goToPasswordPage() {
-
         if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
             Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
         } else if (mBinding.editTextName.getText().toString().length() < 2) {

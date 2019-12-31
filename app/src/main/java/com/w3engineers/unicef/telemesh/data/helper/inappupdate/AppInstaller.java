@@ -174,7 +174,6 @@ public class AppInstaller {
 
     private static void saveToDisk(ResponseBody body, String filename) {
         try {
-
             File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
 
             InputStream inputStream = null;

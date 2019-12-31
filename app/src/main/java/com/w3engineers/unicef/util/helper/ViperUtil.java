@@ -27,10 +27,12 @@ import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerAdd;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
@@ -172,6 +174,15 @@ public abstract class ViperUtil {
             if (configSyncEvent != null) {
                 configSync(configSyncEvent.isUpdate(), configSyncEvent.getConfigurationCommand());
             }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.SERVICE_UPDATE, event -> {
+            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
+
+            if (serviceUpdate.isNeeded) {
+                showServiceUpdateAvailable();
+            }
+
         });
 
     }
@@ -373,7 +384,7 @@ public abstract class ViperUtil {
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
                 builder.setCancelable(false);
-                builder.setTitle(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.alert_title_text) + "</b>"));
+                builder.setTitle(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.service_app_alert_title_text) + "</b>"));
                 builder.setMessage(MainActivity.getInstance().getString(R.string.service_app_update_message));
                 builder.setPositiveButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
@@ -392,7 +403,7 @@ public abstract class ViperUtil {
                     }
                 });
 
-
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             }

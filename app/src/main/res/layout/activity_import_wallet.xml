@@ -130,6 +130,7 @@
             android:layout_marginTop="@dimen/margin_16"
             android:layout_marginEnd="22dp"
             android:clickable="true"
+            android:textAllCaps="false"
             android:text="@string/continue_button"
             android:textColor="@color/white"
             app:bb_drawable="@drawable/ractangular_gradient"

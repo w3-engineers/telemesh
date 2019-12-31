@@ -9,7 +9,11 @@ Proprietary and confidential
 */
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.RemoteException;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,6 +30,7 @@ import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
@@ -35,6 +40,8 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
@@ -155,7 +162,7 @@ public abstract class ViperUtil {
 
             peerAdd(userInfoEvent.getAddress(), userModel);
 
-            Log.e("user_info", "User info " + "id " +userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
+            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
@@ -347,15 +354,50 @@ public abstract class ViperUtil {
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
-           return viperClient.requestPointGuideline();
+            return viperClient.requestPointGuideline();
         }
         return null;
     }
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
-        if(guideLine!=null && viperClient!=null){
+        if (guideLine != null && viperClient != null) {
             viperClient.sendPointGuidelineForUpdate(guideLine);
         }
+    }
+
+    private void showServiceUpdateAvailable() {
+        if (MainActivity.getInstance() == null) return;
+
+        MainActivity.getInstance().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                builder.setCancelable(false);
+                builder.setTitle(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.alert_title_text) + "</b>"));
+                builder.setMessage(MainActivity.getInstance().getString(R.string.service_app_update_message));
+                builder.setPositiveButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                        Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.w3engineers.meshservice");
+                        if (intent != null) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_later) + "<b>"), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                    }
+                });
+
+
+                builder.create();
+                builder.show();
+            }
+        });
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////

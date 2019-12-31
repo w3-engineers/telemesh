@@ -129,16 +129,16 @@ public class WalletAddressHelper {
     }
 
 
-    public static SpannableString getSpannableTitle(Context context){
-            String walletText = context.getResources().getString(R.string.warning);
+    public static SpannableString getSpannableTitle(Context context) {
+        String walletText = context.getResources().getString(R.string.warning);
 
-            SpannableString spannableString = new SpannableString(walletText);
+        SpannableString spannableString = new SpannableString(walletText);
 
 
-            spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.wallet_highlight_color)),
-                    1, walletText.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.wallet_highlight_color)),
+                1, walletText.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
-            return spannableString;
+        return spannableString;
     }
 
     public static void writeDefaultAddress(String address, Context context) {

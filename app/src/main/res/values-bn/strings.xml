@@ -22,11 +22,11 @@
     <string name="type_message">আপনার বার্তা লিখুন &#8230;</string>
 
     <string name="demo_language">English</string>
-    <string name="activity_about_us">আমাদের সম্পর্কে</string>
+    <string name="activity_about_us">টেলিমেশ সম্পর্কে</string>
     <string name="app_version">সংস্করণ:</string>
 
-    <string name="no_contact_available">কোন যোগাযোগ নেই</string>
-    <string name="no_message_available">কোন বার্তা পাওয়া যায় নি</string>
+    <string name="no_contact_available">কাছাকাছি কাউকে পাওয়া যায়নি</string>
+    <string name="no_message_available">কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
 <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
@@ -46,9 +46,9 @@
 <!--    <string name="id">ID</string>-->
 <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Discovering Users</string>
-    <string name="searching">খোঁজা হচ্ছে…</string>
+    <string name="searching">আরো খোজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
-    <string name="no_chat_available">Type your first message\nlet the story begin</string>
+    <string name="no_chat_available">Type to Start a Conversation</string>
 
 <!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
@@ -59,7 +59,7 @@
     <string name="badge_count_more_than_99">99+</string>
     <string name="diagram_map">Diagram Map</string>
 
-    <string name="send_feedback">মতামত পাঠান</string>
+    <string name="send_feedback">মতামত দিন</string>
 
     <string name="password_message">Password must contain at least 1 letter, number, and special character</string>
     <string name="add_your_feedback">মতামত লিখুন</string>
@@ -127,8 +127,8 @@
     <string name="import_my_profile">import another id</string>
 <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
-    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security.</string>
-    <string name="pin_instruction">Please keep your password in a safe place. It is essential for recovering your account.</string>
+    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
+    <string name="pin_instruction">Please remember your password for you will need this in case of  account recovery.</string>
     <string name="skip">Skip</string>
     <string name="clear_search_text">Clear search text</string>
     <string name="close_search">Close search</string>
@@ -137,9 +137,9 @@
     <string name="pin_provide_instruction">Please provide your password to continue.</string>
     <string name="continue_button">continue</string>
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
-    <string name="enter_password_here">Enter password here</string>
+    <string name="enter_password_here">Enter password here:</string>
     <string name="create_profile">Create Profile</string>
-    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
+    <string name="file_exit">A user account already exists in your device with address %s.\n Would you like to continue with that?</string>
     <string name="or">or</string>
     <string name="warning">WARNING!!</string>
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
@@ -156,7 +156,15 @@
 
     <string name="permission">Permission needed</string>
     <string name="permission_for_signup">Need to allow permission on Telemesh app to work properly. You can give permission manually from setting</string>
-    <string name="gps_alert">Location or GPS</string>
-    <string name="for_better_performance">For better performance you need to keep on GPS or location</string>
+
+    <string name="gps_alert">Turn on location</string>
+    <string name="for_better_performance">To get the best results please turn on your location service.</string>
+
+    <string name="negative_button"><![CDATA[<font color=\'#083480\'>I’m a new user</font>]]></string>
+    <string name="button_postivive"><![CDATA[<font color=\'#083480\'>Continue</font>]]></string>
+    <string name="alert_title_text"><![CDATA[<font color=\'#ff5f25\'>WARNING!!</font>]]></string>
+    <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
+    <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
+    <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
 
 </resources>

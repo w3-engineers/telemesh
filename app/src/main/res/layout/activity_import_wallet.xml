@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
         android:background="@color/background_color"
         tools:context=".ui.importwallet.ImportWalletActivity">
 
@@ -25,7 +31,7 @@
             android:id="@+id/image_view_import_success"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_15"
             android:contentDescription="@string/content_description_import_success"
             android:src="@mipmap/ic_import_success"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,29 +51,16 @@
             app:layout_constraintTop_toBottomOf="@+id/image_view_import_success" />
 
         <TextView
-            android:id="@+id/text_view_file_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_size_16"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_import_success" />
-
-        <TextView
             android:id="@+id/text_view_pin_instruction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_20"
             android:text="@string/pin_provide_instruction"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_file_name" />
+            app:layout_constraintTop_toBottomOf="@+id/text_view_import_success" />
 
         <com.w3engineers.unicef.util.lib.boxpassword.BoxPassword
             android:id="@+id/edit_text_box_password"
@@ -86,31 +79,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_pin_instruction" />
 
+
+        <TextView
+            android:id="@+id/lblPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_30"
+            android:text="@string/enter_password_here"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_pin_instruction"
+            app:layout_constraintStart_toStartOf="@+id/password_layout"
+            android:layout_marginStart="@dimen/margin_5"
+            android:textColor="@color/white"
+            android:textAppearance="@style/hint_style" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/password_layout"
             android:layout_width="0dp"
             android:layout_height="@dimen/width_50"
             android:layout_marginStart="@dimen/margin_16"
-            android:layout_marginTop="@dimen/margin_16"
             android:layout_marginEnd="@dimen/margin_16"
-            android:background="@color/white"
-            android:textColorHint="@color/hint_text_color"
-            app:hintTextAppearance="@style/hint_style"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:passwordToggleEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_pin_instruction">
+            app:layout_constraintTop_toBottomOf="@+id/lblPassword"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/edit_text_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_4"
-               android:paddingTop="@dimen/padding_8"
                 android:layout_marginEnd="@dimen/margin_4"
-                android:background="@null"
+                android:paddingStart="@dimen/padding_5"
+                android:paddingEnd="@dimen/padding_5"
+                android:background="@color/white"
                 android:gravity="center|start"
-                android:hint="@string/enter_password_here"
+                android:layout_gravity="center_vertical"
                 android:imeOptions="actionNext"
                 android:inputType="textPassword"
                 android:singleLine="true"
@@ -119,22 +122,23 @@
 
         </android.support.design.widget.TextInputLayout>
 
+
         <com.w3engineers.ext.strom.application.ui.widget.BaseButton
             android:id="@+id/button_continue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_30"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/height_40"
             android:layout_marginTop="@dimen/margin_16"
-            android:layout_marginEnd="@dimen/margin_30"
+            android:layout_marginEnd="22dp"
+            android:clickable="true"
             android:text="@string/continue_button"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            android:textColor="@color/new_user_button_color"
+            app:bb_drawable="@drawable/ractangular_white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_layout"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toBottomOf="@+id/password_layout" />
+
 
     </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </layout>

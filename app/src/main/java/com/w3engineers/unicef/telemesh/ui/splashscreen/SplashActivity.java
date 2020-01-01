@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.mesh.application.data.local.wallet.WalletService;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;

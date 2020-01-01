@@ -52,13 +52,13 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected BaseServiceLocator getServiceLocator() {
+    public BaseServiceLocator a() {
         return ServiceLocator.getInstance();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    protected void startUI() {
+    public void startUI() {
 
         setTitle(LanguageUtil.getString(R.string.activity_view_profile));
         if (getSupportActionBar() != null) {
@@ -102,7 +102,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if (isMyProfile) {

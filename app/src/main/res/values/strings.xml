@@ -10,7 +10,7 @@
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
     <string name="title_discoverd_fragment">Nearby Users</string>
-    <string name="title_personal_fragment">Personal Contact</string>
+    <string name="title_personal_fragment">Personal Contacts</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
 
@@ -22,11 +22,11 @@
     <string name="activity_about_us">About Telemesh</string>
     <string name="app_version">Version:</string>
 
-    <string name="no_contact_available">OOPS!\nNo one is around</string>
+    <string name="no_contact_available">No Nearby User Found Yet</string>
     <string name="no_message_available">No broadcast to show</string>
 
-    <string name="search">Search people</string>
-    <string name="type_message">Type your message…</string>
+    <string name="search">Search People</string>
+    <string name="type_message">Add Text to this Message</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
 <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
@@ -49,7 +49,7 @@
     <string name="discovering_users">Searching Nearby</string>
     <string name="searching">Searching…</string>
     <string name="data_plan">My Data Plan</string>
-    <string name="no_chat_available">Type your first message\nlet the story begin</string>
+    <string name="no_chat_available">Type to Start a Conversation</string>
 
 <!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
@@ -81,11 +81,11 @@
 
     <string name="build_version">Build Version:</string>
 
-    <string name="active_online">Active now</string>
+    <string name="active_online">Active Now</string>
     <string name="active_offline">Offline</string>
     <string name="onboard_image">Onboard image</string>
-    <string name="i_m_a_new_user">I\'m a new user</string>
-    <string name="i_m_a_returning_user">I\'m a returning user</string>
+    <string name="i_m_a_new_user">I\'m a New User</string>
+    <string name="i_m_a_returning_user">I\'m a Returning User</string>
     <string name="profile_selection_image">Profile selection image</string>
     <string name="name_field_icon">Name field icon</string>
     <string name="user_id_copy">User id copy</string>
@@ -102,23 +102,23 @@
     <string name="telemesh_website"><a href="https://telemesh.net/">Telemesh Website</a></string>
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
     <string name="welcome_back">Welcome back</string>
-    <string name="import_my_profile">import another id</string>
+    <string name="import_my_profile">Import Another ID</string>
 <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
-    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security.</string>
-    <string name="pin_instruction">Please keep your password in a safe place. It is essential for recovering your account.</string>
+    <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
+    <string name="pin_instruction">Please remember your password for you will need this in case of  account recovery.</string>
     <string name="skip">Continue</string>
     <string name="clear_search_text">Clear search text</string>
     <string name="close_search">Close search</string>
     <string name="content_description_import_success">Import Success</string>
     <string name="import_successful">Import successful</string>
     <string name="pin_provide_instruction">Please provide your password to continue.</string>
-    <string name="continue_button">continue</string>
+    <string name="continue_button">Continue</string>
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
-    <string name="enter_password_here">Enter password here</string>
+    <string name="enter_password_here">Enter password here:</string>
     <string name="create_profile">Create Profile</string>
     <string name="update_profile">Update Profile</string>
-    <string name="file_exit">A file.keystore already exists in your system, would you like to continue with this? Your address is %s</string>
+    <string name="file_exit">A user account already exists, would you like to continue with that? Your address is %s</string>
     <string name="or">or</string>
     <string name="warning">WARNING!!</string>
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
@@ -129,7 +129,7 @@
     <string name="enter_valid_name">Enter valid name</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>
     <string name="edit">EDIT</string>
-    <string name="send_feedback">Send Feedback</string>
+    <string name="send_feedback">Feedback</string>
     <string name="add_your_feedback">Add your feedback</string>
     <string name="feedback_submitted_successfully">Feedback submitted successfully</string>
     <string name="please_write_your_feedback">Please write your feedback</string>
@@ -151,14 +151,22 @@
     <string name="a_new_version">A new version </string>
     <string name="is_available_for_telemesh">is available for Telemesh</string>
     <string name="favourite">Favourite</string>
-    <string name="show_password">Show password</string>
-    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show Password</string>
+    <string name="hide_password">Hide Password</string>
     <string name="phone_storage_not_enough">Your phone space not enough</string>
 
     <string name="permission">Permission needed</string>
     <string name="permission_for_signup">Need to allow permission on Telemesh app to work properly. You can give permission manually from setting</string>
-    <string name="gps_alert">Location or GPS</string>
-    <string name="for_better_performance">For better performance you need to keep on GPS or location</string>
+
+    <string name="gps_alert">Turn on location</string>
+    <string name="for_better_performance">To get the best results please turn on your location service.</string>
+
+    <string name="negative_button"><![CDATA[<font color=\'#083480\'>I’m a new user</font>]]></string>
+    <string name="button_postivive"><![CDATA[<font color=\'#083480\'>Continue</font>]]></string>
+    <string name="alert_title_text"><![CDATA[<font color=\'#ff5f25\'>WARNING!!</font>]]></string>
+    <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
+    <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
+    <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
 
 
 </resources>

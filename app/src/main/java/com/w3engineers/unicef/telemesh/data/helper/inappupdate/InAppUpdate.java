@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 
@@ -51,6 +52,8 @@ import java.net.URL;
 import java.util.List;
 
 import timber.log.Timber;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -61,8 +64,9 @@ import timber.log.Timber;
 
 public class InAppUpdate {
 
-    public static final String LIVE_JSON_URL = BuildConfig.APP_UPDATE_LINK; // Configure json file that was uploaded in Main server
-    private final String MAIN_JSON = "updatedJSon.json";
+
+    private static final String MAIN_JSON = "updatedJSon.json";
+    public static final String LIVE_JSON_URL = BuildConfig.FILE_REPO_LINK + MAIN_JSON; // Configure json file that was uploaded in Main server
     public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
@@ -160,7 +164,7 @@ public class InAppUpdate {
                 dialog.dismiss();
                 setAppUpdateProcess(false);
 
-                if (finalUrl1.contains("meshlib")) {
+                if (finalUrl1.contains("config")) {
                     SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, versionCode);
                     SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_URL, finalUrl1);
                 }
@@ -422,11 +426,19 @@ public class InAppUpdate {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
 
+                String authString = (BuildConfig.AUTH_USER_NAME+":"+BuildConfig.AUTH_PASSWORD);
+                byte[] data1 = authString.getBytes(UTF_8);
+                String base64 = Base64.encodeToString(data1, Base64.NO_WRAP);
+
+
+               /* Log.e("HttpError", "Credential " +userName+" password: "+userPass);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(BuildConfig.AUTH_USER_NAME, BuildConfig.AUTH_PASSWORD.toCharArray());
+                        return new PasswordAuthentication(userName, userPass.toCharArray());
                     }
-                });
+                });*/
+
+                connection.setRequestProperty("Authorization", "Basic "+base64);
 
                 connection.connect();
                 InputStream stream = connection.getInputStream();

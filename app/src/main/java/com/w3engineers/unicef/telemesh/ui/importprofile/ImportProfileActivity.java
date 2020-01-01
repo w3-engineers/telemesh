@@ -19,8 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.mesh.application.data.local.wallet.WalletService;
-import com.w3engineers.mesh.application.data.local.wallet.Web3jWalletHelper;
+
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -28,6 +27,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
+import com.w3engineers.walleter.wallet.WalletService;
 
 import org.json.JSONException;
 import org.json.JSONObject;

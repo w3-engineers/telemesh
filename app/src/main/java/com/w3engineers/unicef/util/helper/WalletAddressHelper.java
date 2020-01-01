@@ -8,9 +8,10 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
-import com.w3engineers.mesh.application.data.local.wallet.Web3jWalletHelper;
+
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.walleter.wallet.Web3jWalletHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,13 +117,26 @@ public class WalletAddressHelper {
         SpannableString spannableString = new SpannableString(walletExistMessage);
 
 
-        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.wallet_highlight_color)),
+        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.hint_text_color)),
                 1, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         int startIndex = walletExistMessage.length() - address.length();
 
-        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.wallet_highlight_color)),
+        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.hint_text_color)),
                 startIndex, walletExistMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+    }
+
+
+    public static SpannableString getSpannableTitle(Context context) {
+        String walletText = context.getResources().getString(R.string.warning);
+
+        SpannableString spannableString = new SpannableString(walletText);
+
+
+        spannableString.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.wallet_highlight_color)),
+                1, walletText.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableString;
     }

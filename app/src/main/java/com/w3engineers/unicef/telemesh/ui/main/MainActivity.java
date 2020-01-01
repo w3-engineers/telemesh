@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,6 +32,13 @@ import android.widget.TextView;
 
 import androidx.work.WorkInfo;
 
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -41,6 +50,7 @@ import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -59,6 +69,8 @@ import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
 
+import static android.support.constraint.Constraints.TAG;
+
 
 public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityMainBinding binding;
@@ -74,6 +86,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     private int latestUserCount;
     private int latestMessageCount;
+
+    private int RC_APP_UPDATE = 620;
+    private static AppUpdateManager mAppUpdateManager;
 
     @SuppressLint("StaticFieldLeak")
     @Nullable
@@ -95,13 +110,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     @Override
-    protected BaseServiceLocator getServiceLocator() {
+    public BaseServiceLocator a() {
         return ServiceLocator.getInstance();
     }
 
 
     @Override
-    protected void startUI() {
+    public void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
         if (getSupportActionBar() != null) {
@@ -189,6 +204,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         StorageUtil.getFreeMemory();
 
+/*        if (!CommonUtil.isLocationGpsOn(this)){
+            CommonUtil.showGpsOrLocationOffPopup(this);
+        }*/
+
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
     }
@@ -223,7 +242,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
         initNoNetworkCallback(myMode);
@@ -248,6 +267,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 binding.searchBar.editTextSearch.setText("");
                 hideSearchBar();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_APP_UPDATE) {
+            if (resultCode != RESULT_OK) {
+                Log.e("AppUpdateProcess", "onActivityResult: app download failed");
+            }
         }
     }
 
@@ -510,6 +540,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         UIHelper.hideKeyboardFrom(this, binding.searchBar.editTextSearch);
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -610,16 +641,78 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())){
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
                 LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                if (statusOfGPS){
+                if (statusOfGPS) {
                     CommonUtil.dismissDialog();
-                }else {
+                } else {
                     CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
                 }
             }
         }
     };
 
+    public void checkPlayStoreAppUpdate() {
+        mAppUpdateManager = AppUpdateManagerFactory.create(this);
+
+        mAppUpdateManager.registerListener(installStateUpdatedListener);
+
+        mAppUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
+
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+
+                try {
+                    mAppUpdateManager.startUpdateFlowForResult(
+                            appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                popupSnackbarForCompleteUpdate();
+            } else {
+                Log.e("AppUpdateProcess", "checkForAppUpdateAvailability: something else: " + appUpdateInfo.updateAvailability());
+
+                RmDataHelper.getInstance().appUpdateFromOtherServer();
+            }
+        });
+    }
+
+    InstallStateUpdatedListener installStateUpdatedListener = new
+            InstallStateUpdatedListener() {
+                @Override
+                public void onStateUpdate(InstallState state) {
+                    if (state.installStatus() == InstallStatus.DOWNLOADED) {
+                        popupSnackbarForCompleteUpdate();
+                    } else if (state.installStatus() == InstallStatus.INSTALLED) {
+                        if (mAppUpdateManager != null) {
+                            mAppUpdateManager.unregisterListener(installStateUpdatedListener);
+                        }
+
+                    } else {
+                        Log.i("AppUpdateProcess", "InstallStateUpdatedListener: state: " + state.installStatus());
+                    }
+                }
+            };
+
+    private void popupSnackbarForCompleteUpdate() {
+
+        Snackbar snackbar =
+                Snackbar.make(
+                        findViewById(R.id.main_view),
+                        "An update has just been downloaded.",
+                        Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Install", view -> {
+            if (mAppUpdateManager != null) {
+                mAppUpdateManager.completeUpdate();
+            }
+        });
+
+
+        snackbar.setActionTextColor(getResources().getColor(R.color.background_color));
+        snackbar.show();
+    }
 }

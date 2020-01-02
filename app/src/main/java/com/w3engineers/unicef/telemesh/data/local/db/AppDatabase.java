@@ -57,6 +57,8 @@ import java.util.List;
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {
 
+    private static final int initialVersion = 1;
+
     @NonNull
     public abstract UserDao userDao();
 
@@ -90,19 +92,15 @@ public abstract class AppDatabase extends BaseDatabase {
     @NonNull
     public static AppDatabase getInstance() {
 
+
+
         if (BuildConfig.DEBUG){
             if (sInstance == null) {
                 synchronized (AppDatabase.class) {
                     if (sInstance == null) {
                         Context context = App.getContext();
-                        sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                                , 21,
-                                new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
-                                new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
-                                new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
-                                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                                new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
-                                new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
+
+                        sInstance = createDbWithMigration(context); //normally initial version is always 21
                     }
                 }
             }
@@ -112,14 +110,8 @@ public abstract class AppDatabase extends BaseDatabase {
                     synchronized (AppDatabase.class) {
                         if (sInstance == null) {
                             Context context = App.getContext();
-                            sInstance = createDb(context, context.getString(R.string.app_name), AppDatabase.class
-                                    , 21,
-                                    new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
-                                    new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
-                                    new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
-                                    new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                                    new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
-                                    new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2)); //normally initial version is always 21
+
+                            sInstance = createDbWithMigration(context);
                         }
                     }
                 }
@@ -127,6 +119,21 @@ public abstract class AppDatabase extends BaseDatabase {
         }
 
         return (AppDatabase) sInstance;
+    }
+
+    private static AppDatabase createDbWithMigration(Context context) {
+
+        return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
+                initialVersion, new BaseMigration(BuildConfig.VERSION_CODE, ""));
+
+        /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
+                , 21,
+                new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE-1, FEEDBACK_MIGRATION, USER_TABLE_MIGRATION_1),
+                new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_2));*/
     }
 
 

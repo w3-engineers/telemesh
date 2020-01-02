@@ -87,6 +87,7 @@ public class TeleMeshTest {
     private SharedPref sharedPref;
     private AppDatabase appDatabase;
     private Context context;
+    private String defaultPassword = "mesh_123";
 
     @Before
     public void setUp() {
@@ -119,7 +120,7 @@ public class TeleMeshTest {
         addDelay(3200);
 
         // first create new user.
-        onView(allOf(withId(R.id.button_create_account))).perform(click());
+        onView(withId(R.id.button_create_account)).perform(click());
 
         addDelay(500);
 
@@ -231,17 +232,46 @@ public class TeleMeshTest {
         addDelay(700);
 
         ViewInteraction baseButton = onView(
-                allOf(withId(R.id.button_signup), withText("Sign Up"),
+                allOf(withId(R.id.button_signup), withText("Next"),
                         childAtPosition(
                                 allOf(withId(R.id.image_layout),
                                         childAtPosition(
                                                 withId(R.id.scrollview),
                                                 0)),
-                                8)));
+                                10)));
         baseButton.perform(scrollTo(), click());
 
         addDelay(700);
+
+        // Add password in password page.
+
+        onView(withId(R.id.edit_text_box_password)).perform(replaceText(defaultPassword), closeSoftKeyboard());
+
+        addDelay(700);
+
+        // show hide password
+
+        onView(withId(R.id.text_view_show_password)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.text_view_show_password)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.button_next)).perform(click());
+
+        addDelay(3200);
     }
+
+/*    @Test
+    public void openExistsAccount(){
+        addDelay(3200);
+
+        onView(withId(R.id.button_import_account)).perform(click());
+
+        addDelay(700);
+    }*/
 
     // Fragment tab switch process
     @Test

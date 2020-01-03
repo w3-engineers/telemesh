@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_security_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_background"
@@ -17,12 +18,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
+            android:id="@+id/activity_security_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true"
             app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/activity_security_scroll_parent"
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
 

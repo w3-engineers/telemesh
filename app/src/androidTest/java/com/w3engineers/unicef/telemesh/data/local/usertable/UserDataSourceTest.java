@@ -66,7 +66,7 @@ public class UserDataSourceTest {
         UserEntity user2 = getUserInfo(customId2, lastOnlineTime2, meshId2);
         SUT.insertOrUpdateData(user2);
 
-   /*     TestSubscriber<List<UserEntity>> getAllUserEntitySubscriber = SUT.getAllUsers().test();
+        TestSubscriber<List<UserEntity>> getAllUserEntitySubscriber = SUT.getAllOnlineUsers().test();
 
         addDelay();
 
@@ -77,7 +77,7 @@ public class UserDataSourceTest {
         getAllUserEntitySubscriber.assertNoErrors().assertValue(userEntities -> {
             UserEntity userEntity = userEntities.get(0);
             return userEntity.getCustomId() != null && userEntity.getCustomId().equals(customId1);
-        });*/
+        });
 
         TestSubscriber<UserEntity> getLastInsertedUser = SUT.getLastData().test();
 

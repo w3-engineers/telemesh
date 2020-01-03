@@ -4,8 +4,11 @@ import android.app.Application;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
+import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -102,7 +105,7 @@ public class MeshContactViewModelTest {
 
         SUT.startFavouriteObserver();
 
-        List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+        PagedList<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
         // assertTrue(testObserver.observedvalues.get(0).isEmpty());
         assertTrue(result.isEmpty());
@@ -111,18 +114,29 @@ public class MeshContactViewModelTest {
     @Test
     public void testGetAllUsers_addUser_checkUserProperties() throws InterruptedException {
 
+        addDelay(1000);
+
         String userMeshId = UUID.randomUUID().toString();
 
         userEntity.setMeshId(userMeshId);
+        userEntity.isFavourite = 1;
         userDataSource.insertOrUpdateData(userEntity);
+
+
+        addDelay(2000);
 
         LiveData<PagedList<UserEntity>> allUserList = SUT.favoriteEntityList;
 
+        addDelay(1000);
+
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        SUT.startFavouriteObserver();
+        PagedList<UserEntity> result = LiveDataTestUtil.getValue(SUT.favoriteEntityList);
 
-        List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+        addDelay(2000);
+        SUT.startFavouriteObserver();
+        addDelay(2000);
 
         // assertEquals(testObserver.observedvalues.get(0).get(0).getMeshId(), userMeshId);
         assertEquals(result.get(0).getMeshId(), userMeshId);
@@ -144,6 +158,7 @@ public class MeshContactViewModelTest {
         SUT.startFavouriteObserver();
 
         List<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
 
         assertThat(result.size(), is(2));
     }

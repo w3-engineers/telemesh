@@ -2,7 +2,10 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 
 import android.app.Activity;
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.core.internal.deps.guava.collect.Iterables;
 import android.support.test.filters.LargeTest;
@@ -15,18 +18,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -47,14 +65,12 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class TelemeshTest {
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
-
-    @Rule
-    public ActivityTestRule<SecurityActivity> mChatTestRule = new ActivityTestRule<>(SecurityActivity.class);
 
 
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -62,6 +78,32 @@ public class TelemeshTest {
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
     public String defaultPassword = "mesh_123";
+
+    private AppDatabase appDatabase;
+    private UserDataSource userDataSource;
+    private MessageSourceData messageSourceData;
+    private RandomEntityGenerator randomEntityGenerator;
+    private SharedPref sharedPref;
+    private Context context;
+
+    @Before
+    public void setUp() {
+
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+                AppDatabase.class).allowMainThreadQueries().build();
+
+        userDataSource = UserDataSource.getInstance();
+        messageSourceData = MessageSourceData.getInstance();
+        randomEntityGenerator = new RandomEntityGenerator();
+
+        context = InstrumentationRegistry.getTargetContext();
+        sharedPref = SharedPref.getSharedPref(context);
+    }
+
+    @After
+    public void closeDb() throws IOException {
+        appDatabase.close();
+    }
 
     @Test
     public void uiTest_01() {
@@ -248,26 +290,307 @@ public class TelemeshTest {
         addDelay(300);
     }
 
-    public Activity currentActivity = null;
-
-    public Activity getActivityInstance() {
-        getInstrumentation().runOnMainSync(new Runnable() {
-            public void run() {
-                Collection resumedActivities =
-                        ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(RESUMED);
-                if (resumedActivities.iterator().hasNext()){
-                    currentActivity = (Activity) resumedActivities.iterator().next();
-                }
-            }
-        });
-
-        return currentActivity;
-    }
-
     @Test
     public void uiTest_02() {
         addDelay(3800);
+
+        ViewInteraction favoriteTab = onView(
+                allOf(withId(R.id.action_contact),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+        favoriteTab.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction broadcastMessageTab = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
+        broadcastMessageTab.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction settingsTab = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
+        settingsTab.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction profileRow = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        profileRow.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction copyUserId = onView(
+                allOf(withId(R.id.image_view_id_copy),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
+        copyUserId.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction editButton = onView(
+                allOf(withId(R.id.text_view_edit),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
+        editButton.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction editInputTextBox = onView(
+                allOf(withId(R.id.edit_text_name),
+                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
+        editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+
+        addDelay(500);
+
+        ViewInteraction updateProfileImageSelection = onView(
+                allOf(withId(R.id.image_profile),
+                        childAtPosition(allOf(withId(R.id.image_layout),
+                                childAtPosition(withId(R.id.scrollview), 0)), 6)));
+        updateProfileImageSelection.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction profileImageSelect = onView(
+                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
+                        childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
+        profileImageSelect.perform(click());
+
+        addDelay(300);
+
+        ViewInteraction profileUpdateDone = onView(
+                allOf(withId(R.id.menu_done),
+                        childAtPosition(
+                                childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+        profileUpdateDone.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction updateProfile = onView(
+                allOf(withId(R.id.button_update),
+                        childAtPosition(allOf(withId(R.id.image_layout),
+                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+        updateProfile.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction updateProfileBack = onView(
+                allOf(withId(R.id.op_back),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
+        updateProfileBack.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction openWallet = onView(
+                allOf(withId(R.id.layout_open_wallet),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
+        openWallet.perform(scrollTo(), click());
+
+        addDelay(2000);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction openDataPlan = onView(
+                allOf(withId(R.id.layout_data_plan),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
+        openDataPlan.perform(scrollTo(), click());
+
+        addDelay(2000);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction openShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
+        openShareApp.perform(scrollTo(), click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction chooseLanguage = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+        chooseLanguage.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction optionBangla = onView(
+                allOf(withId(R.id.radio_bangla),
+                        childAtPosition(allOf(withId(R.id.radio_group_language),
+                                childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 1), isDisplayed()));
+        optionBangla.perform(click());
+
+        addDelay(1500);
+
+        ViewInteraction chooseLanguageForSecond = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                        childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+        chooseLanguageForSecond.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction optionEnglish = onView(
+                allOf(withId(R.id.radio_english),
+                        childAtPosition(allOf(withId(R.id.radio_group_language),
+                                childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 0), isDisplayed()));
+        optionEnglish.perform(click());
+
+        addDelay(1500);
+
+        ViewInteraction optionAboutUs = onView(
+                allOf(withId(R.id.layout_about_us),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 7)));
+        optionAboutUs.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction optionFeedBack = onView(
+                allOf(withId(R.id.layout_feedback),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 8)));
+        optionFeedBack.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction editBoxFeedback = onView(
+                allOf(withId(R.id.edit_text_feedback),
+                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1), isDisplayed()));
+        editBoxFeedback.perform(replaceText("good"), closeSoftKeyboard());
+
+        addDelay(300);
+
+        ViewInteraction baseButton4 = onView(
+                allOf(withId(R.id.button_feed_back),
+                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2), isDisplayed()));
+        baseButton4.perform(click());
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        addDelay(2000);
+
+        try {
+            RmDataHelper.getInstance().stopRmService();
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
     }
+
+    /*@Test
+    public void uiTest_03() {
+
+        addDelay(4000);
+
+        UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+        userEntity.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(1000);
+
+        ViewInteraction userItemAction = onView(
+                allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
+                                childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        userItemAction.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction messageEditBox = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(allOf(withId(R.id.chat_message_bar),
+                                childAtPosition(withId(R.id.chat_layout), 4)), 0), isDisplayed()));
+        messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
+
+        addDelay(700);
+
+        ViewInteraction messageSendAction = onView(
+                allOf(withId(R.id.image_view_send),
+                        childAtPosition(allOf(withId(R.id.chat_message_bar),
+                                childAtPosition(withId(R.id.chat_layout), 4)), 1), isDisplayed()));
+        messageSendAction.perform(click());
+
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+        messageSourceData.insertOrUpdateData(chatEntity);
+
+        addDelay(1000);
+
+        ViewInteraction viewProfileAction = onView(
+                allOf(withId(R.id.text_view_last_name),
+                        childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
+                                        childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        viewProfileAction.perform(click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        ViewInteraction contactSearch = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+        contactSearch.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction searchWithText = onView(
+                allOf(withId(R.id.search_src_text),
+                        childAtPosition(allOf(withId(R.id.search_plate),
+                                childAtPosition(withId(R.id.search_edit_frame), 1)), 0), isDisplayed()));
+        searchWithText.perform(replaceText("dane"), closeSoftKeyboard());
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        ViewInteraction favoriteTab = onView(
+                allOf(withId(R.id.action_contact),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+        favoriteTab.perform(click());
+
+        addDelay(500);
+
+        mDevice.pressBack();
+    }*/
 
     private void addDelay(int i) {
         try {
@@ -275,6 +598,20 @@ public class TelemeshTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public Activity currentActivity = null;
+
+    public Activity getActivityInstance() {
+        getInstrumentation().runOnMainSync(() -> {
+            Collection resumedActivities =
+                    ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(RESUMED);
+            if (resumedActivities.iterator().hasNext()){
+                currentActivity = (Activity) resumedActivities.iterator().next();
+            }
+        });
+
+        return currentActivity;
     }
 
     private static Matcher<View> childAtPosition(

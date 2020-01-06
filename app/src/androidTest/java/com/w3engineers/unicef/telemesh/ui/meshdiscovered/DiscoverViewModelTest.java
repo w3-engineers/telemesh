@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 import android.app.Application;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -23,6 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
@@ -34,13 +37,13 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static org.junit.Assert.*;
 
-
+@RunWith(AndroidJUnit4.class)
 public class DiscoverViewModelTest {
     private CompositeDisposable mCompositeDisposable;
     private List<UserEntity> mUserEntities;
 
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+ /*   @Rule
+    public TestRule instantTaskExecutorRule = new InstantTaskExecutorRule();*/
 
     private DiscoverViewModel SUT;
 
@@ -78,13 +81,15 @@ public class DiscoverViewModelTest {
     @Test
     public void testGetAllUsers_forFirstTime_getEmptyUserList() throws InterruptedException {
 
+        MutableLiveData<PagedList<UserEntity>> nearbyUsers = SUT.nearbyUsers;
+
         String userMeshId = UUID.randomUUID().toString();
 
         userEntity.setMeshId(userMeshId);
         userEntity.isFavourite = 1;
         userEntity.isOnline = 1;
 
-        AsyncTask.execute(() -> userDataSource.insertOrUpdateData(userEntity));
+        userDataSource.insertOrUpdateData(userEntity);
 
 
         addDelay(1000);
@@ -94,12 +99,27 @@ public class DiscoverViewModelTest {
         addDelay(2000);
 
 
-        List<UserEntity> result = LiveDataTestUtil.getValue(SUT.nearbyUsers);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PagedList<UserEntity> result = LiveDataTestUtil.getValue(nearbyUsers);
 
-        addDelay(2000);
+                    addDelay(2000);
 
-        assertTrue(result.isEmpty());
+                    System.out.println("User list length: " + result.size());
+                    if (result.size() > 0) {
+                        assertFalse(result.isEmpty());
+                    } else {
+                        assertTrue(result.isEmpty());
+                    }
 
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 

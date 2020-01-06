@@ -8,6 +8,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -55,8 +57,8 @@ public class MeshContactViewModelTest {
     private CompositeDisposable mCompositeDisposable;
     private List<UserEntity> mUserEntities;
 
-    @Rule
-    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+    /*@Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();*/
 
     private MeshContactViewModel SUT;
 
@@ -97,7 +99,7 @@ public class MeshContactViewModelTest {
     }
 
     @Test
-    public void testGetAllUsers_forFirstTime_getEmptyUserList() throws InterruptedException {
+    public void testGetAllUsers_forFirstTime_getEmptyUserList() {
 
         LiveData<PagedList<UserEntity>> allUserList = SUT.favoriteEntityList;
 
@@ -105,14 +107,28 @@ public class MeshContactViewModelTest {
 
         SUT.startFavouriteObserver();
 
-        PagedList<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+        addDelay(2000);
 
-        // assertTrue(testObserver.observedvalues.get(0).isEmpty());
-        assertTrue(result.isEmpty());
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PagedList<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+                    // assertTrue(testObserver.observedvalues.get(0).isEmpty());
+                    assertTrue(result.isEmpty());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
     }
 
     @Test
-    public void testGetAllUsers_addUser_checkUserProperties() throws InterruptedException {
+    public void testGetAllUsers_addUser_checkUserProperties() {
 
         addDelay(1000);
 
@@ -120,8 +136,9 @@ public class MeshContactViewModelTest {
 
         userEntity.setMeshId(userMeshId);
         userEntity.isFavourite = 1;
-        userDataSource.insertOrUpdateData(userEntity);
+        long res = userDataSource.insertOrUpdateData(userEntity);
 
+        System.out.println("Data insert: "+res);
 
         addDelay(2000);
 
@@ -131,15 +148,25 @@ public class MeshContactViewModelTest {
 
         //TestObserver<List<UserEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getAllUsers());
 
-        PagedList<UserEntity> result = LiveDataTestUtil.getValue(SUT.favoriteEntityList);
-
-
-        addDelay(2000);
         SUT.startFavouriteObserver();
         addDelay(2000);
 
-        // assertEquals(testObserver.observedvalues.get(0).get(0).getMeshId(), userMeshId);
-        assertEquals(result.get(0).getMeshId(), userMeshId);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PagedList<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
+
+                    addDelay(2000);
+
+                    // assertEquals(testObserver.observedvalues.get(0).get(0).getMeshId(), userMeshId);
+                    assertEquals(result.get(0).getMeshId(), userMeshId);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     @Test

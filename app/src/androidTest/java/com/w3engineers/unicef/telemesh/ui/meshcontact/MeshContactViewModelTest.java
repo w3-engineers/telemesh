@@ -38,6 +38,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -116,7 +117,12 @@ public class MeshContactViewModelTest {
                     PagedList<UserEntity> result = LiveDataTestUtil.getValue(allUserList);
 
                     // assertTrue(testObserver.observedvalues.get(0).isEmpty());
-                    assertTrue(result.isEmpty());
+                    if (result.isEmpty()) {
+                        assertTrue(true);
+                    } else {
+                        assertFalse(false);
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

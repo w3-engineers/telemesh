@@ -82,6 +82,7 @@ public class TelemeshTest {
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
+    public String friendAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
     public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
     public String defaultPassword = "mesh_123";
 
@@ -528,7 +529,7 @@ public class TelemeshTest {
         }
     }
 
-    /*@Test
+    @Test
     public void uiTest_03() {
 
         addDelay(4000);
@@ -548,7 +549,7 @@ public class TelemeshTest {
 
         ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
-                                childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+                        childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
         userItemAction.perform(click());
 
         addDelay(1000);
@@ -556,7 +557,7 @@ public class TelemeshTest {
         ViewInteraction messageEditBox = onView(
                 allOf(withId(R.id.edit_text_message),
                         childAtPosition(allOf(withId(R.id.chat_message_bar),
-                                childAtPosition(withId(R.id.chat_layout), 4)), 0), isDisplayed()));
+                                childAtPosition(withId(R.id.chat_layout), 5)), 0), isDisplayed()));
         messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
 
         addDelay(700);
@@ -564,7 +565,7 @@ public class TelemeshTest {
         ViewInteraction messageSendAction = onView(
                 allOf(withId(R.id.image_view_send),
                         childAtPosition(allOf(withId(R.id.chat_message_bar),
-                                childAtPosition(withId(R.id.chat_layout), 4)), 1), isDisplayed()));
+                                childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
         messageSendAction.perform(click());
 
         addDelay(1000);
@@ -577,7 +578,7 @@ public class TelemeshTest {
         ViewInteraction viewProfileAction = onView(
                 allOf(withId(R.id.text_view_last_name),
                         childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
-                                        childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+                                childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
         viewProfileAction.perform(click());
 
         addDelay(1000);
@@ -593,13 +594,15 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
         contactSearch.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
-        ViewInteraction searchWithText = onView(
+        /*ViewInteraction searchWithText = onView(
                 allOf(withId(R.id.search_src_text),
                         childAtPosition(allOf(withId(R.id.search_plate),
                                 childAtPosition(withId(R.id.search_edit_frame), 1)), 0), isDisplayed()));
-        searchWithText.perform(replaceText("dane"), closeSoftKeyboard());
+        searchWithText.perform(replaceText("dane"), closeSoftKeyboard());*/
+
+        onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
 
         addDelay(500);
 
@@ -613,7 +616,7 @@ public class TelemeshTest {
         addDelay(500);
 
         mDevice.pressBack();
-    }*/
+    }
 
     private void addDelay(int i) {
         try {
@@ -667,4 +670,5 @@ public class TelemeshTest {
 
         feedDataSource.insertOrUpdateData(entity);
     }
+
 }

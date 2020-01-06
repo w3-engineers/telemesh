@@ -139,6 +139,7 @@ dependencies {
     androidTestImplementation deps.atsl.rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.espresso.contrib
 
     androidTestImplementation deps.room.testing
     androidTestImplementation deps.arch_core.testing // It is mandatory for live data test

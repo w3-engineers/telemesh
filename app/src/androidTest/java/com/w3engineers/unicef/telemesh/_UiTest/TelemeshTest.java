@@ -24,6 +24,7 @@ import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -46,6 +47,8 @@ import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
+import java.util.concurrent.RecursiveAction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -62,7 +65,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+
+import android.support.test.espresso.contrib.RecyclerViewActions;
 
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -81,6 +87,7 @@ public class TelemeshTest {
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
+    private FeedDataSource feedDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
     private SharedPref sharedPref;
@@ -93,6 +100,7 @@ public class TelemeshTest {
                 AppDatabase.class).allowMainThreadQueries().build();
 
         userDataSource = UserDataSource.getInstance();
+        feedDataSource = FeedDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
         randomEntityGenerator = new RandomEntityGenerator();
 
@@ -122,7 +130,7 @@ public class TelemeshTest {
         ViewInteraction importAnotherId = onView(
                 allOf(withId(R.id.button_import_profile),
                         childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
-                                        childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 5)));
+                                childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 5)));
         importAnotherId.perform(scrollTo(), click());
 
         addDelay(3000);
@@ -176,7 +184,7 @@ public class TelemeshTest {
 
         ViewInteraction selectImageForTheFirst = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                                childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
+                        childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
         selectImageForTheFirst.perform(click());
 
         addDelay(300);
@@ -242,7 +250,7 @@ public class TelemeshTest {
         ViewInteraction ActionCreateProfileNext = onView(
                 allOf(withId(R.id.button_signup),
                         childAtPosition(allOf(withId(R.id.image_layout),
-                                        childAtPosition(withId(R.id.scrollview), 0)), 10)));
+                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
         ActionCreateProfileNext.perform(scrollTo(), click());
 
         addDelay(500);
@@ -307,6 +315,23 @@ public class TelemeshTest {
         broadcastMessageTab.perform(click());
 
         addDelay(500);
+
+        // Todo add a feed item.
+
+        addFeedItem();
+
+        addDelay(1500);
+
+        // click feed item.
+
+        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        addDelay(1500);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
@@ -440,7 +465,7 @@ public class TelemeshTest {
         ViewInteraction chooseLanguageForSecond = onView(
                 allOf(withId(R.id.layout_choose_language),
                         childAtPosition(allOf(withId(R.id.layout_settings),
-                                        childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
         chooseLanguageForSecond.perform(scrollTo(), click());
 
         addDelay(500);
@@ -606,7 +631,7 @@ public class TelemeshTest {
         getInstrumentation().runOnMainSync(() -> {
             Collection resumedActivities =
                     ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(RESUMED);
-            if (resumedActivities.iterator().hasNext()){
+            if (resumedActivities.iterator().hasNext()) {
                 currentActivity = (Activity) resumedActivities.iterator().next();
             }
         });
@@ -631,5 +656,17 @@ public class TelemeshTest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    private void addFeedItem() {
+        FeedEntity entity = new FeedEntity();
+        entity.setFeedId(UUID.randomUUID().toString());
+        entity.setFeedTitle("Sample title");
+        entity.setFeedDetail("Sample broadcast");
+        entity.setFeedProviderName("Unicef");
+        entity.setFeedTime("2019-08-02T06:05:30.000Z");
+        entity.setFeedReadStatus(false);
+
+        feedDataSource.insertOrUpdateData(entity);
     }
 }

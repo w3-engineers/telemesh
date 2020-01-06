@@ -316,8 +316,6 @@ public class TelemeshTest {
 
         addDelay(500);
 
-        // Todo add a feed item.
-
         addFeedItem();
 
         addDelay(1500);

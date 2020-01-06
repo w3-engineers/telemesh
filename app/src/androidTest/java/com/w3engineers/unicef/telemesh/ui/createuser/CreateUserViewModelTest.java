@@ -46,7 +46,7 @@ public class CreateUserViewModelTest {
     public void tearDown() {
     }
 
-    @Test
+   /* @Test
     public void storeData_storeNameString_getNameString() {
         String firstName = "Daniel Alvez";
         int imageIndex = 1;
@@ -55,9 +55,9 @@ public class CreateUserViewModelTest {
       //  SUT.storeData(firstName);
 
         checkValues(firstName, imageIndex);
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void storeData_storeNameEmpty_getNameEmpty() {
         String firstName = "";
         String lastName = "";
@@ -67,7 +67,7 @@ public class CreateUserViewModelTest {
         //SUT.storeData(firstName);
 
         checkValues(firstName, imageIndex);
-    }
+    }*/
 
     @Test
     public void storeData_storeNameNull_getNameNull() {

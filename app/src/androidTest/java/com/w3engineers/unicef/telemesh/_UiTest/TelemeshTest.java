@@ -498,7 +498,7 @@ public class TelemeshTest {
         addDelay(2000);
 
         try {
-            RmDataHelper.getInstance().stopRmService();
+            //RmDataHelper.getInstance().stopRmService();
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();

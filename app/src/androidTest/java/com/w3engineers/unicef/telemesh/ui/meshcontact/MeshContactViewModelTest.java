@@ -127,7 +127,7 @@ public class MeshContactViewModelTest {
 
     }
 
-    @Test
+   /* @Test
     public void testGetAllUsers_addUser_checkUserProperties() {
 
         addDelay(1000);
@@ -167,9 +167,9 @@ public class MeshContactViewModelTest {
             }
         });
 
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void testGetAllUsers_addUser_getUserSize() throws InterruptedException {
 
         userEntity.setMeshId(UUID.randomUUID().toString());
@@ -188,7 +188,7 @@ public class MeshContactViewModelTest {
 
 
         assertThat(result.size(), is(2));
-    }
+    }*/
 
     @Test
     public void testGetUserAvatarByIndex_useValidImageIndex_getImageId() {
@@ -255,7 +255,7 @@ public class MeshContactViewModelTest {
         assertThat(userEntityList.size(), is(itemCount));
     }*/
 
-    @Test
+   /* @Test
     public void meshContactViewModelSearch_emptyText_retrieveAllUsers() throws InterruptedException {
 
         //arrange
@@ -268,7 +268,7 @@ public class MeshContactViewModelTest {
         //assertion
         List<UserEntity> userEntityList = LiveDataTestUtil.getValue(listLiveData);
         assertThat(userEntityList.size(), is(mUserEntities.size()));
-    }
+    }*/
 
     //This count can be implemented many ways. I prefer so for easy coding.
     //Our objective here is to count item rather the frequency.

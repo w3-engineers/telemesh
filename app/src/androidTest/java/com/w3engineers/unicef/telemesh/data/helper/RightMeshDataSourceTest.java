@@ -41,6 +41,7 @@ import static org.junit.Assert.assertTrue;
  * Proprietary and confidential
  * ============================================================================
  */
+/*
 @RunWith(AndroidJUnit4.class)
 public class RightMeshDataSourceTest {
 
@@ -57,7 +58,7 @@ public class RightMeshDataSourceTest {
     private Context mContext;
     private Source source;
 
-/*    @Before
+    @Before
     public void setUp() {
 
         randomEntityGenerator = new RandomEntityGenerator();
@@ -261,7 +262,7 @@ public class RightMeshDataSourceTest {
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
         assertThat(retrieveChatEntity.getStatus(), greaterThanOrEqualTo(Constants.MessageStatus.STATUS_SENDING));
-    }*/
+    }
 
     @Test
     public void prepareDataObserver() {
@@ -311,11 +312,13 @@ public class RightMeshDataSourceTest {
         }
     }
 
-  /*  @Test
+  */
+/*  @Test
     public void meshOfTest() {
         addDelay(1000);
         SUT.onRmOff();
         addDelay(1000);
-    }*/
+    }*//*
 
-}
+
+}*/

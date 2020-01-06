@@ -48,7 +48,7 @@ For UNICEF, we plan to develop an open source messaging app to be tested in refu
             |-- util
                 |-- helper #Generic tasks like TimeUtil, NetworkUtil etc.
                 |-- lib #third party library, component etc.
-            |-- Application.java #Android Application class    
+            |-- Application.java #Android Application class
     |-- viper #W3Engineers wrapper module
     |-- build.gradle
     |-- settings.gradle
@@ -62,7 +62,7 @@ N/A
 N/A
 
 ## Prerequisites
-* Mesh networking technology. 
+* Mesh networking technology.
 * Android device with Wifi, WifiDirect, Bluetooth or Bluetooth Low Energy (BLE) support.
 
 ## Project Dependencies
@@ -87,7 +87,7 @@ Navigate to directory where you want to keep source code. Open command prompt. E
 You need to request for mesh technology support to the Telemesh team to build the project successfully.
 
 **Step 3: Sync and build:**
-If everything is ok then sync and build should work as it should be. If not please recheck step 1 and 2. 
+If everything is ok then sync and build should work as it should be. If not please recheck step 1 and 2.
 
 **Step 4: Test on device:**
 [TBD]
@@ -101,9 +101,9 @@ If everything is ok then sync and build should work as it should be. If not plea
 **NOTE:** You must have a connected device or emulator as it runs instrumentation tests. You will find the coverage report at *telemesh/app/build/reports/coverage*
 
 ## User Interface (UI)
-<kbd><img src="http://gdurl.com/eghW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Tjfb" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/mHBU0" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/vxRe" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/eghW" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/Tjfb" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/mHBU0" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/vxRe" width="175" height="300"></kbd>
 
-<kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd> 
+<kbd><img src="http://gdurl.com/Un2g" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/wmHS" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/G9N1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/0vRW" width="175" height="300"></kbd>
 
 <kbd><img src="http://gdurl.com/IbR1" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/fKqZ" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/gIwO" width="175" height="300"></kbd> <kbd><img src="http://gdurl.com/lCNV" width="175" height="300"></kbd>
 

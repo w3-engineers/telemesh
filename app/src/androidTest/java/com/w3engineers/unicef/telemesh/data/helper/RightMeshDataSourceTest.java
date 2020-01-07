@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
+import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -17,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.junit.After;
@@ -41,7 +43,6 @@ import static org.junit.Assert.assertTrue;
  * Proprietary and confidential
  * ============================================================================
  */
-/*
 @RunWith(AndroidJUnit4.class)
 public class RightMeshDataSourceTest {
 
@@ -57,6 +58,8 @@ public class RightMeshDataSourceTest {
     private AppDatabase appDatabase;
     private Context mContext;
     private Source source;
+
+    public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
 
     @Before
     public void setUp() {
@@ -78,9 +81,12 @@ public class RightMeshDataSourceTest {
         rmDataHelper.initSource(source);
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
-        SUT = new MeshDataSource(userEntity.getProtoUser());
 
-        SUT.onRmOn();
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, myAddress);
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.IMAGE_INDEX, 2);
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
+
+        SUT = MeshDataSource.getRmDataSource();
     }
 
     @After
@@ -93,13 +99,15 @@ public class RightMeshDataSourceTest {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        SUT.onPeer(baseMeshData);
+        String byteData = new Gson().toJson(userModel);
+
+        SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
 
         addDelay(2000);
 
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
+        UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
         addDelay(2000);
 
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
@@ -121,31 +129,33 @@ public class RightMeshDataSourceTest {
     public void testOnPeerGone_getOnlineStatus_setExistingUser() {
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
-        SUT.onPeer(baseMeshData);
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        addDelay();
+        String byteData = new Gson().toJson(userModel);
 
-        MeshPeer meshPeer = baseMeshData.mMeshPeer;
-        SUT.onPeerGone(meshPeer);
-        addDelay();
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        addDelay();
+        SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
+
+        addDelay(500);
+
+        SUT.peerRemove(userModel.getUserId());
+        addDelay(500);
+        UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
+        addDelay(500);
         assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus() > Constants.UserStatus.OFFLINE);
     }
 
     @Test
     public void testDataSend() {
 
-        addDelay();
+        addDelay(500);
 
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
+        SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
     }
 
-    @Test
+  /*  @Test
     public void onlyNodeAddedTest() {
-        addDelay();
+        addDelay(500);
 
         String nodeId = "0x3988dbfkjdf984rc9";
         SUT.nodeIdDiscovered(nodeId);
@@ -157,9 +167,9 @@ public class RightMeshDataSourceTest {
         assertEquals(userEntity.getMeshId(), nodeId);
 
         addDelay();
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void nodeAvailableTest() {
         addDelay();
 
@@ -190,12 +200,10 @@ public class RightMeshDataSourceTest {
         assertEquals(myUserId, meshId);
 
         addDelay();
-    }
+    }*/
 
 
-
-
-    @Test
+   /* @Test
     public void testOnData_checkMessageProperties_forValidMessage() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
@@ -235,9 +243,9 @@ public class RightMeshDataSourceTest {
         }
 
 
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void testOnAcknowledgement() {
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
@@ -262,9 +270,9 @@ public class RightMeshDataSourceTest {
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
         assertThat(retrieveChatEntity.getStatus(), greaterThanOrEqualTo(Constants.MessageStatus.STATUS_SENDING));
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void prepareDataObserver() {
         addDelay();
 
@@ -294,15 +302,8 @@ public class RightMeshDataSourceTest {
 
         assertFalse(retrieveChatEntity.isIncoming());
 
-    }
+    }*/
 
-    private void addDelay() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void addDelay(long time) {
         try {
@@ -312,13 +313,4 @@ public class RightMeshDataSourceTest {
         }
     }
 
-  */
-/*  @Test
-    public void meshOfTest() {
-        addDelay(1000);
-        SUT.onRmOff();
-        addDelay(1000);
-    }*//*
-
-
-}*/
+}

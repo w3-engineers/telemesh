@@ -199,24 +199,33 @@ public class VRmDataHelperTest {
 
     @Test
     public void userNodeStatusFindTest() {
-      /*  addDelay(500);
+        addDelay(500);
 
-        int wifiOnlineStatus = RmDataHelper.getInstance().getActiveStatus(Link.Type.WIFI.getValue());
+        int wifiOnlineStatus = RmDataHelper.getInstance().getActiveStatus(1);
         assertEquals(Constants.UserStatus.WIFI_ONLINE, wifiOnlineStatus);
         addDelay(200);
 
-        int wifiMeshOnlineStatus = RmDataHelper.getInstance().getActiveStatus(Link.Type.WIFI_MESH.getValue());
+        int bleOnlineStatus = RmDataHelper.getInstance().getActiveStatus(2);
+        assertEquals(Constants.UserStatus.BLE_ONLINE, bleOnlineStatus);
+        addDelay(200);
+
+        int wifiMeshOnlineStatus = RmDataHelper.getInstance().getActiveStatus(3);
         assertEquals(Constants.UserStatus.WIFI_MESH_ONLINE, wifiMeshOnlineStatus);
         addDelay(200);
 
-        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(Link.Type.BT_MESH.getValue());
+        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(4);
         assertEquals(Constants.UserStatus.BLE_MESH_ONLINE, BtMeshOnline);
         addDelay(200);
 
-        int internetOnline = RmDataHelper.getInstance().getActiveStatus(Link.Type.INTERNET.getValue());
+        int internetOnline = RmDataHelper.getInstance().getActiveStatus(5);
         assertEquals(Constants.UserStatus.INTERNET_ONLINE, internetOnline);
 
-        addDelay(500);*/
+        addDelay(200);
+
+        int offline = RmDataHelper.getInstance().getActiveStatus(0);
+        assertEquals(Constants.UserStatus.OFFLINE, offline);
+
+        addDelay(500);
     }
 
     @Test

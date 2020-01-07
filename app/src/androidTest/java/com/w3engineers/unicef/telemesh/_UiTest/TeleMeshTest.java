@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh._UiTest;
 
 
@@ -264,6 +265,7 @@ public class TeleMeshTest {
         addDelay(3200);
     }
 
+*/
 /*    @Test
     public void openExistsAccount(){
         addDelay(3200);
@@ -271,7 +273,8 @@ public class TeleMeshTest {
         onView(withId(R.id.button_import_account)).perform(click());
 
         addDelay(700);
-    }*/
+    }*//*
+
 
     // Fragment tab switch process
     @Test
@@ -309,12 +312,14 @@ public class TeleMeshTest {
         pressBack();
         addDelay(700);
 
-       /* ViewInteraction connectivityDiagram = onView(allOf(withId(R.id.layout_diagram_map),
+       */
+/* ViewInteraction connectivityDiagram = onView(allOf(withId(R.id.layout_diagram_map),
                 childAtPosition(allOf(withId(R.id.layout_settings), childAtPosition(withId(R.id.layout_scroll), 0)), 5)));
 
         connectivityDiagram.perform(scrollTo(), click());
         pressBack();
-        addDelay(700);*/
+        addDelay(700);*//*
+
 
         mDevice.pressBack();
 
@@ -721,3 +726,4 @@ public class TeleMeshTest {
     }
 
 }
+*/

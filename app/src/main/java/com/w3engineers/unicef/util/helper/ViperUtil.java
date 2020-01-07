@@ -11,17 +11,14 @@ Proprietary and confidential
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
-import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
@@ -31,27 +28,17 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -73,11 +60,11 @@ public abstract class ViperUtil {
 
 //            String jsonData = loadJSONFromAsset(context);
 
-            String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
-            String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
-            String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
-            String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
-            String PARSE_URL = BuildConfig.PARSE_URL;
+            String AUTH_USER_NAME = "";
+            String AUTH_PASSWORD = "";
+            String FILE_REPO_LINK = "";
+            String PARSE_APP_ID = "";
+            String PARSE_URL = "";
 
 //                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
@@ -163,8 +150,6 @@ public abstract class ViperUtil {
                     .setConfigVersion(userInfoEvent.getConfigVersion());
 
             peerAdd(userInfoEvent.getAddress(), userModel);
-
-            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {

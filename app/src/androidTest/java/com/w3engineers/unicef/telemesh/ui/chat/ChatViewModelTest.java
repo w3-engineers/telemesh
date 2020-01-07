@@ -41,7 +41,7 @@ import static org.junit.Assert.assertThat;
  * ============================================================================
  */
 
-@RunWith(AndroidJUnit4.class)
+/*@RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
     @Rule
@@ -149,4 +149,4 @@ public class ChatViewModelTest {
     public void tearDown() {
         appDatabase.close();
     }
-}
+}*/

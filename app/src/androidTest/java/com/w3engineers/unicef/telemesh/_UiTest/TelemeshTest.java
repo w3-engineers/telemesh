@@ -358,7 +358,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
         editButton.perform(click());
 
-        addDelay(500);
+        addDelay(2000);
 
         ViewInteraction editInputTextBox = onView(
                 allOf(withId(R.id.edit_text_name),

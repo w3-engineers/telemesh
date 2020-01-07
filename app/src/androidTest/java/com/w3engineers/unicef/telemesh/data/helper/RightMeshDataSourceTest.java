@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
+import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -124,35 +125,37 @@ public class RightMeshDataSourceTest {
     }
 
 
-   /* @Test
+    @Test
     public void testOnPeerGone_getOnlineStatus_setExistingUser() {
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
-        SUT.onPeer(baseMeshData);
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        addDelay();
+        String byteData = new Gson().toJson(userModel);
 
-        MeshPeer meshPeer = baseMeshData.mMeshPeer;
-        SUT.onPeerGone(meshPeer);
-        addDelay();
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        addDelay();
+        SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
+
+        addDelay(500);
+
+        SUT.peerRemove(userModel.getUserId());
+        addDelay(500);
+        UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
+        addDelay(500);
         assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus() > Constants.UserStatus.OFFLINE);
-    }*/
+    }
 
-   /* @Test
+    @Test
     public void testDataSend() {
 
-        addDelay();
+        addDelay(500);
 
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
-    }*/
+        SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
+    }
 
-   /* @Test
+  /*  @Test
     public void onlyNodeAddedTest() {
-        addDelay();
+        addDelay(500);
 
         String nodeId = "0x3988dbfkjdf984rc9";
         SUT.nodeIdDiscovered(nodeId);

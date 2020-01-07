@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 import android.net.Uri;
 import android.os.Build;
 
+import com.w3engineers.unicef.telemesh.BuildConfig;
+
 import java.util.Locale;
 
 public class Constants {
@@ -218,12 +220,12 @@ public class Constants {
     }
 
     public interface GradleBuildValues {
-        String AUTH_PASSWORD = "";
-        String AUTH_USER_NAME = "";
-        String BROADCAST_TOKEN = "";
-        String BROADCAST_URL = "";
-        String FILE_REPO_LINK = "";
-        String PARSE_APP_ID = "";
-        String PARSE_URL = "";
+        String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
+        String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
+        String BROADCAST_TOKEN = BuildConfig.BROADCAST_TOKEN;
+        String BROADCAST_URL = BuildConfig.BROADCAST_URL;
+        String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
+        String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
+        String PARSE_URL = BuildConfig.PARSE_URL;
     }
 }

@@ -3,8 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 import android.net.Uri;
 import android.os.Build;
 
-import com.w3engineers.mesh.util.Constant;
-
 import java.util.Locale;
 
 public class Constants {
@@ -217,5 +215,15 @@ public class Constants {
         } else {
             return Character.toUpperCase(first) + s.substring(1);
         }
+    }
+
+    public interface GradleBuildValues {
+        String AUTH_PASSWORD = "";
+        String AUTH_USER_NAME = "";
+        String BROADCAST_TOKEN = "";
+        String BROADCAST_URL = "";
+        String FILE_REPO_LINK = "";
+        String PARSE_APP_ID = "";
+        String PARSE_URL = "";
     }
 }

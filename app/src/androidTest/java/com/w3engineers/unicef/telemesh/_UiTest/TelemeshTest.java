@@ -284,11 +284,16 @@ public class TelemeshTest {
 
         addDelay(5000);
 
-        /*SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
+        Activity currentActivity = getActivityInstance();
 
-        securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
+        if (currentActivity instanceof SecurityActivity) {
 
-        addDelay(300);*/
+            SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
+
+            securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
+
+            addDelay(300);
+        }
     }
 
     @Test

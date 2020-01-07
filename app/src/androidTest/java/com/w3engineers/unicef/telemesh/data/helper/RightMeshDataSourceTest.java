@@ -146,7 +146,6 @@ public class RightMeshDataSourceTest {
 
     @Test
     public void testDataSend() {
-
         addDelay(500);
 
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();

@@ -1,4 +1,7 @@
 package com.w3engineers.unicef.telemesh.util;
+import com.google.gson.Gson;
+import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
+import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
@@ -7,6 +10,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.UUID;
 
@@ -181,12 +185,12 @@ public class RandomEntityGenerator {
                 .setStatus(Constants.MessageStatus.STATUS_UNREAD);
     }
 
-   /* public MeshData createMeshData(String userId, ChatEntity chatEntity) {
-        MeshData meshData = new MeshData();
+    public ViperData createMeshData(ChatEntity chatEntity) {
+        ViperData meshData = new ViperData();
 
-        meshData.mType = Constants.DataType.MESSAGE;
-        meshData.mMeshPeer = new MeshPeer(userId);
-        meshData.mData = new Gson().toJson(chatEntity.toMessageModel()).getBytes();
+        meshData.dataType = Constants.DataType.MESSAGE;
+        meshData.isNotificationEnable = false;
+        meshData.rawData = new Gson().toJson(chatEntity.toMessageModel()).getBytes();
 
         return meshData;
     }
@@ -202,7 +206,7 @@ public class RandomEntityGenerator {
         MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(String.valueOf(transferId));
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;
-    }*/
+    }
 
     public GeoLocation createGeoLocation() {
         GeoLocation geoLocation = new GeoLocation();

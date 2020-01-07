@@ -61,11 +61,17 @@ public abstract class ViperUtil {
 
 //            String jsonData = loadJSONFromAsset(context);
 
-            String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
+            /*String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
             String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
             String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
             String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
-            String PARSE_URL = BuildConfig.PARSE_URL;
+            String PARSE_URL = BuildConfig.PARSE_URL;*/
+
+            String AUTH_USER_NAME = "";
+            String AUTH_PASSWORD = "";
+            String FILE_REPO_LINK = "";
+            String PARSE_APP_ID = "";
+            String PARSE_URL = "";
 
 //                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 

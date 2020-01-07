@@ -8,14 +8,14 @@ import android.support.annotation.NonNull;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.mesh.util.CommonUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
+import com.w3engineers.walleter.wallet.WalletService;
 
 import timber.log.Timber;
 
@@ -40,6 +40,12 @@ public class SplashActivity extends BaseActivity {
         splashViewModel.getUserRegistrationStatus();
         ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
         shimmerFrameLayout.startShimmer();
+
+        if (CommonUtil.isEmulator()) {
+            if (WalletService.getInstance(this).isWalletExists()) {
+                WalletService.getInstance(this).deleteExistsWallet();
+            }
+        }
 
 
         splashViewModel.getIsUserRegistered().observe(this, aBoolean -> {

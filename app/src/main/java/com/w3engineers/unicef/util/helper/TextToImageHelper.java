@@ -46,6 +46,7 @@ public class TextToImageHelper {
      * @return converting bitmap and return a string
      */
     private static String BitMapToString(Bitmap bitmap) {
+        if (bitmap == null) return "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();

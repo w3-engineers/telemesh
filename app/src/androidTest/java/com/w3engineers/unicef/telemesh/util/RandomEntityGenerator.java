@@ -6,6 +6,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 
 import java.util.UUID;
 
@@ -216,6 +217,11 @@ public class RandomEntityGenerator {
         payload.setGeoLocation(location);
         payload.setConnectedClients(String.valueOf(2));
         return payload;
+    }
+
+    public UserModel createUserModel(UserEntity entity){
+
+        return entity.getProtoUser();
     }
 
 }

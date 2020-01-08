@@ -12,12 +12,12 @@ public class StorageUtil {
 
     private static long UNIT = 1048576;
 
-    public static boolean hasStorage(Context context) {
+   /* public static boolean hasStorage(Context context) {
         IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
         boolean hasLowStorage = context.registerReceiver(null, lowstorageFilter) != null;
 
         return hasLowStorage;
-    }
+    }*/
 
     /**
      * The return storage define the available storage in mobile and it show as Megabyte

@@ -43,7 +43,7 @@ public class WalletAddressHelper {
         File directory = new File(filePath);
         StringBuilder result = new StringBuilder();
         File[] list = directory.listFiles();
-        if (list != null) {
+        if (list != null && list.length > 0) {
             File walletFile = list[0];
             if (walletFile.exists()) {
                 FileInputStream fis = null;
@@ -129,7 +129,7 @@ public class WalletAddressHelper {
     }
 
 
-    public static SpannableString getSpannableTitle(Context context) {
+   /* public static SpannableString getSpannableTitle(Context context) {
         String walletText = context.getResources().getString(R.string.warning);
 
         SpannableString spannableString = new SpannableString(walletText);
@@ -139,7 +139,7 @@ public class WalletAddressHelper {
                 1, walletText.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableString;
-    }
+    }*/
 
     public static void writeDefaultAddress(String address, Context context) {
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +

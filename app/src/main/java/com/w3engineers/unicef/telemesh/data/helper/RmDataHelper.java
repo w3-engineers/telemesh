@@ -1198,6 +1198,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
+            if (rightMeshDataSource == null) {
+                rightMeshDataSource = MeshDataSource.getRmDataSource();
+            }
+
             rightMeshDataSource.sendConfigToViper(configurationCommand);
 
             rightMeshDataSource.saveUpdateUserInfo();

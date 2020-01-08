@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
@@ -360,12 +361,21 @@ public class TelemeshTest {
 
         addDelay(4000);
 
-        onView(withId(R.id.edit_text_name)).perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        try {
 
-        /*ViewInteraction editInputTextBox = onView(
-                allOf(withId(R.id.edit_text_name),
-                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());*/
+            ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
+                    childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
+                    childAtPosition(allOf(withId(R.id.image_layout),
+                    childAtPosition(withId(R.id.scrollview), 0)),
+                    8)));
+
+            /*ViewInteraction editInputTextBox = onView(
+                    allOf(withId(R.id.edit_text_name),
+                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
+            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(500);
 
@@ -395,7 +405,8 @@ public class TelemeshTest {
         ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+                                childAtPosition(withId(R.id.scrollview), 0)),
+                                10)));
         updateProfile.perform(scrollTo(), click());
 
         addDelay(500);

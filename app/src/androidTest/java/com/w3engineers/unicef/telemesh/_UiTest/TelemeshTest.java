@@ -343,7 +343,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
         profileRow.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction copyUserId = onView(
                 allOf(withId(R.id.image_view_id_copy),

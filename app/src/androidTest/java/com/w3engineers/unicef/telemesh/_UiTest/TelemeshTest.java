@@ -446,7 +446,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction editButton = onView(
+        /*ViewInteraction editButton = onView(
                 allOf(withId(R.id.text_view_edit),
                         childAtPosition(allOf(withId(R.id.view_profile_layout),
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
@@ -462,9 +462,9 @@ public class TelemeshTest {
                     childAtPosition(withId(R.id.scrollview), 0)),
                     8)));
 
-            /*ViewInteraction editInputTextBox = onView(
+            *//*ViewInteraction editInputTextBox = onView(
                     allOf(withId(R.id.edit_text_name),
-                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
+                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*//*
             editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
@@ -510,7 +510,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
         updateProfileBack.perform(click());
 
-        addDelay(500);
+        addDelay(500);*/
 
         ViewInteraction openWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),

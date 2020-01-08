@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
  * ============================================================================
  */
 
-/*
 @RunWith(AndroidJUnit4.class)
 public class ViperDataProcessorTest {
     private ViperDataProcessor SUT;
@@ -33,10 +32,22 @@ public class ViperDataProcessorTest {
     }
 
     @Test
-    public void setDataFormatFromJsonTest() {
+    public void viperDataProcessTest() {
         addDelay(500);
         ViperData res = SUT.setDataFormatFromJson(createDummyJson().getBytes());
 
+        assertEquals(res.dataType,(byte)type);
+
+        addDelay(500);
+
+        ViperData pingData = SUT.getPingForProfile();
+
+        assertEquals(pingData.dataType,(byte)type);
+
+        addDelay(500);
+
+        ViperData profileData = SUT.getMyProfileMeshData();
+        assertEquals(pingData.dataType,(byte)type);
     }
 
     private String createDummyJson() {
@@ -60,4 +71,4 @@ public class ViperDataProcessorTest {
             e.printStackTrace();
         }
     }
-}*/
+}

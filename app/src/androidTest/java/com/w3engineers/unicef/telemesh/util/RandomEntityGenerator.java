@@ -4,6 +4,7 @@ import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -228,4 +229,11 @@ public class RandomEntityGenerator {
         return entity.getProtoUser();
     }
 
+    public BulletinModel getBulletinModel(){
+        BulletinModel model = new BulletinModel();
+        model.setId(UUID.randomUUID().toString());
+        model.setMessage("Test message");
+        model.setTime("2019-08-02T06:05:30.000Z");
+        return model;
+    }
 }

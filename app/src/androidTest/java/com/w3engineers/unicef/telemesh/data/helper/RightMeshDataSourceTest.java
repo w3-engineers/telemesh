@@ -61,6 +61,7 @@ public class RightMeshDataSourceTest {
     private Source source;
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
+    public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
 
     @Before
     public void setUp() {
@@ -81,13 +82,14 @@ public class RightMeshDataSourceTest {
         rmDataHelper = RmDataHelper.getInstance();
         rmDataHelper.initSource(source);
 
-        UserEntity userEntity = randomEntityGenerator.createUserEntity();
 
         SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, myAddress);
         SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.IMAGE_INDEX, 2);
         SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
 
         SUT = MeshDataSource.getRmDataSource();
+
+        SUT.saveUpdateUserInfo();
     }
 
     @After
@@ -129,14 +131,14 @@ public class RightMeshDataSourceTest {
     @Test
     public void testOnPeerGone_getOnlineStatus_setExistingUser() {
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
-
+        userEntity.setMeshId(meshId);
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
         String byteData = new Gson().toJson(userModel);
 
         SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
 
-        addDelay(500);
+        addDelay(1500);
 
         SUT.peerRemove(userModel.getUserId());
         addDelay(500);
@@ -249,7 +251,7 @@ public class RightMeshDataSourceTest {
 
         rmDataHelper.rmDataMap.put(String.valueOf(transferKey), rmDataModel);
 
-        SUT.onAck(chatEntity.getMessageId(),Constants.MessageStatus.STATUS_SENDING);
+        SUT.onAck(chatEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING);
 
         addDelay(500);
 

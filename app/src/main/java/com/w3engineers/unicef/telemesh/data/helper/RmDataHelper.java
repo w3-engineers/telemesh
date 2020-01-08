@@ -178,7 +178,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
-    public void onlyNodeAdd(String nodeId) {
+   /* public void onlyNodeAdd(String nodeId) {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
@@ -190,7 +190,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
-    }
+    }*/
 
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
@@ -244,7 +244,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      *
      * @param mode Integer
      */
-    public void onGetMyMode(int mode) {
+  /*  public void onGetMyMode(int mode) {
         // Here we will get callback
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
         dataSource.setMyMode(mode);
@@ -261,7 +261,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
 
         //initRM(dataSource);
-    }
+    }*/
 
     /**
      * This api is responsible for update user info in database

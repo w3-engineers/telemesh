@@ -15,6 +15,8 @@ import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -58,13 +60,16 @@ public class VRmDataHelperTest {
     private String date;
     private String meshId;
     private RandomEntityGenerator randomEntityGenerator;
+    private FeedDataSource feedDataSource;
 
     @Before
     public void setUp() {
         msgBody = "This is test message";
         createdAt = "2019-07-19T06:02:30.628Z";
         date = "16-07-2019";
-        meshId = "0xuodnaiabd1983nd";
+        meshId = "0x550de922bec427fc1b279944e47451a89a4f7car";
+
+        feedDataSource = FeedDataSource.getInstance();
 
         randomEntityGenerator = new RandomEntityGenerator();
     }
@@ -103,6 +108,28 @@ public class VRmDataHelperTest {
                 .setMessageId(UUID.randomUUID().toString());
 
         assertEquals(bulletinFeed.getMessageBody(), msgBody);
+    }
+
+    @Test
+    public void bulletinFeedReceiveTest() {
+        addDelay(500);
+
+        DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
+        BulletinModel bulletinModel = randomEntityGenerator.getBulletinModel();
+        String broadCatMessage = new Gson().toJson(bulletinModel);
+        rmDataModel.setRawData(broadCatMessage.getBytes());
+        rmDataModel.setUserId(meshId);
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+
+        addDelay(2000);
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, false);
+
+        addDelay(2000);
+
+        long result = feedDataSource.updateFeedMessageReadStatus(bulletinModel.getId());
+        assertTrue(result > 0);
     }
 
     @Test

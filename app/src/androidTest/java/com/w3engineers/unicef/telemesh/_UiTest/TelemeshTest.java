@@ -365,7 +365,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         profileUpdateDone.perform(click());
 
-        addDelay(500);
+        addDelay(2500);
 
         ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
@@ -374,7 +374,7 @@ public class TelemeshTest {
                                 10)));
         updateProfile.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(2500);
 
         ViewInteraction updateProfileBack = onView(
                 allOf(withId(R.id.op_back),
@@ -493,7 +493,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         profileUpdateDone.perform(click());
 
-        addDelay(500);
+        addDelay(2500);
 
         ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),

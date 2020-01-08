@@ -1,11 +1,19 @@
 package com.w3engineers.unicef.telemesh.util;
+
+import android.os.Parcel;
+
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
+import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.PointGuideLine;
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -223,9 +231,53 @@ public class RandomEntityGenerator {
         return payload;
     }
 
-    public UserModel createUserModel(UserEntity entity){
+    public UserModel createUserModel(UserEntity entity) {
 
         return entity.getProtoUser();
+    }
+
+    public BulletinModel getBulletinModel() {
+        BulletinModel model = new BulletinModel();
+        model.setId(UUID.randomUUID().toString());
+        model.setMessage("Test message");
+        model.setTime("2019-08-02T06:05:30.000Z");
+        return model;
+    }
+
+    public FeedbackModel generateFeedbackModel() {
+        FeedbackModel model = new FeedbackModel();
+        model.setFeedbackId(UUID.randomUUID().toString());
+        model.setUserName("John Doe");
+        model.setUserId("0x550de922bec427fc1b279944e47451a89a4f7cag");
+        model.setFeedback("Good app");
+        return model;
+    }
+
+    public DataModel generateDataModel(String data, byte type, String userId) {
+        DataModel dataModel = new DataModel();
+        dataModel.setUserId(userId);
+        dataModel.setRawData(data.getBytes());
+        dataModel.setDataType(type);
+
+        return dataModel;
+    }
+
+    public ConfigurationCommand generateConfigFile() {
+        ConfigurationCommand configurationCommand = new ConfigurationCommand(Parcel.obtain());
+
+        configurationCommand.setConfigVersionCode(2);
+
+        configurationCommand.setTokenGuideVersion(2);
+
+        configurationCommand.setConfigVersionName("2.0.0");
+
+        return configurationCommand;
+    }
+
+    public TokenGuideRequestModel generateTokenModel() {
+        TokenGuideRequestModel model = new TokenGuideRequestModel();
+        model.setRequest("Request");
+        return model;
     }
 
 }

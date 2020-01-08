@@ -3,7 +3,12 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.PointGuideLine;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastWebSocket;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
@@ -15,8 +20,13 @@ import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -58,13 +68,19 @@ public class VRmDataHelperTest {
     private String date;
     private String meshId;
     private RandomEntityGenerator randomEntityGenerator;
+    private FeedDataSource feedDataSource;
+    private FeedbackDataSource feedbackDataSource;
 
     @Before
     public void setUp() {
         msgBody = "This is test message";
         createdAt = "2019-07-19T06:02:30.628Z";
         date = "16-07-2019";
-        meshId = "0xuodnaiabd1983nd";
+        meshId = "0x550de922bec427fc1b279944e47451a89a4f7car";
+
+        feedDataSource = FeedDataSource.getInstance();
+
+        feedbackDataSource = FeedbackDataSource.getInstance();
 
         randomEntityGenerator = new RandomEntityGenerator();
     }
@@ -106,6 +122,28 @@ public class VRmDataHelperTest {
     }
 
     @Test
+    public void bulletinFeedReceiveTest() {
+        addDelay(500);
+
+        DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
+        BulletinModel bulletinModel = randomEntityGenerator.getBulletinModel();
+        String broadCatMessage = new Gson().toJson(bulletinModel);
+        rmDataModel.setRawData(broadCatMessage.getBytes());
+        rmDataModel.setUserId(meshId);
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, true);
+
+        addDelay(2000);
+
+        RmDataHelper.getInstance().dataReceive(rmDataModel, false);
+
+        addDelay(2000);
+
+        long result = feedDataSource.updateFeedMessageReadStatus(bulletinModel.getId());
+        assertTrue(result > 0);
+    }
+
+    @Test
     public void localAppShareCountTest() {
         addDelay(500);
 
@@ -143,6 +181,63 @@ public class VRmDataHelperTest {
         entities.add(entity);
         RmDataHelper.getInstance().sendAppShareCountToSellers(entities);
         addDelay(500);
+    }
+
+    @Test
+    public void feedbackReceiveAndAckTest() {
+        addDelay(500);
+        FeedbackModel feedBackModel = randomEntityGenerator.generateFeedbackModel();
+        String feedbackText = new Gson().toJson(feedBackModel);
+        DataModel dataModel = randomEntityGenerator.generateDataModel(feedbackText, Constants.DataType.FEEDBACK_TEXT, feedBackModel.getUserId());
+
+        RmDataHelper.getInstance().dataReceive(dataModel, false);
+
+        addDelay(500);
+
+        DataModel dataAckModel = randomEntityGenerator.generateDataModel(feedbackText, Constants.DataType.FEEDBACK_ACK, feedBackModel.getUserId());
+
+        feedbackDataSource.insertOrUpdate(FeedbackEntity.toFeedbackEntity(feedBackModel));
+
+        addDelay(700);
+
+        RmDataHelper.getInstance().dataReceive(dataAckModel, false);
+
+        addDelay(700);
+
+        FeedbackEntity entity = feedbackDataSource.getFeedbackById(feedBackModel.getFeedbackId());
+
+        assertNull(entity);
+    }
+
+    @Test
+    public void configInfoTransferTest() {
+        addDelay(500);
+        ConfigurationCommand configModel = randomEntityGenerator.generateConfigFile();
+
+        String configData = new Gson().toJson(configModel);
+
+        DataModel configDataModel = randomEntityGenerator.generateDataModel(configData, Constants.DataType.CONFIG_UPDATE_INFO, meshId);
+
+        RmDataHelper.getInstance().dataReceive(configDataModel, true);
+
+        addDelay(700);
+
+        TokenGuideRequestModel tokenRequestModel = randomEntityGenerator.generateTokenModel();
+        String tokenData = new Gson().toJson(tokenRequestModel);
+        DataModel tokenDataModel = randomEntityGenerator.generateDataModel(tokenData, Constants.DataType.TOKEN_GUIDE_REQUEST, meshId);
+
+        RmDataHelper.getInstance().dataReceive(tokenDataModel, true);
+        addDelay(700);
+
+        DataModel pointConfigDataModel = randomEntityGenerator.generateDataModel(configData, Constants.DataType.TOKEN_GUIDE_INFO, meshId);
+
+        RmDataHelper.getInstance().dataReceive(pointConfigDataModel, true);
+
+        addDelay(700);
+
+        int currentVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
+
+        assertEquals(currentVersion, (int) configModel.getConfigVersionCode());
     }
 
     @Test

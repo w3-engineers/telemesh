@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
@@ -294,11 +295,97 @@ public class TelemeshTest {
 
             addDelay(300);
         }
+
+        ViewInteraction settingsTab = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
+        settingsTab.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction profileRow = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        profileRow.perform(scrollTo(), click());
+
+        addDelay(1000);
+
+        ViewInteraction editButton = onView(
+                allOf(withId(R.id.text_view_edit),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
+        editButton.perform(click());
+
+        addDelay(4000);
+
+        try {
+
+            ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
+                    childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
+                    childAtPosition(allOf(withId(R.id.image_layout),
+                            childAtPosition(withId(R.id.scrollview), 0)),
+                            8)));
+
+            /*ViewInteraction editInputTextBox = onView(
+                    allOf(withId(R.id.edit_text_name),
+                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
+            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(500);
+
+        ViewInteraction updateProfileImageSelection = onView(
+                allOf(withId(R.id.image_profile),
+                        childAtPosition(allOf(withId(R.id.image_layout),
+                                childAtPosition(withId(R.id.scrollview), 0)), 6)));
+        updateProfileImageSelection.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction profileImageSelect = onView(
+                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
+                        childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
+        profileImageSelect.perform(click());
+
+        addDelay(300);
+
+        ViewInteraction profileUpdateDone = onView(
+                allOf(withId(R.id.menu_done),
+                        childAtPosition(
+                                childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+        profileUpdateDone.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction updateProfile = onView(
+                allOf(withId(R.id.button_update),
+                        childAtPosition(allOf(withId(R.id.image_layout),
+                                childAtPosition(withId(R.id.scrollview), 0)),
+                                10)));
+        updateProfile.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction updateProfileBack = onView(
+                allOf(withId(R.id.op_back),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
+        updateProfileBack.perform(click());
+
+        addDelay(500);
     }
 
     @Test
     public void uiTest_02() {
         addDelay(3800);
+
+        SharedPref sharedPref = SharedPref.getSharedPref(context);
+        sharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
+        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
+        sharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
 
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
@@ -342,7 +429,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
         profileRow.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction copyUserId = onView(
                 allOf(withId(R.id.image_view_id_copy),
@@ -358,12 +445,23 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
         editButton.perform(click());
 
-        addDelay(2000);
+        addDelay(4000);
 
-        ViewInteraction editInputTextBox = onView(
-                allOf(withId(R.id.edit_text_name),
-                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        try {
+
+            ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
+                    childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
+                    childAtPosition(allOf(withId(R.id.image_layout),
+                    childAtPosition(withId(R.id.scrollview), 0)),
+                    8)));
+
+            /*ViewInteraction editInputTextBox = onView(
+                    allOf(withId(R.id.edit_text_name),
+                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
+            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(500);
 
@@ -393,7 +491,8 @@ public class TelemeshTest {
         ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+                                childAtPosition(withId(R.id.scrollview), 0)),
+                                10)));
         updateProfile.perform(scrollTo(), click());
 
         addDelay(500);
@@ -585,6 +684,8 @@ public class TelemeshTest {
         addDelay(1000);
 
         mDevice.pressBack();
+
+        addDelay(4000);
 
         ViewInteraction contactSearch = onView(
                 allOf(withId(R.id.action_search),

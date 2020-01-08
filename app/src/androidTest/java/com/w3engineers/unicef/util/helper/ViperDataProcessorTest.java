@@ -46,8 +46,6 @@ public class ViperDataProcessorTest {
 
         addDelay(500);
 
-        ViperData profileData = SUT.getMyProfileMeshData();
-        assertEquals(pingData.dataType,(byte)type);
     }
 
     private String createDummyJson() {

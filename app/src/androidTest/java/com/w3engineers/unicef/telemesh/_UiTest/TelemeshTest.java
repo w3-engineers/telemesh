@@ -367,7 +367,7 @@ public class TelemeshTest {
                                 10)));
         updateProfile.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(2500);
 
         ViewInteraction updateProfileBack = onView(
                 allOf(withId(R.id.op_back),

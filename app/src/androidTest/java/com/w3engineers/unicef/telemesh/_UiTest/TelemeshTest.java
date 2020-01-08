@@ -29,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
@@ -367,20 +368,23 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-        ViewInteraction updateProfile = onView(
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof EditProfileActivity) {
+            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
+            editProfileActivity.goNext();
+        }
+
+        /*ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)),
                                 10)));
-        updateProfile.perform(scrollTo(), click());
+        updateProfile.perform(scrollTo(), click());*/
 
         addDelay(2500);
 
-        ViewInteraction updateProfileBack = onView(
-                allOf(withId(R.id.op_back),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
-        updateProfileBack.perform(click());
+        mDevice.pressBack();
 
         addDelay(500);
     }

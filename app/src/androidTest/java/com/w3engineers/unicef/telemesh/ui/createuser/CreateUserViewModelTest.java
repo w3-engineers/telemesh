@@ -87,6 +87,13 @@ public class CreateUserViewModelTest {
         assertTrue(SUT.isNameValid(firstName));
     }
 
+    @Test
+    public void storeData_true_setValidData() {
+        String firstName = "Daniel";
+        String password = "mesh_123";
+        assertTrue(SUT.storeData(firstName, password));
+    }
+
     /*@Test
     public void isNameValid_true_setValidWithSpecialString() {
         String firstName = "%Daniel%";

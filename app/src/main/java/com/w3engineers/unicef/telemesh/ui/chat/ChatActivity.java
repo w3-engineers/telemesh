@@ -76,19 +76,14 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() {
-        return ServiceLocator.getInstance();
-    }
+    public BaseServiceLocator a() { return ServiceLocator.getInstance(); }
 
     @Override
     public void startUI() {
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
-        if (TextUtils.isEmpty(userId)) {
-            finish();
-            return;
-        }
+        if (TextUtils.isEmpty(userId)) { finish(); return; }
 
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
@@ -351,11 +346,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
 
         @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-        }
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) { }
 
         @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
+        public void onItemRangeRemoved(int positionStart, int itemCount) { }
     }
 }

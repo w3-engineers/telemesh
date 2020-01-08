@@ -201,9 +201,9 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void messageOperation(@NonNull ChatEntity chatEntity) {
-        chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
-        messageInsertionProcess(chatEntity);
-        dataSource.reSendMessage(chatEntity);
+//        chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
+//        messageInsertionProcess(chatEntity);
+//        dataSource.reSendMessage(chatEntity);
     }
 
     /**

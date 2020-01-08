@@ -20,9 +20,9 @@ public class ViperDataProcessor {
     private final String TYPE = "t";
     private final String DATA = "d";
 
-    public static final byte TYPE_PING = 1, TYPE_PROFILE = 3;
+//    public static final byte TYPE_PING = 1, TYPE_PROFILE = 3;
 
-    private byte[] myProfileInfo = null;
+//    private byte[] myProfileInfo = null;
 
     static {
         viperDataProcessor = new ViperDataProcessor();
@@ -76,7 +76,7 @@ public class ViperDataProcessor {
         return viperData;
     }
 
-    public ViperData getPingForProfile() {
+    /*public ViperData getPingForProfile() {
 
         try {
             JSONObject jsonObject = new JSONObject();
@@ -93,9 +93,9 @@ public class ViperDataProcessor {
         }
 
         return null;
-    }
+    }*/
 
-    public ViperData getMyProfileMeshData() {
+    /*public ViperData getMyProfileMeshData() {
 
         if (myProfileInfo == null)
             return null;
@@ -119,6 +119,6 @@ public class ViperDataProcessor {
             return true;
         else
             return false;
-    }
+    }*/
 
 }

@@ -180,7 +180,7 @@ public abstract class ViperUtil {
 
             if (!isUserExist) {
                 if (isActive) {
-                    pingedNodeId(nodeId);
+//                    pingedNodeId(nodeId);
                 } else {
                     peerRemove(nodeId);
                 }
@@ -190,21 +190,21 @@ public abstract class ViperUtil {
 
     /*********************Ping*************************/
 
-    private void pingedNodeId(String nodeId) {
+    /*private void pingedNodeId(String nodeId) {
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
 
         sendProfilePing(nodeId);
-    }
+    }*/
 
-    private void sendProfilePing(String nodeId) {
+    /*private void sendProfilePing(String nodeId) {
         ViperData viperData = ViperDataProcessor.getInstance().getPingForProfile();
 
         if (viperData != null) {
             String sendId = UUID.randomUUID().toString();
             sendDataToMesh(nodeId, viperData, sendId);
         }
-    }
+    }*/
 
     /*********************Ping*************************/
 
@@ -215,7 +215,11 @@ public abstract class ViperUtil {
 
             if (viperData != null) {
 
-                if (ViperDataProcessor.getInstance().isProfilePing(viperData)) {
+                if (viperData.rawData != null) {
+                    onData(senderId, viperData);
+                }
+
+                /*if (ViperDataProcessor.getInstance().isProfilePing(viperData)) {
 
                     myProfileSend(senderId);
 
@@ -228,12 +232,12 @@ public abstract class ViperUtil {
                     if (viperData.rawData != null) {
                         onData(senderId, viperData);
                     }
-                }
+                }*/
             }
         }
     }
 
-    private void myProfileSend(String nodeId) {
+    /*private void myProfileSend(String nodeId) {
 
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
@@ -241,14 +245,14 @@ public abstract class ViperUtil {
         HandlerUtil.postBackground(() -> {
             sendMyInfo(nodeId);
         });
-    }
+    }*/
 
     /**
      * Send my info after discovering him
      *
      * @param nodeId - The discovered node id
      */
-    private void sendMyInfo(String nodeId) {
+    /*private void sendMyInfo(String nodeId) {
 
         ViperData viperData = ViperDataProcessor.getInstance().getMyProfileMeshData();
 
@@ -256,7 +260,7 @@ public abstract class ViperUtil {
             String sendId = UUID.randomUUID().toString();
             sendDataToMesh(nodeId, viperData, sendId);
         }
-    }
+    }*/
 
 
     private void sendDataToMesh(String nodeId, ViperData viperData, String sendId) {

@@ -176,12 +176,19 @@ public class TelemeshTest {
 
         addDelay(500);
 
+        ViewInteraction selectDoneMenuForNoSelect = onView(
+                allOf(withId(R.id.menu_done),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+        selectDoneMenuForNoSelect.perform(click());
+
+        addDelay(500);
+
         ViewInteraction selectImageForTheFirst = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
         selectImageForTheFirst.perform(click());
 
-        addDelay(300);
+        addDelay(500);
 
         ViewInteraction selectDoneMenuForTheFirst = onView(
                 allOf(withId(R.id.menu_done),

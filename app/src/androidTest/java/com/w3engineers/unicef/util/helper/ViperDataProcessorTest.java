@@ -37,15 +37,6 @@ public class ViperDataProcessorTest {
         ViperData res = SUT.setDataFormatFromJson(createDummyJson().getBytes());
 
         assertEquals(res.dataType,(byte)type);
-
-        addDelay(500);
-
-        ViperData pingData = SUT.getPingForProfile();
-
-        assertEquals(pingData.dataType,(byte)type);
-
-        addDelay(500);
-
     }
 
     private String createDummyJson() {

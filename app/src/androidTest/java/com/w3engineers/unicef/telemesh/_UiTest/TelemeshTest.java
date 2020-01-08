@@ -358,12 +358,14 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
         editButton.perform(click());
 
-        addDelay(2000);
+        addDelay(4000);
 
-        ViewInteraction editInputTextBox = onView(
+        onView(withId(R.id.edit_text_name)).perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+
+        /*ViewInteraction editInputTextBox = onView(
                 allOf(withId(R.id.edit_text_name),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+        editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());*/
 
         addDelay(500);
 
@@ -585,6 +587,8 @@ public class TelemeshTest {
         addDelay(1000);
 
         mDevice.pressBack();
+
+        addDelay(4000);
 
         ViewInteraction contactSearch = onView(
                 allOf(withId(R.id.action_search),

@@ -301,6 +301,11 @@ public class TelemeshTest {
     public void uiTest_02() {
         addDelay(3800);
 
+        SharedPref sharedPref = SharedPref.getSharedPref(context);
+        sharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
+        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
+        sharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));

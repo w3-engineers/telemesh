@@ -507,7 +507,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 1), isDisplayed()));
         optionBangla.perform(click());
 
-        addDelay(1500);
+        addDelay(4000);
 
         ViewInteraction chooseLanguageForSecond = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -523,7 +523,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 0), isDisplayed()));
         optionEnglish.perform(click());
 
-        addDelay(1500);
+        addDelay(4000);
 
         ViewInteraction optionAboutUs = onView(
                 allOf(withId(R.id.layout_about_us),

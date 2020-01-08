@@ -44,10 +44,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class InAppUpdate {
 
 
     private static final String MAIN_JSON = "updatedJSon.json";
-    public static final String LIVE_JSON_URL = BuildConfig.FILE_REPO_LINK + MAIN_JSON; // Configure json file that was uploaded in Main server
+    public static final String LIVE_JSON_URL = Constants.GradleBuildValues.FILE_REPO_LINK + MAIN_JSON; // Configure json file that was uploaded in Main server
     public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
@@ -426,7 +424,7 @@ public class InAppUpdate {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
 
-                String authString = (BuildConfig.AUTH_USER_NAME+":"+BuildConfig.AUTH_PASSWORD);
+                String authString = (Constants.GradleBuildValues.AUTH_USER_NAME+":"+Constants.GradleBuildValues.AUTH_PASSWORD);
                 byte[] data1 = authString.getBytes(UTF_8);
                 String base64 = Base64.encodeToString(data1, Base64.NO_WRAP);
 

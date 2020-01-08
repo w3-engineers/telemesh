@@ -16,7 +16,6 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
@@ -654,7 +653,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(Constants.GradleBuildValues.BROADCAST_URL).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
         client.newWebSocket(request, listener);
@@ -671,7 +670,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void requestAckMessage(String messageId, String userId) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(Constants.GradleBuildValues.BROADCAST_URL).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getAckCommand(messageId, userId));
         client.newWebSocket(request, listener);
@@ -792,7 +791,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
 
         return new BroadcastCommand().setEvent("connect")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken(Constants.GradleBuildValues.BROADCAST_TOKEN)
                 .setBaseStationId(getMyMeshId())
                 .setClientId(getMyMeshId())
                 .setPayload(payload);
@@ -801,7 +800,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private BroadcastCommand getAckCommand(String messageId, String userId) {
         Payload payload = new Payload().setMessageId(messageId);
         return new BroadcastCommand().setEvent("ack_msg_received")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken(Constants.GradleBuildValues.BROADCAST_TOKEN)
                 .setBaseStationId(getMyMeshId())
                 .setClientId(userId)
                 .setPayload(payload);

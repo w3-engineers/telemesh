@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -78,7 +77,7 @@ public class TeleMeshApplication extends MeshApp {
     }
 
     private void initCredential() {
-        CredentialHolder.getInStance().init(BuildConfig.PARSE_APP_ID, "", BuildConfig.PARSE_URL);
+        CredentialHolder.getInStance().init(Constants.GradleBuildValues.PARSE_APP_ID, "", Constants.GradleBuildValues.PARSE_URL);
     }
 
     public static Context getContext() {

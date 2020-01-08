@@ -284,11 +284,16 @@ public class TelemeshTest {
 
         addDelay(5000);
 
-        /*SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
+        Activity currentActivity = getActivityInstance();
 
-        securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
+        if (currentActivity instanceof SecurityActivity) {
 
-        addDelay(300);*/
+            SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
+
+            securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
+
+            addDelay(300);
+        }
     }
 
     @Test
@@ -353,7 +358,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
         editButton.perform(click());
 
-        addDelay(500);
+        addDelay(2000);
 
         ViewInteraction editInputTextBox = onView(
                 allOf(withId(R.id.edit_text_name),

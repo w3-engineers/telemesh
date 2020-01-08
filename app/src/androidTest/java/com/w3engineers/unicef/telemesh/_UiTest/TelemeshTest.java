@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.NoMatchingViewException;
@@ -372,7 +374,8 @@ public class TelemeshTest {
 
         if (currentActivity instanceof EditProfileActivity) {
             EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
-            editProfileActivity.goNext();
+            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
+//            editProfileActivity.goNext();
         }
 
         /*ViewInteraction updateProfile = onView(

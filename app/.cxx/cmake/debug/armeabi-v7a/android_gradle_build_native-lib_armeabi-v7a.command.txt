@@ -1,0 +1,7 @@
+Executable : /home/w3/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/home/w3/Local Drive/w3projects/telemesh/app/.cxx/cmake/debug/armeabi-v7a
+native-lib
+jvmArgs : 
+

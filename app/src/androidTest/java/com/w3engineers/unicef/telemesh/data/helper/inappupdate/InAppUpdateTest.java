@@ -52,7 +52,7 @@ public class InAppUpdateTest {
     @Test
     public void downloadAppUpdateInfoFromServer() {
 
-        addDelay(500);
+        addDelay(1500);
 
         InAppUpdate.getInstance(mContext).checkForUpdate(mContext, url);
 
@@ -74,7 +74,7 @@ public class InAppUpdateTest {
     @Test
     @UiThreadTest
     public void appUpdateDialogOpenTest() {
-        addDelay(500);
+        addDelay(2500);
 
         InAppUpdate.getInstance(rule.getActivity()).showAppInstallDialog(buildAppUpdateJson(), rule.getActivity());
 

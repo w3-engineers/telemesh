@@ -174,8 +174,8 @@ dependencies {
 
     api deps.app_share
     debugImplementation deps.inappstoragereader
-    implementation deps.viper
-//    implementation project(path: ':viper')
+//    implementation deps.viper
+    implementation project(path: ':viper')
 }
 
 coveralls {

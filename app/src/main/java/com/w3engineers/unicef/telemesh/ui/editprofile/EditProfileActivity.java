@@ -42,10 +42,13 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() { return null; }
+    public BaseServiceLocator a() {
+        return null;
+    }
 
     @Override
     public void startUI() {
+        super.startUI();
         mBinding = (ActivityEditProfileBinding) getViewDataBinding();
         mViewModel = getViewModel();
 

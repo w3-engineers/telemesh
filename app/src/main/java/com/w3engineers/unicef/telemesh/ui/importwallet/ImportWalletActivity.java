@@ -104,54 +104,42 @@ public class ImportWalletActivity extends BaseActivity {
 
             WalletManager.getInstance().loadWallet(this, password, new WalletManager.WalletLoadListener() {
                 @Override
-                public void onWalletLoaded(String walletAddress, String publicKey) {
-                    if (mViewModel.storeData(walletAddress, password, publicKey)) {
-                        runOnUiThread(() -> {
-                            CustomDialogUtil.dismissProgressDialog();
-
-                            Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
-                            intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
-                            startActivity(intent);
-                        });
-                    }
-                }
+                public void onWalletLoaded(String walletAddress, String publicKey) { successWalletResponse(walletAddress, publicKey, password); }
 
                 @Override
-                public void onError(String message) {
-                    runOnUiThread(() -> {
-                        CustomDialogUtil.dismissProgressDialog();
-                        Toaster.showShort(message);
-                    });
-                }
+                public void onError(String message) { failedWalletResponse(message); }
             });
         } else {
             WalletUtil.getInstance(this).importWallet(Constants.WALLET_URI, password, new WalletPrepareListener() {
                 @Override
-                public void onGetWalletInformation(String address, String publickKey) {
-                    if (mViewModel.storeData(address, password, publickKey)) {
-
-                        runOnUiThread(() -> {
-                            CustomDialogUtil.dismissProgressDialog();
-
-                            Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
-                            intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
-                            startActivity(intent);
-                        });
-                    }
-                }
+                public void onGetWalletInformation(String address, String publickKey) { successWalletResponse(address, publickKey, password); }
 
                 @Override
-                public void onWalletLoadError(String errorMessage) {
-                    Timber.tag("walletLoad").e("Error: %s", errorMessage);
-                    runOnUiThread(() -> {
-                        CustomDialogUtil.dismissProgressDialog();
-                        Toaster.showShort(errorMessage);
-                    });
-                }
+                public void onWalletLoadError(String errorMessage) { failedWalletResponse(errorMessage); }
             });
 
         }
 
+    }
+
+    private void failedWalletResponse(String message) {
+        runOnUiThread(() -> {
+            CustomDialogUtil.dismissProgressDialog();
+            Toaster.showShort(message);
+        });
+    }
+
+    public void successWalletResponse(String address, String publickKey, String password) {
+        if (mViewModel.storeData(address, password, publickKey)) {
+
+            runOnUiThread(() -> {
+                CustomDialogUtil.dismissProgressDialog();
+
+                Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
+                intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
+                startActivity(intent);
+            });
+        }
     }
 
     protected void requestMultiplePermissions() {

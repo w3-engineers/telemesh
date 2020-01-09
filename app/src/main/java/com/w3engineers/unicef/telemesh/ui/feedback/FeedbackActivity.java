@@ -51,10 +51,13 @@ public class FeedbackActivity extends TelemeshBaseActivity {
 
 
     @Override
-    public BaseServiceLocator a() { return null; }
+    public BaseServiceLocator a() {
+        return null;
+    }
 
     @Override
     public void startUI() {
+        super.startUI();
         mBinding = (ActivityFeedbackBinding) getViewDataBinding();
         mViewModel = getViewModel();
         setTitle(LanguageUtil.getString(R.string.feedback));

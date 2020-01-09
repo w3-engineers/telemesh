@@ -158,7 +158,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0, len = permissions.length; i < len; i++) {
@@ -176,7 +176,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 //checkPermission();
             }
         }
-    }
+    }*/
 
 
     @Override

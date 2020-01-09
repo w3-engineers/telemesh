@@ -639,20 +639,20 @@ public class TelemeshTest {
 
         addDelay(4000);
 
-        ViewInteraction contactSearch = onView(
-                allOf(withId(R.id.action_search),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        contactSearch.perform(click());
+        try {
 
-        addDelay(1000);
+            ViewInteraction contactSearch = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            contactSearch.perform(click());
 
-        /*ViewInteraction searchWithText = onView(
-                allOf(withId(R.id.search_src_text),
-                        childAtPosition(allOf(withId(R.id.search_plate),
-                                childAtPosition(withId(R.id.search_edit_frame), 1)), 0), isDisplayed()));
-        searchWithText.perform(replaceText("dane"), closeSoftKeyboard());*/
+            addDelay(1000);
 
-        onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
+            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
+
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(500);
 

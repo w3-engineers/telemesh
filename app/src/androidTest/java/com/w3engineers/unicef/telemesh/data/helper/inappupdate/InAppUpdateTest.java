@@ -63,7 +63,7 @@ public class InAppUpdateTest {
     @Test
     @UiThreadTest
     public void appUpdateDialogOpenTest() {
-        addDelay(500);
+        addDelay(2500);
 
         InAppUpdate.getInstance(rule.getActivity()).showAppInstallDialog(buildAppUpdateJson(), rule.getActivity());
 

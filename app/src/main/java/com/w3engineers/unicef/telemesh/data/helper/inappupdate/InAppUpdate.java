@@ -233,7 +233,6 @@ public class InAppUpdate {
 
         String myIpAddress = tempAddress.getHostAddress();
         mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
-        mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
 
         if (!mServer.isAlive()) {
             try {

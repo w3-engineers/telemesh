@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -332,9 +333,29 @@ public class VRmDataHelperTest {
         RmDataHelper.getInstance().analyticsDataSendToSellers(entity);
     }
 
+    @Test
+    public void versionCrossMatchingTest() {
+        addDelay(500);
+
+        InAppUpdateModel appUpdateModel = randomEntityGenerator.generateAppUpdateModel();
+
+        String localAppUpdateData = new Gson().toJson(appUpdateModel);
+
+        DataModel updateDataModel = randomEntityGenerator.generateDataModel(localAppUpdateData, Constants.DataType.VERSION_HANDSHAKING, meshId);
+
+        RmDataHelper.getInstance().dataReceive(updateDataModel, true);
+
+        addDelay(1000);
+
+        DataModel apkDownloadDataModel = randomEntityGenerator.generateDataModel(localAppUpdateData, Constants.DataType.SERVER_LINK, meshId);
+
+        RmDataHelper.getInstance().dataReceive(apkDownloadDataModel, true);
+
+        assertTrue(BuildConfig.VERSION_CODE > appUpdateModel.getVersionCode());
+    }
+
     @After
     public void tearDown() {
-//        SUT.onRmOff();
     }
 
     private String getBulletinResponse() {

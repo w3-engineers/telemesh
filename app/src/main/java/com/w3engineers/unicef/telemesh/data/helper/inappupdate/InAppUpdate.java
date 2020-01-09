@@ -91,39 +91,6 @@ public class InAppUpdate {
         private static InAppUpdate INSTANCE = new InAppUpdate();
     }
 
-    /**
-     * This method is responsible to update app from Main server
-     * <p>
-     * Yo
-     */
-    public void appUpdateFromInternet() {
-        AppUpdater appUpdater = new AppUpdater(mContext) // This context may be Activity context
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON(LIVE_JSON_URL);
-        appUpdater.start();
-    }
-
-    /**
-     * This method is responsible for updating app from local Server
-     *
-     * @param localLink String (Local server link)
-     */
-    public void appUpdateFromLocal(String localLink, Context context) {
-        if (!isAppUpdateProcessStart) {
-            setAppUpdateProcess(true);
-            AppUpdater appUpdater = new AppUpdater(context) // This context may be Activity context
-                    .setDisplay(Display.DIALOG)
-                    .setUpdateFrom(UpdateFrom.JSON)
-                    .setUpdateJSON(localLink)
-                    .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false));
-
-            appUpdater.start();
-        } else {
-            Timber.tag("InAppUpdateTest").e("App update process running");
-        }
-    }
-
     public void showAppInstallDialog(String json, Context context) {
         try {
             if (json == null) return;
@@ -233,7 +200,6 @@ public class InAppUpdate {
 
         String myIpAddress = tempAddress.getHostAddress();
         mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
-        mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
 
         if (!mServer.isAlive()) {
             try {
@@ -249,7 +215,7 @@ public class InAppUpdate {
         return isServerRunning;
     }
 
-    public void stopServer() {
+  /*  public void stopServer() {
         if (mServer != null) {
             try {
                 mServer.stop();
@@ -259,7 +225,7 @@ public class InAppUpdate {
             }
 
         }
-    }
+    }*/
 
     public void setAppUpdateProcess(boolean isUpdating) {
         isAppUpdateProcessStart = isUpdating;

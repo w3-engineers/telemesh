@@ -10,6 +10,7 @@ import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
@@ -277,6 +278,16 @@ public class RandomEntityGenerator {
     public TokenGuideRequestModel generateTokenModel() {
         TokenGuideRequestModel model = new TokenGuideRequestModel();
         model.setRequest("Request");
+        return model;
+    }
+
+    public InAppUpdateModel generateAppUpdateModel() {
+        InAppUpdateModel model = new InAppUpdateModel();
+
+        model.setUpdateLink("192.168.43.1");
+        model.setVersionCode(1);
+        model.setVersionName("1.0.0");
+
         return model;
     }
 

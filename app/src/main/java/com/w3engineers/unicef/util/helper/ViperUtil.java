@@ -317,7 +317,8 @@ public abstract class ViperUtil {
         viperClient.restartMesh(myCurrentRole);
     }
 
-    public void destroyMeshService() {
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
         if (viperClient != null) {
             viperClient.destroyMeshService();
         }
@@ -327,7 +328,7 @@ public abstract class ViperUtil {
         if (viperClient != null) {
             viperClient.resetViperInstance();
         }
-    }
+    }*/
 
     public void sendConfigToViper(ConfigurationCommand configurationCommand) {
         if (configurationCommand != null) {

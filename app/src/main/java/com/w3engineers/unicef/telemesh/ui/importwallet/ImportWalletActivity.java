@@ -88,10 +88,7 @@ public class ImportWalletActivity extends BaseActivity {
 
         setClickListener(mBinding.imageViewBack, mBinding.buttonContinue);
 
-        if (TextUtils.isEmpty(mWalletPath)
-                && !TextUtils.isEmpty(Constants.CURRENT_ADDRESS)
-                && !TextUtils.isEmpty(Constants.DEFAULT_ADDRESS)
-                && Constants.CURRENT_ADDRESS.equals(Constants.DEFAULT_ADDRESS.trim())) {
+        if (TextUtils.isEmpty(mWalletPath) && !TextUtils.isEmpty(Constants.CURRENT_ADDRESS) && !TextUtils.isEmpty(Constants.DEFAULT_ADDRESS) && Constants.CURRENT_ADDRESS.equals(Constants.DEFAULT_ADDRESS.trim())) {
             mBinding.textViewPinInstruction.setText("Your default password is:  " + Constants.DEFAULT_PASSWORD);
         }
     }
@@ -122,7 +119,7 @@ public class ImportWalletActivity extends BaseActivity {
 
     }
 
-    private void failedWalletResponse(String message) {
+    public void failedWalletResponse(String message) {
         runOnUiThread(() -> {
             CustomDialogUtil.dismissProgressDialog();
             Toaster.showShort(message);

@@ -105,9 +105,10 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         ServiceLocator.getInstance().resetMesh();
     }
 
-    public void destroyMeshService() {
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
         RmDataHelper.getInstance().destroyMeshService();
-    }
+    }*/
 
     @Override
     public void closeInAppShare() {

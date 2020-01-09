@@ -133,6 +133,16 @@ public class SettingsViewModelTest {
         addDelay(700);
     }
 
+    public void testAppShareMeshOnAndOff_success_setOkay() {
+        SUT.closeRmService();
+
+        addDelay(2000);
+
+        SUT.closeInAppShare();
+
+        addDelay(5300);
+    }
+
     /*@Test
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;

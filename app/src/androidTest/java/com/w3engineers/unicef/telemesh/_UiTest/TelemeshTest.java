@@ -32,6 +32,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
@@ -639,20 +640,20 @@ public class TelemeshTest {
 
         addDelay(4000);
 
-        ViewInteraction contactSearch = onView(
-                allOf(withId(R.id.action_search),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        contactSearch.perform(click());
+        try {
 
-        addDelay(1000);
+            ViewInteraction contactSearch = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            contactSearch.perform(click());
 
-        /*ViewInteraction searchWithText = onView(
-                allOf(withId(R.id.search_src_text),
-                        childAtPosition(allOf(withId(R.id.search_plate),
-                                childAtPosition(withId(R.id.search_edit_frame), 1)), 0), isDisplayed()));
-        searchWithText.perform(replaceText("dane"), closeSoftKeyboard());*/
+            addDelay(1000);
 
-        onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
+            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
+
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(500);
 
@@ -663,7 +664,24 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
         favoriteTab.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
+
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        addDelay(1000);
+
+        Activity currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+            mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+            mainActivity.popupSnackbarForCompleteUpdate();
+
+            addDelay(2000);
+        }
 
         mDevice.pressBack();
     }

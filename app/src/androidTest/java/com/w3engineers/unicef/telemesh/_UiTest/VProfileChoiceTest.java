@@ -89,7 +89,6 @@ public class VProfileChoiceTest {
         if (currentActivity instanceof ImportProfileActivity) {
             ImportProfileActivity importProfileActivity = (ImportProfileActivity) currentActivity;
             importProfileActivity.setIsEmulatorTestingMode(true);
-            importProfileActivity.initView();
         }
 
         addDelay(1000);

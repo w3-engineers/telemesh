@@ -19,6 +19,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
@@ -42,10 +43,13 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() { return null; }
+    public BaseServiceLocator a() {
+        return null;
+    }
 
     @Override
     public void startUI() {
+        super.startUI();
         mBinding = (ActivityEditProfileBinding) getViewDataBinding();
         mViewModel = getViewModel();
 
@@ -113,7 +117,14 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 
     public void goNext() {
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
-        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
+
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+            Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+            mViewModel.sendUserInfoToAll();
+            finish();
+        }
+
+        /*if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
             Toaster.showShort(LanguageUtil.getString(R.string.please_enter_your_name));
         } else if (mBinding.editTextName.getText().toString().length() < 2) {
             Toaster.showShort(LanguageUtil.getString(R.string.enter_valid_name));
@@ -121,7 +132,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
             mViewModel.sendUserInfoToAll();
             finish();
-        }
+        }*/
     }
 
 

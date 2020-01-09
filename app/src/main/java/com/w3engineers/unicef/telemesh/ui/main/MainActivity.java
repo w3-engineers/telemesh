@@ -117,6 +117,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void startUI() {
+        super.startUI();
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
         if (getSupportActionBar() != null) {
@@ -154,16 +155,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
 
             // If there are no matching work info, do nothing
-            if (workInfos == null || workInfos.isEmpty()) {
-                return;
+            if (workInfos != null && !workInfos.isEmpty()) {
+                // We only care about the first output status.
+                WorkInfo workInfo = workInfos.get(0);
+
+                boolean finished = workInfo.getState().isFinished();
             }
-
-            // We only care about the first output status.
-            WorkInfo workInfo = workInfos.get(0);
-
-            boolean finished = workInfo.getState().isFinished();
-
-
         });
 
         mViewModel.getMyUserMode().observe(this, integer -> {
@@ -253,9 +250,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.text_view_background:
+            /*case R.id.text_view_background:
                 // disableLoading();
-                break;
+                break;*/
             case R.id.image_view_cross:
                 if (TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())) {
                     hideSearchBar();
@@ -270,7 +267,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -279,7 +276,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 Log.e("AppUpdateProcess", "onActivityResult: app download failed");
             }
         }
-    }
+    }*/
 
     private MainActivityViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {

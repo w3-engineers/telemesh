@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.walleter.wallet.WalletService;
 
@@ -50,6 +51,7 @@ public class ImportProfileActivity extends BaseActivity {
     private ImportProfileViewModel mViewModel;
     private int PICKFILE_REQUEST_CODE = 480;
     private String walletSuffixDir;
+    private boolean isEmulatorMode = false;
 
     @Override
     protected int getLayoutId() {
@@ -86,6 +88,10 @@ public class ImportProfileActivity extends BaseActivity {
         }
     }
 
+    public void setIsEmulatorTestingMode(boolean isEmulatorMode) {
+        this.isEmulatorMode = isEmulatorMode;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -107,10 +113,10 @@ public class ImportProfileActivity extends BaseActivity {
         }
     }
 
-    private void initView() {
+    public void initView() {
         setClickListener(mBinding.imageViewBack, mBinding.buttonImportProfile, mBinding.buttonContinue);
 
-        if (WalletService.getInstance(this).isWalletExists()) {
+        if (WalletService.getInstance(this).isWalletExists() || CommonUtil.isEmulator()) {
             mBinding.buttonContinue.setVisibility(View.VISIBLE);
             mBinding.textViewWelcome.setText(WalletAddressHelper.getWalletSpannableString(this));
             mBinding.textViewWelcome.setTypeface(mBinding.textViewWelcome.getTypeface(), Typeface.NORMAL);

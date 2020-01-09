@@ -158,7 +158,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0, len = permissions.length; i < len; i++) {
@@ -176,7 +176,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 //checkPermission();
             }
         }
-    }
+    }*/
 
 
     @Override
@@ -227,7 +227,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void saveData() {
-        if (isValidName()) {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             requestMultiplePermissions();
         }
     }
@@ -254,20 +254,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private boolean isValidName() {
-        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
-            Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
-            return false;
-        } else if (mBinding.editTextName.getText().toString().length() < 2) {
-            Toaster.showShort(getResources().getString(R.string.enter_valid_name));
-            return false;
-        }
-        return true;
-    }
-
     private void goToPasswordPage() {
 
-        if (isValidName()) {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
             intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
             intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());

@@ -59,7 +59,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     public void startUI() {
-
+        super.startUI();
         setTitle(LanguageUtil.getString(R.string.activity_view_profile));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

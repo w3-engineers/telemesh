@@ -46,7 +46,7 @@ public class InAppUpdateTest {
         mContext = InstrumentationRegistry.getTargetContext();
     }
 
-    @Test
+  /*  @Test
     public void downloadAppUpdateInfoFromServer() {
         InAppUpdate.getInstance(mContext).checkForUpdate(mContext, url);
 
@@ -58,7 +58,7 @@ public class InAppUpdateTest {
 
         assertTrue(true);
 
-    }
+    }*/
 
     @Test
     @UiThreadTest

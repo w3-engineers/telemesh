@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -81,6 +83,7 @@ public class NanoHTTPDTest {
 
         NanoHTTPD.HTTPSession session = webServer.createHttpSession(tempFileManager, inputStream, outputStream);
 
+
         try {
             session.execute();
 
@@ -90,6 +93,15 @@ public class NanoHTTPDTest {
             e.printStackTrace();
             System.out.println("Error: " + e.getMessage());
         }
+
+
+        String uri = host + "/dummy.text";
+
+        Map<String, String> headers = new HashMap<>();
+        // headers.put()
+
+        webServer.serveFile(uri, headers, rootFile);
+
     }
 
     private void addDelay(int i) {

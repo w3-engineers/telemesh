@@ -125,9 +125,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() {
-            binding.textViewMessage.invalidate();
-        }
+        protected void clearView() { binding.textViewMessage.invalidate(); }
     }
 
     private class TextMessageOutHolder extends GenericViewHolder {
@@ -147,9 +145,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() {
-            binding.textViewMessage.invalidate();
-        }
+        protected void clearView() { binding.textViewMessage.invalidate(); }
     }
 
     private class SeparatorViewHolder extends GenericViewHolder {
@@ -166,9 +162,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() {
-            binding.textViewSeprator.invalidate();
-        }
+        protected void clearView() { binding.textViewSeprator.invalidate(); }
     }
 
 

@@ -33,11 +33,13 @@ public class BulletinDetails extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() { return ServiceLocator.getInstance(); }
+    public BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
 
     @Override
     public void startUI() {
-
+        super.startUI();
         ActivityBulletinDetailsBinding activityBulletinDetailsBinding = (ActivityBulletinDetailsBinding) getViewDataBinding();
 
         FeedEntity feedEntity = getIntent().getParcelableExtra(FeedEntity.class.getName());

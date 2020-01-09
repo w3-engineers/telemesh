@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -102,21 +103,26 @@ public class VProfileChoiceTest {
 
         addDelay(2000);
 
-        ViewInteraction importWalletBack = onView(
-                allOf(withId(R.id.image_view_back),
-                        childAtPosition(allOf(withId(R.id.activity_import_wallet_scroll_parent),
-                                childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 0), isDisplayed()));
-        importWalletBack.perform(click());
+        try {
+            ViewInteraction importWalletBack = onView(
+                    allOf(withId(R.id.image_view_back),
+                            childAtPosition(allOf(withId(R.id.activity_import_wallet_scroll_parent),
+                                    childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 0), isDisplayed()));
+            importWalletBack.perform(click());
 
-        addDelay(1000);
+            addDelay(1000);
 
-        ViewInteraction importAnotherIdSecond = onView(
-                allOf(withId(R.id.button_continue),
-                        childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
-                                childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 3)));
-        importAnotherIdSecond.perform(scrollTo(), click());
+            ViewInteraction importAnotherIdSecond = onView(
+                    allOf(withId(R.id.button_continue),
+                            childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
+                                    childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 3)));
+            importAnotherIdSecond.perform(scrollTo(), click());
 
-        addDelay(2000);
+            addDelay(2000);
+
+        } catch (PerformException e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edit_text_password),

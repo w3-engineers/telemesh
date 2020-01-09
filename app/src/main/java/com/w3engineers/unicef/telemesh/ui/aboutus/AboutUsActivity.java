@@ -47,9 +47,7 @@ public class AboutUsActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() {
-        return ServiceLocator.getInstance();
-    }
+    public BaseServiceLocator a() { return ServiceLocator.getInstance(); }
 
 
     @Override

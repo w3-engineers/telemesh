@@ -42,9 +42,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     @Override
-    public BaseServiceLocator a() {
-        return null;
-    }
+    public BaseServiceLocator a() { return null; }
 
     @Override
     public void startUI() {
@@ -113,7 +111,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         }
     }
 
-    protected void goNext() {
+    public void goNext() {
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
         if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
             Toaster.showShort(LanguageUtil.getString(R.string.please_enter_your_name));

@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.NoMatchingViewException;
@@ -29,6 +31,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
@@ -176,12 +179,19 @@ public class TelemeshTest {
 
         addDelay(500);
 
+        ViewInteraction selectDoneMenuForNoSelect = onView(
+                allOf(withId(R.id.menu_done),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+        selectDoneMenuForNoSelect.perform(click());
+
+        addDelay(500);
+
         ViewInteraction selectImageForTheFirst = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
         selectImageForTheFirst.perform(click());
 
-        addDelay(300);
+        addDelay(500);
 
         ViewInteraction selectDoneMenuForTheFirst = onView(
                 allOf(withId(R.id.menu_done),
@@ -360,20 +370,24 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-        ViewInteraction updateProfile = onView(
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof EditProfileActivity) {
+            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
+            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
+//            editProfileActivity.goNext();
+        }
+
+        /*ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)),
                                 10)));
-        updateProfile.perform(scrollTo(), click());
+        updateProfile.perform(scrollTo(), click());*/
 
         addDelay(2500);
 
-        ViewInteraction updateProfileBack = onView(
-                allOf(withId(R.id.op_back),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
-        updateProfileBack.perform(click());
+        mDevice.pressBack();
 
         addDelay(500);
     }
@@ -439,71 +453,9 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction editButton = onView(
-                allOf(withId(R.id.text_view_edit),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
-        editButton.perform(click());
+        mDevice.pressBack();
 
-        addDelay(4000);
-
-        try {
-
-            ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
-                    childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
-                    childAtPosition(allOf(withId(R.id.image_layout),
-                    childAtPosition(withId(R.id.scrollview), 0)),
-                    8)));
-
-            /*ViewInteraction editInputTextBox = onView(
-                    allOf(withId(R.id.edit_text_name),
-                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
-            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
-        } catch (NoMatchingViewException e) {
-            e.printStackTrace();
-        }
-
-        addDelay(500);
-
-        ViewInteraction updateProfileImageSelection = onView(
-                allOf(withId(R.id.image_profile),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        updateProfileImageSelection.perform(scrollTo(), click());
-
-        addDelay(500);
-
-        ViewInteraction profileImageSelect = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
-        profileImageSelect.perform(click());
-
-        addDelay(300);
-
-        ViewInteraction profileUpdateDone = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(
-                                childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        profileUpdateDone.perform(click());
-
-        addDelay(2500);
-
-        ViewInteraction updateProfile = onView(
-                allOf(withId(R.id.button_update),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)),
-                                10)));
-        updateProfile.perform(scrollTo(), click());
-
-        addDelay(500);
-
-        ViewInteraction updateProfileBack = onView(
-                allOf(withId(R.id.op_back),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 1), isDisplayed()));
-        updateProfileBack.perform(click());
-
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction openWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
@@ -555,7 +507,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 1), isDisplayed()));
         optionBangla.perform(click());
 
-        addDelay(1500);
+        addDelay(4000);
 
         ViewInteraction chooseLanguageForSecond = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -571,7 +523,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 0), isDisplayed()));
         optionEnglish.perform(click());
 
-        addDelay(1500);
+        addDelay(4000);
 
         ViewInteraction optionAboutUs = onView(
                 allOf(withId(R.id.layout_about_us),

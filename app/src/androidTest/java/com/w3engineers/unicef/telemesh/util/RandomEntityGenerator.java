@@ -266,7 +266,7 @@ public class RandomEntityGenerator {
     public ConfigurationCommand generateConfigFile() {
         ConfigurationCommand configurationCommand = new ConfigurationCommand(Parcel.obtain());
 
-        configurationCommand.setConfigVersionCode(2);
+        configurationCommand.setConfigVersionCode(100);
 
         configurationCommand.setTokenGuideVersion(2);
 

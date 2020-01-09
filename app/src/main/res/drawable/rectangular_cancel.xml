@@ -3,77 +3,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
-
-            <solid android:color="#00CCCCCC" />
-
-            <corners android:radius="@dimen/width_25" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
-
-            <solid android:color="#10CCCCCC" />
-
-            <corners android:radius="@dimen/width_25" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
-
-            <solid android:color="#20CCCCCC" />
-
-            <corners android:radius="@dimen/width_25" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
-
-            <solid android:color="#30CCCCCC" />
-
-            <corners android:radius="@dimen/width_25" />
-        </shape>
-    </item>
-    <item>
-        <shape android:shape="rectangle">
-            <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
-
-            <solid android:color="#50CCCCCC" />
-
-            <corners android:radius="@dimen/width_25" />
-        </shape>
-    </item>
-
-    <item>
-        <shape android:shape="rectangle">
             <gradient
                 android:endColor="@color/error_color"
                 android:startColor="@color/error_color" />
-            <corners android:radius="@dimen/width_25" />
+            <corners android:radius="@dimen/width_0" />
         </shape>
     </item>
-
 </layer-list>

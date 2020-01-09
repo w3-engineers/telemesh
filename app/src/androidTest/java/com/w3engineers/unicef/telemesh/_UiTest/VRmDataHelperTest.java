@@ -30,7 +30,9 @@ import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.json.JSONException;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import io.reactivex.subscribers.TestSubscriber;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
@@ -71,6 +74,7 @@ public class VRmDataHelperTest {
     private RandomEntityGenerator randomEntityGenerator;
     private FeedDataSource feedDataSource;
     private FeedbackDataSource feedbackDataSource;
+    private UserDataSource userDataSource;
 
     @Before
     public void setUp() {
@@ -82,6 +86,8 @@ public class VRmDataHelperTest {
         feedDataSource = FeedDataSource.getInstance();
 
         feedbackDataSource = FeedbackDataSource.getInstance();
+
+        userDataSource = UserDataSource.getInstance();
 
         randomEntityGenerator = new RandomEntityGenerator();
     }
@@ -352,6 +358,58 @@ public class VRmDataHelperTest {
         RmDataHelper.getInstance().dataReceive(apkDownloadDataModel, true);
 
         assertTrue(BuildConfig.VERSION_CODE > appUpdateModel.getVersionCode());
+    }
+
+    @Test
+    public void userUpdatedDataInfoTest() {
+        addDelay(500);
+
+        UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(1000);
+
+        String updatedName = "John Doe";
+        userEntity.setUserName(updatedName);
+
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
+        String userUpdatedData = new Gson().toJson(userModel);
+
+        DataModel userUpdateDataModel = randomEntityGenerator.generateDataModel(userUpdatedData, Constants.DataType.USER_UPDATE_INFO, userEntity.getMeshId());
+
+        RmDataHelper.getInstance().dataReceive(userUpdateDataModel, true);
+
+        addDelay(2500);
+
+        UserEntity updatedUserData = userDataSource.getSingleUserById(userEntity.getMeshId());
+
+        assertTrue(updatedUserData.getUserName().equalsIgnoreCase(updatedName));
+
+    }
+
+    @Test
+    public void updateAllUserOffline() {
+        addDelay(500);
+
+        UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
+        userEntity.setOnlineStatus(Constants.UserStatus.WIFI_ONLINE);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(1000);
+
+        RmDataHelper.getInstance().updateUserStatus(true);
+
+        addDelay(2000);
+
+        UserEntity updatedUserData = userDataSource.getSingleUserById(userEntity.getMeshId());
+
+        if (updatedUserData != null) {
+            assertEquals(updatedUserData.isOnline, Constants.UserStatus.OFFLINE);
+        }
     }
 
     @After

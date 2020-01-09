@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
@@ -106,6 +107,7 @@ public class InAppUpdateTest {
 
         try {
             mDevice.pressBack();
+            Espresso.pressBackUnconditionally();
         } catch (Exception e) {
             e.printStackTrace();
         }

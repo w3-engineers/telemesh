@@ -77,13 +77,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
             android:text="@string/cancel"
             android:textAllCaps="false"
             app:bb_drawable="@drawable/rectangular_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/button_update"
-            app:layout_constraintEnd_toStartOf="@+id/button_update"
-            app:layout_constraintTop_toTopOf="@+id/button_update" />
+            app:layout_constraintEnd_toStartOf="@+id/button_update" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -563,11 +563,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void stopMeshService() {
+   /* public void stopMeshService() {
         updateUserStatus(true);
-    }
+    }*/
 
-    private void updateUserStatus(boolean isServiceStop) {
+    public void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
                     if (isServiceStop) {
@@ -1003,9 +1003,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void showMeshLog(String log) {
+ /*   public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
-    }
+    }*/
 
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
 

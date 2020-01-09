@@ -354,14 +354,14 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.scrollview), 0)), 6)));
         updateProfileImageSelection.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction profileImageSelect = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
         profileImageSelect.perform(click());
 
-        addDelay(300);
+        addDelay(1000);
 
         ViewInteraction profileUpdateDone = onView(
                 allOf(withId(R.id.menu_done),

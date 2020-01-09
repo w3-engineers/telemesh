@@ -18,9 +18,11 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -31,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class InAppUpdateTest {
     private String url;
@@ -46,19 +49,27 @@ public class InAppUpdateTest {
         mContext = InstrumentationRegistry.getTargetContext();
     }
 
-  /*  @Test
+    @Test
     public void downloadAppUpdateInfoFromServer() {
+
+        addDelay(500);
+
         InAppUpdate.getInstance(mContext).checkForUpdate(mContext, url);
 
-        addDelay(2000);
+        addDelay(4000);
 
         InAppUpdate.getInstance(mContext).prepareLocalServer();
 
-        addDelay(1500);
+        addDelay(2500);
 
         assertTrue(true);
 
-    }*/
+        try {
+            mDevice.pressBack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     @UiThreadTest
@@ -76,6 +87,12 @@ public class InAppUpdateTest {
             e.printStackTrace();
         }
 
+        try {
+            mDevice.pressBack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         assertTrue(true);
     }
 
@@ -85,9 +102,14 @@ public class InAppUpdateTest {
 
         AppInstaller.downloadApkFile(Constants.GradleBuildValues.FILE_REPO_LINK, rule.getActivity());
 
-        addDelay(2000);
+        addDelay(4000);
 
-        mDevice.pressBack();
+        try {
+            mDevice.pressBack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void addDelay(int i) {

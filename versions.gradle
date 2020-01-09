@@ -164,6 +164,7 @@ glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
 glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
 deps.glide = glide
 deps.app_share = project(':appshare')
+deps.local_server = project(':localserver')
 deps.leak_canary = "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
 //Strom remote dependency
 deps.strom_remote = "com.github.w3-engineers:strom:$versions.strom_remote"

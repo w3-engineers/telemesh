@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD;
+package com.we3ngineers.localserver.NanoHTTPD;
 
 
 import java.io.BufferedReader;
@@ -482,7 +482,7 @@ public abstract class NanoHTTPD {
             this.mimeType = mimeType;
             try {
                 this.data = txt != null ? new ByteArrayInputStream(txt.getBytes("UTF-8")) : null;
-            } catch (java.io.UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException uee) {
                 uee.printStackTrace();
             }
         }

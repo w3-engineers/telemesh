@@ -14,9 +14,6 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -24,11 +21,11 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.we3ngineers.localserver.NanoHTTPD.NanoHTTPD;
+import com.we3ngineers.localserver.NanoHTTPD.SimpleWebServer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,7 +148,7 @@ public class InAppUpdate {
             String finalUrl = url;
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
-                
+
                 if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
                     AppInstaller.downloadApkFile(finalUrl, context);
                 } else {
@@ -390,7 +387,7 @@ public class InAppUpdate {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
 
-                String authString = (Constants.GradleBuildValues.AUTH_USER_NAME+":"+Constants.GradleBuildValues.AUTH_PASSWORD);
+                String authString = (Constants.GradleBuildValues.AUTH_USER_NAME + ":" + Constants.GradleBuildValues.AUTH_PASSWORD);
                 byte[] data1 = authString.getBytes(UTF_8);
                 String base64 = Base64.encodeToString(data1, Base64.NO_WRAP);
 
@@ -402,7 +399,7 @@ public class InAppUpdate {
                     }
                 });*/
 
-                connection.setRequestProperty("Authorization", "Basic "+base64);
+                connection.setRequestProperty("Authorization", "Basic " + base64);
 
                 connection.connect();
                 InputStream stream = connection.getInputStream();

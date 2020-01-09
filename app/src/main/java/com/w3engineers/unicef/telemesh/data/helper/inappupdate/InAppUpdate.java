@@ -11,6 +11,7 @@ import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 
@@ -23,6 +24,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
@@ -66,7 +68,7 @@ public class InAppUpdate {
 
 
     private static final String MAIN_JSON = "updatedJSon.json";
-    public static final String LIVE_JSON_URL = BuildConfig.FILE_REPO_LINK + MAIN_JSON; // Configure json file that was uploaded in Main server
+    public static final String LIVE_JSON_URL = AppCredentials.getInstance().getFileRepoLink() + MAIN_JSON; // Configure json file that was uploaded in Main server
     public static final String MAIN_APK = "updatedApk.apk";
     private final String LOCAL_IP_FIRST_PORTION = "/192";
     private static File rootFile;
@@ -399,6 +401,9 @@ public class InAppUpdate {
     }
 
     public void checkForUpdate(Context context, String url) {
+
+        Log.e("native_test", "url:: " + url);
+
         if (isAppUpdating()) return;
 
         setAppUpdateProcess(true);
@@ -426,7 +431,7 @@ public class InAppUpdate {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
 
-                String authString = (BuildConfig.AUTH_USER_NAME+":"+BuildConfig.AUTH_PASSWORD);
+                String authString = (AppCredentials.getInstance().getAuthUserName() + ":" + AppCredentials.getInstance().getAuthPassword());
                 byte[] data1 = authString.getBytes(UTF_8);
                 String base64 = Base64.encodeToString(data1, Base64.NO_WRAP);
 

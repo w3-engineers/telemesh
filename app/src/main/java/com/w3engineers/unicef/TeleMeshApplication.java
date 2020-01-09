@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -15,6 +14,7 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.util.helper.CommonUtil;
@@ -78,7 +78,7 @@ public class TeleMeshApplication extends MeshApp {
     }
 
     private void initCredential() {
-        CredentialHolder.getInStance().init(BuildConfig.PARSE_APP_ID, "", BuildConfig.PARSE_URL);
+        CredentialHolder.getInStance().init(AppCredentials.getInstance().getParseAppId(), "", AppCredentials.getInstance().getParseUrl());
     }
 
     public static Context getContext() {

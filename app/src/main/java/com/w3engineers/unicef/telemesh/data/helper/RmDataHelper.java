@@ -80,11 +80,6 @@ import timber.log.Timber;
  */
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
-    public native String getBroadCastUrl();
-
-    public native String getBroadcastToken();
-
-
     private static RmDataHelper rmDataHelper = new RmDataHelper();
     private MeshDataSource rightMeshDataSource;
 
@@ -654,7 +649,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
         client.newWebSocket(request, listener);
@@ -671,7 +666,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private void requestAckMessage(String messageId, String userId) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         listener.setBroadcastCommand(getAckCommand(messageId, userId));
         client.newWebSocket(request, listener);
@@ -792,7 +787,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
 
         return new BroadcastCommand().setEvent("connect")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken(AppCredentials.getInstance().getBroadCastToken())
                 .setBaseStationId(getMyMeshId())
                 .setClientId(getMyMeshId())
                 .setPayload(payload);
@@ -801,7 +796,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private BroadcastCommand getAckCommand(String messageId, String userId) {
         Payload payload = new Payload().setMessageId(messageId);
         return new BroadcastCommand().setEvent("ack_msg_received")
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken(AppCredentials.getInstance().getBroadCastToken())
                 .setBaseStationId(getMyMeshId())
                 .setClientId(userId)
                 .setPayload(payload);

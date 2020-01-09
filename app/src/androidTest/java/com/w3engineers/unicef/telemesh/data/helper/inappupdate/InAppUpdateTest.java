@@ -52,7 +52,7 @@ public class InAppUpdateTest {
     @Test
     public void downloadAppUpdateInfoFromServer() {
 
-        addDelay(500);
+        addDelay(1500);
 
         InAppUpdate.getInstance(mContext).checkForUpdate(mContext, url);
 

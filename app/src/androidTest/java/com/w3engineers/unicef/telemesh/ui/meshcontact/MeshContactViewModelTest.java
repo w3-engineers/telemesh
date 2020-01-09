@@ -213,7 +213,7 @@ public class MeshContactViewModelTest {
     }
 
     @Test
-    public void meshContactViewModelSearch_smallLetter_retrieveUsers() throws InterruptedException {
+    public void meshContactViewModelSearch_smallLetter_retrieveUsers() {
 
         addDelay(1500);
         //arrange
@@ -224,11 +224,19 @@ public class MeshContactViewModelTest {
         //action
         SUT.startSearch(SMALL_SEARCH_TEXT, mUserEntities);
 
-        //assertion
-        List<UserEntity> userEntityList = LiveDataTestUtil.getValue(listLiveData);
-        assertThat(userEntityList.size(), is(itemCount));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            try {
+                //assertion
+                List<UserEntity> userEntityList = LiveDataTestUtil.getValue(listLiveData);
+                assertThat(userEntityList.size(), is(itemCount));
 
-        addDelay(5000);
+                addDelay(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+
     }
 
     /*@Test

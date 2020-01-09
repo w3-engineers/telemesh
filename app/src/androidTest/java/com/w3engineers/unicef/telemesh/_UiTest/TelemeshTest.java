@@ -677,10 +677,13 @@ public class TelemeshTest {
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
-            mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-            mainActivity.popupSnackbarForCompleteUpdate();
 
-            addDelay(2000);
+            new Handler(Looper.getMainLooper()).post(()-> {
+                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+                mainActivity.popupSnackbarForCompleteUpdate();
+            });
+
+            addDelay(3000);
         }
 
         mDevice.pressBack();

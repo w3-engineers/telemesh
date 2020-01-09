@@ -42,9 +42,7 @@ public class SplashActivity extends BaseActivity {
         shimmerFrameLayout.startShimmer();
 
         if (CommonUtil.isEmulator()) {
-            if (WalletService.getInstance(this).isWalletExists()) {
-                WalletService.getInstance(this).deleteExistsWallet();
-            }
+            WalletService.getInstance(this).deleteExistsWallet();
         }
 
 

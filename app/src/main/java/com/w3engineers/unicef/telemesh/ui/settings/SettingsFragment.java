@@ -22,7 +22,6 @@ import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
-import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -134,13 +133,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                     Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
                 }
                 break;
-            case R.id.layout_show_log:
+            /*case R.id.layout_show_log:
 //                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
                 MeshLogManager.openActivity(getActivity());
-                break;
-            case R.id.layout_diagram_map:
+                break;*/
+            /*case R.id.layout_diagram_map:
 //                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
-                break;
+                break;*/
             case R.id.layout_app_update:
                 if (MainActivity.getInstance() == null) return;
                 String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
@@ -156,9 +155,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
 
-            case R.id.layout_ssid:
+            /*case R.id.layout_ssid:
                 showAlertForSSID();
-                break;
+                break;*/
 
             default:
                 break;
@@ -279,8 +278,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
     }
 
-
-    public void showAlertForSSID() {
+    // TODO SSID_Change
+    /*public void showAlertForSSID() {
         // create an alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View customLayout = getLayoutInflater().inflate(R.layout.alert_change_ssid, null);
@@ -322,5 +321,5 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();
-    }
+    }*/
 }

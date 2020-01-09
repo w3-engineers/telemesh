@@ -38,6 +38,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
@@ -101,6 +102,22 @@ public class VProfileChoiceTest {
 
         addDelay(2000);
 
+        ViewInteraction importWalletBack = onView(
+                allOf(withId(R.id.image_view_back),
+                        childAtPosition(allOf(withId(R.id.activity_import_wallet_scroll_parent),
+                                childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 0), isDisplayed()));
+        importWalletBack.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction importAnotherIdSecond = onView(
+                allOf(withId(R.id.button_continue),
+                        childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
+                                childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 3)));
+        importAnotherIdSecond.perform(scrollTo(), click());
+
+        addDelay(2000);
+
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edit_text_password),
                         childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0), isDisplayed()));
@@ -121,14 +138,23 @@ public class VProfileChoiceTest {
 
         addDelay(500);
 
-        importContinue.perform(click());
-
-        addDelay(5000);
-
         currentActivity = getActivityInstance();
 
         if (currentActivity instanceof ImportWalletActivity) {
             ImportWalletActivity importWalletActivity = (ImportWalletActivity) currentActivity;
+
+            importWalletActivity.failedWalletResponse("Wallet not exist");
+
+            addDelay(1000);
+        }
+
+        importContinue.perform(click());
+
+        addDelay(5000);
+
+        if (currentActivity instanceof ImportWalletActivity) {
+            ImportWalletActivity importWalletActivity = (ImportWalletActivity) currentActivity;
+
             importWalletActivity.successWalletResponse(myAddress, publicKey, defaultPassword);
         }
 

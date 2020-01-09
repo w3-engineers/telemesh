@@ -625,7 +625,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.restartMeshService();
     }
 
-    public void destroyMeshService() {
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
         rightMeshDataSource.destroyMeshService();
         rightMeshDataSource.resetViperInstance();
 
@@ -633,7 +634,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         rightMeshDataSource = MeshDataSource.getRmDataSource();
 
-    }
+    }*/
 
     public void requestWsMessage() {
         if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {

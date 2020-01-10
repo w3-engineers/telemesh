@@ -222,11 +222,11 @@ public class VProfileChoiceTest {
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ce4")
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
-        userEntityOne.setId(0);
+        //userEntityOne.setId(0);
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
@@ -235,11 +235,11 @@ public class VProfileChoiceTest {
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cf4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis() + 1);
-        userEntityTwo.setId(1);
+        //userEntityTwo.setId(1);
 
         userDataSource.insertOrUpdateData(userEntityTwo);
 

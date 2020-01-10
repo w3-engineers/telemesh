@@ -11,6 +11,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -27,6 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -101,6 +104,7 @@ public class RightMeshDataSourceTest {
     public void testOnPeerAdd_checkUserFullName_setValidUser() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
 
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
@@ -134,9 +138,8 @@ public class RightMeshDataSourceTest {
         userEntity.setMeshId(meshId);
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        String byteData = new Gson().toJson(userModel);
 
-        SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
+        SUT.peerAdd(userEntity.getMeshId(), userModel);
 
         addDelay(1500);
 
@@ -155,22 +158,6 @@ public class RightMeshDataSourceTest {
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
         SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
     }
-
-  /*  @Test
-    public void onlyNodeAddedTest() {
-        addDelay(500);
-
-        String nodeId = "0x3988dbfkjdf984rc9";
-        SUT.nodeIdDiscovered(nodeId);
-
-        addDelay(3000);
-
-        UserEntity userEntity = userDataSource.getSingleUserById(nodeId);
-        addDelay(1000);
-        assertEquals(userEntity.getMeshId(), nodeId);
-
-        addDelay();
-    }*/
 
     @Test
     public void nodeAvailableTest() {
@@ -251,9 +238,23 @@ public class RightMeshDataSourceTest {
 
         rmDataHelper.rmDataMap.put(String.valueOf(transferKey), rmDataModel);
 
-        SUT.onAck(chatEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING);
+        RmDataHelper.getInstance().rmDataMap.put(chatEntity.getMessageId(), rmDataModel);
+
+        // Send status test
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
 
         addDelay(500);
+
+        // Delivered status test
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.DELIVERED);
+
+        addDelay(500);
+
+        // Received status test
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.RECEIVED);
+
+        addDelay(500);
+
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
@@ -291,7 +292,6 @@ public class RightMeshDataSourceTest {
         assertFalse(retrieveChatEntity.isIncoming());
 
     }
-
 
     private void addDelay(long time) {
         try {

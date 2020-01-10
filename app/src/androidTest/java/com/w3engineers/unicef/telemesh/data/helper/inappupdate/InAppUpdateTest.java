@@ -31,6 +31,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
@@ -79,7 +81,8 @@ public class InAppUpdateTest {
 
         InAppUpdate.getInstance(rule.getActivity()).showAppInstallDialog(buildAppUpdateJson(), rule.getActivity());
 
-        UiObject button = mDevice.findObject(new UiSelector().text("CANCEL"));
+
+        UiObject button = mDevice.findObject(new UiSelector().text("Cancel"));
         try {
             if (button.exists() && button.isEnabled()) {
                 button.click();

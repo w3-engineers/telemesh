@@ -221,7 +221,7 @@ public class VProfileChoiceTest {
 
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
@@ -234,7 +234,7 @@ public class VProfileChoiceTest {
 
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
@@ -242,8 +242,6 @@ public class VProfileChoiceTest {
         userEntityTwo.setId(1);
 
         userDataSource.insertOrUpdateData(userEntityTwo);
-
-        addDelay(1000);
 
         try {
 
@@ -277,7 +275,7 @@ public class VProfileChoiceTest {
             e.printStackTrace();
         }
 
-        addDelay(3000);
+        addDelay(5000);
 
         ViewInteraction bottomNavigationFavorite = onView(
                 allOf(withId(R.id.action_contact),

@@ -18,7 +18,7 @@ import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
-public class MessageFeedFragment extends BaseFragment implements ItemClickListener<FeedEntity> {
+public class MessageFeedFragment extends BaseFragment {
 
 
     private FragmentMessageFeedBinding mMessageFeedBinding;
@@ -97,12 +97,6 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
         Intent intent = new Intent(getActivity(), BulletinDetails.class);
         intent.putExtra(FeedEntity.class.getName(), feedEntity);
         startActivity(intent);
-    }
-
-
-    @Override
-    public void onItemClick(@NonNull View view, @NonNull FeedEntity item) {
-
     }
 
     private void initAllText() {

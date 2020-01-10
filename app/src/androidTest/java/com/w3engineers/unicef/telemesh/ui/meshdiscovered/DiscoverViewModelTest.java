@@ -123,7 +123,6 @@ public class DiscoverViewModelTest {
 
                     addDelay(2000);
 
-                    System.out.println("User list length: " + result.size());
                     if (result == null) {
                         assertNull(result);
                     } else {

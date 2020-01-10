@@ -13,6 +13,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -94,11 +95,19 @@ public class DiscoverViewModelTest {
 
         addDelay(1000);
 
-        userEntity.setMeshId(UUID.randomUUID().toString());
 
-        String SearchText = "Danial";
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
+                .setUserName("Mike")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis() + 1);
+        userEntityTwo.setId(1);
 
-        SUT.userList.add(userEntity);
+        String SearchText = "Mike";
+
+        SUT.userList.add(userEntityTwo);
         SUT.searchableText = SearchText;
 
         SUT.startUserObserver();
@@ -115,12 +124,15 @@ public class DiscoverViewModelTest {
                     addDelay(2000);
 
                     System.out.println("User list length: " + result.size());
-                    if (result.size() > 0) {
-                        assertFalse(result.isEmpty());
+                    if (result == null) {
+                        assertNull(result);
                     } else {
-                        assertTrue(result.isEmpty());
+                        if (result.size() > 0) {
+                            assertFalse(result.isEmpty());
+                        } else {
+                            assertTrue(result.isEmpty());
+                        }
                     }
-
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

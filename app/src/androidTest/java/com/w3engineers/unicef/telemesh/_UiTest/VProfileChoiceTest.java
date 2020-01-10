@@ -277,7 +277,7 @@ public class VProfileChoiceTest {
             e.printStackTrace();
         }
 
-        addDelay(1000);
+        addDelay(3000);
 
         ViewInteraction bottomNavigationFavorite = onView(
                 allOf(withId(R.id.action_contact),

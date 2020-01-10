@@ -261,7 +261,7 @@ public class DiscoverFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
+    /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -276,7 +276,7 @@ public class DiscoverFragment extends BaseFragment {
                 return true;
             }
         });
-    }
+    }*/
 
     private void searchViewControl(List<UserEntity> userEntities) {
         boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
@@ -333,7 +333,7 @@ public class DiscoverFragment extends BaseFragment {
         }*/
     }
 
-    protected void searchLoading() {
+    /*protected void searchLoading() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
@@ -344,7 +344,7 @@ public class DiscoverFragment extends BaseFragment {
                 // ((MainActivity) getActivity()).enableLoading();
             });
         }
-    }
+    }*/
 
     // General API's and initialization area
     private void init() {

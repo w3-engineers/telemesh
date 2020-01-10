@@ -233,7 +233,7 @@ public class VProfileChoiceTest {
 
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.BLE_MESH_ONLINE)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)

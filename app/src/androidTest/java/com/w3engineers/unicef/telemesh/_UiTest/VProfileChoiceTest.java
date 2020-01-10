@@ -233,7 +233,7 @@ public class VProfileChoiceTest {
 
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
+                .setOnlineStatus(Constants.UserStatus.BLE_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
@@ -265,12 +265,12 @@ public class VProfileChoiceTest {
 
         addDelay(1000);
 
-        ViewInteraction contactSearchClickSecond = onView(
+        /*ViewInteraction contactSearchClickSecond = onView(
                 allOf(withId(R.id.action_search),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        contactSearchClickSecond.perform(click());
+        contactSearchClickSecond.perform(click());*/
 
-        addDelay(1000);
+//        addDelay(1000);
 
         ViewInteraction contactSearchBack = onView(
                 allOf(withId(R.id.image_view_back),

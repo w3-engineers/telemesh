@@ -596,19 +596,6 @@ public class TelemeshTest {
 
         addDelay(500);
 
-        UserEntity userEntityTwo = new UserEntity()
-                .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
-                .setUserName("Mike")
-                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
-                .setRegistrationTime(System.currentTimeMillis() + 1);
-        userEntityTwo.setId(1);
-
-        userDataSource.insertOrUpdateData(userEntityTwo);
-
-        addDelay(1000);
-
         ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));

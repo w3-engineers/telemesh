@@ -412,6 +412,32 @@ public class VRmDataHelperTest {
         }
     }
 
+    @Test
+    public void hanShakingVersionTest() {
+        addDelay(500);
+
+        RmDataHelper.getInstance().configFileSendToOthers(-2, meshId);
+
+        addDelay(500);
+
+        RmDataHelper.getInstance().versionMessageHandshaking(meshId);
+
+        addDelay(500);
+
+    }
+
+    @Test
+    public void sendFeedbackToInternetUser() {
+        addDelay(500);
+        FeedbackModel feedBackModel = randomEntityGenerator.generateFeedbackModel();
+        RmDataHelper.getInstance().sendFeedbackToInternetUser(FeedbackEntity.toFeedbackEntity(feedBackModel));
+
+        addDelay(500);
+
+        assertTrue(true);
+    }
+
+
     @After
     public void tearDown() {
     }

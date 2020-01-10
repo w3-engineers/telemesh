@@ -594,6 +594,19 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
+        addDelay(500);
+
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
+                .setUserName("Mike")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis() + 1);
+        userEntityTwo.setId(1);
+
+        userDataSource.insertOrUpdateData(userEntityTwo);
+
         addDelay(1000);
 
         ViewInteraction userItemAction = onView(
@@ -687,6 +700,18 @@ public class TelemeshTest {
         }
 
         mDevice.pressBack();
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(700);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addDelay(int i) {

@@ -118,7 +118,8 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     public void goNext() {
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
-        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)
+                && mViewModel.storeData(mBinding.editTextName.getText() + "")) {
             Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
             mViewModel.sendUserInfoToAll();
             finish();

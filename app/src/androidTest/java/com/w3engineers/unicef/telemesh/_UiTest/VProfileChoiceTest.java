@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
@@ -244,38 +245,37 @@ public class VProfileChoiceTest {
 
         addDelay(1000);
 
-        ViewInteraction contactSearchClick = onView(
-                allOf(withId(R.id.action_search),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        contactSearchClick.perform(click());
+        try {
 
-        addDelay(500);
+            ViewInteraction contactSearchClick = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            contactSearchClick.perform(click());
 
-        ViewInteraction contactSearchTextAdd = onView(
-                allOf(withId(R.id.edit_text_search),
-                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
-        contactSearchTextAdd.perform(replaceText("da"), closeSoftKeyboard());
+            addDelay(500);
 
-        addDelay(2000);
+            ViewInteraction contactSearchTextAdd = onView(
+                    allOf(withId(R.id.edit_text_search),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+            contactSearchTextAdd.perform(replaceText("da"), closeSoftKeyboard());
 
-        ViewInteraction contactSearchClear = onView(
-                allOf(withId(R.id.image_view_cross),
-                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 0), isDisplayed()));
-        contactSearchClear.perform(click());
+            addDelay(2000);
 
-        addDelay(1000);
+            ViewInteraction contactSearchClear = onView(
+                    allOf(withId(R.id.image_view_cross),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 0), isDisplayed()));
+            contactSearchClear.perform(click());
 
-        /*ViewInteraction contactSearchClickSecond = onView(
-                allOf(withId(R.id.action_search),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        contactSearchClickSecond.perform(click());*/
+            addDelay(1000);
 
-//        addDelay(1000);
+            ViewInteraction contactSearchBack = onView(
+                    allOf(withId(R.id.image_view_back),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+            contactSearchBack.perform(click());
 
-        ViewInteraction contactSearchBack = onView(
-                allOf(withId(R.id.image_view_back),
-                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
-        contactSearchBack.perform(click());
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(1000);
 
@@ -307,24 +307,30 @@ public class VProfileChoiceTest {
 
         addDelay(1000);
 
-        ViewInteraction favSearchClick = onView(
-                allOf(withId(R.id.action_search),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-        favSearchClick.perform(click());
+        try {
 
-        addDelay(500);
+            ViewInteraction favSearchClick = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            favSearchClick.perform(click());
 
-        ViewInteraction favSearchWrite = onView(
-                allOf(withId(R.id.edit_text_search),
-                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
-        favSearchWrite.perform(replaceText("dane"), closeSoftKeyboard());
+            addDelay(500);
 
-        addDelay(2000);
+            ViewInteraction favSearchWrite = onView(
+                    allOf(withId(R.id.edit_text_search),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+            favSearchWrite.perform(replaceText("dane"), closeSoftKeyboard());
 
-        ViewInteraction favSearchClose = onView(
-                allOf(withId(R.id.image_view_back),
-                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
-        favSearchClose.perform(click());
+            addDelay(2000);
+
+            ViewInteraction favSearchClose = onView(
+                    allOf(withId(R.id.image_view_back),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+            favSearchClose.perform(click());
+
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(1000);
 

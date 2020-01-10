@@ -94,6 +94,13 @@ public class DiscoverViewModelTest {
 
         addDelay(1000);
 
+        userEntity.setMeshId(UUID.randomUUID().toString());
+
+        String SearchText = "Danial";
+
+        SUT.userList.add(userEntity);
+        SUT.searchableText = SearchText;
+
         SUT.startUserObserver();
 
         addDelay(2000);

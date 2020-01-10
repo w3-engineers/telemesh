@@ -133,9 +133,7 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
 
         private int activeStatusResource(int userActiveStatus) {
 
-            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
-                return R.mipmap.ic_mesh_online;
-            } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
                 return R.mipmap.ic_mesh_online;
             } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
                 return R.mipmap.ic_internet;

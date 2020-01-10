@@ -64,7 +64,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
      * @return
      */
 
-    @NonNull
+  /*  @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
@@ -80,7 +80,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
             + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract Flowable<List<UserEntity>> getAllUsers();
+    abstract Flowable<List<UserEntity>> getAllUsers();*/
 
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

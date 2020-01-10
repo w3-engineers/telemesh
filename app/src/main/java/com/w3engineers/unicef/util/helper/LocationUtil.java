@@ -52,9 +52,9 @@ public class LocationUtil {
         this.callback = callback;
     }
 
-    public LocationRequestCallback getLocationListener() {
+  /*  public LocationRequestCallback getLocationListener() {
         return callback;
-    }
+    }*/
 
     public LocationCallback getLocationCallback() {
         return locationCallback;

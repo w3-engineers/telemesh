@@ -383,9 +383,9 @@ public class SmoothCheckBox extends View implements Checkable {
         return Color.argb(currentA, currentR, currentG, currentB);
     }
 
-    public void setOnCheckedChangeListener(@Nullable OnCheckedChangeListener l) {
+ /*   public void setOnCheckedChangeListener(@Nullable OnCheckedChangeListener l) {
         this.mListener = l;
-    }
+    }*/
 
     public interface OnCheckedChangeListener {
         void onCheckedChanged(@NonNull SmoothCheckBox checkBox, boolean isChecked);

@@ -73,7 +73,7 @@ public class WalletUtil {
         });
     }
 
-    public void loadWallet(String password, WalletPrepareListener walletPrepareListener) {
+   /* public void loadWallet(String password, WalletPrepareListener walletPrepareListener) {
         this.listener = walletPrepareListener;
         WalletManager.getInstance().loadWallet(mContext, password, new WalletManager.WalletLoadListener() {
             @Override
@@ -90,6 +90,6 @@ public class WalletUtil {
                 }
             }
         });
-    }
+    }*/
 }
 

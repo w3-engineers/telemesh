@@ -84,11 +84,6 @@ public class MeshDataSource extends ViperUtil {
         Constants.IsMeshInit = true;
     }
 
-    @Override
-    protected void offMesh() {
-
-    }
-
     /*public void stopAllServices() {
         // TODO stop service during mode change from data plan mode
     }*/

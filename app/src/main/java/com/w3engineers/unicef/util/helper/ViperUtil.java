@@ -407,8 +407,6 @@ public abstract class ViperUtil {
 
     protected abstract void onMeshPrepared(String myWalletAddress);
 
-    protected abstract void offMesh();
-
     protected abstract void peerAdd(String peerId, byte[] peerData);
 
     protected abstract void peerAdd(String peerId, UserModel userModel);

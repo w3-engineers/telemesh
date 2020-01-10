@@ -115,7 +115,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         }
     }
 
-    private SpannableString getCompanyName(String name) {
+  /*  private SpannableString getCompanyName(String name) {
         String companyName = String.format(getResources().getString(R.string.company_org), name);
 
         SpannableString spannableString = new SpannableString(companyName);
@@ -126,7 +126,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
                 startIndex, companyName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spannableString;
-    }
+    }*/
 
     @Override
     public void onClick(@NonNull View view) {

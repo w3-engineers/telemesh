@@ -46,11 +46,11 @@ public class CommonUtil {
                 });
     }
 
-    public static boolean isLocationGpsOn(Context context){
+   /* public static boolean isLocationGpsOn(Context context){
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return statusOfGPS;
-    }
+    }*/
 
     public static void showGpsOrLocationOffPopup(Context mContext) {
         DialogUtil.showConfirmationDialog(mContext,

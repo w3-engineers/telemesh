@@ -32,11 +32,11 @@ public class CustomDialogUtil {
         }
     }
 
-    public static boolean isProgressDialogRunning() {
+   /* public static boolean isProgressDialogRunning() {
         if (dialog != null && dialog.isShowing()) {
             return true;
         } else return false;
-    }
+    }*/
 
     /**
      * Dismiss comman progress dialog

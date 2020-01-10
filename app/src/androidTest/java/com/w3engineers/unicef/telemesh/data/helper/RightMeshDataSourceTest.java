@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -201,7 +202,6 @@ public class RightMeshDataSourceTest {
 
         addDelay(500);
     }
-
 
     @Test
     public void testOnData_checkMessageProperties_forValidMessage() {

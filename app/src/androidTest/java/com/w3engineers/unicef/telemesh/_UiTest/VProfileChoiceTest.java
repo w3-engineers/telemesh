@@ -1,18 +1,26 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileViewModel;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
@@ -31,6 +39,7 @@ import org.junit.runner.RunWith;
 import java.util.Collection;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -44,6 +53,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 
@@ -61,16 +71,25 @@ public class VProfileChoiceTest {
     public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
     public String defaultPassword = "mesh_123";
 
+    public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+
+    private AppDatabase appDatabase;
+    private UserDataSource userDataSource;
+
     @Rule
     public ActivityTestRule<ProfileChoiceActivity> rule  = new ActivityTestRule<>(ProfileChoiceActivity.class);
 
     @Before
     public void setUp() {
+        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+                AppDatabase.class).allowMainThreadQueries().build();
 
+        userDataSource = UserDataSource.getInstance();
     }
 
     @After
     public void tearDown() {
+        appDatabase.close();
     }
 
     @Test
@@ -198,6 +217,125 @@ public class VProfileChoiceTest {
         ActionCreateProfileNext.perform(scrollTo(), click());
 
         addDelay(2000);
+
+        UserEntity userEntityOne = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+        userEntityOne.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntityOne);
+
+        addDelay(500);
+
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.BLE_MESH_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
+                .setUserName("Mike")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis() + 1);
+        userEntityTwo.setId(1);
+
+        userDataSource.insertOrUpdateData(userEntityTwo);
+
+        addDelay(1000);
+
+        ViewInteraction contactSearchClick = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+        contactSearchClick.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction contactSearchTextAdd = onView(
+                allOf(withId(R.id.edit_text_search),
+                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+        contactSearchTextAdd.perform(replaceText("da"), closeSoftKeyboard());
+
+        addDelay(2000);
+
+        ViewInteraction contactSearchClear = onView(
+                allOf(withId(R.id.image_view_cross),
+                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 0), isDisplayed()));
+        contactSearchClear.perform(click());
+
+        addDelay(1000);
+
+        /*ViewInteraction contactSearchClickSecond = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+        contactSearchClickSecond.perform(click());*/
+
+//        addDelay(1000);
+
+        ViewInteraction contactSearchBack = onView(
+                allOf(withId(R.id.image_view_back),
+                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+        contactSearchBack.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction bottomNavigationFavorite = onView(
+                allOf(withId(R.id.action_contact),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+        bottomNavigationFavorite.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction favoriteSpinner = onView(
+                allOf(withId(R.id.spinner_view),
+                        childAtPosition(allOf(withId(R.id.spinner_holder),
+                                childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        favoriteSpinner.perform(click());
+
+        addDelay(1000);
+
+        DataInteraction favTypeSelect = onData(anything())
+                .atPosition(1);
+        favTypeSelect.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction favoriteClick = onView(
+                allOf(withId(R.id.image_view_favourite),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 2), isDisplayed()));
+        favoriteClick.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction favSearchClick = onView(
+                allOf(withId(R.id.action_search),
+                        childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+        favSearchClick.perform(click());
+
+        addDelay(500);
+
+        ViewInteraction favSearchWrite = onView(
+                allOf(withId(R.id.edit_text_search),
+                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+        favSearchWrite.perform(replaceText("dane"), closeSoftKeyboard());
+
+        addDelay(2000);
+
+        ViewInteraction favSearchClose = onView(
+                allOf(withId(R.id.image_view_back),
+                        childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+        favSearchClose.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction favContactClick = onView(
+                allOf(withId(R.id.user_container),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+        favContactClick.perform(click());
+
+        addDelay(2000);
+
+        mDevice.pressBack();
     }
 
     public Activity currentActivity = null;

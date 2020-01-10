@@ -8,6 +8,12 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
+import com.w3engineers.mesh.application.data.model.TransportInit;
+import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
@@ -138,12 +144,23 @@ public class RightMeshDataSourceTest {
         userEntity.setMeshId(meshId);
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
+        //SUT.peerAdd(userEntity.getMeshId(), userModel);
 
-        SUT.peerAdd(userEntity.getMeshId(), userModel);
+        UserInfoEvent userInfoEvent = randomEntityGenerator.generateUserInfoEvent(meshId);
 
-        addDelay(1500);
+        AppDataObserver.on().sendObserverData(userInfoEvent);
 
-        SUT.peerRemove(userModel.getUserId());
+        addDelay(2500);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(500);
+
+        //SUT.peerRemove(userModel.getUserId());
+
+        PeerRemoved userRemoveEvent = randomEntityGenerator.generatePeerRemoveEvent(meshId);
+        AppDataObserver.on().sendObserverData(userRemoveEvent);
+
         addDelay(500);
         UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
         addDelay(500);
@@ -241,7 +258,9 @@ public class RightMeshDataSourceTest {
         RmDataHelper.getInstance().rmDataMap.put(chatEntity.getMessageId(), rmDataModel);
 
         // Send status test
-        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        DataAckEvent sendAckEvent = randomEntityGenerator.generateDataAckEvent(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        //SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        AppDataObserver.on().sendObserverData(sendAckEvent);
 
         addDelay(500);
 
@@ -291,6 +310,22 @@ public class RightMeshDataSourceTest {
 
         assertFalse(retrieveChatEntity.isIncoming());
 
+    }
+
+    @Test
+    public void meshInitAndServiceAppUpdateAvailableTest() {
+        addDelay(500);
+
+        TransportInit transportEvent = randomEntityGenerator.generateTransportInit(meshId);
+        AppDataObserver.on().sendObserverData(transportEvent);
+
+        addDelay(2000);
+
+        ServiceUpdate serviceAppUpdateEvent = randomEntityGenerator.generateServiceUpdate();
+
+        AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
+
+        addDelay(500);
     }
 
     private void addDelay(long time) {

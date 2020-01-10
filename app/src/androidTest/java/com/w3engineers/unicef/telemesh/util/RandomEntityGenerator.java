@@ -3,6 +3,11 @@ package com.w3engineers.unicef.telemesh.util;
 import android.os.Parcel;
 
 import com.google.gson.Gson;
+import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
+import com.w3engineers.mesh.application.data.model.TransportInit;
+import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.models.ConfigurationCommand;
@@ -292,4 +297,40 @@ public class RandomEntityGenerator {
         return model;
     }
 
+    public UserInfoEvent generateUserInfoEvent(String meshId) {
+        UserInfoEvent userInfoEvent = new UserInfoEvent();
+        userInfoEvent.userName = "John Doe";
+        userInfoEvent.setAvatar(2);
+        userInfoEvent.setRegTime(System.currentTimeMillis());
+        userInfoEvent.setConfigVersion(1);
+        userInfoEvent.setAddress(meshId);
+        return userInfoEvent;
+    }
+
+    public DataAckEvent generateDataAckEvent(String dataId, int status) {
+        DataAckEvent event = new DataAckEvent();
+
+        event.dataId = dataId;
+        event.status = status;
+
+        return event;
+    }
+
+    public PeerRemoved generatePeerRemoveEvent(String meshId) {
+        PeerRemoved event = new PeerRemoved();
+        event.peerId = meshId;
+        return event;
+    }
+
+    public TransportInit generateTransportInit(String meshId) {
+        TransportInit event = new TransportInit();
+        event.nodeId = meshId;
+        return event;
+    }
+
+    public ServiceUpdate generateServiceUpdate() {
+        ServiceUpdate event = new ServiceUpdate();
+        event.isNeeded = true;
+        return event;
+    }
 }

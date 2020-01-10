@@ -115,10 +115,10 @@ public abstract class ViperUtil {
             }
         });
 
-        AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
+       /* AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
             PeerAdd peerAdd = (PeerAdd) event;
             peerDiscoveryProcess(peerAdd.peerId, true);
-        });
+        });*/
 
         AppDataObserver.on().startObserver(ApiEvent.PEER_REMOVED, event -> {
             PeerRemoved peerRemoved = (PeerRemoved) event;

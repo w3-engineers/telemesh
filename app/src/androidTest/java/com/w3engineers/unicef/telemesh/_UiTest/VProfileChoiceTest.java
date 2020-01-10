@@ -192,7 +192,7 @@ public class VProfileChoiceTest {
 
         baseEditText.perform(scrollTo(), replaceText(""), closeSoftKeyboard());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction ActionCreateProfileNext = onView(
                 allOf(withId(R.id.button_signup),
@@ -201,19 +201,19 @@ public class VProfileChoiceTest {
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
 
-        addDelay(500);
+        addDelay(1000);
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
 
-        addDelay(500);
+        addDelay(1000);
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
@@ -230,7 +230,7 @@ public class VProfileChoiceTest {
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
-        addDelay(500);
+        addDelay(1000);
 
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
@@ -242,6 +242,8 @@ public class VProfileChoiceTest {
         userEntityTwo.setId(1);
 
         userDataSource.insertOrUpdateData(userEntityTwo);
+
+        addDelay(1000);
 
         try {
 
@@ -312,7 +314,7 @@ public class VProfileChoiceTest {
                             childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
             favSearchClick.perform(click());
 
-            addDelay(500);
+            addDelay(1000);
 
             ViewInteraction favSearchWrite = onView(
                     allOf(withId(R.id.edit_text_search),

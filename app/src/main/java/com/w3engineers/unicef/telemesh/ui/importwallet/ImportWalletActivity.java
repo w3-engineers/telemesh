@@ -25,8 +25,11 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportWalletBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
+import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 
 import java.util.List;
@@ -140,7 +143,16 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     protected void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+
+        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
+                    CustomDialogUtil.showProgressDialog(ImportWalletActivity.this);
+
+                    HandlerUtil.postBackground(() -> gotoProfileCreatePage(), 100);
+
+                }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        /*Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -166,7 +178,7 @@ public class ImportWalletActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
     private void parseIntent() {

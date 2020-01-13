@@ -63,6 +63,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -210,7 +211,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     protected void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+
+        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
+
+                }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        /*Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -231,7 +240,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
     public static MainActivity getInstance() {

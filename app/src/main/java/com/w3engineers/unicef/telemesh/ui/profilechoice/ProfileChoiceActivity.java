@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 
 import java.util.List;
 
@@ -85,7 +86,17 @@ public class ProfileChoiceActivity extends BaseActivity {
     }
 
     protected void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+
+        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
+                    if (isCreateProfileCall) {
+                        startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
+                    } else {
+                        startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
+                    }
+        }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        /*Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -112,7 +123,7 @@ public class ProfileChoiceActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
 }

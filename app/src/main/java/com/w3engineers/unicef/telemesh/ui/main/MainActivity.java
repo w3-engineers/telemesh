@@ -63,6 +63,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -210,7 +211,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     protected void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+
+        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
+
+                }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+        /*Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -231,7 +240,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
     public static MainActivity getInstance() {
@@ -505,12 +514,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
-        if (itemView == null) {
-            return;
+        if (itemView != null) {
+            ConstraintLayout feedBadge = itemView.findViewById(R.id.constraint_layout_badge);
+            feedBadge.setVisibility(View.GONE);
         }
-        ConstraintLayout feedBadge = itemView.findViewById(R.id.constraint_layout_badge);
-
-        feedBadge.setVisibility(View.GONE);
     }
 
     /*public void enableLoading() {
@@ -640,8 +647,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
-                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
                 if (statusOfGPS) {
                     CommonUtil.dismissDialog();
                 } else {
@@ -658,12 +665,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         mAppUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
 
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
 
                 try {
-                    mAppUpdateManager.startUpdateFlowForResult(
-                            appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
+                    mAppUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
@@ -671,8 +676,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                Log.e("AppUpdateProcess", "checkForAppUpdateAvailability: something else: " + appUpdateInfo.updateAvailability());
-
                 RmDataHelper.getInstance().appUpdateFromOtherServer();
             }
         });
@@ -689,9 +692,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             mAppUpdateManager.unregisterListener(installStateUpdatedListener);
                         }
 
-                    } else {
+                    } /*else {
                         Log.i("AppUpdateProcess", "InstallStateUpdatedListener: state: " + state.installStatus());
-                    }
+                    }*/
                 }
             };
 
@@ -717,11 +720,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void feedRefresh() {
         if ((mCurrentFragment instanceof MessageFeedFragment)) {
 
-            if (CommonUtil.isEmulator()) {
-                Constants.IS_DATA_ON = true;
-                RmDataHelper.getInstance().mLatitude = "22.8456";
-                RmDataHelper.getInstance().mLongitude = "89.5403";
-            }
+            Constants.IS_DATA_ON = true;
+            RmDataHelper.getInstance().mLatitude = "22.8456";
+            RmDataHelper.getInstance().mLongitude = "89.5403";
 
             MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
             messageFeedFragment.swipeRefreshOperation();

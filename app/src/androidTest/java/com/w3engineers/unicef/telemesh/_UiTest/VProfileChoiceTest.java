@@ -220,6 +220,7 @@ public class VProfileChoiceTest {
         addDelay(2000);
     }
 
+    @Test
     public void vUITest_02() {
         addDelay(4000);
 
@@ -232,17 +233,7 @@ public class VProfileChoiceTest {
                 .setRegistrationTime(System.currentTimeMillis());
         userEntityOne.setId(1);
 
-        /*UserEntity userEntityTwo = new UserEntity()
-                .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
-                .setMeshId("0xaa2dd785fk60eeb8151f65b3ded59ce6c2f12cd4")
-                .setUserName("Mike")
-                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
-                .setRegistrationTime(System.currentTimeMillis() + 1);*/
-
         userDataSource.insertOrUpdateData(userEntityOne);
-
-//        userDataSource.insertOrUpdateData(userEntityTwo);
 
         addDelay(3000);
 
@@ -274,7 +265,7 @@ public class VProfileChoiceTest {
                             childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
             contactSearchBack.perform(click());
 
-        } catch (NoMatchingViewException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

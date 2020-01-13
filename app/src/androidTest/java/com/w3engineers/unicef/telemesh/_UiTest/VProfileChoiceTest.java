@@ -217,7 +217,11 @@ public class VProfileChoiceTest {
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(5000);
+        addDelay(2000);
+    }
+
+    public void vUITest_02() {
+        addDelay(4000);
 
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
@@ -226,6 +230,7 @@ public class VProfileChoiceTest {
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
+        userEntityOne.setId(1);
 
         /*UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)

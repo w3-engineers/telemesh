@@ -356,15 +356,15 @@ public class TelemeshTest {
 
         try {
 
-            ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
+            /*ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
                     childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
                     childAtPosition(allOf(withId(R.id.image_layout),
                             childAtPosition(withId(R.id.scrollview), 0)),
                             8)));
-
-            /*ViewInteraction editInputTextBox = onView(
+*/
+            ViewInteraction editInputTextBox = onView(
                     allOf(withId(R.id.edit_text_name),
-                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));*/
+                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
             editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
@@ -395,20 +395,20 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-        currentActivity = getActivityInstance();
+      /*  currentActivity = getActivityInstance();
 
         if (currentActivity instanceof EditProfileActivity) {
             EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
             new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
 //            editProfileActivity.goNext();
-        }
+        }*/
 
-        /*ViewInteraction updateProfile = onView(
+        ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)),
                                 10)));
-        updateProfile.perform(scrollTo(), click());*/
+        updateProfile.perform(scrollTo(), click());
 
         addDelay(2500);
 

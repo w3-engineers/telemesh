@@ -217,31 +217,27 @@ public class VProfileChoiceTest {
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(2000);
+        addDelay(5000);
 
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
-                .setUserName("Daniel")
+                .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
-        addDelay(1000);
-
-        UserEntity userEntityTwo = new UserEntity()
+        /*UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xaa2dd785fk60eeb8151f65b3ded59ce6c2f12cd4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
-                .setRegistrationTime(System.currentTimeMillis() + 1);
+                .setRegistrationTime(System.currentTimeMillis() + 1);*/
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
-        addDelay(2000);
-
-        userDataSource.insertOrUpdateData(userEntityTwo);
+//        userDataSource.insertOrUpdateData(userEntityTwo);
 
         addDelay(3000);
 

@@ -1,4 +1,4 @@
-Apache Telemesh
+Telemesh
 Copyright [2018-2020] W3 Engineers Ltd.
 
 This product includes software developed at W3 Engineers Ltd. and licensed under Apache 2.0 Licence. 

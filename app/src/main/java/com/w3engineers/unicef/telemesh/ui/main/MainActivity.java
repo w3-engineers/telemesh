@@ -514,12 +514,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
-        if (itemView == null) {
-            return;
+        if (itemView != null) {
+            ConstraintLayout feedBadge = itemView.findViewById(R.id.constraint_layout_badge);
+            feedBadge.setVisibility(View.GONE);
         }
-        ConstraintLayout feedBadge = itemView.findViewById(R.id.constraint_layout_badge);
-
-        feedBadge.setVisibility(View.GONE);
     }
 
     /*public void enableLoading() {
@@ -649,8 +647,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
-                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
                 if (statusOfGPS) {
                     CommonUtil.dismissDialog();
                 } else {
@@ -667,12 +665,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         mAppUpdateManager.getAppUpdateInfo().addOnSuccessListener(appUpdateInfo -> {
 
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
 
                 try {
-                    mAppUpdateManager.startUpdateFlowForResult(
-                            appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
+                    mAppUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
                 }
@@ -680,8 +676,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                Log.e("AppUpdateProcess", "checkForAppUpdateAvailability: something else: " + appUpdateInfo.updateAvailability());
-
                 RmDataHelper.getInstance().appUpdateFromOtherServer();
             }
         });
@@ -698,9 +692,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             mAppUpdateManager.unregisterListener(installStateUpdatedListener);
                         }
 
-                    } else {
+                    } /*else {
                         Log.i("AppUpdateProcess", "InstallStateUpdatedListener: state: " + state.installStatus());
-                    }
+                    }*/
                 }
             };
 
@@ -726,11 +720,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void feedRefresh() {
         if ((mCurrentFragment instanceof MessageFeedFragment)) {
 
-            if (CommonUtil.isEmulator()) {
-                Constants.IS_DATA_ON = true;
-                RmDataHelper.getInstance().mLatitude = "22.8456";
-                RmDataHelper.getInstance().mLongitude = "89.5403";
-            }
+            Constants.IS_DATA_ON = true;
+            RmDataHelper.getInstance().mLatitude = "22.8456";
+            RmDataHelper.getInstance().mLongitude = "89.5403";
 
             MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
             messageFeedFragment.swipeRefreshOperation();

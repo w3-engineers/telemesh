@@ -328,7 +328,7 @@ public class TelemeshTest {
 
             securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
 
-            addDelay(300);
+            addDelay(1000);
         }
 
         ViewInteraction settingsTab = onView(

@@ -222,28 +222,28 @@ public class VProfileChoiceTest {
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
-        userEntityOne.setId(0);
-
-        userDataSource.insertOrUpdateData(userEntityOne);
 
         addDelay(1000);
 
         UserEntity userEntityTwo = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce6c2f12cd4")
+                .setMeshId("0xaa2dd785fk60eeb8151f65b3ded59ce6c2f12cd4")
                 .setUserName("Mike")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis() + 1);
-        userEntityTwo.setId(1);
+
+        userDataSource.insertOrUpdateData(userEntityOne);
+
+        addDelay(2000);
 
         userDataSource.insertOrUpdateData(userEntityTwo);
 
-        addDelay(1000);
+        addDelay(3000);
 
         try {
 
@@ -277,7 +277,7 @@ public class VProfileChoiceTest {
             e.printStackTrace();
         }
 
-        addDelay(5000);
+        addDelay(1000);
 
         ViewInteraction bottomNavigationFavorite = onView(
                 allOf(withId(R.id.action_contact),

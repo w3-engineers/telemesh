@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
@@ -54,6 +55,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -66,6 +68,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static com.parse.Parse.getApplicationContext;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -699,6 +702,121 @@ public class TelemeshTest {
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void uiTest_04() {
+        addDelay(4000);
+
+        UserEntity userEntityOne = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
+                .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Mike")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        userDataSource.insertOrUpdateData(userEntityOne);
+
+        addDelay(3000);
+
+        try {
+
+            ViewInteraction contactSearchClick = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            contactSearchClick.perform(click());
+
+            addDelay(500);
+
+            ViewInteraction contactSearchTextAdd = onView(
+                    allOf(withId(R.id.edit_text_search),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+            contactSearchTextAdd.perform(replaceText("da"), closeSoftKeyboard());
+
+            addDelay(2000);
+
+            ViewInteraction contactSearchClear = onView(
+                    allOf(withId(R.id.image_view_cross),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 0), isDisplayed()));
+            contactSearchClear.perform(click());
+
+            addDelay(1000);
+
+            ViewInteraction contactSearchBack = onView(
+                    allOf(withId(R.id.image_view_back),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+            contactSearchBack.perform(click());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        addDelay(1000);
+
+        ViewInteraction bottomNavigationFavorite = onView(
+                allOf(withId(R.id.action_contact),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+        bottomNavigationFavorite.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction favoriteSpinner = onView(
+                allOf(withId(R.id.spinner_view),
+                        childAtPosition(allOf(withId(R.id.spinner_holder),
+                                childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        favoriteSpinner.perform(click());
+
+        addDelay(1000);
+
+        DataInteraction favTypeSelect = onData(anything())
+                .atPosition(1);
+        favTypeSelect.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction favoriteClick = onView(
+                allOf(withId(R.id.image_view_favourite),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 2), isDisplayed()));
+        favoriteClick.perform(click());
+
+        addDelay(1000);
+
+        try {
+
+            ViewInteraction favSearchClick = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            favSearchClick.perform(click());
+
+            addDelay(1000);
+
+            ViewInteraction favSearchWrite = onView(
+                    allOf(withId(R.id.edit_text_search),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 1), isDisplayed()));
+            favSearchWrite.perform(replaceText("dane"), closeSoftKeyboard());
+
+            addDelay(2000);
+
+            ViewInteraction favSearchClose = onView(
+                    allOf(withId(R.id.image_view_back),
+                            childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
+            favSearchClose.perform(click());
+
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(1000);
+
+        ViewInteraction favContactClick = onView(
+                allOf(withId(R.id.user_container),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+        favContactClick.perform(click());
+
+        addDelay(2000);
+
+        mDevice.pressBack();
     }
 
     private void addDelay(int i) {

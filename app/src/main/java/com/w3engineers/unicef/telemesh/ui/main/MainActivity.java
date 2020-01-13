@@ -163,10 +163,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         });
 
-        mViewModel.getMyUserMode().observe(this, integer -> {
+        /*mViewModel.getMyUserMode().observe(this, integer -> {
             if (integer == null) return;
             showHideInternetWarning(integer, Constants.IS_DATA_ON);
-        });
+        });*/
 
         subscribeForActiveUser();
         subscribeForNewFeedMessage();

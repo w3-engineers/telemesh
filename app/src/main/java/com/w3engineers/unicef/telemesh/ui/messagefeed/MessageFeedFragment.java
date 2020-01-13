@@ -71,10 +71,14 @@ public class MessageFeedFragment extends BaseFragment {
         mMessageFeedViewModel.getMessageFeedDetails().observe(this, this::openDetailsPage);
 
         mMessageFeedBinding.swipeRefresh.setOnRefreshListener(() -> {
-            mMessageFeedViewModel.requestBroadcastMessage();
-
-            mMessageFeedBinding.swipeRefresh.setRefreshing(false);
+            swipeRefreshOperation();
         });
+    }
+
+    public void swipeRefreshOperation() {
+        mMessageFeedViewModel.requestBroadcastMessage();
+
+        mMessageFeedBinding.swipeRefresh.setRefreshing(false);
     }
 
     /**

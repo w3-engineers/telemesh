@@ -437,9 +437,17 @@ public class TelemeshTest {
     public void updateButtonClick() {
         addDelay(1000);
 
-        onView(withId(R.id.button_update)).perform(click());
+        Activity currentActivity = getActivityInstance();
 
-        addDelay(2500);
+        if (currentActivity instanceof EditProfileActivity) {
+            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
+            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
+//            editProfileActivity.goNext();
+        }
+
+//        onView(withId(R.id.button_update)).perform(click());
+
+        addDelay(3500);
 
         mDevice.pressBack();
 

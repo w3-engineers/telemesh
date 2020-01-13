@@ -713,4 +713,18 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         snackbar.setActionTextColor(getResources().getColor(R.color.background_color));
         snackbar.show();
     }
+
+    public void feedRefresh() {
+        if ((mCurrentFragment instanceof MessageFeedFragment)) {
+
+            if (CommonUtil.isEmulator()) {
+                Constants.IS_DATA_ON = true;
+                RmDataHelper.getInstance().mLatitude = "22.8456";
+                RmDataHelper.getInstance().mLongitude = "89.5403";
+            }
+
+            MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
+            messageFeedFragment.swipeRefreshOperation();
+        }
+    }
 }

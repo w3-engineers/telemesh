@@ -89,8 +89,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private DataSource dataSource;
 
-    private String mLatitude;
-    private String mLongitude;
+    public String mLatitude;
+    public String mLongitude;
 
     @SuppressLint("UseSparseArrays")
     @NonNull

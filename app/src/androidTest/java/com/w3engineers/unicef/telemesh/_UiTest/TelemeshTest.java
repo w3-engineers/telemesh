@@ -452,7 +452,18 @@ public class TelemeshTest {
 
         mDevice.pressBack();
 
-        addDelay(500);
+        addDelay(1000);
+
+        Activity activity = getActivityInstance();
+
+        if (activity instanceof MainActivity) {
+
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.feedRefresh();
+
+        }
+
+        addDelay(3000);
 
 
         ViewInteraction settingsTab = onView(

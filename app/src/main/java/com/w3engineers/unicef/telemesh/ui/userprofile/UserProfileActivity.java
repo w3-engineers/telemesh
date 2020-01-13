@@ -139,9 +139,9 @@ public class UserProfileActivity extends TelemeshBaseActivity {
             case R.id.image_view_id_copy:
                 copyEthAddress();
                 break;
-            case R.id.button_export_profile:
+            /*case R.id.button_export_profile:
                 // Todo Export profile option
-                break;
+                break;*/
             case R.id.text_view_edit:
                 gotoEditPage();
                 break;

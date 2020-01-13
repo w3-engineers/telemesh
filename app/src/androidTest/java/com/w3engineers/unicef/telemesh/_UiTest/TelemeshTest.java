@@ -263,10 +263,35 @@ public class TelemeshTest {
 
         addDelay(500);
 
+
         ViewInteraction boxPassword = onView(
                 allOf(withId(R.id.edit_text_box_password),
                         childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 1)));
+
+        addDelay(500);
+
+        ViewInteraction securityButtonNext = onView(
+                allOf(withId(R.id.button_next),
+                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
+                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 4)));
+
+        boxPassword.perform(scrollTo(), replaceText("meshtest"), closeSoftKeyboard());
+        securityButtonNext.perform(click());
+
+        addDelay(1500);
+
+        boxPassword.perform(scrollTo(), replaceText("12345678"), closeSoftKeyboard());
+        securityButtonNext.perform(click());
+
+        addDelay(1500);
+
+        boxPassword.perform(scrollTo(), replaceText("mesh1234"), closeSoftKeyboard());
+        securityButtonNext.perform(click());
+
+        addDelay(1500);
+
+
         boxPassword.perform(scrollTo(), replaceText("mesh_123"), closeSoftKeyboard());
 
         addDelay(1000);
@@ -291,10 +316,6 @@ public class TelemeshTest {
 
         addDelay(300);
 
-        ViewInteraction securityButtonNext = onView(
-                allOf(withId(R.id.button_next),
-                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
-                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 4)));
         securityButtonNext.perform(scrollTo(), click());
 
         addDelay(5000);
@@ -652,7 +673,7 @@ public class TelemeshTest {
 
             addDelay(1000);
 
-            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"),closeSoftKeyboard());
+            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
 
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
@@ -681,7 +702,7 @@ public class TelemeshTest {
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
 
-            new Handler(Looper.getMainLooper()).post(()-> {
+            new Handler(Looper.getMainLooper()).post(() -> {
                 mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
                 mainActivity.popupSnackbarForCompleteUpdate();
             });

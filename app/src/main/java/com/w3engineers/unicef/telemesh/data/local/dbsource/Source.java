@@ -85,7 +85,8 @@ public class Source implements DataSource {
         return failedMessage.toFlowable(BackpressureStrategy.LATEST);
     }
 
-    @Override
+    // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
+    /*@Override
     public void setMyMode(int mode) {
         this.myMode.onNext(mode);
     }
@@ -93,5 +94,5 @@ public class Source implements DataSource {
     @Override
     public Observable<Integer> getMyMode() {
         return this.myMode;
-    }
+    }*/
 }

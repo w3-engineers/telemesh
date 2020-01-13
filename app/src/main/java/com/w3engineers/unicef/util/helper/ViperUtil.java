@@ -79,6 +79,7 @@ public abstract class ViperUtil {
             String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
             String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
             String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+            String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
 
 //                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
@@ -96,7 +97,7 @@ public abstract class ViperUtil {
 
             viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID);
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
 
             /*if (!TextUtils.isEmpty(jsonData)) {
                 JSONObject jsonObject = new JSONObject(jsonData);

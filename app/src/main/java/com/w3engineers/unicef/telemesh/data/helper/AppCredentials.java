@@ -32,6 +32,8 @@ public class AppCredentials {
 
     public native String getFileRepoLink();
 
+    public native String getConfiguration();
+
 
     static {
         System.loadLibrary("native-lib");

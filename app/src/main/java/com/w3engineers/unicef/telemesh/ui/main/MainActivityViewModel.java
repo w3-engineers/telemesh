@@ -2,7 +2,11 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.net.LinkAddress;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
@@ -16,6 +20,10 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountLocalWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountSendServerWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
+import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -24,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivityViewModel extends BaseRxViewModel {
@@ -40,14 +49,22 @@ public class MainActivityViewModel extends BaseRxViewModel {
     private PeriodicWorkRequest localUserCountRequest;
     private PeriodicWorkRequest sendCountToServerRequest;
 
+    // FeedDataSource instance
+    private FeedDataSource mFeedDataSource;
     private MessageSourceData messageSourceData;
     private UserDataSource userDataSource;
+    private DataSource dataSource;
+    private MutableLiveData<Integer> myModeLiveData;
+    private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
 
     public MainActivityViewModel() {
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
+        mFeedDataSource = FeedDataSource.getInstance();
         mWorkManager = WorkManager.getInstance();
         mNewUserCountWorkInfo = mWorkManager.getWorkInfosByTagLiveData(NEW_USER_COUNT);
+        dataSource = Source.getDbSource();
+        myModeLiveData = new MutableLiveData<>();
     }
 
     public void userOfflineProcess() {
@@ -60,6 +77,15 @@ public class MainActivityViewModel extends BaseRxViewModel {
         return Single.fromCallable(() ->
                 UserDataSource.getInstance().updateUserToOffline());
     }
+
+    /*public LiveData<Integer> getMyUserMode() {
+        getCompositeDisposable().add(dataSource.getMyMode()
+                .subscribeOn(Schedulers.io())
+                .subscribe(integer -> {
+                    myModeLiveData.postValue(integer);
+                }, Throwable::printStackTrace));
+        return myModeLiveData;
+    }*/
 
     // Add a getter method for mNewUserCountWorkInfo
     public LiveData<List<WorkInfo>> getNewUserWorkInfo() {
@@ -122,5 +148,9 @@ public class MainActivityViewModel extends BaseRxViewModel {
     @NonNull
     public LiveData<List<UserEntity>> getActiveUser() {
         return userDataSource.getActiveUser();
+    }
+
+    public LiveData<List<FeedEntity>> getNewFeedsList() {
+        return mFeedDataSource.getAllUnreadFeeds();
     }
 }

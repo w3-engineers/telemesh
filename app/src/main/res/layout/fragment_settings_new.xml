@@ -38,6 +38,15 @@
                     app:layout_constraintLeft_toRightOf="@id/image_view_profile"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/activity_view_profile"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     style="@style/divider_style_settings_page"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -67,6 +76,15 @@
                     android:text="@string/settings_open_wallet"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_wallet"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_open_wallet"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -100,6 +118,15 @@
                     app:layout_constraintLeft_toRightOf="@id/image_view_data_plan"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/data_plan"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     style="@style/divider_style_settings_page"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -129,6 +156,15 @@
                     android:text="@string/settings_share_app"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_share"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_share_app"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -191,6 +227,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layout_diagram_map"
                 style="@style/full_content_style_settings_page"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_choose_language">
@@ -212,6 +249,15 @@
                     app:layout_constraintLeft_toRightOf="@id/image_view_map"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/diagram_map"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     style="@style/divider_style_settings_page"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -224,6 +270,7 @@
                 android:id="@+id/layout_show_log"
                 style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_diagram_map">
 
@@ -242,6 +289,15 @@
                     android:text="@string/settings_open_log"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/image_view_log"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_open_log"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -276,6 +332,136 @@
                     app:layout_constraintLeft_toRightOf="@id/image_view_about"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/activity_about_us"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/about_us_bottom"
+                    style="@style/divider_style_settings_page"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_feedback"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_about_us">
+
+                <ImageView
+                    android:id="@+id/image_view_feedback"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_feedback"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_feedback"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/send_feedback"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_feedback"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/activity_about_us"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/feedback_bottom"
+                    style="@style/divider_style_settings_page"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_ssid"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_feedback">
+
+                <ImageView
+                    android:id="@+id/image_view_ssid"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_about_cyan"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_ssid"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/set_ssid"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_ssid"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/activity_about_us"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_app_update"
+                style="@style/full_content_style_settings_page"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_feedback">
+
+                <ImageView
+                    android:id="@+id/image_view_app_update"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_app_update"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title_view_app_update"
+                    style="@style/text_style_settings_page"
+                    android:text="@string/update_app"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_app_update"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/update_app"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     style="@style/divider_style_settings_page"
                     android:visibility="invisible"
@@ -283,6 +469,7 @@
                     app:layout_constraintLeft_toLeftOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
+
 
         </android.support.constraint.ConstraintLayout>
 

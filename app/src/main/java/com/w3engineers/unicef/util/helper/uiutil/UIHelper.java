@@ -7,8 +7,11 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,14 +48,18 @@ public class UIHelper {
     }
 
     @BindingAdapter("imageStatusResource")
-    public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId){
+    public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId) {
         //AppLog.v("Image status resource id ="+resourceId);
         int statusId;
         if (resourceId == Constants.MessageStatus.STATUS_SENDING) {
+            statusId = R.mipmap.ic_dot_grey;
+        } else if (resourceId == Constants.MessageStatus.STATUS_SEND) {
             statusId = R.mipmap.ic_sending_grey;
-        }else if (resourceId == Constants.MessageStatus.STATUS_DELIVERED) {
+        } else if (resourceId == Constants.MessageStatus.STATUS_DELIVERED) {
+            statusId = R.mipmap.ic_deliverd_grey;
+        } else if (resourceId == Constants.MessageStatus.STATUS_RECEIVED) {
             statusId = R.mipmap.ic_deliverd;
-        }else {
+        } else {
             statusId = R.mipmap.ic_alert;
         }
         Glide.with(App.getContext()).load(statusId).into(imageView);
@@ -81,6 +88,28 @@ public class UIHelper {
         return subject;
     }
 
+   /* public static Observable<String> fromSearchEditText(EditText editText) {
+        final PublishSubject<String> subject = PublishSubject.create();
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                subject.onNext(s.toString());
+            }
+        });
+
+        return subject;
+    }*/
+
     @BindingAdapter("android:typeface")
     public static void setTypeface(@NonNull TextView v, @NonNull String style) {
         switch (style) {
@@ -94,16 +123,16 @@ public class UIHelper {
     }
 
     @Nullable
-    public static String getSeparatorDate(@Nullable MessageEntity messageEntity){
+    public static String getSeparatorDate(@Nullable MessageEntity messageEntity) {
 
-        if(messageEntity != null){
+        if (messageEntity != null) {
             Calendar smsTime = Calendar.getInstance();
             smsTime.setTimeInMillis(messageEntity.time);
 
             Calendar now = Calendar.getInstance();
-            if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
+            if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
                 return App.getContext().getResources().getString(R.string.today);
-            } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
+            } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
                 return App.getContext().getResources().getString(R.string.yesterday);
             } else {
                 return TimeUtil.getDateString(messageEntity.time);

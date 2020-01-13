@@ -12,7 +12,9 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 /*
  * ============================================================================
@@ -25,7 +27,7 @@ public class Source implements DataSource {
 
     private static Source dbSource = new Source();
     private String chatCurrentUser = null;
-
+    final PublishSubject<Integer> myMode = PublishSubject.create();
     private MessageDao messageDao;
     private UserDao userDao;
     private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
@@ -37,6 +39,7 @@ public class Source implements DataSource {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
      * @param appDatabase -> provide mock database from unit test class
      */
     public Source(@NonNull AppDatabase appDatabase) {
@@ -81,4 +84,15 @@ public class Source implements DataSource {
     public Flowable<ChatEntity> getReSendMessage() {
         return failedMessage.toFlowable(BackpressureStrategy.LATEST);
     }
+
+    // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
+    /*@Override
+    public void setMyMode(int mode) {
+        this.myMode.onNext(mode);
+    }
+
+    @Override
+    public Observable<Integer> getMyMode() {
+        return this.myMode;
+    }*/
 }

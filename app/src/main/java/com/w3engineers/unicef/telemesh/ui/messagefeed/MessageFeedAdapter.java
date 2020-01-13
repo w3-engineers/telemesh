@@ -37,10 +37,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
 
     @Override
     public boolean isEqual(@NonNull FeedEntity left, @NonNull FeedEntity right) {
-        String leftFeedId = left.getFeedId();
-        String rightFeedId = right.getFeedId();
-
-        return !TextUtils.isEmpty(leftFeedId) && !TextUtils.isEmpty(rightFeedId) && leftFeedId.equals(rightFeedId);
+        return !TextUtils.isEmpty(left.getFeedId()) && !TextUtils.isEmpty(right.getFeedId()) && left.getFeedId().equals(right.getFeedId());
     }
 
     /**

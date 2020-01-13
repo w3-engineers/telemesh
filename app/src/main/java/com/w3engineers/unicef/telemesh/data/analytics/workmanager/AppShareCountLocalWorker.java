@@ -27,8 +27,6 @@ public class AppShareCountLocalWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-
-        Log.d("AppShareTest", "Local send worker call");
         RmDataHelper.getInstance().sendAppShareCount();
 
         return Result.success();

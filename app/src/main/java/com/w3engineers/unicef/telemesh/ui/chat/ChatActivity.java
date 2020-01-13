@@ -10,14 +10,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.w3engineers.ext.viper.application.data.BaseServiceLocator;
-import com.w3engineers.ext.viper.application.ui.base.rm.RmBaseActivity;
-import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.ext.strom.util.Text;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -26,6 +28,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
 import java.util.List;
 
@@ -39,12 +42,13 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends RmBaseActivity {
+public class ChatActivity extends TelemeshBaseActivity {
     /**
      * <h1>Instance variable scope</h1>
      */
     private ChatViewModel mChatViewModel;
     private UserEntity mUserEntity;
+    private String userId;
     //private ChatAdapter mChatAdapter;
     //private  ChatPagedAdapter mChatPagedAdapter;
     @Nullable
@@ -54,7 +58,6 @@ public class ChatActivity extends RmBaseActivity {
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable
     public LayoutManagerWithSmoothScroller mLinearLayoutManager;
-
 
 
     @Override
@@ -73,9 +76,17 @@ public class ChatActivity extends RmBaseActivity {
     }
 
     @Override
-    protected void startUI() {
+    public BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
+
+    @Override
+    public void startUI() {
+        super.startUI();
         Intent intent = getIntent();
-        mUserEntity = intent.getParcelableExtra(UserEntity.class.getName());
+        userId = intent.getStringExtra(UserEntity.class.getName());
+
+        if (TextUtils.isEmpty(userId)) { finish(); return; }
 
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
@@ -83,8 +94,8 @@ public class ChatActivity extends RmBaseActivity {
         mChatViewModel = getViewModel();
 
         initComponent();
-        subscribeForMessages();
-        subscribeForUserEvent();
+        subscribeForMessages(userId);
+        subscribeForUserEvent(userId);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -94,36 +105,35 @@ public class ChatActivity extends RmBaseActivity {
             mViewBinging.textViewLastName.setOnClickListener(this);
 
             mViewBinging.setUserEntity(mUserEntity);
-            mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
+            //mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
         }
 
 
-        if (mUserEntity != null && mUserEntity.meshId != null) {
-            mChatViewModel.updateAllMessageStatus(mUserEntity.meshId);
+        if (Text.isNotEmpty(userId)) {
+            mChatViewModel.updateAllMessageStatus(userId);
         }
+
+        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+        BulletinTimeScheduler.getInstance().initNoInternetCallback(isMobileDataOn -> showHideInternetWarning(myMode, isMobileDataOn));
+        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
+
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        if (mUserEntity != null) {
-            mChatViewModel.setCurrentUser(mUserEntity.meshId);
+        if (Text.isNotEmpty(userId)) {
+            mChatViewModel.setCurrentUser(userId);
         }
-
-    }
-
-    @NonNull
-    @Override
-    protected BaseServiceLocator getServiceLocator() {
-        return ServiceLocator.getInstance();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
 
         mChatViewModel.setCurrentUser(null);
     }
+
 
     /**
      * <h1>Init view model and recycler view</h1>
@@ -155,8 +165,8 @@ public class ChatActivity extends RmBaseActivity {
      * Remove current user notification
      */
     private void clearNotification() {
-        if (mUserEntity.meshId != null) {
-            int notificationId = Math.abs(mUserEntity.meshId.hashCode());
+        if (Text.isNotEmpty(userId)) {
+            int notificationId = Math.abs(userId.hashCode());
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancel(notificationId);
         }
@@ -167,9 +177,11 @@ public class ChatActivity extends RmBaseActivity {
      * from local db.
      * if any new message get inserted into db with the help of LifeData
      * here we can listen that message
+     *
+     * @param userId
      */
-    private void subscribeForMessages() {
-        if (mUserEntity != null) {
+    private void subscribeForMessages(String userId) {
+        if (Text.isNotEmpty(userId)) {
             /*mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
 
                 if (chatEntities == null)
@@ -187,9 +199,9 @@ public class ChatActivity extends RmBaseActivity {
                 });
             }
 
-            if (mUserEntity.meshId != null) {
-                mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
-                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+            if (Text.isNotEmpty(userId)) {
+                mChatViewModel.getAllMessage(userId).observe(this, chatEntities -> {
+                    mChatViewModel.prepareDateSpecificChat(chatEntities);
                 });
             }
 
@@ -197,14 +209,18 @@ public class ChatActivity extends RmBaseActivity {
     }
 
 
-    private void subscribeForUserEvent() {
-        if (mUserEntity != null && mUserEntity.meshId != null) {
+    private void subscribeForUserEvent(String userId) {
+        if (Text.isNotEmpty(userId)) {
 
-            mChatViewModel.getUserById(mUserEntity.meshId).observe(this, userEntity -> {
+            mChatViewModel.getUserById(userId).observe(this, userEntity -> {
                 mUserEntity = userEntity;
                 if (userEntity != null && mViewBinging != null) {
                     mViewBinging.setUserEntity(userEntity);
                     mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.getOnlineStatus()));
+
+                    if (mChatPagedAdapter != null) {
+                        mChatPagedAdapter.addAvatarIndex(mUserEntity.getAvatarIndex());
+                    }
                 }
             });
         }
@@ -212,10 +228,8 @@ public class ChatActivity extends RmBaseActivity {
 
     private int activeStatusResource(int userActiveStatus) {
 
-        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
-            return R.mipmap.ic_wifi;
-        } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
-            return R.mipmap.empty_mesh;
+        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+            return R.mipmap.ic_mesh_online;
         } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
             return R.mipmap.ic_internet;
         } else {
@@ -238,7 +252,7 @@ public class ChatActivity extends RmBaseActivity {
             case R.id.image_view_send:
                 if (mViewBinging != null) {
                     String value = mViewBinging.editTextMessage.getText().toString().trim();
-                    if (!TextUtils.isEmpty(value) && mUserEntity.meshId != null) {
+                    if (!TextUtils.isEmpty(value) && mUserEntity != null && mUserEntity.meshId != null) {
                         mChatViewModel.sendMessage(mUserEntity.meshId, value, true);
                         mViewBinging.editTextMessage.setText("");
                     }
@@ -268,12 +282,13 @@ public class ChatActivity extends RmBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            loadMainActivity();
+        if (item.getItemId() == android.R.id.home && isTaskRoot()) {
+            Intent newTask = new Intent(this, MainActivity.class);
+            newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(newTask);
+            finish();
         }
-        finish();
         return super.onOptionsItemSelected(item);
     }
 
@@ -282,14 +297,14 @@ public class ChatActivity extends RmBaseActivity {
         finish();
     }
 
-    private void loadMainActivity() {
+    /*private void loadMainActivity() {
         // When user comes in chat screen using notification
         if (isTaskRoot()) {
             Intent newTask = new Intent(this, MainActivity.class);
             newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(newTask);
         }
-    }
+    }*/
 
     private ChatViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
@@ -300,6 +315,18 @@ public class ChatActivity extends RmBaseActivity {
                 return (T) ServiceLocator.getInstance().getChatViewModel(getApplication());
             }
         }).get(ChatViewModel.class);
+    }
+
+    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
+            if (isMobileDataOn) {
+                mViewBinging.textViewNoInternet.setVisibility(View.GONE);
+            } else {
+                mViewBinging.textViewNoInternet.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mViewBinging.textViewNoInternet.setVisibility(View.GONE);
+        }
     }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
@@ -321,11 +348,9 @@ public class ChatActivity extends RmBaseActivity {
         }
 
         @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-        }
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) { }
 
         @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
+        public void onItemRangeRemoved(int positionStart, int itemCount) { }
     }
 }

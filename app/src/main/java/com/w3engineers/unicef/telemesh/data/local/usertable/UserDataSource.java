@@ -24,9 +24,6 @@ import android.support.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -87,9 +84,27 @@ public class UserDataSource {
     }
 
     @NonNull
-    public Flowable<List<UserEntity>> getAllUsers() {
-        return mUserDao.getAllUsers();
+    public Flowable<List<UserEntity>> getAllOnlineUsers() {
+        return mUserDao.getAllOnlineUsers();
     }
+
+
+    @NonNull
+    public Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers() {
+        return mUserDao.getAllMessagedWithFavouriteUsers();
+    }
+
+/*    @NonNull
+    public LiveData<PagedList<UserEntity>> getAllMessagedWithFavouriteUsers() {
+        return new LivePagedListBuilder<>(
+                mUserDao.getAllMessagedWithFavouriteUsers(), *//* page size *//* 50).build();
+    }*/
+
+    @NonNull
+    public Flowable<List<UserEntity>> getFavouriteUsers() {
+        return mUserDao.getAllFavouriteContactUsers();
+    }
+
 
     @Nullable
     public UserEntity getSingleUserById(@NonNull String userId) {
@@ -137,13 +152,34 @@ public class UserDataSource {
         return mUserDao.updateUserStatus(userId, activityStatus);
     }
 
+    public int updateFavouriteStatus(String userId, int favouriteStatus) {
+        return mUserDao.updateFavouriteStatus(userId, favouriteStatus);
+    }
+
+
     @NonNull
     public LiveData<List<UserEntity>> getActiveUser() {
         return mUserDao.getActiveUser();
     }
 
     @NonNull
-    public int getLocalUserCount() {
-        return mUserDao.getLocalUserCount();
+    public List<String> getLocalUserCount() {
+        return mUserDao.getLocalActiveUsers();
+    }
+
+    public Single<List<String>> getAllFabMessagedUserIds() {
+        return mUserDao.getFavMessageUserIds();
+    }
+
+    public List<String> getLocalWithBackConfigUsers(int versionCode) {
+        return mUserDao.getLocalWithBackConfigUsers(versionCode);
+    }
+
+    public int updateBackConfigUsers(int versionCode) {
+        return mUserDao.updateBackConfigUsers(versionCode);
+    }
+
+    public int updateBroadcastUserConfigVersion(int versionCode, String userId) {
+        return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
     }
 }

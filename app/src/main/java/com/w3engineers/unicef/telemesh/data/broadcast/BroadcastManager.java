@@ -3,9 +3,8 @@ package com.w3engineers.unicef.telemesh.data.broadcast;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,19 +125,17 @@ public class BroadcastManager {
         try {
             String result = (String) future.get();
             if (broadcastSendCallback != null) {
-                MeshData meshData = sendDataTask.getMeshData();
+                ViperData viperData = sendDataTask.getViperData();
 
-                if (meshData != null) {
+                if (viperData != null) {
                     DataModel rmDataModel = new DataModel()
-                            .setUserId(meshData.mMeshPeer.getPeerId())
-                            .setRawData(meshData.mData)
-                            .setDataType(meshData.mType);
+                            .setUserId(sendDataTask.getPeerId())
+                            .setRawData(viperData.rawData)
+                            .setDataType(viperData.dataType);
                     broadcastSendCallback.dataSent(rmDataModel, result);
                 }
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }

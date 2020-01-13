@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Telemesh</string>
+
+    <string name="text_1">1</string>
+    <string name="text_2">2</string>
+    <string name="text_or">OR</string>
+    <string name="turn_on_hotspot">To get this app on your Android device,\nplease connect to hotspot</string>
+    <string name="using_password">Password: %s</string>
+    <string name="wifi">Wifi: %s</string>
+    <string name="hotspot_id_pass">ID: %s\nPassword: %s</string>
+    <string name="qr_code_text">If your device has a QR scanner,\nscan the QR code bellow to get this app</string>
+    <string name="qr_code_wifi_text">If your device has a QR scanner,\nscan the QR code to connect the network</string>
+    <string name="enter_url_text">Enter the following URL into the browser</string>
+
+    <string name="qr_content_description">QR Code</string>
+    <string name="url_loading">Your URl is loading....</string>
+    <string name="settings_share_app">Share App</string>
+
+    <string name="wifi_connection_instruction">Scan the following QR code to connect with this phone.</string>
+    <string name="hotspot_connection_instruction">Please connect to this Wifi hotspot.</string>
+    <string name="qr_code_instruction">Scan the following QR code to get the app download link.</string>
+    <string name="url_instruction">Please enter the following URL into your browser.</string>
+    <string name="exit_message">Do you want to close the share app process? Because someone is still downloading.</string>
+
+    <string name="share_app_title">Share This App</string>
+    <string name="step_1">Step-1</string>
+    <string name="step_2">Step-2</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+</resources>

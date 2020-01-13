@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/height_50"
+        android:layout_height="@dimen/width_50"
+        android:layout_marginStart="@dimen/margin_20"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:indeterminateDrawable="@drawable/drawable_progress_dialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:text="@string/please_wait"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_20"
+        android:textSize="@dimen/text_size_18"
+        app:layout_constraintBottom_toBottomOf="@+id/load_progress"
+        app:layout_constraintStart_toEndOf="@+id/load_progress"
+        app:layout_constraintTop_toTopOf="@+id/load_progress" />
+
+</android.support.constraint.ConstraintLayout>

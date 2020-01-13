@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
@@ -15,8 +16,9 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
-public class MessageFeedFragment extends BaseFragment implements ItemClickListener<FeedEntity> {
+public class MessageFeedFragment extends BaseFragment {
 
 
     private FragmentMessageFeedBinding mMessageFeedBinding;
@@ -57,6 +59,7 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
      */
     private void initGui() {
         mMessageFeedViewModel = getViewModel();
+        initAllText();
 
         mMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
         mMessageFeedBinding.messageRecyclerView.setItemAnimator(null);
@@ -66,10 +69,17 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
         mMessageFeedBinding.messageRecyclerView.setAdapter(messageFeedAdapter);
 
         mMessageFeedViewModel.getMessageFeedDetails().observe(this, this::openDetailsPage);
+
+        mMessageFeedBinding.swipeRefresh.setOnRefreshListener(() -> {
+            mMessageFeedViewModel.requestBroadcastMessage();
+
+            mMessageFeedBinding.swipeRefresh.setRefreshing(false);
+        });
     }
 
     /**
      * Get the view model from the view model factory
+     *
      * @return ViewModel
      */
 
@@ -89,12 +99,8 @@ public class MessageFeedFragment extends BaseFragment implements ItemClickListen
         startActivity(intent);
     }
 
-
-    @Override
-    public void onItemClick(@NonNull View view, @NonNull FeedEntity item) {
-
+    private void initAllText() {
+        mMessageFeedBinding.textNoBroadcast.setText(LanguageUtil.getString(R.string.no_message_available));
     }
-
-
 
 }

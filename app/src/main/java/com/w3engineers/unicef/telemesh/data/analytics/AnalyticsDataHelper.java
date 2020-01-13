@@ -14,17 +14,22 @@ import android.os.Build;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -36,20 +41,23 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     private static AnalyticsDataHelper analyticsDataHelper;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private static CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int trackMessageCount = 0;
     private List<AppShareCountEntity> countSentList;
     private static FileUploadResponseCallback fileUploadResponseCallback;
+    private static FeedbackSendCallback feedbackSendCallback;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
-        
+
         fileUploadResponseCallback = (isSuccessful, name) -> {
             if (isSuccessful) {
                 AsyncTask.execute(() -> {
@@ -58,6 +66,26 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
                     MeshLogDataSource.getInstance().insertOrUpdateData(entity);
                 });
+            }
+        };
+
+        feedbackSendCallback = (isSuccess, model) -> {
+            if (isSuccess) {
+                if (model.isDirectSend()) {
+                    compositeDisposable
+                            .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId()))
+                                    .subscribeOn(Schedulers.newThread())
+                            .subscribe((result) -> {
+                                Timber.tag("FeedbackTest").d("Delete result: %s", result);
+                            }, Throwable::printStackTrace));
+                } else {
+                    FeedbackModel feedbackModel = new FeedbackModel();
+                    feedbackModel.setUserId(model.getUserId());
+                    feedbackModel.setUserName(model.getUserName());
+                    feedbackModel.setFeedback(model.getFeedback());
+                    feedbackModel.setFeedbackId(model.getFeedbackId());
+                    RmDataHelper.getInstance().sendFeedbackAck(feedbackModel);
+                }
             }
         };
     }
@@ -91,7 +119,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     private void exception(Throwable tr) {
-        Log.e("MessageCountTest", "Error: " + tr.getMessage());
+        Timber.tag("MessageCountTest").e("Error: %s", tr.getMessage());
     }
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
@@ -166,6 +194,27 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         AnalyticsApi.on().sendLogFileInServer(file, userId, deviceName, fileUploadResponseCallback);
     }
 
+    public void sendFeedback(FeedbackEntity entity) {
+        if (isMobileDataEnable()) {
+            Timber.tag("FeedbackTest").d("Feedback send directly");
+            sendFeedbackToInternet(entity, true);
+        } else {
+            Timber.tag("FeedbackTest").d("Feedback send via seller");
+            RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
+        }
+    }
+
+    public void sendFeedbackToInternet(FeedbackEntity entity, boolean isDirectSend) {
+        FeedbackParseModel model = new FeedbackParseModel();
+        model.setUserId(entity.getUserId());
+        model.setUserName(entity.getUserName());
+        model.setFeedback(entity.getFeedback());
+        model.setFeedbackId(entity.getFeedbackId());
+        model.setDirectSend(isDirectSend);
+
+        AnalyticsApi.on().sendFeedback(model, feedbackSendCallback);
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {
         return BulletinTimeScheduler.getInstance().isMobileDataEnable();
@@ -184,13 +233,12 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             HandlerUtil.postBackground(() -> {
                 if (countSentList != null) {
                     if (isSuccess) {
-                        Log.d("AppShareTest", "countSentList not null");
+                        Timber.tag("AppShareTest").d("countSentList not null");
                         for (AppShareCountEntity entity : countSentList) {
                             int id = AppShareCountDataService.getInstance().deleteCount(entity.getUserId(), entity.getDate());
-                            Log.d("AppShareTest", "Delete id " + id);
+                            Timber.tag("AppShareTest").d("Delete id %s", id);
                         }
                     }
-
                 }
             });
         }

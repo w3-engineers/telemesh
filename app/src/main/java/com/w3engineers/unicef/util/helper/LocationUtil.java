@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,6 +17,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -41,6 +44,7 @@ public class LocationUtil {
     }
 
     private static class LazyHolder {
+        @SuppressLint("StaticFieldLeak")
         private static final LocationUtil sInstance = new LocationUtil();
     }
 
@@ -48,9 +52,9 @@ public class LocationUtil {
         this.callback = callback;
     }
 
-    public LocationRequestCallback getLocationListener() {
+  /*  public LocationRequestCallback getLocationListener() {
         return callback;
-    }
+    }*/
 
     public LocationCallback getLocationCallback() {
         return locationCallback;
@@ -111,7 +115,7 @@ public class LocationUtil {
 
             for (Location location : locationResult.getLocations()) {
                 if (location != null) {
-                    Log.d("LocationTest", "Lat: " + location.getLatitude() + " lang: " + location.getLongitude());
+                    Timber.tag("LocationTest").d("Lat: " + location.getLatitude() + " lang: " + location.getLongitude());
 
                     if (callback != null) {
                         callback.onGetLocation(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));

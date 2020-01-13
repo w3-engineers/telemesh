@@ -5,9 +5,15 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -18,15 +24,29 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
+import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
+import com.w3engineers.walleter.wallet.WalletService;
 
 import java.util.List;
+
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
@@ -34,6 +54,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
+
+    public static CreateUserActivity sInstance;
+    private boolean isLoadAccount;
+
+    private String mPassword;
+
     @NonNull
     public static String IMAGE_POSITION = "image_position";
 
@@ -56,6 +82,10 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
 
+        setClickListener(mBinding.imageViewBack);
+
+        parseIntent();
+
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
         mBinding.imageViewCamera.setOnClickListener(this);
@@ -67,21 +97,22 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
         mViewModel.textEditControl(mBinding.editTextName);
+
+        sInstance = this;
     }
 
     private void nextButtonControl(String nameText) {
-        if (mViewModel.getImageIndex() >= 0 &&
-                !TextUtils.isEmpty(nameText) &&
+        if (!TextUtils.isEmpty(nameText) &&
                 nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
-            mBinding.buttonSignup.setClickable(true);
+            //mBinding.buttonSignup.setClickable(true);
         } else {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_white);
-            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.deep_grey));
-            mBinding.buttonSignup.setClickable(false);
+            mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.new_user_button_color));
+            //mBinding.buttonSignup.setClickable(false);
         }
     }
 
@@ -112,7 +143,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            requestMultiplePermissions();
+                           CommonUtil.showPermissionPopUp(CreateUserActivity.this);
                         }
                     }
 
@@ -125,6 +156,29 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
 
+
+
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int i = 0, len = permissions.length; i < len; i++) {
+            String permission = permissions[i];
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                // user rejected the permission
+                boolean showRationale = shouldShowRequestPermissionRationale(permission);
+                if (!showRationale) {
+                    //  Toast.makeText(this,"Permission denaid", Toast.LENGTH_LONG).show();
+                 //   showPermissionPopUp();
+                } else {
+                  //  checkPermission();
+                }
+            } else {
+                //checkPermission();
+            }
+        }
+    }*/
+
+
     @Override
     public void onClick(@NonNull View view) {
         super.onClick(view);
@@ -133,13 +187,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         switch (id) {
             case R.id.button_signup:
-                saveData();
+                if (isLoadAccount) {
+                    saveData();
+                } else {
+                    goToPasswordPage();
+                }
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
                 Intent intent = new Intent(this, ProfileImageActivity.class);
                 intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
                 startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
+                break;
+            case R.id.image_view_back:
+                finish();
                 break;
 
         }
@@ -159,21 +220,65 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sInstance = null;
+    }
+
     private void saveData() {
-        if (mViewModel.getImageIndex() != INITIAL_IMAGE_INDEX) {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             requestMultiplePermissions();
+        }
+    }
+
+    private void parseIntent() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.IntentKeys.PASSWORD)) {
+            isLoadAccount = true;
+            mPassword = intent.getStringExtra(Constants.IntentKeys.PASSWORD);
         } else {
-            Toaster.showLong(getString(R.string.select_avatar));
+            if (WalletService.getInstance(this).isWalletExists()) {
+                showWarningDialog();
+            }
         }
     }
 
     protected void goNext() {
-        if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+        if (mViewModel.storeData(mBinding.editTextName.getText() + "", mPassword)) {
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
+    }
+
+    private void goToPasswordPage() {
+
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+            Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
+            intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
+            intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
+            startActivity(intent);
+        }
+    }
+
+    private void showWarningDialog() {
+        AlertDialog.Builder builder  = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(Html.fromHtml("<b>" + getString(R.string.alert_title_text) + "</b>"));
+        builder.setMessage(WalletAddressHelper.getWalletSpannableString(this).toString());
+        builder.setPositiveButton(Html.fromHtml("<b>"  + getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                startActivity(new Intent(CreateUserActivity.this, ImportWalletActivity.class));
+            }
+        });
+        builder.setNegativeButton(Html.fromHtml("<b>" + getString(R.string.negative_button) + "<b>"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+            }
+        });
+        builder.create();
+        builder.show();
     }
 }

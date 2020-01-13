@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="margin_25">25dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_3">3dp</dimen>
+    <dimen name="margin_1">1dp</dimen>
+
+    <dimen name="elevation_6">6dp</dimen>
+
+    <!--<dimen name="padding_1">1dp</dimen>-->
+    <!--<dimen name="padding_2">2dp</dimen>-->
+    <dimen name="padding_3">3dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <!--<dimen name="padding_15">15dp</dimen>-->
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_30sp">30sp</dimen>
+    <dimen name="text_size_80sp">80sp</dimen>
+
+    <dimen name="width_0">0dp</dimen>
+    <dimen name="width_1">1dp</dimen>
+    <dimen name="width_2">2dp</dimen>
+    <dimen name="width_3">3dp</dimen>
+    <dimen name="width_5">5dp</dimen>
+    <dimen name="width_10">10dp</dimen>
+    <dimen name="width_40">40dp</dimen>
+    <dimen name="width_55">55dp</dimen>
+    <dimen name="width_135">135dp</dimen>
+    <dimen name="width_140">140dp</dimen>
+    <dimen name="width_145">145dp</dimen>
+    <dimen name="width_150">150dp</dimen>
+    <dimen name="width_155">155dp</dimen>
+    <dimen name="width_200">200dp</dimen>
+    <dimen name="width_250">250dp</dimen>
+    <dimen name="width_160">160dp</dimen>
+    <dimen name="width_400">400dp</dimen>
+    <dimen name="width_45">45dp</dimen>
+    <dimen name="height_45">45dp</dimen>
+
+    <dimen name="height_4">4dp</dimen>
+    <dimen name="height_40">40dp</dimen>
+    <dimen name="height_120">120dp</dimen>
+    <dimen name="height_55">55dp</dimen>
+    <!--<dimen name="height_45">55dp</dimen>-->
+    <!--<dimen name="height_150">150dp</dimen>-->
+    <dimen name="height_200">200dp</dimen>
+    <dimen name="height_50">50dp</dimen>
+    <dimen name="height_25">25dp</dimen>
+    <dimen name="height_20">20dp</dimen>
+    <dimen name="height_150">150dp</dimen>
+
+</resources>

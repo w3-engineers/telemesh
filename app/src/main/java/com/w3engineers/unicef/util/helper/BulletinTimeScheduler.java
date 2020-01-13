@@ -16,19 +16,16 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
-import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
-import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
+import com.w3engineers.mesh.util.ConfigSyncUtil;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-
-import java.io.File;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 public class BulletinTimeScheduler {
 
@@ -36,6 +33,7 @@ public class BulletinTimeScheduler {
     private static BulletinTimeScheduler bulletinTimeScheduler = new BulletinTimeScheduler();
     private Context context;
     protected int DEFAULT = 0, WIFI = 1, DATA = 2, AP = 3;
+    private NoInternetCallback noInternetCallback;
 
     private BulletinTimeScheduler() {
         context = App.getContext();
@@ -46,10 +44,15 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    public void connectivityRegister() {
+    public BulletinTimeScheduler connectivityRegister() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
+        return this;
+    }
+
+    public void initNoInternetCallback(NoInternetCallback callback) {
+        this.noInternetCallback = callback;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -93,18 +96,34 @@ public class BulletinTimeScheduler {
                 if (!noConnectivity) {
                     int state = getNetworkState();
                     if (state == DATA) {
+                        Constants.IS_DATA_ON = true;
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
 
+                        ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
+
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;
+
+                            if (MainActivity.getInstance() != null) {
+                                MainActivity.getInstance().checkPlayStoreAppUpdate();
+                            }
+
                             RmDataHelper.getInstance().uploadLogFile();
+
+
+                            RmDataHelper.getInstance().sendPendingFeedback();
                         }
 
+                    } else {
+                        Constants.IS_DATA_ON = false;
                     }
                 } else {
                     // No action needed
+                    Constants.IS_DATA_ON = false;
                 }
+
+                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
             }
         }
     }
@@ -118,6 +137,13 @@ public class BulletinTimeScheduler {
     @NonNull
     public NetworkCheckReceiver getReceiver() {
         return new NetworkCheckReceiver();
+    }
+
+
+    private void sendNoInternetCallbackToUi(boolean haveInternet) {
+        if (noInternetCallback != null) {
+            noInternetCallback.onGetAvailableInternet(haveInternet);
+        }
     }
 
    /* private void uploadLogFile() {

@@ -1,17 +1,31 @@
 package com.w3engineers.unicef.telemesh.util;
 
+import android.os.Parcel;
+
 import com.google.gson.Gson;
-import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
+import com.w3engineers.mesh.application.data.model.TransportInit;
+import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
+import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
+import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.PointGuideLine;
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.UUID;
 
@@ -101,13 +115,13 @@ public class RandomEntityGenerator {
         return baseMeshData;
     }*/
 
-    public BaseMeshData createBaseMeshData(UserEntity userEntity) {
+   /* public BaseMeshData createBaseMeshData(UserEntity userEntity) {
         BaseMeshData baseMeshData = new BaseMeshData();
         baseMeshData.mData = userEntity == null ? null : new Gson().toJson(userEntity.getProtoUser()).getBytes();
         baseMeshData.mMeshPeer = new MeshPeer(UUID.randomUUID().toString());
 
         return baseMeshData;
-    }
+    }*/
 
     /*public RMDataModel createRMDataModel() throws Exception {
 
@@ -186,12 +200,12 @@ public class RandomEntityGenerator {
                 .setStatus(Constants.MessageStatus.STATUS_UNREAD);
     }
 
-    public MeshData createMeshData(String userId, ChatEntity chatEntity) {
-        MeshData meshData = new MeshData();
+    public ViperData createMeshData(ChatEntity chatEntity) {
+        ViperData meshData = new ViperData();
 
-        meshData.mType = Constants.DataType.MESSAGE;
-        meshData.mMeshPeer = new MeshPeer(userId);
-        meshData.mData = new Gson().toJson(chatEntity.toMessageModel()).getBytes();
+        meshData.dataType = Constants.DataType.MESSAGE;
+        meshData.isNotificationEnable = false;
+        meshData.rawData = new Gson().toJson(chatEntity.toMessageModel()).getBytes();
 
         return meshData;
     }
@@ -224,4 +238,99 @@ public class RandomEntityGenerator {
         return payload;
     }
 
+    public UserModel createUserModel(UserEntity entity) {
+
+        return entity.getProtoUser();
+    }
+
+    public BulletinModel getBulletinModel() {
+        BulletinModel model = new BulletinModel();
+        model.setId(UUID.randomUUID().toString());
+        model.setMessage("Test message");
+        model.setTime("2019-08-02T06:05:30.000Z");
+        return model;
+    }
+
+    public FeedbackModel generateFeedbackModel() {
+        FeedbackModel model = new FeedbackModel();
+        model.setFeedbackId(UUID.randomUUID().toString());
+        model.setUserName("John Doe");
+        model.setUserId("0x550de922bec427fc1b279944e47451a89a4f7cag");
+        model.setFeedback("Good app");
+        return model;
+    }
+
+    public DataModel generateDataModel(String data, byte type, String userId) {
+        DataModel dataModel = new DataModel();
+        dataModel.setUserId(userId);
+        dataModel.setRawData(data.getBytes());
+        dataModel.setDataType(type);
+
+        return dataModel;
+    }
+
+    public ConfigurationCommand generateConfigFile() {
+        ConfigurationCommand configurationCommand = new ConfigurationCommand(Parcel.obtain());
+
+        configurationCommand.setConfigVersionCode(100);
+
+        configurationCommand.setTokenGuideVersion(2);
+
+        configurationCommand.setConfigVersionName("2.0.0");
+
+        return configurationCommand;
+    }
+
+    public TokenGuideRequestModel generateTokenModel() {
+        TokenGuideRequestModel model = new TokenGuideRequestModel();
+        model.setRequest("Request");
+        return model;
+    }
+
+    public InAppUpdateModel generateAppUpdateModel() {
+        InAppUpdateModel model = new InAppUpdateModel();
+
+        model.setUpdateLink("192.168.43.1");
+        model.setVersionCode(1);
+        model.setVersionName("1.0.0");
+
+        return model;
+    }
+
+    public UserInfoEvent generateUserInfoEvent(String meshId) {
+        UserInfoEvent userInfoEvent = new UserInfoEvent();
+        userInfoEvent.userName = "John Doe";
+        userInfoEvent.setAvatar(2);
+        userInfoEvent.setRegTime(System.currentTimeMillis());
+        userInfoEvent.setConfigVersion(1);
+        userInfoEvent.setAddress(meshId);
+        return userInfoEvent;
+    }
+
+    public DataAckEvent generateDataAckEvent(String dataId, int status) {
+        DataAckEvent event = new DataAckEvent();
+
+        event.dataId = dataId;
+        event.status = status;
+
+        return event;
+    }
+
+    public PeerRemoved generatePeerRemoveEvent(String meshId) {
+        PeerRemoved event = new PeerRemoved();
+        event.peerId = meshId;
+        return event;
+    }
+
+    public TransportInit generateTransportInit(String meshId) {
+        TransportInit event = new TransportInit();
+        event.nodeId = meshId;
+        return event;
+    }
+
+    public ServiceUpdate generateServiceUpdate() {
+        ServiceUpdate event = new ServiceUpdate();
+        event.isNeeded = true;
+        return event;
+    }
 }

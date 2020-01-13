@@ -18,8 +18,10 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_CUSTOM_ID = "custom_id";
     String COLUMN_USER_LAST_ONLINE_TIME = "last_online_time";
     String COLUMN_USER_IS_ONLINE = "is_online";
+    String COLUMN_USER_IS_FAVOURITE = "is_favourite";
     String COLUMN_USER_IS_SYNCED = "is_synced";
     String COLUMN_USER_REGISTRATION_TIME = "registration_time";
+    String COLUMN_USER_CONFIG_VERSION = "config_version";
 
 
     /**
@@ -69,4 +71,9 @@ public interface ColumnNames extends BaseColumnNames {
 
     String LOG_NAME = "log_name";
 
+    // Feedback
+
+    String COLUMN_FEEDBACK = "feedback";
+    String COLUMN_FEEDBACK_ID = "feedback_id";
+    String TIMESTAMP = "timestamp";
 }

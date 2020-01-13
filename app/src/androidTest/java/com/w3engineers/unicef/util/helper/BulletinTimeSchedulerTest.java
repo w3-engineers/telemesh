@@ -11,7 +11,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.LocationResult;
-import com.w3engineers.mesh.MeshApp;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 
 import org.junit.Before;

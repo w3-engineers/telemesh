@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 /*
  * ============================================================================
@@ -104,6 +106,21 @@ public class ModelParcelableTest {
         assertThat(meshLogEntity.getLogName(), is(logName));
 
         addDelay();
+    }
+
+    @Test
+    public void InAppUpdateModelTest() {
+        addDelay();
+        String versionName = "1.0.0";
+        String updateLink = "192.168.43.1";
+        InAppUpdateModel model = new InAppUpdateModel();
+        model.setVersionName(versionName);
+        model.setUpdateLink(updateLink);
+
+        assertEquals(versionName, model.getVersionName());
+        assertEquals(updateLink, model.getUpdateLink());
+        addDelay();
+
     }
 
     private void addDelay() {

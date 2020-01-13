@@ -32,6 +32,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
@@ -395,6 +396,26 @@ public class TelemeshTest {
 
         addDelay(2500);
 
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof ProfileImageActivity) {
+
+            addDelay(3000);
+
+            currentActivity = getActivityInstance();
+            if (currentActivity instanceof ProfileImageActivity) {
+                mDevice.pressBack();
+
+                addDelay(2000);
+
+                updateButtonClick();
+            } else {
+                updateButtonClick();
+            }
+        } else {
+            updateButtonClick();
+        }
+
       /*  currentActivity = getActivityInstance();
 
         if (currentActivity instanceof EditProfileActivity) {
@@ -403,15 +424,20 @@ public class TelemeshTest {
 //            editProfileActivity.goNext();
         }*/
 
-       /* ViewInteraction updateProfile = onView(
+    /*    ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)),
-                                10)));*/
+                                10)));
+        updateProfile.perform(scrollTo(), click());*/
+
+
+    }
+
+    public void updateButtonClick() {
+        addDelay(1000);
 
         onView(withId(R.id.button_update)).perform(click());
-
-       // updateProfile.perform(scrollTo(), click());
 
         addDelay(2500);
 

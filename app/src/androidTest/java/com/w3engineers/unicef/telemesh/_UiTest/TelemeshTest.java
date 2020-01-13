@@ -403,12 +403,15 @@ public class TelemeshTest {
 //            editProfileActivity.goNext();
         }*/
 
-        ViewInteraction updateProfile = onView(
+       /* ViewInteraction updateProfile = onView(
                 allOf(withId(R.id.button_update),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)),
-                                10)));
-        updateProfile.perform(scrollTo(), click());
+                                10)));*/
+
+        onView(withId(R.id.button_update)).perform(click());
+
+       // updateProfile.perform(scrollTo(), click());
 
         addDelay(2500);
 

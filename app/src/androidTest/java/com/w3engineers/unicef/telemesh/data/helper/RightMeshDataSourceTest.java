@@ -161,6 +161,10 @@ public class RightMeshDataSourceTest {
 
         addDelay(500);
 
+        SUT.peerRemove(userEntity.getMeshId());
+
+        addDelay(500);
+
         PeerRemoved userRemoveEvent = randomEntityGenerator.generatePeerRemoveEvent(meshId);
         AppDataObserver.on().sendObserverData(userRemoveEvent);
 

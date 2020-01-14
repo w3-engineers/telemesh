@@ -11,7 +11,6 @@ Proprietary and confidential
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
@@ -21,7 +20,6 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
-import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
 import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
@@ -31,28 +29,18 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -64,15 +52,10 @@ public abstract class ViperUtil {
     private Context context;
 
     protected ViperUtil(UserModel userModel) {
-
         try {
-
             context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
             String appName = context.getResources().getString(R.string.app_name);
 
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
-
-//            String jsonData = loadJSONFromAsset(context);
 
             String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
             String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
@@ -81,15 +64,13 @@ public abstract class ViperUtil {
             String PARSE_URL = AppCredentials.getInstance().getParseUrl();
             String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
 
-//                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
 
-            String address = sharedPref.read(Constants.preferenceKey.
-                    MY_WALLET_ADDRESS);
+            SharedPref sharedPref = SharedPref.getSharedPref(context);
+            String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
             String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+            String networkSSID = sharedPref.read(Constants.preferenceKey.NETWORK_PREFIX);
 
             initObservers();
-
-            String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
 
             if (TextUtils.isEmpty(networkSSID)) {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
@@ -97,16 +78,11 @@ public abstract class ViperUtil {
 
             viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
-
-            /*if (!TextUtils.isEmpty(jsonData)) {
-                JSONObject jsonObject = new JSONObject(jsonData);
-            }*/
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void initObservers() {

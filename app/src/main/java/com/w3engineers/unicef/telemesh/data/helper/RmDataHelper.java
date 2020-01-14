@@ -435,9 +435,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             }
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
@@ -473,9 +472,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
@@ -491,9 +489,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, messageAnalyticsEntity);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
@@ -510,7 +507,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(longResult -> {
                             if (longResult > 1) {
-                                Timber.tag("AppShareCount").d("Data saved");
+//                                Timber.tag("AppShareCount").d("Data saved");
                             }
                         }, Throwable::printStackTrace));
 
@@ -521,13 +518,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(longResult -> {
                             if (longResult > 1) {
-                                Timber.tag("AppShareCount").d("Data Deleted");
+//                                Timber.tag("AppShareCount").d("Data Deleted");
                             }
                         }, Throwable::printStackTrace));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
 
     }
 
@@ -698,9 +694,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         }
                     }, Throwable::printStackTrace));
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void broadcastMessage(@NonNull FeedEntity feedEntity) {
@@ -845,10 +840,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
             sendAppShareCountAnalytics();
         } else {
-            compositeDisposable.add(AppShareCountDataService.getInstance()
-                    .getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
-                    .subscribeOn(Schedulers.newThread())
-                    .subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
+            compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                    .subscribeOn(Schedulers.newThread()).subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
         }
 
         sendPendingFeedback();
@@ -1073,7 +1066,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             Timber.tag("InAppUpdateTest").d("My version is Big: ");
         } else {
-            Timber.tag("InAppUpdateTest").d("My version is same: ");
+//            Timber.tag("InAppUpdateTest").d("My version is same: ");
         }
     }
 
@@ -1083,8 +1076,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
         if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
             long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-            long dif = System.currentTimeMillis() - saveTime;
-            long days = dif / (24 * 60 * 60 * 1000);
+            long days = (System.currentTimeMillis() - saveTime) / (24 * 60 * 60 * 1000);
 
             if (days <= 2) return;
         }
@@ -1187,34 +1179,34 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage, String userId) {
-        if (!isNewMessage)
-            return;
+        if (isNewMessage) {
 
-        String configText = new String(rawData);
-        ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
+            String configText = new String(rawData);
+            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
 
-        int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
+            int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
 
-        if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
+            if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
+                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
+                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
-            if (rightMeshDataSource == null) {
-                rightMeshDataSource = MeshDataSource.getRmDataSource();
+                if (rightMeshDataSource == null) {
+                    rightMeshDataSource = MeshDataSource.getRmDataSource();
+                }
+
+                rightMeshDataSource.sendConfigToViper(configurationCommand);
+
+                rightMeshDataSource.saveUpdateUserInfo();
+
+                updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
             }
 
-            rightMeshDataSource.sendConfigToViper(configurationCommand);
-
-            rightMeshDataSource.saveUpdateUserInfo();
-
-            updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
-        }
-
-        // check token guide version and request token_guide
-        int myTokenGuideVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE);
-        if (myTokenGuideVersion < configurationCommand.getTokenGuideVersion()) {
-            // request toke guide info
-            requestTokenGuideInfo(userId);
+            // check token guide version and request token_guide
+            int myTokenGuideVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE);
+            if (myTokenGuideVersion < configurationCommand.getTokenGuideVersion()) {
+                // request toke guide info
+                requestTokenGuideInfo(userId);
+            }
         }
     }
 

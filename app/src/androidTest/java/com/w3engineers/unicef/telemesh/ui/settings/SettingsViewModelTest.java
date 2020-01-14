@@ -133,6 +133,7 @@ public class SettingsViewModelTest {
         addDelay(700);
     }
 
+    @Test
     public void testAppShareMeshOnAndOff_success_setOkay() {
         SUT.closeRmService();
 

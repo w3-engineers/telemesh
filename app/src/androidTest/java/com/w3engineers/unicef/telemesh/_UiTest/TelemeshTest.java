@@ -650,11 +650,17 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction optionUpdate = onView(
-                allOf(withId(R.id.layout_app_update),
-                        childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 10), isDisplayed()));
-        optionUpdate.perform(scrollTo(), click());
+        try {
+
+            ViewInteraction optionUpdate = onView(
+                    allOf(withId(R.id.layout_app_update),
+                            childAtPosition(allOf(withId(R.id.layout_settings),
+                                    childAtPosition(withId(R.id.layout_scroll), 0)), 10), isDisplayed()));
+            optionUpdate.perform(scrollTo(), click());
+
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
 
         addDelay(3000);
 

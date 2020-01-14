@@ -115,9 +115,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                         setUserMessageWithFavouriteData(userEntities);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
 
         //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
@@ -159,9 +157,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                         setUserFavouriteData(userEntities);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
 
         //  favoriteEntityList = userDataSource.getFavouriteUsers();
     }

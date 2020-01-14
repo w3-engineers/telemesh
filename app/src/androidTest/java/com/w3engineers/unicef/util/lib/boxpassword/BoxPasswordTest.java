@@ -24,6 +24,8 @@ public class BoxPasswordTest {
     @Test
     public void boxPasswordEventTest(){
 
+        addDelay();
+
         BoxPassword password =new BoxPassword(mContext);
 
 

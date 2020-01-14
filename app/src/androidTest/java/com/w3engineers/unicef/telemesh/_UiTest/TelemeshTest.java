@@ -445,7 +445,7 @@ public class TelemeshTest {
         addDelay(1000);
 
         try {
-            onView(withId(R.id.button_update)).perform(click());
+            onView(withId(R.id.button_update)).perform(scrollTo(), click());
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
 
@@ -474,7 +474,8 @@ public class TelemeshTest {
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
         sharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
 
-        SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, (BuildConfig.VERSION_CODE + 5));
+        long version = (BuildConfig.VERSION_CODE + 5);
+        SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
 
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
@@ -650,7 +651,7 @@ public class TelemeshTest {
         addDelay(1000);
 
         ViewInteraction optionUpdate = onView(
-                allOf(withId(R.id.layout_feedback),
+                allOf(withId(R.id.layout_app_update),
                         childAtPosition(allOf(withId(R.id.layout_settings),
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 10), isDisplayed()));
         optionUpdate.perform(scrollTo(), click());

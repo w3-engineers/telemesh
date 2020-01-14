@@ -83,11 +83,11 @@ public class SecurityActivity extends BaseActivity {
             case R.id.button_next:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
 //                requestMultiplePermissions();
-                isValidPassword(mBinding.editTextBoxPassword.getText().toString());
+                isValidPassword(mBinding.editTextBoxPassword.getText().toString(), false);
                 break;
             case R.id.button_skip:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
-                requestMultiplePermissions();
+                isValidPassword(null, true);
                 break;
             case R.id.text_view_show_password:
                 updatePasswordVisibility();
@@ -119,19 +119,9 @@ public class SecurityActivity extends BaseActivity {
         }
     }
 
-    protected void requestMultiplePermissions() {
+    protected void requestMultiplePermissions(boolean isSkip) {
 
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-                    CustomDialogUtil.showProgressDialog(SecurityActivity.this);
-
-                    HandlerUtil.postBackground(() -> goNext(), 100);
-
-                }, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        /*Dexter.withActivity(this)
+        Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -145,7 +135,7 @@ public class SecurityActivity extends BaseActivity {
 
                             CustomDialogUtil.showProgressDialog(SecurityActivity.this);
 
-                            HandlerUtil.postBackground(() -> goNext(), 100);
+                            HandlerUtil.postBackground(() -> goNext(isSkip), 100);
                         }
 
                         // check for permanent denial of any permission
@@ -159,16 +149,16 @@ public class SecurityActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
+                }).withErrorListener(error -> requestMultiplePermissions(isSkip)).onSameThread().check();
     }
 
 
 
-    protected void goNext() {
+    protected void goNext(boolean isSkip) {
 
         String password = mBinding.editTextBoxPassword.getText() + "";
 
-        if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password) || isSkip) {
             password = Constants.DEFAULT_PASSWORD;
             isDefaultPassword = true;
         }
@@ -225,10 +215,10 @@ public class SecurityActivity extends BaseActivity {
         }
     }
 
-    public void isValidPassword(final String password) {
+    public void isValidPassword(final String password, boolean isSkip) {
 
-        if (mViewModel.isValidPassword(password)) {
-            requestMultiplePermissions();
+        if (mViewModel.isValidPassword(password) || isSkip) {
+            requestMultiplePermissions(isSkip);
         } else {
             if (!mViewModel.isValidChar(password)) {
                 Toaster.showShort("Letter missing in password");

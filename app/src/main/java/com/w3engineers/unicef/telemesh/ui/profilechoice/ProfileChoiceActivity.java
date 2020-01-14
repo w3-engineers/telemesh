@@ -87,16 +87,7 @@ public class ProfileChoiceActivity extends BaseActivity {
 
     protected void requestMultiplePermissions() {
 
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-                    if (isCreateProfileCall) {
-                        startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
-                    } else {
-                        startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
-                    }
-        }, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        /*Dexter.withActivity(this)
+        Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -123,7 +114,7 @@ public class ProfileChoiceActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
 
 }

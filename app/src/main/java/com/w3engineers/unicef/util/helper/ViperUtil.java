@@ -308,12 +308,18 @@ public abstract class ViperUtil {
     }
 
     public void stopMeshService() {
-        viperClient.stopMesh();
+        try {
+            viperClient.stopMesh();
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void restartMeshService() {
-        int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
-        viperClient.restartMesh(myCurrentRole);
+        try {
+            int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
+            viperClient.restartMesh(myCurrentRole);
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     // TODO SSID_Change

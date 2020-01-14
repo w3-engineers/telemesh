@@ -131,15 +131,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     protected void requestMultiplePermissions() {
 
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-                    goNext();
-
-                }, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        /*Dexter.withActivity(this)
+        Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -164,7 +156,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
 
 

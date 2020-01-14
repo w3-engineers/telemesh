@@ -149,7 +149,8 @@ public class ImportWalletActivity extends BaseActivity {
 
                     HandlerUtil.postBackground(() -> gotoProfileCreatePage(), 100);
 
-                }, Manifest.permission.READ_EXTERNAL_STORAGE,
+                },
+                Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         /*Dexter.withActivity(this)

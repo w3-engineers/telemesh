@@ -121,17 +121,7 @@ public class SecurityActivity extends BaseActivity {
 
     protected void requestMultiplePermissions() {
 
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-                    CustomDialogUtil.showProgressDialog(SecurityActivity.this);
-
-                    HandlerUtil.postBackground(() -> goNext(), 100);
-
-                }, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        /*Dexter.withActivity(this)
+        Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -159,7 +149,7 @@ public class SecurityActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
 
 

@@ -4,6 +4,7 @@ import android.os.Parcel;
 
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
@@ -26,6 +27,9 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -331,6 +335,28 @@ public class RandomEntityGenerator {
     public ServiceUpdate generateServiceUpdate() {
         ServiceUpdate event = new ServiceUpdate();
         event.isNeeded = true;
+        return event;
+    }
+
+    public DataEvent generateDataEvent(String meshId) {
+        DataEvent event = new DataEvent();
+        event.peerId = meshId;
+
+        ChatEntity messageModel = createReceiverChatEntity(meshId);
+
+        String messageData = new Gson().toJson(messageModel.toMessageModel());
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("t", Constants.DataType.MESSAGE);
+            jsonObject.put("d", messageData);
+
+            event.data = jsonObject.toString().getBytes();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return event;
     }
 }

@@ -6,95 +6,179 @@ Telemesh
 1. Find the ``versions.gradle`` in the Telemesh root directory of the repo and
    any new support library reference should be added here.
 
-2. Any support library on app level ``build.gradle`` should be added in
+2. Any support library on app-level ``build.gradle`` should be added in
    this way
 
-   ::
+  ::
 
-           implementation deps.support.app_compat
-           implementation deps.support.design
-           implementation deps.constraint_layout
-           implementation deps.support.recyclerview
-           implementation deps.support.cardview
+    implementation deps.support.app_compat
+    implementation deps.support.design
+    implementation deps.constraint_layout
+    implementation deps.support.recyclerview
+    implementation deps.support.cardview
 
+3. ``Viper`` dependency should be added in the same way inside the app-level ``build.gradle``
 
-3. ``Viper`` dependency should be added in the same way inside app level ``build.gradle``
+4. The *Telemesh* app is using different ``URLs`` for different services. Preparing all those services is time-consuming as well as boring too. But if you are a contributor to *Telemesh* app, you don't need to worry at all about those boring tasks. All the ``URLs`` and other permission related information are provided in a ``.so`` file as solid package to give you a staging environment the same as production for development purposes. Just download the project and run.
 
-4. Edit the file ``~/.gradle/gradle.properties`` and add the
+  But, we don't give the guarantee of continuous services for the staging environment, as it's only for development and testing purposes.
 
-   following credentials::
+5. If you want to deploy your server machines and services you need to do a little more work. Assuming that you already have the services installed on the online machine(s), please follow the steps below.
 
-                 BROADCAST_TOKEN = "<BROADCAST_TOKEN>"
-                 BROADCAST_URL = "<BROADCAST_URL>"
-                 PARSE_URL = "<PARSE_URL>"
-                 PARSE_APP_ID = "<PARSE_APP_ID>"
+  a. If android **NDK** and **CMake** are not installed on your development machine, please download and install them using **SDK manager**. For more help visit https://developer.android.com/studio/projects/install-ndk#default-version
 
 
+  b. Create a directory named *cpp* under the *main* package of the *Telemesh* app.
+  c. Put/Create the following two files into the *cpp* folder.
+
+      1. CMakeLists.txt
+      2. native-lib.cpp
 
 
-   Directory::
+  d. ``CMakeLists.txt`` build script can be prepared from the following link: https://developer.android.com/studio/projects/configure-cmake#create_script
 
-      For Unix based system the directory is ``~/.gradle/gradle.properties``
+  If you need any help on any stage of work and you want to communicate with us please join our `Discord`_ channel.
 
-      For Windows system the directory is ``C:\Users\username\.gradle\gradle.properties``
+  e. Any change or addition of credentials has to do under ``native-lib.cpp`` file. Copy the following code snippet and paste it into this file.
 
-  If you don't find ``gradle.properties`` file then you can create your own.
+  ::
 
-  For credentials please join our `Discord`_ channel.
+    #include <jni.h>
+    #include <string>
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getBroadCastToken(JNIEnv *env, jobject) {
+      std::string broadcast_token= "Here have to set your broadcast token";
+      return env->NewStringUTF(broadcast_token.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getBroadCastUrl(JNIEnv *env, jobject) {
+      std::string broadcast_url = "Here have to set your broadcast url";
+      return env->NewStringUTF(broadcast_url.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getParseUrl(JNIEnv *env, jobject) {
+      std::string parse_url = "Here have to set your parse server url";
+      return env->NewStringUTF(parse_url.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getParseAppId(JNIEnv *env, jobject) {
+      std::string parse_app_id = "Here have to set your parse app id";
+      return env->NewStringUTF(parse_app_id.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getAuthUserName(JNIEnv *env, jobject) {
+      std::string auth_user_name = "Here have to set your Authenticate name";
+      return env->NewStringUTF(auth_user_name.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getAuthPassword(JNIEnv *env, jobject) {
+      std::string auth_password = "Here have to set your authenticate password";
+      return env->NewStringUTF(auth_password.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getFileRepoLink(JNIEnv *env, jobject) {
+      std::string file_repo_link = "Here have to set your file download repo link";
+      return env->NewStringUTF(file_repo_link.c_str());
+    }
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_w3engineers_unicef_telemesh_data_helper_AppCredentials_getConfiguration(JNIEnv *env, jobject) {
+      std::string config_file = "Here have to set a Json file as string like below”;
+      return env->NewStringUTF(config_file.c_str());
+    }
 
 
-5. Prepare ``config.json`` file inside Android Studio and put it under the ``assets`` folder of your app module.
-   Then paste this below text into file
+  JSON file for configuration:
+  ::
+    {
+      "config_version_name":"0.0.1",
+      "config_version_code":1,
+      "token_per_mb":1.0,
+      "default_network_type":2,
+      "token_guide_version":0,
+      "GIFT_DONATE_LINK" : "Here set your gift donate link",
+      "wallet_rmesh_available": false,
+      "network": [
+        {
+          "network_type":2,
+          "network_name":"Kotti",
+          "network_url":"Here set network url",
+          "currency_symbol":"ETC",
+          "token_symbol":"TMESH",
+          "token_address":"Here set your token address",
+          "channel_address":"Here set your channel address",
+          "gas_price":25000000000,
+          "gas_limit":800000,
+          "token_amount":0,
+          "currency_amount":0
+        }
+      ]
+    }
 
-    .. code-block:: JSON
 
-      {
-        "AUTH_USER_NAME" : "<AUTH_USER_NAME>",
-        "AUTH_PASSWORD" : "<AUTH_PASSWORD>",
-        "APP_DOWNLOAD_LINK" : "<UPDATED_APP_DOWNLOAD_LINK>",
-        "GIFT_DONATE_LINK" : "<GIFT_DONATE_URL>"
-      }
+  For more query please join us through `Discord`_ channel.
 
-   Here you need to provide valid credentials. For credentials please join our `Discord`_ channel.
+  e. If any new credential is added have to add an API into AppCredentials.java class to access that credentials.
+
+  f. Delete the following two files from **jniLibs** package.
+
+    1. armeabi-v7a
+    2. x86
+
+  g. Find the externalNativeBuild {} tag from app-level build.gradle and uncomment this line: path ``src/main/cpp/CMakeLists.txt``
+
+  h. Execute Gradle sync
 
 
 6. Now check the ``ViperUtil.java`` class and find the constructor ``ViperUtil`` where we use the above credentials
 
-    ::
+  ::
 
-           protected ViperUtil(UserModel userModel) {
-
-              try {
-
-                  Context context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
-                  String appName = context.getResources().getString(R.string.app_name);
-
-                  String jsonData = loadJSONFromAsset(context);
-
-                  if (!TextUtils.isEmpty(jsonData)) {
-                      JSONObject jsonObject = new JSONObject(jsonData);
-
-                      String AUTH_USER_NAME = jsonObject.optString("AUTH_USER_NAME");
-                      String AUTH_PASSWORD = jsonObject.optString("AUTH_PASSWORD");
-                      String APP_DOWNLOAD_LINK = jsonObject.optString("APP_DOWNLOAD_LINK");
-                      String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
-
-                      viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", "captor", userModel.getName(), userModel.getImage(), userModel.getTime(), true)
-                              .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, APP_DOWNLOAD_LINK, GIFT_DONATE_LINK);
-
-                      initObservers();
-                  }
-              } catch (JSONException e) {
-                  e.printStackTrace();
-              }
-           }
+    protected ViperUtil(UserModel userModel) {
+      try {
+        context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
+        String appName = context.getResources().getString(R.string.app_name);
 
 
+        String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
+        String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
+        String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
+        String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
+        String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+        String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
 
-7. For wallet design currently we are using default design from ``Viper``
+
+        SharedPref sharedPref = SharedPref.getSharedPref(context);
+        String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
+        String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+        String networkSSID = sharedPref.read(Constants.preferenceKey.NETWORK_PREFIX);
+
+        initObservers();
+
+        if (TextUtils.isEmpty(networkSSID)) {
+          networkSSID = context.getResources().getString(R.string.def_ssid);
+        }
+
+        viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(), address, publicKey, userModel.getImage(), userModel.getTime(), true)
+        .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+7. For wallet design currently, we are using default design from ``Viper``
+
+
+Happy Coding :)
 
 
 
 .. _Discord: https://discord.gg/SHG4qrH
-
-

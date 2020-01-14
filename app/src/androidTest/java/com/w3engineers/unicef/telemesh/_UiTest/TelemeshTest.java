@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -63,6 +64,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -317,7 +319,12 @@ public class TelemeshTest {
 
         addDelay(300);
 
-        securityButtonNext.perform(scrollTo(), click());
+        ViewInteraction securityButtonSkip = onView(
+                allOf(withId(R.id.button_skip),
+                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
+                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 5)));
+
+        securityButtonSkip.perform(scrollTo(), click());
 
         addDelay(5000);
 
@@ -466,6 +473,8 @@ public class TelemeshTest {
         sharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
         sharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+
+        SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, (BuildConfig.VERSION_CODE + 5));
 
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
@@ -637,6 +646,16 @@ public class TelemeshTest {
         addDelay(500);
 
         mDevice.pressBack();
+
+        addDelay(1000);
+
+        ViewInteraction optionUpdate = onView(
+                allOf(withId(R.id.layout_feedback),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 10), isDisplayed()));
+        optionUpdate.perform(scrollTo(), click());
+
+        addDelay(3000);
 
         mDevice.pressBack();
 

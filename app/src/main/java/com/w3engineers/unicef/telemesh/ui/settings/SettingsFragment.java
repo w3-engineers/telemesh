@@ -91,47 +91,20 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             case R.id.layout_choose_language:
                 // Go system settings for change language
                 showLanguageChangeDialog();
-
-                /*HandlerUtil.postBackground(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppShareCountEntity entity = new AppShareCountEntity();
-                        entity.setCount(1);
-                        String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-                        entity.setUserId(myId);
-                        entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
-                        AppShareCountDataService.getInstance().insertAppShareCount(entity);
-
-                        RmDataHelper.getInstance().sendAppShareCountAnalytics();
-                    }
-                });*/
                 break;
             case R.id.layout_share_app:
-                if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
-                    settingsViewModel.startInAppShareProcess();
-                } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
-                }
-//                RmDataHelper.getInstance().newUserAnalyticsSend();
+                shareAppOperation();
                 break;
             case R.id.layout_about_us:
                 // Show about us
                 startActivity(new Intent(mActivity, AboutUsActivity.class));
                 break;
             case R.id.layout_data_plan:
-                if (Constants.IsMeshInit) {
-                    DataPlanManager.openActivity(mActivity, 0);
-                } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
-                }
+                dataPlanAction();
                 break;
 
             case R.id.layout_open_wallet:
-                if (Constants.IsMeshInit) {
-                    WalletManager.openActivity(mActivity, getImageByteArray());
-                } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
-                }
+                walletAction();
                 break;
             /*case R.id.layout_show_log:
 //                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
@@ -141,15 +114,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 //                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
                 break;*/
             case R.id.layout_app_update:
-                if (MainActivity.getInstance() == null) return;
-                String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL);
-                url = url.replace(InAppUpdate.MAIN_APK, "");
-                if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
-                    AppInstaller.downloadApkFile(url, MainActivity.getInstance());
-                } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
-                }
-
+                appUpdateAction();
                 break;
             case R.id.layout_feedback:
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
@@ -168,6 +133,33 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     }
 
+    private void appUpdateAction() {
+        if (MainActivity.getInstance() != null) {
+            String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL).replace(InAppUpdate.MAIN_APK, "");
+            if (hasEnoughStorage()) {
+                AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+            }
+        }
+    }
+
+    private void walletAction() {
+        if (isMeshInit()) {
+            WalletManager.openActivity(mActivity, getImageByteArray());
+        }
+    }
+
+    private void dataPlanAction() {
+        if (isMeshInit()) {
+            DataPlanManager.openActivity(mActivity, 0);
+        }
+    }
+
+    private void shareAppOperation() {
+        if (hasEnoughStorage()) {
+            settingsViewModel.startInAppShareProcess();
+        }
+    }
+
     private byte[] getImageByteArray() {
 
         int imageIndex = SharedPref.getSharedPref(getActivity()).readInt(Constants.preferenceKey.IMAGE_INDEX);
@@ -175,6 +167,26 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
+    }
+
+    private boolean isMeshInit() {
+        boolean isMeshInit = false;
+        if (Constants.IsMeshInit) {
+            isMeshInit = true;
+        } else {
+            Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
+        }
+        return isMeshInit;
+    }
+
+    private boolean hasEnoughStorage() {
+        boolean hasEnoughStorage = false;
+        if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
+            hasEnoughStorage = true;
+        } else {
+            Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+        }
+        return hasEnoughStorage;
     }
 
     private void showLanguageChangeDialog() {

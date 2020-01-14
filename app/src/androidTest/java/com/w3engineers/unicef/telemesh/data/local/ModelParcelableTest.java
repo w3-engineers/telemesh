@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
@@ -119,6 +120,14 @@ public class ModelParcelableTest {
 
         assertEquals(versionName, model.getVersionName());
         assertEquals(updateLink, model.getUpdateLink());
+        addDelay();
+
+        String sampleRequest = "request";
+        TokenGuideRequestModel tokenGuideRequestModel = new TokenGuideRequestModel();
+        tokenGuideRequestModel.setRequest(sampleRequest);
+
+        assertEquals(sampleRequest, tokenGuideRequestModel.getRequest());
+
         addDelay();
 
     }

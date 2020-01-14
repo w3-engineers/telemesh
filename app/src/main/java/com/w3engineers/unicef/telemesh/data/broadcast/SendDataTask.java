@@ -69,9 +69,7 @@ public class SendDataTask implements Callable {
                 return getViperUtil().sendMeshData(getPeerId(), getViperData());
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        } catch (InterruptedException e) { e.printStackTrace(); }
         return null;
     }
 }

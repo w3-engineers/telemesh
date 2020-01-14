@@ -75,8 +75,7 @@ public abstract class ViperUtil {
             if (TextUtils.isEmpty(networkSSID)) {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
             }
-
-            Log.e("package_name", "package_tel "+ context.getPackageName());
+            
 
             viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true)

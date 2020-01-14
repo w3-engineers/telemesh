@@ -437,17 +437,21 @@ public class TelemeshTest {
     public void updateButtonClick() {
         addDelay(1000);
 
-        Activity currentActivity = getActivityInstance();
+        try {
+            onView(withId(R.id.button_update)).perform(click());
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
 
-        if (currentActivity instanceof EditProfileActivity) {
-            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
-            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
+            Activity currentActivity = getActivityInstance();
+
+            if (currentActivity instanceof EditProfileActivity) {
+                EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
+                new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
 //            editProfileActivity.goNext();
+            }
         }
 
-//        onView(withId(R.id.button_update)).perform(click());
-
-        addDelay(3500);
+        addDelay(2500);
 
         mDevice.pressBack();
 

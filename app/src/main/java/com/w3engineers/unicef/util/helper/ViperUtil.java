@@ -76,7 +76,9 @@ public abstract class ViperUtil {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-            viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
+            Log.e("package_name", "package_tel "+ context.getPackageName());
+
+            viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true)
                     .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
 

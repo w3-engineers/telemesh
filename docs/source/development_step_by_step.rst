@@ -29,6 +29,11 @@ Telemesh
 
 
   b. Create a directory named *cpp* under the *main* package of the *Telemesh* app.
+
+        .. figure:: img/cpp_directory.png
+           :scale: 100 %
+           :alt: cpp directory
+
   c. Put/Create the following two files into the *cpp* folder.
 
       1. CMakeLists.txt

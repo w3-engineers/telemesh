@@ -47,10 +47,10 @@ If you face any bug or have any particular feature request please go [here](http
 
 Please find here the complete UI flow [Telemesh UI](https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/grid)
 
-<kbd><img src="https://drive.google.com/file/d/1q4Z_OWFKI-p3V9xbXmvP6DxtnOFfCgRm/view?usp=sharing" width="175" height="300"></kbd> 
-<kbd><img src="https://drive.google.com/file/d/1t2RIwJGDJITbvuFnYunnPQ3mH-iH0Jnt/view?usp=sharing" width="175" height="300"></kbd> 
-<kbd><img src="http://gdurl.com/TMGD" width="175" height="300"></kbd> 
-<kbd><img src="http://gdurl.com/9oMM" width="175" height="300"></kbd> 
+![](https://github.com/MimoSaha/app-share/blob/master/images/splash.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/profile.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/discovery.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/wallet.png)
 
 ## Notice
 

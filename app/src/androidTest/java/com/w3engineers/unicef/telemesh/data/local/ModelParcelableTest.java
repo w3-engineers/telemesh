@@ -5,17 +5,30 @@ import android.os.Parcel;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
+import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
+import com.w3engineers.unicef.telemesh.data.local.db.BaseMigration;
+import com.w3engineers.unicef.telemesh.data.local.db.Converters;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /*
  * ============================================================================
@@ -104,6 +117,101 @@ public class ModelParcelableTest {
         assertThat(meshLogEntity.getLogName(), is(logName));
 
         addDelay();
+    }
+
+    @Test
+    public void InAppUpdateModelTest() {
+        addDelay();
+        String versionName = "1.0.0";
+        String updateLink = "192.168.43.1";
+        InAppUpdateModel model = new InAppUpdateModel();
+        model.setVersionName(versionName);
+        model.setUpdateLink(updateLink);
+
+        assertEquals(versionName, model.getVersionName());
+        assertEquals(updateLink, model.getUpdateLink());
+        addDelay();
+
+        String sampleRequest = "request";
+        TokenGuideRequestModel tokenGuideRequestModel = new TokenGuideRequestModel();
+        tokenGuideRequestModel.setRequest(sampleRequest);
+
+        assertEquals(sampleRequest, tokenGuideRequestModel.getRequest());
+
+        addDelay();
+
+        String[] arr = {"query"};
+        BaseMigration baseMigration = new BaseMigration(1, arr);
+
+        assertEquals(baseMigration.getQueryScript()[0], arr[0]);
+
+        addDelay();
+
+        long msgTime = System.currentTimeMillis();
+
+        MessageCountModel messageCountModel = new MessageCountModel();
+        messageCountModel.setMsgTime(msgTime);
+
+        assertEquals(msgTime, messageCountModel.getMsgTime());
+
+        addDelay();
+    }
+
+    @Test
+    public void dataConvertTest() {
+        addDelay();
+
+        Converters converters = new Converters();
+
+        long currentTime = System.currentTimeMillis();
+
+        Date date = Converters.toDate(currentTime);
+
+        assertEquals(date.getTime(), currentTime);
+
+        addDelay();
+
+        long convertedTime = Converters.fromDate(date);
+
+        assertEquals(convertedTime, convertedTime);
+
+        addDelay();
+    }
+
+    @Test
+    public void feedDataSetterTest() {
+        addDelay();
+
+        FeedEntity entity = new FeedEntity();
+
+        String providerLogo = "logo.png";
+        String providerName = "Camp 1";
+        String feedTitle = "Sample title";
+
+        entity.setFeedProviderLogo(providerLogo)
+                .setFeedProviderName(providerName)
+                .setFeedTitle(feedTitle)
+                .setFeedReadStatus(false);
+
+        addDelay();
+
+        assertFalse(entity.isFeedRead());
+
+        assertEquals(entity.getFeedTitle(), feedTitle);
+
+        assertEquals(entity.getFeedProviderName(), providerName);
+        assertEquals(entity.getFeedProviderLogo(), providerLogo);
+
+        addDelay();
+
+        Payload payload = new Payload();
+
+        List<String> payloadData = new ArrayList<>();
+        payloadData.add("data");
+        payload.setConnectedClientEthIds(payloadData);
+
+        assertEquals(payload.getConnectedClientEthIds().get(0),payloadData.get(0));
+
     }
 
     private void addDelay() {

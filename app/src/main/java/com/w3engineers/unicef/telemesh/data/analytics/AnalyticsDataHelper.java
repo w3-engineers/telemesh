@@ -119,7 +119,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     private void exception(Throwable tr) {
-        Timber.tag("MessageCountTest").e("Error: %s", tr.getMessage());
+//        Timber.tag("MessageCountTest").e("Error: %s", tr.getMessage());
     }
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
@@ -199,7 +199,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
             Timber.tag("FeedbackTest").d("Feedback send directly");
             sendFeedbackToInternet(entity, true);
         } else {
-            Timber.tag("FeedbackTest").d("Feedback send via seller");
+//            Timber.tag("FeedbackTest").d("Feedback send via seller");
             RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
         }
     }

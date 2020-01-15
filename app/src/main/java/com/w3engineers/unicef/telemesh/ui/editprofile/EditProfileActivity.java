@@ -77,6 +77,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
                 Intent intent = new Intent(this, ProfileImageActivity.class);
                 intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
                 startActivityForResult(intent, PROFILE_IMAGE_REQUEST);

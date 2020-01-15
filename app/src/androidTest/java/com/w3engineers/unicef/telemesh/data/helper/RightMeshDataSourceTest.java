@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
@@ -28,10 +30,12 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,6 +43,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -72,6 +82,9 @@ public class RightMeshDataSourceTest {
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -157,7 +170,13 @@ public class RightMeshDataSourceTest {
 
         addDelay(500);
 
-        //SUT.peerRemove(userModel.getUserId());
+        SUT.peerRemove(userModel.getUserId());
+
+        addDelay(500);
+
+        SUT.peerRemove(userEntity.getMeshId());
+
+        addDelay(500);
 
         PeerRemoved userRemoveEvent = randomEntityGenerator.generatePeerRemoveEvent(meshId);
         AppDataObserver.on().sendObserverData(userRemoveEvent);
@@ -326,6 +345,34 @@ public class RightMeshDataSourceTest {
         AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
 
         addDelay(500);
+    }
+
+    @Test
+    public void dataReceiveTest() {
+        addDelay(500);
+
+        UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
+        userEntity.setMeshId(meshId);
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(1000);
+
+        DataEvent dataEvent = randomEntityGenerator.generateDataEvent(meshId);
+
+        addDelay(1000);
+
+        AppDataObserver.on().sendObserverData(dataEvent);
+
+        addDelay(2000);
+
+        SUT.showServiceUpdateAvailable(rule.getActivity());
+
+        addDelay(4000);
+
+        onView(withText("LATER")).inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(click());
+
     }
 
     private void addDelay(long time) {

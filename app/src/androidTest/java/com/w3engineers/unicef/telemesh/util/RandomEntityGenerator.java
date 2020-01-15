@@ -4,6 +4,7 @@ import android.os.Parcel;
 
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
@@ -27,6 +28,9 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 /*
@@ -44,94 +48,28 @@ import java.util.UUID;
  */
 public class RandomEntityGenerator {
 
-    /*@Override
-    public <T> T createAndFill(Class<T> clazz) throws Exception {
-        UserEntity userEntity = (UserEntity) super.createAndFill(clazz);
-
-        Faker faker = new Faker();
-
-        userEntity.setUserFirstName(faker.name().firstName());
-        userEntity.setUserLastName(faker.name().lastName());
-
-        @SuppressWarnings("unchecked")
-        T t = (T) userEntity;
-        return t;
-    }*/
-
-    /*public UserEntity createUserEntity() throws Exception {
-        UserEntity userEntity = createAndFill(UserEntity.class);
-
-        Faker faker = new Faker();
-
-        userEntity.setUserFirstName(faker.name().firstName());
-        userEntity.setUserLastName(faker.name().lastName());
-        userEntity.setAvatarIndex(faker.random().nextInt(20));
-
-        return userEntity;
-    }*/
-
     public UserEntity createUserEntity() {
 
         String firstName = "Daniel";
-        String lastName = "Alvez";
 
         return new UserEntity()
                 .setUserName(firstName)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setAvatarIndex(3);
     }
-
-    /*public UserEntity createUserEntityWithId() throws Exception {
-        UserEntity userEntity = createAndFill(UserEntity.class);
-
-        Faker faker = new Faker();
-
-        userEntity.setUserFirstName(faker.name().firstName());
-        userEntity.setUserLastName(faker.name().lastName());
-        userEntity.setAvatarIndex(faker.random().nextInt(20));
-        userEntity.setMeshId(faker.idNumber().valid());
-
-        return userEntity;
-    }*/
 
     public UserEntity createUserEntityWithId() {
 
         String firstName = "Daniel";
-        String lastName = "Alvez";
 
         return new UserEntity()
                 .setUserName(firstName)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setAvatarIndex(3)
                 .setMeshId(UUID.randomUUID().toString());
     }
-
-    /*public BaseMeshData createBaseMeshData(UserEntity userEntity) throws Exception {
-        BaseMeshData baseMeshData = new BaseMeshData();
-
-        Faker faker = new Faker();
-
-        baseMeshData.mData = userEntity == null ? null : userEntity.getProtoUser().toByteArray();
-        baseMeshData.mMeshPeer = new MeshPeer(faker.idNumber().valid());
-
-        return baseMeshData;
-    }*/
-
-   /* public BaseMeshData createBaseMeshData(UserEntity userEntity) {
-        BaseMeshData baseMeshData = new BaseMeshData();
-        baseMeshData.mData = userEntity == null ? null : new Gson().toJson(userEntity.getProtoUser()).getBytes();
-        baseMeshData.mMeshPeer = new MeshPeer(UUID.randomUUID().toString());
-
-        return baseMeshData;
-    }*/
-
-    /*public RMDataModel createRMDataModel() throws Exception {
-
-        Faker faker = new Faker();
-
-        return RMDataModel.newBuilder()
-                .setRawData(ByteString.copyFrom("Hi".getBytes()))
-                .setUserMeshId(faker.idNumber().valid())
-                .setDataType(1).build();
-    }*/
 
     public DataModel createRMDataModel() {
 
@@ -146,22 +84,6 @@ public class RandomEntityGenerator {
                 .setDataType(1).build();*/
     }
 
-    /*public ChatEntity createChatEntity(String userId) throws Exception {
-        MessageEntity messageEntity = createAndFill(MessageEntity.class);
-
-        Faker faker = new Faker();
-
-        messageEntity.setMessage("Hi")
-                .setFriendsId(userId)
-                .setMessageId(faker.idNumber().valid())
-                .setIncoming(true)
-                .setMessageType(Constants.MessageType.TEXT_MESSAGE)
-                .setTime(System.currentTimeMillis())
-                .setStatus(Constants.MessageStatus.STATUS_SENDING);
-
-        return messageEntity;
-    }*/
-
     public ChatEntity createChatEntity(String userId) {
 
         return new MessageEntity().setMessage("Hi")
@@ -172,22 +94,6 @@ public class RandomEntityGenerator {
                 .setTime(System.currentTimeMillis())
                 .setStatus(Constants.MessageStatus.STATUS_SENDING);
     }
-
-    /*public ChatEntity createReceiverChatEntity(String userId) throws Exception {
-        MessageEntity messageEntity = createAndFill(MessageEntity.class);
-
-        Faker faker = new Faker();
-
-        messageEntity.setMessage("Hi")
-                .setFriendsId(userId)
-                .setMessageId(faker.idNumber().valid())
-                .setIncoming(true)
-                .setMessageType(Constants.MessageType.TEXT_MESSAGE)
-                .setTime(System.currentTimeMillis())
-                .setStatus(Constants.MessageStatus.STATUS_UNREAD);
-
-        return messageEntity;
-    }*/
 
     public ChatEntity createReceiverChatEntity(String userId) {
 
@@ -331,6 +237,28 @@ public class RandomEntityGenerator {
     public ServiceUpdate generateServiceUpdate() {
         ServiceUpdate event = new ServiceUpdate();
         event.isNeeded = true;
+        return event;
+    }
+
+    public DataEvent generateDataEvent(String meshId) {
+        DataEvent event = new DataEvent();
+        event.peerId = meshId;
+
+        ChatEntity messageModel = createReceiverChatEntity(meshId);
+
+        String messageData = new Gson().toJson(messageModel.toMessageModel());
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("t", Constants.DataType.MESSAGE);
+            jsonObject.put("d", messageData);
+
+            event.data = jsonObject.toString().getBytes();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return event;
     }
 }

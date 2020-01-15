@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class ProfileChoiceActivity extends BaseActivity {
     }
 
     protected void requestMultiplePermissions() {
+
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,

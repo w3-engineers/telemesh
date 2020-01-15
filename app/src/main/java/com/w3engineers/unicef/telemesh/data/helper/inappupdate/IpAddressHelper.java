@@ -31,9 +31,7 @@ public class IpAddressHelper {
                     return inetAddress;
                 } // for
             } // for
-        } catch (SocketException ex) {
-            ex.printStackTrace();
-        }
+        } catch (SocketException ex) { ex.printStackTrace(); }
         return null;
     }
 
@@ -64,11 +62,8 @@ public class IpAddressHelper {
                 InetAddress myInetAddress = InetAddress.getByName(my_ip);
                 return myInetAddress;
             }
-            return null;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        catch (Exception e) { e.printStackTrace(); }
+        return null;
     }
 }

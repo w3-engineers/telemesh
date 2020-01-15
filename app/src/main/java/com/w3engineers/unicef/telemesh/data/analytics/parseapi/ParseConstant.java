@@ -11,7 +11,7 @@ package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
  * ============================================================================
  */
 
-public class ParseConstant {
+public interface ParseConstant {
 
     interface MessageCount {
         String TABLE = "MessageCount";

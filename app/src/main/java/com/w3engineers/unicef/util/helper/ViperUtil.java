@@ -8,6 +8,7 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -165,7 +166,7 @@ public abstract class ViperUtil {
             ServiceUpdate serviceUpdate = (ServiceUpdate) event;
 
             if (serviceUpdate.isNeeded) {
-                showServiceUpdateAvailable();
+                showServiceUpdateAvailable(MainActivity.getInstance());
             }
 
         });
@@ -261,8 +262,6 @@ public abstract class ViperUtil {
             sendDataToMesh(nodeId, viperData, sendId);
         }
     }*/
-
-
     private void sendDataToMesh(String nodeId, ViperData viperData, String sendId) {
         byte[] data = ViperDataProcessor.getInstance().getDataFormatToJson(viperData);
 
@@ -309,12 +308,18 @@ public abstract class ViperUtil {
     }
 
     public void stopMeshService() {
-        viperClient.stopMesh();
+        try {
+            viperClient.stopMesh();
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void restartMeshService() {
-        int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
-        viperClient.restartMesh(myCurrentRole);
+        try {
+            int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
+            viperClient.restartMesh(myCurrentRole);
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     // TODO SSID_Change
@@ -366,17 +371,17 @@ public abstract class ViperUtil {
         }
     }
 
-    private void showServiceUpdateAvailable() {
-        if (MainActivity.getInstance() == null) return;
+    public void showServiceUpdateAvailable(Activity activity) {
+        if (activity == null) return;
 
-        MainActivity.getInstance().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.getInstance());
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setCancelable(false);
-                builder.setTitle(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.service_app_alert_title_text) + "</b>"));
-                builder.setMessage(MainActivity.getInstance().getString(R.string.service_app_update_message));
-                builder.setPositiveButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
+                builder.setTitle(Html.fromHtml("<b>" + activity.getString(R.string.service_app_alert_title_text) + "</b>"));
+                builder.setMessage(activity.getString(R.string.service_app_update_message));
+                builder.setPositiveButton(Html.fromHtml("<b>" + activity.getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
 
                         Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.w3engineers.meshservice");
@@ -387,7 +392,7 @@ public abstract class ViperUtil {
                     }
                 });
 
-                builder.setNegativeButton(Html.fromHtml("<b>" + MainActivity.getInstance().getString(R.string.button_later) + "<b>"), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(Html.fromHtml("<b>" + activity.getString(R.string.button_later) + "<b>"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
 
                     }

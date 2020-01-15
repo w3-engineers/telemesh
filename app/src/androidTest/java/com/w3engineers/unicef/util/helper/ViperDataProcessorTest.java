@@ -2,10 +2,12 @@ package com.w3engineers.unicef.util.helper;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,25 +34,22 @@ public class ViperDataProcessorTest {
     }
 
     @Test
-    public void viperDataProcessTest() {
+    public void viperDataProcessorExceptionTest() {
         addDelay(500);
-        ViperData res = SUT.setDataFormatFromJson(createDummyJson().getBytes());
-
-        assertEquals(res.dataType,(byte)type);
-    }
-
-    private String createDummyJson() {
         try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("t", type);
-            jsonObject.put("d", data);
-
-            return jsonObject.toString();
-        } catch (JSONException e) {
+            SUT.setDataFormatFromJson(null);
+            Assert.fail("Corrupted data");
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        addDelay(500);
+
+        ViperData viperData = SUT.setDataFormatFromJson("testData".getBytes());
+
+        assertFalse(viperData.dataType > 0);
+
+        addDelay(500);
     }
 
     private void addDelay(long time) {

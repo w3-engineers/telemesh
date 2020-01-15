@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -60,15 +61,19 @@ public class SecurityViewModel extends BaseRxAndroidViewModel {
 
     boolean isValidPassword(final String password) {
 
-        Pattern pattern;
-        Matcher matcher;
+        if (password != null) {
+            Pattern pattern;
+            Matcher matcher;
 
-        final String PASSWORD_PATTERN = "^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[@$%&#_()=+?»«<>£§€{}\\\\[\\\\]-]).{8,}$";
+            final String PASSWORD_PATTERN = "^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[@$%&#_()=+?»«<>£§€{}\\\\[\\\\]-]).{8,}$";
 
-        pattern = Pattern.compile(PASSWORD_PATTERN);
-        matcher = pattern.matcher(password);
+            pattern = Pattern.compile(PASSWORD_PATTERN);
+            matcher = pattern.matcher(password);
 
-        return matcher.matches();
+            return matcher.matches();
+        } else {
+            return false;
+        }
     }
 
     boolean isValidChar(final String password) {

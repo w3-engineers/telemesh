@@ -198,7 +198,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     }*/
 
-    public DisposableObserver<String> searchContacts() {
+    /*public DisposableObserver<String> searchContacts() {
         return new DisposableObserver<String>() {
 
             boolean isSearchStart = false;
@@ -227,7 +227,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 Timber.e("onError: Complete");
             }
         };
-    }
+    }*/
 
     public void searchContacts(String query) {
         if (meshContactViewModel != null) {

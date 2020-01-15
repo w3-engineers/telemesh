@@ -298,9 +298,7 @@ public class DiscoverFragment extends BaseFragment {
                     try {
                         enableEmpty();
                         setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    } catch (Exception e) { e.printStackTrace(); }
                 }
             };
 

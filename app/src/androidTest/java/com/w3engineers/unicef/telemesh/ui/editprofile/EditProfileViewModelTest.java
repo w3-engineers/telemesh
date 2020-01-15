@@ -58,5 +58,19 @@ public class EditProfileViewModelTest {
     public void isNameValid_true_setValidString() {
         String firstName = "Daniel";
         assertTrue(SUT.isNameValid(firstName));
+
+        addDelay(500);
+
+        SUT.sendUserInfoToAll();
+
+        addDelay(2000);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

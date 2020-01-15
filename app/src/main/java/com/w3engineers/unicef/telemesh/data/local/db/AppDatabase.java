@@ -92,18 +92,13 @@ public abstract class AppDatabase extends BaseDatabase {
     @NonNull
     public static AppDatabase getInstance() {
 
+        if (!BuildConfig.DEBUG) {
+            if (CommonUtil.isEmulator())
+                return (AppDatabase) sInstance;
+        }
 
+        /*if (BuildConfig.DEBUG){
 
-        if (BuildConfig.DEBUG){
-            if (sInstance == null) {
-                synchronized (AppDatabase.class) {
-                    if (sInstance == null) {
-                        Context context = App.getContext();
-
-                        sInstance = createDbWithMigration(context); //normally initial version is always 21
-                    }
-                }
-            }
         }else {
             if (!CommonUtil.isEmulator()) {
                 if (sInstance == null) {
@@ -114,6 +109,16 @@ public abstract class AppDatabase extends BaseDatabase {
                             sInstance = createDbWithMigration(context);
                         }
                     }
+                }
+            }
+        }*/
+
+        if (sInstance == null) {
+            synchronized (AppDatabase.class) {
+                if (sInstance == null) {
+                    Context context = App.getContext();
+
+                    sInstance = createDbWithMigration(context); //normally initial version is always 21
                 }
             }
         }

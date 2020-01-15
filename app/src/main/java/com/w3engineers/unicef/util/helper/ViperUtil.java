@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
@@ -106,10 +105,10 @@ public abstract class ViperUtil {
             }
         });
 
-        AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
+       /* AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
             PeerAdd peerAdd = (PeerAdd) event;
             peerDiscoveryProcess(peerAdd.peerId, true);
-        });
+        });*/
 
         AppDataObserver.on().startObserver(ApiEvent.PEER_REMOVED, event -> {
             PeerRemoved peerRemoved = (PeerRemoved) event;
@@ -141,8 +140,6 @@ public abstract class ViperUtil {
                     .setConfigVersion(userInfoEvent.getConfigVersion());
 
             peerAdd(userInfoEvent.getAddress(), userModel);
-
-            Log.e("user_info", "User info " + "id " + userInfoEvent.getAddress() + " name " + userInfoEvent.getUserName());
         });
 
         AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
@@ -173,7 +170,7 @@ public abstract class ViperUtil {
 
             if (!isUserExist) {
                 if (isActive) {
-                    pingedNodeId(nodeId);
+//                    pingedNodeId(nodeId);
                 } else {
                     peerRemove(nodeId);
                 }
@@ -183,21 +180,21 @@ public abstract class ViperUtil {
 
     /*********************Ping*************************/
 
-    private void pingedNodeId(String nodeId) {
+    /*private void pingedNodeId(String nodeId) {
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
 
         sendProfilePing(nodeId);
-    }
+    }*/
 
-    private void sendProfilePing(String nodeId) {
+    /*private void sendProfilePing(String nodeId) {
         ViperData viperData = ViperDataProcessor.getInstance().getPingForProfile();
 
         if (viperData != null) {
             String sendId = UUID.randomUUID().toString();
             sendDataToMesh(nodeId, viperData, sendId);
         }
-    }
+    }*/
 
     /*********************Ping*************************/
 
@@ -208,7 +205,11 @@ public abstract class ViperUtil {
 
             if (viperData != null) {
 
-                if (ViperDataProcessor.getInstance().isProfilePing(viperData)) {
+                if (viperData.rawData != null) {
+                    onData(senderId, viperData);
+                }
+
+                /*if (ViperDataProcessor.getInstance().isProfilePing(viperData)) {
 
                     myProfileSend(senderId);
 
@@ -221,12 +222,12 @@ public abstract class ViperUtil {
                     if (viperData.rawData != null) {
                         onData(senderId, viperData);
                     }
-                }
+                }*/
             }
         }
     }
 
-    private void myProfileSend(String nodeId) {
+    /*private void myProfileSend(String nodeId) {
 
         if (!TextUtils.isEmpty(nodeId) && nodeId.equals(myUserId))
             return;
@@ -234,14 +235,14 @@ public abstract class ViperUtil {
         HandlerUtil.postBackground(() -> {
             sendMyInfo(nodeId);
         });
-    }
+    }*/
 
     /**
      * Send my info after discovering him
      *
      * @param nodeId - The discovered node id
      */
-    private void sendMyInfo(String nodeId) {
+    /*private void sendMyInfo(String nodeId) {
 
         ViperData viperData = ViperDataProcessor.getInstance().getMyProfileMeshData();
 
@@ -249,7 +250,7 @@ public abstract class ViperUtil {
             String sendId = UUID.randomUUID().toString();
             sendDataToMesh(nodeId, viperData, sendId);
         }
-    }
+    }*/
 
 
     private void sendDataToMesh(String nodeId, ViperData viperData, String sendId) {
@@ -306,7 +307,8 @@ public abstract class ViperUtil {
         viperClient.restartMesh(myCurrentRole);
     }
 
-    public void destroyMeshService() {
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
         if (viperClient != null) {
             viperClient.destroyMeshService();
         }
@@ -316,7 +318,7 @@ public abstract class ViperUtil {
         if (viperClient != null) {
             viperClient.resetViperInstance();
         }
-    }
+    }*/
 
     public void sendConfigToViper(ConfigurationCommand configurationCommand) {
         if (configurationCommand != null) {
@@ -394,8 +396,6 @@ public abstract class ViperUtil {
     protected abstract void onMesh(String myMeshId);
 
     protected abstract void onMeshPrepared(String myWalletAddress);
-
-    protected abstract void offMesh();
 
     protected abstract void peerAdd(String peerId, byte[] peerData);
 

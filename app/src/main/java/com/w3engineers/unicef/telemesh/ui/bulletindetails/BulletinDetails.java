@@ -8,9 +8,6 @@ Proprietary and confidential
 ============================================================================
 */
 
-import android.support.annotation.NonNull;
-import android.view.MenuItem;
-
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
@@ -42,7 +39,7 @@ public class BulletinDetails extends TelemeshBaseActivity {
 
     @Override
     public void startUI() {
-
+        super.startUI();
         ActivityBulletinDetailsBinding activityBulletinDetailsBinding = (ActivityBulletinDetailsBinding) getViewDataBinding();
 
         FeedEntity feedEntity = getIntent().getParcelableExtra(FeedEntity.class.getName());
@@ -53,7 +50,7 @@ public class BulletinDetails extends TelemeshBaseActivity {
         }
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
@@ -61,7 +58,7 @@ public class BulletinDetails extends TelemeshBaseActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /*@Override
     protected BaseServiceLocator getServiceLocator() {

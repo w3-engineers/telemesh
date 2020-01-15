@@ -5,12 +5,20 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.ext.viper.application.data.remote.model.BaseMeshData;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
+import com.w3engineers.mesh.application.data.model.TransportInit;
+import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
+import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
+import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -19,6 +27,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.junit.After;
@@ -26,6 +35,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -59,6 +70,9 @@ public class RightMeshDataSourceTest {
     private Context mContext;
     private Source source;
 
+    public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
+    public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
+
     @Before
     public void setUp() {
 
@@ -78,10 +92,14 @@ public class RightMeshDataSourceTest {
         rmDataHelper = RmDataHelper.getInstance();
         rmDataHelper.initSource(source);
 
-        UserEntity userEntity = randomEntityGenerator.createUserEntity();
-        SUT = new MeshDataSource(new Gson().toJson(userEntity.getProtoUser()).getBytes());
 
-        SUT.onRmOn();
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, myAddress);
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.IMAGE_INDEX, 2);
+        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
+
+        SUT = MeshDataSource.getRmDataSource();
+
+        SUT.saveUpdateUserInfo();
     }
 
     @After
@@ -93,14 +111,17 @@ public class RightMeshDataSourceTest {
     public void testOnPeerAdd_checkUserFullName_setValidUser() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
 
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        SUT.onPeer(baseMeshData);
+        String byteData = new Gson().toJson(userModel);
+
+        SUT.peerAdd(userEntity.getMeshId(), byteData.getBytes());
 
         addDelay(2000);
 
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
+        UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
         addDelay(2000);
 
         String retrieveFullName = retrieveUser == null ? null : retrieveUser.getFullName();
@@ -121,51 +142,47 @@ public class RightMeshDataSourceTest {
     @Test
     public void testOnPeerGone_getOnlineStatus_setExistingUser() {
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
+        userEntity.setMeshId(meshId);
+        UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
 
-        BaseMeshData baseMeshData = randomEntityGenerator.createBaseMeshData(userEntity);
-        SUT.onPeer(baseMeshData);
+        //SUT.peerAdd(userEntity.getMeshId(), userModel);
 
-        addDelay();
+        UserInfoEvent userInfoEvent = randomEntityGenerator.generateUserInfoEvent(meshId);
 
-        MeshPeer meshPeer = baseMeshData.mMeshPeer;
-        SUT.onPeerGone(meshPeer);
-        addDelay();
-        UserEntity retrieveUser = userDataSource.getSingleUserById(baseMeshData.mMeshPeer.getPeerId());
-        addDelay();
+        AppDataObserver.on().sendObserverData(userInfoEvent);
+
+        addDelay(2500);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(500);
+
+        //SUT.peerRemove(userModel.getUserId());
+
+        PeerRemoved userRemoveEvent = randomEntityGenerator.generatePeerRemoveEvent(meshId);
+        AppDataObserver.on().sendObserverData(userRemoveEvent);
+
+        addDelay(500);
+        UserEntity retrieveUser = userDataSource.getSingleUserById(userModel.getUserId());
+        addDelay(500);
         assertFalse(retrieveUser != null && retrieveUser.getOnlineStatus() > Constants.UserStatus.OFFLINE);
     }
 
     @Test
     public void testDataSend() {
 
-        addDelay();
+        addDelay(500);
 
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
-        SUT.DataSend(rmDataModel, UUID.randomUUID().toString());
-    }
-
-    @Test
-    public void onlyNodeAddedTest() {
-        addDelay();
-
-        String nodeId = "0x3988dbfkjdf984rc9";
-        SUT.nodeIdDiscovered(nodeId);
-
-        addDelay(3000);
-
-        UserEntity userEntity = userDataSource.getSingleUserById(nodeId);
-        addDelay(1000);
-        assertEquals(userEntity.getMeshId(), nodeId);
-
-        addDelay();
+        SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
     }
 
     @Test
     public void nodeAvailableTest() {
-        addDelay();
+        addDelay(500);
 
         // create a user first
-        String meshId = "0x3988dbfkjdf984rc9";
+        String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
         UserEntity userEntity = randomEntityGenerator.createUserEntity();
         userEntity.setMeshId(meshId);
         addDelay(700);
@@ -183,32 +200,8 @@ public class RightMeshDataSourceTest {
 
         assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.BLE_ONLINE);
 
-        addDelay();
-
-        // ownId test
-        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, meshId);
-        String myUserId = SUT.getOwnUserId();
-        assertEquals(myUserId, meshId);
-
-        addDelay();
+        addDelay(500);
     }
-
-    private void addDelay() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addDelay(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     public void testOnData_checkMessageProperties_forValidMessage() {
@@ -216,20 +209,16 @@ public class RightMeshDataSourceTest {
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay();
+        addDelay(500);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
 
         String prevMessageId = chatEntity != null ? chatEntity.getMessageId() : null;
 
-        addDelay();
-        SUT.onData(randomEntityGenerator.createMeshData(userEntity.getMeshId(), chatEntity));
+        addDelay(500);
+        SUT.onData(userEntity.getMeshId(), randomEntityGenerator.createMeshData(chatEntity));
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        addDelay(2000);
 
         if (prevMessageId == null) {
             assertNull(prevMessageId);
@@ -237,7 +226,7 @@ public class RightMeshDataSourceTest {
         }
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(prevMessageId);
-        addDelay();
+        addDelay(500);
 
         String newMessageId = retrieveChatEntity != null ? retrieveChatEntity.getMessageId() : null;
 
@@ -248,8 +237,6 @@ public class RightMeshDataSourceTest {
         if (!TextUtils.isEmpty(newMessageId) && !TextUtils.isEmpty(prevMessageId)) {
             assertThat(prevMessageId, is(newMessageId));
         }
-
-
     }
 
     @Test
@@ -257,7 +244,7 @@ public class RightMeshDataSourceTest {
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay();
+        addDelay(500);
 
         ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         messageSourceData.insertOrUpdateData(chatEntity);
@@ -268,11 +255,25 @@ public class RightMeshDataSourceTest {
 
         rmDataHelper.rmDataMap.put(String.valueOf(transferKey), rmDataModel);
 
-        MeshAcknowledgement meshAcknowledgement = randomEntityGenerator.createAckRmDataModel(userEntity.getMeshId(), transferKey);
+        RmDataHelper.getInstance().rmDataMap.put(chatEntity.getMessageId(), rmDataModel);
 
-        SUT.onAcknowledgement(meshAcknowledgement);
+        // Send status test
+        DataAckEvent sendAckEvent = randomEntityGenerator.generateDataAckEvent(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        //SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        AppDataObserver.on().sendObserverData(sendAckEvent);
 
-        addDelay();
+        addDelay(500);
+
+        // Delivered status test
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.DELIVERED);
+
+        addDelay(500);
+
+        // Received status test
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.RECEIVED);
+
+        addDelay(500);
+
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
 
@@ -281,12 +282,12 @@ public class RightMeshDataSourceTest {
 
     @Test
     public void prepareDataObserver() {
-        addDelay();
+        addDelay(500);
 
         UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay();
+        addDelay(500);
 
         ChatEntity failEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
         failEntity.setIncoming(false);
@@ -305,17 +306,34 @@ public class RightMeshDataSourceTest {
         addDelay(3000);
 
         ChatEntity retrieveChatEntity = messageSourceData.getMessageEntityById(chatEntity.getMessageId());
-        addDelay();
+        addDelay(500);
 
         assertFalse(retrieveChatEntity.isIncoming());
 
     }
 
-  /*  @Test
-    public void meshOfTest() {
-        addDelay(1000);
-        SUT.onRmOff();
-        addDelay(1000);
-    }*/
+    @Test
+    public void meshInitAndServiceAppUpdateAvailableTest() {
+        addDelay(500);
+
+        TransportInit transportEvent = randomEntityGenerator.generateTransportInit(meshId);
+        AppDataObserver.on().sendObserverData(transportEvent);
+
+        addDelay(2000);
+
+        ServiceUpdate serviceAppUpdateEvent = randomEntityGenerator.generateServiceUpdate();
+
+        AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
+
+        addDelay(500);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -78,14 +78,14 @@ public class MainActivityViewModel extends BaseRxViewModel {
                 UserDataSource.getInstance().updateUserToOffline());
     }
 
-    public LiveData<Integer> getMyUserMode() {
+    /*public LiveData<Integer> getMyUserMode() {
         getCompositeDisposable().add(dataSource.getMyMode()
                 .subscribeOn(Schedulers.io())
                 .subscribe(integer -> {
                     myModeLiveData.postValue(integer);
                 }, Throwable::printStackTrace));
         return myModeLiveData;
-    }
+    }*/
 
     // Add a getter method for mNewUserCountWorkInfo
     public LiveData<List<WorkInfo>> getNewUserWorkInfo() {

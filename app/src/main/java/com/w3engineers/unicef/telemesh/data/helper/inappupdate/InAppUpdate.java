@@ -15,9 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.google.gson.JsonObject;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -26,11 +23,12 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.NanoHTTPD;
-import com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD.SimpleWebServer;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.we3ngineers.localserver.NanoHTTPD.NanoHTTPD;
+import com.we3ngineers.localserver.NanoHTTPD.SimpleWebServer;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,10 +44,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.List;
 
@@ -93,39 +89,6 @@ public class InAppUpdate {
     private static class Singleton {
         @SuppressLint("StaticFieldLeak")
         private static InAppUpdate INSTANCE = new InAppUpdate();
-    }
-
-    /**
-     * This method is responsible to update app from Main server
-     * <p>
-     * Yo
-     */
-    public void appUpdateFromInternet() {
-        AppUpdater appUpdater = new AppUpdater(mContext) // This context may be Activity context
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON(LIVE_JSON_URL);
-        appUpdater.start();
-    }
-
-    /**
-     * This method is responsible for updating app from local Server
-     *
-     * @param localLink String (Local server link)
-     */
-    public void appUpdateFromLocal(String localLink, Context context) {
-        if (!isAppUpdateProcessStart) {
-            setAppUpdateProcess(true);
-            AppUpdater appUpdater = new AppUpdater(context) // This context may be Activity context
-                    .setDisplay(Display.DIALOG)
-                    .setUpdateFrom(UpdateFrom.JSON)
-                    .setUpdateJSON(localLink)
-                    .setButtonDismissClickListener((dialog, which) -> setAppUpdateProcess(false));
-
-            appUpdater.start();
-        } else {
-            Timber.tag("InAppUpdateTest").e("App update process running");
-        }
     }
 
     public void showAppInstallDialog(String json, Context context) {
@@ -188,7 +151,7 @@ public class InAppUpdate {
             String finalUrl = url;
             binding.buttonUpdate.setOnClickListener(v -> {
                 dialog.dismiss();
-                
+
                 if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
                     AppInstaller.downloadApkFile(finalUrl, context);
                 } else {
@@ -237,7 +200,6 @@ public class InAppUpdate {
 
         String myIpAddress = tempAddress.getHostAddress();
         mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
-        mServer = new SimpleWebServer(myIpAddress, PORT, rootFile, false);
 
         if (!mServer.isAlive()) {
             try {
@@ -253,7 +215,7 @@ public class InAppUpdate {
         return isServerRunning;
     }
 
-    public void stopServer() {
+  /*  public void stopServer() {
         if (mServer != null) {
             try {
                 mServer.stop();
@@ -263,7 +225,7 @@ public class InAppUpdate {
             }
 
         }
-    }
+    }*/
 
     public void setAppUpdateProcess(boolean isUpdating) {
         isAppUpdateProcessStart = isUpdating;
@@ -443,7 +405,7 @@ public class InAppUpdate {
                     }
                 });*/
 
-                connection.setRequestProperty("Authorization", "Basic "+base64);
+                connection.setRequestProperty("Authorization", "Basic " + base64);
 
                 connection.connect();
                 InputStream stream = connection.getInputStream();

@@ -82,13 +82,11 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     @Override
     public void startUI() {
+        super.startUI();
         Intent intent = getIntent();
         userId = intent.getStringExtra(UserEntity.class.getName());
 
-        if (TextUtils.isEmpty(userId)) {
-            finish();
-            return;
-        }
+        if (TextUtils.isEmpty(userId)) { finish(); return; }
 
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
@@ -230,9 +228,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     private int activeStatusResource(int userActiveStatus) {
 
-        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE) {
-            return R.mipmap.ic_mesh_online;
-        } else if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+        if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
             return R.mipmap.ic_mesh_online;
         } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
             return R.mipmap.ic_internet;
@@ -286,12 +282,13 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            loadMainActivity();
+        if (item.getItemId() == android.R.id.home && isTaskRoot()) {
+            Intent newTask = new Intent(this, MainActivity.class);
+            newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(newTask);
+            finish();
         }
-        finish();
         return super.onOptionsItemSelected(item);
     }
 
@@ -300,14 +297,14 @@ public class ChatActivity extends TelemeshBaseActivity {
         finish();
     }
 
-    private void loadMainActivity() {
+    /*private void loadMainActivity() {
         // When user comes in chat screen using notification
         if (isTaskRoot()) {
             Intent newTask = new Intent(this, MainActivity.class);
             newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(newTask);
         }
-    }
+    }*/
 
     private ChatViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
@@ -351,11 +348,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
 
         @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-        }
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) { }
 
         @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-        }
+        public void onItemRangeRemoved(int positionStart, int itemCount) { }
     }
 }

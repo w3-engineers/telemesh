@@ -158,7 +158,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /*@RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0, len = permissions.length; i < len; i++) {
@@ -176,7 +176,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 //checkPermission();
             }
         }
-    }
+    }*/
 
 
     @Override
@@ -227,16 +227,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void saveData() {
-        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
-            Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
-        } else if (mBinding.editTextName.getText().toString().length() < 2) {
-            Toaster.showShort(getResources().getString(R.string.enter_valid_name));
-        } /*else if (mViewModel.getImageIndex() < 0) {
-            Toaster.showShort(getString(R.string.select_avatar));
-        }*/ else {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             requestMultiplePermissions();
         }
-
     }
 
     private void parseIntent() {
@@ -263,19 +256,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     private void goToPasswordPage() {
 
-        if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
-            Toaster.showShort(getResources().getString(R.string.please_enter_your_name));
-        } else if (mBinding.editTextName.getText().toString().length() < 2) {
-            Toaster.showShort(getResources().getString(R.string.enter_valid_name));
-        } /*else if (mViewModel.getImageIndex() < 0) {
-            Toaster.showShort(getString(R.string.select_avatar));
-        } */else {
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             Intent intent = new Intent(CreateUserActivity.this, SecurityActivity.class);
             intent.putExtra(Constants.IntentKeys.USER_NAME, mBinding.editTextName.getText() + "");
             intent.putExtra(Constants.IntentKeys.AVATAR_INDEX, mViewModel.getImageIndex());
             startActivity(intent);
         }
-
     }
 
     private void showWarningDialog() {

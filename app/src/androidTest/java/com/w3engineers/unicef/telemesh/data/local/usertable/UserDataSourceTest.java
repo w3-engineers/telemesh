@@ -66,7 +66,7 @@ public class UserDataSourceTest {
         UserEntity user2 = getUserInfo(customId2, lastOnlineTime2, meshId2);
         SUT.insertOrUpdateData(user2);
 
-        TestSubscriber<List<UserEntity>> getAllUserEntitySubscriber = SUT.getAllUsers().test();
+        TestSubscriber<List<UserEntity>> getAllUserEntitySubscriber = SUT.getAllOnlineUsers().test();
 
         addDelay();
 

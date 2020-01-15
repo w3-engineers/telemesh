@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_import_profile_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color"
@@ -21,6 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
+            android:id="@+id/activity_import_profile_scroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,6 +31,7 @@
             app:layout_constraintTop_toBottomOf="@+id/image_view_back">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/activity_import_profile_scroll_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

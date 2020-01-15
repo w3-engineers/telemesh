@@ -84,14 +84,9 @@ public class MeshDataSource extends ViperUtil {
         Constants.IsMeshInit = true;
     }
 
-    @Override
-    protected void offMesh() {
-
-    }
-
-    public void stopAllServices() {
+    /*public void stopAllServices() {
         // TODO stop service during mode change from data plan mode
-    }
+    }*/
 
     /**
      * During send data to peer
@@ -218,10 +213,10 @@ public class MeshDataSource extends ViperUtil {
         RmDataHelper.getInstance().syncConfigFileAndBroadcast(isUpdate, configurationCommand);
     }
 
-
-    public void resetInstance() {
+    // TODO SSID_Change
+    /*public void resetInstance() {
         rightMeshDataSource = null;
-    }
+    }*/
 
     public void saveUpdateUserInfo() {
 

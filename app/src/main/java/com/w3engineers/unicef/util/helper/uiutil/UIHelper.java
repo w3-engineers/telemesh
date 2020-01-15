@@ -88,7 +88,7 @@ public class UIHelper {
         return subject;
     }
 
-    public static Observable<String> fromSearchEditText(EditText editText) {
+   /* public static Observable<String> fromSearchEditText(EditText editText) {
         final PublishSubject<String> subject = PublishSubject.create();
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,7 +108,7 @@ public class UIHelper {
         });
 
         return subject;
-    }
+    }*/
 
     @BindingAdapter("android:typeface")
     public static void setTypeface(@NonNull TextView v, @NonNull String style) {

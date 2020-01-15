@@ -68,9 +68,9 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         openUserMessage.postValue(userEntity);
     }
 
-    public void setSearchText(String searchText) {
+    /*public void setSearchText(String searchText) {
         this.searchableText = searchText;
-    }
+    }*/
 
     public int getUserAvatarByIndex(int imageIndex) {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);

@@ -44,10 +44,10 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     private static final int PAGE_SIZE = 50;
     private static final int PREFETCH_DISTANCE = 30;
 
-    private String searchableText;
+    public String searchableText;
 
     private List<UserEntity> tempNearByList;
-    private List<UserEntity> userList;
+    public List<UserEntity> userList;
 
     public DiscoverViewModel(@NonNull Application application) {
         super(application);
@@ -64,9 +64,9 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
         changeFavouriteStatus.postValue(userEntity);
     }
 
-    public void setSearchText(String searchText) {
+    /*public void setSearchText(String searchText) {
         this.searchableText = searchText;
-    }
+    }*/
 
     public int getUserAvatarByIndex(int imageIndex) {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);

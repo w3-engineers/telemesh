@@ -200,11 +200,11 @@ public class ChatViewModel extends AndroidViewModel {
         return mutableChatList;
     }
 
-    public void messageOperation(@NonNull ChatEntity chatEntity) {
+    /*public void messageOperation(@NonNull ChatEntity chatEntity) {
         chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
         messageInsertionProcess(chatEntity);
         dataSource.reSendMessage(chatEntity);
-    }
+    }*/
 
     /**
      * chunk by chunk data load will be applicable.

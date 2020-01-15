@@ -16,7 +16,6 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
@@ -173,7 +172,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     }
 
-    public void onlyNodeAdd(String nodeId) {
+   /* public void onlyNodeAdd(String nodeId) {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
@@ -185,7 +184,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
-    }
+    }*/
 
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
@@ -239,7 +238,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      *
      * @param mode Integer
      */
-    public void onGetMyMode(int mode) {
+  /*  public void onGetMyMode(int mode) {
         // Here we will get callback
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
         dataSource.setMyMode(mode);
@@ -256,7 +255,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
 
         //initRM(dataSource);
-    }
+    }*/
 
     /**
      * This api is responsible for update user info in database
@@ -559,11 +558,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void stopMeshService() {
+   /* public void stopMeshService() {
         updateUserStatus(true);
-    }
+    }*/
 
-    private void updateUserStatus(boolean isServiceStop) {
+    public void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
                     if (isServiceStop) {
@@ -621,7 +620,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.restartMeshService();
     }
 
-    public void destroyMeshService() {
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
         rightMeshDataSource.destroyMeshService();
         rightMeshDataSource.resetViperInstance();
 
@@ -629,7 +629,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         rightMeshDataSource = MeshDataSource.getRmDataSource();
 
-    }
+    }*/
 
     public void requestWsMessage() {
         if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
@@ -999,9 +999,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public void showMeshLog(String log) {
+ /*   public void showMeshLog(String log) {
         // LogProcessUtil.getInstance().writeLog(log);
-    }
+    }*/
 
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
 
@@ -1194,6 +1194,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
+            if (rightMeshDataSource == null) {
+                rightMeshDataSource = MeshDataSource.getRmDataSource();
+            }
+
             rightMeshDataSource.sendConfigToViper(configurationCommand);
 
             rightMeshDataSource.saveUpdateUserInfo();
@@ -1241,4 +1245,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         String guidelineInfo = new String(rawData);
         rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);
     }
+
+
 }

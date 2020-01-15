@@ -1,4 +1,4 @@
-include ':app', ':appshare',':viper', ':paylib', ':wallet_gen'
+include ':app', ':appshare', ':localserver', ':viper', ':paylib', ':wallet_gen'
 
 // Remove RM-Lib
 /*pluginManagement.repositories {

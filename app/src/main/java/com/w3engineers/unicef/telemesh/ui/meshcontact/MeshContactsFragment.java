@@ -187,16 +187,16 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
-    private void initSearchView(SearchView searchView) {
+    /*private void initSearchView(SearchView searchView) {
 
         getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
                 .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
                 .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged()/*.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())*/
+                .distinctUntilChanged()*//*.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())*//*
                 .subscribeWith(searchContacts()));
 
-    }
+    }*/
 
     public DisposableObserver<String> searchContacts() {
         return new DisposableObserver<String>() {
@@ -287,7 +287,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         return super.onOptionsItemSelected(item);
     }
 
-    private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
+    /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -302,7 +302,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 return true;
             }
         });
-    }
+    }*/
 
     private void searchViewControl(List<UserEntity> userEntities) {
         boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
@@ -313,7 +313,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
-    private void controlEmptyLayout() {
+    /*private void controlEmptyLayout() {
         if (!Constants.IS_LOADING_ENABLE) {
             Handler handler = new Handler(Looper.getMainLooper());
             enableLoading();
@@ -336,7 +336,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             enableEmpty();
             title = LanguageUtil.getString(R.string.title_personal_fragment);
         }
-    }
+    }*/
 
     private void enableLoading() {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
@@ -380,7 +380,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.spinnerView.setAdapter(dataAdapter);
     }
 
-    protected void searchLoading() {
+  /*  protected void searchLoading() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
                 //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
@@ -391,7 +391,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 // ((MainActivity) getActivity()).enableLoading();
             });
         }
-    }
+    }*/
 
     // General API's and initialization area
     private void init() {

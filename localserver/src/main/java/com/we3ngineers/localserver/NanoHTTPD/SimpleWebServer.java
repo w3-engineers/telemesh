@@ -1,9 +1,11 @@
-package com.w3engineers.unicef.telemesh.data.helper.inappupdate.NanoHTTPD;
+package com.we3ngineers.localserver.NanoHTTPD;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -350,5 +352,9 @@ public class SimpleWebServer extends NanoHTTPD {
         }
 
         ServerRunner.executeInstance(new SimpleWebServer(host, port, wwwroot, quiet));
+    }
+
+    public HTTPSession createHttpSession(TempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream){
+        return new HTTPSession(tempFileManager,inputStream,outputStream);
     }
 }

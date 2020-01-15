@@ -72,7 +72,7 @@ versions.location = "16.0.0"
 versions.appupdater = "2.7"
 versions.ripplebg = "1.0.1"
 versions.qrgenerator = "1.0.3"
-versions.viper = "1.0.20"
+versions.viper = "1.0.24"
 versions.in_app_db = "1.0.2"
 versions.web3j = "4.2.0-android"
 versions.bouncy = "1.61"
@@ -164,6 +164,7 @@ glide.runtime = "com.github.bumptech.glide:glide:$versions.glide"
 glide.compiler = "com.github.bumptech.glide:compiler:$versions.glide"
 deps.glide = glide
 deps.app_share = project(':appshare')
+deps.local_server = project(':localserver')
 deps.leak_canary = "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
 //Strom remote dependency
 deps.strom_remote = "com.github.w3-engineers:strom:$versions.strom_remote"

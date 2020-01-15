@@ -45,7 +45,25 @@ public class TeleMeshApplication extends MeshApp {
         super.onCreate();
         AppDatabase.getInstance();
         // Set app language based on user
-        if (BuildConfig.DEBUG) {
+
+        if (!BuildConfig.DEBUG) {
+            if (CommonUtil.isEmulator())
+                return;
+        }
+
+        String language = SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
+        if (TextUtils.isEmpty(language)) {
+            language = "en";
+        }
+        LanguageUtil.setAppLanguage(mContext, language);
+
+        initCredential();
+
+        AnalyticsApi.init(mContext);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
+        Toaster.init(R.color.colorPrimary);
+
+        /*if (BuildConfig.DEBUG) {
             Log.e("biuld_type", "debug build");
             MeshLog.i("from my self");
             String language = SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
@@ -74,7 +92,7 @@ public class TeleMeshApplication extends MeshApp {
                 Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
                 Toaster.init(R.color.colorPrimary);
             }
-        }
+        }*/
     }
 
     private void initCredential() {

@@ -117,6 +117,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void startUI() {
+        super.startUI();
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
         if (getSupportActionBar() != null) {
@@ -154,22 +155,18 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mViewModel.getNewUserWorkInfo().observe(this, workInfos -> {
 
             // If there are no matching work info, do nothing
-            if (workInfos == null || workInfos.isEmpty()) {
-                return;
+            if (workInfos != null && !workInfos.isEmpty()) {
+                // We only care about the first output status.
+                WorkInfo workInfo = workInfos.get(0);
+
+                boolean finished = workInfo.getState().isFinished();
             }
-
-            // We only care about the first output status.
-            WorkInfo workInfo = workInfos.get(0);
-
-            boolean finished = workInfo.getState().isFinished();
-
-
         });
 
-        mViewModel.getMyUserMode().observe(this, integer -> {
+        /*mViewModel.getMyUserMode().observe(this, integer -> {
             if (integer == null) return;
             showHideInternetWarning(integer, Constants.IS_DATA_ON);
-        });
+        });*/
 
         subscribeForActiveUser();
         subscribeForNewFeedMessage();
@@ -253,9 +250,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.text_view_background:
+            /*case R.id.text_view_background:
                 // disableLoading();
-                break;
+                break;*/
             case R.id.image_view_cross:
                 if (TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())) {
                     hideSearchBar();
@@ -270,7 +267,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -279,7 +276,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 Log.e("AppUpdateProcess", "onActivityResult: app download failed");
             }
         }
-    }
+    }*/
 
     private MainActivityViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
@@ -410,28 +407,29 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
 
-        if (itemView == null)
-            return;
+        if (itemView != null) {
 
-        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
-        TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
+            ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
+            TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
-        if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+            if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
 
-            constraintLayoutContainer.setVisibility(View.VISIBLE);
+                constraintLayoutContainer.setVisibility(View.VISIBLE);
 
-            if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
-                textViewBadgeCount.setText(String.valueOf(latestCount));
+                if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
+                    textViewBadgeCount.setText(String.valueOf(latestCount));
+                } else {
+                    textViewBadgeCount.setText(R.string.badge_count_more_than_99);
+                }
             } else {
-                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
+                constraintLayoutContainer.setVisibility(View.GONE);
             }
-        } else {
-            constraintLayoutContainer.setVisibility(View.GONE);
+
         }
     }
 
     // Again this api will be enable when its functionality will be added
-    public void createBadgeCount(int latestCount, int menuItemPosition) {
+    /*public void createBadgeCount(int latestCount, int menuItemPosition) {
         ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
         if (constraintLayoutContainer == null) return;
         // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
@@ -449,7 +447,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         latestUserCount = latestCount;
 
-       /* if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
+       *//* if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
 
             constraintLayoutContainer.setVisibility(View.VISIBLE);
 
@@ -460,8 +458,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         } else {
             constraintLayoutContainer.setVisibility(View.GONE);
-        }*/
-    }
+        }*//*
+    }*/
 
     private void createFeedBadge(int latestCount, int menuItemPosition) {
 
@@ -491,7 +489,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         return itemView.findViewById(R.id.constraint_layout_badge);
     }
 
-    private void hideUserBadge() {
+    /*private void hideUserBadge() {
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
 
@@ -501,7 +499,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         ConstraintLayout userBadgeView = itemView.findViewById(R.id.constraint_layout_badge);
 
         userBadgeView.setVisibility(View.GONE);
-    }
+    }*/
 
     private void hideFeedBadge() {
         BottomNavigationItemView itemView =
@@ -515,7 +513,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         feedBadge.setVisibility(View.GONE);
     }
 
-    public void enableLoading() {
+    /*public void enableLoading() {
         binding.searchingView.setVisibility(View.VISIBLE);
         binding.mainView.setVisibility(View.GONE);
     }
@@ -523,7 +521,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void disableLoading() {
         binding.searchingView.setVisibility(View.GONE);
         binding.mainView.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     public void showSearchBar() {
         binding.toolbarMain.setVisibility(View.INVISIBLE);
@@ -697,7 +695,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 }
             };
 
-    private void popupSnackbarForCompleteUpdate() {
+    public void popupSnackbarForCompleteUpdate() {
 
         Snackbar snackbar =
                 Snackbar.make(

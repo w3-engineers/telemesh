@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
+import android.text.TextUtils;
 
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 
@@ -44,11 +46,11 @@ public class CommonUtil {
                 });
     }
 
-    public static boolean isLocationGpsOn(Context context){
+   /* public static boolean isLocationGpsOn(Context context){
         LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return statusOfGPS;
-    }
+    }*/
 
     public static void showGpsOrLocationOffPopup(Context mContext) {
         DialogUtil.showConfirmationDialog(mContext,
@@ -72,6 +74,17 @@ public class CommonUtil {
 
                     }
                 });
+    }
+
+    public static boolean isValidName(String name, Context context) {
+        if (TextUtils.isEmpty(name)) {
+            Toaster.showShort(context.getResources().getString(R.string.please_enter_your_name));
+            return false;
+        } else if (name.length() < 2) {
+            Toaster.showShort(context.getResources().getString(R.string.enter_valid_name));
+            return false;
+        }
+        return true;
     }
 
     public static void dismissDialog(){

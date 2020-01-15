@@ -158,9 +158,7 @@ public class InAppUpdate {
             });
 
             dialog.show();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException e) { e.printStackTrace(); }
     }
 
     /**
@@ -202,9 +200,7 @@ public class InAppUpdate {
             try {
                 mServer.start();
                 isServerRunning = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
         }
     }
 
@@ -241,9 +237,7 @@ public class InAppUpdate {
             model.setVersionName(version);
             model.setVersionCode(versionCode);
             return model;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        } catch (PackageManager.NameNotFoundException e) { e.printStackTrace(); }
         return null;
     }
 
@@ -331,9 +325,7 @@ public class InAppUpdate {
                 e.printStackTrace();
             }
 
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        } catch (PackageManager.NameNotFoundException e) { e.printStackTrace(); }
 
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
                 mContext.getString(R.string.app_name) + "/" + MAIN_JSON);
@@ -353,9 +345,7 @@ public class InAppUpdate {
             in.close();
             out.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
 
     }
 
@@ -411,9 +401,8 @@ public class InAppUpdate {
                     //here u ll get whole response...... :-)
                 }
                 return buffer.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
+            } catch (IOException e) { e.printStackTrace(); }
+            finally {
                 if (connection != null) {
                     connection.disconnect();
                 }
@@ -421,9 +410,7 @@ public class InAppUpdate {
                     if (reader != null) {
                         reader.close();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                } catch (IOException e) { e.printStackTrace(); }
             }
             return null;
         }

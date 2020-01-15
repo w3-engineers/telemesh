@@ -10,15 +10,21 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
+import com.w3engineers.unicef.telemesh.data.local.db.BaseMigration;
+import com.w3engineers.unicef.telemesh.data.local.db.Converters;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Date;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /*
  * ============================================================================
@@ -127,6 +133,62 @@ public class ModelParcelableTest {
         tokenGuideRequestModel.setRequest(sampleRequest);
 
         assertEquals(sampleRequest, tokenGuideRequestModel.getRequest());
+
+        addDelay();
+
+        String[] arr = {"query"};
+        BaseMigration baseMigration = new BaseMigration(1, arr);
+
+        assertEquals(baseMigration.getQueryScript()[0], arr[0]);
+
+        addDelay();
+
+    }
+
+    @Test
+    public void dataConvertTest() {
+        addDelay();
+
+        Converters converters = new Converters();
+
+        long currentTime = System.currentTimeMillis();
+
+        Date date = Converters.toDate(currentTime);
+
+        assertEquals(date.getTime(), currentTime);
+
+        addDelay();
+
+        long convertedTime = Converters.fromDate(date);
+
+        assertEquals(convertedTime, convertedTime);
+
+        addDelay();
+    }
+
+    @Test
+    public void feedDataSetterTest() {
+        addDelay();
+
+        FeedEntity entity = new FeedEntity();
+
+        String providerLogo = "logo.png";
+        String providerName = "Camp 1";
+        String feedTitle = "Sample title";
+
+        entity.setFeedProviderLogo(providerLogo)
+                .setFeedProviderName(providerName)
+                .setFeedTitle(feedTitle)
+                .setFeedReadStatus(false);
+
+        addDelay();
+
+        assertFalse(entity.isFeedRead());
+
+        assertEquals(entity.getFeedTitle(), feedTitle);
+
+        assertEquals(entity.getFeedProviderName(), providerName);
+        assertEquals(entity.getFeedProviderLogo(), providerLogo);
 
         addDelay();
 

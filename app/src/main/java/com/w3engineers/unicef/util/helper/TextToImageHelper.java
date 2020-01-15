@@ -34,9 +34,7 @@ public class TextToImageHelper {
 
                     sharedPref.write(Constants.preferenceKey.MY_WALLET_IMAGE, bitmapAddress);
 
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
+                } catch (WriterException e) { e.printStackTrace(); }
             });
         }
     }

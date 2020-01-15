@@ -159,14 +159,14 @@ public class VProfileChoiceTest {
                 walletActivity.finish();
             }
 
-            addDelay(2000);
+            addDelay(3000);
 
             Activity walletActivity1 = getActivityInstance();
             if (walletActivity1 instanceof ImportWalletActivity) {
                 walletActivity1.finish();
             }
 
-            addDelay(2000);
+            addDelay(3000);
         }
 
 

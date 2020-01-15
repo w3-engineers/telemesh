@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
@@ -13,13 +14,16 @@ import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEnt
 import com.w3engineers.unicef.telemesh.data.local.db.BaseMigration;
 import com.w3engineers.unicef.telemesh.data.local.db.Converters;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -143,6 +147,14 @@ public class ModelParcelableTest {
 
         addDelay();
 
+        long msgTime = System.currentTimeMillis();
+
+        MessageCountModel messageCountModel = new MessageCountModel();
+        messageCountModel.setMsgTime(msgTime);
+
+        assertEquals(msgTime, messageCountModel.getMsgTime());
+
+        addDelay();
     }
 
     @Test
@@ -191,6 +203,14 @@ public class ModelParcelableTest {
         assertEquals(entity.getFeedProviderLogo(), providerLogo);
 
         addDelay();
+
+        Payload payload = new Payload();
+
+        List<String> payloadData = new ArrayList<>();
+        payloadData.add("data");
+        payload.setConnectedClientEthIds(payloadData);
+
+        assertEquals(payload.getConnectedClientEthIds().get(0),payloadData.get(0));
 
     }
 

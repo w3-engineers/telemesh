@@ -60,7 +60,7 @@ public class ChatViewModel extends AndroidViewModel {
 
 
     private CompositeDisposable compositeDisposable;
-    private  MutableLiveData<PagedList<ChatEntity>> mutableMovieList = new MutableLiveData<>();
+    private  MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -197,14 +197,14 @@ public class ChatViewModel extends AndroidViewModel {
 
     @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
-        return mutableMovieList;
+        return mutableChatList;
     }
 
-    public void messageOperation(@NonNull ChatEntity chatEntity) {
+    /*public void messageOperation(@NonNull ChatEntity chatEntity) {
         chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
         messageInsertionProcess(chatEntity);
         dataSource.reSendMessage(chatEntity);
-    }
+    }*/
 
     /**
      * chunk by chunk data load will be applicable.
@@ -236,7 +236,7 @@ public class ChatViewModel extends AndroidViewModel {
                     .build();
 
             // here mutable live data is used to pass the updated value
-            mutableMovieList.postValue(pagedStrings);
+            mutableChatList.postValue(pagedStrings);
         }
     }
 
@@ -262,13 +262,15 @@ public class ChatViewModel extends AndroidViewModel {
                     // The key is already in the HashMap; add the pojo object
                     // against the existing key.
                     chatEntitySet = groupedHashMap.get(hashMapKey);
-                    if (chatEntitySet != null) {
+                    /*if (chatEntitySet != null) {
                         chatEntitySet.add(chatEntity);
                         groupedHashMap.put(hashMapKey, chatEntitySet);
-                    }
+                    }*/
                 } else {
                     // The key is not there in the HashMap; create a new key-value pair
                     chatEntitySet = new LinkedHashSet<>();
+                }
+                if (chatEntitySet != null) {
                     chatEntitySet.add(chatEntity);
                     groupedHashMap.put(hashMapKey, chatEntitySet);
                 }

@@ -8,15 +8,14 @@ Proprietary and confidential
 ============================================================================
 */
 
-import android.support.annotation.NonNull;
-import android.view.MenuItem;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBinding;
 
-public class BulletinDetails extends BaseActivity {
+public class BulletinDetails extends TelemeshBaseActivity {
 
     @Override
     protected int getToolbarId() {
@@ -34,8 +33,13 @@ public class BulletinDetails extends BaseActivity {
     }
 
     @Override
-    protected void startUI() {
+    public BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
 
+    @Override
+    public void startUI() {
+        super.startUI();
         ActivityBulletinDetailsBinding activityBulletinDetailsBinding = (ActivityBulletinDetailsBinding) getViewDataBinding();
 
         FeedEntity feedEntity = getIntent().getParcelableExtra(FeedEntity.class.getName());
@@ -46,7 +50,7 @@ public class BulletinDetails extends BaseActivity {
         }
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
@@ -54,5 +58,10 @@ public class BulletinDetails extends BaseActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
+
+    /*@Override
+    protected BaseServiceLocator getServiceLocator() {
+        return ServiceLocator.getInstance();
+    }*/
 }

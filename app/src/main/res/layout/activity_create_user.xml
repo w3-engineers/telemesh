@@ -13,7 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/chat_background">
 
 
         <ScrollView
@@ -36,7 +36,7 @@
                     android:id="@+id/top_gradient"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_150"
-                    android:background="@drawable/drawable_reg_page_shape"
+                    android:background="@color/background_color"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -46,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:weightSum="2"
                     app:layout_constraintBottom_toBottomOf="@id/divider"
                     app:layout_constraintLeft_toLeftOf="parent">
@@ -55,18 +56,41 @@
                         android:layout_height="20dp"
                         android:layout_weight="1"
                         android:background="@mipmap/shape"
+                        android:contentDescription="@string/app_name"
                         android:scaleType="fitXY"
-                        android:scaleX="-1"
-                        android:contentDescription="@string/app_name"/>
+                        android:scaleX="-1" />
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="20dp"
                         android:layout_weight="1"
                         android:background="@mipmap/shape"
-                        android:scaleType="fitXY"
-                        android:contentDescription="@string/app_name" />
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitXY" />
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image_view_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_16"
+                    android:contentDescription="@string/txt_description_back"
+                    android:padding="@dimen/padding_5"
+                    android:src="@mipmap/ic_back_white"
+                    app:layout_constraintStart_toStartOf="@+id/top_gradient"
+                    app:layout_constraintTop_toTopOf="@+id/top_gradient" />
+
+                <TextView
+                    android:id="@+id/text_view_create_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_20"
+                    android:text="@string/create_profile"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_view_back"
+                    app:layout_constraintStart_toEndOf="@+id/image_view_back"
+                    app:layout_constraintTop_toTopOf="@+id/image_view_back" />
 
                 <View
                     android:id="@+id/divider"
@@ -78,64 +102,54 @@
                     android:id="@+id/image_profile_background"
                     android:layout_width="@dimen/width_120"
                     android:layout_height="@dimen/height_120"
-                    android:contentDescription="@string/logo_image"
                     android:background="@drawable/circular_white"
+                    android:contentDescription="@string/logo_image"
                     android:padding="@dimen/margin_15"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintTop_toTopOf="@+id/divider" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/image_profile"
                     android:layout_width="@dimen/width_120"
                     android:layout_height="@dimen/height_120"
-                    android:padding="@dimen/margin_15"
+                    android:contentDescription="@string/profile_selection_image"
+                    android:padding="@dimen/margin_20"
                     android:src="@mipmap/ic_avatar_grey"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintTop_toTopOf="@+id/divider" />
 
                 <ImageView
                     android:id="@+id/image_view_camera"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/circular_gradient"
+                    android:layout_width="@dimen/width_40"
+                    android:layout_height="@dimen/height_40"
                     android:contentDescription="@string/logo_image"
                     android:padding="@dimen/padding_10"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_plus"
+                    android:src="@mipmap/ic_profile_edit"
                     app:layout_constraintBottom_toBottomOf="@+id/image_profile"
                     app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
-                <TextView
-                    android:id="@+id/select_avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:text="@string/select_avatar"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/image_profile" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/name_layout"
                     style="@style/signup_editext_style"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/select_avatar">
+                    android:textColorHint="@color/hint_text_color"
+                    app:hintTextAppearance="@style/hint_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_view_pen"
+                    app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
 
                     <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
                         android:id="@+id/edit_text_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_15"
-                        android:layout_marginRight="@dimen/margin_15"
+                        android:layout_marginEnd="@dimen/margin_15"
                         android:background="@color/transparent_color"
+                        android:backgroundTint="@color/new_user_button_color"
                         android:digits="@string/myDigits"
                         android:fontFamily="@font/poppins_regular"
                         android:hint="@string/enter_first_name"
@@ -144,26 +158,51 @@
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
                         android:singleLine="true"
                         android:textSize="@dimen/text_body"
-                        app:bet_baseColor="@color/colorPrimary"
-                        app:bet_textColor="@color/select_photo_color"
-                        app:bet_underlineColor="@color/deep_grey">
+                        app:bet_baseColor="@color/message_text_color"
+                        app:bet_primaryColor="@color/new_user_button_color"
+                        app:bet_textColor="@color/message_text_color"
+                        app:bet_underlineColor="@color/message_text_color">
 
                     </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
 
                 </android.support.design.widget.TextInputLayout>
 
+                <ImageView
+                    android:id="@+id/image_view_pen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_15"
+                    android:contentDescription="@string/name_field_icon"
+                    android:src="@mipmap/ic_pen"
+                    app:layout_constraintBottom_toBottomOf="@+id/name_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/name_layout" />
 
+
+<!--                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                    android:id="@+id/button_signup"
+                    style="@style/CustomButton"
+                    android:clickable="true"
+                    android:text="@string/signup"
+                    android:textAllCaps="false"
+                    android:textColor="@color/new_user_button_color"
+                    app:bb_drawable="@drawable/ractangular_white"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />-->
 
                 <com.w3engineers.ext.strom.application.ui.widget.BaseButton
                     android:id="@+id/button_signup"
-                    style="@style/CustomButton"
-                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="25dp"
+                    android:clickable="true"
                     android:text="@string/signup"
-                    android:textColor="@color/deep_grey"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintRight_toRightOf="parent"
+                    android:textColor="@color/new_user_button_color"
                     app:bb_drawable="@drawable/ractangular_white"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />
+
             </android.support.constraint.ConstraintLayout>
 
         </ScrollView>

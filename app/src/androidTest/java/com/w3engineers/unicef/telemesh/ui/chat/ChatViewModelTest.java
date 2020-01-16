@@ -2,10 +2,12 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.arch.paging.PagedList;
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -39,8 +41,7 @@ import static org.junit.Assert.assertThat;
  * ============================================================================
  */
 
-/*
-@RunWith(AndroidJUnit4.class)
+/*@RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
     @Rule
@@ -53,22 +54,27 @@ public class ChatViewModelTest {
 
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
+    private Context mContext;
+
+    private String userAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
 
     @Before
     public void setUp() {
+        mContext = InstrumentationRegistry.getContext();
         randomEntityGenerator = new RandomEntityGenerator();
-        appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
+        appDatabase = Room.inMemoryDatabaseBuilder(mContext,
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        */
-/*userDataSource = UserDataSource.getInstance(appDatabase.userDao());
-        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());*//*
-
+        userDataSource = UserDataSource.getInstance(appDatabase.userDao());
+        messageSourceData = MessageSourceData.getInstance(appDatabase.messageDao());
 
 
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
 
+        if (SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.MY_USER_ID).isEmpty()) {
+            SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, userAddress);
+        }
         SUT = new ChatViewModel(rule.getActivity().getApplication());
     }
 
@@ -143,5 +149,4 @@ public class ChatViewModelTest {
     public void tearDown() {
         appDatabase.close();
     }
-}
-*/
+}*/

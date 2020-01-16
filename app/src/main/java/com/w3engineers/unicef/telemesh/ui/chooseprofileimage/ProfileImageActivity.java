@@ -9,10 +9,12 @@ import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileImageBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.util.helper.ImageUtil;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 
@@ -45,8 +47,9 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     }
 
     private void initRecyclerView() {
-        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem);
+        ProfileImageAdapter mAdapter = new ProfileImageAdapter(selectedItem, this);
         mAdapter.setItemClickListener(this);
+        mProfileImageBinding.recyclerView.setHasFixedSize(true);
         mProfileImageBinding.recyclerView.setAdapter(mAdapter);
         int ITEM_IN_ROW = 3;
         mProfileImageBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, ITEM_IN_ROW));
@@ -66,10 +69,15 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
         switch (id) {
             case R.id.menu_done:
-                Intent intent = getIntent();
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (selectedItem == -1) {
+                    Toaster.showShort(getResources().getString(R.string.select_avatar));
+                } else {
+                    Intent intent = getIntent();
+                    intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }

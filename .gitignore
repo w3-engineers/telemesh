@@ -41,6 +41,8 @@ captures/
 meshlib/
 paylib/
 hardwareoff/
+viper/
+wallet_gen/
 
 # Keystore files
 # Uncomment the following line if you do not want to check your keystore files in.
@@ -66,3 +68,11 @@ fastlane/readme.md
 
 # rightmesh
 **rightmesh.json
+
+**config.json
+app/src/main/assets/config.json
+app/src/main/assets/configuration.json
+app/src/main/assets/point_guide.json
+
+#output.json
+app/debug/output.json

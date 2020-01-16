@@ -66,7 +66,7 @@ public class SettingsViewModelTest {
         addDelay(700);
     }
 
-    @Test
+    /*@Test
     public void testSetLocale_notSuccess_setAsyncData() {
         addDelay(1500);
 
@@ -116,11 +116,13 @@ public class SettingsViewModelTest {
         assertEquals(languageList[dataIndex], SUT.getAppLanguage());
 
         addDelay(700);
-    }
+    }*/
 
     @Test
     public void testOnCheckedChanged_success_setBoolean() {
         boolean checkedStatus = true;
+
+        SUT.successShared();
 
         addDelay(1500);
 
@@ -132,6 +134,17 @@ public class SettingsViewModelTest {
     }
 
     @Test
+    public void testAppShareMeshOnAndOff_success_setOkay() {
+        SUT.closeRmService();
+
+        addDelay(2000);
+
+        SUT.closeInAppShare();
+
+        addDelay(5300);
+    }
+
+    /*@Test
     public void testOnCheckedChanged_notSuccess_setBoolean() {
         boolean checkedStatus = false;
 
@@ -157,7 +170,7 @@ public class SettingsViewModelTest {
         assertFalse(SUT.getCheckedStatus());
 
         addDelay(700);
-    }
+    }*/
 
     private void addDelay(long time) {
         try {

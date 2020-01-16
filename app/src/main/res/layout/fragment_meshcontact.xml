@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.w3engineers.unicef.telemesh.R" />
     </data>
 
@@ -12,114 +13,87 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+        <RelativeLayout
+            android:id="@+id/spinner_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_14"
+            android:layout_marginEnd="@dimen/margin_14"
+            android:background="@color/colorGradientPrimary"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Spinner
+                android:id="@+id/spinner_view"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:brv_emptyLayoutId="@id/empty_layout" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_holder" />
+
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/empty_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_marginTop="@dimen/margin_60"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_holder">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/loading_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
 
-                <TextView
-                    android:id="@+id/loading_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:textIsSelectable="true"
-                    android:textSize="@dimen/text_size_20"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/empty_image_view"
+                android:layout_width="@dimen/width_200"
+                android:layout_height="@dimen/height_200"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_50"
+                android:layout_marginRight="@dimen/margin_20"
+                android:contentDescription="@string/no_contact_available"
+                android:src="@mipmap/ic_no_favorite"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/loading_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/margin_20"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/loading_text"
-                    app:shimmer_base_alpha="1.0"
-                    app:shimmer_highlight_alpha="0.1">
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fillViewport="true">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_15"
-                            android:layout_marginRight="@dimen/margin_15"
-                            android:contentDescription="@string/no_contact_available"
-                            android:scaleType="fitXY"
-                            android:src="@mipmap/ic_discovering"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </ScrollView>
-
-                </com.facebook.shimmer.ShimmerFrameLayout>
-
-            </android.support.constraint.ConstraintLayout>
-
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/not_found_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
-
-                <ImageView
-                    android:id="@+id/empty_image_view"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginTop="@dimen/margin_30"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:contentDescription="@string/no_contact_available"
-                    android:src="@mipmap/ic_no_contact"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_message"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:gravity="center"
-                    android:text="@string/no_contact_available"
-                    android:textSize="@dimen/text_size_18"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
-
-            </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20"
+                android:gravity="center"
+                android:text="@string/no_favorite"
+                android:textColor="@color/not_found_color"
+                android:textSize="@dimen/text_size_20"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
 
 
         </android.support.constraint.ConstraintLayout>
 
-        <!--<include
-            android:id="@+id/empty_layout"
-            layout="@layout/list_empty_layout"
-            android:visibility="visible"
-            app:emptyImage="@{R.drawable.img_contact_empty}"
-            app:emptyMessage="@{@string/no_contact_available}" />-->
 
     </android.support.constraint.ConstraintLayout>
 

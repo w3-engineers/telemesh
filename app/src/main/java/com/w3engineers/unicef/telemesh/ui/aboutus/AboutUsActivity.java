@@ -3,12 +3,21 @@ package com.w3engineers.unicef.telemesh.ui.aboutus;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.widget.TextView;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
+import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 
 /*
@@ -18,8 +27,9 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
  * Proprietary and confidential
  * ============================================================================
  */
-public class AboutUsActivity extends BaseActivity {
+public class AboutUsActivity extends TelemeshBaseActivity {
 
+    private ActivityAboutUsBinding mBinding;
 
     @Override
     protected int getLayoutId() {
@@ -36,21 +46,39 @@ public class AboutUsActivity extends BaseActivity {
         return R.color.colorPrimaryDark;
     }
 
+    @Override
+    public BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
+
 
     @Override
-    protected void startUI() {
-
+    public void startUI() {
+        super.startUI();
         AboutUsViewModel aboutUsViewModel = getViewModel();
-        ActivityAboutUsBinding mBinding = (ActivityAboutUsBinding) getViewDataBinding();
-        setTitle(getString(R.string.activity_about_us));
+        mBinding = (ActivityAboutUsBinding) getViewDataBinding();
+        setTitle(LanguageUtil.getString(R.string.activity_about_us));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         mBinding.setAboutViewModel(aboutUsViewModel);
 
-
+        initView();
     }
+
+    private void initView() {
+        mBinding.textViewPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewTerms.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewTelemeshWeb.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.textViewW3Web.setMovementMethod(LinkMovementMethod.getInstance());
+
+        stripUnderlines(mBinding.textViewPrivacy);
+        stripUnderlines(mBinding.textViewTerms);
+        stripUnderlines(mBinding.textViewTelemeshWeb);
+        stripUnderlines(mBinding.textViewW3Web);
+    }
+
 
     private AboutUsViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
@@ -60,5 +88,30 @@ public class AboutUsActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getAboutUsViewModel(getApplication());
             }
         }).get(AboutUsViewModel.class);
+    }
+
+    private void stripUnderlines(TextView textView) {
+        Spannable s = new SpannableString(textView.getText());
+        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+        for (URLSpan span : spans) {
+            int start = s.getSpanStart(span);
+            int end = s.getSpanEnd(span);
+            s.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            s.setSpan(span, start, end, 0);
+        }
+        textView.setText(s);
+    }
+
+    private class URLSpanNoUnderline extends URLSpan {
+        public URLSpanNoUnderline(String url) {
+            super(url);
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
     }
 }

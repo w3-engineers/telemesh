@@ -59,6 +59,36 @@ public class ExceptionTrackerTest {
         assertTrue(crashFile.exists());
     }
 
+    @Test
+    public void exceptionCaughtTest() {
+        addDelay(500);
+
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+
+                try{
+                    throw new RuntimeException("Mew");
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(1000);
+
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

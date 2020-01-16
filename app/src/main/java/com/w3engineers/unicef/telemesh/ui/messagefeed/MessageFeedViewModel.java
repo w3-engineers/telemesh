@@ -6,6 +6,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 
@@ -57,6 +59,12 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      */
     public void postMessageFeedEntity(@NonNull FeedEntity feedEntity) {
         updateFeedEntity(feedEntity);
+    }
+
+    public void requestBroadcastMessage() {
+        if (Constants.IS_DATA_ON) {
+            RmDataHelper.getInstance().requestWsMessage();
+        }
     }
 
     private void updateFeedEntity(FeedEntity feedEntity) {

@@ -22,8 +22,8 @@ licenses:
 before_install:
   - "chmod +x gradlew"
   - yes | sdkmanager "platforms;android-28"
-  - wget $MESHLIB_WGET_URL -O /tmp/meshlib.zip
-  - unzip /tmp/meshlib.zip -d ./
+#  - wget $MESHLIB_WGET_URL -O /tmp/meshlib.zip
+#  - unzip /tmp/meshlib.zip -d ./
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a -c 1000M

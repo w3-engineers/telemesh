@@ -10,8 +10,8 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 21
-        versionName "0.2.1"
+        versionCode 10
+        versionName "0.1.0-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -21,24 +21,36 @@ android {
     }
     buildTypes {
         debug {
+            debuggable true
+            minifyEnabled false
+
             testCoverageEnabled true
 
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
+
+            buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
+            buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
         }
         release {
+            debuggable false
+          //  minifyEnabled true
+          //  shrinkResources true
 
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
-        }
 
+            buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
+            buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
+        }
     }
     lintOptions {
 
@@ -68,6 +80,7 @@ android {
         exclude 'META-INF/io.netty.versions.properties'
     }
 
+
 //    externalNativeBuild {
 //        cmake {
 //            path 'src/CMakeLists.txt'
@@ -85,10 +98,14 @@ dependencies {
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
+    implementation deps.support.animated_vector_drawable
+    implementation deps.support.media_compact
+    implementation deps.support.v4
 
     //lifecycle
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     annotationProcessor deps.lifecycle.compiler
 
     //LiveDataReactStream
@@ -122,6 +139,7 @@ dependencies {
     androidTestImplementation deps.atsl.rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.espresso.contrib
 
     androidTestImplementation deps.room.testing
     androidTestImplementation deps.arch_core.testing // It is mandatory for live data test
@@ -141,7 +159,6 @@ dependencies {
 
     implementation deps.zxing.core
     implementation deps.dexter.dexter
-    implementation deps.appshare.share
 
     implementation deps.parse.server
     implementation deps.work.runtime
@@ -149,9 +166,17 @@ dependencies {
 
     implementation deps.location.service
 
-    api deps.framework
-    api deps.mesh
-    api deps.pay
+    implementation deps.appupdater.update
+
+    implementation deps.ripplebg.ripple
+    implementation deps.qrgenerator.qr
+    implementation deps.playcore.core
+
+    api deps.app_share
+    api deps.local_server
+    debugImplementation deps.inappstoragereader
+    implementation deps.viper
+//    implementation project(path: ':viper')
 }
 
 coveralls {

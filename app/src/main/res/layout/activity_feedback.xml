@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/chat_background"
+        tools:context=".ui.feedback.FeedbackActivity">
+
+        <include
+            android:id="@+id/main_toolbar"
+            layout="@layout/app_toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_text_feedback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8"
+            android:background="@drawable/drawable_feed_back_bg"
+            android:gravity="start"
+            android:hint="@string/add_your_feedback"
+            android:minLines="10"
+            android:padding="@dimen/padding_5"
+            android:textColor="@color/message_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
+
+        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+            android:id="@+id/button_feed_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/text_size_16"
+            android:text="@string/send_feedback"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

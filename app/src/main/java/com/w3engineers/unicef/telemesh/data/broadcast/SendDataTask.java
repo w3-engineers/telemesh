@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.w3engineers.ext.viper.application.data.local.BaseMeshDataSource;
-import com.w3engineers.ext.viper.application.data.remote.model.MeshData;
+import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
-import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 
 /**
@@ -23,31 +22,40 @@ public class SendDataTask implements Callable {
     // Keep a weak reference to the CustomThreadPoolManager singleton object, so we can send a
     // message. Use of weak reference is not a must here because CustomThreadPoolManager lives
     // across the whole application lifecycle
-    private MeshData mMeshData;
-    private BaseMeshDataSource baseRmDataSource;
+    private ViperData viperData;
+    private ViperUtil viperUtil;
+    private String peerId;
 
     @Nullable
-    public BaseMeshDataSource getBaseRmDataSource() {
-        return baseRmDataSource;
+    public ViperUtil getViperUtil() {
+        return viperUtil;
     }
 
     @NonNull
-    public SendDataTask setBaseRmDataSource(@NonNull BaseMeshDataSource baseRmDataSource) {
-        this.baseRmDataSource = baseRmDataSource;
+    public SendDataTask setBaseRmDataSource(@NonNull ViperUtil baseRmDataSource) {
+        this.viperUtil = baseRmDataSource;
         return this;
     }
 
     @Nullable
-    public MeshData getMeshData() {
-        return mMeshData;
+    public ViperData getViperData() {
+        return viperData;
     }
 
     @NonNull
-    public SendDataTask setMeshData(@Nullable MeshData mMeshData) {
-        this.mMeshData = mMeshData;
+    public SendDataTask setMeshData(@Nullable ViperData mMeshData) {
+        this.viperData = mMeshData;
         return this;
     }
 
+    public String getPeerId() {
+        return peerId;
+    }
+
+    public SendDataTask setPeerId(String peerId) {
+        this.peerId = peerId;
+        return this;
+    }
 
     @SuppressLint("TimberArgCount")
     @Override
@@ -57,13 +65,11 @@ public class SendDataTask implements Callable {
             // check if thread is interrupted before lengthy operation
             if (Thread.interrupted()) throw new InterruptedException();
 
-            if (getBaseRmDataSource() != null) {
-                return getBaseRmDataSource().sendMeshData(getMeshData());
+            if (getViperUtil() != null) {
+                return getViperUtil().sendMeshData(getPeerId(), getViperData());
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        } catch (InterruptedException e) { e.printStackTrace(); }
         return null;
     }
 }

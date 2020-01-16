@@ -6,11 +6,13 @@ import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 
 @Entity(tableName = TableNames.USERS,
@@ -45,6 +47,12 @@ public class UserEntity extends DbBaseEntity {
     public boolean isUserSynced;
 
     public int hasUnreadMessage;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_IS_FAVOURITE)
+    public int isFavourite;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_CONFIG_VERSION)
+    public int configVersion;
 
     //@Ignore
     //private String userLastName;
@@ -124,7 +132,27 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
-   /* public boolean isUserSynced() {
+    public int getIsFavourite() {
+        return isFavourite;
+    }
+
+    @NonNull
+    public UserEntity setIsFavourite(int isFavourite) {
+        this.isFavourite = isFavourite;
+        return this;
+    }
+
+    public int getConfigVersion() {
+        return configVersion;
+    }
+
+    @NonNull
+    public UserEntity setConfigVersion(int configVersion) {
+        this.configVersion = configVersion;
+        return this;
+    }
+
+    /* public boolean isUserSynced() {
         return isUserSynced;
     }
 
@@ -133,6 +161,9 @@ public class UserEntity extends DbBaseEntity {
         isUserSynced = userSynced;
         return this;
     }*/
+
+
+
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -143,9 +174,11 @@ public class UserEntity extends DbBaseEntity {
         dest.writeInt(this.avatarIndex);
         dest.writeLong(this.lastOnlineTime);
         dest.writeInt(isOnline);
+        dest.writeInt(isFavourite);
         dest.writeLong(this.registrationTime);
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
+        dest.writeInt(this.configVersion);
     }
 
     protected UserEntity(@NonNull Parcel in) {
@@ -156,9 +189,11 @@ public class UserEntity extends DbBaseEntity {
         this.avatarIndex = in.readInt();
         this.lastOnlineTime = in.readLong();
         this.isOnline = in.readInt();
+        this.isFavourite = in.readInt();
         this.registrationTime = in.readLong();
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();
+        this.configVersion = in.readInt();
     }
 
     public static final Creator<UserEntity> CREATOR = new Creator<UserEntity>() {
@@ -192,6 +227,14 @@ public class UserEntity extends DbBaseEntity {
         return setUserName(userModel.getName())
                 .setAvatarIndex(userModel.getImage())
                 .setRegistrationTime(userModel.getTime())
+                .setMeshId(userModel.getUserId())
+                .setConfigVersion(userModel.getConfigVersion());
+    }
+
+    @NonNull
+    public UserEntity updateUserEntity(@NonNull UserModel userModel) {
+        return setUserName(userModel.getName())
+                .setAvatarIndex(userModel.getImage())
                 .setMeshId(userModel.getUserId());
     }
 

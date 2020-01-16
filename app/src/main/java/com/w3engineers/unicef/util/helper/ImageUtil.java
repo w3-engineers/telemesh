@@ -50,12 +50,12 @@ public class ImageUtil {
         imageIndexMap.put(12, R.mipmap.avatar12);
         imageIndexMap.put(13, R.mipmap.avatar13);
         imageIndexMap.put(14, R.mipmap.avatar14);
-        imageIndexMap.put(15, R.mipmap.avatar15);
+      /*  imageIndexMap.put(15, R.mipmap.avatar15);
         imageIndexMap.put(16, R.mipmap.avatar16);
         imageIndexMap.put(17, R.mipmap.avatar17);
         imageIndexMap.put(18, R.mipmap.avatar18);
         imageIndexMap.put(19, R.mipmap.avatar19);
-        imageIndexMap.put(20, R.mipmap.avatar20);
+        imageIndexMap.put(20, R.mipmap.avatar20);*/
     }
 
     @NonNull

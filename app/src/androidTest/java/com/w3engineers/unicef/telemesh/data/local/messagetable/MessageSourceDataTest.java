@@ -55,6 +55,8 @@ public class MessageSourceDataTest {
     @Test
     public void basicMessageTest() {
 
+        addDelay();
+
         String userId = UUID.randomUUID().toString();
 
         userDataSource.insertOrUpdateData(getUserInfo(userId));

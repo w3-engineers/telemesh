@@ -3,67 +3,99 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.w3engineers.unicef.telemesh.R" />
 
         <variable
             name="messageFeedViewModel"
-            type="com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel"/>
+            type="com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel" />
     </data>
 
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/message_feed_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
-            android:id="@+id/message_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:brv_emptyLayoutId="@id/empty_layout" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/empty_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
-
-            <ImageView
-                android:id="@+id/empty_image_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_20"
-                android:layout_marginRight="@dimen/margin_20"
-                android:layout_marginTop="@dimen/margin_30"
-                android:contentDescription="@string/no_message_available"
-                android:src="@mipmap/no_feed_found"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/text_no_broadcast"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20"
-                android:gravity="center"
-                android:text="@string/no_message_available"
-                android:textSize="@dimen/text_size_18"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/message_feed_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
 
-        </android.support.constraint.ConstraintLayout>
+                <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+                    android:id="@+id/message_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:brv_emptyLayoutId="@id/empty_layout" />
 
-        <!--<include
-            android:id="@+id/empty_layout"
-            layout="@layout/list_empty_layout"
-            android:visibility="visible"
-            app:emptyImage="@{R.drawable.img_message_empty}"
-            app:emptyMessage="@{@string/no_message_available}" />-->
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/empty_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white">
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <ImageView
+                        android:id="@+id/empty_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_20"
+                        android:layout_marginTop="@dimen/margin_30"
+                        android:layout_marginRight="@dimen/margin_20"
+                        android:contentDescription="@string/no_message_available"
+                        android:src="@mipmap/no_feed_found"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/text_no_broadcast"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_20"
+                        android:gravity="center"
+                        android:text="@string/no_message_available"
+                        android:textColor="@color/not_found_color"
+                        android:textSize="@dimen/text_size_20"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
+
+
+                </android.support.constraint.ConstraintLayout>
+
+                <!--<include
+                    android:id="@+id/empty_layout"
+                    layout="@layout/list_empty_layout"
+                    android:visibility="visible"
+                    app:emptyImage="@{R.drawable.img_message_empty}"
+                    app:emptyMessage="@{@string/no_message_available}" />-->
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
 
     </android.support.constraint.ConstraintLayout>
+
 
 </layout>

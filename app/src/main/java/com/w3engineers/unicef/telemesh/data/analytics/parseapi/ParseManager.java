@@ -1,27 +1,29 @@
 package com.w3engineers.unicef.telemesh.data.analytics.parseapi;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -35,8 +37,10 @@ import java.util.List;
 
 
 public class ParseManager {
+    @SuppressLint("StaticFieldLeak")
     private static volatile ParseManager sInstance;
     private static final Object mutex = new Object();
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static String TAG = ParseManager.class.getName();
     private byte analyticsType;
@@ -128,21 +132,51 @@ public class ParseManager {
                         if (callback != null) {
                             callback.onGetMeshLogUploadResponse(true, logFile.getName());
                         }
-                        Log.d("ParseFileUpload", "Save done ");
                     } else {
                         if (callback != null) {
                             callback.onGetMeshLogUploadResponse(false, "");
                         }
-                        Log.e("ParseFileUpload", "Error: " + e1.getMessage());
                     }
                 });
             } else {
                 if (callback != null) {
                     callback.onGetMeshLogUploadResponse(false, "");
                 }
-                Log.e("ParseFileUpload", "Error: " + e.getMessage());
             }
         });
+    }
+
+    public void sendFeedback(FeedbackParseModel model, FeedbackSendCallback callback) {
+        ParseObject parseObject = new ParseObject(ParseConstant.Feedback.TABLE);
+        parseObject.put(ParseConstant.Feedback.USER_ID, model.getUserId());
+        parseObject.put(ParseConstant.Feedback.USER_NAME, model.getUserName());
+        parseObject.put(ParseConstant.Feedback.USER_FEEDBACK, model.getFeedback());
+        parseObject.put(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
+
+        parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
+
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                if (objects == null || objects.isEmpty()) {
+                    parseObject.saveInBackground(e1 -> {
+                        if (callback != null) {
+                            if (e1 == null) {
+                                callback.onGetFeedbackSendResponse(true, model);
+                            } else {
+                                Timber.tag("FeedbackTest").e("Feedback send Failed: %s", e1.getMessage());
+                            }
+                        }
+                    });
+                } else {
+                    Timber.tag("FeedbackTest").e("Feed back already exist");
+                }
+            } else {
+                Timber.tag("FeedbackTest").e("Feed back query Error: %s", e.getMessage());
+            }
+        });
+
     }
 
     private void sendResponse(boolean isSuccess) {

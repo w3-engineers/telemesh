@@ -36,11 +36,12 @@
             android:paddingBottom="@dimen/padding_8"
             android:text="@{textMessage.message}"
             android:gravity="center"
-            android:textColor="@color/select_photo_text_color"
+            android:textColor="@color/message_text_color"
             android:textSize="@dimen/text_small_body_14"
-            android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+<!--        android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"-->
 
         <!--android:text="@{textMessage.message}"-->
 
@@ -51,9 +52,10 @@
             android:layout_marginTop="@dimen/margin_1"
             android:contentDescription="@string/image"
             app:imageStatusResource="@{textMessage.status}"
-            android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"
             app:layout_constraintEnd_toStartOf="@+id/text_view_date_time"
             app:layout_constraintTop_toBottomOf="@+id/text_view_message" />
+
+<!--        android:onClick="@{() -> chatViewModel.messageOperation(textMessage)}"-->
 
         <TextView
             android:id="@+id/text_view_date_time"
@@ -61,7 +63,7 @@
             android:layout_height="@dimen/height_20"
             android:layout_marginTop="@dimen/padding_3"
             android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
-            android:textColor="@color/grey_400"
+            android:textColor="@color/chat_sub_item_color"
             android:textSize="@dimen/text_size_10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_message" />

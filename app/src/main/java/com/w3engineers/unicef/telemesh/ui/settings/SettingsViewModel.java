@@ -3,12 +3,14 @@ package com.w3engineers.unicef.telemesh.ui.settings;
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.util.HandlerUtil;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -65,10 +67,12 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
         SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
 
-        LanguageUtil.setAppLanguage(getApplication().getApplicationContext(), lang);
+        LanguageUtil.setAppLanguage(TeleMeshApplication.getContext(), lang);
     }
 
     public void startInAppShareProcess() {
+
+//        RmDataHelper.getInstance().stopRmService();
 
         InAppShareControl.getInstance().startInAppShareProcess(getApplication().getApplicationContext(), this);
     }
@@ -83,6 +87,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         HandlerUtil.postBackground(() -> {
             String date = TimeUtil.getDateString(System.currentTimeMillis());
             String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            Log.d("WalletAddress", "My address: " + myId);
             boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
             if (isExist) {
                 AppShareCountDataService.getInstance().updateCount(myId, date);
@@ -96,8 +101,18 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
         });
     }
 
+    public void restartMesh() {
+        ServiceLocator.getInstance().resetMesh();
+    }
+
+    // TODO SSID_Change
+    /*public void destroyMeshService() {
+        RmDataHelper.getInstance().destroyMeshService();
+    }*/
+
     @Override
     public void closeInAppShare() {
-        ServiceLocator.getInstance().resetMesh();
+        HandlerUtil.postBackground(this::restartMesh, 5000);
+//        ServiceLocator.getInstance().resetMesh();
     }
 }

@@ -63,6 +63,7 @@ public abstract class ViperUtil {
             String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
             String PARSE_URL = AppCredentials.getInstance().getParseUrl();
             String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
+            String SIGNAL_SERVER_URL = AppCredentials.getInstance().getSignalServerUrl();
 
 
             SharedPref sharedPref = SharedPref.getSharedPref(context);
@@ -78,7 +79,7 @@ public abstract class ViperUtil {
 
             viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, CONFIG_DATA);
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL, CONFIG_DATA);
 
         } catch (Exception e) {
             e.printStackTrace();

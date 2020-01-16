@@ -96,17 +96,16 @@ public class MeshDataSource extends ViperUtil {
      */
     public void DataSend(@NonNull DataModel dataModel, @NonNull String receiverId, boolean isNotificationEnable) {
 
-        if (TextUtils.isEmpty(receiverId))
-            return;
+        if (!TextUtils.isEmpty(receiverId)) {
+            dataModel.setUserId(receiverId);
 
-        dataModel.setUserId(receiverId);
+            ViperData viperData = new ViperData();
+            viperData.rawData = dataModel.getRawData();
+            viperData.dataType = dataModel.getDataType();
+            viperData.isNotificationEnable = isNotificationEnable;
 
-        ViperData viperData = new ViperData();
-        viperData.rawData = dataModel.getRawData();
-        viperData.dataType = dataModel.getDataType();
-        viperData.isNotificationEnable = isNotificationEnable;
-
-        broadcastManager.addBroadCastMessage(getMeshDataTask(viperData, receiverId));
+            broadcastManager.addBroadCastMessage(getMeshDataTask(viperData, receiverId));
+        }
     }
 
     public void DataSend(@NonNull DataModel dataModel, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
@@ -128,15 +127,14 @@ public class MeshDataSource extends ViperUtil {
 
         try {
 
-            if (TextUtils.isEmpty(peerId))
-                return;
+            if (!TextUtils.isEmpty(peerId)) {
+                String userString = new String(peerData);
+                UserModel userModel = new Gson().fromJson(userString, UserModel.class);
 
-            String userString = new String(peerData);
-            UserModel userModel = new Gson().fromJson(userString, UserModel.class);
-
-            if (userModel != null) {
-                userModel.setUserId(peerId);
-                HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+                if (userModel != null) {
+                    userModel.setUserId(peerId);
+                    HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,12 +144,11 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void peerAdd(String peerId, UserModel userModel) {
 
-        if (TextUtils.isEmpty(peerId))
-            return;
-
-        if (userModel != null) {
-            userModel.setUserId(peerId);
-            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+        if (!TextUtils.isEmpty(peerId)) {
+            if (userModel != null) {
+                userModel.setUserId(peerId);
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+            }
         }
     }
 
@@ -164,10 +161,9 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void peerRemove(@NonNull String peerId) {
 
-        if (TextUtils.isEmpty(peerId))
-            return;
-
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(peerId));
+        if (!TextUtils.isEmpty(peerId)) {
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(peerId));
+        }
     }
 
     /**
@@ -178,15 +174,14 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void onData(@NonNull String peerId, ViperData viperData) {
 
-        if (TextUtils.isEmpty(peerId))
-            return;
+        if (!TextUtils.isEmpty(peerId)) {
+            DataModel dataModel = new DataModel()
+                    .setUserId(peerId)
+                    .setRawData(viperData.rawData)
+                    .setDataType(viperData.dataType);
 
-        DataModel dataModel = new DataModel()
-                .setUserId(peerId)
-                .setRawData(viperData.rawData)
-                .setDataType(viperData.dataType);
-
-        HandlerUtil.postBackground(() -> RmDataHelper.getInstance().dataReceive(dataModel, true));
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().dataReceive(dataModel, true));
+        }
     }
 
     /**

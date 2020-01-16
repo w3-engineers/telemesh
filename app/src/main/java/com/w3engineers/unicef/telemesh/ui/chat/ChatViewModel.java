@@ -262,13 +262,15 @@ public class ChatViewModel extends AndroidViewModel {
                     // The key is already in the HashMap; add the pojo object
                     // against the existing key.
                     chatEntitySet = groupedHashMap.get(hashMapKey);
-                    if (chatEntitySet != null) {
+                    /*if (chatEntitySet != null) {
                         chatEntitySet.add(chatEntity);
                         groupedHashMap.put(hashMapKey, chatEntitySet);
-                    }
+                    }*/
                 } else {
                     // The key is not there in the HashMap; create a new key-value pair
                     chatEntitySet = new LinkedHashSet<>();
+                }
+                if (chatEntitySet != null) {
                     chatEntitySet.add(chatEntity);
                     groupedHashMap.put(hashMapKey, chatEntitySet);
                 }

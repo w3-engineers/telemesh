@@ -377,6 +377,12 @@ public class VRmDataHelperTest {
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
         String userUpdatedData = new Gson().toJson(userModel);
 
+        addDelay(500);
+
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(updatedName, 4);
+
+        addDelay(2000);
+
         DataModel userUpdateDataModel = randomEntityGenerator.generateDataModel(userUpdatedData, Constants.DataType.USER_UPDATE_INFO, userEntity.getMeshId());
 
         RmDataHelper.getInstance().dataReceive(userUpdateDataModel, true);
@@ -436,7 +442,6 @@ public class VRmDataHelperTest {
 
         assertTrue(true);
     }
-
 
     @After
     public void tearDown() {

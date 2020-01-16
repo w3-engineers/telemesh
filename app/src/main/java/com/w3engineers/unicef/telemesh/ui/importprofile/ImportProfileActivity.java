@@ -147,7 +147,7 @@ public class ImportProfileActivity extends BaseActivity {
 
     }
 
-    private void showWarningDialog() {
+    public void showWarningDialog() {
         DialogUtil.showConfirmationDialog(this, getResources().getString(R.string.warning), getResources().getString(R.string.wallet_lost_warning), getResources().getString(R.string.cancel), getResources().getString(R.string.ok), new DialogUtil.DialogButtonListener() {
                     @Override
                     public void onClickPositive() { openFileChooser(); }

@@ -284,12 +284,16 @@ public class ChatActivity extends TelemeshBaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == android.R.id.home && isTaskRoot()) {
-            Intent newTask = new Intent(this, MainActivity.class);
-            newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(newTask);
-            finish();
+            chatFinishAndStartApp();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void chatFinishAndStartApp() {
+        Intent newTask = new Intent(this, MainActivity.class);
+        newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(newTask);
+        finish();
     }
 
     @Override

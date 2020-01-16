@@ -68,6 +68,8 @@ public class BulletinTimeSchedulerTest {
 
         // now job already scheduled. But in instrumental test we cannot test Job scheduler.
         // so we can call the method which is located in start job section
+        RmDataHelper.getInstance().mLatitude = "";
+        RmDataHelper.getInstance().mLongitude = "";
         RmDataHelper.getInstance().requestWsMessage();
        /* if (LocationUtil.getInstance().getLocationListener() != null) {
             LocationUtil.getInstance().getLocationListener().onGetLocation("22.8456", "89.5403");

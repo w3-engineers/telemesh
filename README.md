@@ -47,29 +47,38 @@ If you face any bug or have any particular feature request please go [here](http
 
 Please find here the complete UI flow [Telemesh UI](https://xd.adobe.com/view/102f0226-2937-4d2e-6ec0-e7e82c164fa1-661e/grid)
 
-<kbd><img src="http://gdurl.com/vjIz" width="175" height="300"></kbd> 
-<kbd><img src="http://gdurl.com/uZ08" width="175" height="300"></kbd> 
-<kbd><img src="http://gdurl.com/TMGD" width="175" height="300"></kbd> 
-<kbd><img src="http://gdurl.com/9oMM" width="175" height="300"></kbd> 
+![](https://github.com/MimoSaha/app-share/blob/master/images/splash.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/profile.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/discovery.png)
+![](https://github.com/MimoSaha/app-share/blob/master/images/wallet.png)
 
+## Notice
 
+Telemesh
+Copyright [2018-2020] W3 Engineers Ltd.
 
-## License
+This product includes software developed at W3 Engineers Ltd. and licensed under Apache 2.0 Licence. 
+The [LICENSE.md](https://github.com/w3-engineers/telemesh/blob/master/LICENSE.md) file contains a copy of the Apache 2.0 Licence.
 
-       Copyright 2019 W3 Engineers
-    
-       Licensed under the Apache License, Version 2.0 (the "License");
-       you may not use this file except in compliance with the License.
-       You may obtain a copy of the License at
-    
-           http://www.apache.org/licenses/LICENSE-2.0
-    
-       Unless required by applicable law or agreed to in writing, software
-       distributed under the License is distributed on an "AS IS" BASIS,
-       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-       See the License for the specific language governing permissions and
-       limitations under the License.
+This software also use other open source libraries and tools. The list of other open source projects with associate license are as follows
 
+1. Android Paging library	Android Native	Android SDK license
+2. Circular image	https://github.com/hdodenhof/CircleImageView	Apache 2.0 license
+3. Dexter for runtime permission	https://github.com/Karumi/Dexter	Apache 2.0 license
+4. RxJava view binding	https://github.com/JakeWharton/RxBinding	Apache 2.0 license
+5. Facebook Shimmer effect	https://github.com/facebook/shimmer-android	 BSD license
+6. Bottom Navigation View	https://github.com/ittianyu/BottomNavigationViewEx	MIT 
+7. Glide for image load	https://github.com/bumptech/glide	Copyright (c) 1994 Anthony Dekker Copyrighted legal terms are meet.
+8. Retrofit adapter	https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2	Apache 2.0 license
+9. Web3J	https://github.com/web3j/web3j	Apache 2.0 license
+10. bouncyCastle	https://github.com/bcgit/bc-java	Free
+11. qrgenerator	https://github.com/androidmads/QRGenerator	MIT license
+12. Parse	https://github.com/parse-community/parse-server	BSD license
+13. Android ripple background	https://github.com/skyfishjy/android-ripple-background	MIT license
+14. Viper	https://github.com/w3-engineers/viper	GPL-3.0 license
+15. Coveralls Grdle Plugin	https://github.com/kt3k/coveralls-gradle-plugin	MIT license
+
+For any kind of assistance, queries, improvement please contact at info@telemesh.net
 
 ## Community manager 
 

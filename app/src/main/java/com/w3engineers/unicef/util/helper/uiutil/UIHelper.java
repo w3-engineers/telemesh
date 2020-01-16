@@ -65,7 +65,7 @@ public class UIHelper {
         Glide.with(App.getContext()).load(statusId).into(imageView);
     }
 
-    @NonNull
+   /* @NonNull
     public static Observable<String> fromSearchView(@NonNull SearchView searchView) {
 
         final PublishSubject<String> subject = PublishSubject.create();
@@ -86,7 +86,7 @@ public class UIHelper {
         });
 
         return subject;
-    }
+    }*/
 
    /* public static Observable<String> fromSearchEditText(EditText editText) {
         final PublishSubject<String> subject = PublishSubject.create();

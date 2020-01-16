@@ -115,9 +115,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                         setUserMessageWithFavouriteData(userEntities);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
 
         //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
@@ -159,9 +157,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                         setUserFavouriteData(userEntities);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
 
         //  favoriteEntityList = userDataSource.getFavouriteUsers();
     }
@@ -253,7 +249,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Timber.tag("SearchIssue").d("user list null");
+//            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

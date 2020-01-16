@@ -1,7 +1,10 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.arch.persistence.room.Room;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
@@ -27,6 +30,7 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileViewModel;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
+import com.w3engineers.walleter.wallet.Web3jWalletHelper;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -37,6 +41,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.util.Collection;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -47,6 +52,8 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -78,7 +85,7 @@ public class VProfileChoiceTest {
     private UserDataSource userDataSource;
 
     @Rule
-    public ActivityTestRule<ProfileChoiceActivity> rule  = new ActivityTestRule<>(ProfileChoiceActivity.class);
+    public ActivityTestRule<ProfileChoiceActivity> rule = new ActivityTestRule<>(ProfileChoiceActivity.class);
 
     @Before
     public void setUp() {
@@ -111,7 +118,57 @@ public class VProfileChoiceTest {
         if (currentActivity instanceof ImportProfileActivity) {
             ImportProfileActivity importProfileActivity = (ImportProfileActivity) currentActivity;
             importProfileActivity.setIsEmulatorTestingMode(true);
+
+
+            Activity finalCurrentActivity = currentActivity;
+            currentActivity.runOnUiThread(() -> {
+                ((ImportProfileActivity) finalCurrentActivity).showWarningDialog();
+
+                addDelay(5000);
+            });
+
         }
+
+        onView(withText("CANCEL")).inRoot(isDialog())
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+
+        Activity currentActivity1 = getActivityInstance();
+        if (currentActivity1 instanceof ImportProfileActivity) {
+
+            String walletSuffixDir = "wallet/" + currentActivity1.getResources().getString(com.w3engineers.mesh.R.string.app_name);
+
+            String filePath = Web3jWalletHelper.onInstance(currentActivity1).getWalletDir(walletSuffixDir);
+            File directory = new File(filePath);
+
+            Intent intent = new Intent();
+            intent.setData(Uri.fromFile(directory));
+
+            // Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+
+            currentActivity1.startActivityForResult(new Intent(currentActivity1, ImportWalletActivity.class), 480);
+
+            addDelay(2000);
+
+            Activity walletActivity = getActivityInstance();
+
+            if (walletActivity instanceof ImportWalletActivity) {
+                walletActivity.setResult(Activity.RESULT_OK, intent);
+
+                walletActivity.finish();
+            }
+
+            addDelay(3000);
+
+            Activity walletActivity1 = getActivityInstance();
+            if (walletActivity1 instanceof ImportWalletActivity) {
+                walletActivity1.finish();
+            }
+
+            addDelay(3000);
+        }
+
 
         addDelay(1000);
 
@@ -154,7 +211,7 @@ public class VProfileChoiceTest {
         ViewInteraction importContinue = onView(
                 allOf(withId(R.id.button_continue),
                         childAtPosition(allOf(withId(R.id.activity_import_wallet_scroll_parent),
-                                        childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 7), isDisplayed()));
+                                childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 7), isDisplayed()));
 
         importContinue.perform(click());
 

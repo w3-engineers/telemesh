@@ -13,12 +13,15 @@ Telemesh Documentation
    project_goal
    features
    project_structure
-   prerequisities
-   project_dependencies
+   deployment
    get_started
+   project_dependencies
+   development_guideline
    create_branch
    local_dev_env
-   development_guideline
+   prerequisities
+
+
 
 
 

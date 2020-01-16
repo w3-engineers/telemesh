@@ -32,11 +32,13 @@ public class AppCredentials {
 
     public native String getFileRepoLink();
 
+    public native String getSignalServerUrl();
+
     public native String getConfiguration();
 
 
     static {
-        System.loadLibrary("native-lib");
+        System.loadLibrary("staging-native-lib");
     }
 
 }

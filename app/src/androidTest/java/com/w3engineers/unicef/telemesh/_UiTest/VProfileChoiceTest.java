@@ -134,7 +134,7 @@ public class VProfileChoiceTest {
                 .perform(click());
 
 
-        addDelay(1000);
+        addDelay(2000);
 
         Activity currentActivity1 = getActivityInstance();
         if (currentActivity1 instanceof ImportProfileActivity) {

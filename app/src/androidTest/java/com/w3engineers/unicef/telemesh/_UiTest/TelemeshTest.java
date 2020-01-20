@@ -185,35 +185,35 @@ public class TelemeshTest {
                         childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserFirst.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectDoneMenuForNoSelect = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForNoSelect.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectImageForTheFirst = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
         selectImageForTheFirst.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectDoneMenuForTheFirst = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheFirst.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction buttonImageChooserSecond = onView(
                 allOf(withId(R.id.image_profile),
                         childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserSecond.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectImageForTheSecond = onView(
                 allOf(childAtPosition(
@@ -228,14 +228,14 @@ public class TelemeshTest {
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 1), isDisplayed()));
         selectImageForTheThird.perform(click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction selectDoneMenuForTheSecond = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheSecond.perform(click());
 
-        addDelay(500);
+        addDelay(700);
 
         ViewInteraction buttonImageChooserThird = onView(
                 allOf(withId(R.id.image_profile),
@@ -243,21 +243,21 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserThird.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(700);
 
         ViewInteraction selectImageForTheFourth = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 4), isDisplayed()));
         selectImageForTheFourth.perform(click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction selectDoneMenuForTheThird = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheThird.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction ActionCreateProfileNext = onView(
                 allOf(withId(R.id.button_signup),
@@ -265,7 +265,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.scrollview), 0)), 10)));
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
 
         ViewInteraction boxPassword = onView(
@@ -273,7 +273,7 @@ public class TelemeshTest {
                         childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 1)));
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction securityButtonNext = onView(
                 allOf(withId(R.id.button_next),
@@ -318,7 +318,7 @@ public class TelemeshTest {
                                 2)));
         showPassword.perform(scrollTo(), click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction securityButtonSkip = onView(
                 allOf(withId(R.id.button_skip),
@@ -701,7 +701,7 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay(500);
+        addDelay(3000);
 
         ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),

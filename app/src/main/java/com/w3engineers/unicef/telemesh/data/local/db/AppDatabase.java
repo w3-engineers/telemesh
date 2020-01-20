@@ -129,7 +129,8 @@ public abstract class AppDatabase extends BaseDatabase {
     private static AppDatabase createDbWithMigration(Context context) {
 
         return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
-                initialVersion, new BaseMigration(BuildConfig.VERSION_CODE, ""));
+                initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE, ""));
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,

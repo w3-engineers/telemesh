@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -31,6 +32,7 @@ import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
 
@@ -76,13 +78,17 @@ public class ImportWalletActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.button_continue:
-                if (mBinding.editTextPassword.getText() != null &&
-                        mBinding.editTextPassword.getText().length() >= 8) {
-                    requestMultiplePermissions();
-                } else {
-                    Toaster.showShort(getResources().getString(R.string.enter_eight_digit_password));
-                }
+                continueAction();
                 break;
+        }
+    }
+
+    private void continueAction() {
+        if (mBinding.editTextPassword.getText() != null &&
+                mBinding.editTextPassword.getText().length() >= 8) {
+            requestMultiplePermissions();
+        } else {
+            Toaster.showShort(getResources().getString(R.string.enter_eight_digit_password));
         }
     }
 
@@ -94,6 +100,15 @@ public class ImportWalletActivity extends BaseActivity {
         if (TextUtils.isEmpty(mWalletPath) && !TextUtils.isEmpty(Constants.CURRENT_ADDRESS) && !TextUtils.isEmpty(Constants.DEFAULT_ADDRESS) && Constants.CURRENT_ADDRESS.equals(Constants.DEFAULT_ADDRESS.trim())) {
             mBinding.textViewPinInstruction.setText("Your default password is:  " + Constants.DEFAULT_PASSWORD);
         }
+
+        mBinding.editTextPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
+                continueAction();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void gotoProfileCreatePage() {

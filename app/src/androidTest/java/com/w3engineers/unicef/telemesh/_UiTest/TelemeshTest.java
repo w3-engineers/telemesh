@@ -701,7 +701,7 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay(3000);
+        addDelay(5000);
 
         ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),

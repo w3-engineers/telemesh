@@ -19,7 +19,7 @@ Telemesh
 
 3. ``Viper`` dependency should be added in the same way inside the app-level ``build.gradle``
 
-4. The *Telemesh* app is using different ``URLs`` for different services. Preparing all those services is time-consuming as well as boring too. But if you are a contributor to *Telemesh* app, you don't need to worry at all about those boring tasks. All the ``URLs`` and other permission related information are provided in a ``.so`` file as solid package to give you a staging environment the same as production for development purposes. Just download the project and run.
+4. The *Telemesh* app is using different ``URLs`` for different services. Preparing all those services is time-consuming as well as tedious too. But if you are a contributor to *Telemesh* app, you don't need to worry at all about those monotonous tasks. All the ``URLs`` and other permission related information are provided in a ``.so`` file as solid package to give you a staging environment the same as production for development purposes. Just download the project and run.
 
   But, we don't give the guarantee of continuous services for the staging environment, as it's only for development and testing purposes.
 
@@ -181,9 +181,46 @@ Telemesh
 
 7. For wallet design currently, we are using default design from ``Viper``
 
+8. In Telemesh we are using ``Parse`` server to store analytics data from local mesh.
+
+   Please follow this `Parse`_ installation process in Android.
+
+   In Telemesh to configure parse the following steps are given below:
+
+      Step 1:  Add parse server Android SDK version in ``version.gradle``
+
+      Step 2: If you want to deploy your own parse server in any platform, you have to update parse server ``URL`` and parse server ``APP-ID`` in the Telemesh project.
+
+      Step 3. You have to add the ``PARSE_URL`` and ``PARSE_APP_ID`` in the GradleBuildValues interface that located in Constants class.
+
+   The sample Parse model (Table) structure is
+
+    ::
+
+         ParseObject parseObj = new ParseObject(“table_name”);
+         parseObj.put(“column_name”,”value”);
+         ………….
+         parseObj.saveInBackground();
+
+   The parse server table structure and save/update process located in ``parseapi`` package.
+
+   Parse Server installation Inside a Docker container
+
+   ::
+
+         $ git clone https://github.com/parse-community/parse-server
+         $ cd parse-server
+         $ docker build --tag parse-server .
+         $ docker run --name my-parse-server -p 1337:1337  -d parse-server --appId APPLICATION_ID --masterKey MASTER_KEY --databaseURI mongodb://mongo/test
+
+
+
+
+
 
 Happy Coding :)
 
 
 
 .. _Discord: https://discord.gg/SHG4qrH
+.. _Parse: https://docs.parseplatform.org/android/guide/

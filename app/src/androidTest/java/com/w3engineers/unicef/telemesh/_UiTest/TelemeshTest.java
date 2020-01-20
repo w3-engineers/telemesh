@@ -697,7 +697,7 @@ public class TelemeshTest {
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
-        userEntity.setId(0);
+        //userEntity.setId(0);
 
         userDataSource.insertOrUpdateData(userEntity);
 

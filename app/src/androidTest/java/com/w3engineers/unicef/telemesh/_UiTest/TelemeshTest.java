@@ -688,7 +688,7 @@ public class TelemeshTest {
     @Test
     public void uiTest_03() {
 
-        addDelay(4000);
+        addDelay(5000);
 
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)

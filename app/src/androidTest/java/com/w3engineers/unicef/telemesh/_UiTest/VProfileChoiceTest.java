@@ -134,6 +134,8 @@ public class VProfileChoiceTest {
                 .perform(click());
 
 
+        addDelay(1000);
+
         Activity currentActivity1 = getActivityInstance();
         if (currentActivity1 instanceof ImportProfileActivity) {
 
@@ -172,11 +174,14 @@ public class VProfileChoiceTest {
 
         addDelay(1000);
 
-        ViewInteraction importAnotherId = onView(
+       /* ViewInteraction importAnotherId = onView(
                 allOf(withId(R.id.button_continue),
                         childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
                                 childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 3)));
-        importAnotherId.perform(scrollTo(), click());
+
+        importAnotherId.perform(scrollTo(), click());*/
+
+        onView(withId(R.id.button_continue)).perform(click());
 
         addDelay(2000);
 

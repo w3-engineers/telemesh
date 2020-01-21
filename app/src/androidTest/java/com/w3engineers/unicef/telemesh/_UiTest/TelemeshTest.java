@@ -672,7 +672,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(3000);
+        addDelay(6000);
 
        /* mDevice.pressBack();
 

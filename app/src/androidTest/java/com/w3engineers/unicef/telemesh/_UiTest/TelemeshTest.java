@@ -688,10 +688,12 @@ public class TelemeshTest {
             e.printStackTrace();
         }*/
 
-        ViewInteraction discoverTab = onView(
+        /*ViewInteraction discoverTab = onView(
                 allOf(withId(R.id.action_discover),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
-        discoverTab.perform(click());
+        discoverTab.perform(click());*/
+
+        onView(withId(R.id.action_discover)).perform(click());
 
 
         uiTest_03(userEntity);

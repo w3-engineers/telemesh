@@ -172,7 +172,7 @@ public class VProfileChoiceTest {
         }
 
 
-        addDelay(1000);
+        addDelay(3000);
 
        /* ViewInteraction importAnotherId = onView(
                 allOf(withId(R.id.button_continue),

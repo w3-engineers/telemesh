@@ -479,6 +479,19 @@ public class TelemeshTest {
         long version = (BuildConfig.VERSION_CODE + 5);
         SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
 
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
+
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));

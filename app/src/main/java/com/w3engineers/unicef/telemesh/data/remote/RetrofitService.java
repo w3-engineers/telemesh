@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.remote;
 
+import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class RetrofitService {
                 Request request = chain.request();
                 request = request
                         .newBuilder()
-                        .addHeader("Authorization", Credentials.basic(Constants.GradleBuildValues.AUTH_USER_NAME, Constants.GradleBuildValues.AUTH_PASSWORD))
+                        .addHeader("Authorization", Credentials.basic(AppCredentials.getInstance().getAuthUserName(), AppCredentials.getInstance().getAuthPassword()))
                         .build();
                 return chain.proceed(request);
             }

@@ -496,6 +496,10 @@ public class TelemeshTest {
 
         addDelay(1500);
 
+        UserEntity userEntity = addSampleUser();
+
+        addDelay(1500);
+
         // click feed item.
 
         onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -690,16 +694,16 @@ public class TelemeshTest {
         discoverTab.perform(click());
 
 
-        uiTest_03();
+        uiTest_03(userEntity);
 
     }
 
 
-    public void uiTest_03() {
+    public void uiTest_03(UserEntity userEntity) {
 
-        addDelay(5000);
+        // addDelay(5000);
 
-        UserEntity userEntity = new UserEntity()
+       /* UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
@@ -708,7 +712,7 @@ public class TelemeshTest {
                 .setRegistrationTime(System.currentTimeMillis());
         //userEntity.setId(0);
 
-        userDataSource.insertOrUpdateData(userEntity);
+        userDataSource.insertOrUpdateData(userEntity);*/
 
         addDelay(5000);
 
@@ -1012,6 +1016,21 @@ public class TelemeshTest {
         entity.setFeedReadStatus(false);
 
         feedDataSource.insertOrUpdateData(entity);
+    }
+
+    private UserEntity addSampleUser() {
+        UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+        //userEntity.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        return userEntity;
     }
 
 }

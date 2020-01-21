@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
@@ -119,11 +120,16 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     public void goNext() {
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
-        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)
-                && mViewModel.storeData(mBinding.editTextName.getText() + "")) {
-            Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
-            mViewModel.sendUserInfoToAll();
-            finish();
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+            if (isNeedToUpdate()) {
+                if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+                    Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+                    mViewModel.sendUserInfoToAll();
+                }
+            } else {
+                Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+                finish();
+            }
         }
 
         /*if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
@@ -135,6 +141,28 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             mViewModel.sendUserInfoToAll();
             finish();
         }*/
+    }
+
+    private boolean isNeedToUpdate() {
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        String oldName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
+        if (!oldName.equals(mBinding.editTextName.getText().toString().trim())) {
+            return true;
+        }
+
+        int currentImageIndex = mViewModel.getImageIndex();
+
+        if (currentImageIndex < 0) {
+            currentImageIndex = Constants.DEFAULT_AVATAR;
+        }
+
+        if (currentImageIndex != oldImageIndex) {
+            return true;
+        }
+
+        return false;
     }
 
 

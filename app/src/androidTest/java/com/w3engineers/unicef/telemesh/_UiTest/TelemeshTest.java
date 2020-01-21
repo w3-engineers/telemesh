@@ -669,11 +669,11 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
-        addDelay(500);
+        addDelay(500);*/
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
         addDelay(2000);
 
@@ -682,10 +682,19 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+
+        uiTest_03();
+
     }
 
-    @Test
+
     public void uiTest_03() {
 
         addDelay(5000);

@@ -729,4 +729,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             messageFeedFragment.swipeRefreshOperation();
         }
     }
+
+    public void stopAnimation() {
+        if (mCurrentFragment instanceof DiscoverFragment) {
+            ((DiscoverFragment) mCurrentFragment).enableEmpty();
+        }
+    }
 }

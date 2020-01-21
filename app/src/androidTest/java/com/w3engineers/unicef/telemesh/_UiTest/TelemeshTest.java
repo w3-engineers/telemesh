@@ -717,7 +717,13 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);*/
 
-        addDelay(5000);
+        addDelay(1000);
+
+        if (getActivityInstance() instanceof MainActivity) {
+            ((MainActivity) getActivityInstance()).stopAnimation();
+        }
+
+        addDelay(1000);
 
       /*  ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
@@ -771,7 +777,7 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-       // userItemAction.perform(click());
+        // userItemAction.perform(click());
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
@@ -796,7 +802,7 @@ public class TelemeshTest {
 
             onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
 
-        } catch (NoMatchingViewException| PerformException e) {
+        } catch (NoMatchingViewException | PerformException e) {
             e.printStackTrace();
         }
 

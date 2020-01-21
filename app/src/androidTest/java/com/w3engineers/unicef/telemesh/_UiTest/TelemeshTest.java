@@ -11,6 +11,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
@@ -795,7 +796,7 @@ public class TelemeshTest {
 
             onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
 
-        } catch (NoMatchingViewException e) {
+        } catch (NoMatchingViewException| PerformException e) {
             e.printStackTrace();
         }
 

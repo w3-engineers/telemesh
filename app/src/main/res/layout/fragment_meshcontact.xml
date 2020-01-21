@@ -21,7 +21,6 @@
             android:layout_marginStart="@dimen/margin_14"
             android:layout_marginEnd="@dimen/margin_14"
             android:background="@color/colorGradientPrimary"
-            android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

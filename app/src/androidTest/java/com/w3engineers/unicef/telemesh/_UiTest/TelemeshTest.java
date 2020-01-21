@@ -793,14 +793,14 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
         addDelay(2000);
 
         // userItemAction.perform(click());
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        addDelay(2000);
+        addDelay(2000);*/
 
         Activity currentActivity = getActivityInstance();
 

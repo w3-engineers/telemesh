@@ -660,7 +660,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        try {
+       /* try {
 
             ViewInteraction optionUpdate = onView(
                     allOf(withId(R.id.layout_app_update),
@@ -672,7 +672,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(6000);
+        addDelay(6000);*/
 
        /* mDevice.pressBack();
 

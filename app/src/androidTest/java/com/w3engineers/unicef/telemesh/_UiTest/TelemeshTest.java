@@ -718,10 +718,12 @@ public class TelemeshTest {
 
         addDelay(5000);
 
-        ViewInteraction userItemAction = onView(
+      /*  ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
-        userItemAction.perform(click());
+        userItemAction.perform(click());*/
+
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(1000);
 
@@ -768,7 +770,8 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        userItemAction.perform(click());
+       // userItemAction.perform(click());
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
 

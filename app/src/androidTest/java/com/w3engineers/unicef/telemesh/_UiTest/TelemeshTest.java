@@ -719,8 +719,15 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        if (getActivityInstance() instanceof MainActivity) {
-            ((MainActivity) getActivityInstance()).stopAnimation();
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
         }
 
         addDelay(1000);

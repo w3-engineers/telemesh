@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
@@ -80,7 +81,15 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             case R.id.image_view_camera:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
                 Intent intent = new Intent(this, ProfileImageActivity.class);
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
+                int currentImageIndex = mViewModel.getImageIndex();
+
+                SharedPref sharedPref = SharedPref.getSharedPref(this);
+                int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+                if (currentImageIndex < 0) {
+                    currentImageIndex = oldImageIndex;
+                }
+
+                intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
                 startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
                 break;
             case R.id.image_view_back:
@@ -125,6 +134,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
                     Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
                     mViewModel.sendUserInfoToAll();
+                    finish();
                 }
             } else {
                 Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
@@ -155,7 +165,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         int currentImageIndex = mViewModel.getImageIndex();
 
         if (currentImageIndex < 0) {
-            currentImageIndex = Constants.DEFAULT_AVATAR;
+            currentImageIndex = oldImageIndex;
         }
 
         if (currentImageIndex != oldImageIndex) {

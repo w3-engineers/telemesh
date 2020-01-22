@@ -533,6 +533,12 @@ public class TelemeshTest {
 
         }
 
+        addDelay(1000);
+        onView(withId(R.id.action_discover)).perform(click());
+
+        uiTest_03(userEntity);
+
+
         addDelay(3000);
 
 
@@ -707,10 +713,35 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
         discoverTab.perform(click());*/
 
-        onView(withId(R.id.action_discover)).perform(click());
+        // todo unit test 03
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+                mainActivity.popupSnackbarForCompleteUpdate();
+            });
+
+            addDelay(3000);
+        }
 
 
-        uiTest_03(userEntity);
+        mDevice.pressBack();
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(700);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -844,7 +875,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        currentActivity = getActivityInstance();
+        /*currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
@@ -855,9 +886,9 @@ public class TelemeshTest {
             });
 
             addDelay(3000);
-        }
+        }*/
 
-        mDevice.pressBack();
+        /*mDevice.pressBack();
 
         addDelay(2500);
 
@@ -869,7 +900,7 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Test

@@ -1,7 +1,7 @@
 .. _development_step_by_step:
 
 Telemesh
----------------------------------
+--------
 
 1. Find the ``versions.gradle`` in the Telemesh root directory of the repo and
    any new support library reference should be added here.
@@ -185,7 +185,7 @@ Telemesh
 
    Please follow this `Parse`_ installation process in Android.
 
-   In Telemesh to configure parse the following steps are given below:
+   In Telemesh to configure parse, the following steps are given below:
 
       Step 1:  Add parse server Android SDK version in ``version.gradle``
 

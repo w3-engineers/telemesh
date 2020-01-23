@@ -22,7 +22,7 @@ In Telemesh we are using ``Parse`` server to store analytics data from local mes
 
 Please follow this `Parse`_ installation process in Android.
 
-   In Telemesh to configure parse, the following steps are given below:
+   To configure parse with Telemesh, follow the steps are given below:
 
       Step 1:  Add parse server Android SDK version in ``version.gradle``
 

@@ -4,7 +4,6 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
@@ -53,7 +52,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
@@ -63,15 +61,11 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
-import static com.parse.Parse.getApplicationContext;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
@@ -174,12 +168,12 @@ public class TelemeshTest {
 
         addDelay(500);
 
-        ViewInteraction baseEditText2 = onView(
+        /*ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         baseEditText2.perform(pressImeActionButton());
 
-        addDelay(1000);
+        addDelay(1000);*/
 
         ViewInteraction buttonImageChooserFirst = onView(
                 allOf(withId(R.id.image_profile),

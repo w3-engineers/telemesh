@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 
 import java.util.Locale;
 
@@ -219,13 +220,13 @@ public class Constants {
         }
     }
 
-/*    public interface GradleBuildValues {
-        String AUTH_PASSWORD = BuildConfig.AUTH_PASSWORD;
-        String AUTH_USER_NAME = BuildConfig.AUTH_USER_NAME;
-        String BROADCAST_TOKEN = BuildConfig.BROADCAST_TOKEN;
-        String BROADCAST_URL = BuildConfig.BROADCAST_URL;
-        String FILE_REPO_LINK = BuildConfig.FILE_REPO_LINK;
-        String PARSE_APP_ID = BuildConfig.PARSE_APP_ID;
-        String PARSE_URL = BuildConfig.PARSE_URL;
-    }*/
+    public interface GradleBuildValues {
+        String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
+        String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
+        String BROADCAST_TOKEN = AppCredentials.getInstance().getBroadCastToken();
+        String BROADCAST_URL = AppCredentials.getInstance().getBroadCastUrl();
+        String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
+        String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
+        String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+    }
 }

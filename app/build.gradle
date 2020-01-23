@@ -10,7 +10,7 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 10
+        versionCode 11
         versionName "0.1.0-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

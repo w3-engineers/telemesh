@@ -53,7 +53,8 @@
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.editprofile.EditProfileActivity" />
         <activity android:name=".ui.importwallet.ImportWalletActivity" />
-        <activity android:name=".ui.security.SecurityActivity" />
+        <activity android:name=".ui.security.SecurityActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"
             android:theme="@style/NoActionBarTheme" />

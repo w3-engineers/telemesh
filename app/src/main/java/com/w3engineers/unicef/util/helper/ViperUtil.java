@@ -29,6 +29,7 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
@@ -154,8 +155,10 @@ public abstract class ViperUtil {
         });
 
         AppDataObserver.on().startObserver(ApiEvent.SERVICE_UPDATE, event -> {
-            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
 
+
+            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
+            MeshLog.v("SERVICE_UPDATE  " + serviceUpdate.isNeeded);
             if (serviceUpdate.isNeeded) {
                 showServiceUpdateAvailable(MainActivity.getInstance());
             }

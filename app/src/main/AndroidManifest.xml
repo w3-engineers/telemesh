@@ -55,6 +55,7 @@
         <activity android:name=".ui.importwallet.ImportWalletActivity" />
         <activity android:name=".ui.security.SecurityActivity"
             android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"

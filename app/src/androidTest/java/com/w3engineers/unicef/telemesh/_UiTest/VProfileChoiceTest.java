@@ -11,6 +11,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.PerformException;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -19,6 +21,8 @@ import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -54,6 +58,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -134,6 +139,8 @@ public class VProfileChoiceTest {
                 .perform(click());
 
 
+        addDelay(2000);
+
         Activity currentActivity1 = getActivityInstance();
         if (currentActivity1 instanceof ImportProfileActivity) {
 
@@ -170,13 +177,25 @@ public class VProfileChoiceTest {
         }
 
 
-        addDelay(1000);
+        addDelay(3000);
 
-        ViewInteraction importAnotherId = onView(
+       /* ViewInteraction importAnotherId = onView(
                 allOf(withId(R.id.button_continue),
                         childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
                                 childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 3)));
-        importAnotherId.perform(scrollTo(), click());
+
+        importAnotherId.perform(scrollTo(), click());*/
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof ImportProfileActivity) {
+
+
+            onView(withId(R.id.button_continue)).perform(setTextViewVisibility(true));
+            addDelay(100);
+
+            onView(withId(R.id.button_continue)).perform(click());
+        }
 
         addDelay(2000);
 
@@ -314,6 +333,26 @@ public class VProfileChoiceTest {
                 ViewParent parent = view.getParent();
                 return parent instanceof ViewGroup && parentMatcher.matches(parent)
                         && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
+
+    private static ViewAction setTextViewVisibility(final boolean value) {
+        return new ViewAction() {
+
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(Button.class);
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                view.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Show / Hide View";
             }
         };
     }

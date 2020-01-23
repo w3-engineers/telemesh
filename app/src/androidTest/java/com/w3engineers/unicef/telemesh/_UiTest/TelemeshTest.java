@@ -61,6 +61,7 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -164,9 +165,17 @@ public class TelemeshTest {
                 allOf(withId(R.id.edit_text_name),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         addDelay(500);
-        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+        baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
 
         addDelay(500);
+
+        baseEditText.perform(pressImeActionButton());
+
+        addDelay(1000);
+
+        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+        addDelay(1000);
 
         /*ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
@@ -276,7 +285,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 4)));
 
         boxPassword.perform(scrollTo(), replaceText("meshtest"), closeSoftKeyboard());
-        securityButtonNext.perform(click());
+        boxPassword.perform(pressImeActionButton());
 
         addDelay(1500);
 

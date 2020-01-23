@@ -232,7 +232,8 @@ public class VProfileChoiceTest {
                         childAtPosition(allOf(withId(R.id.activity_import_wallet_scroll_parent),
                                 childAtPosition(withId(R.id.activity_import_wallet_scroll), 0)), 7), isDisplayed()));
 
-        importContinue.perform(click());
+//        importContinue.perform(click());
+        appCompatEditText.perform(pressImeActionButton());
 
         addDelay(500);
 

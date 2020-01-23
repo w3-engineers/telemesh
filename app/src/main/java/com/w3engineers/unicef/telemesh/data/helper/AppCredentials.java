@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.w3engineers.unicef.telemesh.BuildConfig;
+
 public class AppCredentials {
     @Nullable
     private static AppCredentials appCredentials;
@@ -38,7 +40,11 @@ public class AppCredentials {
 
 
     static {
-        System.loadLibrary("staging-native-lib");
+        if (BuildConfig.DEBUG) {
+            System.loadLibrary("staging-native-lib");
+        } else {
+            System.loadLibrary("native-lib");
+        }
     }
 
 }

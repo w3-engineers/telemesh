@@ -107,11 +107,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public MeshDataSource initRM(@NonNull DataSource dataSource) {
 
         this.dataSource = dataSource;
+        prepareRightMeshDataSource();
+
+        return rightMeshDataSource;
+    }
+
+    private void prepareRightMeshDataSource() {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
-
-        return rightMeshDataSource;
     }
 
     /**
@@ -324,9 +328,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setRawData(data)
                 .setDataType(type);
 
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
+        prepareRightMeshDataSource();
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
@@ -584,9 +586,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * i.e. update user status to offline successfully then called this method
      */
     private void stopMeshProcess() {
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
+        prepareRightMeshDataSource();
         // TODO app needed to stop full process when close the service from library
 //        rightMeshDataSource.stopMeshProcess();
     }
@@ -714,9 +714,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setDataType(Constants.DataType.MESSAGE_FEED);
 
         ExecutorService service = Executors.newSingleThreadExecutor();
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
+        prepareRightMeshDataSource();
         service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList, false));
     }
 
@@ -822,9 +820,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         MessageCount messageCount = messageAnalyticsEntity.toAnalyticMessageCount();
         String messageCountString = new Gson().toJson(messageCount);
 
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
+        prepareRightMeshDataSource();
 
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(messageCountString.getBytes(), Constants.DataType.MESSAGE_COUNT, sellersId, false);
@@ -849,9 +845,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         for (AppShareCountEntity entity : entityList) {
             ShareCountModel appShareCount = entity.toAnalyticAppShareCount();
             String shareCountString = new Gson().toJson(appShareCount);
-            if (rightMeshDataSource == null) {
-                rightMeshDataSource = MeshDataSource.getRmDataSource();
-            }
+            prepareRightMeshDataSource();
             for (String sellersId : rightMeshDataSource.getAllSellers()) {
                 dataSend(shareCountString.getBytes(), Constants.DataType.APP_SHARE_COUNT, sellersId, false);
             }
@@ -1008,9 +1002,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setRawData(updateInfo.getBytes())
                 .setDataType(Constants.DataType.USER_UPDATE_INFO);
 
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
+        prepareRightMeshDataSource();
 
         compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
                 .subscribeOn(Schedulers.newThread())
@@ -1185,9 +1177,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
                 SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
 
-                if (rightMeshDataSource == null) {
-                    rightMeshDataSource = MeshDataSource.getRmDataSource();
-                }
+                prepareRightMeshDataSource();
 
                 rightMeshDataSource.sendConfigToViper(configurationCommand);
 

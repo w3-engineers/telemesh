@@ -137,7 +137,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                     finish();
                 }
             } else {
-                Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
                 finish();
             }
         }
@@ -158,17 +157,13 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         String oldName = sharedPref.read(Constants.preferenceKey.USER_NAME);
         int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
-        if (!oldName.equals(mBinding.editTextName.getText().toString().trim())) {
-            return true;
-        }
-
         int currentImageIndex = mViewModel.getImageIndex();
 
         if (currentImageIndex < 0) {
             currentImageIndex = oldImageIndex;
         }
 
-        if (currentImageIndex != oldImageIndex) {
+        if (!oldName.equals(mBinding.editTextName.getText().toString().trim()) || (currentImageIndex != oldImageIndex)) {
             return true;
         }
 

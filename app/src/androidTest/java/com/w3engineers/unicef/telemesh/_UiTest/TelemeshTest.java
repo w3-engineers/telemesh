@@ -344,6 +344,26 @@ public class TelemeshTest {
             addDelay(1000);
         }
 
+    }
+
+    @Test
+    public void uiTest_02() {
+
+        addDelay(3800);
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
+
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
@@ -427,23 +447,6 @@ public class TelemeshTest {
         } else {
             updateButtonClick();
         }
-
-      /*  currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof EditProfileActivity) {
-            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
-            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
-//            editProfileActivity.goNext();
-        }*/
-
-    /*    ViewInteraction updateProfile = onView(
-                allOf(withId(R.id.button_update),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)),
-                                10)));
-        updateProfile.perform(scrollTo(), click());*/
-
-
     }
 
     public void updateButtonClick() {
@@ -471,7 +474,7 @@ public class TelemeshTest {
     }
 
     @Test
-    public void uiTest_02() {
+    public void uiTest_03() {
         addDelay(3800);
 
         SharedPref sharedPref = SharedPref.getSharedPref(context);
@@ -539,7 +542,7 @@ public class TelemeshTest {
         addDelay(1000);
         onView(withId(R.id.action_discover)).perform(click());
 
-        uiTest_03(userEntity);
+        uiTest_003(userEntity);
 
 
         addDelay(3000);
@@ -749,7 +752,7 @@ public class TelemeshTest {
     }
 
 
-    public void uiTest_03(UserEntity userEntity) {
+    public void uiTest_003(UserEntity userEntity) {
 
         // addDelay(5000);
 

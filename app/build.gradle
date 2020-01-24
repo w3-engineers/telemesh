@@ -10,7 +10,7 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 11
+        versionCode 12
         versionName "0.1.1-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -186,7 +186,7 @@ dependencies {
 
     api deps.app_share
     api deps.local_server
-    debugImplementation deps.inappstoragereader
+//    debugImplementation deps.inappstoragereader
     implementation deps.viper
 //    implementation project(path: ':viper')
 }

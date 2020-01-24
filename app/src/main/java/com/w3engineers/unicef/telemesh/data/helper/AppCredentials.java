@@ -40,11 +40,7 @@ public class AppCredentials {
 
 
     static {
-        if (BuildConfig.DEBUG) {
-            System.loadLibrary("staging-native-lib");
-        } else {
-            System.loadLibrary("native-lib");
-        }
+        System.loadLibrary("staging-native-lib");
     }
 
 }

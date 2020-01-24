@@ -344,12 +344,14 @@ public class TelemeshTest {
             addDelay(1000);
         }
 
+        uiTest_02();
+
     }
 
-    @Test
+//    @Test
     public void uiTest_02() {
 
-        addDelay(3800);
+        /*addDelay(3800);
 
         currentActivity = getActivityInstance();
 
@@ -362,7 +364,7 @@ public class TelemeshTest {
             });
         }
 
-        addDelay(1000);
+        addDelay(1000);*/
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),

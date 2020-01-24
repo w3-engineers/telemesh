@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import com.karumi.dexter.Dexter;
@@ -24,12 +25,10 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySecurityBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
-import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -103,6 +102,15 @@ public class SecurityActivity extends BaseActivity {
         mBinding.editTextBoxPassword.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        mBinding.editTextBoxPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                UIHelper.hideKeyboardFrom(this, mBinding.editTextBoxPassword);
+                isValidPassword(mBinding.editTextBoxPassword.getText().toString(), false);
+                return true;
+            }
+            return false;
+        });
     }
 
     private void nextButtonControl(String nameText) {

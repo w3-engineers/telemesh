@@ -10,10 +10,20 @@ android {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 10
-        versionName "0.1.0-beta"
+        versionCode 12
+        versionName "0.1.1-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+
+        externalNativeBuild {
+            cmake {
+                abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -26,14 +36,14 @@ android {
 
             testCoverageEnabled true
 
-            buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
+/*            buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
 
             buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
             buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
-            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')*/
         }
         release {
             debuggable false
@@ -42,14 +52,14 @@ android {
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
+/*            buildConfigField 'String', 'BROADCAST_URL', System.getenv('BROADCAST_URL').equals(null) ? BROADCAST_URL : System.getenv('BROADCAST_URL')
             buildConfigField 'String', 'BROADCAST_TOKEN', System.getenv('BROADCAST_TOKEN').equals(null) ? BROADCAST_TOKEN : System.getenv('BROADCAST_TOKEN')
             buildConfigField 'String', 'PARSE_URL', System.getenv('PARSE_URL').equals(null) ? PARSE_URL : System.getenv('PARSE_URL')
             buildConfigField 'String', 'PARSE_APP_ID', System.getenv('PARSE_APP_ID').equals(null) ? PARSE_APP_ID : System.getenv('PARSE_APP_ID')
 
             buildConfigField 'String', 'AUTH_USER_NAME', System.getenv('AUTH_USER_NAME').equals(null) ? AUTH_USER_NAME : System.getenv('AUTH_USER_NAME')
             buildConfigField 'String', 'AUTH_PASSWORD', System.getenv('AUTH_PASSWORD').equals(null) ? AUTH_PASSWORD : System.getenv('AUTH_PASSWORD')
-            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')
+            buildConfigField 'String', 'FILE_REPO_LINK', System.getenv('FILE_REPO_LINK').equals(null) ? FILE_REPO_LINK : System.getenv('FILE_REPO_LINK')*/
         }
     }
     lintOptions {
@@ -81,11 +91,13 @@ android {
     }
 
 
-//    externalNativeBuild {
-//        cmake {
-//            path 'src/CMakeLists.txt'
-//        }
-//    }
+
+    externalNativeBuild {
+        cmake {
+//            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
 
 }
 
@@ -174,7 +186,7 @@ dependencies {
 
     api deps.app_share
     api deps.local_server
-    debugImplementation deps.inappstoragereader
+//    debugImplementation deps.inappstoragereader
     implementation deps.viper
 //    implementation project(path: ':viper')
 }

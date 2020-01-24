@@ -6,11 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.View;
 
@@ -32,7 +29,7 @@ public class BoxPassword extends AppCompatEditText {
     private float mLineStroke = 2;
     private Paint mFillPaint;
     private Paint mStrokePaint;
-    private OnClickListener mClickListener;
+    private View.OnClickListener mClickListener;
     private String hidedPasswordCharacter = "*"; // We can change the symbol of hide password
 
     private boolean isPasswordShow;
@@ -64,6 +61,8 @@ public class BoxPassword extends AppCompatEditText {
         mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setColor(getResources().getColor(R.color.password_border_color));
 
+        setMaxLines(1);
+
         setFocusable(true);
 
         setBackgroundResource(0);
@@ -71,7 +70,7 @@ public class BoxPassword extends AppCompatEditText {
         mLineSpacing = multi * mLineSpacing; //convert to pixels for our density
         mNumChars = mMaxLength;
 
-        super.setOnClickListener(new OnClickListener() {
+        super.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // When tapped, move cursor to end of text.

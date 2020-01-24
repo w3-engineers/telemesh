@@ -12,6 +12,7 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
@@ -97,7 +98,7 @@ public class InAppUpdateTest {
     public void downloadUpdateAppTest() {
         addDelay(500);
 
-        AppInstaller.downloadApkFile(Constants.GradleBuildValues.FILE_REPO_LINK, rule.getActivity());
+        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity());
 
         addDelay(4000);
 

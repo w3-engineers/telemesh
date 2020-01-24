@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
@@ -79,7 +81,15 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             case R.id.image_view_camera:
                 UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
                 Intent intent = new Intent(this, ProfileImageActivity.class);
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
+                int currentImageIndex = mViewModel.getImageIndex();
+
+                SharedPref sharedPref = SharedPref.getSharedPref(this);
+                int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+                if (currentImageIndex < 0) {
+                    currentImageIndex = oldImageIndex;
+                }
+
+                intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
                 startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
                 break;
             case R.id.image_view_back:
@@ -119,11 +129,16 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     public void goNext() {
         UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
 
-        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)
-                && mViewModel.storeData(mBinding.editTextName.getText() + "")) {
-            Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
-            mViewModel.sendUserInfoToAll();
-            finish();
+        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+            if (isNeedToUpdate()) {
+                if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+                    Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+                    mViewModel.sendUserInfoToAll();
+                    finish();
+                }
+            } else {
+                finish();
+            }
         }
 
         /*if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
@@ -135,6 +150,24 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             mViewModel.sendUserInfoToAll();
             finish();
         }*/
+    }
+
+    private boolean isNeedToUpdate() {
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        String oldName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
+        int currentImageIndex = mViewModel.getImageIndex();
+
+        if (currentImageIndex < 0) {
+            currentImageIndex = oldImageIndex;
+        }
+
+        if (!oldName.equals(mBinding.editTextName.getText().toString().trim()) || (currentImageIndex != oldImageIndex)) {
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -99,6 +99,14 @@
         <item name="android:background">@color/divider_color</item>
     </style>
 
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem" >
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
 <!--    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">-->
 <!--        <item name="android:paddingLeft">5dp</item>-->
 <!--    </style>-->

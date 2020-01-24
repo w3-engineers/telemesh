@@ -97,7 +97,7 @@ public class VRmDataHelperTest {
         BroadcastWebSocket listener = new BroadcastWebSocket();
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(Constants.GradleBuildValues.BROADCAST_URL).build();
         WebSocket socket = client.newWebSocket(request, listener);
         //fake response create and test
         listener.onMessage(socket, getAckResponse());
@@ -115,7 +115,7 @@ public class VRmDataHelperTest {
         BroadcastWebSocket listener = new BroadcastWebSocket();
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(BuildConfig.BROADCAST_URL).build();
+        Request request = new Request.Builder().url(Constants.GradleBuildValues.BROADCAST_URL).build();
         WebSocket socket = client.newWebSocket(request, listener);
         //fake response create and test
         listener.onMessage(socket, getBulletinResponse());
@@ -280,7 +280,7 @@ public class VRmDataHelperTest {
         Payload payLoad = randomEntityGenerator.createPayload(geoLocation);
 
         BroadcastCommand command = new BroadcastCommand().setEvent(event)
-                .setToken(BuildConfig.BROADCAST_TOKEN)
+                .setToken(Constants.GradleBuildValues.BROADCAST_TOKEN)
                 .setBaseStationId(meshId)
                 .setClientId(meshId)
                 .setPayload(payLoad);
@@ -288,7 +288,7 @@ public class VRmDataHelperTest {
         // now testing getter value of value
 
         assertThat(command.getEvent(), is(event));
-        assertThat(command.getToken(), is(BuildConfig.BROADCAST_TOKEN));
+        assertThat(command.getToken(), is(Constants.GradleBuildValues.BROADCAST_TOKEN));
         assertThat(command.getClientId(), is(meshId));
         assertThat(command.getBaseStationId(), is(meshId));
         assertThat(command.getPayload().getMessageId(), is(payLoad.getMessageId()));

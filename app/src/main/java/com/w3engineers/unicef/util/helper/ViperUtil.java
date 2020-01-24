@@ -29,12 +29,14 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -51,48 +53,38 @@ public abstract class ViperUtil {
     private Context context;
 
     protected ViperUtil(UserModel userModel) {
-
         try {
-
             context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
             String appName = context.getResources().getString(R.string.app_name);
 
+
+            String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
+            String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
+            String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
+            String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
+            String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+            String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
+            String SIGNAL_SERVER_URL = AppCredentials.getInstance().getSignalServerUrl();
+
+
             SharedPref sharedPref = SharedPref.getSharedPref(context);
-
-//            String jsonData = loadJSONFromAsset(context);
-
-            String AUTH_USER_NAME = Constants.GradleBuildValues.AUTH_USER_NAME;
-            String AUTH_PASSWORD = Constants.GradleBuildValues.AUTH_PASSWORD;
-            String FILE_REPO_LINK = Constants.GradleBuildValues.FILE_REPO_LINK;
-            String PARSE_APP_ID = Constants.GradleBuildValues.PARSE_APP_ID;
-            String PARSE_URL = Constants.GradleBuildValues.PARSE_URL;
-
-//                String GIFT_DONATE_LINK = jsonObject.optString("GIFT_DONATE_LINK");
-
-            String address = sharedPref.read(Constants.preferenceKey.
-                    MY_WALLET_ADDRESS);
+            String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
             String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+            String networkSSID = sharedPref.read(Constants.preferenceKey.NETWORK_PREFIX);
 
             initObservers();
-
-            String networkSSID = SharedPref.getSharedPref(context).read(Constants.preferenceKey.NETWORK_PREFIX);
 
             if (TextUtils.isEmpty(networkSSID)) {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-            viperClient = ViperClient.on(context, appName, "com.w3engineers.unicef.telemesh", networkSSID, userModel.getName(),
-                    address, publicKey, userModel.getImage(), userModel.getTime(), true)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK/*, GIFT_DONATE_LINK*/, PARSE_URL, PARSE_APP_ID);
-
-            /*if (!TextUtils.isEmpty(jsonData)) {
-                JSONObject jsonObject = new JSONObject(jsonData);
-            }*/
+            viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(),
+                    address, publicKey, userModel.getImage(), userModel.getTime(), true, CONFIG_DATA)
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void initObservers() {
@@ -163,8 +155,10 @@ public abstract class ViperUtil {
         });
 
         AppDataObserver.on().startObserver(ApiEvent.SERVICE_UPDATE, event -> {
-            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
 
+
+            ServiceUpdate serviceUpdate = (ServiceUpdate) event;
+            MeshLog.v("SERVICE_UPDATE  " + serviceUpdate.isNeeded);
             if (serviceUpdate.isNeeded) {
                 showServiceUpdateAvailable(MainActivity.getInstance());
             }

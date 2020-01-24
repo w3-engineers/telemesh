@@ -12,8 +12,9 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/activity_import_wallet_scroll_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
+        android:paddingBottom="@dimen/padding_30"
         android:background="@color/background_color"
         tools:context=".ui.importwallet.ImportWalletActivity">
 

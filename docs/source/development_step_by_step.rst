@@ -217,8 +217,12 @@ Telemesh
 
 
 
-
 Happy Coding :)
+
+
+After successful build, install the apk into any Android device (minimum android version ``Lollipop - 5.0``)
+
+and you need to download ``TeleService`` apk from Telemesh inside which will provide multihop mesh support into Telemesh.
 
 
 

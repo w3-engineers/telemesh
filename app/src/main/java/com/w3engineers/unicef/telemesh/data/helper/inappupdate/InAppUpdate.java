@@ -29,7 +29,6 @@ import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.we3ngineers.localserver.NanoHTTPD.NanoHTTPD;
 import com.we3ngineers.localserver.NanoHTTPD.SimpleWebServer;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,8 +47,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.List;
-
-import timber.log.Timber;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 /*

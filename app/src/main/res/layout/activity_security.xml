@@ -19,15 +19,17 @@
 
         <ScrollView
             android:id="@+id/activity_security_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true"
+            style="@style/ScrollStyle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/activity_security_scroll_parent"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_30">
 
                 <TextView
                     android:id="@+id/text_view_title"
@@ -45,6 +47,21 @@
 
                 <com.w3engineers.unicef.util.lib.boxpassword.BoxPassword
                     android:id="@+id/edit_text_box_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_16"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginEnd="@dimen/padding_16"
+                    android:cursorVisible="false"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:textIsSelectable="false"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+
+                <!--<com.w3engineers.unicef.util.lib.boxpassword.BoxPassword
+                    android:id="@+id/edit_text_box_password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_16"
@@ -57,7 +74,7 @@
                     android:textIsSelectable="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/text_view_title"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_title" />-->
 
                 <TextView
                     android:id="@+id/text_view_show_password"

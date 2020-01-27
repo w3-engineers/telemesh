@@ -370,14 +370,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         categories.add("Favourite");
         categories.add("All");
 
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, categories);
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.simple_spinner_item, categories);
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        fragmentMeshcontactBinding.spinnerView.setAdapter(dataAdapter);
+        fragmentMeshcontactBinding.spinnerView.setAdapter(spinnerAdapter);
     }
 
   /*  protected void searchLoading() {

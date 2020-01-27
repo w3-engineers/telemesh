@@ -205,7 +205,7 @@ public class RandomEntityGenerator {
 
     public UserInfoEvent generateUserInfoEvent(String meshId) {
         UserInfoEvent userInfoEvent = new UserInfoEvent();
-        userInfoEvent.userName = "John Doe";
+        userInfoEvent.setUserName("John Doe");
         userInfoEvent.setAvatar(2);
         userInfoEvent.setRegTime(System.currentTimeMillis());
         userInfoEvent.setConfigVersion(1);

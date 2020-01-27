@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height_40"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/text1"
+        style="@style/spinnerDropDownItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_40"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical"
+        android:text="sdkvcks" />
+
+</android.support.constraint.ConstraintLayout>

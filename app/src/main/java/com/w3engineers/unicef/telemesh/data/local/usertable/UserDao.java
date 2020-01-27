@@ -228,6 +228,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID)
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS NOT NULL OR "
+            + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + ")")
     abstract Single<List<String>> getFavMessageUserIds();
 }

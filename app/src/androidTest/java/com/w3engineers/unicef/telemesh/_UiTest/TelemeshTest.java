@@ -4,13 +4,13 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
@@ -52,7 +52,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
@@ -65,12 +64,9 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
-import static com.parse.Parse.getApplicationContext;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
@@ -169,51 +165,59 @@ public class TelemeshTest {
                 allOf(withId(R.id.edit_text_name),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         addDelay(500);
-        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+        baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
 
         addDelay(500);
 
-        ViewInteraction baseEditText2 = onView(
+        baseEditText.perform(pressImeActionButton());
+
+        addDelay(1000);
+
+        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+        addDelay(1000);
+
+        /*ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         baseEditText2.perform(pressImeActionButton());
 
-        addDelay(1000);
+        addDelay(1000);*/
 
         ViewInteraction buttonImageChooserFirst = onView(
                 allOf(withId(R.id.image_profile),
                         childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserFirst.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectDoneMenuForNoSelect = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForNoSelect.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectImageForTheFirst = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
         selectImageForTheFirst.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectDoneMenuForTheFirst = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheFirst.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction buttonImageChooserSecond = onView(
                 allOf(withId(R.id.image_profile),
                         childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserSecond.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction selectImageForTheSecond = onView(
                 allOf(childAtPosition(
@@ -228,14 +232,14 @@ public class TelemeshTest {
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 1), isDisplayed()));
         selectImageForTheThird.perform(click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction selectDoneMenuForTheSecond = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheSecond.perform(click());
 
-        addDelay(500);
+        addDelay(700);
 
         ViewInteraction buttonImageChooserThird = onView(
                 allOf(withId(R.id.image_profile),
@@ -243,21 +247,21 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.scrollview), 0)), 6)));
         buttonImageChooserThird.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(700);
 
         ViewInteraction selectImageForTheFourth = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 4), isDisplayed()));
         selectImageForTheFourth.perform(click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction selectDoneMenuForTheThird = onView(
                 allOf(withId(R.id.menu_done),
                         childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
         selectDoneMenuForTheThird.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction ActionCreateProfileNext = onView(
                 allOf(withId(R.id.button_signup),
@@ -265,7 +269,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.scrollview), 0)), 10)));
         ActionCreateProfileNext.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
 
         ViewInteraction boxPassword = onView(
@@ -273,7 +277,7 @@ public class TelemeshTest {
                         childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 1)));
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction securityButtonNext = onView(
                 allOf(withId(R.id.button_next),
@@ -281,7 +285,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 4)));
 
         boxPassword.perform(scrollTo(), replaceText("meshtest"), closeSoftKeyboard());
-        securityButtonNext.perform(click());
+        boxPassword.perform(pressImeActionButton());
 
         addDelay(1500);
 
@@ -318,7 +322,7 @@ public class TelemeshTest {
                                 2)));
         showPassword.perform(scrollTo(), click());
 
-        addDelay(300);
+        addDelay(700);
 
         ViewInteraction securityButtonSkip = onView(
                 allOf(withId(R.id.button_skip),
@@ -339,6 +343,28 @@ public class TelemeshTest {
 
             addDelay(1000);
         }
+
+        uiTest_02();
+
+    }
+
+//    @Test
+    public void uiTest_02() {
+
+        /*addDelay(3800);
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);*/
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
@@ -423,23 +449,6 @@ public class TelemeshTest {
         } else {
             updateButtonClick();
         }
-
-      /*  currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof EditProfileActivity) {
-            EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
-            new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
-//            editProfileActivity.goNext();
-        }*/
-
-    /*    ViewInteraction updateProfile = onView(
-                allOf(withId(R.id.button_update),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)),
-                                10)));
-        updateProfile.perform(scrollTo(), click());*/
-
-
     }
 
     public void updateButtonClick() {
@@ -467,7 +476,7 @@ public class TelemeshTest {
     }
 
     @Test
-    public void uiTest_02() {
+    public void uiTest_03() {
         addDelay(3800);
 
         SharedPref sharedPref = SharedPref.getSharedPref(context);
@@ -477,6 +486,19 @@ public class TelemeshTest {
 
         long version = (BuildConfig.VERSION_CODE + 5);
         SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
 
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
@@ -493,6 +515,10 @@ public class TelemeshTest {
         addDelay(500);
 
         addFeedItem();
+
+        addDelay(1500);
+
+        UserEntity userEntity = addSampleUser();
 
         addDelay(1500);
 
@@ -514,6 +540,12 @@ public class TelemeshTest {
             mainActivity.feedRefresh();
 
         }
+
+        addDelay(1000);
+        onView(withId(R.id.action_discover)).perform(click());
+
+        uiTest_003(userEntity);
+
 
         addDelay(3000);
 
@@ -655,7 +687,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        try {
+       /* try {
 
             ViewInteraction optionUpdate = onView(
                     allOf(withId(R.id.layout_app_update),
@@ -667,13 +699,13 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(3000);
+        addDelay(6000);*/
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
-        addDelay(500);
+        addDelay(500);*/
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
         addDelay(2000);
 
@@ -682,31 +714,82 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
+        }*/
+
+        /*ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());*/
+
+        // todo unit test 03
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+                mainActivity.popupSnackbarForCompleteUpdate();
+            });
+
+            addDelay(3000);
         }
+
+
+        mDevice.pressBack();
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(700);
+
+        try {
+            mDevice.pressBack();
+        } catch (NoActivityResumedException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    @Test
-    public void uiTest_03() {
 
-        addDelay(4000);
+    public void uiTest_003(UserEntity userEntity) {
 
-        UserEntity userEntity = new UserEntity()
+        // addDelay(5000);
+
+       /* UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
-        userEntity.setId(0);
+        //userEntity.setId(0);
 
-        userDataSource.insertOrUpdateData(userEntity);
+        userDataSource.insertOrUpdateData(userEntity);*/
 
-        addDelay(500);
+        addDelay(1000);
 
-        ViewInteraction userItemAction = onView(
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
+
+      /*  ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
-        userItemAction.perform(click());
+        userItemAction.perform(click());*/
+
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(1000);
 
@@ -749,13 +832,14 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        mDevice.pressBack();
+       /* mDevice.pressBack();
 
         addDelay(2000);
 
-        userItemAction.perform(click());
+        // userItemAction.perform(click());
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        addDelay(2000);
+        addDelay(2000);*/
 
         Activity currentActivity = getActivityInstance();
 
@@ -777,7 +861,7 @@ public class TelemeshTest {
 
             onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
 
-        } catch (NoMatchingViewException e) {
+        } catch (NoMatchingViewException | PerformException e) {
             e.printStackTrace();
         }
 
@@ -799,7 +883,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        currentActivity = getActivityInstance();
+        /*currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
@@ -810,9 +894,9 @@ public class TelemeshTest {
             });
 
             addDelay(3000);
-        }
+        }*/
 
-        mDevice.pressBack();
+        /*mDevice.pressBack();
 
         addDelay(2500);
 
@@ -824,7 +908,7 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Test
@@ -1003,6 +1087,21 @@ public class TelemeshTest {
         entity.setFeedReadStatus(false);
 
         feedDataSource.insertOrUpdateData(entity);
+    }
+
+    private UserEntity addSampleUser() {
+        UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+        //userEntity.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        return userEntity;
     }
 
 }

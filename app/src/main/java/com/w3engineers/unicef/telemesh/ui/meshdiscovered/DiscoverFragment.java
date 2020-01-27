@@ -321,7 +321,7 @@ public class DiscoverFragment extends BaseFragment {
         }*/
     }
 
-    private void enableEmpty() {
+    public void enableEmpty() {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();

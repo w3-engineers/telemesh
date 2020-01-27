@@ -50,9 +50,7 @@ public class BroadcastWebSocket extends WebSocketListener {
             } else {
                 RmDataHelper.getInstance().processBroadcastMessage(text);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException e) { e.printStackTrace(); }
 
         webSocket.close(closeCode, closeMessage);
     }
@@ -63,7 +61,7 @@ public class BroadcastWebSocket extends WebSocketListener {
     }
     @Override
     public void onClosing(@NonNull WebSocket webSocket, int code, @Nullable String reason) {
-        Timber.tag("MIMO_SAHA:").v("Close: %s", code);
+//        Timber.tag("MIMO_SAHA:").v("Close: %s", code);
         webSocket.close(closeCode, null);
     }
     @Override

@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -102,6 +103,14 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         mViewModel.textEditControl(mBinding.editTextName);
 
         sInstance = this;
+
+        mBinding.editTextName.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                nextAction();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void nextButtonControl(String nameText) {
@@ -159,30 +168,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();
     }
 
-
-
-
-    /*@RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        for (int i = 0, len = permissions.length; i < len; i++) {
-            String permission = permissions[i];
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                // user rejected the permission
-                boolean showRationale = shouldShowRequestPermissionRationale(permission);
-                if (!showRationale) {
-                    //  Toast.makeText(this,"Permission denaid", Toast.LENGTH_LONG).show();
-                 //   showPermissionPopUp();
-                } else {
-                  //  checkPermission();
-                }
-            } else {
-                //checkPermission();
-            }
-        }
-    }*/
-
-
     @Override
     public void onClick(@NonNull View view) {
         super.onClick(view);
@@ -191,11 +176,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         switch (id) {
             case R.id.button_signup:
-                if (isLoadAccount) {
-                    saveData();
-                } else {
-                    goToPasswordPage();
-                }
+                nextAction();
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
@@ -207,6 +188,14 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
 
+        }
+    }
+
+    private void nextAction() {
+        if (isLoadAccount) {
+            saveData();
+        } else {
+            goToPasswordPage();
         }
     }
 
@@ -276,6 +265,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         builder.setPositiveButton(Html.fromHtml("<b>"  + getString(R.string.button_postivive) + "<b>"), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 startActivity(new Intent(CreateUserActivity.this, ImportWalletActivity.class));
+                finish();
             }
         });
         builder.setNegativeButton(Html.fromHtml("<b>" + getString(R.string.negative_button) + "<b>"), new DialogInterface.OnClickListener() {

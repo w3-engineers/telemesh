@@ -103,6 +103,8 @@ public class AnalyticsDataHelperTest {
 
         AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, entity);
 
+        addDelay(3000);
+
         assertTrue(true);
     }
 

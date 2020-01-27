@@ -65,7 +65,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:text="@string/update"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             app:bb_drawable="@drawable/ractangular_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,8 +79,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/cancel"
-            android:textAllCaps="false"
-            app:bb_drawable="@drawable/rectangular_cancel"
+            android:textColor="@color/new_user_button_color"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:bb_drawable="@drawable/ractangular_white"
             app:layout_constraintBottom_toBottomOf="@+id/button_update"
             app:layout_constraintEnd_toStartOf="@+id/button_update" />
 

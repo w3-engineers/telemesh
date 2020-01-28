@@ -14,6 +14,7 @@ public class Constants {
     public static boolean IsMeshInit;
     public static boolean IS_LOG_UPLOADING_START = false;
     public static boolean IS_DATA_ON = false;
+    public static boolean IS_APP_BLOCKER_ON = false;
 
     public static int INTERNET_ONLY = 3;
     public static int SELLER_MODE = 1;

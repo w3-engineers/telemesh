@@ -8,6 +8,10 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.json.JSONException;
@@ -51,7 +55,7 @@ public class ViperDataProcessor {
     }
 
     public ViperData setDataFormatFromJson(byte[] meshDataBytes) {
-        if(meshDataBytes == null) {
+        if (meshDataBytes == null) {
             throw new IllegalStateException("Corrupted data");
         }
 
@@ -120,5 +124,23 @@ public class ViperDataProcessor {
         else
             return false;
     }*/
+
+    public void processUpdateAppConfigJson(String configData) {
+
+        UpdateConfigModel updateConfigModel;
+
+        updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
+
+     //   int configVersion = PreferencesHelperDataplan.on().getConfigVersion();
+      //  int tokenGuideVersion = PreferencesHelperDataplan.on().getTokenGuideVersion();
+
+        if (updateConfigModel != null) {
+
+            String versionName = updateConfigModel.getVersionName();
+            int versionCode = updateConfigModel.getVersionCode();
+            int updateType = updateConfigModel.getUpdateType();
+
+        }
+    }
 
 }

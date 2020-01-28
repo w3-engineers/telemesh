@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -22,6 +23,7 @@ import android.support.annotation.RequiresApi;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -99,6 +101,10 @@ public class BulletinTimeScheduler {
                         Constants.IS_DATA_ON = true;
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
+
+                        String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updateappconfig.json";
+
+                        new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
 
                         ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
 

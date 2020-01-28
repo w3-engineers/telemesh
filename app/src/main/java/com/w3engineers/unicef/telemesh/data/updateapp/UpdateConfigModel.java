@@ -7,17 +7,21 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UpdateConfigModel implements Parcelable {
-    @SerializedName("version_name")
+    @SerializedName("latestVersion")
     @Expose
     private String versionName;
 
-    @SerializedName("version_code")
+    @SerializedName("latestVersionCode")
     @Expose
     private int versionCode;
 
     @SerializedName("update_type")
     @Expose
     private int updateType;
+
+    @SerializedName("releaseNotes")
+    @Expose
+    private String releaseNote;
 
     public String getVersionName() {
         return versionName;
@@ -43,10 +47,19 @@ public class UpdateConfigModel implements Parcelable {
         this.updateType = updateType;
     }
 
+    public String getReleaseNote() {
+        return releaseNote;
+    }
+
+    public void setReleaseNote(String releaseNote) {
+        this.releaseNote = releaseNote;
+    }
+
     protected UpdateConfigModel(Parcel in) {
         versionName = in.readString();
         versionCode = in.readInt();
         updateType = in.readInt();
+        releaseNote = in.readString();
     }
 
     public static final Creator<UpdateConfigModel> CREATOR = new Creator<UpdateConfigModel>() {
@@ -71,5 +84,6 @@ public class UpdateConfigModel implements Parcelable {
         parcel.writeString(versionName);
         parcel.writeInt(versionCode);
         parcel.writeInt(updateType);
+        parcel.writeString(releaseNote);
     }
 }

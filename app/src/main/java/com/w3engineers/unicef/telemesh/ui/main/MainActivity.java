@@ -45,6 +45,7 @@ import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -188,6 +189,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }*/
 
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
+        checkAppBlockerAvailable();
+
     }
 
     protected void requestMultiplePermissions() {
@@ -660,7 +664,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                RmDataHelper.getInstance().appUpdateFromOtherServer(type,normalUpdateJson);
+                RmDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
             }
         });
     }
@@ -681,6 +685,19 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                     }*/
                 }
             };
+
+    private void checkAppBlockerAvailable() {
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+
+        int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+        int currentVersionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+
+        if (BuildConfig.VERSION_CODE < currentVersionCode
+                && currentUpdateType == Constants.AppUpdateType.BLOCKER) {
+
+            openAppBlocker();
+        }
+    }
 
     public void popupSnackbarForCompleteUpdate() {
 

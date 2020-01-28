@@ -107,7 +107,7 @@ public class BulletinTimeScheduler {
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;
 
-                            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updateappconfig.json";
+                            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
                             new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
 
 

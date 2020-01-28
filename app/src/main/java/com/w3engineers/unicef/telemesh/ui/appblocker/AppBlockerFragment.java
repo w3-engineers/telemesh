@@ -13,10 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.FragmentAppBlockerBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class AppBlockerFragment extends DialogFragment implements View.OnClickListener {
 
@@ -36,20 +42,8 @@ public class AppBlockerFragment extends DialogFragment implements View.OnClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       /* Dialog dialog = onCreateDialog(savedInstanceState);
-
-        if (dialog != null) {
-            Log.d("AppBlocker", "Dialog not null");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-        } else {
-            Log.d("AppBlocker", "Dialog null");
-        }*/
-
         if (this.getDialog() != null) {
             this.getDialog().setCanceledOnTouchOutside(false);
-        } else {
-            Log.d("AppBlocker", "Dialog 2 null");
         }
 
         mBinding.buttonUpdate.setOnClickListener(this);
@@ -58,7 +52,12 @@ public class AppBlockerFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+
         if (v.getId() == R.id.button_update) {
+            if (!Constants.IS_DATA_ON) {
+                Toaster.showShort(LanguageUtil.getString(R.string.no_internet_connection));
+                return;
+            }
             if (MainActivity.getInstance() != null) {
                 MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "");
             }
@@ -67,11 +66,4 @@ public class AppBlockerFragment extends DialogFragment implements View.OnClickLi
         }
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Log.d("AppBlocker", "onCreateDialog call");
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        return dialog;
-    }
 }

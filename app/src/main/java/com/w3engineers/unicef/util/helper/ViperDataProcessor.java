@@ -137,7 +137,7 @@ public class ViperDataProcessor {
     public void processUpdateAppConfigJson(String configData) {
 
         UpdateConfigModel updateConfigModel;
-        //    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
 
         updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
 
@@ -148,20 +148,22 @@ public class ViperDataProcessor {
             String versionName = updateConfigModel.getVersionName();
             int versionCode = updateConfigModel.getVersionCode();
             int updateType = updateConfigModel.getUpdateType();
-
+            String releaseNote = updateConfigModel.getReleaseNote();
 
             if (BuildConfig.VERSION_CODE < versionCode) {
+
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
+
                 if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
-                    String normalUpdateJson = buildAppUpdateJson(versionName, versionCode);
+                    String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);
                     if (MainActivity.getInstance() != null) {
-                        MainActivity.getInstance().checkPlayStoreAppUpdate(updateType,normalUpdateJson);
+                        MainActivity.getInstance().checkPlayStoreAppUpdate(updateType, normalUpdateJson);
                     }
                 } else if (Constants.AppUpdateType.BLOCKER == updateType) {
                     if (MainActivity.getInstance() != null) {
                         MainActivity.getInstance().openAppBlocker();
                     }
-                } else {
-
                 }
             }
 
@@ -169,12 +171,13 @@ public class ViperDataProcessor {
         }
     }
 
-    private String buildAppUpdateJson(String versionName, int versionCode) {
+    private String buildAppUpdateJson(String versionName, int versionCode, String releaseNote) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, versionCode);
             jsonObject.put(Constants.InAppUpdate.LATEST_VERSION_KEY, versionName);
             jsonObject.put(Constants.InAppUpdate.URL_KEY, AppCredentials.getInstance().getFileRepoLink());
+            jsonObject.put(Constants.InAppUpdate.RELEASE_NOTE_KEY, releaseNote);
         } catch (JSONException e) {
             e.printStackTrace();
         }

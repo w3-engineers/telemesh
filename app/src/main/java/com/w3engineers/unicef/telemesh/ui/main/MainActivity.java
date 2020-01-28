@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +38,6 @@ import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
@@ -56,7 +50,6 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
@@ -67,10 +60,6 @@ import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
-
-import java.util.List;
-
-import static android.support.constraint.Constraints.TAG;
 
 
 public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {

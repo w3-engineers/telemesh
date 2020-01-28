@@ -71,6 +71,7 @@ public class Constants {
         String CONFIG_STATUS = "CONFIG_STATUS";
         String CONFIG_VERSION_CODE = "CONFIG_VERSION_CODE";
         String TOKEN_GUIDE_VERSION_CODE = "TOKEN_GUIDE_VERSION_CODE";
+        String APP_UPDATE_TYPE = "app_update_type";
     }
 
     public interface MenuItemPosition {
@@ -156,6 +157,12 @@ public class Constants {
         String CRASH_REPORT_FILE_NAME = "Crashes.txt";
         String DEFAULT_ADDRESS_FILE = "defaultAddressFile.txt";
         String DASHES = "-------------------------------";
+    }
+
+    public interface AppUpdateType{
+        int NO_CHANGES = 0;
+        int NORMAL_UPDATE = 1;
+        int BLOCKER = 2;
     }
 
     public interface Bulletin {

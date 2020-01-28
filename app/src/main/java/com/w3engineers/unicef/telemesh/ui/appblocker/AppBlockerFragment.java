@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.FragmentAppBlockerBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
@@ -59,7 +60,7 @@ public class AppBlockerFragment extends DialogFragment implements View.OnClickLi
     public void onClick(View v) {
         if (v.getId() == R.id.button_update) {
             if (MainActivity.getInstance() != null) {
-                MainActivity.getInstance().checkPlayStoreAppUpdate();
+                MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "");
             }
         } else if (v.getId() == R.id.button_cancel) {
             android.os.Process.killProcess(Process.myPid());

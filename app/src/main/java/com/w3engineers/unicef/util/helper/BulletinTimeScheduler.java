@@ -102,22 +102,16 @@ public class BulletinTimeScheduler {
                         RmDataHelper.getInstance().sendPendingAck();
                         resetScheduler(context);
 
-                        String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updateappconfig.json";
-
-                        new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
-
                         ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
 
                         if (!Constants.IS_LOG_UPLOADING_START) {
                             Constants.IS_LOG_UPLOADING_START = true;
 
-                            if (MainActivity.getInstance() != null) {
-                                MainActivity.getInstance().checkPlayStoreAppUpdate();
-                            }
+                            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updateappconfig.json";
+                            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+
 
                             RmDataHelper.getInstance().uploadLogFile();
-
-
                             RmDataHelper.getInstance().sendPendingFeedback();
                         }
 

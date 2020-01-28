@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
@@ -432,8 +433,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             }
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
@@ -469,8 +471,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
@@ -486,8 +489,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, messageAnalyticsEntity);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
@@ -519,8 +523,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             }
                         }, Throwable::printStackTrace));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
 
     }
 
@@ -689,8 +694,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         }
                     }, Throwable::printStackTrace));
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void broadcastMessage(@NonNull FeedEntity feedEntity) {
@@ -913,27 +919,39 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribe(this::uploadLogFile, Throwable::printStackTrace));
     }
 
-    public void appUpdateFromOtherServer() {
+    public void appUpdateFromOtherServer(int type, String normalUpdateJson) {
 
         // check app update for internet;
 
-        HandlerUtil.postForeground(() -> {
-            if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-                //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-                if (MainActivity.getInstance() == null) return;
+        if (type == Constants.AppUpdateType.BLOCKER) {
+            InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
 
-                SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-                if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-                    long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-                    long dif = System.currentTimeMillis() - saveTime;
-                    long days = dif / (24 * 60 * 60 * 1000);
+            AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance());
 
-                    if (days <= 2) return;
+        } else {
+            HandlerUtil.postForeground(() -> {
+                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+                    if (MainActivity.getInstance() == null) return;
+
+                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+                        long dif = System.currentTimeMillis() - saveTime;
+                        long days = dif / (24 * 60 * 60 * 1000);
+
+                        if (days <= 2) return;
+                    }
+
+                    // We can show the dialog directly by creating a json file
+
+                    InAppUpdate.getInstance(MainActivity.getInstance()).showAppInstallDialog(normalUpdateJson, MainActivity.getInstance());
+
+                    // InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
                 }
+            }, TimeUnit.MINUTES.toMillis(1));
+        }
 
-                InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-            }
-        }, TimeUnit.MINUTES.toMillis(1));
     }
 
     private void uploadLogFile(List<String> previousList) {

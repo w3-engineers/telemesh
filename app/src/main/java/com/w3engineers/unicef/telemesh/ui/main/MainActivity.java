@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -48,6 +49,7 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -56,6 +58,7 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.ui.appblocker.AppBlockerFragment;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
@@ -129,6 +132,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         requestMultiplePermissions();
 
         Constants.IS_LOADING_ENABLE = false;
+        Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
         sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
@@ -184,18 +188,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 //        mViewModel.makeSendingMessageAsFailed();
 
 
-       /* new Handler().postDelayed(() -> {
-            AppShareCountEntity entity = new AppShareCountEntity();
-            entity.setCount(1);
-            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-            entity.setUserId(myId);
-            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
-            List<AppShareCountEntity> list = new ArrayList<>();
-            list.add(entity);
-            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
-        }, 10000);*/
-        /*DiagramUtil.on(this).start();*/
-
         initSearchListener();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
@@ -208,6 +200,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
+        openApBlocker();
     }
 
     protected void requestMultiplePermissions() {
@@ -558,6 +551,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
+        if (Constants.IS_APP_BLOCKER_ON) {
+            return;
+        }
         if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
             binding.searchBar.editTextSearch.setText("");
             hideSearchBar();
@@ -734,5 +730,23 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (mCurrentFragment instanceof DiscoverFragment) {
             ((DiscoverFragment) mCurrentFragment).enableEmpty();
         }
+    }
+
+    public void openApBlocker() {
+        Constants.IS_APP_BLOCKER_ON = true;
+
+        // App blocker ui open test
+
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                AppBlockerFragment appBlockerFragment = new AppBlockerFragment();
+                appBlockerFragment.setCancelable(false);
+                //appBlockerFragment.show(transaction,"dialog");
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.add(android.R.id.content, appBlockerFragment).addToBackStack(null).commit();
+            }
+        }, 10 * 1000);
     }
 }

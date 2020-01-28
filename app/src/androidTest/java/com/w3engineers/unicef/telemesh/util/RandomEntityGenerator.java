@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.json.JSONException;
@@ -260,5 +261,15 @@ public class RandomEntityGenerator {
         }
 
         return event;
+    }
+
+    public UpdateConfigModel generateUpdateConfigModel() {
+        UpdateConfigModel model = new UpdateConfigModel();
+        model.setReleaseNote("Test update");
+        model.setUpdateType(1);
+        model.setVersionCode(100);
+        model.setVersionName("100.0.0");
+
+        return model;
     }
 }

@@ -54,6 +54,7 @@ public class UpdateConfigModel implements Parcelable {
     public void setReleaseNote(String releaseNote) {
         this.releaseNote = releaseNote;
     }
+    public UpdateConfigModel(){}
 
     protected UpdateConfigModel(Parcel in) {
         versionName = in.readString();

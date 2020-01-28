@@ -16,6 +16,7 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
@@ -166,13 +167,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             configFileSendToOthers(userModel.getConfigVersion(), userId);
         }
 
-        HandlerUtil.postForeground(new Runnable() {
-            @Override
-            public void run() {
-                if (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE) {
-                    versionMessageHandshaking(userId);
-                }
-            }
+        HandlerUtil.postForeground(() -> {
+
+            versionMessageHandshaking(userId);
         }, 10 * 1000);
 
     }
@@ -368,7 +365,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 versionCrossMatching(rawData, userId, isAckSuccess);
                 break;
             case Constants.DataType.SERVER_LINK:
-                startAppUpdate(rawData, isAckSuccess);
+                startAppUpdate(rawData, isAckSuccess, userId);
                 break;
             case Constants.DataType.FEEDBACK_TEXT:
                 parseFeedbackText(rawData, isAckSuccess);
@@ -1036,9 +1033,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void versionMessageHandshaking(String userId) {
         InAppUpdateModel model = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
+
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        int versionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        if (BuildConfig.VERSION_CODE == versionCode) {
+            model.setUpdateType(sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE));
+        }
+
         String data = new Gson().toJson(model);
         dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
-
     }
 
 
@@ -1055,28 +1058,40 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String myServerLink = instance.getMyLocalServerLink();
         Timber.tag("InAppUpdateTest").d("My version Code: %s", myVersionModel.getVersionCode());
-        if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
-                myServerLink != null) {
+        if (myVersionModel.getVersionCode() > versionModel.getVersionCode()) {
 
+            if (myServerLink != null) {
+                // start my server
+                if (!instance.isServerRunning()) {
+                    instance.prepareLocalServer();
+                }
 
-            // start my server
-            if (!instance.isServerRunning()) {
-                instance.prepareLocalServer();
+                InAppUpdateModel model = new InAppUpdateModel();
+                model.setUpdateLink(myServerLink);
+                String data = new Gson().toJson(model);
+                dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
+
+                Timber.tag("InAppUpdateTest").d("My version is Big: ");
             }
-
-            InAppUpdateModel model = new InAppUpdateModel();
-            model.setUpdateLink(myServerLink);
-            String data = new Gson().toJson(model);
-            dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
-
-            Timber.tag("InAppUpdateTest").d("My version is Big: ");
-        } else {
-//            Timber.tag("InAppUpdateTest").d("My version is same: ");
+        } else if (versionModel.getVersionCode() > myVersionModel.getVersionCode()) {
+            if (versionModel.getUpdateType() == Constants.AppUpdateType.BLOCKER) {
+                if (MainActivity.getInstance() != null) {
+                    MainActivity.getInstance().openAppBlocker();
+                }
+            }
         }
     }
 
-    private void startAppUpdate(byte[] rawData, boolean isAckSuccess) {
+    private void startAppUpdate(byte[] rawData, boolean isAckSuccess, String userId) {
         if (isAckSuccess) return;
+
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
+
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        if (userConnectivityStatus != Constants.UserStatus.WIFI_ONLINE) {
+            return;
+        }
 
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
         if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {

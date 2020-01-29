@@ -25,7 +25,7 @@ should work as it should be.
 
 **Step 3: Test on device:**
 
-Minimum API: 19 (KitKat - 4.4.x)
+Minimum API: 21 (Lollipop - 5.0)
 
 .. _Discord chat: https://discord.gg/SHG4qrH
 .. _Open source: https://www.digitalocean.com/community/tutorial_series/an-introduction-to-open-source

@@ -2,7 +2,6 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.FragmentTransaction;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -53,7 +52,6 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
-import com.w3engineers.unicef.telemesh.ui.appblocker.AppBlockerFragment;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
@@ -699,6 +697,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
             openAppBlocker(currentVersionName);
         }
+
+        openAppBlocker(currentVersionName);
+
     }
 
     public void popupSnackbarForCompleteUpdate() {

@@ -168,6 +168,9 @@
     <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
     <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
+    <string name="i_understand">I Understand</string>
+    <string name="app_update_information">Telemesh has some important updates on the latest release. This app won\'t work unless you update the latest version of Telemesh.</string>
+
 
 
 </resources>

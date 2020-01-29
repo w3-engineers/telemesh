@@ -16,6 +16,7 @@ import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,6 +109,27 @@ public class InAppUpdateTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Test
+    @UiThreadTest
+    public void appBlockerDialogOpenTest() {
+        addDelay(500);
+
+        AppBlockerUtil.openAppBlockerDialog(rule.getActivity(), "1.0.0");
+
+        addDelay(2000);
+
+        UiObject button = mDevice.findObject(new UiSelector().text("I Understand"));
+        try {
+            if (button.exists() && button.isEnabled()) {
+                button.click();
+            }
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+        addDelay(500);
 
     }
 

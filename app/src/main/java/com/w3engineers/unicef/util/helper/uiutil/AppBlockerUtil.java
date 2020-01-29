@@ -24,6 +24,8 @@ public class AppBlockerUtil {
         DialogAppBlockerBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_app_blocker, null, false);
         builder.setView(binding.getRoot());
 
+        AlertDialog dialog = builder.create();
+
         String versionText = "Update are Available: " + versionName;
         binding.textViewVersion.setText(versionText);
 
@@ -34,12 +36,13 @@ public class AppBlockerUtil {
                 return;
             }
             if (MainActivity.getInstance() != null) {
+                dialog.dismiss();
                 MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "");
             }
         });
 
         binding.textViewCancel.setOnClickListener(v -> Process.killProcess(Process.myPid()));
 
-        builder.show();
+        dialog.show();
     }
 }

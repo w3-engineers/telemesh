@@ -1076,7 +1076,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         } else if (versionModel.getVersionCode() > myVersionModel.getVersionCode()) {
             if (versionModel.getUpdateType() == Constants.AppUpdateType.BLOCKER) {
                 if (MainActivity.getInstance() != null) {
-                    MainActivity.getInstance().openAppBlocker();
+                    MainActivity.getInstance().openAppBlocker(versionModel.getVersionName());
                 }
             }
         }

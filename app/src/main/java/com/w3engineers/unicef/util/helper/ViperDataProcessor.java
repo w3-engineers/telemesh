@@ -154,6 +154,7 @@ public class ViperDataProcessor {
 
                 sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
                 sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
 
                 if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
                     String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);
@@ -162,7 +163,7 @@ public class ViperDataProcessor {
                     }
                 } else if (Constants.AppUpdateType.BLOCKER == updateType) {
                     if (MainActivity.getInstance() != null) {
-                        MainActivity.getInstance().openAppBlocker();
+                        MainActivity.getInstance().openAppBlocker(versionName);
                     }
                 }
             }

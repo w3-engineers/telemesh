@@ -73,6 +73,7 @@ public class Constants {
         String TOKEN_GUIDE_VERSION_CODE = "TOKEN_GUIDE_VERSION_CODE";
         String APP_UPDATE_TYPE = "app_update_type";
         String APP_UPDATE_VERSION_CODE = "app_update_version_code";
+        String APP_UPDATE_VERSION_NAME = "app_update_version_name";
     }
 
     public interface MenuItemPosition {

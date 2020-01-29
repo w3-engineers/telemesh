@@ -63,6 +63,7 @@ import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
@@ -691,11 +692,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
         int currentVersionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        String currentVersionName = sharedPref.read(Constants.preferenceKey.APP_UPDATE_VERSION_NAME);
 
         if (BuildConfig.VERSION_CODE < currentVersionCode
                 && currentUpdateType == Constants.AppUpdateType.BLOCKER) {
 
-            openAppBlocker();
+            openAppBlocker(currentVersionName);
         }
     }
 
@@ -736,7 +738,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    public void openAppBlocker() {
+    public void openAppBlocker(String versionName) {
         Constants.IS_APP_BLOCKER_ON = true;
 
         // App blocker ui open test
@@ -744,12 +746,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                AppBlockerFragment appBlockerFragment = new AppBlockerFragment();
-                appBlockerFragment.setCancelable(false);
-                //appBlockerFragment.show(transaction,"dialog");
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.add(android.R.id.content, appBlockerFragment).addToBackStack(null).commit();
+                AppBlockerUtil.openAppBlockerDialog(MainActivity.this, versionName);
             }
         }, 10 * 1000);
     }

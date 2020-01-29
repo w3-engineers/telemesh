@@ -698,7 +698,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             openAppBlocker(currentVersionName);
         }
 
-        openAppBlocker(currentVersionName);
+        //openAppBlocker(currentVersionName);
 
     }
 

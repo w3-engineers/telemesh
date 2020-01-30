@@ -119,6 +119,10 @@ public class TelemeshTest {
 
         addDelay(3200);
 
+        termsOfUsePageTest();
+
+        addDelay(1000);
+
         ViewInteraction buttonImportAccount = onView(
                 allOf(withId(R.id.button_import_account),
                         childAtPosition(
@@ -348,7 +352,7 @@ public class TelemeshTest {
 
     }
 
-//    @Test
+    //    @Test
     public void uiTest_02() {
 
         /*addDelay(3800);
@@ -1056,6 +1060,26 @@ public class TelemeshTest {
         });
 
         return currentActivity;
+    }
+
+    public void termsOfUsePageTest() {
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.button_next)).perform(click());
+
+        addDelay(1000);
     }
 
     private static Matcher<View> childAtPosition(

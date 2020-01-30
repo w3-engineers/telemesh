@@ -946,7 +946,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                     // InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
                 }
-            }, TimeUnit.MINUTES.toMillis(1));
+            }, TimeUnit.SECONDS.toMillis(5));
         }
 
     }

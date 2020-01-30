@@ -8,6 +8,7 @@ import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
@@ -38,18 +39,12 @@ public class AppBlockerUtilTest {
 
         rule.getActivity().checkPlayStoreAppUpdate(1, buildAppUpdateJson());
 
-        addDelay(20 * 1000);
+        addDelay(5 * 1000);
 
-        UiObject button1 = mDevice.findObject(new UiSelector().text("Cancel"));
-        try {
-            if (button1.exists() && button1.isEnabled()) {
-                button1.click();
-            }
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
+        RmDataHelper.getInstance().appUpdateFromOtherServer(1, "");
 
-        addDelay(1000);
+
+        addDelay(10 * 1000);
     }
 
     private void addDelay(int i) {

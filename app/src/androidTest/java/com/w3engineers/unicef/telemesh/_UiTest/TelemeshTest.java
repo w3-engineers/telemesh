@@ -460,7 +460,7 @@ public class TelemeshTest {
 
         hideKeyboard(currentActivity = getActivityInstance());
 
-        addDelay(1000);
+        addDelay(2000);
 
         try {
             onView(withId(R.id.button_update)).perform(scrollTo(), click());
@@ -472,7 +472,6 @@ public class TelemeshTest {
             if (currentActivity instanceof EditProfileActivity) {
                 EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
                 new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
-//            editProfileActivity.goNext();
             }
         }
 

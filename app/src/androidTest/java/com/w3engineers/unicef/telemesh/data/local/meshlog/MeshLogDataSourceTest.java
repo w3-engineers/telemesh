@@ -6,6 +6,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +23,9 @@ public class MeshLogDataSourceTest {
     private AppDatabase appDatabase;
     private Context mContext;
 
+    private FeedbackDataSource feedbackDataSource;
+    private FeedDataSource feedDataSource;
+
     @Before
     public void setup() {
         mContext = InstrumentationRegistry.getContext();
@@ -28,6 +33,8 @@ public class MeshLogDataSourceTest {
         appDatabase = Room.inMemoryDatabaseBuilder(mContext,
                 AppDatabase.class).allowMainThreadQueries().build();
         SUT = MeshLogDataSource.getInstance();
+        feedbackDataSource = FeedbackDataSource.getInstance();
+        feedDataSource  = FeedDataSource.getInstance();
     }
 
     @After
@@ -40,6 +47,30 @@ public class MeshLogDataSourceTest {
         addDelay(500);
 
         long res = SUT.insertOrUpdateData(null);
+
+        addDelay(1000);
+
+        assertEquals(0, res);
+
+        addDelay(500);
+
+        res = feedbackDataSource.insertOrUpdate(null);
+
+        addDelay(1000);
+
+        assertEquals(0, res);
+
+        addDelay(500);
+
+        res = feedDataSource.insertOrUpdateData(null);
+
+        addDelay(1000);
+
+        assertEquals(0, res);
+
+        addDelay(500);
+
+        res = feedDataSource.updateFeedMessageReadStatus(null);
 
         addDelay(1000);
 

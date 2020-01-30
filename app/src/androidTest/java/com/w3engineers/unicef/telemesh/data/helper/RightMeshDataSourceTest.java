@@ -21,6 +21,7 @@ import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -373,6 +374,17 @@ public class RightMeshDataSourceTest {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
+    }
+
+    @Test
+    public void configDataSyncTest() {
+        addDelay(500);
+
+        ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
+
+        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
+
+        addDelay(2000);
     }
 
     private void addDelay(long time) {

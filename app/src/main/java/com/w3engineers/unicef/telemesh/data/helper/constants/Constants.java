@@ -218,7 +218,7 @@ public class Constants {
         }
     }
 
-    private static String capitalize(String s) {
+    public static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }

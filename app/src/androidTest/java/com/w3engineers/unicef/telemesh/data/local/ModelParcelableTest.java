@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
@@ -31,6 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /*
  * ============================================================================
@@ -197,6 +199,21 @@ public class ModelParcelableTest {
         long convertedTime = Converters.fromDate(date);
 
         assertEquals(convertedTime, convertedTime);
+
+        addDelay();
+
+        // Constants item test
+        String res = Constants.capitalize(null);
+
+        assertTrue(TextUtils.isEmpty(res));
+
+        addDelay();
+
+        String test = "Mobile";
+
+        res = Constants.capitalize(test);
+
+        assertEquals(test, res);
 
         addDelay();
     }

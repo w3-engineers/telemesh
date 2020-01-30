@@ -457,9 +457,10 @@ public class TelemeshTest {
     }
 
     public void updateButtonClick() {
-        addDelay(1000);
-        
+
         hideKeyboard(currentActivity = getActivityInstance());
+
+        addDelay(1000);
 
         try {
             onView(withId(R.id.button_update)).perform(scrollTo(), click());
@@ -872,7 +873,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(500);
+        addDelay(2500);
 
         mDevice.pressBack();
 

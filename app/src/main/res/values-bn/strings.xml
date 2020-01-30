@@ -168,4 +168,5 @@
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
     <string name="i_understand">বুঝেছি</string>
     <string name="app_update_information">সর্বশেষ প্রকাশের বিষয়ে টেলিমেশের কিছু গুরুত্বপূর্ণ আপডেট রয়েছে। আপনি টেলিমেশের সর্বশেষতম সংস্করণ আপডেট না করলে এই অ্যাপ্লিকেশনটি কাজ করবে না।.</string>
+    <string name="terms_of_use_details">Terms of Use</string>
 </resources>

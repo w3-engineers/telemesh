@@ -167,4 +167,8 @@
     <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
 
+    <string name="interruption_title">%s Interruption</string>
+    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+
 </resources>

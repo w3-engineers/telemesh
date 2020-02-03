@@ -172,5 +172,8 @@
     <string name="app_update_information">Telemesh has some important updates on the latest release. This app won\'t work unless you update the latest version of Telemesh.</string>
     <string name="terms_of_use_details">Terms of Use</string>
 
+    <string name="interruption_title">%s Interruption</string>
+    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
 
 </resources>

@@ -169,4 +169,9 @@
     <string name="i_understand">বুঝেছি</string>
     <string name="app_update_information">সর্বশেষ প্রকাশের বিষয়ে টেলিমেশের কিছু গুরুত্বপূর্ণ আপডেট রয়েছে। আপনি টেলিমেশের সর্বশেষতম সংস্করণ আপডেট না করলে এই অ্যাপ্লিকেশনটি কাজ করবে না।.</string>
     <string name="terms_of_use_details">Terms of Use</string>
+
+    <string name="interruption_title">%s Interruption</string>
+    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+
 </resources>

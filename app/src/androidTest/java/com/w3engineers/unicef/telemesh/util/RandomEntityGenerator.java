@@ -3,9 +3,11 @@ package com.w3engineers.unicef.telemesh.util;
 import android.os.Parcel;
 
 import com.google.gson.Gson;
+import com.w3engineers.mesh.application.data.local.DataPlanConstants;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
@@ -271,5 +273,11 @@ public class RandomEntityGenerator {
         model.setVersionName("100.0.0");
 
         return model;
+    }
+
+    public PermissionInterruptionEvent generatePermissionInterruptEvent(){
+        PermissionInterruptionEvent event = new PermissionInterruptionEvent();
+        event.hardwareState = DataPlanConstants.INTERRUPTION_EVENT.USER_DISABLED_BT;
+        return event;
     }
 }

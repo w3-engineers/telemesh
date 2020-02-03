@@ -179,16 +179,15 @@ public abstract class ViperUtil {
             Log.v("MIMO_SAHA::", "Permission<><> 2");
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
-                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions));
+                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions, MainActivity.getInstance()));
             }
         });
 
     }
 
-    private void showPermissionEventAlert(int hardwareEvent, List<String> permissions) {
+    public void showPermissionEventAlert(int hardwareEvent, List<String> permissions, Activity activity) {
 
-        Activity activity = MainActivity.getInstance();
-
+        if (activity == null) return;
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         @SuppressLint("InflateParams")
@@ -397,16 +396,18 @@ public abstract class ViperUtil {
     public void stopMeshService() {
         try {
             viperClient.stopMesh();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void restartMeshService() {
         try {
             int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
             viperClient.restartMesh(myCurrentRole);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     // TODO SSID_Change

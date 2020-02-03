@@ -8,6 +8,19 @@ Proprietary and confidential
 ============================================================================
 */
 
+import android.content.Context;
+import android.os.Build;
+
+import com.google.gson.Gson;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.MeshApp;
+import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.json.JSONException;
@@ -51,7 +64,7 @@ public class ViperDataProcessor {
     }
 
     public ViperData setDataFormatFromJson(byte[] meshDataBytes) {
-        if(meshDataBytes == null) {
+        if (meshDataBytes == null) {
             throw new IllegalStateException("Corrupted data");
         }
 
@@ -121,4 +134,54 @@ public class ViperDataProcessor {
             return false;
     }*/
 
+    public void processUpdateAppConfigJson(String configData) {
+
+        UpdateConfigModel updateConfigModel;
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+
+        updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
+
+        //   int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+
+        if (updateConfigModel != null) {
+
+            String versionName = updateConfigModel.getVersionName();
+            int versionCode = updateConfigModel.getVersionCode();
+            int updateType = updateConfigModel.getUpdateType();
+            String releaseNote = updateConfigModel.getReleaseNote();
+
+            if (BuildConfig.VERSION_CODE < versionCode) {
+
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
+                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
+
+                if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
+                    String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);
+                    if (MainActivity.getInstance() != null) {
+                        MainActivity.getInstance().checkPlayStoreAppUpdate(updateType, normalUpdateJson);
+                    }
+                } else if (Constants.AppUpdateType.BLOCKER == updateType) {
+                    if (MainActivity.getInstance() != null) {
+                        MainActivity.getInstance().openAppBlocker(versionName);
+                    }
+                }
+            }
+
+            //  sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+        }
+    }
+
+    private String buildAppUpdateJson(String versionName, int versionCode, String releaseNote) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constants.InAppUpdate.LATEST_VERSION_CODE_KEY, versionCode);
+            jsonObject.put(Constants.InAppUpdate.LATEST_VERSION_KEY, versionName);
+            jsonObject.put(Constants.InAppUpdate.URL_KEY, AppCredentials.getInstance().getFileRepoLink());
+            jsonObject.put(Constants.InAppUpdate.RELEASE_NOTE_KEY, releaseNote);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
 }

@@ -21,6 +21,7 @@ import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -118,6 +119,10 @@ public class TelemeshTest {
     public void uiTest_01() {
 
         addDelay(3200);
+
+        termsOfUsePageTest();
+
+        addDelay(1000);
 
         ViewInteraction buttonImportAccount = onView(
                 allOf(withId(R.id.button_import_account),
@@ -348,7 +353,7 @@ public class TelemeshTest {
 
     }
 
-//    @Test
+    //    @Test
     public void uiTest_02() {
 
         /*addDelay(3800);
@@ -452,7 +457,10 @@ public class TelemeshTest {
     }
 
     public void updateButtonClick() {
-        addDelay(1000);
+
+        hideKeyboard(currentActivity = getActivityInstance());
+
+        addDelay(2000);
 
         try {
             onView(withId(R.id.button_update)).perform(scrollTo(), click());
@@ -464,7 +472,6 @@ public class TelemeshTest {
             if (currentActivity instanceof EditProfileActivity) {
                 EditProfileActivity editProfileActivity = (EditProfileActivity) currentActivity;
                 new Handler(Looper.getMainLooper()).post(editProfileActivity::goNext);
-//            editProfileActivity.goNext();
             }
         }
 
@@ -865,7 +872,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(500);
+        addDelay(2500);
 
         mDevice.pressBack();
 
@@ -1058,6 +1065,26 @@ public class TelemeshTest {
         return currentActivity;
     }
 
+    public void termsOfUsePageTest() {
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.check_box_terms_of_use)).perform(click());
+
+        addDelay(500);
+
+        onView(withId(R.id.button_next)).perform(click());
+
+        addDelay(1000);
+    }
+
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
@@ -1104,4 +1131,14 @@ public class TelemeshTest {
         return userEntity;
     }
 
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

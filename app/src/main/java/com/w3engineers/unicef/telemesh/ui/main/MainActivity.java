@@ -42,7 +42,9 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -59,6 +61,7 @@ import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
@@ -118,6 +121,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         requestMultiplePermissions();
 
         Constants.IS_LOADING_ENABLE = false;
+        Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
         sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
@@ -173,18 +177,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 //        mViewModel.makeSendingMessageAsFailed();
 
 
-       /* new Handler().postDelayed(() -> {
-            AppShareCountEntity entity = new AppShareCountEntity();
-            entity.setCount(1);
-            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-            entity.setUserId(myId);
-            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
-            List<AppShareCountEntity> list = new ArrayList<>();
-            list.add(entity);
-            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
-        }, 10000);*/
-        /*DiagramUtil.on(this).start();*/
-
         initSearchListener();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
@@ -196,6 +188,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }*/
 
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
+        checkAppBlockerAvailable();
 
     }
 
@@ -547,6 +541,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
+        if (Constants.IS_APP_BLOCKER_ON) {
+            return;
+        }
         if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
             binding.searchBar.editTextSearch.setText("");
             hideSearchBar();
@@ -648,7 +645,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     };
 
-    public void checkPlayStoreAppUpdate() {
+    public void checkPlayStoreAppUpdate(int type, String normalUpdateJson) {
         mAppUpdateManager = AppUpdateManagerFactory.create(this);
 
         mAppUpdateManager.registerListener(installStateUpdatedListener);
@@ -666,7 +663,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                RmDataHelper.getInstance().appUpdateFromOtherServer();
+                RmDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
             }
         });
     }
@@ -687,6 +684,23 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                     }*/
                 }
             };
+
+    private void checkAppBlockerAvailable() {
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+
+        int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+        int currentVersionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        String currentVersionName = sharedPref.read(Constants.preferenceKey.APP_UPDATE_VERSION_NAME);
+
+        if (BuildConfig.VERSION_CODE < currentVersionCode
+                && currentUpdateType == Constants.AppUpdateType.BLOCKER) {
+
+            openAppBlocker(currentVersionName);
+        }
+
+        //openAppBlocker(currentVersionName);
+
+    }
 
     public void popupSnackbarForCompleteUpdate() {
 
@@ -723,5 +737,18 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (mCurrentFragment instanceof DiscoverFragment) {
             ((DiscoverFragment) mCurrentFragment).enableEmpty();
         }
+    }
+
+    public void openAppBlocker(String versionName) {
+        Constants.IS_APP_BLOCKER_ON = true;
+
+        // App blocker ui open test
+
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                AppBlockerUtil.openAppBlockerDialog(MainActivity.this, versionName);
+            }
+        }, 10 * 1000);
     }
 }

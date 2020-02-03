@@ -50,13 +50,15 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
+        <activity android:name=".ui.termofuse.TermsOfUseActivity"></activity>
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.editprofile.EditProfileActivity" />
         <activity android:name=".ui.importwallet.ImportWalletActivity" />
-        <activity android:name=".ui.security.SecurityActivity"
-            android:theme="@style/AppTheme"
+        <activity
+            android:name=".ui.security.SecurityActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.importprofile.ImportProfileActivity"
             android:theme="@style/NoActionBarTheme" />

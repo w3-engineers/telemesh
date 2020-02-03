@@ -21,6 +21,7 @@ import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -271,30 +272,41 @@ public class VProfileChoiceTest {
 
         addDelay(1000);
 
-        ViewInteraction ActionCreateProfileNext = onView(
-                allOf(withId(R.id.button_signup),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+        try {
+            ViewInteraction ActionCreateProfileNext = onView(
+                    allOf(withId(R.id.button_signup),
+                            childAtPosition(allOf(withId(R.id.image_layout),
+                                    childAtPosition(withId(R.id.scrollview), 0)), 10)));
 
-        ActionCreateProfileNext.perform(scrollTo(), click());
+            addDelay(1000);
 
-        addDelay(1000);
+            hideKeyboard(getActivityInstance());
 
-        baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
+            addDelay(2000);
 
-        addDelay(1000);
+            ActionCreateProfileNext.perform(scrollTo(), click());
 
-        ActionCreateProfileNext.perform(scrollTo(), click());
+            addDelay(1000);
 
-        addDelay(1000);
+            baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
 
-        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+            addDelay(1000);
 
-        addDelay(1000);
+            ActionCreateProfileNext.perform(scrollTo(), click());
 
-        ActionCreateProfileNext.perform(scrollTo(), click());
+            addDelay(1000);
 
-        addDelay(2000);
+            baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+            addDelay(1000);
+
+            ActionCreateProfileNext.perform(scrollTo(), click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public Activity currentActivity = null;
@@ -356,5 +368,16 @@ public class VProfileChoiceTest {
                 return "Show / Hide View";
             }
         };
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

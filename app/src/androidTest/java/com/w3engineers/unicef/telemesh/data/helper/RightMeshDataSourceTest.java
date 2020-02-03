@@ -1,19 +1,26 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import android.Manifest;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.local.DataPlanConstants;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
@@ -21,6 +28,7 @@ import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
 import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
 import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -43,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -82,6 +91,7 @@ public class RightMeshDataSourceTest {
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
+    public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
     @Rule
     public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
@@ -373,6 +383,74 @@ public class RightMeshDataSourceTest {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
+    }
+
+    @Test
+    @UiThreadTest
+    public void permissionDialogOpenTest() {
+        addDelay(500);
+        PermissionInterruptionEvent event = randomEntityGenerator.generatePermissionInterruptEvent();
+
+        AppDataObserver.on().sendObserverData(event);
+
+        addDelay(2000);
+
+        int btEvent = DataPlanConstants.INTERRUPTION_EVENT.USER_DISABLED_BT;
+        int wifiEvent = DataPlanConstants.INTERRUPTION_EVENT.USER_DISABLED_WIFI;
+        int locationEvent = DataPlanConstants.INTERRUPTION_EVENT.LOCATION_PROVIDER_OFF;
+
+        /*new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                SUT.showPermissionEventAlert(btEvent, null, rule.getActivity());
+
+                addDelay(2000);
+
+                SUT.showPermissionEventAlert(wifiEvent, null, rule.getActivity());
+
+                addDelay(2000);
+
+
+                SUT.showPermissionEventAlert(locationEvent, null, rule.getActivity());
+            }
+        });*/
+
+        SUT.showPermissionEventAlert(btEvent, null, rule.getActivity());
+
+        addDelay(2000);
+
+        SUT.showPermissionEventAlert(wifiEvent, null, rule.getActivity());
+
+        addDelay(2000);
+
+        SUT.showPermissionEventAlert(locationEvent, null, rule.getActivity());
+
+        addDelay(2000);
+
+        List<String> permissionList = new ArrayList<>();
+        permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        SUT.showPermissionEventAlert(-1, permissionList, rule.getActivity());
+
+        addDelay(2000);
+
+        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        SUT.showPermissionEventAlert(-1, permissionList, rule.getActivity());
+
+        addDelay(5000);
+
+    }
+
+    @Test
+    public void configDataSyncTest() {
+        addDelay(500);
+
+        ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
+
+        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
+
+        addDelay(2000);
     }
 
     private void addDelay(long time) {

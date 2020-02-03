@@ -48,8 +48,8 @@ android {
         }
         release {
             debuggable false
-          //  minifyEnabled true
-          //  shrinkResources true
+            //  minifyEnabled true
+            //  shrinkResources true
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -90,7 +90,6 @@ android {
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
     }
-
 
 
     externalNativeBuild {

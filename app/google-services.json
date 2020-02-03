@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "224497987468",
+    "firebase_url": "https://telemesh-9ddcc.firebaseio.com",
+    "project_id": "telemesh-9ddcc",
+    "storage_bucket": "telemesh-9ddcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224497987468:android:e5002244f2bb0db60870a9",
+        "android_client_info": {
+          "package_name": "com.w3engineers.unicef.telemesh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224497987468-kd0uelobjdvof4paufdbj42ivg02k8ot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.w3engineers.unicef.telemesh",
+            "certificate_hash": "53b5053877ca87c8dfc5452cfc4e3c86a89c2414"
+          }
+        },
+        {
+          "client_id": "224497987468-rvrr3rctid5alocguknt0ff4tivksgci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEUexHj2MqBE69w53SCZnX88gDxr8CGAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224497987468-rvrr3rctid5alocguknt0ff4tivksgci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

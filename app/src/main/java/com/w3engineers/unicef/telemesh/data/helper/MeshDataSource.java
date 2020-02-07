@@ -228,4 +228,11 @@ public class MeshDataSource extends ViperUtil {
 
     }
 
+    public void saveUpdateOtherUserInfo(String userAddress, String userName, int imageIndex) {
+        UserModel userModel = new UserModel().setUserId(userAddress)
+                .setName(userName).setImage(imageIndex);
+
+        saveOtherUserInfo(userModel);
+    }
+
 }

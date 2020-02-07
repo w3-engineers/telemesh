@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -982,6 +981,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             userEntity = userEntity.updateUserEntity(userModel);
 
+            rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
+
             UserDataSource.getInstance().insertOrUpdateData(userEntity);
         }
     }
@@ -1004,7 +1005,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         prepareRightMeshDataSource();
 
-        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
+        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedActiveUserIds()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(users -> {
 

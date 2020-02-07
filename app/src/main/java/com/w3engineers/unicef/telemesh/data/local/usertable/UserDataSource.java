@@ -167,8 +167,8 @@ public class UserDataSource {
         return mUserDao.getLocalActiveUsers();
     }
 
-    public Single<List<String>> getAllFabMessagedUserIds() {
-        return mUserDao.getFavMessageUserIds();
+    public Single<List<String>> getAllFabMessagedActiveUserIds() {
+        return mUserDao.getAllFabMessagedActiveUserIds();
     }
 
     public List<String> getLocalWithBackConfigUsers(int versionCode) {

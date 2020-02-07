@@ -229,6 +229,11 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS NOT NULL OR "
-            + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + ")")
-    abstract Single<List<String>> getFavMessageUserIds();
+            + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + " OR "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE + ")")
+    abstract Single<List<String>> getAllFabMessagedActiveUserIds();
+
+    /*@Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE)
+    abstract Single<List<String>> getAllActiveUsers();*/
 }

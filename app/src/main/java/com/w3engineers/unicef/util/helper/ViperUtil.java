@@ -444,6 +444,13 @@ public abstract class ViperUtil {
         }
     }
 
+    public void saveOtherUserInfo(UserModel userModel) {
+
+        if (viperClient != null) {
+            viperClient.saveOtherUserInfo(userModel.getName(), userModel.getImage(), userModel.getUserId());
+        }
+    }
+
 
     public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {

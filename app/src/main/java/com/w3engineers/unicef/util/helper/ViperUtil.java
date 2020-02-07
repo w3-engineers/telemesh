@@ -37,6 +37,8 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -60,6 +62,7 @@ public abstract class ViperUtil {
     private ViperClient viperClient;
     private String myUserId;
     private Context context;
+    private String DEVICE_NAME = "xiaomi";
 
     protected ViperUtil(UserModel userModel) {
         try {
@@ -179,16 +182,15 @@ public abstract class ViperUtil {
             Log.v("MIMO_SAHA::", "Permission<><> 2");
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
-                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions));
+                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions, MainActivity.getInstance()));
             }
         });
 
     }
 
-    private void showPermissionEventAlert(int hardwareEvent, List<String> permissions) {
+    public void showPermissionEventAlert(int hardwareEvent, List<String> permissions, Activity activity) {
 
-        Activity activity = MainActivity.getInstance();
-
+        if (activity == null) return;
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         @SuppressLint("InflateParams")
@@ -246,16 +248,20 @@ public abstract class ViperUtil {
 
         boolean finalIsPermission = isPermission;
         okay.setOnClickListener(v -> {
-            if (finalIsPermission) {
+            if (isPermissionNeeded(DEVICE_NAME)) {
+                showPermissionPopupForXiaomi(MainActivity.getInstance());
+            } else if (finalIsPermission) {
                 DataManager.on().allowMissingPermission(permissions);
+                alertDialog.dismiss();
             }
-            alertDialog.dismiss();
+
         });
 
         if (!TextUtils.isEmpty(finalTitle) && !TextUtils.isEmpty(finalMessage)) {
             title.setText(finalTitle);
             message.setText(finalMessage);
 
+            alertDialog.setCancelable(false);
             alertDialog.show();
         }
     }
@@ -397,16 +403,18 @@ public abstract class ViperUtil {
     public void stopMeshService() {
         try {
             viperClient.stopMesh();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     public void restartMeshService() {
         try {
             int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
             viperClient.restartMesh(myCurrentRole);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     // TODO SSID_Change
@@ -498,6 +506,38 @@ public abstract class ViperUtil {
             }
         });
 
+    }
+
+    public boolean isPermissionNeeded(String deviceName) {
+        String manufacturer = android.os.Build.MANUFACTURER;
+        try {
+
+            if (deviceName.equalsIgnoreCase(manufacturer)) {
+                return !SharedPref.getSharedPref(context).readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private void showPermissionPopupForXiaomi(Activity activity) {
+        if (activity == null) return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setCancelable(false);
+        builder.setTitle(Html.fromHtml("<b>" + "<font color='#FF7F27'>Please allow permissions</font>" + "</b>"));
+        builder.setMessage(activity.getString(R.string.permission_xiomi));
+        builder.setPositiveButton(Html.fromHtml("<b>" + activity.getString(com.w3engineers.mesh.R.string.ok) + "<b>"), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                SharedPref.getSharedPref(context).write(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE, true);
+                activity.startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 100);
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////

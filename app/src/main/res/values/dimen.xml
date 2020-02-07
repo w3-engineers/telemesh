@@ -14,6 +14,7 @@
     <dimen name="margin_16">16dp</dimen>
     <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_3">3dp</dimen>
     <dimen name="margin_1">1dp</dimen>
 

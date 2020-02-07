@@ -14,6 +14,7 @@ public class Constants {
     public static boolean IsMeshInit;
     public static boolean IS_LOG_UPLOADING_START = false;
     public static boolean IS_DATA_ON = false;
+    public static boolean IS_APP_BLOCKER_ON = false;
 
     public static int INTERNET_ONLY = 3;
     public static int SELLER_MODE = 1;
@@ -70,6 +71,10 @@ public class Constants {
         String CONFIG_STATUS = "CONFIG_STATUS";
         String CONFIG_VERSION_CODE = "CONFIG_VERSION_CODE";
         String TOKEN_GUIDE_VERSION_CODE = "TOKEN_GUIDE_VERSION_CODE";
+        String APP_UPDATE_TYPE = "app_update_type";
+        String APP_UPDATE_VERSION_CODE = "app_update_version_code";
+        String APP_UPDATE_VERSION_NAME = "app_update_version_name";
+        String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
     }
 
     public interface MenuItemPosition {
@@ -157,6 +162,12 @@ public class Constants {
         String DASHES = "-------------------------------";
     }
 
+    public interface AppUpdateType{
+        int NO_CHANGES = 0;
+        int NORMAL_UPDATE = 1;
+        int BLOCKER = 2;
+    }
+
     public interface Bulletin {
         int DEFAULT = 0;
         int BULLETIN_SEND = 1;
@@ -208,7 +219,7 @@ public class Constants {
         }
     }
 
-    private static String capitalize(String s) {
+    public static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }

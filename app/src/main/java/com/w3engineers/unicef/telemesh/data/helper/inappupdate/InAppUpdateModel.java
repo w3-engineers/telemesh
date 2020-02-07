@@ -12,6 +12,7 @@ public class InAppUpdateModel {
     private String vn;
     private int vc;
     private String un;
+    private int ut;
 
     public String getVersionName() {
         return vn;
@@ -35,5 +36,13 @@ public class InAppUpdateModel {
 
     public void setUpdateLink(String un) {
         this.un = un;
+    }
+
+    public void setUpdateType(int type){
+        this.ut = type;
+    }
+
+    public int getUpdateType(){
+        return ut;
     }
 }

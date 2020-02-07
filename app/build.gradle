@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'com.github.kt3k.coveralls'
+    id 'com.google.gms.google-services'
+    id 'io.fabric'
 }
-
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion '28.0.3'
@@ -47,8 +48,8 @@ android {
         }
         release {
             debuggable false
-          //  minifyEnabled true
-          //  shrinkResources true
+            //  minifyEnabled true
+            //  shrinkResources true
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -91,10 +92,9 @@ android {
     }
 
 
-
     externalNativeBuild {
         cmake {
-//            path "src/main/cpp/CMakeLists.txt"
+            //path "src/main/cpp/CMakeLists.txt"
             version "3.10.2"
         }
     }
@@ -122,6 +122,10 @@ dependencies {
 
     //LiveDataReactStream
     implementation deps.livedata_reactive
+
+    //Crashlytics
+  //  implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     //room with Rx
     implementation deps.room.runtime

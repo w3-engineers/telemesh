@@ -185,7 +185,7 @@ Telemesh
 
    Please follow this `Parse`_ installation process in Android.
 
-   In Telemesh to configure parse, the following steps are given below:
+   To configure parse with Telemesh, follow the steps are given below:
 
       Step 1:  Add parse server Android SDK version in ``version.gradle``
 
@@ -217,8 +217,12 @@ Telemesh
 
 
 
-
 Happy Coding :)
+
+
+After successful build, install the apk into any Android device (minimum android version ``Lollipop - 5.0``)
+
+and you need to download ``TeleService`` apk from Telemesh inside which will provide multihop mesh support into Telemesh.
 
 
 

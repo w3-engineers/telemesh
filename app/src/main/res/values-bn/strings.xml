@@ -3,7 +3,7 @@
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <string name="enter_first_name">আপনার নাম লিখুন</string>
     <string name="signup">Next</string>
-<!--    <string name="no_item_found">No item found</string>-->
+    <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
@@ -29,7 +29,7 @@
     <string name="no_message_available">কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
-<!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
+    <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     // Settings title
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
@@ -43,14 +43,14 @@
     <string name="settings_open_wallet">ওয়ালেট</string>
     <string name="image">Image</string>
 
-<!--    <string name="id">ID</string>-->
-<!--    <string name="this_may_take_while">This may take a while…</string>-->
+    <!--    <string name="id">ID</string>-->
+    <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Discovering Users</string>
     <string name="searching">আরো খোজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 
-<!--    <string name="profile">Profile</string>-->
+    <!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
 
     <string name="unicef">UNICEF</string>
@@ -125,7 +125,7 @@
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
     <string name="welcome_back">Welcome back</string>
     <string name="import_my_profile">import another id</string>
-<!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
+    <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
     <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
     <string name="pin_instruction">Please remember your password for you will need this in case of  account recovery.</string>
@@ -145,10 +145,10 @@
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
     <string name="ok">OK</string>
 
-<!--    <string name="search_hint">Search</string>-->
-<!--    <string name="clear_button">Clear</string>-->
+    <!--    <string name="search_hint">Search</string>-->
+    <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
-<!--    <string name="spinner_title">Favourite</string>-->
+    <!--    <string name="spinner_title">Favourite</string>-->
 
     <string name="favourite">Favourite</string>
     <string name="show_password">Show password</string>
@@ -166,9 +166,16 @@
     <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
     <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
+    <string name="i_understand">বুঝেছি</string>
+    <string name="app_update_information">সর্বশেষ প্রকাশের বিষয়ে টেলিমেশের কিছু গুরুত্বপূর্ণ আপডেট রয়েছে। আপনি টেলিমেশের সর্বশেষতম সংস্করণ আপডেট না করলে এই অ্যাপ্লিকেশনটি কাজ করবে না।.</string>
+    <string name="terms_of_use_details">Terms of Use</string>
 
     <string name="interruption_title">%s Interruption</string>
     <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
     <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+    <string name="permission_xiomi">To deliver the best experience TeleService needs a few system permissions.\n\nPlease go to your device settings and search for Permissions.
+                          \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
+                          \nAllow all the permissions from TeleService screen which are not marked as green.
+                          \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
 
 </resources>

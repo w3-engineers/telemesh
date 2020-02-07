@@ -1007,6 +1007,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
 
+        // Save current my information in SDK layer
+        rightMeshDataSource.saveUpdateUserInfo();
+
         UserModel userModel = new UserModel();
         userModel.setImage(imageIndex);
         userModel.setName(userName);

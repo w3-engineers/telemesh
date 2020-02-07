@@ -74,6 +74,7 @@ public class Constants {
         String APP_UPDATE_TYPE = "app_update_type";
         String APP_UPDATE_VERSION_CODE = "app_update_version_code";
         String APP_UPDATE_VERSION_NAME = "app_update_version_name";
+        String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
     }
 
     public interface MenuItemPosition {

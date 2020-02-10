@@ -92,6 +92,7 @@ public class RightMeshDataSourceTest {
     private AppDatabase appDatabase;
     private Context mContext;
     private Source source;
+    private String DEVICE_NAME = "xiaomi";
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
@@ -451,7 +452,7 @@ public class RightMeshDataSourceTest {
     public void xiaomiPermissionTest() {
         addDelay(500);
 
-        boolean res = SUT.isPermissionNeeded("xiaomi");
+        boolean res = SUT.isPermissionNeeded(DEVICE_NAME);
         assertFalse(res);
 
         addDelay(500);
@@ -460,7 +461,7 @@ public class RightMeshDataSourceTest {
 
         addDelay(4000);
 
-        UiObject button1 = mDevice.findObject(new UiSelector().text("Ok"));
+        UiObject button1 = mDevice.findObject(new UiSelector().text("OK"));
         try {
             if (button1.exists() && button1.isEnabled()) {
                 button1.click();

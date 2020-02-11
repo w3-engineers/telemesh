@@ -530,9 +530,7 @@ public abstract class ViperUtil {
             if (deviceName.equalsIgnoreCase(manufacturer)) {
                 isPermissionNeeded = !SharedPref.getSharedPref(context).readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
 
         return isPermissionNeeded;
     }

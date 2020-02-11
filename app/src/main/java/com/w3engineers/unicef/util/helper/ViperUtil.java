@@ -524,18 +524,15 @@ public abstract class ViperUtil {
 
     public boolean isPermissionNeeded(String deviceName) {
         String manufacturer = android.os.Build.MANUFACTURER;
+        boolean isPermissionNeeded = false;
         try {
 
             if (deviceName.equalsIgnoreCase(manufacturer)) {
-                return !SharedPref.getSharedPref(context).readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
-            } else {
-                return false;
+                isPermissionNeeded = !SharedPref.getSharedPref(context).readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
 
-        return false;
+        return isPermissionNeeded;
     }
 
     public void showPermissionPopupForXiaomi(Activity activity) {

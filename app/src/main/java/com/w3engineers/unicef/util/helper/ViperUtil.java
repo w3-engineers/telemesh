@@ -253,8 +253,9 @@ public abstract class ViperUtil {
             } else if (finalIsPermission) {
                 DataManager.on().allowMissingPermission(permissions);
                 alertDialog.dismiss();
+            } else {
+                alertDialog.dismiss();
             }
-
         });
 
         if (!TextUtils.isEmpty(finalTitle) && !TextUtils.isEmpty(finalMessage)) {

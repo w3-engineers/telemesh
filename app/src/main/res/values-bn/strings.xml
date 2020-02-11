@@ -177,5 +177,6 @@
                           \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
                           \nAllow all the permissions from TeleService screen which are not marked as green.
                           \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
+    <string name="got_it">Got It</string>
 
 </resources>

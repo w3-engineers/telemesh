@@ -136,8 +136,8 @@
     <string name="set_new_network_prefix">Set new network prefix</string>
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
-    <!--    <string name="def_ssid">captor</string>-->
-    <string name="def_ssid">England</string>
+<!--        <string name="def_ssid">captor</string>-->
+    <string name="def_ssid">stage</string>
     <!--    <string name="search_hint">Search</string>-->
     <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
@@ -180,5 +180,6 @@
                           \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
                           \nAllow all the permissions from TeleService screen which are not marked as green.
                           \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
+    <string name="got_it">Got It</string>
 
 </resources>

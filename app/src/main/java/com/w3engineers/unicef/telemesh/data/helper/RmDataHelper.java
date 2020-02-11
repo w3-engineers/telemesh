@@ -214,6 +214,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case 4:
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
+            case 8:
+            case 9:
                 return Constants.UserStatus.INTERNET_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;

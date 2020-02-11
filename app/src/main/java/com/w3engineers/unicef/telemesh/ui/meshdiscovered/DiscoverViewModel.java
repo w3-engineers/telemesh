@@ -119,11 +119,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                         userEntity.setIsFavourite(diffElement.getIsFavourite());
                         userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
-                        if (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) {
-                            userEntity.hasUnreadMessage = 0;
-                        } else {
-                            userEntity.hasUnreadMessage = diffElement.hasUnreadMessage;
-                        }
+                        userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
 
                         userEntityList.add(userEntity);
                     }
@@ -139,9 +135,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         setUserData(userList);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
     }
 
     public void setUserData(List<UserEntity> userEntities) {
@@ -216,7 +210,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Timber.tag("SearchIssue").d("user list null");
+//            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

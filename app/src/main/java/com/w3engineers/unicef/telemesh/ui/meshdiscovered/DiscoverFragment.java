@@ -74,6 +74,14 @@ public class DiscoverFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (discoverViewModel != null) {
+            discoverViewModel.selectedChattedUser(null);
+        }
+    }
+
     private void userDataOperation() {
 
         if (discoverViewModel != null) {
@@ -137,6 +145,8 @@ public class DiscoverFragment extends BaseFragment {
 
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
+
+                    discoverViewModel.selectedChattedUser(userEntity.meshId);
 
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);

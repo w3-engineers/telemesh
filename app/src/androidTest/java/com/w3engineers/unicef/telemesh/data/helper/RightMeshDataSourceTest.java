@@ -10,6 +10,9 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -58,6 +61,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -88,6 +92,7 @@ public class RightMeshDataSourceTest {
     private AppDatabase appDatabase;
     private Context mContext;
     private Source source;
+    private String DEVICE_NAME = "xiaomi";
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
@@ -439,6 +444,34 @@ public class RightMeshDataSourceTest {
         SUT.showPermissionEventAlert(-1, permissionList, rule.getActivity());
 
         addDelay(5000);
+
+    }
+
+    @Test
+    @UiThreadTest
+    public void xiaomiPermissionTest() {
+        addDelay(500);
+
+        boolean res = SUT.isPermissionNeeded(DEVICE_NAME);
+        assertFalse(res);
+
+        addDelay(500);
+
+        SUT.showPermissionPopupForXiaomi(rule.getActivity());
+
+        addDelay(4000);
+
+        UiObject button1 = mDevice.findObject(new UiSelector().text("OK"));
+        try {
+            if (button1.exists() && button1.isEnabled()) {
+                button1.click();
+            }
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(1000);
+
 
     }
 

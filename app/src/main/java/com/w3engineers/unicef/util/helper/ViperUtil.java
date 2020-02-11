@@ -525,7 +525,7 @@ public abstract class ViperUtil {
         return false;
     }
 
-    private void showPermissionPopupForXiaomi(Activity activity) {
+    public void showPermissionPopupForXiaomi(Activity activity) {
         if (activity == null) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setCancelable(false);

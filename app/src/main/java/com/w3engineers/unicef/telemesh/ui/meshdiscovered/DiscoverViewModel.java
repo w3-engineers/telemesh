@@ -39,6 +39,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+    private String selectChattedUser = null;
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 50;
@@ -62,6 +63,10 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
         changeFavouriteStatus.postValue(userEntity);
+    }
+
+    public void selectedChattedUser(String selectChattedUser) {
+        this.selectChattedUser = selectChattedUser;
     }
 
     /*public void setSearchText(String searchText) {
@@ -113,8 +118,8 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         userEntity.setUserName(diffElement.getUserName());
                         userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                         userEntity.setIsFavourite(diffElement.getIsFavourite());
-                        userEntity.setOnlineStatus(0);
-                        userEntity.hasUnreadMessage = diffElement.hasUnreadMessage;
+                        userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                        userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
 
                         userEntityList.add(userEntity);
                     }
@@ -130,9 +135,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         setUserData(userList);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
     }
 
     public void setUserData(List<UserEntity> userEntities) {
@@ -207,7 +210,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Timber.tag("SearchIssue").d("user list null");
+//            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

@@ -56,7 +56,7 @@
         android:paddingRight="@dimen/padding_5"
         android:paddingBottom="@dimen/padding_5"
         android:background="@android:color/transparent"
-        android:text="@string/ok"
+        android:text="@string/got_it"
         android:textColor="@color/link_color"
         android:textSize="@dimen/text_size_16"
         app:layout_constraintLeft_toLeftOf="parent"

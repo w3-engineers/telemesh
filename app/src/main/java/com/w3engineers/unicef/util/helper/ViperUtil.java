@@ -253,8 +253,9 @@ public abstract class ViperUtil {
             } else if (finalIsPermission) {
                 DataManager.on().allowMissingPermission(permissions);
                 alertDialog.dismiss();
+            } else {
+                alertDialog.dismiss();
             }
-
         });
 
         if (!TextUtils.isEmpty(finalTitle) && !TextUtils.isEmpty(finalMessage)) {
@@ -440,7 +441,7 @@ public abstract class ViperUtil {
 
     public void saveUserInfo(UserModel userModel) {
 
-        if (viperClient != null) {
+        try {
             SharedPref sharedPref = SharedPref.getSharedPref(context);
 
             String address = sharedPref.read(Constants.preferenceKey.
@@ -449,7 +450,20 @@ public abstract class ViperUtil {
 
             viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
                     userModel.getName(), publicKey, "com.w3engineers.unicef.telemesh");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        /*if (viperClient != null) {
+            SharedPref sharedPref = SharedPref.getSharedPref(context);
+
+            String address = sharedPref.read(Constants.preferenceKey.
+                    MY_WALLET_ADDRESS);
+            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+
+            viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
+                    userModel.getName(), publicKey, "com.w3engineers.unicef.telemesh");
+        }*/
     }
 
     public void saveOtherUserInfo(UserModel userModel) {

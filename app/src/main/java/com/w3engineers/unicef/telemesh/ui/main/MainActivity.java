@@ -541,21 +541,21 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        if (Constants.IS_APP_BLOCKER_ON) {
-            return;
-        }
-        if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
-            binding.searchBar.editTextSearch.setText("");
-            hideSearchBar();
-            return;
-        } else if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
+        if (!Constants.IS_APP_BLOCKER_ON) {
 
-        this.doubleBackToExitPressedOnce = true;
-        Toaster.showShort(LanguageUtil.getString(R.string.double_press_exit));
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
+            if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
+                binding.searchBar.editTextSearch.setText("");
+                hideSearchBar();
+                return;
+            } else if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toaster.showShort(LanguageUtil.getString(R.string.double_press_exit));
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
+        }
     }
 
     private void subscribeForActiveUser() {
@@ -656,9 +656,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
                 try {
                     mAppUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
-                }
+                } catch (IntentSender.SendIntentException e) { e.printStackTrace(); }
 
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();

@@ -235,4 +235,8 @@ public class MeshDataSource extends ViperUtil {
         saveOtherUserInfo(userModel);
     }
 
+    public void checkUserIsConnected(String userId) {
+        checkUserConnectionStatus(userId);
+    }
+
 }

@@ -195,7 +195,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .updateUserStatus(userId, userConnectivityStatus);
 
         if (updateId > 0 && (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE
-                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
+                || userConnectivityStatus == Constants.UserStatus.WIFI_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_MESH_ONLINE)) {
             syncUserWithBroadcastMessage(userId);
         }
 
@@ -214,9 +218,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case 4:
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
-            case 8:
-            case 9:
                 return Constants.UserStatus.INTERNET_ONLINE;
+            case 8:
+                return Constants.UserStatus.HB_ONLINE;
+            case 9:
+                return Constants.UserStatus.HB_MESH_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;
         }
@@ -229,6 +235,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.UserStatus.BLE_ONLINE:
             case Constants.UserStatus.WIFI_MESH_ONLINE:
             case Constants.UserStatus.BLE_MESH_ONLINE:
+            case Constants.UserStatus.HB_ONLINE:
+            case Constants.UserStatus.HB_MESH_ONLINE:
                 return true;
             default:
                 return false;
@@ -312,6 +320,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         dataSend(messageModelString.getBytes(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                     }
+                }, Throwable::printStackTrace));
+
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getLiveUserId())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(liveUserId -> {
+
+                    if (!TextUtils.isEmpty(liveUserId)) {
+                        prepareRightMeshDataSource();
+                        rightMeshDataSource.checkUserIsConnected(liveUserId);
+                    }
+
                 }, Throwable::printStackTrace));
     }
 

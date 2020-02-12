@@ -137,7 +137,7 @@
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
     <!--    <string name="def_ssid">captor</string>-->
-    <string name="def_ssid">australia</string>
+    <string name="def_ssid">pecod</string>
     <!--    <string name="search_hint">Search</string>-->
     <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>

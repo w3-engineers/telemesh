@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -31,6 +32,7 @@ public class Source implements DataSource {
     private MessageDao messageDao;
     private UserDao userDao;
     private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
+    private BehaviorSubject<String> liveUserId = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -67,6 +69,9 @@ public class Source implements DataSource {
     @Override
     public void setCurrentUser(@Nullable String currentUser) {
         this.chatCurrentUser = currentUser;
+        if (currentUser != null && !TextUtils.isEmpty(currentUser)) {
+            liveUserId.onNext(currentUser);
+        }
     }
 
     @Override
@@ -77,6 +82,11 @@ public class Source implements DataSource {
     @Override
     public void reSendMessage(@NonNull ChatEntity chatEntity) {
         failedMessage.onNext(chatEntity);
+    }
+
+    @Override
+    public Flowable<String> getLiveUserId() {
+        return liveUserId.toFlowable(BackpressureStrategy.LATEST);
     }
 
     @Override

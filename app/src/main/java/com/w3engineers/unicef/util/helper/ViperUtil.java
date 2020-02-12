@@ -487,6 +487,14 @@ public abstract class ViperUtil {
         }
     }
 
+    protected void checkUserConnectionStatus(String userId) {
+        try {
+            viperClient.checkConnectionStatus(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void showServiceUpdateAvailable(Activity activity) {
         if (activity == null) return;
 

@@ -142,6 +142,8 @@ public class Constants {
 
     public interface UserStatus {
         int OFFLINE = 0;
+        int HB_ONLINE = 7;
+        int HB_MESH_ONLINE = 6;
         int WIFI_ONLINE = 5;
         int WIFI_MESH_ONLINE = 4;
         int BLE_MESH_ONLINE = 3;

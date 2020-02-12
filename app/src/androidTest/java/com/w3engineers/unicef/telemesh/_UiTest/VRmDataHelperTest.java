@@ -324,6 +324,16 @@ public class VRmDataHelperTest {
 
         addDelay(200);
 
+        int hbOnline = RmDataHelper.getInstance().getActiveStatus(8);
+        assertEquals(Constants.UserStatus.HB_ONLINE, hbOnline);
+
+        addDelay(200);
+
+        int hbMeshOnline = RmDataHelper.getInstance().getActiveStatus(5);
+        assertEquals(Constants.UserStatus.HB_MESH_ONLINE, hbMeshOnline);
+
+        addDelay(200);
+
         int offline = RmDataHelper.getInstance().getActiveStatus(0);
         assertEquals(Constants.UserStatus.OFFLINE, offline);
 

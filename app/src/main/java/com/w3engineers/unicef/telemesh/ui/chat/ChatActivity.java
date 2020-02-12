@@ -230,6 +230,8 @@ public class ChatActivity extends TelemeshBaseActivity {
 
         if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
             return R.mipmap.ic_mesh_online;
+        } else if (userActiveStatus == Constants.UserStatus.HB_ONLINE || userActiveStatus == Constants.UserStatus.HB_MESH_ONLINE) {
+            return R.mipmap.ic_hb_online;
         } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
             return R.mipmap.ic_internet;
         } else {

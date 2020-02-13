@@ -124,7 +124,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
-        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
+        BulletinTimeScheduler.getInstance().resetScheduler(this);
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -132,12 +132,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         initBottomBar();
         initAllText();
         mViewModel = getViewModel();
-
-
-        /*if (isRestart) {
-            View view = binding.bottomNavigation.findViewById(R.id.action_contact);
-            view.performClick();
-        }*/
 
         // set new user count analytics so that the work manager will trigger
         mViewModel.setUserCountWorkRequest();
@@ -157,35 +151,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         });
 
-        /*mViewModel.getMyUserMode().observe(this, integer -> {
-            if (integer == null) return;
-            showHideInternetWarning(integer, Constants.IS_DATA_ON);
-        });*/
-
         subscribeForActiveUser();
         subscribeForNewFeedMessage();
-
-        //when  counting need to add
-        /*
-        mViewModel.getMessageCount().observe(this, messageCount -> {
-            //call createBadgeCount() put necessary params (count, position)
-        });
-        mViewModel.getSurveyCount().observe(this, surveyCount ->{
-            //call createBadgeCount() put necessary params (count, position)
-        });*/
-
-//        mViewModel.makeSendingMessageAsFailed();
-
-
         initSearchListener();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
-
         StorageUtil.getFreeMemory();
-
-/*        if (!CommonUtil.isLocationGpsOn(this)){
-            CommonUtil.showGpsOrLocationOffPopup(this);
-        }*/
 
         registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
@@ -202,29 +173,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION);
-
-        /*Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            CommonUtil.showPermissionPopUp(MainActivity.this);
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(
-                            List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
     public static MainActivity getInstance() {
@@ -234,18 +182,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     public void onResume() {
         super.onResume();
-        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-        initNoNetworkCallback(myMode);
-        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            /*case R.id.text_view_background:
-                // disableLoading();
-                break;*/
             case R.id.image_view_cross:
                 if (TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())) {
                     hideSearchBar();
@@ -260,17 +202,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_APP_UPDATE) {
-            if (resultCode != RESULT_OK) {
-                Log.e("AppUpdateProcess", "onActivityResult: app download failed");
-            }
-        }
-    }*/
-
     private MainActivityViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -284,12 +215,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private void initBottomBar() {
 
         boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
-
-        /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
-        if (isRestart) {
-            fromSettings = true;
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, false);
-        }*/
 
         Fragment mFragment = null;
         String title;
@@ -312,23 +237,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-
-        /*binding.bottomNavigation
-                .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
-                        , Constants.MenuItemPosition.MENU_ITEM_HEIGHT);
-        binding.bottomNavigation.enableShiftingMode(false);
-        binding.bottomNavigation.enableItemShiftingMode(false);
-        binding.bottomNavigation.enableAnimation(false);*/
-
-/*
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_SURVEY);
-*/
-
-
-        //its for checking. must be removed later
- /*       createBadgeCount(6, Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-        createBadgeCount(12, Constants.MenuItemPosition.POSITION_FOR_SURVEY);*/
 
     }
 
@@ -359,17 +267,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_discover:
                 toolbarTitle = LanguageUtil.getString(R.string.title_discoverd_fragment);
                 mFragment = new DiscoverFragment();
-                //hideUserBadge();
                 break;
             case R.id.action_contact:
                 toolbarTitle = LanguageUtil.getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
-//                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = LanguageUtil.getString(R.string.title_message_feed_fragment);
-              /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
-                        , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
                 hideFeedBadge();
                 break;
@@ -421,39 +325,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    // Again this api will be enable when its functionality will be added
-    /*public void createBadgeCount(int latestCount, int menuItemPosition) {
-        ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
-        if (constraintLayoutContainer == null) return;
-        // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
-
-        if (!(mCurrentFragment instanceof DiscoverFragment)) {
-            if (latestCount > latestUserCount) {
-                constraintLayoutContainer.setVisibility(View.VISIBLE);
-            } else {
-                constraintLayoutContainer.setVisibility(View.GONE);
-            }
-        } else {
-            constraintLayoutContainer.setVisibility(View.GONE);
-        }
-
-
-        latestUserCount = latestCount;
-
-       *//* if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
-
-            constraintLayoutContainer.setVisibility(View.VISIBLE);
-
-            if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
-                textViewBadgeCount.setText(String.valueOf(latestCount));
-            } else {
-                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
-            }
-        } else {
-            constraintLayoutContainer.setVisibility(View.GONE);
-        }*//*
-    }*/
-
     private void createFeedBadge(int latestCount, int menuItemPosition) {
 
         ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
@@ -482,18 +353,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         return itemView.findViewById(R.id.constraint_layout_badge);
     }
 
-    /*private void hideUserBadge() {
-        BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-
-        if (itemView == null) {
-            return;
-        }
-        ConstraintLayout userBadgeView = itemView.findViewById(R.id.constraint_layout_badge);
-
-        userBadgeView.setVisibility(View.GONE);
-    }*/
-
     private void hideFeedBadge() {
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
@@ -503,16 +362,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             feedBadge.setVisibility(View.GONE);
         }
     }
-
-    /*public void enableLoading() {
-        binding.searchingView.setVisibility(View.VISIBLE);
-        binding.mainView.setVisibility(View.GONE);
-    }
-
-    public void disableLoading() {
-        binding.searchingView.setVisibility(View.GONE);
-        binding.mainView.setVisibility(View.VISIBLE);
-    }*/
 
     public void showSearchBar() {
         binding.toolbarMain.setVisibility(View.INVISIBLE);
@@ -533,9 +382,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mViewModel.userOfflineProcess();
         sInstance = null;
-
         unregisterReceiver(mGpsSwitchStateReceiver);
     }
 
@@ -574,24 +421,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
-        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
-            if (isMobileDataOn) {
-                binding.textViewNoInternet.setVisibility(View.GONE);
-            } else {
-                binding.textViewNoInternet.setVisibility(View.VISIBLE);
-            }
-        } else {
-            binding.textViewNoInternet.setVisibility(View.GONE);
-        }
-    }
-
-    private void initNoNetworkCallback(int myMode) {
-        sheduler.initNoInternetCallback(isMobileDataOn -> {
-            showHideInternetWarning(myMode, isMobileDataOn);
-        });
-    }
-
     private void initSearchListener() {
 
         binding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -617,11 +446,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         });
     }
-
-    /*@Override
-    public void sendToUi(String message) {
-        Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
-    }*/
 
     private void initAllText() {
         binding.searchBar.editTextSearch.setHint(LanguageUtil.getString(R.string.search));
@@ -677,9 +501,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             mAppUpdateManager.unregisterListener(installStateUpdatedListener);
                         }
 
-                    } /*else {
-                        Log.i("AppUpdateProcess", "InstallStateUpdatedListener: state: " + state.installStatus());
-                    }*/
+                    }
                 }
             };
 
@@ -695,8 +517,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
             openAppBlocker(currentVersionName);
         }
-
-        //openAppBlocker(currentVersionName);
 
     }
 

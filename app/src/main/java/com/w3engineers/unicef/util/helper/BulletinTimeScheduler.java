@@ -47,14 +47,30 @@ public class BulletinTimeScheduler {
     }
 
     public BulletinTimeScheduler connectivityRegister() {
-        IntentFilter intentFilter = new IntentFilter();
+        /*IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
+        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*/
         return this;
     }
 
     public void initNoInternetCallback(NoInternetCallback callback) {
         this.noInternetCallback = callback;
+    }
+
+    public void processesForInternetConnection() {
+        RmDataHelper.getInstance().sendPendingAck();
+        ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
+
+        if (!Constants.IS_LOG_UPLOADING_START) {
+            Constants.IS_LOG_UPLOADING_START = true;
+
+            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
+            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+
+
+            RmDataHelper.getInstance().uploadLogFile();
+            RmDataHelper.getInstance().sendPendingFeedback();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -129,7 +145,7 @@ public class BulletinTimeScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    protected void resetScheduler(@NonNull Context context) {
+    public void resetScheduler(@NonNull Context context) {
         Util.cancelJob(context);
         Util.scheduleJob(context);
     }

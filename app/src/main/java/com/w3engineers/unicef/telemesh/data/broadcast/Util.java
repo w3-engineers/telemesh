@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 
 import com.w3engineers.unicef.util.helper.BulletinJobService;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,7 +33,7 @@ public class Util {
         ComponentName serviceComponent = new ComponentName(context, BulletinJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(jobId, serviceComponent);
 //        builder.setMinimumLatency(1000); // wait at least
-        builder.setOverrideDeadline(TimeUnit.MINUTES.toMillis(1)); // maximum delay 2 miniute now statoc
+        builder.setOverrideDeadline(TimeUnit.SECONDS.toMillis(10)); // maximum delay 2 miniute now statoc
 //        builder.setOverrideDeadline(TimeUnit.HOURS.toMillis(24)); // maximum delay 24 hour
         //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         builder.setRequiresDeviceIdle(true); // device should be idle
@@ -45,6 +46,16 @@ public class Util {
     public static void cancelJob(@NonNull Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(jobId);
+    }
+
+    public static boolean isJobExist(Context context) {
+        JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        List<JobInfo> jobInfos = jobScheduler.getAllPendingJobs();
+        for (JobInfo jobInfo : jobInfos) {
+            if (jobInfo.getId() == jobId)
+                return true;
+        }
+        return false;
     }
 
     public static String convertToTitleCaseIteratingChars(String text) {

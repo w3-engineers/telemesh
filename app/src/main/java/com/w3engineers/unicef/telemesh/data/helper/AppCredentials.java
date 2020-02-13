@@ -40,7 +40,7 @@ public class AppCredentials {
 
 
     static {
-        System.loadLibrary("staging-native-lib");
+        System.loadLibrary("native-lib");
     }
 
 }

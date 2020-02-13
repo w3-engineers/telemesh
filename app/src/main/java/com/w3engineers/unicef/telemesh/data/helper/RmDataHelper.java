@@ -851,7 +851,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendAppShareCount() {
-        if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
+        if (AnalyticsDataHelper.getInstance().isInternetDataEnable()) {
             sendAppShareCountAnalytics();
         } else {
             compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))

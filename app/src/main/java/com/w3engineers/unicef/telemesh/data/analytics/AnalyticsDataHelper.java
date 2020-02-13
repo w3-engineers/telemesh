@@ -11,7 +11,6 @@ Proprietary and confidential
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -36,6 +35,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.ConnectivityUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -124,7 +124,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
 
-        if (isMobileDataEnable() || !isMine) {
+        if (isInternetDataEnable() || !isMine) {
             MessageCountModel messageCountModel = messageAnalyticsEntity.toMessageCountModel();
             sendMessageCount(messageCountModel);
         } else {
@@ -195,7 +195,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     public void sendFeedback(FeedbackEntity entity) {
-        if (isMobileDataEnable()) {
+        if (isInternetDataEnable()) {
             Timber.tag("FeedbackTest").d("Feedback send directly");
             sendFeedbackToInternet(entity, true);
         } else {
@@ -216,8 +216,8 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public boolean isMobileDataEnable() {
-        return BulletinTimeScheduler.getInstance().isMobileDataEnable();
+    public boolean isInternetDataEnable() {
+        return ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext());
     }
 
     @Override

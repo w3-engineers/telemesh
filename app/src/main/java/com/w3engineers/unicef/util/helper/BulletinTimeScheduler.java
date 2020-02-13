@@ -46,16 +46,16 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    public BulletinTimeScheduler connectivityRegister() {
-        /*IntentFilter intentFilter = new IntentFilter();
+    /*public BulletinTimeScheduler connectivityRegister() {
+        *//*IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*/
+        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*//*
         return this;
-    }
+    }*/
 
-    public void initNoInternetCallback(NoInternetCallback callback) {
+    /*public void initNoInternetCallback(NoInternetCallback callback) {
         this.noInternetCallback = callback;
-    }
+    }*/
 
     public void processesForInternetConnection() {
         RmDataHelper.getInstance().sendPendingAck();
@@ -100,7 +100,7 @@ public class BulletinTimeScheduler {
         return 0;
     }
 
-    public class NetworkCheckReceiver extends BroadcastReceiver {
+    /*public class NetworkCheckReceiver extends BroadcastReceiver {
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
@@ -142,7 +142,7 @@ public class BulletinTimeScheduler {
                 sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
             }
         }
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void resetScheduler(@NonNull Context context) {
@@ -150,17 +150,22 @@ public class BulletinTimeScheduler {
         Util.scheduleJob(context);
     }
 
-    @NonNull
-    public NetworkCheckReceiver getReceiver() {
-        return new NetworkCheckReceiver();
+    public void setScheduler(Context context) {
+        if (Util.isJobExist(context)) return;
+        Util.scheduleJob(context);
     }
 
+    /*@NonNull
+    public NetworkCheckReceiver getReceiver() {
+        return new NetworkCheckReceiver();
+    }*/
 
-    private void sendNoInternetCallbackToUi(boolean haveInternet) {
+
+    /*private void sendNoInternetCallbackToUi(boolean haveInternet) {
         if (noInternetCallback != null) {
             noInternetCallback.onGetAvailableInternet(haveInternet);
         }
-    }
+    }*/
 
    /* private void uploadLogFile() {
         Log.d("ParseFileUpload", "Upload file call");

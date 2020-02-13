@@ -124,7 +124,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
-        BulletinTimeScheduler.getInstance().resetScheduler(this);
+        BulletinTimeScheduler.getInstance().setScheduler(this);
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 

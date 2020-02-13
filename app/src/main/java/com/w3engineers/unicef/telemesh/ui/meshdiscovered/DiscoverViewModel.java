@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -125,8 +126,18 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                     }
 
                     userList.clear();
-                    userList.addAll(userEntityList);
                     userList.addAll(userEntities);
+
+                    if(!userEntityList.isEmpty()) {
+                        Collections.sort(userEntityList, (o1, o2) -> {
+                            if (o1.getUserName() != null && o2.getUserName() != null) {
+                                return o1.getUserName().compareTo(o2.getUserName());
+                            }
+                            return 0;
+                        });
+                    }
+
+                    userList.addAll(userEntityList);
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userList);

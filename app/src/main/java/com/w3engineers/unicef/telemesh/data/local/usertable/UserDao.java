@@ -91,8 +91,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_USER_IS_ONLINE + " != "
-            + Constants.UserStatus.OFFLINE + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " != "
+            + Constants.UserStatus.OFFLINE + " OR ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
+            + Constants.UserStatus.OFFLINE + " AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " IS "
+            + Constants.MessageStatus.STATUS_UNREAD + " )) ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " ELSE " + Constants.MessageStatus.STATUS_READ

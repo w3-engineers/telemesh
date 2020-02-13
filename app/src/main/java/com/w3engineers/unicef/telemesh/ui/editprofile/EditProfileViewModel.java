@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
@@ -51,6 +52,8 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
                 imageIndex = currentImageIndex;
             }
         }
+
+        userName = Util.convertToTitleCaseIteratingChars(userName);
 
         sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
         sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);

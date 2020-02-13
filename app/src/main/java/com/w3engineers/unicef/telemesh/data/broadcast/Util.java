@@ -46,4 +46,27 @@ public class Util {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(jobId);
     }
+
+    public static String convertToTitleCaseIteratingChars(String text) {
+        /*if (text != null && !text.isEmpty()) {
+            StringBuilder converted = new StringBuilder();
+
+            boolean convertNext = true;
+            for (char ch : text.toCharArray()) {
+                if (Character.isSpaceChar(ch)) {
+                    convertNext = true;
+                } else if (convertNext) {
+                    ch = Character.toTitleCase(ch);
+                    convertNext = false;
+                } else {
+                    ch = Character.toLowerCase(ch);
+                }
+                converted.append(ch);
+            }
+
+            text = converted.toString();
+        }*/
+
+        return text;
+    }
 }

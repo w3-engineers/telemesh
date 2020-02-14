@@ -24,16 +24,17 @@ public class BulletinJobService extends JobService {
 
     @Override
     public boolean onStartJob(@Nullable JobParameters params) {
-        if (BulletinTimeScheduler.getInstance().isMobileDataEnable()) {
-            RmDataHelper.getInstance().requestWsMessage();
 
-            Util.scheduleJob(getApplicationContext()); // reschedule the job
-        }
+        Log.v("MIMO_SAHA::", "Job called");
+//        BulletinTimeScheduler.getInstance().processesForInternetConnection();
+//        RmDataHelper.getInstance().requestWsMessage();
+        Util.scheduleJob(getApplicationContext()); // reschedule the job
         return true;
     }
 
     @Override
     public boolean onStopJob(@Nullable JobParameters params) {
+        Log.v("MIMO_SAHA::", "Job Cancelled");
         return true;
     }
 

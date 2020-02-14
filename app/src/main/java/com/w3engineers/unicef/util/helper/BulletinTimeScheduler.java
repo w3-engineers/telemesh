@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
@@ -73,7 +74,7 @@ public class BulletinTimeScheduler {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {
         int state = getNetworkState();
         if (state == DATA) {
@@ -82,23 +83,23 @@ public class BulletinTimeScheduler {
             Util.cancelJob(context);
             return false;
         }
-    }
+    }*/
 
-    protected int getNetworkState() {
+    /*protected int getNetworkState() {
         ConnectivityManager connectivitymanager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] networkInfo = connectivitymanager.getAllNetworkInfo();
 
         for (NetworkInfo netInfo : networkInfo) {
 
-            /*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
+            *//*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
                 if (netInfo.isConnected())
-                    return WIFI;*/
+                    return WIFI;*//*
             if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
                 if (netInfo.isConnected())
                     return DATA;
         }
         return 0;
-    }
+    }*/
 
     /*public class NetworkCheckReceiver extends BroadcastReceiver {
 
@@ -151,6 +152,7 @@ public class BulletinTimeScheduler {
     }
 
     public void setScheduler(Context context) {
+        Log.v("MIMO_SAHA::", "Job exist: " + Util.isJobExist(context));
         if (Util.isJobExist(context)) return;
         Util.scheduleJob(context);
     }

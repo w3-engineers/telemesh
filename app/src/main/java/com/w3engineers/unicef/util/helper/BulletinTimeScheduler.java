@@ -21,7 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -47,7 +49,7 @@ public class BulletinTimeScheduler {
     }
 
     /*public BulletinTimeScheduler connectivityRegister() {
-        *//*IntentFilter intentFilter = new IntentFilter();
+     *//*IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*//*
         return this;
@@ -64,9 +66,7 @@ public class BulletinTimeScheduler {
         if (!Constants.IS_LOG_UPLOADING_START) {
             Constants.IS_LOG_UPLOADING_START = true;
 
-            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
-            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
-
+            checkAppUpdate();
 
             RmDataHelper.getInstance().uploadLogFile();
             RmDataHelper.getInstance().sendPendingFeedback();
@@ -153,6 +153,19 @@ public class BulletinTimeScheduler {
     public void setScheduler(Context context) {
         if (Util.isJobExist(context)) return;
         Util.scheduleJob(context);
+    }
+
+    public void checkAppUpdate() {
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        long saveTime = sharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
+        long dif = System.currentTimeMillis() - saveTime;
+        long days = dif / (24 * 60 * 60 * 1000);
+        int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+
+        if (hour > 23) {
+            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
+            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+        }
     }
 
     /*@NonNull

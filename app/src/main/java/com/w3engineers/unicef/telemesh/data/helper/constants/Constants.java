@@ -75,6 +75,7 @@ public class Constants {
         String APP_UPDATE_VERSION_CODE = "app_update_version_code";
         String APP_UPDATE_VERSION_NAME = "app_update_version_name";
         String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
+        String APP_UPDATE_CHECK_TIME = "app_update_check_time";
     }
 
     public interface MenuItemPosition {
@@ -164,7 +165,7 @@ public class Constants {
         String DASHES = "-------------------------------";
     }
 
-    public interface AppUpdateType{
+    public interface AppUpdateType {
         int NO_CHANGES = 0;
         int NORMAL_UPDATE = 1;
         int BLOCKER = 2;

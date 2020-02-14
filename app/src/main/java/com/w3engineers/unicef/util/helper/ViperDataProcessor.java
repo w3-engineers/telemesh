@@ -138,6 +138,7 @@ public class ViperDataProcessor {
 
         UpdateConfigModel updateConfigModel;
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        sharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
 
         updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
 

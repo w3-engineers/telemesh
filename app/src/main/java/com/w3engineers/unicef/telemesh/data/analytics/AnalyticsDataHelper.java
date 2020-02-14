@@ -75,9 +75,9 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                     compositeDisposable
                             .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId()))
                                     .subscribeOn(Schedulers.newThread())
-                            .subscribe((result) -> {
-                                Timber.tag("FeedbackTest").d("Delete result: %s", result);
-                            }, Throwable::printStackTrace));
+                                    .subscribe((result) -> {
+                                        Timber.tag("FeedbackTest").d("Delete result: %s", result);
+                                    }, Throwable::printStackTrace));
                 } else {
                     FeedbackModel feedbackModel = new FeedbackModel();
                     feedbackModel.setUserId(model.getUserId());
@@ -124,12 +124,14 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
 
-        if (isInternetDataEnable() || !isMine) {
-            MessageCountModel messageCountModel = messageAnalyticsEntity.toMessageCountModel();
-            sendMessageCount(messageCountModel);
-        } else {
-            RmDataHelper.getInstance().analyticsDataSendToSellers(messageAnalyticsEntity);
-        }
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected || !isMine) {
+                MessageCountModel messageCountModel = messageAnalyticsEntity.toMessageCountModel();
+                sendMessageCount(messageCountModel);
+            } else {
+                RmDataHelper.getInstance().analyticsDataSendToSellers(messageAnalyticsEntity);
+            }
+        });
     }
 
     public void sendMessageCount(MessageCountModel messageCountModel) {
@@ -195,13 +197,14 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     public void sendFeedback(FeedbackEntity entity) {
-        if (isInternetDataEnable()) {
-            Timber.tag("FeedbackTest").d("Feedback send directly");
-            sendFeedbackToInternet(entity, true);
-        } else {
-//            Timber.tag("FeedbackTest").d("Feedback send via seller");
-            RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
-        }
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected) {
+                Timber.tag("FeedbackTest").d("Feedback send directly");
+                sendFeedbackToInternet(entity, true);
+            } else {
+                RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
+            }
+        });
     }
 
     public void sendFeedbackToInternet(FeedbackEntity entity, boolean isDirectSend) {
@@ -217,7 +220,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public boolean isInternetDataEnable() {
-        return ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext());
+        return false;
     }
 
     @Override

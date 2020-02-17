@@ -32,11 +32,13 @@ public class AppBlockerUtil {
         binding.textViewUpdate.setOnClickListener(v -> {
 
             if (!Constants.IS_DATA_ON) {
+                // TODO: 2/14/2020 Check Internet is available or not
                 Toaster.showShort(LanguageUtil.getString(R.string.no_internet_connection));
                 return;
             }
             if (MainActivity.getInstance() != null) {
                 dialog.dismiss();
+                // TODO: 2/14/2020 need to optimize that for app blocker it is need to check play store or not
                 MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "");
             }
         });

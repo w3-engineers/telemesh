@@ -4,6 +4,7 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -66,6 +67,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     public void requestBroadcastMessage() {
         ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
             if (isConnected) {
+                Log.d("TelemeshTest","network connected");
                 RmDataHelper.getInstance().requestWsMessage();
             }
         });

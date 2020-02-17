@@ -28,6 +28,7 @@ import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
@@ -162,8 +163,8 @@ public class BulletinTimeScheduler {
         long days = dif / (24 * 60 * 60 * 1000);
         int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
 
-        if (hour > 23) {
-            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
+        if (saveTime == 0 || hour > 23) {
+            String downloadLink = InAppUpdate.LIVE_JSON_URL;
             new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
         }
     }

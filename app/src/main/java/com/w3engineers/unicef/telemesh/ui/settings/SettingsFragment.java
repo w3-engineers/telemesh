@@ -257,6 +257,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
+        // TODO: 2/14/2020 Need to check internet is available or not  . make sure view is  not NULL
         if (Constants.IS_DATA_ON) {
             long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
             if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {

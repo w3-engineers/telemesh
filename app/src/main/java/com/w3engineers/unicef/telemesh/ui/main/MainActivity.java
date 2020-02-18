@@ -124,7 +124,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
-        BulletinTimeScheduler.getInstance().resetScheduler(this);
+        BulletinTimeScheduler.getInstance().checkAppUpdate();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -137,6 +137,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mViewModel.setUserCountWorkRequest();
         mViewModel.setServerAppShareCountWorkerRequest();
         mViewModel.setLocalAppShareCountWorkerRequest();
+        mViewModel.setRefreshWorkerRequest();
 
         setClickListener(binding.textViewBackground, binding.searchBar.imageViewBack, binding.searchBar.imageViewCross);
 

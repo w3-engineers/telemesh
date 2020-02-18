@@ -68,8 +68,6 @@ public class BulletinTimeScheduler {
         if (!Constants.IS_LOG_UPLOADING_START) {
             Constants.IS_LOG_UPLOADING_START = true;
 
-            checkAppUpdate();
-
             RmDataHelper.getInstance().uploadLogFile();
             RmDataHelper.getInstance().sendPendingFeedback();
         }
@@ -148,15 +146,18 @@ public class BulletinTimeScheduler {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void resetScheduler(@NonNull Context context) {
-        Util.cancelJob(context);
-        Util.scheduleJob(context);
+
+
+
+//        Util.cancelJob(context);
+//        Util.scheduleJob(context);
     }
 
-    public void setScheduler(Context context) {
+    /*public void setScheduler(Context context) {
         Log.v("MIMO_SAHA::", "Job exist: " + Util.isJobExist(context));
         if (Util.isJobExist(context)) return;
         Util.scheduleJob(context);
-    }
+    }*/
 
     public void checkAppUpdate() {
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());

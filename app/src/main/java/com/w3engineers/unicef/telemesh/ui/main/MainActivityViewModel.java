@@ -10,16 +10,19 @@ import android.util.Log;
 
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountLocalWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountSendServerWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
+import com.w3engineers.unicef.telemesh.data.analytics.workmanager.RefreshJobWorker;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -29,6 +32,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
@@ -45,6 +49,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
     public static final String NEW_USER_COUNT = "new_user_count";
     public static final String LOCAL_APP_SHARE = "local_app_share";
     public static final String APP_SHARE_SEND_SERVER = "app_share_send_server";
+    public static final String TAG_REFRESH_JOB = "tag_refresh_job";
     private PeriodicWorkRequest userCountWorkRequest;
     private PeriodicWorkRequest localUserCountRequest;
     private PeriodicWorkRequest sendCountToServerRequest;
@@ -142,6 +147,33 @@ public class MainActivityViewModel extends BaseRxViewModel {
                 .build();
 
         mWorkManager.enqueue(sendCountToServerRequest);
+    }
+
+    void setRefreshWorkerRequest() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        try {
+            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosForUniqueWork(TAG_REFRESH_JOB);
+            List<WorkInfo> workInfos = forUniqueWork.get();
+
+            if (workInfos == null || workInfos.isEmpty()) {
+                PeriodicWorkRequest refreshCpnWork =
+                        new PeriodicWorkRequest.Builder(RefreshJobWorker.class, 12, TimeUnit.HOURS)
+                                .addTag(TAG_REFRESH_JOB)
+                                .setConstraints(constraints)
+                                .setBackoffCriteria(
+                                        BackoffPolicy.LINEAR,
+                                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                        TimeUnit.MILLISECONDS).build();
+
+                WorkManager.getInstance().enqueueUniquePeriodicWork(TAG_REFRESH_JOB, ExistingPeriodicWorkPolicy.KEEP, refreshCpnWork);
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -25,7 +25,7 @@ public class Util {
     public static final String MESSAGE_BODY = "MESSAGE_BODY";
     public static final String EMPTY_MESSAGE = "<EMPTY_MESSAGE>";
 
-    private static int jobId = 32;
+    /*private static int jobId = 32;
     // schedule the start of the service every 10 - 30 seconds
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void scheduleJob(@NonNull Context context) {
@@ -40,15 +40,15 @@ public class Util {
         builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
-    }
+    }*/
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void cancelJob(@NonNull Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(jobId);
-    }
+    }*/
 
-    public static boolean isJobExist(Context context) {
+    /*public static boolean isJobExist(Context context) {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         List<JobInfo> jobInfos = jobScheduler.getAllPendingJobs();
         for (JobInfo jobInfo : jobInfos) {
@@ -56,7 +56,7 @@ public class Util {
                 return true;
         }
         return false;
-    }
+    }*/
 
     public static String convertToTitleCaseIteratingChars(String text) {
         /*if (text != null && !text.isEmpty()) {

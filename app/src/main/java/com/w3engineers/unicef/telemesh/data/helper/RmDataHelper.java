@@ -282,6 +282,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
     }
 
+    public void meshInitiated() {
+        if (dataSource != null) {
+            dataSource.setMeshInitiated(true);
+        }
+    }
+
     /**
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
@@ -668,12 +674,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
+        if (NetworkMonitor.isOnline()) {
+            OkHttpClient.Builder client1 = new OkHttpClient.Builder();
+            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
+
+//        OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
+            BroadcastWebSocket listener = new BroadcastWebSocket();
+            listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
+            client.newWebSocket(request, listener);
+            client.dispatcher().executorService().shutdown();
+        }
     }
 
     private String getMyMeshId() {

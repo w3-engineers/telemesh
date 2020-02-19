@@ -134,10 +134,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mViewModel = getViewModel();
 
         // set new user count analytics so that the work manager will trigger
-        mViewModel.setUserCountWorkRequest();
-        mViewModel.setServerAppShareCountWorkerRequest();
-        mViewModel.setLocalAppShareCountWorkerRequest();
-        mViewModel.setRefreshWorkerRequest();
+        mViewModel.getMeshInitiatedCall();
 
         setClickListener(binding.textViewBackground, binding.searchBar.imageViewBack, binding.searchBar.imageViewCross);
 

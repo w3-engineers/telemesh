@@ -33,6 +33,7 @@ public class Source implements DataSource {
     private UserDao userDao;
     private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
     private BehaviorSubject<String> liveUserId = BehaviorSubject.create();
+    private BehaviorSubject<Boolean> isMeshInitiated = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -87,6 +88,16 @@ public class Source implements DataSource {
     @Override
     public Flowable<String> getLiveUserId() {
         return liveUserId.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setMeshInitiated(boolean isInitiated) {
+        isMeshInitiated.onNext(true);
+    }
+
+    @Override
+    public Flowable<Boolean> getMeshInitiated() {
+        return isMeshInitiated.toFlowable(BackpressureStrategy.LATEST);
     }
 
     @Override

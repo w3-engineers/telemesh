@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
-
 /**
  * Created by Frank Tan on 10/04/2016.
  *

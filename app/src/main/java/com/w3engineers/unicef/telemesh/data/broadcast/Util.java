@@ -1,17 +1,5 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-
-import com.w3engineers.unicef.util.helper.BulletinJobService;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Frank Tan on 10/04/2016.

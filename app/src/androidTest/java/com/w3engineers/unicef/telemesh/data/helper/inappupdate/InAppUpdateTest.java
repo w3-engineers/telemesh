@@ -99,7 +99,7 @@ public class InAppUpdateTest {
     public void downloadUpdateAppTest() {
         addDelay(500);
 
-        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity());
+        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity(), null);
 
         addDelay(4000);
 

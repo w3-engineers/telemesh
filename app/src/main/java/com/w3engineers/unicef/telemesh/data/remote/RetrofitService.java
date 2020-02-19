@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.remote;
 
+import android.net.Network;
+
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -23,19 +25,21 @@ import retrofit2.Retrofit;
 
 public class RetrofitService {
 
-    public static <T> T createService(Class<T> serviceClass, String baseUrl) {
+    public static <T> T createService(Class<T> serviceClass, String baseUrl, Network network) {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
-        client.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                request = request
-                        .newBuilder()
-                        .addHeader("Authorization", Credentials.basic(AppCredentials.getInstance().getAuthUserName(), AppCredentials.getInstance().getAuthPassword()))
-                        .build();
-                return chain.proceed(request);
-            }
+        client.addInterceptor(chain -> {
+            Request request = chain.request();
+            request = request
+                    .newBuilder()
+                    .addHeader("Authorization", Credentials.basic(AppCredentials.getInstance().getAuthUserName(), AppCredentials.getInstance().getAuthPassword()))
+                    .build();
+            return chain.proceed(request);
         });
+
+        if (network != null) {
+            client.socketFactory(network.getSocketFactory());
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client.build())

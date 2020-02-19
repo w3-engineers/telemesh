@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -945,9 +946,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // check app update for internet;
 
         if (type == Constants.AppUpdateType.BLOCKER) {
-            InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
+            if (NetworkMonitor.isOnline()) {
+                InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
 
-            AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance());
+                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance(), NetworkMonitor.getNetwork());
+            }
 
         } else {
             HandlerUtil.postForeground(() -> {

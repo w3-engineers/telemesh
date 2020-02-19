@@ -138,7 +138,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         if (MainActivity.getInstance() != null) {
             String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL).replace(InAppUpdate.MAIN_APK, "");
             if (hasEnoughStorage()) {
-                AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+                AppInstaller.downloadApkFile(url, MainActivity.getInstance(),null);
             }
         }
     }

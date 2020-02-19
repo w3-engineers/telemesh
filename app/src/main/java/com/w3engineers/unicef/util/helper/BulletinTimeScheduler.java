@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
@@ -148,7 +149,6 @@ public class BulletinTimeScheduler {
     public void resetScheduler(@NonNull Context context) {
 
 
-
 //        Util.cancelJob(context);
 //        Util.scheduleJob(context);
     }
@@ -160,6 +160,8 @@ public class BulletinTimeScheduler {
     }*/
 
     public void checkAppUpdate() {
+
+        Log.d("FileDownload","Downloading process start");
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
         long saveTime = sharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
         long dif = System.currentTimeMillis() - saveTime;
@@ -167,8 +169,12 @@ public class BulletinTimeScheduler {
         int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
 
         if (saveTime == 0 || hour > 23) {
-            String downloadLink = InAppUpdate.LIVE_JSON_URL;
-            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+            Log.d("FileDownload","Downloading process time match");
+            if (NetworkMonitor.isOnline()) {
+                Log.d("FileDownload","Online ");
+                // new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+                InAppUpdate.getInstance(context).downloadAppUpdateConfig(NetworkMonitor.getNetwork());
+            }
         }
     }
 

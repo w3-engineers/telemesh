@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -53,7 +54,7 @@ public class AppInstaller {
     private static DialogAppInstallProgressBinding binding;
     private static AlertDialog dialog;
 
-    public static void downloadApkFile(String baseUrl, Context context) {
+    public static void downloadApkFile(String baseUrl, Context context, Network network) {
 
         if (isAppUpdating) return;
 
@@ -64,7 +65,7 @@ public class AppInstaller {
             baseUrl = "https://" + url[1];
         }
 
-        RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl);
+        RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl, network);
         Call<ResponseBody> call = downloadService.downloadFileByUrl("updatedApk.apk");
 
         call.enqueue(new Callback<ResponseBody>() {

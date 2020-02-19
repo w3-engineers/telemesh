@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -31,11 +32,11 @@ public class AppBlockerUtil {
 
         binding.textViewUpdate.setOnClickListener(v -> {
 
-            if (!Constants.IS_DATA_ON) {
-                // TODO: 2/14/2020 Check Internet is available or not
+            if (NetworkMonitor.isOnline()) {
                 Toaster.showShort(LanguageUtil.getString(R.string.no_internet_connection));
                 return;
             }
+
             if (MainActivity.getInstance() != null) {
                 dialog.dismiss();
                 // TODO: 2/14/2020 need to optimize that for app blocker it is need to check play store or not

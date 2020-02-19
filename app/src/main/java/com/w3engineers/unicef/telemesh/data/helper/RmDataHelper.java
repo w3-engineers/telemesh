@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -279,6 +280,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userLeave(@NonNull String peerId) {
 
         UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
+    }
+
+    public void meshInitiated() {
+        if (dataSource != null) {
+            dataSource.setMeshInitiated(true);
+        }
     }
 
     /**
@@ -667,12 +674,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
+        if (NetworkMonitor.isOnline()) {
+            OkHttpClient.Builder client1 = new OkHttpClient.Builder();
+            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
+
+//        OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
+            BroadcastWebSocket listener = new BroadcastWebSocket();
+            listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
+            client.newWebSocket(request, listener);
+            client.dispatcher().executorService().shutdown();
+        }
     }
 
     private String getMyMeshId() {

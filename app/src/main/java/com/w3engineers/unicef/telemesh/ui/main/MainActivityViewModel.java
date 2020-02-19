@@ -97,68 +97,117 @@ public class MainActivityViewModel extends BaseRxViewModel {
         return mNewUserCountWorkInfo;
     }
 
+    public void getMeshInitiatedCall() {
+        getCompositeDisposable().add(dataSource.getMeshInitiated()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        setUserCountWorkRequest();
+                        setServerAppShareCountWorkerRequest();
+                        setLocalAppShareCountWorkerRequest();
+                        setRefreshWorkerRequest();
+                    }
+                }, Throwable::printStackTrace));
+    }
+
     public void setUserCountWorkRequest() {
-
-        // Create charging constraint
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        userCountWorkRequest = new PeriodicWorkRequest.Builder(NewUserCountWorker.class, 20, TimeUnit.MINUTES)
-                .addTag(NEW_USER_COUNT)
-                .setConstraints(constraints)
-                .setBackoffCriteria(
-                        BackoffPolicy.LINEAR,
-                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                        TimeUnit.MILLISECONDS)
-                .build();
-
-        mWorkManager.enqueue(userCountWorkRequest);
-    }
-
-    void setLocalAppShareCountWorkerRequest() {
-        Constraints constraints = new Constraints.Builder()
-                .build();
-
-        localUserCountRequest = new PeriodicWorkRequest.Builder(AppShareCountLocalWorker.class, 6, TimeUnit.HOURS)
-                .addTag(LOCAL_APP_SHARE)
-                .setConstraints(constraints)
-                .setBackoffCriteria(
-                        BackoffPolicy.LINEAR,
-                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                        TimeUnit.MILLISECONDS)
-                .build();
-
-        mWorkManager.enqueue(localUserCountRequest);
-    }
-
-    void setServerAppShareCountWorkerRequest() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        sendCountToServerRequest = new PeriodicWorkRequest.Builder(AppShareCountSendServerWorker.class, 7, TimeUnit.HOURS)
-                .addTag(APP_SHARE_SEND_SERVER)
-                .setConstraints(constraints)
-                .setBackoffCriteria(
-                        BackoffPolicy.LINEAR,
-                        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-                        TimeUnit.MILLISECONDS)
-                .build();
-
-        mWorkManager.enqueue(sendCountToServerRequest);
-    }
-
-    void setRefreshWorkerRequest() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
         try {
-            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosForUniqueWork(TAG_REFRESH_JOB);
+
+            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosByTag(NEW_USER_COUNT);
             List<WorkInfo> workInfos = forUniqueWork.get();
 
             if (workInfos == null || workInfos.isEmpty()) {
+                // Create charging constraint
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+
+                userCountWorkRequest = new PeriodicWorkRequest.Builder(NewUserCountWorker.class, 20, TimeUnit.MINUTES)
+                        .addTag(NEW_USER_COUNT)
+                        .setConstraints(constraints)
+                        .setBackoffCriteria(
+                                BackoffPolicy.LINEAR,
+                                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                TimeUnit.MILLISECONDS)
+                        .build();
+
+                mWorkManager.enqueue(userCountWorkRequest);
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    void setLocalAppShareCountWorkerRequest() {
+        try {
+
+            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosByTag(LOCAL_APP_SHARE);
+            List<WorkInfo> workInfos = forUniqueWork.get();
+
+            if (workInfos == null || workInfos.isEmpty()) {
+
+                Constraints constraints = new Constraints.Builder()
+                        .build();
+
+                localUserCountRequest = new PeriodicWorkRequest.Builder(AppShareCountLocalWorker.class, 6, TimeUnit.HOURS)
+                        .addTag(LOCAL_APP_SHARE)
+                        .setConstraints(constraints)
+                        .setBackoffCriteria(
+                                BackoffPolicy.LINEAR,
+                                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                TimeUnit.MILLISECONDS)
+                        .build();
+
+                mWorkManager.enqueue(localUserCountRequest);
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void setServerAppShareCountWorkerRequest() {
+        try {
+
+            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosByTag(APP_SHARE_SEND_SERVER);
+            List<WorkInfo> workInfos = forUniqueWork.get();
+
+            if (workInfos == null || workInfos.isEmpty()) {
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+
+                sendCountToServerRequest = new PeriodicWorkRequest.Builder(AppShareCountSendServerWorker.class, 7, TimeUnit.HOURS)
+                        .addTag(APP_SHARE_SEND_SERVER)
+                        .setConstraints(constraints)
+                        .setBackoffCriteria(
+                                BackoffPolicy.LINEAR,
+                                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                                TimeUnit.MILLISECONDS)
+                        .build();
+
+                mWorkManager.enqueue(sendCountToServerRequest);
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void setRefreshWorkerRequest() {
+
+        try {
+            ListenableFuture<List<WorkInfo>> forUniqueWork = WorkManager.getInstance().getWorkInfosByTag(TAG_REFRESH_JOB);
+            List<WorkInfo> workInfos = forUniqueWork.get();
+
+            if (workInfos == null || workInfos.isEmpty()) {
+
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+
                 PeriodicWorkRequest refreshCpnWork =
                         new PeriodicWorkRequest.Builder(RefreshJobWorker.class, 12, TimeUnit.HOURS)
                                 .addTag(TAG_REFRESH_JOB)
@@ -168,7 +217,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
                                         OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
                                         TimeUnit.MILLISECONDS).build();
 
-                WorkManager.getInstance().enqueueUniquePeriodicWork(TAG_REFRESH_JOB, ExistingPeriodicWorkPolicy.KEEP, refreshCpnWork);
+                mWorkManager.enqueue(refreshCpnWork);
             }
 
         } catch (ExecutionException | InterruptedException e) {

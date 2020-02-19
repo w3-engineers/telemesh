@@ -62,6 +62,7 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void onMesh(String myMeshId) {
         meshInited(myMeshId);
+        RmDataHelper.getInstance().meshInitiated();
     }
 
     @Override

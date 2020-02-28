@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
@@ -46,11 +47,13 @@ import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.model.MeshControlConfig;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.ArrayList;
@@ -90,9 +93,14 @@ public abstract class ViperUtil {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-            viperClient = ViperClient.on(context, appName, context.getPackageName(), networkSSID, userModel.getName(),
+            MeshControlConfig meshControlConfig = new MeshControlConfig().setAppDownloadEnable(true)
+                    .setMessageEnable(true).setDiscoveryEnable(true).setBlockChainEnable(true);
+
+            String meshControlConfigData = new Gson().toJson(meshControlConfig);
+
+            viperClient = ViperClient.on(context, context.getPackageName(), userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true, CONFIG_DATA)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL);
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL, meshControlConfigData, BuildConfig.VERSION_CODE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -469,7 +477,7 @@ public abstract class ViperUtil {
     public void saveOtherUserInfo(UserModel userModel) {
 
         if (viperClient != null) {
-            viperClient.saveOtherUserInfo(userModel.getName(), userModel.getImage(), userModel.getUserId());
+            viperClient.saveOtherUserInfo(userModel.getName(), userModel.getImage(), userModel.getUserId(), context.getPackageName());
         }
     }
 

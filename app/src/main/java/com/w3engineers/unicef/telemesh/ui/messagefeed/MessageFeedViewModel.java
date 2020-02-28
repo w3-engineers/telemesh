@@ -6,10 +6,10 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
@@ -65,12 +65,9 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     }
 
     public void requestBroadcastMessage() {
-        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
-            if (isConnected) {
-                Log.d("TelemeshTest","network connected");
-                RmDataHelper.getInstance().requestWsMessage();
-            }
-        });
+        if(NetworkMonitor.isOnline()) {
+            RmDataHelper.getInstance().requestWsMessage();
+        }
     }
 
     private void updateFeedEntity(FeedEntity feedEntity) {

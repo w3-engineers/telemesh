@@ -10,6 +10,7 @@ Proprietary and confidential
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -138,12 +139,14 @@ public class ViperDataProcessor {
 
         UpdateConfigModel updateConfigModel;
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        sharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
 
         updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
 
         //   int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
 
         if (updateConfigModel != null) {
+            Log.d("FileDownload", "Config file info: " + updateConfigModel.getVersionName());
 
             String versionName = updateConfigModel.getVersionName();
             int versionCode = updateConfigModel.getVersionCode();

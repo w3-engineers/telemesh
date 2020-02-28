@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.net.Network;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
@@ -23,9 +24,12 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.remote.RetrofitInterface;
+import com.w3engineers.unicef.telemesh.data.remote.RetrofitService;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppUpdateWarningBinding;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.UpdateAppConfigDownloadTask;
 import com.we3ngineers.localserver.NanoHTTPD.NanoHTTPD;
 import com.we3ngineers.localserver.NanoHTTPD.SimpleWebServer;
 
@@ -47,6 +51,11 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 /*
@@ -150,7 +159,7 @@ public class InAppUpdate {
                 dialog.dismiss();
 
                 if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
-                    AppInstaller.downloadApkFile(finalUrl, context);
+                    AppInstaller.downloadApkFile(finalUrl, context, null);
                 } else {
                     Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
                 }
@@ -158,7 +167,9 @@ public class InAppUpdate {
             });
 
             dialog.show();
-        } catch (JSONException e) { e.printStackTrace(); }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -200,7 +211,9 @@ public class InAppUpdate {
             try {
                 mServer.start();
                 isServerRunning = true;
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -237,7 +250,9 @@ public class InAppUpdate {
             model.setVersionName(version);
             model.setVersionCode(versionCode);
             return model;
-        } catch (PackageManager.NameNotFoundException e) { e.printStackTrace(); }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -325,7 +340,9 @@ public class InAppUpdate {
                 e.printStackTrace();
             }
 
-        } catch (PackageManager.NameNotFoundException e) { e.printStackTrace(); }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
                 mContext.getString(R.string.app_name) + "/" + MAIN_JSON);
@@ -345,8 +362,36 @@ public class InAppUpdate {
             in.close();
             out.close();
 
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
+
+
+    public void downloadAppUpdateConfig(Network network) {
+        setAppUpdateProcess(true);
+
+        Log.d("FileDownload", "Downloading process server hit");
+
+        RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, AppCredentials.getInstance().getFileRepoLink(), network);
+        Call<ResponseBody> call = downloadService.downloadFileByUrl(MAIN_JSON);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    new UpdateAppConfigDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, response.body());
+                } else {
+                    setAppUpdateProcess(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("FileDownload", "Downloading process Error " + t.getMessage());
+                setAppUpdateProcess(false);
+            }
+        });
     }
 
     public void checkForUpdate(Context context, String url) {
@@ -404,8 +449,9 @@ public class InAppUpdate {
                     //here u ll get whole response...... :-)
                 }
                 return buffer.toString();
-            } catch (IOException e) { e.printStackTrace(); }
-            finally {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 if (connection != null) {
                     connection.disconnect();
                 }
@@ -413,7 +459,9 @@ public class InAppUpdate {
                     if (reader != null) {
                         reader.close();
                     }
-                } catch (IOException e) { e.printStackTrace(); }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }

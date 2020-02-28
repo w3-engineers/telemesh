@@ -3,13 +3,13 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -52,6 +52,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.ConnectivityUtil;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -196,7 +197,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .updateUserStatus(userId, userConnectivityStatus);
 
         if (updateId > 0 && (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE
-                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
+                || userConnectivityStatus == Constants.UserStatus.WIFI_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_MESH_ONLINE)) {
             syncUserWithBroadcastMessage(userId);
         }
 
@@ -216,6 +221,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;
+            case 8:
+                return Constants.UserStatus.HB_ONLINE;
+            case 9:
+                return Constants.UserStatus.HB_MESH_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;
         }
@@ -228,6 +237,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.UserStatus.BLE_ONLINE:
             case Constants.UserStatus.WIFI_MESH_ONLINE:
             case Constants.UserStatus.BLE_MESH_ONLINE:
+            case Constants.UserStatus.HB_ONLINE:
+            case Constants.UserStatus.HB_MESH_ONLINE:
                 return true;
             default:
                 return false;
@@ -271,6 +282,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
     }
 
+    public void meshInitiated() {
+        if (dataSource != null) {
+            dataSource.setMeshInitiated(true);
+        }
+    }
+
     /**
      * after inserting the message to the db
      * here we will fetch the last inserted message that will be
@@ -311,6 +328,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         dataSend(messageModelString.getBytes(),
                                 Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                     }
+                }, Throwable::printStackTrace));
+
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getLiveUserId())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(liveUserId -> {
+
+                    if (!TextUtils.isEmpty(liveUserId)) {
+                        prepareRightMeshDataSource();
+                        rightMeshDataSource.checkUserIsConnected(liveUserId);
+                    }
+
                 }, Throwable::printStackTrace));
     }
 
@@ -646,12 +674,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
+        if (NetworkMonitor.isOnline()) {
+            OkHttpClient.Builder client1 = new OkHttpClient.Builder();
+            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
+
+//        OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
+            BroadcastWebSocket listener = new BroadcastWebSocket();
+            listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
+            client.newWebSocket(request, listener);
+            client.dispatcher().executorService().shutdown();
+        }
     }
 
     private String getMyMeshId() {
@@ -831,12 +864,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendAppShareCount() {
-        if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
-            sendAppShareCountAnalytics();
-        } else {
-            compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
-                    .subscribeOn(Schedulers.newThread()).subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
-        }
+
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected) {
+                sendAppShareCountAnalytics();
+            } else {
+                compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                        .subscribeOn(Schedulers.newThread()).subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
+            }
+        });
 
         sendPendingFeedback();
     }
@@ -921,9 +957,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // check app update for internet;
 
         if (type == Constants.AppUpdateType.BLOCKER) {
-            InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
+            if (NetworkMonitor.isOnline()) {
+                InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
 
-            AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance());
+                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance(), NetworkMonitor.getNetwork());
+            }
 
         } else {
             HandlerUtil.postForeground(() -> {
@@ -997,6 +1035,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             userEntity = userEntity.updateUserEntity(userModel);
 
+            rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
+
             UserDataSource.getInstance().insertOrUpdateData(userEntity);
         }
     }
@@ -1006,6 +1046,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
+
+        // Save current my information in SDK layer
+        rightMeshDataSource.saveUpdateUserInfo();
 
         UserModel userModel = new UserModel();
         userModel.setImage(imageIndex);
@@ -1019,7 +1062,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         prepareRightMeshDataSource();
 
-        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
+        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedActiveUserIds()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(users -> {
 

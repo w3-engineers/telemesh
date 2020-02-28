@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+    private String selectChattedUser = null;
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 50;
@@ -62,6 +64,10 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
         changeFavouriteStatus.postValue(userEntity);
+    }
+
+    public void selectedChattedUser(String selectChattedUser) {
+        this.selectChattedUser = selectChattedUser;
     }
 
     /*public void setSearchText(String searchText) {
@@ -113,15 +119,25 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         userEntity.setUserName(diffElement.getUserName());
                         userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                         userEntity.setIsFavourite(diffElement.getIsFavourite());
-                        userEntity.setOnlineStatus(0);
-                        userEntity.hasUnreadMessage = diffElement.hasUnreadMessage;
+                        userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                        userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
 
                         userEntityList.add(userEntity);
                     }
 
                     userList.clear();
-                    userList.addAll(userEntityList);
                     userList.addAll(userEntities);
+
+                    if(!userEntityList.isEmpty()) {
+                        Collections.sort(userEntityList, (o1, o2) -> {
+                            if (o1.getUserName() != null && o2.getUserName() != null) {
+                                return o1.getUserName().compareTo(o2.getUserName());
+                            }
+                            return 0;
+                        });
+                    }
+
+                    userList.addAll(userEntityList);
 
                     if (!TextUtils.isEmpty(searchableText)) {
                         backUserEntity.postValue(userList);
@@ -130,9 +146,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         setUserData(userList);
                     }
 
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
     }
 
     public void setUserData(List<UserEntity> userEntities) {
@@ -207,7 +221,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Timber.tag("SearchIssue").d("user list null");
+//            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

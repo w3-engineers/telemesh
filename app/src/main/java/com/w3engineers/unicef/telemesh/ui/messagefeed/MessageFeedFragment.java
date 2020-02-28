@@ -70,9 +70,7 @@ public class MessageFeedFragment extends BaseFragment {
 
         mMessageFeedViewModel.getMessageFeedDetails().observe(this, this::openDetailsPage);
 
-        mMessageFeedBinding.swipeRefresh.setOnRefreshListener(() -> {
-            swipeRefreshOperation();
-        });
+        mMessageFeedBinding.swipeRefresh.setOnRefreshListener(this::swipeRefreshOperation);
     }
 
     public void swipeRefreshOperation() {

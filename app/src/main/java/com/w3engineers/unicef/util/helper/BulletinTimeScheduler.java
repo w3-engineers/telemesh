@@ -19,13 +19,18 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.ConfigSyncUtil;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
@@ -46,18 +51,30 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    public BulletinTimeScheduler connectivityRegister() {
-        IntentFilter intentFilter = new IntentFilter();
+    /*public BulletinTimeScheduler connectivityRegister() {
+     *//*IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
+        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*//*
         return this;
-    }
+    }*/
 
-    public void initNoInternetCallback(NoInternetCallback callback) {
+    /*public void initNoInternetCallback(NoInternetCallback callback) {
         this.noInternetCallback = callback;
+    }*/
+
+    public void processesForInternetConnection() {
+        RmDataHelper.getInstance().sendPendingAck();
+        ConfigSyncUtil.getInstance().startConfigurationSync(context, false, NetworkMonitor.getNetwork());
+
+        if (!Constants.IS_LOG_UPLOADING_START) {
+            Constants.IS_LOG_UPLOADING_START = true;
+
+            RmDataHelper.getInstance().uploadLogFile();
+            RmDataHelper.getInstance().sendPendingFeedback();
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {
         int state = getNetworkState();
         if (state == DATA) {
@@ -66,25 +83,25 @@ public class BulletinTimeScheduler {
             Util.cancelJob(context);
             return false;
         }
-    }
+    }*/
 
-    protected int getNetworkState() {
+    /*protected int getNetworkState() {
         ConnectivityManager connectivitymanager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] networkInfo = connectivitymanager.getAllNetworkInfo();
 
         for (NetworkInfo netInfo : networkInfo) {
 
-            /*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
+            *//*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
                 if (netInfo.isConnected())
-                    return WIFI;*/
+                    return WIFI;*//*
             if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
                 if (netInfo.isConnected())
                     return DATA;
         }
         return 0;
-    }
+    }*/
 
-    public class NetworkCheckReceiver extends BroadcastReceiver {
+    /*public class NetworkCheckReceiver extends BroadcastReceiver {
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
@@ -126,25 +143,52 @@ public class BulletinTimeScheduler {
                 sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
             }
         }
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    protected void resetScheduler(@NonNull Context context) {
-        Util.cancelJob(context);
-        Util.scheduleJob(context);
+    public void resetScheduler(@NonNull Context context) {
+
+
+//        Util.cancelJob(context);
+//        Util.scheduleJob(context);
     }
 
-    @NonNull
+    /*public void setScheduler(Context context) {
+        Log.v("MIMO_SAHA::", "Job exist: " + Util.isJobExist(context));
+        if (Util.isJobExist(context)) return;
+        Util.scheduleJob(context);
+    }*/
+
+    public void checkAppUpdate() {
+
+        Log.d("FileDownload", "Downloading process start");
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        long saveTime = sharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
+        long dif = System.currentTimeMillis() - saveTime;
+        long days = dif / (24 * 60 * 60 * 1000);
+        int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+
+        if (saveTime == 0 || hour > 23) {
+            Log.d("FileDownload", "Downloading process time match");
+            if (NetworkMonitor.isOnline()) {
+                Log.d("FileDownload", "Online ");
+                // new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
+                InAppUpdate.getInstance(context).downloadAppUpdateConfig(NetworkMonitor.getNetwork());
+            }
+        }
+    }
+
+    /*@NonNull
     public NetworkCheckReceiver getReceiver() {
         return new NetworkCheckReceiver();
-    }
+    }*/
 
 
-    private void sendNoInternetCallbackToUi(boolean haveInternet) {
+    /*private void sendNoInternetCallbackToUi(boolean haveInternet) {
         if (noInternetCallback != null) {
             noInternetCallback.onGetAvailableInternet(haveInternet);
         }
-    }
+    }*/
 
    /* private void uploadLogFile() {
         Log.d("ParseFileUpload", "Upload file call");

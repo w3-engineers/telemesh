@@ -16,6 +16,7 @@ import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
@@ -62,6 +63,7 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void onMesh(String myMeshId) {
         meshInited(myMeshId);
+        RmDataHelper.getInstance().meshInitiated();
     }
 
     @Override
@@ -82,6 +84,8 @@ public class MeshDataSource extends ViperUtil {
         }
 
         Constants.IsMeshInit = true;
+
+        BulletinTimeScheduler.getInstance().checkAppUpdate();
     }
 
     /*public void stopAllServices() {
@@ -226,6 +230,17 @@ public class MeshDataSource extends ViperUtil {
 
         saveUserInfo(userModel);
 
+    }
+
+    public void saveUpdateOtherUserInfo(String userAddress, String userName, int imageIndex) {
+        UserModel userModel = new UserModel().setUserId(userAddress)
+                .setName(userName).setImage(imageIndex);
+
+        saveOtherUserInfo(userModel);
+    }
+
+    public void checkUserIsConnected(String userId) {
+        checkUserConnectionStatus(userId);
     }
 
 }

@@ -74,6 +74,8 @@ public class Constants {
         String APP_UPDATE_TYPE = "app_update_type";
         String APP_UPDATE_VERSION_CODE = "app_update_version_code";
         String APP_UPDATE_VERSION_NAME = "app_update_version_name";
+        String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
+        String APP_UPDATE_CHECK_TIME = "app_update_check_time";
     }
 
     public interface MenuItemPosition {
@@ -141,6 +143,8 @@ public class Constants {
 
     public interface UserStatus {
         int OFFLINE = 0;
+        int HB_ONLINE = 7;
+        int HB_MESH_ONLINE = 6;
         int WIFI_ONLINE = 5;
         int WIFI_MESH_ONLINE = 4;
         int BLE_MESH_ONLINE = 3;
@@ -161,7 +165,7 @@ public class Constants {
         String DASHES = "-------------------------------";
     }
 
-    public interface AppUpdateType{
+    public interface AppUpdateType {
         int NO_CHANGES = 0;
         int NORMAL_UPDATE = 1;
         int BLOCKER = 2;

@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -138,7 +139,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         if (MainActivity.getInstance() != null) {
             String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL).replace(InAppUpdate.MAIN_APK, "");
             if (hasEnoughStorage()) {
-                AppInstaller.downloadApkFile(url, MainActivity.getInstance());
+                AppInstaller.downloadApkFile(url, MainActivity.getInstance(), NetworkMonitor.getNetwork());
             }
         }
     }
@@ -257,7 +258,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
-        if (Constants.IS_DATA_ON) {
+        if (NetworkMonitor.isOnline()) {
             long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
             if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
                 mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);

@@ -36,6 +36,12 @@ public interface DataSource {
     @Nullable
     Flowable<ChatEntity> getReSendMessage();
 
+    Flowable<String> getLiveUserId();
+
+    void setMeshInitiated(boolean isInitiated);
+
+    Flowable<Boolean> getMeshInitiated();
+
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     //void setMyMode(int mode);
 

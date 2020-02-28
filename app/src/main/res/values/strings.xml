@@ -137,7 +137,7 @@
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
     <!--    <string name="def_ssid">captor</string>-->
-    <string name="def_ssid">stage</string>
+    <string name="def_ssid">chocolate</string>
     <!--    <string name="search_hint">Search</string>-->
     <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
@@ -175,5 +175,11 @@
     <string name="interruption_title">%s Interruption</string>
     <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
     <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+
+    <string name="permission_xiomi">To deliver the best experience TeleService needs a few system permissions.\n\nPlease go to your device settings and search for Permissions.
+                          \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
+                          \nAllow all the permissions from TeleService screen which are not marked as green.
+                          \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
+    <string name="got_it">Got It</string>
 
 </resources>

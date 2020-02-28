@@ -94,7 +94,7 @@ android {
 
     externalNativeBuild {
         cmake {
-//            path "src/main/cpp/CMakeLists.txt"
+            //path "src/main/cpp/CMakeLists.txt"
             version "3.10.2"
         }
     }
@@ -191,8 +191,8 @@ dependencies {
     api deps.app_share
     api deps.local_server
 //    debugImplementation deps.inappstoragereader
-    implementation deps.viper
-//    implementation project(path: ':viper')
+  //  implementation deps.viper
+   implementation project(path: ':viper')
 }
 
 coveralls {

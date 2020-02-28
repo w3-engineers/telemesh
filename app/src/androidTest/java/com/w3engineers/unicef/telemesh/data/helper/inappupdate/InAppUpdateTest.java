@@ -99,7 +99,7 @@ public class InAppUpdateTest {
     public void downloadUpdateAppTest() {
         addDelay(500);
 
-        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity());
+        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity(), null);
 
         addDelay(4000);
 
@@ -140,7 +140,7 @@ public class InAppUpdateTest {
 
         UiObject button1 = mDevice.findObject(new UiSelector().text("Update"));
         try {
-            if (button1.exists() && button.isEnabled()) {
+            if (button1.exists() && button1.isEnabled()) {
                 button1.click();
             }
         } catch (UiObjectNotFoundException e) {

@@ -372,7 +372,7 @@ public class InAppUpdate {
     public void downloadAppUpdateConfig(Network network) {
         setAppUpdateProcess(true);
 
-        Log.d("FileDownload","Downloading process server hit");
+        Log.d("FileDownload", "Downloading process server hit");
 
         RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, AppCredentials.getInstance().getFileRepoLink(), network);
         Call<ResponseBody> call = downloadService.downloadFileByUrl(MAIN_JSON);
@@ -381,12 +381,15 @@ public class InAppUpdate {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     new UpdateAppConfigDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, response.body());
+                } else {
+                    setAppUpdateProcess(false);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("FileDownload","Downloading process Error "+t.getMessage());
+                Log.e("FileDownload", "Downloading process Error " + t.getMessage());
+                setAppUpdateProcess(false);
             }
         });
     }

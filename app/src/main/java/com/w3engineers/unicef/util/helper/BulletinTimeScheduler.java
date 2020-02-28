@@ -161,7 +161,7 @@ public class BulletinTimeScheduler {
 
     public void checkAppUpdate() {
 
-        Log.d("FileDownload","Downloading process start");
+        Log.d("FileDownload", "Downloading process start");
         SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
         long saveTime = sharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
         long dif = System.currentTimeMillis() - saveTime;
@@ -169,9 +169,9 @@ public class BulletinTimeScheduler {
         int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
 
         if (saveTime == 0 || hour > 23) {
-            Log.d("FileDownload","Downloading process time match");
+            Log.d("FileDownload", "Downloading process time match");
             if (NetworkMonitor.isOnline()) {
-                Log.d("FileDownload","Online ");
+                Log.d("FileDownload", "Online ");
                 // new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
                 InAppUpdate.getInstance(context).downloadAppUpdateConfig(NetworkMonitor.getNetwork());
             }

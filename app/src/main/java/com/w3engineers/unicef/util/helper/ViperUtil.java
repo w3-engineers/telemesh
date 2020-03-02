@@ -93,14 +93,14 @@ public abstract class ViperUtil {
                 networkSSID = context.getResources().getString(R.string.def_ssid);
             }
 
-            MeshControlConfig meshControlConfig = new MeshControlConfig().setAppDownloadEnable(true)
+            /*MeshControlConfig meshControlConfig = new MeshControlConfig().setAppDownloadEnable(true)
                     .setMessageEnable(true).setDiscoveryEnable(true).setBlockChainEnable(true);
 
-            String meshControlConfigData = new Gson().toJson(meshControlConfig);
+            String meshControlConfigData = new Gson().toJson(meshControlConfig);*/
 
             viperClient = ViperClient.on(context, context.getPackageName(), userModel.getName(),
                     address, publicKey, userModel.getImage(), userModel.getTime(), true, CONFIG_DATA)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL, meshControlConfigData, BuildConfig.VERSION_CODE);
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL, BuildConfig.VERSION_CODE);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,18 +8,16 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
-import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 import com.w3engineers.unicef.util.helper.model.ViperData;
-import com.w3engineers.unicef.util.helper.TextToImageHelper;
 
 import java.util.List;
 
@@ -74,7 +72,6 @@ public class MeshDataSource extends ViperUtil {
     private void meshInited(String meshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
 
-        Log.d("WalletAddress", "My wallet address: " + meshId);
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
 
         if (!isPrepared) {
@@ -207,10 +204,10 @@ public class MeshDataSource extends ViperUtil {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
 
-    @Override
+    /*@Override
     protected void configSync(boolean isUpdate, ConfigurationCommand configurationCommand) {
         RmDataHelper.getInstance().syncConfigFileAndBroadcast(isUpdate, configurationCommand);
-    }
+    }*/
 
     // TODO SSID_Change
     /*public void resetInstance() {

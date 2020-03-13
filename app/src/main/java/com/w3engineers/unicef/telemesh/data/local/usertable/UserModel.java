@@ -49,13 +49,4 @@ public class UserModel {
         this.t = time;
         return this;
     }
-
-    public int getConfigVersion() {
-        return cv;
-    }
-
-    public UserModel setConfigVersion(int cv) {
-        this.cv = cv;
-        return this;
-    }
 }

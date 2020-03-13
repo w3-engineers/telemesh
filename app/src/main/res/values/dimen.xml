@@ -17,15 +17,23 @@
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_3">3dp</dimen>
     <dimen name="margin_1">1dp</dimen>
+    <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_60">60dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
 
     <dimen name="elevation_6">6dp</dimen>
 
     <!--<dimen name="padding_1">1dp</dimen>-->
     <!--<dimen name="padding_2">2dp</dimen>-->
     <dimen name="padding_3">3dp</dimen>
+    <dimen name="padding_4">4dp</dimen>
     <dimen name="padding_5">5dp</dimen>
     <dimen name="padding_10">10dp</dimen>
-    <!--<dimen name="padding_15">15dp</dimen>-->
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
+    <dimen name="padding_15">15dp</dimen>
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <!--<dimen name="text_size_17">17sp</dimen>-->
@@ -35,6 +43,7 @@
 <!--    <dimen name="text_size_11">11sp</dimen>-->
     <dimen name="text_small_body_14">14sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
 
     <dimen name="width_40">40dp</dimen>
     <dimen name="width_120">120dp</dimen>
@@ -59,6 +68,9 @@
     <dimen name="height_50">50dp</dimen>
     <dimen name="height_25">25dp</dimen>
     <dimen name="height_20">20dp</dimen>
+    <dimen name="height_205">205dp</dimen>
+    <dimen name="height_15">15dp</dimen>
+    <dimen name="height_10">10dp</dimen>
 
     <dimen name="circle_image_height">100dp</dimen>
     <dimen name="circle_image_width">100dp</dimen>

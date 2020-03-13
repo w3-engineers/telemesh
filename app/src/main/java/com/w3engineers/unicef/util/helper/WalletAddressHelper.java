@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
@@ -25,13 +26,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class WalletAddressHelper {
     private static String walletSuffixDir;
@@ -129,7 +132,8 @@ public class WalletAddressHelper {
     }
 
 
-   /* public static SpannableString getSpannableTitle(Context context) {
+   */
+/* public static SpannableString getSpannableTitle(Context context) {
         String walletText = context.getResources().getString(R.string.warning);
 
         SpannableString spannableString = new SpannableString(walletText);
@@ -139,7 +143,8 @@ public class WalletAddressHelper {
                 1, walletText.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableString;
-    }*/
+    }*//*
+
 
     public static void writeDefaultAddress(String address, Context context) {
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
@@ -170,3 +175,4 @@ public class WalletAddressHelper {
 
     }
 }
+*/

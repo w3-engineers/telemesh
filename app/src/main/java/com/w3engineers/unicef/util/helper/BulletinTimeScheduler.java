@@ -9,29 +9,18 @@ Proprietary and confidential
 */
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-
-import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.util.ConfigSyncUtil;
+import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.data.broadcast.Util;
-import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.uiutil.NoInternetCallback;
 
 public class BulletinTimeScheduler {
@@ -64,7 +53,6 @@ public class BulletinTimeScheduler {
 
     public void processesForInternetConnection() {
         RmDataHelper.getInstance().sendPendingAck();
-        ConfigSyncUtil.getInstance().startConfigurationSync(context, false, NetworkMonitor.getNetwork());
 
         if (!Constants.IS_LOG_UPLOADING_START) {
             Constants.IS_LOG_UPLOADING_START = true;

@@ -6,20 +6,16 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
-import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
-import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -164,9 +160,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         syncUserWithBroadcastMessage(userId);
 
-        if (isLocalOnline(userActiveStatus)) {
+        // TODO update configuration process need to switch in service layer - mimo
+        /*if (isLocalOnline(userActiveStatus)) {
             configFileSendToOthers(userModel.getConfigVersion(), userId);
-        }
+        }*/
 
         HandlerUtil.postForeground(() -> {
 
@@ -405,7 +402,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
 
-            case Constants.DataType.CONFIG_UPDATE_INFO:
+            // TODO update configuration process need to switch in service layer - mimo
+            /*case Constants.DataType.CONFIG_UPDATE_INFO:
                 configFileReceiveFromOthers(rawData, isNewMessage, userId);
                 break;
 
@@ -415,7 +413,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
             case Constants.DataType.TOKEN_GUIDE_INFO:
                 tokenGuidelineReceivedFromOther(rawData, isNewMessage);
-                break;
+                break;*/
         }
     }
 
@@ -1174,7 +1172,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     /////////////////////Broadcast config file/////////////////////////////
 
-    public void syncConfigFileAndBroadcast(boolean isUpdate, ConfigurationCommand configurationCommand) {
+    // TODO update configuration process need to switch in service layer - mimo
+    /*public void syncConfigFileAndBroadcast(boolean isUpdate, ConfigurationCommand configurationCommand) {
         if (isUpdate) {
             String configText = new Gson().toJson(configurationCommand);
             SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
@@ -1302,7 +1301,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String guidelineInfo = new String(rawData);
         rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);
-    }
+    }*/
 
 
 }

@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.security;
 
 import android.app.Application;
@@ -118,3 +119,4 @@ public class SecurityViewModel extends BaseRxAndroidViewModel {
         return matcher.matches();
     }
 }
+*/

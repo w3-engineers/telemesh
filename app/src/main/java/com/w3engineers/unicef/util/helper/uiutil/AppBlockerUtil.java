@@ -5,10 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Process;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.View;
 
-import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppBlockerBinding;

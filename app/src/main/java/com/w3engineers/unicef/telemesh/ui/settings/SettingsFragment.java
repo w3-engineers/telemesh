@@ -10,21 +10,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.w3engineers.eth.util.data.NetworkMonitor;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
 import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
-import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
+import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -146,13 +142,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void walletAction() {
         if (isMeshInit()) {
-            WalletManager.openActivity(mActivity, getImageByteArray());
+            DataManager.on().openWalletActivity(getImageByteArray());
         }
     }
 
     private void dataPlanAction() {
         if (isMeshInit()) {
-            DataPlanManager.openActivity(mActivity, 0);
+            DataManager.on().openDataPlan();
         }
     }
 

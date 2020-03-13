@@ -23,13 +23,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
-import com.w3engineers.mesh.application.data.local.dataplan.DataPlanManager;
-import com.w3engineers.mesh.application.data.model.ConfigSyncEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
@@ -37,15 +34,14 @@ import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.DialogUtil;
+import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
-import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -53,7 +49,6 @@ import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.util.helper.model.MeshControlConfig;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.ArrayList;
@@ -70,28 +65,28 @@ public abstract class ViperUtil {
     protected ViperUtil(UserModel userModel) {
         try {
             context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
-            String appName = context.getResources().getString(R.string.app_name);
+//            String appName = context.getResources().getString(R.string.app_name);
 
 
             String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
             String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
             String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
-            String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
-            String PARSE_URL = AppCredentials.getInstance().getParseUrl();
-            String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
-            String SIGNAL_SERVER_URL = AppCredentials.getInstance().getSignalServerUrl();
+//            String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
+//            String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+//            String CONFIG_DATA = AppCredentials.getInstance().getConfiguration();
+//            String SIGNAL_SERVER_URL = AppCredentials.getInstance().getSignalServerUrl();
 
 
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
-            String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
-            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
-            String networkSSID = sharedPref.read(Constants.preferenceKey.NETWORK_PREFIX);
+//            SharedPref sharedPref = SharedPref.getSharedPref(context);
+//            String address = sharedPref.read(Constants.preferenceKey.MY_WALLET_ADDRESS);
+//            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+//            String networkSSID = sharedPref.read(Constants.preferenceKey.NETWORK_PREFIX);
 
             initObservers();
 
-            if (TextUtils.isEmpty(networkSSID)) {
-                networkSSID = context.getResources().getString(R.string.def_ssid);
-            }
+//            if (TextUtils.isEmpty(networkSSID)) {
+//                networkSSID = context.getResources().getString(R.string.def_ssid);
+//            }
 
             /*MeshControlConfig meshControlConfig = new MeshControlConfig().setAppDownloadEnable(true)
                     .setMessageEnable(true).setDiscoveryEnable(true).setBlockChainEnable(true);
@@ -99,8 +94,8 @@ public abstract class ViperUtil {
             String meshControlConfigData = new Gson().toJson(meshControlConfig);*/
 
             viperClient = ViperClient.on(context, context.getPackageName(), userModel.getName(),
-                    address, publicKey, userModel.getImage(), userModel.getTime(), true, CONFIG_DATA)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, PARSE_URL, PARSE_APP_ID, SIGNAL_SERVER_URL, BuildConfig.VERSION_CODE);
+                    userModel.getImage(), userModel.getTime(), true)
+                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, BuildConfig.VERSION_CODE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,20 +154,20 @@ public abstract class ViperUtil {
 
             UserModel userModel = new UserModel().setName(userInfoEvent.getUserName())
                     .setImage(userInfoEvent.getAvatar())
-                    .setTime(userInfoEvent.getRegTime())
-                    .setConfigVersion(userInfoEvent.getConfigVersion());
+                    .setTime(userInfoEvent.getRegTime());
 
             peerAdd(userInfoEvent.getAddress(), userModel);
         });
 
-        AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
+        // TODO update configuration process need to switch in service layer - mimo
+        /*AppDataObserver.on().startObserver(ApiEvent.CONFIG_SYNC, event -> {
 
             ConfigSyncEvent configSyncEvent = (ConfigSyncEvent) event;
 
             if (configSyncEvent != null) {
                 configSync(configSyncEvent.isUpdate(), configSyncEvent.getConfigurationCommand());
             }
-        });
+        });*/
 
         AppDataObserver.on().startObserver(ApiEvent.SERVICE_UPDATE, event -> {
 
@@ -194,6 +189,13 @@ public abstract class ViperUtil {
             }
         });
 
+
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_CREATION_EVENT, event -> {
+            WalletCreationEvent walletCreationEvent = (WalletCreationEvent) event;
+            if (walletCreationEvent != null) {
+                HandlerUtil.postForeground(this::openAlertForWalletCreation);
+            }
+        });
     }
 
     public void showPermissionEventAlert(int hardwareEvent, List<String> permissions, Activity activity) {
@@ -289,6 +291,29 @@ public abstract class ViperUtil {
                 }
             }
         });
+    }
+
+    public void openAlertForWalletCreation() {
+        DialogUtil.showConfirmationDialog(MainActivity.getInstance(), "Wallet Create",
+                "Do you want to create wallet?",
+                "No",
+                "Yes",
+                new DialogUtil.DialogButtonListener() {
+                    @Override
+                    public void onClickPositive() {
+                        viperClient.openWalletCreationUI();
+                        DialogUtil.dismissDialog();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+
+                    @Override
+                    public void onClickNegative() {
+                        DialogUtil.dismissDialog();
+                    }
+                });
     }
 
     /*********************Ping*************************/
@@ -419,7 +444,7 @@ public abstract class ViperUtil {
 
     public void restartMeshService() {
         try {
-            int myCurrentRole = DataPlanManager.getInstance().getDataPlanRole();
+            int myCurrentRole = DataManager.on().getMeshUserRole();
             viperClient.restartMesh(myCurrentRole);
         } catch (Exception e) {
             e.printStackTrace();
@@ -439,39 +464,27 @@ public abstract class ViperUtil {
         }
     }*/
 
-    public void sendConfigToViper(ConfigurationCommand configurationCommand) {
+    // TODO update configuration process need to switch in service layer - mimo
+    /*public void sendConfigToViper(ConfigurationCommand configurationCommand) {
         if (configurationCommand != null) {
             if (viperClient != null) {
                 viperClient.sendConfigForUpdate(configurationCommand);
             }
         }
-    }
+    }*/
 
     public void saveUserInfo(UserModel userModel) {
 
         try {
             SharedPref sharedPref = SharedPref.getSharedPref(context);
 
-            String address = sharedPref.read(Constants.preferenceKey.
-                    MY_WALLET_ADDRESS);
-            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
+            String address = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
             viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
-                    userModel.getName(), publicKey, "com.w3engineers.unicef.telemesh");
+                    userModel.getName(), "com.w3engineers.unicef.telemesh");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        /*if (viperClient != null) {
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
-
-            String address = sharedPref.read(Constants.preferenceKey.
-                    MY_WALLET_ADDRESS);
-            String publicKey = sharedPref.read(Constants.preferenceKey.MY_PUBLIC_KEY);
-
-            viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
-                    userModel.getName(), publicKey, "com.w3engineers.unicef.telemesh");
-        }*/
     }
 
     public void saveOtherUserInfo(UserModel userModel) {
@@ -481,13 +494,13 @@ public abstract class ViperUtil {
         }
     }
 
-
-    public PointGuideLine requestTokenGuideline() {
+    // TODO update configuration process need to switch in service layer - mimo
+    /*public PointGuideLine requestTokenGuideline() {
         if (viperClient != null) {
             return viperClient.requestPointGuideline();
         }
         return null;
-    }
+    }*/
 
     public void sendTokenGuidelineInfoToViper(String guideLine) {
         if (guideLine != null && viperClient != null) {
@@ -585,7 +598,8 @@ public abstract class ViperUtil {
 
     protected abstract boolean isNodeAvailable(String nodeId, int userActiveStatus);
 
-    protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
+    // TODO update configuration process need to switch in service layer - mimo
+//    protected abstract void configSync(boolean isUpdate, ConfigurationCommand configurationCommand);
 
 
 

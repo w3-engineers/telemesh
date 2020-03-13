@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.importwallet;
 
 import android.Manifest;
@@ -8,15 +9,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.application.data.local.wallet.WalletManager;
@@ -25,26 +20,21 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityImportWalletBinding;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
-import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
-import java.util.List;
-
-import timber.log.Timber;
-
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class ImportWalletActivity extends BaseActivity {
 
@@ -150,9 +140,10 @@ public class ImportWalletActivity extends BaseActivity {
             runOnUiThread(() -> {
                 CustomDialogUtil.dismissProgressDialog();
 
-                Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
-                intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
-                startActivity(intent);
+                // TODO remove wallet option
+//                Intent intent = new Intent(ImportWalletActivity.this, CreateUserActivity.class);
+//                intent.putExtra(Constants.IntentKeys.PASSWORD, mBinding.editTextPassword.getText());
+//                startActivity(intent);
             });
         }
     }
@@ -168,7 +159,8 @@ public class ImportWalletActivity extends BaseActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        /*Dexter.withActivity(this)
+        */
+/*Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -194,7 +186,8 @@ public class ImportWalletActivity extends BaseActivity {
                             List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
+                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*//*
+
     }
 
     private void parseIntent() {
@@ -216,3 +209,4 @@ public class ImportWalletActivity extends BaseActivity {
         }).get(ImportWalletViewModel.class);
     }
 }
+*/

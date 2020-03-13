@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.importprofile;
 
 import android.arch.lifecycle.ViewModel;
@@ -37,13 +38,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class ImportProfileActivity extends BaseActivity {
 
@@ -101,11 +104,13 @@ public class ImportProfileActivity extends BaseActivity {
             Constants.WALLET_URI = data.getData();
             filePath = data.getData().getPath();
 
-           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+           */
+/* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 filePath = data.getData().getPath();
             } else {
                 filePath = data.getData().getPath();
-            }*/
+            }*//*
+
 
             Intent intent = new Intent(ImportProfileActivity.this, ImportWalletActivity.class);
             intent.putExtra(Constants.IntentKeys.WALLET_PATH, filePath);
@@ -160,3 +165,4 @@ public class ImportProfileActivity extends BaseActivity {
                 });
     }
 }
+*/

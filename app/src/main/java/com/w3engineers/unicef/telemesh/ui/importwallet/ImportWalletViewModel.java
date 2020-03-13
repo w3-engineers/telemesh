@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.importwallet;
 
 import android.app.Application;
@@ -8,13 +9,15 @@ import android.support.annotation.Nullable;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class ImportWalletViewModel extends AndroidViewModel {
 
@@ -32,3 +35,4 @@ public class ImportWalletViewModel extends AndroidViewModel {
         return true;
     }
 }
+*/

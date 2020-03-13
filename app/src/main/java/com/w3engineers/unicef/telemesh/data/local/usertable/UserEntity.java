@@ -227,8 +227,7 @@ public class UserEntity extends DbBaseEntity {
         return setUserName(userModel.getName())
                 .setAvatarIndex(userModel.getImage())
                 .setRegistrationTime(userModel.getTime())
-                .setMeshId(userModel.getUserId())
-                .setConfigVersion(userModel.getConfigVersion());
+                .setMeshId(userModel.getUserId());
     }
 
     @NonNull

@@ -1,17 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
-import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 
 public class TermsOfUseActivity extends BaseActivity {
 
@@ -69,7 +64,7 @@ public class TermsOfUseActivity extends BaseActivity {
     }
 
     private void gotoProfileChoicePage() {
-        startActivity(new Intent(TermsOfUseActivity.this, ProfileChoiceActivity.class));
+        startActivity(new Intent(TermsOfUseActivity.this, CreateUserActivity.class));
         finish();
     }
 }

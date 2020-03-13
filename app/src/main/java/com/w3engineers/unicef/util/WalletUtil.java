@@ -1,13 +1,16 @@
+/*
 package com.w3engineers.unicef.util;
 
 
+*/
 /*
 ============================================================================
 Copyright (C) 2019 W3 Engineers Ltd. - All Rights Reserved.
 Unauthorized copying of this file, via any medium is strictly prohibited
 Proprietary and confidential
 ============================================================================
-*/
+*//*
+
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -73,7 +76,8 @@ public class WalletUtil {
         });
     }
 
-   /* public void loadWallet(String password, WalletPrepareListener walletPrepareListener) {
+   */
+/* public void loadWallet(String password, WalletPrepareListener walletPrepareListener) {
         this.listener = walletPrepareListener;
         WalletManager.getInstance().loadWallet(mContext, password, new WalletManager.WalletLoadListener() {
             @Override
@@ -90,6 +94,8 @@ public class WalletUtil {
                 }
             }
         });
-    }*/
+    }*//*
+
 }
 
+*/

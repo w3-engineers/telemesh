@@ -4,5 +4,12 @@ public class FileDownloadUtil {
 
     private static FileDownloadUtil fileDownloadUtil = new FileDownloadUtil();
 
+    public static FileDownloadUtil getInstance() {
+        return fileDownloadUtil;
+    }
 
+    public String getDownloadFilePath() {
+
+        return null;
+    }
 }

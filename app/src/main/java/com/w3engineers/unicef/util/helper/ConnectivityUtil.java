@@ -25,6 +25,7 @@ public class ConnectivityUtil {
 
     public static void isInternetAvailable(Context context, BiConsumer<String, Boolean> consumer) {
         new Thread(() -> {
+            boolean isConnected = false;
             if (isNetworkAvailable(context)) {
                 try {
                     HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
@@ -32,19 +33,19 @@ public class ConnectivityUtil {
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
                     urlc.connect();
-                    consumer.accept("", urlc.getResponseCode() == 200);
-                } catch (IOException e) {
-                    Log.e("InternetCheck", "Error checking internet connection " + e.getMessage());
+                    isConnected = urlc.getResponseCode() == 200;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 Log.e("InternetCheck", "No internet available ");
-                try {
-                    consumer.accept("", false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                isConnected = false;
+            }
+
+            try {
+                consumer.accept("", isConnected);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
 

@@ -10,7 +10,7 @@
     <string name="select_avatar">Select an avatar</string>
 
     <string name="select_photo">ছবি পছন্দ করুন</string>
-    <string name="title_discoverd_fragment">নিকটবর্তী ব্যবহারকারী</string>
+    <string name="title_discoverd_fragment">\'s সংযোগ</string>
     <string name="title_personal_fragment">ব্যক্তিগত যোগাযোগ</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_settings_fragment">সেটিংস</string>
@@ -45,7 +45,7 @@
 
     <!--    <string name="id">ID</string>-->
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
-    <string name="discovering_users">Discovering Users</string>
+    <string name="discovering_users">সংযোগ খোজা হচ্ছে</string>
     <string name="searching">আরো খোজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
@@ -150,7 +150,8 @@
     <string name="please_wait">Please Wait…</string>
     <!--    <string name="spinner_title">Favourite</string>-->
 
-    <string name="favourite">Favourite</string>
+    <string name="favourite">প্রিয়</string>
+    <string name="all">সবাই</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
 

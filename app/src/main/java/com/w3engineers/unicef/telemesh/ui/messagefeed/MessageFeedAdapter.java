@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,9 @@ import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageFeedBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,6 +32,8 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
     protected MessageFeedViewModel mMessageFeedViewModel;
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
+
+    private HashMap<String, Integer> broadcastMap = new HashMap<>();
 
     public MessageFeedAdapter(@NonNull Context context, @Nullable MessageFeedViewModel messageFeedViewModel) {
         this.mMessageFeedViewModel = messageFeedViewModel;
@@ -77,7 +82,21 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
         @Override
         public void bind(FeedEntity feedEntity) {
             mItemMessageFeedBinding.setFeedEntity(feedEntity);
+
+            String details = feedEntity.getFeedDetail();
+
+            mItemMessageFeedBinding.senderName.setText(UIHelper.getBroadcastTitle(details));
+            mItemMessageFeedBinding.senderIcon.setImageResource(UIHelper.getBroadcastLogo(details));
+            mItemMessageFeedBinding.senderMessage.setText(UIHelper.getBroadcastMessage(details));
+
             mItemMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
+
+            if (feedEntity.isFeedRead()) {
+                mItemMessageFeedBinding.senderMessage.setTypeface(null, Typeface.NORMAL);
+            } else {
+                mItemMessageFeedBinding.senderMessage.setTypeface(null, Typeface.BOLD);
+            }
+
            // setImageUrl(mItemMessageFeedBinding.senderIcon, feedEntity.getFeedProviderLogo(), mContext.getResources().getDrawable(R.mipmap.ic_unicef));
         }
 

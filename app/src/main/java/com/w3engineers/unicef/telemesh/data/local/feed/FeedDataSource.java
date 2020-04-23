@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Single;
+
 public class FeedDataSource {
 
     private FeedDao feedDao;
@@ -63,4 +65,7 @@ public class FeedDataSource {
         }
     }
 
+    public Single<Integer> deleteAll() {
+        return Single.fromCallable(() -> feedDao.deleteAll());
+    }
 }

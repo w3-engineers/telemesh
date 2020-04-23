@@ -8,6 +8,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class BulletinDataSource {
@@ -42,5 +43,9 @@ public class BulletinDataSource {
     @NonNull
     public Single<Integer> setFullSuccess(@NonNull String messageId, @NonNull String userId) {
         return Single.fromCallable(() -> bulletinTrackDao.setFullSuccess(messageId, userId));
+    }
+
+    public Single<Integer> deleteAllTrack() {
+        return Single.fromCallable(() -> bulletinTrackDao.deleteAll());
     }
 }

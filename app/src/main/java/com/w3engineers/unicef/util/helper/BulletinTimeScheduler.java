@@ -64,7 +64,9 @@ public class BulletinTimeScheduler {
 
     public void processesForInternetConnection() {
         RmDataHelper.getInstance().sendPendingAck();
-        ConfigSyncUtil.getInstance().startConfigurationSync(context, false, NetworkMonitor.getNetwork());
+        //Fixme Network interface change
+        //ConfigSyncUtil.getInstance().startConfigurationSync(context, false, NetworkMonitor.getNetwork());
+        ConfigSyncUtil.getInstance().startConfigurationSync(context, false, null);
 
         if (!Constants.IS_LOG_UPLOADING_START) {
             Constants.IS_LOG_UPLOADING_START = true;

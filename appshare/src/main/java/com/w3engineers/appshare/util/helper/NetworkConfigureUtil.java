@@ -98,7 +98,10 @@ public class NetworkConfigureUtil {
 
     private void wifiDirectConfigure() {
 
+        boolean isWifiEnable = true;
+
         if (!wifiManager.isWifiEnabled()) {
+            isWifiEnable = false;
             wifiManager.setWifiEnabled(true);
 
             int loopMax = 10;
@@ -109,6 +112,14 @@ public class NetworkConfigureUtil {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        if (!isWifiEnable) {
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

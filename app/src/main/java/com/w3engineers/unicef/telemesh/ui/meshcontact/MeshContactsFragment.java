@@ -367,8 +367,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("Favourite");
-        categories.add("All");
+        categories.add(getResources().getString(R.string.favourite));
+        categories.add(getResources().getString(R.string.all));
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.simple_spinner_item, categories);
 

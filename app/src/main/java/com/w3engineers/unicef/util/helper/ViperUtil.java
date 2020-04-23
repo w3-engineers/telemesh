@@ -66,7 +66,10 @@ public abstract class ViperUtil {
 
     protected ViperUtil(UserModel userModel) {
         try {
-            context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
+            context = MainActivity.getActivityInstance();
+            if (context == null) {
+                context = TeleMeshApplication.getContext();
+            }
             String appName = context.getResources().getString(R.string.app_name);
 
 

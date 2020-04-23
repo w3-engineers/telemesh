@@ -10,6 +10,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
@@ -33,6 +34,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     private FeedDataSource mFeedDataSource;
     // Selected feed entity for details
     private MutableLiveData<FeedEntity> mSelectedFeedEntityObservable = new MutableLiveData<>();
+    public MutableLiveData<Boolean> deleteMutableLiveData = new MutableLiveData<>();
 
     private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
 
@@ -65,12 +67,14 @@ public class MessageFeedViewModel extends BaseRxViewModel {
     }
 
     public void requestBroadcastMessage() {
-        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+        /*ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
             if (isConnected) {
                 Log.d("TelemeshTest","network connected");
                 RmDataHelper.getInstance().requestWsMessage();
             }
-        });
+        });*/
+
+        RmDataHelper.getInstance().requestWsMessage();
     }
 
     private void updateFeedEntity(FeedEntity feedEntity) {
@@ -90,6 +94,25 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      */
     MutableLiveData<FeedEntity> getMessageFeedDetails() {
         return mSelectedFeedEntityObservable;
+    }
+
+    public void deleteAll() {
+        getCompositeDisposable().add(BulletinDataSource.getInstance().deleteAllTrack()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+                    deleteFeeds();
+                }, Throwable::printStackTrace));
+    }
+
+    private void deleteFeeds() {
+        getCompositeDisposable().add(mFeedDataSource.deleteAll()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+                    deleteMutableLiveData.postValue(true);
+                    Log.v("MIMO_SAHA:", "Delete Done");
+                }, Throwable::printStackTrace));
     }
 
 }

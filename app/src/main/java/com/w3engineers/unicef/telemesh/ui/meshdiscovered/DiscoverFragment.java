@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -107,7 +109,10 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+                String toolbarTitle = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
+                setTitle(toolbarTitle);
                 if (userEntities != null && userEntities.size() > 0) {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
@@ -293,7 +298,11 @@ public class DiscoverFragment extends BaseFragment {
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+
+            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+            String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+            String toolbarTitle = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
+            setTitle(toolbarTitle);
         }
     }
 
@@ -307,7 +316,10 @@ public class DiscoverFragment extends BaseFragment {
                 if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                        String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+                        String toolbarTitle = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
+                        setTitle(toolbarTitle);
                     } catch (Exception e) { e.printStackTrace(); }
                 }
             };
@@ -316,7 +328,9 @@ public class DiscoverFragment extends BaseFragment {
             handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
         } else {
             enableEmpty();
-            title = LanguageUtil.getString(R.string.title_discoverd_fragment);
+            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+            String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+            title = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
         }
     }
 

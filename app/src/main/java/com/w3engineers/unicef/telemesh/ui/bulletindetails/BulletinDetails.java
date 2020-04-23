@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 public class BulletinDetails extends TelemeshBaseActivity {
 
@@ -48,6 +49,12 @@ public class BulletinDetails extends TelemeshBaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        String details = feedEntity.getFeedDetail();
+        activityBulletinDetailsBinding.image.setImageResource(UIHelper.getBroadcastLogo(details));
+        activityBulletinDetailsBinding.textViewLastName.setText(UIHelper.getBroadcastTitle(details));
+        activityBulletinDetailsBinding.message.setText(UIHelper.getBroadcastMessage(details));
+        activityBulletinDetailsBinding.textViewName.setText(UIHelper.getBroadcastTitle(details));
     }
 
     /*@Override

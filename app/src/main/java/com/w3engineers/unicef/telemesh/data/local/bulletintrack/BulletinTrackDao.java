@@ -43,4 +43,7 @@ public abstract class BulletinTrackDao extends BaseDao<BulletinTrackEntity> {
             + Constants.Bulletin.BULLETIN_SEND_TO_SERVER + " WHERE " + ColumnNames.COLUMN_BULLETIN_MESSAGE_ID
             + " = :messageId AND " + ColumnNames.COLUMN_BULLETIN_TRACK_USER_ID + " = :userId")
     public abstract int setFullSuccess(@NonNull String messageId, @NonNull String userId);
+
+    @Query("DELETE FROM " + TableNames.BULLETIN_TRACK)
+    public abstract int deleteAll();
 }

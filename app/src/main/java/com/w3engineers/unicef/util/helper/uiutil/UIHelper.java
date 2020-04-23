@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,7 +23,9 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -36,6 +39,9 @@ import io.reactivex.subjects.PublishSubject;
  */
 public class UIHelper {
 
+    private static String[] broadcastKey = {"UNICEF", "UNHCR", "WFP", "WHO", "BRAC", "BD-GOV"};
+    private static int[] broadcastLogo = {R.mipmap.ic_unicef, R.mipmap.ic_unhcr,
+            R.mipmap.ic_wfp, R.mipmap.ic_who, R.mipmap.ic_brac, R.mipmap.ic_bd_govt};
 
     @BindingAdapter("imageResource")
     public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
@@ -64,6 +70,42 @@ public class UIHelper {
         }
         Glide.with(App.getContext()).load(statusId).into(imageView);
     }
+
+    public static String getBroadcastTitle(String message) {
+        if (!TextUtils.isEmpty(message) && message.startsWith("#")) {
+            for (String key : broadcastKey) {
+                if (message.startsWith("#" + key)) {
+                    return key;
+                }
+            }
+        }
+        return broadcastKey[0];
+    }
+
+    public static int getBroadcastLogo(String message) {
+        if (!TextUtils.isEmpty(message) && message.startsWith("#")) {
+            for (int i = 0; i < broadcastLogo.length; i++) {
+                String key = broadcastKey[i];
+                if (message.startsWith("#" + key)) {
+                    return broadcastLogo[i];
+                }
+            }
+        }
+        return broadcastLogo[0];
+    }
+
+    public static String getBroadcastMessage(String message) {
+        if (!TextUtils.isEmpty(message) && message.startsWith("#")) {
+            for (String key : broadcastKey) {
+                if (message.startsWith("#" + key)) {
+                    message = message.replace(("#" + key), "");
+                    return message.trim();
+                }
+            }
+        }
+        return message;
+    }
+
 
    /* @NonNull
     public static Observable<String> fromSearchView(@NonNull SearchView searchView) {

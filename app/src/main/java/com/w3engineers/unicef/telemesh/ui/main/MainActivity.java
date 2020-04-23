@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -83,10 +84,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private int RC_APP_UPDATE = 620;
     private static AppUpdateManager mAppUpdateManager;
 
-    @SuppressLint("StaticFieldLeak")
-    @Nullable
-    public static MainActivity mainActivity;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -122,7 +119,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         Constants.IS_LOADING_ENABLE = false;
         Constants.IS_APP_BLOCKER_ON = false;
-        mainActivity = this;
 
 
 
@@ -177,6 +173,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         return sInstance;
     }
 
+    public static Activity getActivityInstance() {
+        return telemeshBaseActivity;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -225,7 +225,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
             mFragment = new DiscoverFragment();
-            title = LanguageUtil.getString(R.string.title_discoverd_fragment);
+
+            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+            String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+            title = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
         }
         mCurrentFragment = mFragment;
         loadFragment(mFragment, title);
@@ -263,7 +266,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         String toolbarTitle = "";
         switch (item.getItemId()) {
             case R.id.action_discover:
-                toolbarTitle = LanguageUtil.getString(R.string.title_discoverd_fragment);
+                SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                String userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
+                toolbarTitle = userName + LanguageUtil.getString(R.string.title_discoverd_fragment);
                 mFragment = new DiscoverFragment();
                 break;
             case R.id.action_contact:
@@ -380,7 +385,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        sInstance = null;
         unregisterReceiver(mGpsSwitchStateReceiver);
     }
 

@@ -9,7 +9,7 @@
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
-    <string name="title_discoverd_fragment">Nearby Users</string>
+    <string name="title_discoverd_fragment">\'s Contact(s)</string>
     <string name="title_personal_fragment">Personal Contacts</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
@@ -46,7 +46,7 @@
     <!--    <string name="id">ID</string>-->
 
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
-    <string name="discovering_users">Searching Nearby</string>
+    <string name="discovering_users">Searching Contacts</string>
     <string name="searching">Searching…</string>
     <string name="data_plan">My Data Plan</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
@@ -137,7 +137,7 @@
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
     <!--    <string name="def_ssid">captor</string>-->
-    <string name="def_ssid">chocolate</string>
+    <string name="def_ssid">mesht</string>
     <!--    <string name="search_hint">Search</string>-->
     <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
@@ -152,6 +152,7 @@
     <string name="a_new_version">A new version </string>
     <string name="is_available_for_telemesh">is available for Telemesh</string>
     <string name="favourite">Favourite</string>
+    <string name="all">All</string>
     <string name="show_password">Show Password</string>
     <string name="hide_password">Hide Password</string>
     <string name="phone_storage_not_enough">Your phone space not enough</string>

@@ -51,7 +51,8 @@ public class UIHelper {
     public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId) {
         //AppLog.v("Image status resource id ="+resourceId);
         int statusId;
-        if (resourceId == Constants.MessageStatus.STATUS_SENDING) {
+        if (resourceId == Constants.MessageStatus.STATUS_SENDING ||
+                resourceId == Constants.MessageStatus.STATUS_SENDING_START) {
             statusId = R.mipmap.ic_dot_grey;
         } else if (resourceId == Constants.MessageStatus.STATUS_SEND) {
             statusId = R.mipmap.ic_sending_grey;

@@ -312,6 +312,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             dataSend(messageModelString.getBytes(),
                                     Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                         } else {
+                            dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING_START);
                             contentMessageSend(messageEntity, chatEntity.getFriendsId(), false);
                         }
 
@@ -707,31 +708,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 dataReceive(prevRMDataModel, false);
                 return;
-            }
-        }
-
-        if (!TextUtils.isEmpty(dataSendId) && rmContentMap.get(dataSendId) != null) {
-
-            ContentModel contentModel = rmContentMap.get(dataSendId);
-
-            if (contentModel != null) {
-                if (contentModel.isThumbSend()) {
-
-                    if (status == Constant.MessageStatus.SEND) {
-                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_SEND);
-                    } else if (status == Constant.MessageStatus.DELIVERED) {
-                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_DELIVERED);
-                    } else if (status == Constant.MessageStatus.RECEIVED) {
-                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
-                        rmContentMap.remove(dataSendId);
-                    }
-
-                    contentReceive(contentModel, false);
-                } else {
-//                    contentModel.setThumbSend(true);
-//                    contentMessageSend(contentModel);
-                    rmContentMap.remove(dataSendId);
-                }
             }
         }
     }
@@ -1174,7 +1150,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     @Override
     public void contentSent(ContentModel contentModel, String dataSendId) {
-        rmContentMap.put(dataSendId, contentModel);
+        prepareRightMeshDataSource();
+
+        rightMeshDataSource.contentDataSend(dataSendId, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

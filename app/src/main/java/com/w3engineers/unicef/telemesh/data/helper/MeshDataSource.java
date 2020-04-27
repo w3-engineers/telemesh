@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -23,6 +22,8 @@ import com.w3engineers.unicef.util.helper.model.ViperData;
 import java.util.HashMap;
 import java.util.List;
 
+import timber.log.Timber;
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -38,6 +39,7 @@ public class MeshDataSource extends ViperUtil {
     private BroadcastManager broadcastManager;
 
     private HashMap<String, ContentReceiveModel> contentReceiveModelHashMap = new HashMap<>();
+    private HashMap<String, ContentSendModel> contentSendModelHashMap = new HashMap<>();
 
     private MeshDataSource(@NonNull UserModel userModel) {
         super(userModel);
@@ -226,6 +228,25 @@ public class MeshDataSource extends ViperUtil {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
 
+    protected void contentDataSend(String contentId, ContentModel contentModel) {
+        if (!TextUtils.isEmpty(contentId) && contentModel.isThumbSend()) {
+
+            ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+
+            if (contentSendModel == null) {
+                contentSendModel = new ContentSendModel();
+            }
+
+            contentSendModel.contentId = contentId;
+            contentSendModel.messageId = contentModel.getMessageId();
+            contentSendModel.userId = contentModel.getUserId();
+            contentSendModel.successStatus = true;
+            contentSendModel.contentDataType = contentModel.getContentDataType();
+
+            contentSendModelHashMap.put(contentId, contentSendModel);
+        }
+    }
+
     @Override
     protected void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
 
@@ -247,15 +268,23 @@ public class MeshDataSource extends ViperUtil {
 
     @Override
     protected void contentReceiveInProgress(String contentId, int progress) {
+        Timber.tag("FileMessage").v("ContentId: " + contentId + " Pro: " + progress);
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
             contentReceiveModel.setContentReceiveProgress(progress);
             contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+            return;
+        }
+
+        ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+        if (contentSendModel != null) {
+            contentSendModel.contentReceiveProgress = progress;
         }
     }
 
     @Override
     protected void contentReceiveDone(String contentId, boolean contentStatus) {
+        Timber.tag("FileMessage").v("ContentId: %s", contentId + " status: " + contentStatus);
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
             if (contentStatus) {
@@ -289,8 +318,26 @@ public class MeshDataSource extends ViperUtil {
             } else {
                 // Failed
             }
+            contentReceiveModelHashMap.remove(contentId);
+            return;
         }
-        contentReceiveModelHashMap.remove(contentId);
+
+        ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+        if (contentSendModel != null) {
+            if (contentStatus) {
+                ContentModel contentModel = new ContentModel()
+                        .setMessageId(contentSendModel.messageId)
+                        .setContentDataType(contentSendModel.contentDataType)
+                        .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                        .contentReceive(contentModel, false));
+
+            } else {
+
+            }
+            contentSendModelHashMap.remove(contentId);
+        }
     }
 
     /*@Override

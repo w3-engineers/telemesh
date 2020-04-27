@@ -41,7 +41,6 @@ import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.util.DialogUtil;
-import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -61,6 +60,8 @@ import com.w3engineers.unicef.util.helper.model.ViperData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import timber.log.Timber;
 
 public abstract class ViperUtil {
 
@@ -520,7 +521,9 @@ public abstract class ViperUtil {
 
             String contentMessageString = new Gson().toJson(contentMessageModel);
             try {
-                return viperClient.sendFileMessage(peerId, contentPath, contentMessageString.getBytes());
+                String sendId = viperClient.sendFileMessage(peerId, contentPath, contentMessageString.getBytes());
+                Timber.tag("FileMessage").v("SendId: " + sendId);
+                return sendId;
             } catch (Exception e) {
                 e.printStackTrace();
             }

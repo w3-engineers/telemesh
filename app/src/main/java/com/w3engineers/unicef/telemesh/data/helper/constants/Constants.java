@@ -106,6 +106,9 @@ public class Constants {
         int STATUS_RECEIVED = 7;
         int STATUS_CONTENT_RECEIVING = 8;
         int STATUS_CONTENT_RECEIVED = 9;
+        int STATUS_SENDING_START = 10;
+        int STATUS_CONTENT_SENDING = 11;
+        int STATUS_CONTENT_SEND = 12;
     }
 
     public interface DataType {

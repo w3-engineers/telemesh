@@ -190,7 +190,7 @@ dependencies {
 
     api deps.app_share
     api deps.local_server
-//    debugImplementation deps.inappstoragereader
+    debugImplementation deps.inappstoragereader
 //    implementation deps.viper
    implementation project(path: ':viper')
 }

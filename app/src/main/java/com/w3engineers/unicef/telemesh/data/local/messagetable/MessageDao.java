@@ -81,6 +81,11 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
     public abstract ChatEntity getMessageById(@NonNull String messageId);
 
+    @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
+    public abstract MessageEntity getMessageFromId(@NonNull String messageId);
+
     /**
      * Mark all message as read
      *

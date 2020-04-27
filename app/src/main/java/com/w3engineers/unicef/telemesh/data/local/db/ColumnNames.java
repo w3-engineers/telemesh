@@ -35,6 +35,12 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_MESSAGE_TIME = "time";
     String COLUMN_MESSAGE_STATUS = "message_status";
 
+    String COLUMN_CONTENT_ID = "content_id";
+    String COLUMN_CONTENT_PATH = "content_path";
+    String COLUMN_CONTENT_THUMB_PATH = "content_thumb_path";
+    String COLUMN_CONTENT_PROGRESS = "content_progress";
+    String COLUMN_CONTENT_STATUS = "content_status";
+    String COLUMN_CONTENT_INFO = "content_info";
 
     /**
      * Message Feed table column

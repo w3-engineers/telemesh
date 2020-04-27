@@ -65,6 +65,10 @@ public class UIHelper {
         Glide.with(App.getContext()).load(statusId).into(imageView);
     }
 
+    public static void setImageInGlide(ImageView imageView, String imagePath) {
+        Glide.with(App.getContext()).load(imagePath).into(imageView);
+    }
+
    /* @NonNull
     public static Observable<String> fromSearchView(@NonNull SearchView searchView) {
 

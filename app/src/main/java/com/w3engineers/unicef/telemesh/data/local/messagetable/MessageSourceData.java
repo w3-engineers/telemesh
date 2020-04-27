@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -80,6 +81,11 @@ public class MessageSourceData {
     @NonNull
     public ChatEntity getMessageEntityById(@NonNull String messageId) {
         return messageDao.getMessageById(messageId);
+    }
+
+    @Nullable
+    public MessageEntity getMessageEntityFromId(@NonNull String messageId) {
+        return messageDao.getMessageFromId(messageId);
     }
 
     // This api is not used in app layer

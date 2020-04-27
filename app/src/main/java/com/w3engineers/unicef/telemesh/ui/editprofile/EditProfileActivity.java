@@ -28,7 +28,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 
     private ActivityEditProfileBinding mBinding;
     private EditProfileViewModel mViewModel;
-    private int PROFILE_IMAGE_REQUEST = 1;
 
     public static int INITIAL_IMAGE_INDEX = -1;
 
@@ -89,7 +88,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 }
 
                 intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
-                startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
+                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
                 break;
             case R.id.image_view_back:
                 finish();
@@ -102,7 +101,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null && requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(CreateUserActivity.IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());

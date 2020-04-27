@@ -1,11 +1,14 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +17,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
@@ -26,9 +34,14 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
 
 import java.util.List;
 
@@ -58,6 +71,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable
     public LayoutManagerWithSmoothScroller mLinearLayoutManager;
+
 
 
     @Override
@@ -154,8 +168,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         if (mViewBinging != null) {
             mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
+
+            setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage);
             //  mViewBinging.emptyViewId.setOnClickListener(this);
-            mViewBinging.imageViewSend.setOnClickListener(this);
         }
 
         clearNotification();
@@ -182,15 +197,6 @@ public class ChatActivity extends TelemeshBaseActivity {
      */
     private void subscribeForMessages(String userId) {
         if (Text.isNotEmpty(userId)) {
-            /*mChatViewModel.getAllMessage(mUserEntity.meshId).observe(this, chatEntities -> {
-
-                if (chatEntities == null)
-                    return;
-
-//                Collections.reverse(chatEntities);
-                mChatAdapter.addItems(chatEntities);
-                mViewBinging.chatRv.scrollToPosition(mChatAdapter.getItemCount() - 1);
-            });*/
 
             if (mChatPagedAdapter != null) {
                 mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
@@ -237,14 +243,6 @@ public class ChatActivity extends TelemeshBaseActivity {
         } else {
             return R.mipmap.ic_offline;
         }
-
-        /*if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
-            return R.drawable.circle_online;
-        } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
-            return R.drawable.circle_internet;
-        } else {
-            return R.drawable.circle_offline;
-        }*/
     }
 
     @Override
@@ -265,6 +263,10 @@ public class ChatActivity extends TelemeshBaseActivity {
                 Intent intent = new Intent(this, UserProfileActivity.class);
                 intent.putExtra(UserEntity.class.getName(), mUserEntity);
                 startActivity(intent);
+                break;
+
+            case R.id.image_view_pick_gallery_image:
+                requestToOpenGallery();
                 break;
         }
 
@@ -334,6 +336,57 @@ public class ChatActivity extends TelemeshBaseActivity {
             mViewBinging.textViewNoInternet.setVisibility(View.GONE);
         }
     }*/
+
+    protected void requestToOpenGallery() {
+        Dexter.withActivity(this).withPermissions(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            openGallery();
+                        }
+
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            requestToOpenGallery();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(
+                            List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).withErrorListener(error -> requestToOpenGallery()).onSameThread().check();
+    }
+
+    private void openGallery() {
+        int selectImageCount = 1;
+        Matisse.from(this)
+                .choose(MimeType.ofAll(), false)
+                .theme(R.style.Matisse_Dracula)
+                .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.height_120))
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .maxSelectable(selectImageCount)
+                .imageEngine(new MyGlideEngineUtil())
+                .forResult(Constants.RequestCodes.GALLERY_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
+                if (resultCode == RESULT_OK && data != null) {
+                    List<Uri> images = Matisse.obtainResult(data);
+                    mChatViewModel.sendContentMessage(mUserEntity.meshId, images.get(0));
+                }
+                break;
+        }
+    }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
 

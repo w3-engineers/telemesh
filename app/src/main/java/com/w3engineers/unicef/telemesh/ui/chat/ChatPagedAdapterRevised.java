@@ -17,16 +17,17 @@ import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageInBinding;
+import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageOutBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import static com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity.DIFF_CALLBACK;
 
 public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPagedAdapterRevised.GenericViewHolder> {
 
-    private final int TEXT_MESSAGE_IN = 0;
-    private final int TEXT_MESSAGE_OUT = 1;
     private int avatarIndex;
 
     @NonNull
@@ -53,8 +54,23 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public int getItemViewType(int position) {
         ChatEntity chatEntity = getItem(position);
 
-        if (chatEntity != null && chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-            return chatEntity.isIncoming ? Constants.MessageType.MESSAGE_INCOMING : Constants.MessageType.MESSAGE_OUTGOING;
+        if (chatEntity != null && chatEntity.getMessageType() != Constants.MessageType.DATE_MESSAGE) {
+
+            if (chatEntity.isIncoming()) {
+                switch (chatEntity.getMessageType()) {
+                    case Constants.MessageType.TEXT_MESSAGE:
+                        return Constants.ViewHolderType.TEXT_INCOMING;
+                    case Constants.MessageType.IMAGE_MESSAGE:
+                        return Constants.ViewHolderType.IMG_INCOMING;
+                }
+            } else {
+                switch (chatEntity.getMessageType()) {
+                    case Constants.MessageType.TEXT_MESSAGE:
+                        return Constants.ViewHolderType.TEXT_OUTGOING;
+                    case Constants.MessageType.IMAGE_MESSAGE:
+                        return Constants.ViewHolderType.IMG_OUTGOING;
+                }
+            }
         }
 
         return -1;
@@ -65,17 +81,22 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public GenericViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        if (viewType == Constants.MessageType.MESSAGE_INCOMING) {
+        if (viewType == Constants.ViewHolderType.TEXT_INCOMING) {
             ItemTextMessageInBinding itemTextMessageInBinding = ItemTextMessageInBinding.inflate(inflater, viewGroup, false);
             return new TextMessageInHolder(itemTextMessageInBinding);
-        } else if (viewType == Constants.MessageType.MESSAGE_OUTGOING) {
+        } else if (viewType == Constants.ViewHolderType.TEXT_OUTGOING) {
             ItemTextMessageOutBinding itemTextMessageOutBinding = ItemTextMessageOutBinding.inflate(inflater, viewGroup, false);
             return new TextMessageOutHolder(itemTextMessageOutBinding);
+        } else if (viewType == Constants.ViewHolderType.IMG_INCOMING) {
+            ItemImageMessageInBinding itemImageMessageInBinding = ItemImageMessageInBinding.inflate(inflater, viewGroup, false);
+            return new ImageMessageInHolder(itemImageMessageInBinding);
+        } else if (viewType == Constants.ViewHolderType.IMG_OUTGOING) {
+            ItemImageMessageOutBinding itemImageMessageOutBinding = ItemImageMessageOutBinding.inflate(inflater, viewGroup, false);
+            return new ImageMessageOutHolder(itemImageMessageOutBinding);
         } else {
             ItemMessageSeparatorBinding itemMessageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
             return new SeparatorViewHolder(itemMessageSeparatorBinding);
         }
-
     }
 
     @Override
@@ -148,6 +169,54 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         protected void clearView() { binding.textViewMessage.invalidate(); }
     }
 
+    private class ImageMessageInHolder extends GenericViewHolder {
+        private ItemImageMessageInBinding binding;
+
+        public ImageMessageInHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+            binding = (ItemImageMessageInBinding) viewDataBinding;
+            binding.imageProfile.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(avatarIndex));
+        }
+
+        @Override
+        protected void bindView(@NonNull MessageEntity messageEntity) {
+            binding.setTextMessage(messageEntity);
+
+            binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.GONE);
+
+            if (messageEntity.getContentStatus() == Constants.MessageStatus.STATUS_CONTENT_RECEIVING) {
+                binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.VISIBLE);
+                binding.shimmerUploadingImage.shimmerLoadingCellContent.startShimmerAnimation();
+            } else {
+                binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.GONE);
+                binding.shimmerUploadingImage.shimmerLoadingCellContent.stopShimmerAnimation();
+            }
+            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+        }
+
+        @Override
+        protected void clearView() { binding.imageViewMessage.invalidate(); }
+    }
+
+    private class ImageMessageOutHolder extends GenericViewHolder {
+        private ItemImageMessageOutBinding binding;
+
+        public ImageMessageOutHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+            binding = (ItemImageMessageOutBinding) viewDataBinding;
+        }
+
+        @Override
+        protected void bindView(@NonNull MessageEntity item) {
+            binding.setTextMessage(item);
+            binding.setChatViewModel(chatViewModel);
+            UIHelper.setImageInGlide(binding.imageViewMessage, item.contentThumbPath);
+        }
+
+        @Override
+        protected void clearView() { binding.imageViewMessage.invalidate(); }
+    }
+
     private class SeparatorViewHolder extends GenericViewHolder {
         private ItemMessageSeparatorBinding binding;
 
@@ -164,6 +233,4 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void clearView() { binding.textViewSeprator.invalidate(); }
     }
-
-
 }

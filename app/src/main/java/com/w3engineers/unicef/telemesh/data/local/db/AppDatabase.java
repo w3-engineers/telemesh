@@ -89,6 +89,24 @@ public abstract class AppDatabase extends BaseDatabase {
     private static String USER_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
             + ColumnNames.COLUMN_USER_CONFIG_VERSION + " INTEGER NOT NULL DEFAULT 0";
 
+    private static String MESSAGE_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_ID + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_PATH + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_3 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_THUMB_PATH + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_4 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_INFO + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_5 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_PROGRESS + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String MESSAGE_TABLE_MIGRATION_6 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_STATUS + " INTEGER NOT NULL DEFAULT 0";
+
     @NonNull
     public static AppDatabase getInstance() {
 
@@ -96,22 +114,6 @@ public abstract class AppDatabase extends BaseDatabase {
             if (CommonUtil.isEmulator())
                 return (AppDatabase) sInstance;
         }
-
-        /*if (BuildConfig.DEBUG){
-
-        }else {
-            if (!CommonUtil.isEmulator()) {
-                if (sInstance == null) {
-                    synchronized (AppDatabase.class) {
-                        if (sInstance == null) {
-                            Context context = App.getContext();
-
-                            sInstance = createDbWithMigration(context);
-                        }
-                    }
-                }
-            }
-        }*/
 
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
@@ -130,8 +132,12 @@ public abstract class AppDatabase extends BaseDatabase {
 
         return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
                 initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                new BaseMigration(BuildConfig.VERSION_CODE, ""));
+                new BaseMigration(BuildConfig.VERSION_CODE, MESSAGE_TABLE_MIGRATION_1,
+                        MESSAGE_TABLE_MIGRATION_2, MESSAGE_TABLE_MIGRATION_3,
+                        MESSAGE_TABLE_MIGRATION_4, MESSAGE_TABLE_MIGRATION_5,
+                        MESSAGE_TABLE_MIGRATION_6));
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,

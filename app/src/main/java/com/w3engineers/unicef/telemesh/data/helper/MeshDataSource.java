@@ -17,8 +17,10 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -34,6 +36,8 @@ public class MeshDataSource extends ViperUtil {
     private static MeshDataSource rightMeshDataSource;
     public static boolean isPrepared = false;
     private BroadcastManager broadcastManager;
+
+    private HashMap<String, ContentReceiveModel> contentReceiveModelHashMap = new HashMap<>();
 
     private MeshDataSource(@NonNull UserModel userModel) {
         super(userModel);
@@ -119,6 +123,24 @@ public class MeshDataSource extends ViperUtil {
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
     }
 
+    public void ContentDataSend(ContentModel contentModel, boolean notificationEnable) {
+        String receiverId = contentModel.getUserId();
+
+        if (!TextUtils.isEmpty(receiverId)) {
+            ViperContentData viperContentData = new ViperContentData();
+            viperContentData.dataType = contentModel.getContentDataType();
+            viperContentData.contentModel = contentModel;
+            viperContentData.isNotificationEnable = notificationEnable;
+
+            broadcastManager.addBroadCastMessage(getMeshContentDataTask(receiverId, viperContentData));
+        }
+    }
+
+    private SendDataTask getMeshContentDataTask(String receiverId, ViperContentData viperContentData) {
+        return new SendDataTask().setPeerId(receiverId).setViperContentData(viperContentData)
+                .setBaseRmDataSource(this);
+    }
+
     /**
      * During receive a peer this time onPeer api is execute
      *
@@ -202,6 +224,73 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
         return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
+    }
+
+    @Override
+    protected void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
+
+        ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
+
+        if (contentReceiveModel != null) {
+            contentReceiveModel.setContentPath(contentPath)
+                    .setUserId(userId).setMetaData(metaData);
+        } else {
+            contentReceiveModel = new ContentReceiveModel()
+                    .setContentId(contentId)
+                    .setContentPath(contentPath)
+                    .setUserId(userId)
+                    .setMetaData(metaData)
+                    .setSuccessStatus(true);
+        }
+        contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+    }
+
+    @Override
+    protected void contentReceiveInProgress(String contentId, int progress) {
+        ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
+        if (contentReceiveModel != null) {
+            contentReceiveModel.setContentReceiveProgress(progress);
+            contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+        }
+    }
+
+    @Override
+    protected void contentReceiveDone(String contentId, boolean contentStatus) {
+        ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
+        if (contentReceiveModel != null) {
+            if (contentStatus) {
+
+                String contentMessageText = new String(contentReceiveModel.getMetaData());
+                ContentMessageModel contentMessageModel = new Gson().fromJson(contentMessageText,
+                        ContentMessageModel.class);
+
+                String contentPath = null, thumbPath = null;
+
+                switch (contentMessageModel.getContentType()) {
+                    case Constants.DataType.CONTENT_MESSAGE:
+                        contentPath = contentReceiveModel.getContentPath();
+                        break;
+                    case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                        thumbPath = contentReceiveModel.getContentPath();
+                        break;
+                }
+
+                ContentModel contentModel = new ContentModel()
+                        .setMessageId(contentMessageModel.getMessageId())
+                        .setMessageType(contentMessageModel.getMessageType())
+                        .setContentPath(contentPath)
+                        .setThumbPath(thumbPath)
+                        .setContentDataType(contentMessageModel.getContentType())
+                        .setUserId(contentReceiveModel.getUserId());
+
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                        .contentReceive(contentModel, true));
+                // Finished
+            } else {
+                // Failed
+            }
+        }
+        contentReceiveModelHashMap.remove(contentId);
     }
 
     /*@Override

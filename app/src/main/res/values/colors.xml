@@ -80,4 +80,6 @@
 
     <color name="orange_color">#ff5f25</color>
 
+    <color name="black_60_opacity">#99000000</color>
+    <color name="white_70_opacity">#B3FFFFFF</color>
 </resources>

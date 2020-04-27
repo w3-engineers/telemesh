@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 import android.net.Uri;
 import android.os.Build;
 
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 
 import java.util.Locale;
@@ -105,6 +104,8 @@ public class Constants {
         int STATUS_FAILED = 5;
         int STATUS_SEND = 6;
         int STATUS_RECEIVED = 7;
+        int STATUS_CONTENT_RECEIVING = 8;
+        int STATUS_CONTENT_RECEIVED = 9;
     }
 
     public interface DataType {
@@ -122,11 +123,15 @@ public class Constants {
         byte CONFIG_UPDATE_INFO = 0x12;
         byte TOKEN_GUIDE_REQUEST = 0x13;
         byte TOKEN_GUIDE_INFO = 0x14;
+        byte CONTENT_THUMB_MESSAGE = 0x15;
+        byte CONTENT_MESSAGE = 0x16;
+        byte REQ_CONTENT_MESSAGE = 0x17;
     }
 
     public interface MessageType {
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
+        int IMAGE_MESSAGE = 102;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -242,5 +247,23 @@ public class Constants {
         String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
         String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
         String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+    }
+
+    public interface RequestCodes {
+        int PROFILE_IMAGE_REQUEST = 101;
+        int GALLERY_IMAGE_REQUEST = 102;
+    }
+
+    public interface DirectoryName {
+        String ContentFolder = "Content";
+        String ContentThumbFolder = "ContentThumb";
+    }
+
+    public interface ViewHolderType {
+        int TEXT_INCOMING = 11;
+        int TEXT_OUTGOING = 12;
+
+        int IMG_INCOMING = 21;
+        int IMG_OUTGOING = 22;
     }
 }

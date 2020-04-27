@@ -40,7 +40,6 @@ import java.util.List;
 public class CreateUserActivity extends BaseActivity implements View.OnClickListener {
 
     private ActivityCreateUserBinding mBinding;
-    private int PROFILE_IMAGE_REQUEST = 1;
     public static int INITIAL_IMAGE_INDEX = -1;
     private CreateUserViewModel mViewModel;
 
@@ -158,7 +157,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             case R.id.image_view_camera:
                 Intent intent = new Intent(this, ProfileImageActivity.class);
                 intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
-                startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
+                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
                 break;
             case R.id.image_view_back:
                 finish();
@@ -176,7 +175,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null && requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());

@@ -189,11 +189,29 @@
             android:paddingBottom="@dimen/margin_8"
             app:layout_constraintBottom_toBottomOf="parent">
 
+            <ImageButton
+                android:id="@+id/image_view_pick_gallery_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoMirrored="true"
+                android:background="@color/white"
+                android:contentDescription="@string/chat_send_button_description"
+                android:rotationY="@integer/locale_mirror_flip"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/padding_8"
+                android:src="@mipmap/gellary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                tools:targetApi="kitkat" />
+
             <EditText
                 android:id="@+id/edit_text_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_16"
+                android:layout_marginStart="@dimen/margin_16"
                 android:background="@null"
                 android:ems="10"
                 android:textAllCaps="false"
@@ -201,7 +219,7 @@
                 android:inputType="textCapSentences|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_send"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view_pick_gallery_image"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="Autofill" />
 

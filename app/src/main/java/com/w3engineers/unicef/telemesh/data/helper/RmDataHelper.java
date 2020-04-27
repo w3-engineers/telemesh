@@ -89,6 +89,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @SuppressLint("UseSparseArrays")
     @NonNull
     public HashMap<String, DataModel> rmDataMap = new HashMap<>();
+    public HashMap<String, ContentModel> rmContentMap = new HashMap<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -305,10 +306,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
-                        dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                            dataSend(messageModelString.getBytes(),
+                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                        } else {
+                            contentMessageSend(messageEntity, chatEntity.getFriendsId(), false);
+                        }
+
                     }
                 }, Throwable::printStackTrace));
 
@@ -357,6 +363,37 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
     }
 
+    private void contentMessageSend(MessageEntity messageEntity, String userId, boolean isThumbAlreadySend) {
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageEntity.getMessageId())
+                .setMessageType(messageEntity.getMessageType())
+                .setContentPath(messageEntity.getContentPath())
+                .setThumbPath(messageEntity.getContentThumbPath())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                .setUserId(userId)
+                .setThumbSend(isThumbAlreadySend);
+
+        contentMessageSend(contentModel);
+    }
+
+    private void requestedContentMessageSend(byte[] rawData, String userId) {
+        if (rawData == null)
+            return;
+        String messageId = new String(rawData);
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+        if (messageEntity != null) {
+            contentMessageSend(messageEntity, userId, true);
+        }
+    }
+
+    private void contentMessageSend(ContentModel contentModel) {
+        prepareRightMeshDataSource();
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.ContentDataSend(contentModel, true));
+    }
+
     /**
      * During receive any data to from RM this API is manipulating data based on application
      *
@@ -401,22 +438,111 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.USER_UPDATE_INFO:
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
-
-            // TODO update configuration process need to switch in service layer - mimo
-            /*case Constants.DataType.CONFIG_UPDATE_INFO:
-                configFileReceiveFromOthers(rawData, isNewMessage, userId);
+            case Constants.DataType.REQ_CONTENT_MESSAGE:
+                requestedContentMessageSend(rawData, userId);
                 break;
-
-            case Constants.DataType.TOKEN_GUIDE_REQUEST:
-                sendTokenGuideInfo(userId, isNewMessage);
-                break;
-
-            case Constants.DataType.TOKEN_GUIDE_INFO:
-                tokenGuidelineReceivedFromOther(rawData, isNewMessage);
-                break;*/
         }
     }
 
+    public void contentReceive(ContentModel contentModel, boolean isNewMessage) {
+
+        byte dataType = contentModel.getContentDataType();
+
+        switch (dataType) {
+            case Constants.DataType.CONTENT_MESSAGE:
+            case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                setContentMessage(contentModel, isNewMessage);
+                break;
+        }
+    }
+
+    private void setContentMessage(ContentModel contentModel, boolean isNewMessage) {
+        String messageId = contentModel.getMessageId();
+        int ackStatus = contentModel.getAckStatus();
+
+        try {
+            if (isNewMessage) {
+
+                MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+                if (messageEntity == null) {
+
+                    int contentStatus = -1;
+                    switch (contentModel.getContentDataType()) {
+                        case Constants.DataType.CONTENT_MESSAGE:
+                            contentStatus = Constants.MessageStatus.STATUS_CONTENT_RECEIVED;
+                            break;
+                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                            contentStatus = Constants.MessageStatus.STATUS_CONTENT_RECEIVING;
+                            break;
+                    }
+
+                    MessageEntity newMessageEntity = new MessageEntity()
+                            .setMessage("Image")
+                            .setContentPath(contentModel.getContentPath())
+                            .setContentThumbPath(contentModel.getThumbPath());
+
+                    if (contentStatus != -1) {
+                        newMessageEntity.setContentStatus(contentStatus);
+                    }
+
+                    ChatEntity chatEntity = newMessageEntity
+                            .setMessageId(messageId)
+                            .setFriendsId(contentModel.getUserId())
+                            .setIncoming(true)
+                            .setMessageType(contentModel.getMessageType())
+                            .setTime(System.currentTimeMillis())
+                            .setStatus(Constants.MessageStatus.STATUS_UNREAD);;
+
+                    MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+                } else {
+
+                    String thumbPath = null, contentPath = null;
+                    int contentStatus = -1;
+
+                    switch (contentModel.getContentDataType()) {
+                        case Constants.DataType.CONTENT_MESSAGE:
+                            contentPath = contentModel.getContentPath();
+                            contentStatus = Constants.MessageStatus.STATUS_CONTENT_RECEIVED;
+                            break;
+                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                            thumbPath = contentModel.getThumbPath();
+                            contentStatus = Constants.MessageStatus.STATUS_CONTENT_RECEIVING;
+                            break;
+                    }
+
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        messageEntity.setContentPath(contentPath);
+                    }
+
+                    if (contentStatus != -1) {
+                        messageEntity.setContentStatus(contentStatus);
+                    }
+
+                    MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+                }
+
+                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_THUMB_MESSAGE) {
+                    requestForMainContent(contentModel.getUserId(), messageId);
+                }
+
+            } else {
+                dataSource.updateMessageStatus(messageId, ackStatus);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestForMainContent(String userId, String messageId) {
+        if (!TextUtils.isEmpty(messageId)) {
+            dataSend(messageId.getBytes(), Constants.DataType.REQ_CONTENT_MESSAGE, userId, false);
+        }
+    }
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
@@ -580,6 +706,32 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
 
                 dataReceive(prevRMDataModel, false);
+                return;
+            }
+        }
+
+        if (!TextUtils.isEmpty(dataSendId) && rmContentMap.get(dataSendId) != null) {
+
+            ContentModel contentModel = rmContentMap.get(dataSendId);
+
+            if (contentModel != null) {
+                if (contentModel.isThumbSend()) {
+
+                    if (status == Constant.MessageStatus.SEND) {
+                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_SEND);
+                    } else if (status == Constant.MessageStatus.DELIVERED) {
+                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_DELIVERED);
+                    } else if (status == Constant.MessageStatus.RECEIVED) {
+                        contentModel.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                        rmContentMap.remove(dataSendId);
+                    }
+
+                    contentReceive(contentModel, false);
+                } else {
+//                    contentModel.setThumbSend(true);
+//                    contentMessageSend(contentModel);
+                    rmContentMap.remove(dataSendId);
+                }
             }
         }
     }
@@ -1018,6 +1170,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    @Override
+    public void contentSent(ContentModel contentModel, String dataSendId) {
+        rmContentMap.put(dataSendId, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

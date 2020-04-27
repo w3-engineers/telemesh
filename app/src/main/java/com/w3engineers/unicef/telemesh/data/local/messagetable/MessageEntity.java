@@ -33,6 +33,29 @@ public class MessageEntity extends ChatEntity {
     public String message;
 
     @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_ID)
+    public String contentId;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_PATH)
+    public String contentPath;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_THUMB_PATH)
+    public String contentThumbPath;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_PROGRESS)
+    public int contentProgress;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_STATUS)
+    public int contentStatus;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_INFO)
+    public String contentInfo;
+
+    @Nullable
     public String getMessage() {
         return message;
     }
@@ -40,6 +63,64 @@ public class MessageEntity extends ChatEntity {
     @NonNull
     public MessageEntity setMessage(@NonNull String message) {
         this.message = message;
+        return this;
+    }
+
+    @Nullable
+    public String getContentId() {
+        return contentId;
+    }
+
+    public MessageEntity setContentId(@Nullable String contentId) {
+        this.contentId = contentId;
+        return this;
+    }
+
+    @Nullable
+    public String getContentPath() {
+        return contentPath;
+    }
+
+    public MessageEntity setContentPath(@Nullable String contentPath) {
+        this.contentPath = contentPath;
+        return this;
+    }
+
+    @Nullable
+    public String getContentThumbPath() {
+        return contentThumbPath;
+    }
+
+    public MessageEntity setContentThumbPath(@Nullable String contentThumbPath) {
+        this.contentThumbPath = contentThumbPath;
+        return this;
+    }
+
+    public int getContentProgress() {
+        return contentProgress;
+    }
+
+    public MessageEntity setContentProgress(int contentProgress) {
+        this.contentProgress = contentProgress;
+        return this;
+    }
+
+    @Nullable
+    public String getContentInfo() {
+        return contentInfo;
+    }
+
+    public MessageEntity setContentInfo(@Nullable String contentInfo) {
+        this.contentInfo = contentInfo;
+        return this;
+    }
+
+    public int getContentStatus() {
+        return contentStatus;
+    }
+
+    public MessageEntity setContentStatus(int contentStatus) {
+        this.contentStatus = contentStatus;
         return this;
     }
 
@@ -68,22 +149,6 @@ public class MessageEntity extends ChatEntity {
                 .setMessage(getMessage())
                 .setType(getMessageType());
     }
-
-    /*@NonNull
-    @Override
-    public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
-
-        MessageEntity messageEntity = setMessage(teleMeshChat.getTeleMeshMessage()
-                .getMessageText());
-
-        messageEntity.setFriendsId(teleMeshChat.getFriendId())
-                .setMessageId(teleMeshChat.getMessageId())
-                .setMessageType(teleMeshChat.getMessageType())
-                .setStatus(teleMeshChat.getMessageStatus())
-                .setTime(teleMeshChat.getMessageTime());
-
-        return messageEntity;
-    }*/
 
     @NonNull
     @Override

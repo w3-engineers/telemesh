@@ -35,6 +35,7 @@ import com.w3engineers.mesh.application.data.model.FileReceivedEvent;
 import com.w3engineers.mesh.application.data.model.FileTransferEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
+import com.w3engineers.mesh.application.data.model.ServiceDestroyed;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
@@ -208,6 +209,13 @@ public abstract class ViperUtil {
                         fileTransferEvent.isSuccess());
             }
         });
+
+        AppDataObserver.on().startObserver(ApiEvent.SERVICE_DESTROYED, event -> {
+            ServiceDestroyed serviceDestroyed = (ServiceDestroyed) event;
+            if (serviceDestroyed != null) {
+
+            }
+        });
     }
 
     public void showPermissionEventAlert(int hardwareEvent, List<String> permissions, Activity activity) {
@@ -301,6 +309,10 @@ public abstract class ViperUtil {
                 } else {
                     peerRemove(nodeId);
                 }
+            }
+
+            if (isUserExist && !isActive) {
+                peerRemove(nodeId);
             }
         });
     }
@@ -521,13 +533,29 @@ public abstract class ViperUtil {
 
             String contentMessageString = new Gson().toJson(contentMessageModel);
             try {
-                String sendId = viperClient.sendFileMessage(peerId, contentPath, contentMessageString.getBytes());
-                Timber.tag("FileMessage").v("SendId: " + sendId);
-                return sendId;
+
+                if (contentModel.isResendMessage()) {
+                    if (contentModel.isRequestFromReceiver()) {
+                        String contentId = contentModel.getContentId();
+                        viperClient.sendFileResumeRequest(contentId, contentMessageString.getBytes());
+                    } else {
+                        String contentId = contentModel.getContentId();
+                        viperClient.sendFileResumeRequest(contentId, contentMessageString.getBytes());
+                        return contentId;
+                    }
+                } else {
+                    String sendId = viperClient.sendFileMessage(peerId, contentPath, contentMessageString.getBytes());
+                    Timber.tag("FileMessage").v("SendId: " + sendId);
+                    return sendId;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return null;
+    }
+
+    public String resendContentMessage() {
         return null;
     }
 
@@ -536,6 +564,8 @@ public abstract class ViperUtil {
     protected abstract void onMesh(String myMeshId);
 
     protected abstract void onMeshPrepared(String myWalletAddress);
+
+    protected abstract void offMesh();
 
     protected abstract void peerAdd(String peerId, byte[] peerData);
 

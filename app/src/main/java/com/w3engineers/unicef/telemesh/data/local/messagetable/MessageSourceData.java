@@ -88,6 +88,11 @@ public class MessageSourceData {
         return messageDao.getMessageFromId(messageId);
     }
 
+    @Nullable
+    public MessageEntity getMessageEntityFromContentId(@NonNull String contentId) {
+        return messageDao.getMessageFromContentId(contentId);
+    }
+
     // This api is not used in app layer
     /*public long updateMessageEntityStatus(String messageId, int messageStatus) {
         return messageDao.updateMessageStatus(messageId, messageStatus);
@@ -98,6 +103,14 @@ public class MessageSourceData {
 
     public long changeMessageStatusFrom(int fromStatus, int toStatus) {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
+    }
+
+    public long changeMessageStatusByUserFrom(int fromStatus, int toStatus, String userId) {
+        return messageDao.changeMessageStatusByUserFrom(fromStatus, toStatus, userId);
+    }
+
+    public long changeMessageStatusByContentStatus(int fromStatus, int toStatus) {
+        return messageDao.changeMessageStatusByContentStatus(fromStatus, toStatus);
     }
 
     public Flowable<Integer> getBlockMessageInfoForSync() {

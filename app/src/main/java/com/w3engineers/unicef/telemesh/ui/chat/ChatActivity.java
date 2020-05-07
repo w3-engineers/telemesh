@@ -1,6 +1,10 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -8,14 +12,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -23,26 +30,25 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.Text;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
-import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
-import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 
+import java.io.File;
 import java.util.List;
 
 import timber.log.Timber;
@@ -154,9 +160,7 @@ public class ChatActivity extends TelemeshBaseActivity {
      * <p>Init adapter and listener</p>
      */
     private void initComponent() {
-
-
-        mChatPagedAdapter = new ChatPagedAdapterRevised(this, mChatViewModel);
+        mChatPagedAdapter = new ChatPagedAdapterRevised(this, mChatViewModel, this);
         mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
 
 
@@ -166,6 +170,13 @@ public class ChatActivity extends TelemeshBaseActivity {
         mLinearLayoutManager.setStackFromEnd(true);
 
         if (mViewBinging != null) {
+
+            RecyclerView.ItemAnimator itemAnimator = mViewBinging.chatRv.getItemAnimator();
+            if (itemAnimator instanceof SimpleItemAnimator) {
+                SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) itemAnimator;
+                simpleItemAnimator.setSupportsChangeAnimations(false);
+            }
+
             mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
@@ -266,10 +277,41 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.image_view_pick_gallery_image:
-                requestToOpenGallery();
+                if(mUserEntity != null && mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE) {
+                    requestToOpenGallery();
+                }
+                break;
+
+            case R.id.image_view_message:
+            case R.id.shimmer_incoming_loading:
+            case R.id.hover:
+            case R.id.hover_view:
+//            case R.id.shimmerUploadingImage:
+                MessageEntity messageEntity = (MessageEntity) view.getTag(R.id.image_view_message);
+                if (messageEntity != null) {
+                    viewImage(view, messageEntity);
+                }
+                break;
+
+            case R.id.view_failed:
+                MessageEntity failedMessage = (MessageEntity) view.getTag(R.id.image_view_message);
+                if (failedMessage != null &&
+                        failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                    resendFailedMessage(failedMessage);
+                }
                 break;
         }
+    }
 
+    private void resendFailedMessage(MessageEntity failedMessage) {
+        if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
+            Toaster.showShort(mUserEntity.getUserName() + " is in offline.");
+            return;
+        } else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {
+            Toaster.showShort(mUserEntity.getUserName() + " locally not connected.");
+            return;
+        }
+        mChatViewModel.resendContentMessage(failedMessage);
     }
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
@@ -411,5 +453,180 @@ public class ChatActivity extends TelemeshBaseActivity {
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) { }
+    }
+
+    private Animator currentAnimator;
+    private long shortAnimationDuration = 300;
+    private boolean isExpandCancel = false;
+
+    private void viewImage(View messageImage, MessageEntity messageEntity) {
+        if (messageEntity.isIncoming()) {
+            if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
+                    && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                Toaster.showShort("Message was failed");
+                return;
+            }
+
+            if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+                Toaster.showShort("Message is receiving");
+                return;
+            }
+        }
+
+        String imagePath = messageEntity.getContentPath();
+        if (TextUtils.isEmpty(imagePath)) {
+            Toaster.showShort("Error message");
+            return;
+        }
+
+        if (!(new File(imagePath).exists())) {
+            Toaster.showShort("File not found");
+            return;
+        }
+
+        zoomImageFromThumb(messageImage, imagePath);
+    }
+
+    private void zoomImageFromThumb(final View thumbView, String imagePath) {
+        // If there's an animation in progress, cancel it
+        // immediately and proceed with this one.
+        if (currentAnimator != null) {
+            currentAnimator.cancel();
+        }
+
+        // Load the high-resolution "zoomed-in" image.
+        UIHelper.setImageInGlide(mViewBinging.expandedImage, imagePath);
+
+        // Calculate the starting and ending bounds for the zoomed-in image.
+        // This step involves lots of math. Yay, math.
+        final Rect startBounds = new Rect();
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+        // The start bounds are the global visible rectangle of the thumbnail,
+        // and the final bounds are the global visible rectangle of the container
+        // view. Also set the container view's offset as the origin for the
+        // bounds, since that's the origin for the positioning animation
+        // properties (X, Y).
+        thumbView.getGlobalVisibleRect(startBounds);
+        findViewById(R.id.container)
+                .getGlobalVisibleRect(finalBounds, globalOffset);
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+        // Adjust the start bounds to be the same aspect ratio as the final
+        // bounds using the "center crop" technique. This prevents undesirable
+        // stretching during the animation. Also calculate the start scaling
+        // factor (the end scaling factor is always 1.0).
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            // Extend start bounds horizontally
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            // Extend start bounds vertically
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+        // Hide the thumbnail and show the zoomed-in view. When the animation
+        // begins, it will position the zoomed-in view in the place of the
+        // thumbnail.
+        thumbView.setAlpha(1f);
+        mViewBinging.expandedImage.setVisibility(View.VISIBLE);
+
+        // Set the pivot point for SCALE_X and SCALE_Y transformations
+        // to the top-left corner of the zoomed-in view (the default
+        // is the center of the view).
+        mViewBinging.expandedImage.setPivotX(0f);
+        mViewBinging.expandedImage.setPivotY(0f);
+
+        // Construct and run the parallel animation of the four translation and
+        // scale properties (X, Y, SCALE_X, and SCALE_Y).
+        AnimatorSet set = new AnimatorSet();
+        set
+                .play(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.X,
+                        startBounds.left, finalBounds.left))
+                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.Y,
+                        startBounds.top, finalBounds.top))
+                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.SCALE_X,
+                        startScale, 1f))
+                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage,
+                        View.SCALE_Y, startScale, 1f));
+        set.setDuration(shortAnimationDuration);
+        set.setInterpolator(new DecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!isExpandCancel) {
+                    mViewBinging.expandImageBack.setVisibility(View.VISIBLE);
+                }
+                isExpandCancel = false;
+                currentAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                currentAnimator = null;
+                isExpandCancel = true;
+            }
+        });
+        set.start();
+        currentAnimator = set;
+
+        // Upon clicking the zoomed-in image, it should zoom back down
+        // to the original bounds and show the thumbnail instead of
+        // the expanded image.
+        final float startScaleFinal = startScale;
+        mViewBinging.expandedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewBinging.expandImageBack.setVisibility(View.GONE);
+                if (currentAnimator != null) {
+                    currentAnimator.cancel();
+                }
+
+                // Animate the four positioning/sizing properties in parallel,
+                // back to their original values.
+                AnimatorSet set = new AnimatorSet();
+                set.play(ObjectAnimator
+                        .ofFloat(mViewBinging.expandedImage, View.X, startBounds.left))
+                        .with(ObjectAnimator
+                                .ofFloat(mViewBinging.expandedImage,
+                                        View.Y,startBounds.top))
+                        .with(ObjectAnimator
+                                .ofFloat(mViewBinging.expandedImage,
+                                        View.SCALE_X, startScaleFinal))
+                        .with(ObjectAnimator
+                                .ofFloat(mViewBinging.expandedImage,
+                                        View.SCALE_Y, startScaleFinal));
+                set.setDuration(shortAnimationDuration);
+                set.setInterpolator(new DecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        mViewBinging.expandedImage.setVisibility(View.GONE);
+                        currentAnimator = null;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        thumbView.setAlpha(1f);
+                        mViewBinging.expandedImage.setVisibility(View.GONE);
+                        currentAnimator = null;
+                    }
+                });
+                set.start();
+                currentAnimator = set;
+            }
+        });
     }
 }

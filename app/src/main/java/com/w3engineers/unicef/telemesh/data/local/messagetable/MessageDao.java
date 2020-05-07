@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.RoomWarnings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
 import com.w3engineers.mesh.util.Constant;
@@ -86,6 +87,10 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId LIMIT 1")
     public abstract MessageEntity getMessageFromId(@NonNull String messageId);
 
+    @Nullable
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_CONTENT_ID + " LIKE :contentId LIMIT 1")
+    public abstract MessageEntity getMessageFromContentId(String contentId);
     /**
      * Mark all message as read
      *
@@ -100,6 +105,15 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
     public abstract long changeMessageStatusFrom(int fromStatus, int toStatus);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
+            + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromStatus")
+    public abstract long changeMessageStatusByUserFrom(int fromStatus, int toStatus, String userId);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus")
+    public abstract long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")

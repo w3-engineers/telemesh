@@ -4,7 +4,7 @@ public class ContentReceiveModel {
     private String contentId, contentPath, userId;
     private int contentReceiveProgress;
     private boolean successStatus;
-    private byte[] metaData;
+    private ContentMessageModel contentMessageModel;
 
     public String getContentId() {
         return contentId;
@@ -51,12 +51,12 @@ public class ContentReceiveModel {
         return this;
     }
 
-    public byte[] getMetaData() {
-        return metaData;
+    public ContentMessageModel getContentMessageModel() {
+        return contentMessageModel;
     }
 
-    public ContentReceiveModel setMetaData(byte[] metaData) {
-        this.metaData = metaData;
+    public ContentReceiveModel setContentMessageModel(ContentMessageModel contentMessageModel) {
+        this.contentMessageModel = contentMessageModel;
         return this;
     }
 }

@@ -2,9 +2,9 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 public class ContentModel {
 
-    private String userId, thumbPath, contentPath, messageId; // Thumb Only applicable for message
+    private String userId, thumbPath, contentPath, messageId, contentId; // Thumb Only applicable for message
     private int messageType, ackStatus; // Only applicable for message
-    private boolean isThumbSend;
+    private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver;
     private byte contentDataType;
 
     public String getThumbPath() {
@@ -76,6 +76,42 @@ public class ContentModel {
 
     public ContentModel setAckStatus(int ackStatus) {
         this.ackStatus = ackStatus;
+        return this;
+    }
+
+    public boolean getReceiveSuccessStatus() {
+        return receiveSuccessStatus;
+    }
+
+    public ContentModel setReceiveSuccessStatus(boolean receiveSuccessStatus) {
+        this.receiveSuccessStatus = receiveSuccessStatus;
+        return this;
+    }
+
+    public boolean isResendMessage() {
+        return isResend;
+    }
+
+    public ContentModel setResendMessage(boolean resend) {
+        isResend = resend;
+        return this;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public ContentModel setContentId(String contentId) {
+        this.contentId = contentId;
+        return this;
+    }
+
+    public boolean isRequestFromReceiver() {
+        return isRequestFromReceiver;
+    }
+
+    public ContentModel setRequestFromReceiver(boolean requestFromReceiver) {
+        isRequestFromReceiver = requestFromReceiver;
         return this;
     }
 }

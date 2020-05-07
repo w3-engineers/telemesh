@@ -27,6 +27,110 @@
 
         <com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
             android:id="@+id/image_view_message"
+            android:background="@color/black"
+            android:src="@mipmap/gellary"
+            android:layout_width="@dimen/height_200"
+            android:layout_height="@dimen/width_160"
+            android:layout_marginStart="@dimen/margin_10"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            app:bottomLeftRadius="0.058"
+            app:bottomRightRadius="0.058"
+            app:imageShape="rounded_rectangle"
+            app:shapeColor="@color/colorChatGray"
+            app:topLeftRadius="0.058"
+            app:topRightRadius="0.058"/>
+
+        <View
+            android:id="@+id/hover"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_width="@dimen/height_200"
+            android:layout_height="@dimen/width_160"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_profile" />
+
+        <io.supercharge.shimmerlayout.ShimmerLayout
+            android:id="@+id/shimmer_incoming_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:shimmer_angle="0"
+            android:layout_marginStart="@dimen/margin_10"
+            app:shimmer_animation_duration="1000"
+            app:shimmer_color="@color/white_70_opacity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            app:shimmer_mask_width="1">
+
+            <View
+                android:id="@+id/shimmer_hover"
+                android:background="@drawable/shape_loading"
+                android:layout_width="@dimen/height_200"
+                android:layout_height="@dimen/width_160" />
+
+        </io.supercharge.shimmerlayout.ShimmerLayout>
+
+        <View
+            android:id="@+id/hover_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shadow_content_message"
+            app:layout_constraintTop_toTopOf="@+id/hover"
+            app:layout_constraintBottom_toBottomOf="@+id/hover"
+            app:layout_constraintStart_toStartOf="@+id/hover"
+            app:layout_constraintEnd_toEndOf="@+id/hover"/>
+
+        <ImageView
+            android:id="@+id/view_failed"
+            android:layout_width="@dimen/width_50"
+            android:layout_height="@dimen/height_50"
+            android:src="@mipmap/ic_alert"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:layout_constraintBottom_toBottomOf="@+id/hover_view"
+            app:layout_constraintEnd_toEndOf="@+id/hover_view" />
+
+        <at.grabner.circleprogress.CircleProgressView
+            android:id="@+id/circleView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:cpv_autoTextSize="true"
+            app:cpv_barColor="@color/badge_color"
+            app:cpv_barWidth="3dp"
+            app:cpv_innerContourSize="0dp"
+            app:cpv_maxValue="100"
+            app:cpv_outerContourSize="0dp"
+            app:cpv_rimColor="@color/spin_bar"
+            app:cpv_rimWidth="3dp"
+            app:cpv_showUnit="true"
+            app:cpv_spinColor="@color/badge_color"
+            app:cpv_textColor="@color/white"
+            app:cpv_textScale="1"
+            app:cpv_spin="true"
+            app:cpv_unit="%"
+            app:cpv_unitColor="@color/badge_color"
+            app:cpv_unitPosition="right_top"
+            app:cpv_unitScale="1"
+            app:layout_constraintBottom_toBottomOf="@+id/hover_view"
+            app:layout_constraintStart_toStartOf="@+id/hover_view"/>
+
+        <TextView
+            android:id="@+id/text_view_date_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
+            android:textColor="@color/chat_sub_item_color"
+            android:textSize="@dimen/text_size_10sp"
+            app:layout_constraintStart_toStartOf="@+id/image_view_message"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_message" />
+
+        <!--<com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
+            android:id="@+id/image_view_message"
+            android:src="@mipmap/gellary"
             android:layout_width="@dimen/height_200"
             android:layout_height="@dimen/width_160"
             android:layout_marginStart="@dimen/margin_10"
@@ -44,27 +148,56 @@
             app:topLeftRadius="0.058"
             app:topRightRadius="0.058" />
 
+        <View
+            android:background="@drawable/shape_loading"
+            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_width="@dimen/height_200"
+            android:layout_height="@dimen/width_160" />
+
         <include
             android:id="@+id/shimmerUploadingImage"
             layout="@layout/cell_loading_shimmer"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/image_view_message"
             app:layout_constraintLeft_toLeftOf="@id/image_view_message"
             app:layout_constraintRight_toRightOf="@id/image_view_message"
             app:layout_constraintTop_toTopOf="@id/image_view_message" />
 
+        <View
+            android:id="@+id/devider"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="@+id/image_view_message"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_message"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_message"
+            android:layout_height="@dimen/width_1" />
+
+        <TextView
+            android:id="@+id/progress_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="@dimen/text_size_18"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/devider"
+            app:layout_constraintStart_toStartOf="@+id/devider"/>
+
         <TextView
             android:id="@+id/text_view_date_time"
             android:layout_width="0dp"
             android:layout_height="@dimen/height_20"
-            android:layout_marginStart="@dimen/margin_3"
             android:layout_marginTop="@dimen/margin_5"
             android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
             android:textColor="@color/chat_sub_item_color"
             android:textSize="@dimen/text_size_10sp"
             app:layout_constraintStart_toStartOf="@+id/image_view_message"
-            app:layout_constraintTop_toBottomOf="@+id/image_view_message" />
+            app:layout_constraintTop_toBottomOf="@+id/image_view_message" />-->
 
     </android.support.constraint.ConstraintLayout>
 

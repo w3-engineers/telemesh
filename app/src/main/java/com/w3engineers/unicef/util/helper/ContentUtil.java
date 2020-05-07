@@ -4,10 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.common.util.IOUtils;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -91,6 +95,26 @@ public class ContentUtil {
         File file = prepareThumbFile();
         if (file.exists ()) file.delete ();
         try {
+
+            ExifInterface exif = new ExifInterface(imagePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+
+            Matrix matrix = null;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                matrix = new Matrix();
+                matrix.postRotate(270);
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                matrix = new Matrix();
+                matrix.postRotate(180);
+            }  else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                matrix = new Matrix();
+                matrix.postRotate(90);
+            }
+
+            if (matrix != null) {
+                ThumbImage = Bitmap.createBitmap(ThumbImage, 0, 0, ThumbImage.getWidth(), ThumbImage.getHeight(), matrix, true);
+            }
+
             FileOutputStream out = new FileOutputStream(file);
             ThumbImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
             out.flush();
@@ -100,6 +124,30 @@ public class ContentUtil {
         }
 
         return file.getAbsolutePath();
+    }
+
+    public String getCopiedFilePath(String originalFilePath, boolean isThumb) {
+
+        if (TextUtils.isEmpty(originalFilePath))
+            return null;
+
+        File originalFile = new File(originalFilePath);
+        if (originalFile.exists()) {
+
+            File copyFile;
+
+            if (isThumb) {
+                copyFile = prepareThumbFile();
+            } else {
+                copyFile = prepareFile();
+            }
+
+            if (copyFile != null) {
+                originalFile.renameTo(copyFile);
+                return copyFile.getAbsolutePath();
+            }
+        }
+        return null;
     }
 
     private File prepareFile() {

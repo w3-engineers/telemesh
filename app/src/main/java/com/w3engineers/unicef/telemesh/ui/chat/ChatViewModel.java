@@ -150,6 +150,14 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 }));
     }
 
+    public void resendContentMessage(MessageEntity messageEntity) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
+            messageInsertionProcess(messageEntity);
+            dataSource.reSendMessage(messageEntity);
+        }
+    }
+
     private void prepareContentMessage(String userId, String path, String thumbPath) {
         MessageEntity messageEntity = new MessageEntity()
                 .setMessage("Image")

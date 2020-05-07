@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
@@ -73,6 +74,11 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void onMeshPrepared(String myWalletAddress) {
         meshInited(myWalletAddress);
+    }
+
+    @Override
+    protected void offMesh() {
+        RmDataHelper.getInstance().destroyMeshService();
     }
 
     private void meshInited(String meshId) {
@@ -229,99 +235,164 @@ public class MeshDataSource extends ViperUtil {
     }
 
     protected void contentDataSend(String contentId, ContentModel contentModel) {
-        if (!TextUtils.isEmpty(contentId) && contentModel.isThumbSend()) {
 
-            ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+        if (contentModel.isRequestFromReceiver()) {
+            return;
+        }
 
-            if (contentSendModel == null) {
-                contentSendModel = new ContentSendModel();
+        if (!TextUtils.isEmpty(contentId)) {
+
+            if (contentModel.isThumbSend()) {
+
+                ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+
+                if (contentSendModel == null) {
+                    contentSendModel = new ContentSendModel();
+                }
+
+                contentSendModel.contentId = contentId;
+                contentSendModel.messageId = contentModel.getMessageId();
+                contentSendModel.userId = contentModel.getUserId();
+                contentSendModel.successStatus = true;
+                contentSendModel.contentDataType = contentModel.getContentDataType();
+
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                        .setMessageContentId(contentModel.getMessageId(), contentId));
+                contentSendModelHashMap.put(contentId, contentSendModel);
             }
-
-            contentSendModel.contentId = contentId;
-            contentSendModel.messageId = contentModel.getMessageId();
-            contentSendModel.userId = contentModel.getUserId();
-            contentSendModel.successStatus = true;
-            contentSendModel.contentDataType = contentModel.getContentDataType();
-
-            contentSendModelHashMap.put(contentId, contentSendModel);
+        } else {
+            contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                    .contentReceive(contentModel, false));
         }
     }
 
     @Override
     protected void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
 
+        Timber.tag("FileMessage").v(" Start id: %s", contentId);
+        Timber.tag("FileMessage").v(" Path : %s", contentPath);
+
+        //2020-05-07 13:20:13.132 14639-15305/com.w3engineers.unicef.telemesh V/FileMessage:  Start id: 0xf0ad9868ea05a71e1a21f231c975db42d9bddd96_1588874774794
+        //2020-05-07 13:20:13.132 14639-15305/com.w3engineers.unicef.telemesh V/FileMessage:  Path : /storage/emulated/0/20200429_124456_01:20 07-05.jpg     storage/emulated/0/20200429_124456_01:20 07-05.jpg
+
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
 
-        if (contentReceiveModel != null) {
-            contentReceiveModel.setContentPath(contentPath)
-                    .setUserId(userId).setMetaData(metaData);
-        } else {
-            contentReceiveModel = new ContentReceiveModel()
-                    .setContentId(contentId)
-                    .setContentPath(contentPath)
-                    .setUserId(userId)
-                    .setMetaData(metaData)
-                    .setSuccessStatus(true);
+        ContentMessageModel contentMessageModel = null;
+
+        if (metaData != null) {
+            String contentMessageText = new String(metaData);
+            contentMessageModel = new Gson().fromJson(contentMessageText,
+                    ContentMessageModel.class);
+        }
+
+        if (contentReceiveModel == null) {
+            contentReceiveModel = new ContentReceiveModel();
+        }
+
+        contentReceiveModel
+                .setContentId(contentId)
+                .setContentPath(contentPath)
+                .setUserId(userId)
+                .setContentMessageModel(contentMessageModel)
+                .setSuccessStatus(true);
+
+        if (contentMessageModel != null) {
+
+            ContentMessageModel finalContentMessageModel = contentMessageModel;
+
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                    .updateMessageStatus(finalContentMessageModel.getMessageId()));
+
+            if (contentMessageModel.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                        .setMessageContentId(finalContentMessageModel.getMessageId(), contentId));
+            }
         }
         contentReceiveModelHashMap.put(contentId, contentReceiveModel);
     }
 
     @Override
     protected void contentReceiveInProgress(String contentId, int progress) {
-        Timber.tag("FileMessage").v("ContentId: " + contentId + " Pro: " + progress);
+        if (progress > 100)
+            progress = 100;
+        Timber.tag("FileMessage").v(" Progress: %s", progress);
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
             contentReceiveModel.setContentReceiveProgress(progress);
             contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+            ContentMessageModel contentMessageModel = contentReceiveModel.getContentMessageModel();
+            if (contentMessageModel != null &&
+                    contentMessageModel.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
+                String messageId = contentMessageModel.getMessageId();
+                RmDataHelper.getInstance().setContentProgress(messageId, progress, contentId);
+            }
             return;
         }
 
         ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
         if (contentSendModel != null) {
+            RmDataHelper.getInstance().setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
             contentSendModel.contentReceiveProgress = progress;
+
+            contentSendModelHashMap.put(contentId, contentSendModel);
+        } else {
+
+            ContentModel contentModel = RmDataHelper.getInstance().setContentProgressByContentIdForSender(contentId, progress);
+
+            if (contentModel != null) {
+                contentSendModel = new ContentSendModel();
+
+                contentSendModel.contentId = contentId;
+                contentSendModel.messageId = contentModel.getMessageId();
+                contentSendModel.userId = contentModel.getUserId();
+                contentSendModel.successStatus = true;
+                contentSendModel.contentDataType = contentModel.getContentDataType();
+
+                contentSendModelHashMap.put(contentId, contentSendModel);
+            }
         }
     }
 
     @Override
     protected void contentReceiveDone(String contentId, boolean contentStatus) {
-        Timber.tag("FileMessage").v("ContentId: %s", contentId + " status: " + contentStatus);
+        Timber.tag("FileMessage").v(" status: %s", contentStatus);
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
+            ContentMessageModel contentMessageModel = contentReceiveModel.getContentMessageModel();
+
+            String contentPath = null, thumbPath = null;
+
             if (contentStatus) {
-
-                String contentMessageText = new String(contentReceiveModel.getMetaData());
-                ContentMessageModel contentMessageModel = new Gson().fromJson(contentMessageText,
-                        ContentMessageModel.class);
-
-                String contentPath = null, thumbPath = null;
-
                 switch (contentMessageModel.getContentType()) {
                     case Constants.DataType.CONTENT_MESSAGE:
-                        contentPath = contentReceiveModel.getContentPath();
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(
+                                contentReceiveModel.getContentPath(), false);
                         break;
                     case Constants.DataType.CONTENT_THUMB_MESSAGE:
-                        thumbPath = contentReceiveModel.getContentPath();
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(
+                                contentReceiveModel.getContentPath(), true);
                         break;
                 }
-
-                ContentModel contentModel = new ContentModel()
-                        .setMessageId(contentMessageModel.getMessageId())
-                        .setMessageType(contentMessageModel.getMessageType())
-                        .setContentPath(contentPath)
-                        .setThumbPath(thumbPath)
-                        .setContentDataType(contentMessageModel.getContentType())
-                        .setUserId(contentReceiveModel.getUserId());
-
-                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
-                        .contentReceive(contentModel, true));
-                // Finished
-            } else {
-                // Failed
             }
+
+            ContentModel contentModel = new ContentModel()
+                    .setMessageId(contentMessageModel.getMessageId())
+                    .setMessageType(contentMessageModel.getMessageType())
+                    .setContentPath(contentPath)
+                    .setThumbPath(thumbPath)
+                    .setContentDataType(contentMessageModel.getContentType())
+                    .setUserId(contentReceiveModel.getUserId())
+                    .setReceiveSuccessStatus(contentStatus);
+
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                    .contentReceive(contentModel, true));
+
             contentReceiveModelHashMap.remove(contentId);
             return;
         }
 
+        /*****************************Sender side calculation*******************************/
         ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
         if (contentSendModel != null) {
             if (contentStatus) {
@@ -335,6 +406,13 @@ public class MeshDataSource extends ViperUtil {
 
             } else {
 
+                ContentModel contentModel = new ContentModel()
+                        .setMessageId(contentSendModel.messageId)
+                        .setContentDataType(contentSendModel.contentDataType)
+                        .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+
+                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                        .contentReceive(contentModel, false));
             }
             contentSendModelHashMap.remove(contentId);
         }

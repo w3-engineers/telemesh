@@ -104,11 +104,15 @@ public class Constants {
         int STATUS_FAILED = 5;
         int STATUS_SEND = 6;
         int STATUS_RECEIVED = 7;
-        int STATUS_CONTENT_RECEIVING = 8;
-        int STATUS_CONTENT_RECEIVED = 9;
-        int STATUS_SENDING_START = 10;
-        int STATUS_CONTENT_SENDING = 11;
-        int STATUS_CONTENT_SEND = 12;
+        int STATUS_SENDING_START = 8;
+        int STATUS_RESEND_START = 9;
+    }
+
+    public interface ContentStatus {
+        int CONTENT_STATUS_SENDING = 1;
+        int CONTENT_STATUS_SEND = 2;
+        int CONTENT_STATUS_RECEIVING = 3;
+        int CONTENT_STATUS_RECEIVED = 4;
     }
 
     public interface DataType {
@@ -129,6 +133,7 @@ public class Constants {
         byte CONTENT_THUMB_MESSAGE = 0x15;
         byte CONTENT_MESSAGE = 0x16;
         byte REQ_CONTENT_MESSAGE = 0x17;
+        byte SUCCESS_CONTENT_MESSAGE = 0x18;
     }
 
     public interface MessageType {
@@ -253,13 +258,14 @@ public class Constants {
     }
 
     public interface RequestCodes {
-        int PROFILE_IMAGE_REQUEST = 101;
+        // 101 is restricted which used in base activity
         int GALLERY_IMAGE_REQUEST = 102;
+        int PROFILE_IMAGE_REQUEST = 103;
     }
 
     public interface DirectoryName {
         String ContentFolder = "Content";
-        String ContentThumbFolder = "ContentThumb";
+        String ContentThumbFolder = ".contentThumb";
     }
 
     public interface ViewHolderType {

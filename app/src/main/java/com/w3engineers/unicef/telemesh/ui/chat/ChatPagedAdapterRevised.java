@@ -24,11 +24,15 @@ import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
+import at.grabner.circleprogress.CircleProgressView;
+import io.supercharge.shimmerlayout.ShimmerLayout;
+
 import static com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity.DIFF_CALLBACK;
 
 public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPagedAdapterRevised.GenericViewHolder> {
 
     private int avatarIndex;
+    private View.OnClickListener clickListener;
 
     @NonNull
     public Context mContext;
@@ -36,10 +40,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     protected ChatViewModel chatViewModel;
 
 
-    public ChatPagedAdapterRevised(@NonNull Context context, @Nullable ChatViewModel chatViewModel) {
+    public ChatPagedAdapterRevised(@NonNull Context context, @Nullable ChatViewModel chatViewModel,
+                                   View.OnClickListener onClickListener) {
         super(DIFF_CALLBACK);
         mContext = context;
         this.chatViewModel = chatViewModel;
+        this.clickListener = onClickListener;
     }
 
 
@@ -182,15 +188,28 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         protected void bindView(@NonNull MessageEntity messageEntity) {
             binding.setTextMessage(messageEntity);
 
-            binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.GONE);
+            incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
+            incomingLoadingEffect(binding.circleView, messageEntity);
 
-            if (messageEntity.getContentStatus() == Constants.MessageStatus.STATUS_CONTENT_RECEIVING) {
-                binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.VISIBLE);
-                binding.shimmerUploadingImage.shimmerLoadingCellContent.startShimmerAnimation();
+            binding.viewFailed.setVisibility(View.GONE);
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                binding.viewFailed.setVisibility(View.VISIBLE);
             } else {
-                binding.shimmerUploadingImage.shimmerLoadingCellContent.setVisibility(View.GONE);
-                binding.shimmerUploadingImage.shimmerLoadingCellContent.stopShimmerAnimation();
+                binding.viewFailed.setVisibility(View.GONE);
             }
+
+            binding.imageViewMessage.setTag(R.id.image_view_message, messageEntity);
+            binding.imageViewMessage.setOnClickListener(clickListener);
+
+            binding.hover.setTag(R.id.image_view_message, messageEntity);
+            binding.hover.setOnClickListener(clickListener);
+
+            binding.hoverView.setTag(R.id.image_view_message, messageEntity);
+            binding.hoverView.setOnClickListener(clickListener);
+
+            binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
+            binding.viewFailed.setOnClickListener(clickListener);
+
             UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
         }
 
@@ -207,14 +226,110 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void bindView(@NonNull MessageEntity item) {
-            binding.setTextMessage(item);
+        protected void bindView(@NonNull MessageEntity messageEntity) {
+            binding.setTextMessage(messageEntity);
             binding.setChatViewModel(chatViewModel);
-            UIHelper.setImageInGlide(binding.imageViewMessage, item.contentThumbPath);
+
+            outgoingLoadingEffect(binding.circleView, messageEntity);
+
+            binding.viewFailed.setVisibility(View.GONE);
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                binding.viewFailed.setVisibility(View.VISIBLE);
+            } else {
+                binding.viewFailed.setVisibility(View.GONE);
+            }
+
+            binding.imageViewMessage.setTag(R.id.image_view_message, messageEntity);
+            binding.imageViewMessage.setOnClickListener(clickListener);
+
+            binding.hover.setTag(R.id.image_view_message, messageEntity);
+            binding.hover.setOnClickListener(clickListener);
+
+            binding.hoverView.setTag(R.id.image_view_message, messageEntity);
+            binding.hoverView.setOnClickListener(clickListener);
+
+            binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
+            binding.viewFailed.setOnClickListener(clickListener);
+
+            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
         }
 
         @Override
         protected void clearView() { binding.imageViewMessage.invalidate(); }
+    }
+
+    private void incomingShimmerEffect(ShimmerLayout shimmerLayout, MessageEntity messageEntity) {
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmerAnimation();
+
+        if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+            shimmerLayout.setVisibility(View.VISIBLE);
+            shimmerLayout.startShimmerAnimation();
+        } else {
+            shimmerLayout.setVisibility(View.GONE);
+            shimmerLayout.stopShimmerAnimation();
+        }
+
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+            shimmerLayout.stopShimmerAnimation();
+        }
+        shimmerLayout.setTag(R.id.image_view_message, messageEntity);
+        shimmerLayout.setOnClickListener(clickListener);
+    }
+
+    private void incomingLoadingEffect(CircleProgressView circleProgressView, MessageEntity messageEntity) {
+        circleProgressView.setVisibility(View.GONE);
+
+        if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+            circleProgressView.setVisibility(View.VISIBLE);
+        }
+
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+            circleProgressView.setVisibility(View.GONE);
+        }
+
+        // During content is receiving then -> content status
+        // Constants.MessageStatus.STATUS_CONTENT_RECEIVING
+        // Constants.MessageStatus.STATUS_CONTENT_RECEIVED
+
+        // During content is receiving then -> message status
+        // Constants.MessageStatus.STATUS_READ
+        // Constants.MessageStatus.STATUS_UNREAD
+        // Constants.MessageStatus.STATUS_FAILED
+
+        int progress = messageEntity.getContentProgress();
+
+        if (progress == 0) {
+            circleProgressView.spin();
+        } else {
+            if (progress > 0) {
+                circleProgressView.setValue(progress);
+            }
+        }
+    }
+
+    private void outgoingLoadingEffect(CircleProgressView circleProgressView, MessageEntity messageEntity) {
+        circleProgressView.setVisibility(View.GONE);
+
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING_START) {
+            circleProgressView.setVisibility(View.VISIBLE);
+        }
+
+        // During content send message status ->
+        // Constants.MessageStatus.STATUS_SENDING_START
+        // Constants.MessageStatus.STATUS_RESEND_START
+        // Constants.MessageStatus.STATUS_RECEIVED
+        // Constants.MessageStatus.STATUS_FAILED
+
+        int progress = messageEntity.getContentProgress();
+
+        if (progress == 0) {
+            circleProgressView.spin();
+        } else {
+            if (progress > 0) {
+                circleProgressView.setValue(progress);
+            }
+        }
     }
 
     private class SeparatorViewHolder extends GenericViewHolder {

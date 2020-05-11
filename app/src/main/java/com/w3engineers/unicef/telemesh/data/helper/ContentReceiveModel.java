@@ -1,10 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import com.w3engineers.models.ContentMetaInfo;
+
 public class ContentReceiveModel {
     private String contentId, contentPath, userId;
     private int contentReceiveProgress;
     private boolean successStatus;
-    private ContentMessageModel contentMessageModel;
+    private ContentMetaInfo contentMetaInfo;
 
     public String getContentId() {
         return contentId;
@@ -51,12 +53,12 @@ public class ContentReceiveModel {
         return this;
     }
 
-    public ContentMessageModel getContentMessageModel() {
-        return contentMessageModel;
+    public ContentMetaInfo getContentMetaInfo() {
+        return contentMetaInfo;
     }
 
-    public ContentReceiveModel setContentMessageModel(ContentMessageModel contentMessageModel) {
-        this.contentMessageModel = contentMessageModel;
+    public ContentReceiveModel setContentMetaInfo(ContentMetaInfo contentMetaInfo) {
+        this.contentMetaInfo = contentMetaInfo;
         return this;
     }
 }

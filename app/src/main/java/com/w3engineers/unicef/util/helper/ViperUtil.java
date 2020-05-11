@@ -30,6 +30,7 @@ import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
+import com.w3engineers.mesh.application.data.model.FilePendingEvent;
 import com.w3engineers.mesh.application.data.model.FileProgressEvent;
 import com.w3engineers.mesh.application.data.model.FileReceivedEvent;
 import com.w3engineers.mesh.application.data.model.FileTransferEvent;
@@ -46,12 +47,13 @@ import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
+import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
-import com.w3engineers.unicef.telemesh.data.helper.ContentMessageModel;
 import com.w3engineers.unicef.telemesh.data.helper.ContentModel;
+import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -214,6 +216,24 @@ public abstract class ViperUtil {
             ServiceDestroyed serviceDestroyed = (ServiceDestroyed) event;
             if (serviceDestroyed != null) {
 
+            }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.FILE_PENDING_EVENT, event -> {
+            FilePendingEvent filePendingEvent = (FilePendingEvent) event;
+            if (filePendingEvent != null) {
+
+                ContentPendingModel contentPendingModel = new ContentPendingModel();
+                contentPendingModel.setContentId(filePendingEvent.getContentId());
+                contentPendingModel.setContentPath(filePendingEvent.getContentPath());
+                contentPendingModel.setSenderId(filePendingEvent.getSenderId());
+
+                contentPendingModel.setProgress(filePendingEvent.getProgress());
+                contentPendingModel.setState(filePendingEvent.getState());
+                contentPendingModel.setContentMetaInfo(filePendingEvent.getContentMetaInfo());
+                contentPendingModel.setIncoming(filePendingEvent.isIncoming());
+
+                pendingContents(contentPendingModel);
             }
         });
     }
@@ -519,7 +539,7 @@ public abstract class ViperUtil {
         if (viperContentData != null) {
             ContentModel contentModel = viperContentData.contentModel;
 
-            ContentMessageModel contentMessageModel = new ContentMessageModel()
+            ContentMetaInfo contentMessageModel = new ContentMetaInfo()
                     .setMessageId(contentModel.getMessageId()).setMessageType(contentModel.getMessageType());
             String contentPath;
 
@@ -585,4 +605,6 @@ public abstract class ViperUtil {
     protected abstract void contentReceiveInProgress(String contentId, int progress);
 
     protected abstract void contentReceiveDone(String contentId, boolean contentStatus);
+
+    protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 }

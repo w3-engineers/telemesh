@@ -3,7 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 public class ContentModel {
 
     private String userId, thumbPath, contentPath, messageId, contentId; // Thumb Only applicable for message
-    private int messageType, ackStatus; // Only applicable for message
+    private int messageType, ackStatus, progress; // Only applicable for message
     private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver;
     private byte contentDataType;
 
@@ -112,6 +112,15 @@ public class ContentModel {
 
     public ContentModel setRequestFromReceiver(boolean requestFromReceiver) {
         isRequestFromReceiver = requestFromReceiver;
+        return this;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public ContentModel setProgress(int progress) {
+        this.progress = progress;
         return this;
     }
 }

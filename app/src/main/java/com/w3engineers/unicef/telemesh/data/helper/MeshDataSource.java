@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
@@ -267,23 +268,38 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
+    public void setProgressInfoInMap(ContentModel contentModel) {
+        if (contentReceiveModelHashMap.get(contentModel.getContentId()) == null) {
+            ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
+                    .setMessageId(contentModel.getMessageId())
+                    .setContentType(contentModel.getContentDataType())
+                    .setMessageType(contentModel.getMessageType());
+
+            ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
+                    .setContentId(contentModel.getContentId())
+                    .setContentPath(contentModel.getContentPath())
+                    .setUserId(contentModel.getUserId())
+                    .setContentMetaInfo(contentMetaInfo)
+                    .setSuccessStatus(true);
+
+            contentReceiveModelHashMap.put(contentModel.getContentId(), contentReceiveModel);
+            contentSendModelHashMap.remove(contentModel.getContentId());
+        }
+    }
+
     @Override
     protected void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
 
         Timber.tag("FileMessage").v(" Start id: %s", contentId);
-        Timber.tag("FileMessage").v(" Path : %s", contentPath);
-
-        //2020-05-07 13:20:13.132 14639-15305/com.w3engineers.unicef.telemesh V/FileMessage:  Start id: 0xf0ad9868ea05a71e1a21f231c975db42d9bddd96_1588874774794
-        //2020-05-07 13:20:13.132 14639-15305/com.w3engineers.unicef.telemesh V/FileMessage:  Path : /storage/emulated/0/20200429_124456_01:20 07-05.jpg     storage/emulated/0/20200429_124456_01:20 07-05.jpg
 
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
 
-        ContentMessageModel contentMessageModel = null;
+        ContentMetaInfo contentMetaInfo = null;
 
         if (metaData != null) {
             String contentMessageText = new String(metaData);
-            contentMessageModel = new Gson().fromJson(contentMessageText,
-                    ContentMessageModel.class);
+            contentMetaInfo = new Gson().fromJson(contentMessageText,
+                    ContentMetaInfo.class);
         }
 
         if (contentReceiveModel == null) {
@@ -294,19 +310,19 @@ public class MeshDataSource extends ViperUtil {
                 .setContentId(contentId)
                 .setContentPath(contentPath)
                 .setUserId(userId)
-                .setContentMessageModel(contentMessageModel)
+                .setContentMetaInfo(contentMetaInfo)
                 .setSuccessStatus(true);
 
-        if (contentMessageModel != null) {
+        if (contentMetaInfo != null) {
 
-            ContentMessageModel finalContentMessageModel = contentMessageModel;
+            ContentMetaInfo finalContentMetaInfo = contentMetaInfo;
 
             HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
-                    .updateMessageStatus(finalContentMessageModel.getMessageId()));
+                    .updateMessageStatus(finalContentMetaInfo.getMessageId()));
 
-            if (contentMessageModel.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
+            if (contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
-                        .setMessageContentId(finalContentMessageModel.getMessageId(), contentId));
+                        .setMessageContentId(finalContentMetaInfo.getMessageId(), contentId));
             }
         }
         contentReceiveModelHashMap.put(contentId, contentReceiveModel);
@@ -321,10 +337,10 @@ public class MeshDataSource extends ViperUtil {
         if (contentReceiveModel != null) {
             contentReceiveModel.setContentReceiveProgress(progress);
             contentReceiveModelHashMap.put(contentId, contentReceiveModel);
-            ContentMessageModel contentMessageModel = contentReceiveModel.getContentMessageModel();
-            if (contentMessageModel != null &&
-                    contentMessageModel.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
-                String messageId = contentMessageModel.getMessageId();
+            ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
+            if (contentMetaInfo != null &&
+                    contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
+                String messageId = contentMetaInfo.getMessageId();
                 RmDataHelper.getInstance().setContentProgress(messageId, progress, contentId);
             }
             return;
@@ -359,12 +375,12 @@ public class MeshDataSource extends ViperUtil {
         Timber.tag("FileMessage").v(" status: %s", contentStatus);
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
-            ContentMessageModel contentMessageModel = contentReceiveModel.getContentMessageModel();
+            ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
             String contentPath = null, thumbPath = null;
 
             if (contentStatus) {
-                switch (contentMessageModel.getContentType()) {
+                switch (contentMetaInfo.getContentType()) {
                     case Constants.DataType.CONTENT_MESSAGE:
                         contentPath = ContentUtil.getInstance().getCopiedFilePath(
                                 contentReceiveModel.getContentPath(), false);
@@ -377,11 +393,11 @@ public class MeshDataSource extends ViperUtil {
             }
 
             ContentModel contentModel = new ContentModel()
-                    .setMessageId(contentMessageModel.getMessageId())
-                    .setMessageType(contentMessageModel.getMessageType())
+                    .setMessageId(contentMetaInfo.getMessageId())
+                    .setMessageType(contentMetaInfo.getMessageType())
                     .setContentPath(contentPath)
                     .setThumbPath(thumbPath)
-                    .setContentDataType(contentMessageModel.getContentType())
+                    .setContentDataType(contentMetaInfo.getContentType())
                     .setUserId(contentReceiveModel.getUserId())
                     .setReceiveSuccessStatus(contentStatus);
 
@@ -416,6 +432,86 @@ public class MeshDataSource extends ViperUtil {
             }
             contentSendModelHashMap.remove(contentId);
         }
+    }
+
+    @Override
+    protected void pendingContents(ContentPendingModel contentPendingModel) {
+        if (contentPendingModel.isIncoming()) {
+
+            ContentMetaInfo contentMetaInfo = contentPendingModel.getContentMetaInfo();
+            String filePath = contentPendingModel.getContentPath();
+            String userAddress = contentPendingModel.getSenderId();
+
+            String contentId = contentPendingModel.getContentId();
+            int state = contentPendingModel.getState();
+            int progress = contentPendingModel.getProgress();
+
+            if (!TextUtils.isEmpty(filePath)) {
+                // receive started from root
+                if (contentMetaInfo != null) {
+
+                    String contentPath = null, thumbPath = null;
+
+                    switch (contentMetaInfo.getContentType()) {
+                        case Constants.DataType.CONTENT_MESSAGE:
+                            if (state == Constants.ServiceContentState.SUCCESS) {
+                                contentPath = ContentUtil.getInstance()
+                                        .getCopiedFilePath(filePath, false);
+                            } else {
+                                contentPath = filePath;
+                            }
+                            break;
+                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                            if (state == Constants.ServiceContentState.SUCCESS) {
+                                thumbPath = ContentUtil.getInstance().getCopiedFilePath(
+                                        filePath, true);
+                            } else {
+                                thumbPath = filePath;
+                            }
+                            break;
+                    }
+
+                    prepareContentModel(contentMetaInfo.getMessageId(),
+                            contentPath, thumbPath, userAddress, contentId,
+                            contentMetaInfo.getMessageType(), progress,
+                            contentMetaInfo.getContentType(),  state);
+                } else {
+                    prepareContentModel(contentId, progress, state);
+                }
+            } else {
+                if (!TextUtils.isEmpty(contentId)) {
+                    prepareContentModel(contentId, progress, state);
+                }
+            }
+        }
+    }
+
+    private void prepareContentModel(String contentId, int progress, int status) {
+        ContentModel contentModel = new ContentModel()
+                .setContentId(contentId)
+                .setProgress(progress)
+                .setAckStatus(status);
+
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                .receiveIncomingContentInfo(contentModel));
+    }
+
+    private void prepareContentModel(String messageId, String contentPath, String thumbPath,
+                                             String userId, String contentId, int messageType,
+                                             int progress, byte contentType, int status) {
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageId)
+                .setMessageType(messageType)
+                .setContentPath(contentPath)
+                .setThumbPath(thumbPath)
+                .setContentDataType(contentType)
+                .setUserId(userId)
+                .setContentId(contentId)
+                .setProgress(progress)
+                .setAckStatus(status);
+
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                .receiveIncomingContentInfo(contentModel));
     }
 
     /*@Override

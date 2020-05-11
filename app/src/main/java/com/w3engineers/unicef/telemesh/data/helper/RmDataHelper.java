@@ -537,12 +537,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             return;
         String messageId = new String(rawData);
 
-        ContentModel contentModel = new ContentModel()
-                .setMessageId(messageId)
-                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
-        contentReceive(contentModel, false);
+        if (messageEntity != null) {
+            ContentModel contentModel = new ContentModel()
+                    .setMessageId(messageId)
+                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                    .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+
+            contentReceive(contentModel, false);
+        } else {
+
+            messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);
+            if (messageEntity != null) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+        }
     }
 
     private void setContentMessage(ContentModel contentModel, boolean isNewMessage) {
@@ -658,6 +669,164 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (!TextUtils.isEmpty(messageId)) {
             dataSend(messageId.getBytes(), Constants.DataType.SUCCESS_CONTENT_MESSAGE, userId, false);
         }
+    }
+
+    public void receiveIncomingContentInfo(ContentModel contentModel) {
+
+        if (!TextUtils.isEmpty(contentModel.getMessageId())) {
+
+            MessageEntity messageEntity = MessageSourceData.getInstance()
+                    .getMessageEntityFromId(contentModel.getMessageId());
+
+            if (messageEntity == null) {
+
+                int contentStatus = -1;
+                String userId = contentModel.getUserId();
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                MessageEntity newMessageEntity = new MessageEntity()
+                        .setMessage("Image")
+                        .setContentPath(contentModel.getContentPath())
+                        .setContentThumbPath(contentModel.getThumbPath());
+
+                Timber.tag("FileMessage").v(" step 1: %s", contentStatus);
+
+                if (contentStatus != -1) {
+                    newMessageEntity.setContentStatus(contentStatus);
+                }
+
+                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    newMessageEntity.setContentProgress(contentModel.getProgress());
+                    newMessageEntity.setContentId(contentModel.getContentId());
+                }
+
+                ChatEntity chatEntity = newMessageEntity
+                        .setMessageId(contentModel.getMessageId())
+                        .setFriendsId(contentModel.getUserId())
+                        .setIncoming(true)
+                        .setMessageType(contentModel.getMessageType())
+                        .setTime(System.currentTimeMillis())
+                        .setStatus(Constants.MessageStatus.STATUS_READ);
+
+                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
+                        || !userId.equals(dataSource.getCurrentUser())) {
+                    chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    NotifyUtil.showNotification(chatEntity);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    prepareProgressContent((MessageEntity) chatEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+            } else {
+
+                String thumbPath = contentModel.getThumbPath();
+                String contentPath = contentModel.getContentPath();
+                String userId = contentModel.getUserId();
+                int contentStatus = -1;
+
+                if (!TextUtils.isEmpty(thumbPath)) {
+                    messageEntity.setContentThumbPath(thumbPath);
+                }
+
+                if (!TextUtils.isEmpty(contentPath)) {
+                    messageEntity.setContentPath(contentPath);
+                }
+
+                if (!TextUtils.isEmpty(userId)) {
+                    messageEntity.setFriendsId(userId);
+                }
+
+                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    messageEntity.setContentProgress(contentModel.getProgress());
+                    messageEntity.setContentId(contentModel.getContentId());
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                Timber.tag("FileMessage").v(" step 2: %s", contentStatus);
+
+                if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
+                    messageEntity.setContentStatus(contentStatus);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                } else {
+                    messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    prepareProgressContent(messageEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+        } else {
+
+            String contentId = contentModel.getContentId();
+            int contentProgress = contentModel.getProgress();
+            int state = contentModel.getAckStatus();
+
+            MessageEntity messageEntity = MessageSourceData.getInstance()
+                    .getMessageEntityFromContentId(contentId);
+
+            if (messageEntity != null) {
+                messageEntity.setContentProgress(contentProgress);
+
+                int contentStatus = -1;
+                if (state == Constants.ServiceContentState.SUCCESS) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                Timber.tag("FileMessage").v(" step 3: %s", contentStatus);
+                messageEntity.setContentStatus(contentStatus);
+
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
+                    prepareProgressContent(messageEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+
+        }
+    }
+
+    private void prepareProgressContent(MessageEntity messageEntity) {
+        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
+                .setContentPath(messageEntity.getContentPath())
+                .setUserId(messageEntity.getFriendsId())
+                .setMessageId(messageEntity.getMessageId())
+                .setProgress(messageEntity.getContentProgress())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                .setMessageType(messageEntity.getMessageType());
+        prepareRightMeshDataSource();
+        rightMeshDataSource.setProgressInfoInMap(contentModel);
     }
 
     public void setMessageContentId(String messageId, String contentId) {

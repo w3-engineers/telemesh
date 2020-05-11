@@ -275,4 +275,10 @@ public class Constants {
         int IMG_INCOMING = 21;
         int IMG_OUTGOING = 22;
     }
+
+    public interface ServiceContentState {
+        int FAILED = 0;
+        int PROGRESS = 1;
+        int SUCCESS = 2;
+    }
 }

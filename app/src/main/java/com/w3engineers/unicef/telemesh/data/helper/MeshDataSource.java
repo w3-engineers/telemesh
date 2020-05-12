@@ -268,22 +268,37 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void setProgressInfoInMap(ContentModel contentModel) {
-        if (contentReceiveModelHashMap.get(contentModel.getContentId()) == null) {
-            ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
-                    .setMessageId(contentModel.getMessageId())
-                    .setContentType(contentModel.getContentDataType())
-                    .setMessageType(contentModel.getMessageType());
+    public void setProgressInfoInMap(ContentModel contentModel, boolean isReceived) {
 
-            ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
-                    .setContentId(contentModel.getContentId())
-                    .setContentPath(contentModel.getContentPath())
-                    .setUserId(contentModel.getUserId())
-                    .setContentMetaInfo(contentMetaInfo)
-                    .setSuccessStatus(true);
+        if (isReceived) {
+            if (contentReceiveModelHashMap.get(contentModel.getContentId()) == null) {
+                ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
+                        .setMessageId(contentModel.getMessageId())
+                        .setContentType(contentModel.getContentDataType())
+                        .setMessageType(contentModel.getMessageType());
 
-            contentReceiveModelHashMap.put(contentModel.getContentId(), contentReceiveModel);
-            contentSendModelHashMap.remove(contentModel.getContentId());
+                ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
+                        .setContentId(contentModel.getContentId())
+                        .setContentPath(contentModel.getContentPath())
+                        .setUserId(contentModel.getUserId())
+                        .setContentMetaInfo(contentMetaInfo)
+                        .setSuccessStatus(true);
+
+                contentReceiveModelHashMap.put(contentModel.getContentId(), contentReceiveModel);
+                contentSendModelHashMap.remove(contentModel.getContentId());
+            }
+        } else {
+            if (contentSendModelHashMap.get(contentModel.getContentId()) == null) {
+                ContentSendModel contentSendModel = new ContentSendModel();
+
+                contentSendModel.contentId = contentModel.getContentId();
+                contentSendModel.messageId = contentModel.getMessageId();
+                contentSendModel.userId = contentModel.getUserId();
+                contentSendModel.successStatus = true;
+                contentSendModel.contentDataType = contentModel.getContentDataType();
+
+                contentSendModelHashMap.put(contentModel.getContentId(), contentSendModel);
+            }
         }
     }
 
@@ -483,6 +498,15 @@ public class MeshDataSource extends ViperUtil {
                     prepareContentModel(contentId, progress, state);
                 }
             }
+        } else {
+            String contentId = contentPendingModel.getContentId();
+            int state = contentPendingModel.getState();
+            int progress = contentPendingModel.getProgress();
+            String userId = contentPendingModel.getSenderId();
+
+            if (!TextUtils.isEmpty(contentId)) {
+                prepareSendContentModel(contentId, userId, progress, state);
+            }
         }
     }
 
@@ -494,6 +518,17 @@ public class MeshDataSource extends ViperUtil {
 
         HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
                 .receiveIncomingContentInfo(contentModel));
+    }
+
+    private void prepareSendContentModel(String contentId, String userId, int progress, int status) {
+        ContentModel contentModel = new ContentModel()
+                .setContentId(contentId)
+                .setProgress(progress)
+                .setUserId(userId)
+                .setAckStatus(status);
+
+        HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
+                .sendOutgoingContentInfo(contentModel));
     }
 
     private void prepareContentModel(String messageId, String contentPath, String thumbPath,

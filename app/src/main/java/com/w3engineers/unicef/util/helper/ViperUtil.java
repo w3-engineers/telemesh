@@ -575,8 +575,12 @@ public abstract class ViperUtil {
         return null;
     }
 
-    public String resendContentMessage() {
-        return null;
+    public void removeSendContents(String contentId) {
+        try {
+            viperClient.removeSendContent(contentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////

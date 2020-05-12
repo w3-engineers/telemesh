@@ -546,12 +546,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
 
             contentReceive(contentModel, false);
+
+            if (!TextUtils.isEmpty(messageEntity.getContentId())) {
+                prepareRightMeshDataSource();
+                rightMeshDataSource.removeSendContents(messageEntity.getContentId());
+            }
         } else {
 
             messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);
             if (messageEntity != null) {
                 messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+
+            if (!TextUtils.isEmpty(messageId)) {
+                prepareRightMeshDataSource();
+                rightMeshDataSource.removeSendContents(messageId);
             }
         }
     }
@@ -817,6 +827,44 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
+    public void sendOutgoingContentInfo(ContentModel contentModel) {
+        String contentId = contentModel.getContentId();
+        int contentProgress = contentModel.getProgress();
+        int state = contentModel.getAckStatus();
+
+        MessageEntity messageEntity = MessageSourceData.getInstance()
+                .getMessageEntityFromContentId(contentId);
+
+        if (messageEntity != null) {
+            messageEntity.setContentProgress(contentProgress);
+
+            if (state == Constants.ServiceContentState.FAILED) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+            }
+
+            if (state == Constants.ServiceContentState.SUCCESS) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+            }
+
+            if (state == Constants.ServiceContentState.PROGRESS) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                prepareSendProgressContent(messageEntity);
+            }
+
+            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+        }
+    }
+
+    private void prepareSendProgressContent(MessageEntity messageEntity) {
+        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
+                .setUserId(messageEntity.getFriendsId())
+                .setMessageId(messageEntity.getMessageId())
+                .setProgress(messageEntity.getContentProgress())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
+        prepareRightMeshDataSource();
+        rightMeshDataSource.setProgressInfoInMap(contentModel, false);
+    }
+
     private void prepareProgressContent(MessageEntity messageEntity) {
         ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
                 .setContentPath(messageEntity.getContentPath())
@@ -826,7 +874,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
                 .setMessageType(messageEntity.getMessageType());
         prepareRightMeshDataSource();
-        rightMeshDataSource.setProgressInfoInMap(contentModel);
+        rightMeshDataSource.setProgressInfoInMap(contentModel, true);
     }
 
     public void setMessageContentId(String messageId, String contentId) {

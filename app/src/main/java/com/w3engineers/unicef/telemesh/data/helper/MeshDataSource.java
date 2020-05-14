@@ -258,7 +258,8 @@ public class MeshDataSource extends ViperUtil {
                 contentSendModel.contentDataType = contentModel.getContentDataType();
 
                 HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
-                        .setMessageContentId(contentModel.getMessageId(), contentId));
+                        .setMessageContentId(contentModel.getMessageId(), contentId,
+                                contentModel.getContentPath()));
                 contentSendModelHashMap.put(contentId, contentSendModel);
             }
         } else {
@@ -336,8 +337,11 @@ public class MeshDataSource extends ViperUtil {
                     .updateMessageStatus(finalContentMetaInfo.getMessageId()));
 
             if (contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
-                HandlerUtil.postBackground(() -> RmDataHelper.getInstance()
-                        .setMessageContentId(finalContentMetaInfo.getMessageId(), contentId));
+                HandlerUtil.postBackground(() -> {
+                    RmDataHelper.getInstance().setMessageContentId(finalContentMetaInfo.getMessageId(),
+                            contentId, contentPath);
+
+                });
             }
         }
         contentReceiveModelHashMap.put(contentId, contentReceiveModel);

@@ -112,7 +112,7 @@
             app:cpv_textScale="1"
             app:cpv_spin="true"
             app:cpv_unit="%"
-            app:cpv_unitColor="@color/badge_color"
+            app:cpv_unitColor="@color/white"
             app:cpv_unitPosition="right_top"
             app:cpv_unitScale="1"
             app:layout_constraintBottom_toBottomOf="@+id/hover_view"

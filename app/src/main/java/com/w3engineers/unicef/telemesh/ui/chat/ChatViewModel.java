@@ -151,7 +151,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     public void resendContentMessage(MessageEntity messageEntity) {
-        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
             messageInsertionProcess(messageEntity);
             dataSource.reSendMessage(messageEntity);
@@ -224,14 +225,24 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
      * @param friendsId : mesh id
      */
     public void updateAllMessageStatus(@NonNull String friendsId) {
-
-
         compositeDisposable.add(updateMessageStatus(friendsId)
-                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
+                    updateAllFailedMessageStatus(friendsId);
+                }, Throwable::printStackTrace));
+    }
+
+    public void updateAllFailedMessageStatus(@NonNull String friendsId) {
+        compositeDisposable.add(updateFailedMessageStatus(friendsId)
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
+                }, Throwable::printStackTrace));
     }
 
     private Single<Long> updateMessageStatus(String friendsId) {
         return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
+    }
+
+    private Single<Long> updateFailedMessageStatus(String friendsId) {
+        return Single.fromCallable(() -> messageSourceData.updateUnreadToReadFailed(friendsId));
     }
 
     /**

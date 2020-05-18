@@ -192,7 +192,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             incomingLoadingEffect(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
-            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
                 binding.viewFailed.setVisibility(View.VISIBLE);
             } else {
                 binding.viewFailed.setVisibility(View.GONE);
@@ -270,7 +271,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             shimmerLayout.stopShimmerAnimation();
         }
 
-        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             shimmerLayout.stopShimmerAnimation();
         }
         shimmerLayout.setTag(R.id.image_view_message, messageEntity);
@@ -284,7 +286,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             circleProgressView.setVisibility(View.VISIBLE);
         }
 
-        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             circleProgressView.setVisibility(View.GONE);
         }
 

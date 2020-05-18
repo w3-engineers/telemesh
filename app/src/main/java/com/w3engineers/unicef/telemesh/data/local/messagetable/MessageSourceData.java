@@ -101,16 +101,31 @@ public class MessageSourceData {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
+    public long updateUnreadToReadFailed(@NonNull String friendsId) {
+        return messageDao.updateMessageAsReadFailed(friendsId);
+    }
+
     public long changeMessageStatusFrom(int fromStatus, int toStatus) {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
-    public long changeMessageStatusByUserFrom(int fromStatus, int toStatus, String userId) {
-        return messageDao.changeMessageStatusByUserFrom(fromStatus, toStatus, userId);
+
+
+
+    public long changeMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeMessageStatusByUserId(fromContentStatus, toStatus, userId);
     }
 
-    public long changeMessageStatusByContentStatus(int fromStatus, int toStatus) {
-        return messageDao.changeMessageStatusByContentStatus(fromStatus, toStatus);
+    public long changeUnreadMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeUnreadMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+    public long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeMessageStatusByContentStatus(fromContentStatus, toStatus);
+    }
+
+    public long changeUnreadMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeUnreadMessageStatusByContentStatus(fromContentStatus, toStatus);
     }
 
     public Flowable<Integer> getBlockMessageInfoForSync() {

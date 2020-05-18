@@ -277,9 +277,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void userLeave(@NonNull String peerId) {
 
-        MessageSourceData.getInstance().changeMessageStatusByUserFrom(
+        // FAILED MAINTAINED
+        MessageSourceData.getInstance().changeMessageStatusByUserId(
                 Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                 Constants.MessageStatus.STATUS_FAILED, peerId);
+
+        MessageSourceData.getInstance().changeUnreadMessageStatusByUserId(
+                Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                Constants.MessageStatus.STATUS_UNREAD_FAILED, peerId);
         // No need already update user status in userExistedOperation api of RmDataHelper class
 //        UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
     }
@@ -515,7 +520,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 requestedContentMessageSend(rawData, userId);
                 break;
             case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
-                contentMessageSuccessResponse(rawData, userId);
+                contentMessageSuccessResponse(rawData);
                 break;
         }
     }
@@ -532,7 +537,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private void contentMessageSuccessResponse(byte[] rawData, String userId) {
+    private void contentMessageSuccessResponse(byte[] rawData) {
 
         if (rawData == null)
             return;
@@ -615,7 +620,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                     if (!contentModel.getReceiveSuccessStatus()) {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        // FAILED MAINTAINED
+
+                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                        } else {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        }
                     }
 
                     MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
@@ -644,7 +656,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                     if (!contentModel.getReceiveSuccessStatus()) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        // FAILED MAINTAINED
+
+                        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                        } else {
+                            messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        }
                     } else {
                         if (contentStatus != -1) {
                             messageEntity.setContentStatus(contentStatus);
@@ -745,7 +764,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    // FAILED MAINTAINED
+                    if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
@@ -805,10 +830,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     messageEntity.setContentStatus(contentStatus);
                 }
 
+                // FAILED MAINTAINED
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
                 } else {
-                    messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+                    }
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
@@ -840,9 +877,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 Timber.tag("FileMessage").v(" step 3: %s", contentStatus);
                 messageEntity.setContentStatus(contentStatus);
 
-
+                // FAILED MAINTAINED
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
+                } else {
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+                    }
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
@@ -939,8 +988,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
-        if (messageEntity != null && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
-            messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+        // FAILED MAINTAINED
+        if (messageEntity != null) {
+
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+            } else {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+            }
             MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
         }
     }
@@ -1189,11 +1245,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     private void updateReceiveMessageStatusFailed() {
-
+        // FAILED MAINTAINED
         compositeDisposable.add(Single.fromCallable(() ->
                 MessageSourceData.getInstance().changeMessageStatusByContentStatus(
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_FAILED))
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    updateReceiveUnreadMessageStatusFailed();
+                }, Throwable::printStackTrace));
+    }
+
+    private void updateReceiveUnreadMessageStatusFailed() {
+        // FAILED MAINTAINED
+        compositeDisposable.add(Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeUnreadMessageStatusByContentStatus(
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                        Constants.MessageStatus.STATUS_UNREAD_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
 
                 }, Throwable::printStackTrace));

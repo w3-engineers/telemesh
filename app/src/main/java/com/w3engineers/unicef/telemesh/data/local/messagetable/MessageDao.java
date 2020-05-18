@@ -102,18 +102,43 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
             " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
     public abstract long updateMessageAsRead(@NonNull String friendsId);
 
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
+            " = " + Constants.MessageStatus.STATUS_FAILED + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID +
+            " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD_FAILED)
+    public abstract long updateMessageAsReadFailed(@NonNull String friendsId);
+
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
     public abstract long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
-            + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromStatus")
-    public abstract long changeMessageStatusByUserFrom(int fromStatus, int toStatus, String userId);
+            + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
+    public abstract long changeMessageStatusByUserFrom(int fromContentStatus, int fromStatus,
+                                                       int toStatus, String userId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
-            + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus")
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
+            + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " != " + Constants.MessageStatus.STATUS_UNREAD)
+    public abstract long changeMessageStatusByUserId(int fromContentStatus, int toStatus, String userId);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
+            + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
+    public abstract long changeUnreadMessageStatusByUserId(int fromContentStatus, int toStatus, String userId);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " != " + Constants.MessageStatus.STATUS_UNREAD)
     public abstract long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
+    public abstract long changeUnreadMessageStatusByContentStatus(int fromContentStatus, int toStatus);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")

@@ -106,6 +106,7 @@ public class Constants {
         int STATUS_RECEIVED = 7;
         int STATUS_SENDING_START = 8;
         int STATUS_RESEND_START = 9;
+        int STATUS_UNREAD_FAILED = 10;
     }
 
     public interface ContentStatus {

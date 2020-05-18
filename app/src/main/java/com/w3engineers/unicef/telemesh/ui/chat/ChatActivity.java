@@ -296,7 +296,8 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.view_failed:
                 MessageEntity failedMessage = (MessageEntity) view.getTag(R.id.image_view_message);
                 if (failedMessage != null &&
-                        failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                        (failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                        || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
                     resendFailedMessage(failedMessage);
                 }
                 break;

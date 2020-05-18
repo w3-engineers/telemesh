@@ -165,10 +165,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             configFileSendToOthers(userModel.getConfigVersion(), userId);
         }*/
 
-        HandlerUtil.postForeground(() -> {
+
+        // Now we off the app end version handshaking system
+        // SDK -> viper layer will do that
+
+        /*HandlerUtil.postForeground(() -> {
 
             versionMessageHandshaking(userId);
-        }, 10 * 1000);
+        }, 10 * 1000);*/
 
     }
 
@@ -218,9 +222,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;
-            case 8:
+            case 6:
                 return Constants.UserStatus.HB_ONLINE;
-            case 9:
+            case 7:
                 return Constants.UserStatus.HB_MESH_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;

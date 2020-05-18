@@ -49,6 +49,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -704,10 +705,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
                 }
 
+                String thumbPath = contentModel.getThumbPath();
+                String contentPath = contentModel.getContentPath();
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                    }
+
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                    }
+                }
+
                 MessageEntity newMessageEntity = new MessageEntity()
                         .setMessage("Image")
-                        .setContentPath(contentModel.getContentPath())
-                        .setContentThumbPath(contentModel.getThumbPath());
+                        .setContentPath(contentPath)
+                        .setContentThumbPath(thumbPath);
 
                 Timber.tag("FileMessage").v(" step 1: %s", contentStatus);
 
@@ -757,6 +771,20 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 if (!TextUtils.isEmpty(contentPath)) {
                     messageEntity.setContentPath(contentPath);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    thumbPath = messageEntity.getContentThumbPath();
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    contentPath = messageEntity.getContentPath();
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                        messageEntity.setContentPath(contentPath);
+                    }
                 }
 
                 if (!TextUtils.isEmpty(userId)) {
@@ -821,6 +849,20 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
                 }
 
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    String thumbPath = messageEntity.getContentThumbPath();
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    String contentPath = messageEntity.getContentPath();
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                        messageEntity.setContentPath(contentPath);
+                    }
+                }
+
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
                     prepareProgressContent(messageEntity);
                 }
@@ -881,13 +923,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.setProgressInfoInMap(contentModel, true);
     }
 
-    public void setMessageContentId(String messageId, String contentId) {
+    public void setMessageContentId(String messageId, String contentId, String contentPath) {
         if (TextUtils.isEmpty(messageId) || TextUtils.isEmpty(contentId))
             return;
 
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
         if (messageEntity != null) {
             messageEntity.setContentId(contentId);
+            if (!TextUtils.isEmpty(contentPath)) {
+                messageEntity.setContentPath(contentPath);
+            }
             MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
         }
     }

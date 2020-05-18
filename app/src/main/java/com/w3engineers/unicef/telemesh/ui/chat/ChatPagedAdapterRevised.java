@@ -311,7 +311,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     private void outgoingLoadingEffect(CircleProgressView circleProgressView, MessageEntity messageEntity) {
         circleProgressView.setVisibility(View.GONE);
 
-        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING_START) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING_START
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_RESEND_START) {
             circleProgressView.setVisibility(View.VISIBLE);
         }
 

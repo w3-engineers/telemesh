@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.concurrent.Callable;
@@ -23,6 +24,7 @@ public class SendDataTask implements Callable {
     // message. Use of weak reference is not a must here because CustomThreadPoolManager lives
     // across the whole application lifecycle
     private ViperData viperData;
+    private ViperContentData viperContentData;
     private ViperUtil viperUtil;
     private String peerId;
 
@@ -48,6 +50,15 @@ public class SendDataTask implements Callable {
         return this;
     }
 
+    public ViperContentData getViperContentData() {
+        return viperContentData;
+    }
+
+    public SendDataTask setViperContentData(ViperContentData viperContentData) {
+        this.viperContentData = viperContentData;
+        return this;
+    }
+
     public String getPeerId() {
         return peerId;
     }
@@ -65,8 +76,17 @@ public class SendDataTask implements Callable {
             // check if thread is interrupted before lengthy operation
             if (Thread.interrupted()) throw new InterruptedException();
 
+            ViperData viperData = getViperData();
+            ViperContentData viperContentData = getViperContentData();
+
             if (getViperUtil() != null) {
-                return getViperUtil().sendMeshData(getPeerId(), getViperData());
+                if (viperData != null) {
+                    return getViperUtil().sendMeshData(getPeerId(), viperData);
+                }
+
+                if (viperContentData != null) {
+                    return getViperUtil().sendContentMessage(getPeerId(), viperContentData);
+                }
             }
 
         } catch (InterruptedException e) { e.printStackTrace(); }

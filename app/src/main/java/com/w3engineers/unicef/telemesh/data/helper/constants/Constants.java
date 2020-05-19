@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 import android.net.Uri;
 import android.os.Build;
 
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 
 import java.util.Locale;
@@ -105,6 +104,16 @@ public class Constants {
         int STATUS_FAILED = 5;
         int STATUS_SEND = 6;
         int STATUS_RECEIVED = 7;
+        int STATUS_SENDING_START = 8;
+        int STATUS_RESEND_START = 9;
+        int STATUS_UNREAD_FAILED = 10;
+    }
+
+    public interface ContentStatus {
+        int CONTENT_STATUS_SENDING = 1;
+        int CONTENT_STATUS_SEND = 2;
+        int CONTENT_STATUS_RECEIVING = 3;
+        int CONTENT_STATUS_RECEIVED = 4;
     }
 
     public interface DataType {
@@ -122,11 +131,16 @@ public class Constants {
         byte CONFIG_UPDATE_INFO = 0x12;
         byte TOKEN_GUIDE_REQUEST = 0x13;
         byte TOKEN_GUIDE_INFO = 0x14;
+        byte CONTENT_THUMB_MESSAGE = 0x15;
+        byte CONTENT_MESSAGE = 0x16;
+        byte REQ_CONTENT_MESSAGE = 0x17;
+        byte SUCCESS_CONTENT_MESSAGE = 0x18;
     }
 
     public interface MessageType {
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
+        int IMAGE_MESSAGE = 102;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -242,5 +256,30 @@ public class Constants {
         String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
         String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
         String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+    }
+
+    public interface RequestCodes {
+        // 101 is restricted which used in base activity
+        int GALLERY_IMAGE_REQUEST = 102;
+        int PROFILE_IMAGE_REQUEST = 103;
+    }
+
+    public interface DirectoryName {
+        String ContentFolder = "Content";
+        String ContentThumbFolder = ".contentThumb";
+    }
+
+    public interface ViewHolderType {
+        int TEXT_INCOMING = 11;
+        int TEXT_OUTGOING = 12;
+
+        int IMG_INCOMING = 21;
+        int IMG_OUTGOING = 22;
+    }
+
+    public interface ServiceContentState {
+        int FAILED = 0;
+        int PROGRESS = 1;
+        int SUCCESS = 2;
     }
 }

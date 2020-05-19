@@ -51,7 +51,9 @@ public class UIHelper {
     public static void setImageStatusResource(@NonNull ImageView imageView, int resourceId) {
         //AppLog.v("Image status resource id ="+resourceId);
         int statusId;
-        if (resourceId == Constants.MessageStatus.STATUS_SENDING) {
+        if (resourceId == Constants.MessageStatus.STATUS_SENDING ||
+                resourceId == Constants.MessageStatus.STATUS_SENDING_START ||
+                resourceId == Constants.MessageStatus.STATUS_RESEND_START) {
             statusId = R.mipmap.ic_dot_grey;
         } else if (resourceId == Constants.MessageStatus.STATUS_SEND) {
             statusId = R.mipmap.ic_sending_grey;
@@ -63,6 +65,10 @@ public class UIHelper {
             statusId = R.mipmap.ic_alert;
         }
         Glide.with(App.getContext()).load(statusId).into(imageView);
+    }
+
+    public static void setImageInGlide(ImageView imageView, String imagePath) {
+        Glide.with(App.getContext()).load(imagePath).into(imageView);
     }
 
    /* @NonNull

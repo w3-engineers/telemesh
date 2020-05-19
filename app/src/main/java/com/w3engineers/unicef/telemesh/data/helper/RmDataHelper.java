@@ -49,6 +49,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -165,10 +166,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             configFileSendToOthers(userModel.getConfigVersion(), userId);
         }*/
 
-        HandlerUtil.postForeground(() -> {
+
+        // Now we off the app end version handshaking system
+        // SDK -> viper layer will do that
+
+        /*HandlerUtil.postForeground(() -> {
 
             versionMessageHandshaking(userId);
-        }, 10 * 1000);
+        }, 10 * 1000);*/
 
     }
 
@@ -218,9 +223,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;
-            case 8:
+            case 6:
                 return Constants.UserStatus.HB_ONLINE;
-            case 9:
+            case 7:
                 return Constants.UserStatus.HB_MESH_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;
@@ -276,7 +281,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void userLeave(@NonNull String peerId) {
 
-        UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
+        // FAILED MAINTAINED
+        MessageSourceData.getInstance().changeMessageStatusByUserId(
+                Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                Constants.MessageStatus.STATUS_FAILED, peerId);
+
+        MessageSourceData.getInstance().changeUnreadMessageStatusByUserId(
+                Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                Constants.MessageStatus.STATUS_UNREAD_FAILED, peerId);
+        // No need already update user status in userExistedOperation api of RmDataHelper class
+//        UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
     }
 
     public void meshInitiated() {
@@ -302,13 +316,20 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribe(chatEntity -> {
 
                     if (!chatEntity.isIncoming()
-                            && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
+                            && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
-                        dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                            dataSend(messageModelString.getBytes(),
+                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                        } else {
+                            dataSource.updateMessageStatus(messageEntity.getMessageId(),
+                                    Constants.MessageStatus.STATUS_SENDING_START);
+                            contentMessageSend(messageEntity, chatEntity.getFriendsId(), false);
+                        }
+
                     }
                 }, Throwable::printStackTrace));
 
@@ -316,14 +337,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(chatEntity -> {
 
-                    if (!chatEntity.isIncoming()
-                            && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
-
+                    if (!chatEntity.isIncoming() && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
-                        dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                            dataSend(messageModelString.getBytes(),
+                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                        }
+                    } else if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_RESEND_START) {
+                        MessageEntity messageEntity = (MessageEntity) chatEntity;
+                        if (chatEntity.isIncoming()) {
+                            HandlerUtil.postBackground(() -> resendMessageRequestAction(messageEntity));
+                        } else {
+                            HandlerUtil.postBackground(() -> resendMessageAction(messageEntity));
+                        }
                     }
                 }, Throwable::printStackTrace));
 
@@ -337,6 +365,24 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     }
 
                 }, Throwable::printStackTrace));
+    }
+
+    private void resendMessageAction(MessageEntity messageEntity) {
+        try {
+            dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING_START);
+            contentMessageResendSend(messageEntity, messageEntity.getFriendsId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void resendMessageRequestAction(MessageEntity messageEntity) {
+        try {
+            dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_READ);
+            contentMessageResendRequest(messageEntity, messageEntity.getFriendsId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -355,6 +401,79 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
+    }
+
+    private void contentMessageSend(MessageEntity messageEntity, String userId, boolean isThumbAlreadySend) {
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageEntity.getMessageId())
+                .setMessageType(messageEntity.getMessageType())
+                .setContentPath(messageEntity.getContentPath())
+                .setThumbPath(messageEntity.getContentThumbPath())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                .setUserId(userId)
+                .setThumbSend(isThumbAlreadySend);
+
+        contentMessageSend(contentModel, !isThumbAlreadySend);
+    }
+
+    private void contentMessageResendSend(MessageEntity messageEntity, String userId) {
+
+        String contentId = messageEntity.getContentId();
+
+        if (TextUtils.isEmpty(contentId)) {
+            contentMessageSend(messageEntity, userId, false);
+        } else {
+            ContentModel contentModel = new ContentModel()
+                    .setContentId(contentId)
+                    .setMessageId(messageEntity.getMessageId())
+                    .setMessageType(messageEntity.getMessageType())
+                    .setContentPath(messageEntity.getContentPath())
+                    .setThumbPath(messageEntity.getContentThumbPath())
+                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                    .setThumbSend(true)
+                    .setUserId(userId)
+                    .setResendMessage(true);
+            contentMessageSend(contentModel, false);
+        }
+    }
+
+    private void contentMessageResendRequest(MessageEntity messageEntity, String userId) {
+        String contentId = messageEntity.getContentId();
+
+        if (TextUtils.isEmpty(contentId)) {
+            requestForMainContent(userId, messageEntity.getMessageId());
+        } else {
+            ContentModel contentModel = new ContentModel()
+                    .setContentId(contentId)
+                    .setMessageId(messageEntity.getMessageId())
+                    .setMessageType(messageEntity.getMessageType())
+                    .setContentPath(messageEntity.getContentPath())
+                    .setThumbPath(messageEntity.getContentThumbPath())
+                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                    .setThumbSend(true)
+                    .setUserId(userId)
+                    .setRequestFromReceiver(true)
+                    .setResendMessage(true);
+            contentMessageSend(contentModel, false);
+        }
+    }
+
+    private void requestedContentMessageSend(byte[] rawData, String userId) {
+        if (rawData == null)
+            return;
+        String messageId = new String(rawData);
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+        if (messageEntity != null && !messageEntity.isIncoming()) {
+            contentMessageSend(messageEntity, userId, true);
+        }
+    }
+
+    private void contentMessageSend(ContentModel contentModel, boolean isNotificationEnable) {
+        prepareRightMeshDataSource();
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.ContentDataSend(contentModel, isNotificationEnable));
     }
 
     /**
@@ -401,22 +520,526 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.USER_UPDATE_INFO:
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
-
-            // TODO update configuration process need to switch in service layer - mimo
-            /*case Constants.DataType.CONFIG_UPDATE_INFO:
-                configFileReceiveFromOthers(rawData, isNewMessage, userId);
+            case Constants.DataType.REQ_CONTENT_MESSAGE:
+                requestedContentMessageSend(rawData, userId);
                 break;
-
-            case Constants.DataType.TOKEN_GUIDE_REQUEST:
-                sendTokenGuideInfo(userId, isNewMessage);
+            case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
+                contentMessageSuccessResponse(rawData);
                 break;
-
-            case Constants.DataType.TOKEN_GUIDE_INFO:
-                tokenGuidelineReceivedFromOther(rawData, isNewMessage);
-                break;*/
         }
     }
 
+    public void contentReceive(ContentModel contentModel, boolean isNewMessage) {
+
+        byte dataType = contentModel.getContentDataType();
+
+        switch (dataType) {
+            case Constants.DataType.CONTENT_MESSAGE:
+            case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                setContentMessage(contentModel, isNewMessage);
+                break;
+        }
+    }
+
+    private void contentMessageSuccessResponse(byte[] rawData) {
+
+        if (rawData == null)
+            return;
+        String messageId = new String(rawData);
+
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+        if (messageEntity != null) {
+            ContentModel contentModel = new ContentModel()
+                    .setMessageId(messageId)
+                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                    .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+
+            contentReceive(contentModel, false);
+
+            if (!TextUtils.isEmpty(messageEntity.getContentId())) {
+                prepareRightMeshDataSource();
+                rightMeshDataSource.removeSendContents(messageEntity.getContentId());
+            }
+        } else {
+
+            messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);
+            if (messageEntity != null) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+
+            if (!TextUtils.isEmpty(messageId)) {
+                prepareRightMeshDataSource();
+                rightMeshDataSource.removeSendContents(messageId);
+            }
+        }
+    }
+
+    private void setContentMessage(ContentModel contentModel, boolean isNewMessage) {
+        String messageId = contentModel.getMessageId();
+        int ackStatus = contentModel.getAckStatus();
+
+        try {
+            if (isNewMessage) {
+
+                MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+                if (messageEntity == null) {
+
+                    int contentStatus = -1;
+                    String userId = contentModel.getUserId();
+                    switch (contentModel.getContentDataType()) {
+                        case Constants.DataType.CONTENT_MESSAGE:
+                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                            break;
+                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                            break;
+                    }
+
+                    MessageEntity newMessageEntity = new MessageEntity()
+                            .setMessage("Image")
+                            .setContentPath(contentModel.getContentPath())
+                            .setContentThumbPath(contentModel.getThumbPath());
+
+                    if (contentModel.getReceiveSuccessStatus()) {
+                        if (contentStatus != -1) {
+                            newMessageEntity.setContentStatus(contentStatus);
+                        }
+                    }
+
+                    ChatEntity chatEntity = newMessageEntity
+                            .setMessageId(messageId)
+                            .setFriendsId(contentModel.getUserId())
+                            .setIncoming(true)
+                            .setMessageType(contentModel.getMessageType())
+                            .setTime(System.currentTimeMillis())
+                            .setStatus(Constants.MessageStatus.STATUS_READ);
+
+                    if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
+                            || !userId.equals(dataSource.getCurrentUser())) {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                        NotifyUtil.showNotification(chatEntity);
+                    }
+
+                    if (!contentModel.getReceiveSuccessStatus()) {
+                        // FAILED MAINTAINED
+
+                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                        } else {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        }
+                    }
+
+                    MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+                } else {
+
+                    String thumbPath = null, contentPath = null;
+                    int contentStatus = -1;
+
+                    switch (contentModel.getContentDataType()) {
+                        case Constants.DataType.CONTENT_MESSAGE:
+                            contentPath = contentModel.getContentPath();
+                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                            break;
+                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
+                            thumbPath = contentModel.getThumbPath();
+                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                            break;
+                    }
+
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        messageEntity.setContentPath(contentPath);
+                    }
+
+                    if (!contentModel.getReceiveSuccessStatus()) {
+                        // FAILED MAINTAINED
+
+                        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                        } else {
+                            messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        }
+                    } else {
+                        if (contentStatus != -1) {
+                            messageEntity.setContentStatus(contentStatus);
+                        }
+                    }
+
+                    MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+                }
+
+                if (contentModel.getReceiveSuccessStatus()) {
+                    if (contentModel.getContentDataType() == Constants.DataType.CONTENT_THUMB_MESSAGE) {
+                        requestForMainContent(contentModel.getUserId(), messageId);
+                    } else if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                        successForMainContent(contentModel.getUserId(), messageId);
+                    }
+                }
+
+            } else {
+                dataSource.updateMessageStatus(messageId, ackStatus);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestForMainContent(String userId, String messageId) {
+        if (!TextUtils.isEmpty(messageId)) {
+            dataSend(messageId.getBytes(), Constants.DataType.REQ_CONTENT_MESSAGE, userId, false);
+        }
+    }
+
+    private void successForMainContent(String userId, String messageId) {
+        if (!TextUtils.isEmpty(messageId)) {
+            dataSend(messageId.getBytes(), Constants.DataType.SUCCESS_CONTENT_MESSAGE, userId, false);
+        }
+    }
+
+    public void receiveIncomingContentInfo(ContentModel contentModel) {
+
+        if (!TextUtils.isEmpty(contentModel.getMessageId())) {
+
+            MessageEntity messageEntity = MessageSourceData.getInstance()
+                    .getMessageEntityFromId(contentModel.getMessageId());
+
+            if (messageEntity == null) {
+
+                int contentStatus = -1;
+                String userId = contentModel.getUserId();
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                String thumbPath = contentModel.getThumbPath();
+                String contentPath = contentModel.getContentPath();
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                    }
+
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                    }
+                }
+
+                MessageEntity newMessageEntity = new MessageEntity()
+                        .setMessage("Image")
+                        .setContentPath(contentPath)
+                        .setContentThumbPath(thumbPath);
+
+                Timber.tag("FileMessage").v(" step 1: %s", contentStatus);
+
+                if (contentStatus != -1) {
+                    newMessageEntity.setContentStatus(contentStatus);
+                }
+
+                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    newMessageEntity.setContentProgress(contentModel.getProgress());
+                    newMessageEntity.setContentId(contentModel.getContentId());
+                }
+
+                ChatEntity chatEntity = newMessageEntity
+                        .setMessageId(contentModel.getMessageId())
+                        .setFriendsId(contentModel.getUserId())
+                        .setIncoming(true)
+                        .setMessageType(contentModel.getMessageType())
+                        .setTime(System.currentTimeMillis())
+                        .setStatus(Constants.MessageStatus.STATUS_READ);
+
+                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
+                        || !userId.equals(dataSource.getCurrentUser())) {
+                    chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    NotifyUtil.showNotification(chatEntity);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    // FAILED MAINTAINED
+                    if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    prepareProgressContent((MessageEntity) chatEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+            } else {
+
+                String thumbPath = contentModel.getThumbPath();
+                String contentPath = contentModel.getContentPath();
+                String userId = contentModel.getUserId();
+                int contentStatus = -1;
+
+                if (!TextUtils.isEmpty(thumbPath)) {
+                    messageEntity.setContentThumbPath(thumbPath);
+                }
+
+                if (!TextUtils.isEmpty(contentPath)) {
+                    messageEntity.setContentPath(contentPath);
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    thumbPath = messageEntity.getContentThumbPath();
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    contentPath = messageEntity.getContentPath();
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                        messageEntity.setContentPath(contentPath);
+                    }
+                }
+
+                if (!TextUtils.isEmpty(userId)) {
+                    messageEntity.setFriendsId(userId);
+                }
+
+                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    messageEntity.setContentProgress(contentModel.getProgress());
+                    messageEntity.setContentId(contentModel.getContentId());
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                Timber.tag("FileMessage").v(" step 2: %s", contentStatus);
+
+                if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
+                    messageEntity.setContentStatus(contentStatus);
+                }
+
+                // FAILED MAINTAINED
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
+                } else {
+
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+                    }
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
+                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
+                    prepareProgressContent(messageEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+        } else {
+
+            String contentId = contentModel.getContentId();
+            int contentProgress = contentModel.getProgress();
+            int state = contentModel.getAckStatus();
+
+            MessageEntity messageEntity = MessageSourceData.getInstance()
+                    .getMessageEntityFromContentId(contentId);
+
+            if (messageEntity != null) {
+                messageEntity.setContentProgress(contentProgress);
+
+                int contentStatus = -1;
+                if (state == Constants.ServiceContentState.SUCCESS) {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
+                } else {
+                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
+                }
+
+                Timber.tag("FileMessage").v(" step 3: %s", contentStatus);
+                messageEntity.setContentStatus(contentStatus);
+
+                // FAILED MAINTAINED
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                    }
+                } else {
+                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    } else {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+                    }
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
+                    String thumbPath = messageEntity.getContentThumbPath();
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
+                        messageEntity.setContentThumbPath(thumbPath);
+                    }
+
+                    String contentPath = messageEntity.getContentPath();
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                        messageEntity.setContentPath(contentPath);
+                    }
+                }
+
+                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
+                    prepareProgressContent(messageEntity);
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+
+        }
+    }
+
+    public void sendOutgoingContentInfo(ContentModel contentModel) {
+        String contentId = contentModel.getContentId();
+        int contentProgress = contentModel.getProgress();
+        int state = contentModel.getAckStatus();
+
+        MessageEntity messageEntity = MessageSourceData.getInstance()
+                .getMessageEntityFromContentId(contentId);
+
+        if (messageEntity != null) {
+            messageEntity.setContentProgress(contentProgress);
+
+            if (state == Constants.ServiceContentState.FAILED) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+            }
+
+            if (state == Constants.ServiceContentState.SUCCESS) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+            }
+
+            if (state == Constants.ServiceContentState.PROGRESS) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                prepareSendProgressContent(messageEntity);
+            }
+
+            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+        }
+    }
+
+    private void prepareSendProgressContent(MessageEntity messageEntity) {
+        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
+                .setUserId(messageEntity.getFriendsId())
+                .setMessageId(messageEntity.getMessageId())
+                .setProgress(messageEntity.getContentProgress())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
+        prepareRightMeshDataSource();
+        rightMeshDataSource.setProgressInfoInMap(contentModel, false);
+    }
+
+    private void prepareProgressContent(MessageEntity messageEntity) {
+        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
+                .setContentPath(messageEntity.getContentPath())
+                .setUserId(messageEntity.getFriendsId())
+                .setMessageId(messageEntity.getMessageId())
+                .setProgress(messageEntity.getContentProgress())
+                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
+                .setMessageType(messageEntity.getMessageType());
+        prepareRightMeshDataSource();
+        rightMeshDataSource.setProgressInfoInMap(contentModel, true);
+    }
+
+    public void setMessageContentId(String messageId, String contentId, String contentPath) {
+        if (TextUtils.isEmpty(messageId) || TextUtils.isEmpty(contentId))
+            return;
+
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+        if (messageEntity != null) {
+            messageEntity.setContentId(contentId);
+            if (!TextUtils.isEmpty(contentPath)) {
+                messageEntity.setContentPath(contentPath);
+            }
+            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+        }
+    }
+
+    public void updateMessageStatus(String messageId) {
+        if (TextUtils.isEmpty(messageId))
+            return;
+
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+
+        // FAILED MAINTAINED
+        if (messageEntity != null) {
+
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+            } else {
+                messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+            }
+            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+        }
+    }
+
+    public void setContentProgress(String messageId, int progress, String contentId) {
+        if (progress == 0 || TextUtils.isEmpty(messageId))
+            return;
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+        if (messageEntity != null) {
+            int existingProgress = messageEntity.getContentProgress();
+            if (progress > existingProgress) {
+                messageEntity.setContentProgress(progress);
+                messageEntity.setContentId(contentId);
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+            }
+        }
+    }
+
+    public ContentModel setContentProgressByContentIdForSender(String contentId, int progress) {
+        if (TextUtils.isEmpty(contentId))
+            return null;
+
+        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
+        if (messageEntity != null) {
+            int existingProgress = messageEntity.getContentProgress();
+            if (progress > existingProgress) {
+                messageEntity.setContentProgress(progress);
+            }
+
+            messageEntity.setContentId(contentId);
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+
+            return new ContentModel().setMessageId(messageEntity.getMessageId())
+                    .setUserId(messageEntity.getFriendsId())
+                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
+        }
+        return null;
+    }
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
@@ -580,6 +1203,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
 
                 dataReceive(prevRMDataModel, false);
+                return;
             }
         }
     }
@@ -591,15 +1215,59 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    if (isServiceStop) {
+                    /*if (isServiceStop) {
                         stopMeshProcess();
-                    }
+                    }*/
+                    updateMessageStatus();
                 }, Throwable::printStackTrace));
     }
 
     private Single<Integer> updateUserToOffline() {
         return Single.fromCallable(() ->
                 UserDataSource.getInstance().updateUserToOffline());
+    }
+
+    public void destroyMeshService() {
+        compositeDisposable.add(updateUserToOffline()
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    updateMessageStatus();
+                }, Throwable::printStackTrace));
+    }
+
+    private void updateMessageStatus() {
+        compositeDisposable.add(updateMessageStatusFailed()
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    updateReceiveMessageStatusFailed();
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<Long> updateMessageStatusFailed() {
+        return Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeMessageStatusFrom(
+                        Constants.MessageStatus.STATUS_SENDING_START,
+                        Constants.MessageStatus.STATUS_FAILED));
+    }
+
+    private void updateReceiveMessageStatusFailed() {
+        // FAILED MAINTAINED
+        compositeDisposable.add(Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeMessageStatusByContentStatus(
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                        Constants.MessageStatus.STATUS_FAILED))
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    updateReceiveUnreadMessageStatusFailed();
+                }, Throwable::printStackTrace));
+    }
+
+    private void updateReceiveUnreadMessageStatusFailed() {
+        // FAILED MAINTAINED
+        compositeDisposable.add(Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeUnreadMessageStatusByContentStatus(
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                        Constants.MessageStatus.STATUS_UNREAD_FAILED))
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -1018,6 +1686,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    @Override
+    public void contentSent(ContentModel contentModel, String dataSendId) {
+        prepareRightMeshDataSource();
+
+        rightMeshDataSource.contentDataSend(dataSendId, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

@@ -188,6 +188,10 @@ dependencies {
     implementation deps.qrgenerator.qr
     implementation deps.playcore.core
 
+    implementation 'com.zhihu.android:matisse:0.5.2-beta4'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
+
     api deps.app_share
     api deps.local_server
     debugImplementation deps.inappstoragereader

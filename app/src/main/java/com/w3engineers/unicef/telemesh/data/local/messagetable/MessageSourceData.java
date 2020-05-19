@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
@@ -82,6 +83,16 @@ public class MessageSourceData {
         return messageDao.getMessageById(messageId);
     }
 
+    @Nullable
+    public MessageEntity getMessageEntityFromId(@NonNull String messageId) {
+        return messageDao.getMessageFromId(messageId);
+    }
+
+    @Nullable
+    public MessageEntity getMessageEntityFromContentId(@NonNull String contentId) {
+        return messageDao.getMessageFromContentId(contentId);
+    }
+
     // This api is not used in app layer
     /*public long updateMessageEntityStatus(String messageId, int messageStatus) {
         return messageDao.updateMessageStatus(messageId, messageStatus);
@@ -90,8 +101,31 @@ public class MessageSourceData {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
+    public long updateUnreadToReadFailed(@NonNull String friendsId) {
+        return messageDao.updateMessageAsReadFailed(friendsId);
+    }
+
     public long changeMessageStatusFrom(int fromStatus, int toStatus) {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
+    }
+
+
+
+
+    public long changeMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+    public long changeUnreadMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeUnreadMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+    public long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeMessageStatusByContentStatus(fromContentStatus, toStatus);
+    }
+
+    public long changeUnreadMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeUnreadMessageStatusByContentStatus(fromContentStatus, toStatus);
     }
 
     public Flowable<Integer> getBlockMessageInfoForSync() {

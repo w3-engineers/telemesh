@@ -2,14 +2,16 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -20,6 +22,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -45,7 +49,7 @@ import io.reactivex.schedulers.Schedulers;
  * ============================================================================
  */
 
-public class ChatViewModel extends AndroidViewModel {
+public class ChatViewModel extends BaseRxAndroidViewModel {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -112,17 +116,59 @@ public class ChatViewModel extends AndroidViewModel {
      */
     public void sendMessage(@NonNull String meshId, @NonNull String message, boolean isTextMessage) {
 
-
         if (isTextMessage) {
 
             MessageEntity messageEntity = new MessageEntity()
                     .setMessage(message);
 
-
-            ChatEntity chatEntity = prepareChatEntityForText(meshId, messageEntity);
+            ChatEntity chatEntity = prepareChatEntityForText(meshId, messageEntity,
+                    Constants.MessageType.TEXT_MESSAGE);
 
             messageInsertionProcess(chatEntity);
         }
+    }
+
+    public void sendContentMessage(String userId, Uri uri) {
+        getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
+                .getRealPathFromURI(uri))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(imagePath ->{
+                    sendContentMessage(userId, imagePath);
+                }, throwable -> {
+                    Timber.tag("FileMessage").e(throwable);
+                }));
+    }
+
+    public void sendContentMessage(String userId, String path) {
+        getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
+                .getThumbnailFromImagePath(path))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(thumbPath -> {
+                    prepareContentMessage(userId, path, thumbPath);
+                }, throwable -> {
+                    Timber.tag("FileMessage").e(throwable);
+                }));
+    }
+
+    public void resendContentMessage(MessageEntity messageEntity) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
+            messageInsertionProcess(messageEntity);
+            dataSource.reSendMessage(messageEntity);
+        }
+    }
+
+    private void prepareContentMessage(String userId, String path, String thumbPath) {
+        MessageEntity messageEntity = new MessageEntity()
+                .setMessage("Image")
+                .setContentPath(path)
+                .setContentThumbPath(thumbPath);
+
+        ChatEntity chatEntity = prepareChatEntityForText(userId, messageEntity,
+                Constants.MessageType.IMAGE_MESSAGE);
+
+        messageInsertionProcess(chatEntity);
     }
 
     /**
@@ -138,7 +184,11 @@ public class ChatViewModel extends AndroidViewModel {
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {}, Throwable::printStackTrace));
+                .subscribe(aLong -> {
+                    Log.v("FileMessage", "Insert msg: " + aLong);
+                }, throwable -> {
+                    Log.v("FileMessage", "Error: " + throwable.getMessage());
+                }));
 
     }
 
@@ -152,7 +202,8 @@ public class ChatViewModel extends AndroidViewModel {
      * @param meshId -
      * @param messageEntity -
      */
-    private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity) {
+    private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity,
+                                                int messageType) {
 
 
         ChatEntity chatEntity;
@@ -163,8 +214,7 @@ public class ChatViewModel extends AndroidViewModel {
                 .setIncoming(false)
                 .setTime(TimeUtil.toCurrentTime())
                 .setStatus(Constants.MessageStatus.STATUS_SENDING)
-                .setMessageType(Constants.MessageType.TEXT_MESSAGE);
-
+                .setMessageType(messageType);
 
         return chatEntity;
     }
@@ -175,14 +225,24 @@ public class ChatViewModel extends AndroidViewModel {
      * @param friendsId : mesh id
      */
     public void updateAllMessageStatus(@NonNull String friendsId) {
-
-
         compositeDisposable.add(updateMessageStatus(friendsId)
-                .subscribeOn(Schedulers.io()).subscribe(aLong -> {}, Throwable::printStackTrace));
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
+                    updateAllFailedMessageStatus(friendsId);
+                }, Throwable::printStackTrace));
+    }
+
+    public void updateAllFailedMessageStatus(@NonNull String friendsId) {
+        compositeDisposable.add(updateFailedMessageStatus(friendsId)
+                .subscribeOn(Schedulers.io()).subscribe(aLong -> {
+                }, Throwable::printStackTrace));
     }
 
     private Single<Long> updateMessageStatus(String friendsId) {
         return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
+    }
+
+    private Single<Long> updateFailedMessageStatus(String friendsId) {
+        return Single.fromCallable(() -> messageSourceData.updateUnreadToReadFailed(friendsId));
     }
 
     /**

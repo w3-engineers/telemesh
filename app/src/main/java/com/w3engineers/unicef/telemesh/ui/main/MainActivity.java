@@ -110,9 +110,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void startUI() {
-        super.startUI();
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
+        super.startUI();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);

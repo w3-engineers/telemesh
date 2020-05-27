@@ -141,6 +141,7 @@ public class Constants {
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
         int IMAGE_MESSAGE = 102;
+        int BROADCAST_IMAGE = 200;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -249,13 +250,8 @@ public class Constants {
     }
 
     public interface GradleBuildValues {
-        String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
-        String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
         String BROADCAST_TOKEN = AppCredentials.getInstance().getBroadCastToken();
         String BROADCAST_URL = AppCredentials.getInstance().getBroadCastUrl();
-        String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
-        String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
-        String PARSE_URL = AppCredentials.getInstance().getParseUrl();
     }
 
     public interface RequestCodes {

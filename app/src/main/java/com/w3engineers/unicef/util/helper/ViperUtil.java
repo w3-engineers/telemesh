@@ -83,9 +83,7 @@ public abstract class ViperUtil {
 
             initObservers();
 
-            viperClient = ViperClient.on(context, context.getPackageName(), userModel.getName(),
-                    userModel.getImage(), userModel.getTime(), true)
-                    .setConfig(AUTH_USER_NAME, AUTH_PASSWORD, FILE_REPO_LINK, BuildConfig.VERSION_CODE);
+            viperClient = ViperClient.on(context, userModel.getName(), userModel.getImage());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -539,19 +537,21 @@ public abstract class ViperUtil {
         if (viperContentData != null) {
             ContentModel contentModel = viperContentData.contentModel;
 
-            ContentMetaInfo contentMessageModel = new ContentMetaInfo()
-                    .setMessageId(contentModel.getMessageId()).setMessageType(contentModel.getMessageType());
+            ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
+                    .setMessageId(contentModel.getMessageId())
+                    .setMessageType(contentModel.getMessageType())
+                    .setIsContent(contentModel.isContent());
             String contentPath;
 
             if (contentModel.isThumbSend()) {
                 contentPath = contentModel.getContentPath();
-                contentMessageModel.setContentType(Constants.DataType.CONTENT_MESSAGE);
+                contentMetaInfo.setContentType(Constants.DataType.CONTENT_MESSAGE);
             } else {
                 contentPath = contentModel.getThumbPath();
-                contentMessageModel.setContentType(Constants.DataType.CONTENT_THUMB_MESSAGE);
+                contentMetaInfo.setContentType(Constants.DataType.CONTENT_THUMB_MESSAGE);
             }
 
-            String contentMessageString = new Gson().toJson(contentMessageModel);
+            String contentMessageString = new Gson().toJson(contentMetaInfo);
             try {
 
                 if (contentModel.isResendMessage()) {

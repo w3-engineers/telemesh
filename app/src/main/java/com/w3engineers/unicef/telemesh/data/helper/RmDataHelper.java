@@ -80,9 +80,9 @@ import timber.log.Timber;
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
-    private MeshDataSource rightMeshDataSource;
+    protected MeshDataSource rightMeshDataSource;
 
-    private DataSource dataSource;
+    protected DataSource dataSource;
 
     public String mLatitude;
     public String mLongitude;
@@ -93,7 +93,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private RmDataHelper() {
+    public RmDataHelper() {
         dataSource = Source.getDbSource();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
@@ -112,7 +112,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return rightMeshDataSource;
     }
 
-    private void prepareRightMeshDataSource() {
+    protected void prepareRightMeshDataSource() {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
@@ -160,36 +160,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
         syncUserWithBroadcastMessage(userId);
-
-        // TODO update configuration process need to switch in service layer - mimo
-        /*if (isLocalOnline(userActiveStatus)) {
-            configFileSendToOthers(userModel.getConfigVersion(), userId);
-        }*/
-
-
-        // Now we off the app end version handshaking system
-        // SDK -> viper layer will do that
-
-        /*HandlerUtil.postForeground(() -> {
-
-            versionMessageHandshaking(userId);
-        }, 10 * 1000);*/
-
     }
-
-   /* public void onlyNodeAdd(String nodeId) {
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
-        }
-        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
-
-        int userConnectivityStatus = getActiveStatus(userActiveStatus);
-
-        UserEntity userEntity = new UserEntity().setUserName("").setAvatarIndex(-1).setMeshId(nodeId).setOnlineStatus(userConnectivityStatus);
-
-        UserDataSource.getInstance().insertOrUpdateData(userEntity);
-
-    }*/
 
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
@@ -232,46 +203,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    public boolean isLocalOnline(int userActiveStatus) {
-
-        switch (userActiveStatus) {
-            case Constants.UserStatus.WIFI_ONLINE:
-            case Constants.UserStatus.BLE_ONLINE:
-            case Constants.UserStatus.WIFI_MESH_ONLINE:
-            case Constants.UserStatus.BLE_MESH_ONLINE:
-            case Constants.UserStatus.HB_ONLINE:
-            case Constants.UserStatus.HB_MESH_ONLINE:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * If user mode change then we can get here call back of current mode
-     * Even we get mode if we want to call
-     *
-     * @param mode Integer
-     */
-  /*  public void onGetMyMode(int mode) {
-        // Here we will get callback
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
-        dataSource.setMyMode(mode);
-
-        if (MainActivity.getInstance() != null) {
-            // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
-            MainActivity.getInstance().finish();
-            Intent intent = MainActivity.getInstance().getIntent();
-            intent.putExtra(MainActivity.class.getSimpleName(), false);
-            MainActivity.getInstance().startActivity(intent);
-        }
-
-        rightMeshDataSource.stopAllServices();
-
-
-        //initRM(dataSource);
-    }*/
-
     /**
      * This api is responsible for update user info in database
      * when users is gone in mesh network
@@ -311,28 +242,27 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         AnalyticsDataHelper.getInstance().analyticsDataObserver();
 
+        // This observer only for message send
         compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
 
-                    if (!chatEntity.isIncoming()
-                            && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
+                    if (!chatEntity.isIncoming() && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
                             String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
-                            dataSend(messageModelString.getBytes(),
-                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                            dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
+                                    chatEntity.getFriendsId(), true);
                         } else {
-                            dataSource.updateMessageStatus(messageEntity.getMessageId(),
-                                    Constants.MessageStatus.STATUS_SENDING_START);
-                            contentMessageSend(messageEntity, chatEntity.getFriendsId(), false);
+                            ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
                         }
 
                     }
                 }, Throwable::printStackTrace));
 
+        // This observer only for re send
         compositeDisposable.add(Objects.requireNonNull(dataSource.getReSendMessage())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(chatEntity -> {
@@ -345,13 +275,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             dataSend(messageModelString.getBytes(),
                                     Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                         }
-                    } else if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_RESEND_START) {
-                        MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        if (chatEntity.isIncoming()) {
-                            HandlerUtil.postBackground(() -> resendMessageRequestAction(messageEntity));
-                        } else {
-                            HandlerUtil.postBackground(() -> resendMessageAction(messageEntity));
-                        }
+                    } else {
+                        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
                     }
                 }, Throwable::printStackTrace));
 
@@ -363,26 +288,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         prepareRightMeshDataSource();
                         rightMeshDataSource.checkUserIsConnected(liveUserId);
                     }
-
                 }, Throwable::printStackTrace));
-    }
-
-    private void resendMessageAction(MessageEntity messageEntity) {
-        try {
-            dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING_START);
-            contentMessageResendSend(messageEntity, messageEntity.getFriendsId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void resendMessageRequestAction(MessageEntity messageEntity) {
-        try {
-            dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_READ);
-            contentMessageResendRequest(messageEntity, messageEntity.getFriendsId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -391,7 +297,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * @param data -> raw data
      * @param type -> data type
      */
-    private void dataSend(@NonNull byte[] data, byte type, String userId, boolean isNotificationEnable) {
+    protected void dataSend(@NonNull byte[] data, byte type, String userId, boolean isNotificationEnable) {
 
         DataModel dataModel = new DataModel()
                 .setRawData(data)
@@ -401,79 +307,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
-    }
-
-    private void contentMessageSend(MessageEntity messageEntity, String userId, boolean isThumbAlreadySend) {
-        ContentModel contentModel = new ContentModel()
-                .setMessageId(messageEntity.getMessageId())
-                .setMessageType(messageEntity.getMessageType())
-                .setContentPath(messageEntity.getContentPath())
-                .setThumbPath(messageEntity.getContentThumbPath())
-                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                .setUserId(userId)
-                .setThumbSend(isThumbAlreadySend);
-
-        contentMessageSend(contentModel, !isThumbAlreadySend);
-    }
-
-    private void contentMessageResendSend(MessageEntity messageEntity, String userId) {
-
-        String contentId = messageEntity.getContentId();
-
-        if (TextUtils.isEmpty(contentId)) {
-            contentMessageSend(messageEntity, userId, false);
-        } else {
-            ContentModel contentModel = new ContentModel()
-                    .setContentId(contentId)
-                    .setMessageId(messageEntity.getMessageId())
-                    .setMessageType(messageEntity.getMessageType())
-                    .setContentPath(messageEntity.getContentPath())
-                    .setThumbPath(messageEntity.getContentThumbPath())
-                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                    .setThumbSend(true)
-                    .setUserId(userId)
-                    .setResendMessage(true);
-            contentMessageSend(contentModel, false);
-        }
-    }
-
-    private void contentMessageResendRequest(MessageEntity messageEntity, String userId) {
-        String contentId = messageEntity.getContentId();
-
-        if (TextUtils.isEmpty(contentId)) {
-            requestForMainContent(userId, messageEntity.getMessageId());
-        } else {
-            ContentModel contentModel = new ContentModel()
-                    .setContentId(contentId)
-                    .setMessageId(messageEntity.getMessageId())
-                    .setMessageType(messageEntity.getMessageType())
-                    .setContentPath(messageEntity.getContentPath())
-                    .setThumbPath(messageEntity.getContentThumbPath())
-                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                    .setThumbSend(true)
-                    .setUserId(userId)
-                    .setRequestFromReceiver(true)
-                    .setResendMessage(true);
-            contentMessageSend(contentModel, false);
-        }
-    }
-
-    private void requestedContentMessageSend(byte[] rawData, String userId) {
-        if (rawData == null)
-            return;
-        String messageId = new String(rawData);
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-
-        if (messageEntity != null && !messageEntity.isIncoming()) {
-            contentMessageSend(messageEntity, userId, true);
-        }
-    }
-
-    private void contentMessageSend(ContentModel contentModel, boolean isNotificationEnable) {
-        prepareRightMeshDataSource();
-
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(() -> rightMeshDataSource.ContentDataSend(contentModel, isNotificationEnable));
     }
 
     /**
@@ -521,524 +354,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
             case Constants.DataType.REQ_CONTENT_MESSAGE:
-                requestedContentMessageSend(rawData, userId);
+                ContentDataHelper.getInstance().requestedContentMessageSend(rawData, userId);
                 break;
             case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
-                contentMessageSuccessResponse(rawData);
+                ContentDataHelper.getInstance().contentMessageSuccessResponse(rawData);
                 break;
         }
-    }
-
-    public void contentReceive(ContentModel contentModel, boolean isNewMessage) {
-
-        byte dataType = contentModel.getContentDataType();
-
-        switch (dataType) {
-            case Constants.DataType.CONTENT_MESSAGE:
-            case Constants.DataType.CONTENT_THUMB_MESSAGE:
-                setContentMessage(contentModel, isNewMessage);
-                break;
-        }
-    }
-
-    private void contentMessageSuccessResponse(byte[] rawData) {
-
-        if (rawData == null)
-            return;
-        String messageId = new String(rawData);
-
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-
-        if (messageEntity != null) {
-            ContentModel contentModel = new ContentModel()
-                    .setMessageId(messageId)
-                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                    .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
-
-            contentReceive(contentModel, false);
-
-            if (!TextUtils.isEmpty(messageEntity.getContentId())) {
-                prepareRightMeshDataSource();
-                rightMeshDataSource.removeSendContents(messageEntity.getContentId());
-            }
-        } else {
-
-            messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);
-            if (messageEntity != null) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
-                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-            }
-
-            if (!TextUtils.isEmpty(messageId)) {
-                prepareRightMeshDataSource();
-                rightMeshDataSource.removeSendContents(messageId);
-            }
-        }
-    }
-
-    private void setContentMessage(ContentModel contentModel, boolean isNewMessage) {
-        String messageId = contentModel.getMessageId();
-        int ackStatus = contentModel.getAckStatus();
-
-        try {
-            if (isNewMessage) {
-
-                MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-
-                if (messageEntity == null) {
-
-                    int contentStatus = -1;
-                    String userId = contentModel.getUserId();
-                    switch (contentModel.getContentDataType()) {
-                        case Constants.DataType.CONTENT_MESSAGE:
-                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
-                            break;
-                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
-                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
-                            break;
-                    }
-
-                    MessageEntity newMessageEntity = new MessageEntity()
-                            .setMessage("Image")
-                            .setContentPath(contentModel.getContentPath())
-                            .setContentThumbPath(contentModel.getThumbPath());
-
-                    if (contentModel.getReceiveSuccessStatus()) {
-                        if (contentStatus != -1) {
-                            newMessageEntity.setContentStatus(contentStatus);
-                        }
-                    }
-
-                    ChatEntity chatEntity = newMessageEntity
-                            .setMessageId(messageId)
-                            .setFriendsId(contentModel.getUserId())
-                            .setIncoming(true)
-                            .setMessageType(contentModel.getMessageType())
-                            .setTime(System.currentTimeMillis())
-                            .setStatus(Constants.MessageStatus.STATUS_READ);
-
-                    if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
-                            || !userId.equals(dataSource.getCurrentUser())) {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                        NotifyUtil.showNotification(chatEntity);
-                    }
-
-                    if (!contentModel.getReceiveSuccessStatus()) {
-                        // FAILED MAINTAINED
-
-                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                        } else {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                        }
-                    }
-
-                    MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
-                } else {
-
-                    String thumbPath = null, contentPath = null;
-                    int contentStatus = -1;
-
-                    switch (contentModel.getContentDataType()) {
-                        case Constants.DataType.CONTENT_MESSAGE:
-                            contentPath = contentModel.getContentPath();
-                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
-                            break;
-                        case Constants.DataType.CONTENT_THUMB_MESSAGE:
-                            thumbPath = contentModel.getThumbPath();
-                            contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
-                            break;
-                    }
-
-                    if (!TextUtils.isEmpty(thumbPath)) {
-                        messageEntity.setContentThumbPath(thumbPath);
-                    }
-
-                    if (!TextUtils.isEmpty(contentPath)) {
-                        messageEntity.setContentPath(contentPath);
-                    }
-
-                    if (!contentModel.getReceiveSuccessStatus()) {
-                        // FAILED MAINTAINED
-
-                        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                        } else {
-                            messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                        }
-                    } else {
-                        if (contentStatus != -1) {
-                            messageEntity.setContentStatus(contentStatus);
-                        }
-                    }
-
-                    MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-                }
-
-                if (contentModel.getReceiveSuccessStatus()) {
-                    if (contentModel.getContentDataType() == Constants.DataType.CONTENT_THUMB_MESSAGE) {
-                        requestForMainContent(contentModel.getUserId(), messageId);
-                    } else if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                        successForMainContent(contentModel.getUserId(), messageId);
-                    }
-                }
-
-            } else {
-                dataSource.updateMessageStatus(messageId, ackStatus);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void requestForMainContent(String userId, String messageId) {
-        if (!TextUtils.isEmpty(messageId)) {
-            dataSend(messageId.getBytes(), Constants.DataType.REQ_CONTENT_MESSAGE, userId, false);
-        }
-    }
-
-    private void successForMainContent(String userId, String messageId) {
-        if (!TextUtils.isEmpty(messageId)) {
-            dataSend(messageId.getBytes(), Constants.DataType.SUCCESS_CONTENT_MESSAGE, userId, false);
-        }
-    }
-
-    public void receiveIncomingContentInfo(ContentModel contentModel) {
-
-        if (!TextUtils.isEmpty(contentModel.getMessageId())) {
-
-            MessageEntity messageEntity = MessageSourceData.getInstance()
-                    .getMessageEntityFromId(contentModel.getMessageId());
-
-            if (messageEntity == null) {
-
-                int contentStatus = -1;
-                String userId = contentModel.getUserId();
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
-                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
-                } else {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
-                }
-
-                String thumbPath = contentModel.getThumbPath();
-                String contentPath = contentModel.getContentPath();
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
-                    if (!TextUtils.isEmpty(thumbPath)) {
-                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
-                    }
-
-                    if (!TextUtils.isEmpty(contentPath)) {
-                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
-                    }
-                }
-
-                MessageEntity newMessageEntity = new MessageEntity()
-                        .setMessage("Image")
-                        .setContentPath(contentPath)
-                        .setContentThumbPath(thumbPath);
-
-                Timber.tag("FileMessage").v(" step 1: %s", contentStatus);
-
-                if (contentStatus != -1) {
-                    newMessageEntity.setContentStatus(contentStatus);
-                }
-
-                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    newMessageEntity.setContentProgress(contentModel.getProgress());
-                    newMessageEntity.setContentId(contentModel.getContentId());
-                }
-
-                ChatEntity chatEntity = newMessageEntity
-                        .setMessageId(contentModel.getMessageId())
-                        .setFriendsId(contentModel.getUserId())
-                        .setIncoming(true)
-                        .setMessageType(contentModel.getMessageType())
-                        .setTime(System.currentTimeMillis())
-                        .setStatus(Constants.MessageStatus.STATUS_READ);
-
-                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
-                        || !userId.equals(dataSource.getCurrentUser())) {
-                    chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                    NotifyUtil.showNotification(chatEntity);
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    // FAILED MAINTAINED
-                    if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
-                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    prepareProgressContent((MessageEntity) chatEntity);
-                }
-
-                MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
-            } else {
-
-                String thumbPath = contentModel.getThumbPath();
-                String contentPath = contentModel.getContentPath();
-                String userId = contentModel.getUserId();
-                int contentStatus = -1;
-
-                if (!TextUtils.isEmpty(thumbPath)) {
-                    messageEntity.setContentThumbPath(thumbPath);
-                }
-
-                if (!TextUtils.isEmpty(contentPath)) {
-                    messageEntity.setContentPath(contentPath);
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
-                    thumbPath = messageEntity.getContentThumbPath();
-                    if (!TextUtils.isEmpty(thumbPath)) {
-                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
-                        messageEntity.setContentThumbPath(thumbPath);
-                    }
-
-                    contentPath = messageEntity.getContentPath();
-                    if (!TextUtils.isEmpty(contentPath)) {
-                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
-                        messageEntity.setContentPath(contentPath);
-                    }
-                }
-
-                if (!TextUtils.isEmpty(userId)) {
-                    messageEntity.setFriendsId(userId);
-                }
-
-                if (contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    messageEntity.setContentProgress(contentModel.getProgress());
-                    messageEntity.setContentId(contentModel.getContentId());
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS
-                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
-                } else {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
-                }
-
-                Timber.tag("FileMessage").v(" step 2: %s", contentStatus);
-
-                if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
-                    messageEntity.setContentStatus(contentStatus);
-                }
-
-                // FAILED MAINTAINED
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
-                } else {
-
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-                    }
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
-                        && contentModel.getContentDataType() == Constants.DataType.CONTENT_MESSAGE) {
-                    prepareProgressContent(messageEntity);
-                }
-
-                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-            }
-        } else {
-
-            String contentId = contentModel.getContentId();
-            int contentProgress = contentModel.getProgress();
-            int state = contentModel.getAckStatus();
-
-            MessageEntity messageEntity = MessageSourceData.getInstance()
-                    .getMessageEntityFromContentId(contentId);
-
-            if (messageEntity != null) {
-                messageEntity.setContentProgress(contentProgress);
-
-                int contentStatus = -1;
-                if (state == Constants.ServiceContentState.SUCCESS) {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVED;
-                } else {
-                    contentStatus = Constants.ContentStatus.CONTENT_STATUS_RECEIVING;
-                }
-
-                Timber.tag("FileMessage").v(" step 3: %s", contentStatus);
-                messageEntity.setContentStatus(contentStatus);
-
-                // FAILED MAINTAINED
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
-                } else {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-                    }
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
-                    String thumbPath = messageEntity.getContentThumbPath();
-                    if (!TextUtils.isEmpty(thumbPath)) {
-                        thumbPath = ContentUtil.getInstance().getCopiedFilePath(thumbPath, true);
-                        messageEntity.setContentThumbPath(thumbPath);
-                    }
-
-                    String contentPath = messageEntity.getContentPath();
-                    if (!TextUtils.isEmpty(contentPath)) {
-                        contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
-                        messageEntity.setContentPath(contentPath);
-                    }
-                }
-
-                if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
-                    prepareProgressContent(messageEntity);
-                }
-
-                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-            }
-
-        }
-    }
-
-    public void sendOutgoingContentInfo(ContentModel contentModel) {
-        String contentId = contentModel.getContentId();
-        int contentProgress = contentModel.getProgress();
-        int state = contentModel.getAckStatus();
-
-        MessageEntity messageEntity = MessageSourceData.getInstance()
-                .getMessageEntityFromContentId(contentId);
-
-        if (messageEntity != null) {
-            messageEntity.setContentProgress(contentProgress);
-
-            if (state == Constants.ServiceContentState.FAILED) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-            }
-
-            if (state == Constants.ServiceContentState.SUCCESS) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
-            }
-
-            if (state == Constants.ServiceContentState.PROGRESS) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
-                prepareSendProgressContent(messageEntity);
-            }
-
-            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-        }
-    }
-
-    private void prepareSendProgressContent(MessageEntity messageEntity) {
-        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
-                .setUserId(messageEntity.getFriendsId())
-                .setMessageId(messageEntity.getMessageId())
-                .setProgress(messageEntity.getContentProgress())
-                .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
-        prepareRightMeshDataSource();
-        rightMeshDataSource.setProgressInfoInMap(contentModel, false);
-    }
-
-    private void prepareProgressContent(MessageEntity messageEntity) {
-        ContentModel contentModel = new ContentModel().setContentId(messageEntity.getContentId())
-                .setContentPath(messageEntity.getContentPath())
-                .setUserId(messageEntity.getFriendsId())
-                .setMessageId(messageEntity.getMessageId())
-                .setProgress(messageEntity.getContentProgress())
-                .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
-                .setMessageType(messageEntity.getMessageType());
-        prepareRightMeshDataSource();
-        rightMeshDataSource.setProgressInfoInMap(contentModel, true);
-    }
-
-    public void setMessageContentId(String messageId, String contentId, String contentPath) {
-        if (TextUtils.isEmpty(messageId) || TextUtils.isEmpty(contentId))
-            return;
-
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-        if (messageEntity != null) {
-            messageEntity.setContentId(contentId);
-            if (!TextUtils.isEmpty(contentPath)) {
-                messageEntity.setContentPath(contentPath);
-            }
-            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-        }
-    }
-
-    public void updateMessageStatus(String messageId) {
-        if (TextUtils.isEmpty(messageId))
-            return;
-
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-
-        // FAILED MAINTAINED
-        if (messageEntity != null) {
-
-            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-            } else {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-            }
-            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-        }
-    }
-
-    public void setContentProgress(String messageId, int progress, String contentId) {
-        if (progress == 0 || TextUtils.isEmpty(messageId))
-            return;
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
-        if (messageEntity != null) {
-            int existingProgress = messageEntity.getContentProgress();
-            if (progress > existingProgress) {
-                messageEntity.setContentProgress(progress);
-                messageEntity.setContentId(contentId);
-                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-            }
-        }
-    }
-
-    public ContentModel setContentProgressByContentIdForSender(String contentId, int progress) {
-        if (TextUtils.isEmpty(contentId))
-            return null;
-
-        MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
-        if (messageEntity != null) {
-            int existingProgress = messageEntity.getContentProgress();
-            if (progress > existingProgress) {
-                messageEntity.setContentProgress(progress);
-            }
-
-            messageEntity.setContentId(contentId);
-            messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
-            MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
-
-            return new ContentModel().setMessageId(messageEntity.getMessageId())
-                    .setUserId(messageEntity.getFriendsId())
-                    .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
-        }
-        return null;
     }
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
@@ -1690,9 +1011,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     @Override
     public void contentSent(ContentModel contentModel, String dataSendId) {
-        prepareRightMeshDataSource();
 
-        rightMeshDataSource.contentDataSend(dataSendId, contentModel);
+        ContentDataHelper.getInstance().contentDataSend(dataSendId, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

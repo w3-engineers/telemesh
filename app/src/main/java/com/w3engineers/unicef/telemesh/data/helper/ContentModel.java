@@ -4,7 +4,7 @@ public class ContentModel {
 
     private String userId, thumbPath, contentPath, messageId, contentId; // Thumb Only applicable for message
     private int messageType, ackStatus, progress; // Only applicable for message
-    private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver;
+    private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver, isContent;
     private byte contentDataType;
 
     public String getThumbPath() {
@@ -121,6 +121,15 @@ public class ContentModel {
 
     public ContentModel setProgress(int progress) {
         this.progress = progress;
+        return this;
+    }
+
+    public boolean isContent() {
+        return isContent;
+    }
+
+    public ContentModel setContent(boolean content) {
+        isContent = content;
         return this;
     }
 }

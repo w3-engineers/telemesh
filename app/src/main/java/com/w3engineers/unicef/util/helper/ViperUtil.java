@@ -14,6 +14,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
@@ -60,6 +64,7 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -336,7 +341,8 @@ public abstract class ViperUtil {
     }
 
     public void openAlertForWalletCreation() {
-        DialogUtil.showConfirmationDialog(MainActivity.getInstance(), "Wallet Create",
+        Context context = MainActivity.getInstance();
+        DialogUtil.showConfirmationDialog(context, "Wallet Create",
                 "Do you want to create wallet?",
                 "No",
                 "Yes",

@@ -89,7 +89,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     @SuppressLint("UseSparseArrays")
     @NonNull
-    public HashMap<String, DataModel> rmDataMap = new HashMap<>();
+    public static HashMap<String, DataModel> rmDataMap = new HashMap<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 

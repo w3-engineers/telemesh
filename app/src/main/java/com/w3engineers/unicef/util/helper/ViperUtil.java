@@ -433,8 +433,7 @@ public abstract class ViperUtil {
 
     public void restartMeshService() {
         try {
-            int myCurrentRole = DataManager.on().getMeshUserRole();
-            viperClient.restartMesh(myCurrentRole);
+            viperClient.restartMesh();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -447,8 +446,7 @@ public abstract class ViperUtil {
 
             String address = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
-            viperClient.saveUserInfo(address, userModel.getImage(), userModel.getTime(), true,
-                    userModel.getName(), "com.w3engineers.unicef.telemesh");
+            viperClient.updateMyInfo(userModel.getName(), userModel.getImage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -457,7 +455,7 @@ public abstract class ViperUtil {
     public void saveOtherUserInfo(UserModel userModel) {
 
         if (viperClient != null) {
-            viperClient.saveOtherUserInfo(userModel.getName(), userModel.getImage(), userModel.getUserId(), context.getPackageName());
+            viperClient.updateUserInfo(userModel.getUserId(), userModel.getName(), userModel.getImage());
         }
     }
 

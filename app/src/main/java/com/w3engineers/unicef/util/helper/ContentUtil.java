@@ -96,23 +96,27 @@ public class ContentUtil {
         if (file.exists ()) file.delete ();
         try {
 
-            ExifInterface exif = new ExifInterface(imagePath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            try {
+                ExifInterface exif = new ExifInterface(imagePath);
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
-            Matrix matrix = null;
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                matrix = new Matrix();
-                matrix.postRotate(270);
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                matrix = new Matrix();
-                matrix.postRotate(180);
-            }  else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                matrix = new Matrix();
-                matrix.postRotate(90);
-            }
+                Matrix matrix = null;
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    matrix = new Matrix();
+                    matrix.postRotate(270);
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    matrix = new Matrix();
+                    matrix.postRotate(180);
+                }  else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    matrix = new Matrix();
+                    matrix.postRotate(90);
+                }
 
-            if (matrix != null) {
-                ThumbImage = Bitmap.createBitmap(ThumbImage, 0, 0, ThumbImage.getWidth(), ThumbImage.getHeight(), matrix, true);
+                if (matrix != null) {
+                    ThumbImage = Bitmap.createBitmap(ThumbImage, 0, 0, ThumbImage.getWidth(), ThumbImage.getHeight(), matrix, true);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             FileOutputStream out = new FileOutputStream(file);

@@ -324,18 +324,17 @@ public class ContentDataHelper extends RmDataHelper {
                         messageEntity.setContentPath(contentPath);
                     }
 
-                    if (!contentModel.getReceiveSuccessStatus()) {
+                    if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
+                            && !contentModel.getReceiveSuccessStatus()) {
                         // FAILED MAINTAINED
 
-                        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                        } else {
-                            messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                        }
+                        inComingGeneralToFailed(messageEntity);
                     } else {
                         if (contentStatus != -1) {
                             messageEntity.setContentStatus(contentStatus);
+
+                            inComingFailedToGeneral(messageEntity);
+
                         }
                     }
 
@@ -357,6 +356,25 @@ public class ContentDataHelper extends RmDataHelper {
             e.printStackTrace();
         }
     }
+
+    private void inComingFailedToGeneral(MessageEntity messageEntity) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+        } else {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
+        }
+    }
+
+    private void inComingGeneralToFailed(MessageEntity messageEntity) {
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+        } else {
+            messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+        }
+    }
+
 
     // Half done info sync from service ++++++++++++++++++++++++++++++++
 
@@ -491,20 +509,10 @@ public class ContentDataHelper extends RmDataHelper {
 
                 // FAILED MAINTAINED
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
+                    inComingGeneralToFailed(messageEntity);
                 } else {
 
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-                    }
+                    inComingFailedToGeneral(messageEntity);
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS
@@ -538,19 +546,9 @@ public class ContentDataHelper extends RmDataHelper {
 
                 // FAILED MAINTAINED
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
+                    inComingGeneralToFailed(messageEntity);
                 } else {
-                    if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-                    } else {
-                        messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-                    }
+                    inComingFailedToGeneral(messageEntity);
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.SUCCESS) {
@@ -656,12 +654,7 @@ public class ContentDataHelper extends RmDataHelper {
         // FAILED MAINTAINED
         if (messageEntity != null) {
 
-            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
-            } else {
-                messageEntity.setStatus(Constants.MessageStatus.STATUS_READ);
-            }
+            inComingFailedToGeneral(messageEntity);
             MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
         }
     }
@@ -675,6 +668,18 @@ public class ContentDataHelper extends RmDataHelper {
             if (progress > existingProgress) {
                 messageEntity.setContentProgress(progress);
                 messageEntity.setContentId(contentId);
+
+                if (messageEntity.isIncoming() &&
+                        messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
+                    messageEntity.setContentStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING);
+                }
+
+                if (messageEntity.isIncoming()) {
+                    inComingFailedToGeneral(messageEntity);
+                } else {
+                    messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                }
+
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
             }
         }
@@ -897,7 +902,7 @@ public class ContentDataHelper extends RmDataHelper {
 
             HandlerUtil.postBackground(() -> contentReceive(contentModel, true));
 
-            contentReceiveModelHashMap.remove(contentId);
+//            contentReceiveModelHashMap.remove(contentId);
             return;
         }
 

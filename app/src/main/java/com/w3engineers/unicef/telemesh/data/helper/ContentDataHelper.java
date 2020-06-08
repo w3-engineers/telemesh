@@ -119,6 +119,7 @@ public class ContentDataHelper extends RmDataHelper {
                 .setThumbPath(messageEntity.getContentThumbPath())
                 .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
                 .setUserId(userId)
+                .setContentInfo(messageEntity.getContentInfo())
                 .setThumbSend(isThumbAlreadySend);
 
         contentMessageSend(contentModel, !isThumbAlreadySend);
@@ -150,6 +151,7 @@ public class ContentDataHelper extends RmDataHelper {
                     .setThumbPath(messageEntity.getContentThumbPath())
                     .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
                     .setThumbSend(true)
+                    .setContentInfo(messageEntity.getContentInfo())
                     .setUserId(userId)
                     .setResendMessage(true);
             contentMessageSend(contentModel, false);
@@ -171,6 +173,7 @@ public class ContentDataHelper extends RmDataHelper {
                     .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
                     .setThumbSend(true)
                     .setUserId(userId)
+                    .setContentInfo(messageEntity.getContentInfo())
                     .setRequestFromReceiver(true)
                     .setResendMessage(true);
             contentMessageSend(contentModel, false);
@@ -266,7 +269,8 @@ public class ContentDataHelper extends RmDataHelper {
                     MessageEntity newMessageEntity = new MessageEntity()
                             .setMessage("Image")
                             .setContentPath(contentModel.getContentPath())
-                            .setContentThumbPath(contentModel.getThumbPath());
+                            .setContentThumbPath(contentModel.getThumbPath())
+                            .setContentInfo(contentModel.getContentInfo());
 
                     if (contentModel.getReceiveSuccessStatus()) {
                         if (contentStatus != -1) {
@@ -413,7 +417,8 @@ public class ContentDataHelper extends RmDataHelper {
                 MessageEntity newMessageEntity = new MessageEntity()
                         .setMessage("Image")
                         .setContentPath(contentPath)
-                        .setContentThumbPath(thumbPath);
+                        .setContentThumbPath(thumbPath)
+                        .setContentInfo(contentModel.getContentInfo());
 
                 Timber.tag("FileMessage").v(" step 1: %s", contentStatus);
 
@@ -612,6 +617,7 @@ public class ContentDataHelper extends RmDataHelper {
                 .setUserId(messageEntity.getFriendsId())
                 .setMessageId(messageEntity.getMessageId())
                 .setProgress(messageEntity.getContentProgress())
+                .setContentInfo(messageEntity.getContentInfo())
                 .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
         setProgressInfoInMap(contentModel, false);
     }
@@ -622,6 +628,7 @@ public class ContentDataHelper extends RmDataHelper {
                 .setUserId(messageEntity.getFriendsId())
                 .setMessageId(messageEntity.getMessageId())
                 .setProgress(messageEntity.getContentProgress())
+                .setContentInfo(messageEntity.getContentInfo())
                 .setContentDataType(Constants.DataType.CONTENT_MESSAGE)
                 .setMessageType(messageEntity.getMessageType());
         setProgressInfoInMap(contentModel, true);
@@ -756,7 +763,8 @@ public class ContentDataHelper extends RmDataHelper {
                 ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
                         .setMessageId(contentModel.getMessageId())
                         .setContentType(contentModel.getContentDataType())
-                        .setMessageType(contentModel.getMessageType());
+                        .setMessageType(contentModel.getMessageType())
+                        .setMetaInfo(contentModel.getContentInfo());
 
                 ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
                         .setContentId(contentModel.getContentId())
@@ -898,6 +906,7 @@ public class ContentDataHelper extends RmDataHelper {
                     .setContentDataType(contentMetaInfo.getContentType())
                     .setUserId(contentReceiveModel.getUserId())
                     .setReceiveSuccessStatus(contentStatus)
+                    .setContentInfo(contentMetaInfo.getMetaInfo())
                     .setContent(contentMetaInfo.getIsContent());
 
             HandlerUtil.postBackground(() -> contentReceive(contentModel, true));
@@ -980,6 +989,7 @@ public class ContentDataHelper extends RmDataHelper {
                                     .setThumbPath(thumbPath)
                                     .setContentDataType(contentMetaInfo.getContentType())
                                     .setUserId(userAddress)
+                                    .setContentInfo(contentMetaInfo.getMetaInfo())
                                     .setReceiveSuccessStatus(state == Constants.ServiceContentState.SUCCESS)
                                     .setContent(contentMetaInfo.getIsContent());
 
@@ -990,7 +1000,7 @@ public class ContentDataHelper extends RmDataHelper {
                         prepareMessageContentModel(contentMetaInfo.getMessageId(),
                                 contentPath, thumbPath, userAddress, contentId,
                                 contentMetaInfo.getMessageType(), progress,
-                                contentMetaInfo.getContentType(),  state);
+                                contentMetaInfo.getContentType(),  state, contentMetaInfo.getMetaInfo());
                     }
                 } else {
                     prepareMessageContentModel(contentId, progress, state);
@@ -1034,7 +1044,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     private void prepareMessageContentModel(String messageId, String contentPath, String thumbPath,
                                             String userId, String contentId, int messageType,
-                                            int progress, byte contentType, int status) {
+                                            int progress, byte contentType, int status, String contentInfo) {
         ContentModel contentModel = new ContentModel()
                 .setMessageId(messageId)
                 .setMessageType(messageType)
@@ -1044,6 +1054,7 @@ public class ContentDataHelper extends RmDataHelper {
                 .setUserId(userId)
                 .setContentId(contentId)
                 .setProgress(progress)
+                .setContentInfo(contentInfo)
                 .setAckStatus(status);
 
         HandlerUtil.postBackground(() -> receiveIncomingContentInfo(contentModel));

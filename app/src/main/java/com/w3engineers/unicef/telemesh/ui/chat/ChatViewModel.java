@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -22,8 +23,10 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.util.helper.ContentGsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
+import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -130,24 +133,52 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     public void sendContentMessage(String userId, Uri uri) {
         getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
-                .getRealPathFromURI(uri))
+                .getFilePathFromUri(uri))
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(imagePath ->{
-                    sendContentMessage(userId, imagePath);
+                .subscribe(contentPath ->{
+                    startContentMessageProcess(userId, contentPath);
                 }, throwable -> {
                     Timber.tag("FileMessage").e(throwable);
                 }));
     }
 
-    public void sendContentMessage(String userId, String path) {
+    private void startContentMessageProcess(String userId, String contentPath) {
+        if (ContentUtil.getInstance().isTypeImage(contentPath)) {
+            compressImageContentMessage(userId, contentPath);
+        } else {
+            sendContentMessage(userId, contentPath);
+        }
+    }
+
+    private void compressImageContentMessage(String userId, String contentPath) {
         getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
-                .getThumbnailFromImagePath(path))
+                .compressImage(contentPath))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(compressedImagePath ->{
+                    sendContentMessage(userId, compressedImagePath);
+                }, throwable -> {
+                    Timber.tag("FileMessage").e(throwable);
+                }));
+    }
+
+    private void sendContentMessage(String userId, String path) {
+        getCompositeDisposable().add(getThumbnailPath(path)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(thumbPath -> {
                     prepareContentMessage(userId, path, thumbPath);
                 }, throwable -> {
                     Timber.tag("FileMessage").e(throwable);
                 }));
+    }
+
+    private Single<String> getThumbnailPath(String originalPath) {
+        if (ContentUtil.getInstance().isTypeImage(originalPath)) {
+            return Single.just(ContentUtil.getInstance().getThumbnailFromImagePath(originalPath));
+        } else if (ContentUtil.getInstance().isTypeVideo(originalPath)) {
+            return Single.just(ContentUtil.getInstance().getThumbnailFromVideoPath(originalPath));
+        } else {
+            return Single.just(ContentUtil.getInstance().getThumbnailFromImagePath(originalPath));
+        }
     }
 
     public void resendContentMessage(MessageEntity messageEntity) {
@@ -161,12 +192,21 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     private void prepareContentMessage(String userId, String path, String thumbPath) {
         MessageEntity messageEntity = new MessageEntity()
-                .setMessage("Image")
+                .setMessage(ContentUtil.getInstance().getContentMessageBody(path))
                 .setContentPath(path)
                 .setContentThumbPath(thumbPath);
 
+        if (ContentUtil.getInstance().isTypeVideo(path)) {
+            long videoDuration = ContentUtil.getInstance().getMediaDuration(path);
+            ContentInfo contentInfo = new ContentInfo();
+            contentInfo.setDuration(videoDuration);
+
+            String contentInfoText = ContentGsonBuilder.getInstance().getContentInfoJson(contentInfo);
+            messageEntity.setContentInfo(contentInfoText);
+        }
+
         ChatEntity chatEntity = prepareChatEntityForText(userId, messageEntity,
-                Constants.MessageType.IMAGE_MESSAGE);
+                ContentUtil.getInstance().getContentMessageType(path));
 
         messageInsertionProcess(chatEntity);
     }

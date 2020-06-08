@@ -544,7 +544,8 @@ public abstract class ViperUtil {
             ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
                     .setMessageId(contentModel.getMessageId())
                     .setMessageType(contentModel.getMessageType())
-                    .setIsContent(contentModel.isContent());
+                    .setIsContent(contentModel.isContent())
+                    .setMetaInfo(contentModel.getContentInfo());
             String contentPath;
 
             if (contentModel.isThumbSend()) {

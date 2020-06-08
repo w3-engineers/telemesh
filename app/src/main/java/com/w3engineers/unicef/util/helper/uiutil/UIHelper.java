@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,7 +21,10 @@ import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.util.helper.ContentGsonBuilder;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
+import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 import java.util.Calendar;
 
@@ -65,6 +69,20 @@ public class UIHelper {
             statusId = R.mipmap.ic_alert;
         }
         Glide.with(App.getContext()).load(statusId).into(imageView);
+    }
+
+    @BindingAdapter("textDurationResource")
+    public static void setDuration(TextView textView, String contentInfoText) {
+        if (TextUtils.isEmpty(contentInfoText))
+            return;
+
+        ContentInfo contentInfo = ContentGsonBuilder.getInstance().getContentInfoObj(contentInfoText);
+        if (contentInfo != null) {
+            String duration = ContentUtil.getMediaTime(contentInfo.getDuration()) + "";
+            if (!TextUtils.isEmpty(duration)) {
+                textView.setText(duration);
+            }
+        }
     }
 
     public static void setImageInGlide(ImageView imageView, String imagePath) {

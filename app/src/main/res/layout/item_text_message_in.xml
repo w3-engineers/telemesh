@@ -7,6 +7,10 @@
         <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
 
         <variable
+            name="avatarIndex"
+            type="Integer" />
+
+        <variable
             name="textMessage"
             type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
     </data>
@@ -21,6 +25,7 @@
             android:id="@+id/image_profile"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
+            app:imageResource="@{avatarIndex}"
             app:civ_circle_background_color="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/text_view_message"
             app:layout_constraintStart_toStartOf="parent"

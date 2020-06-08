@@ -15,11 +15,15 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -43,6 +47,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import com.zhihu.matisse.Matisse;
@@ -289,7 +294,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 //            case R.id.shimmerUploadingImage:
                 MessageEntity messageEntity = (MessageEntity) view.getTag(R.id.image_view_message);
                 if (messageEntity != null) {
-                    viewImage(view, messageEntity);
+                    viewContent(view, messageEntity);
                 }
                 break;
 
@@ -460,7 +465,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private long shortAnimationDuration = 300;
     private boolean isExpandCancel = false;
 
-    private void viewImage(View messageImage, MessageEntity messageEntity) {
+    private void viewContent(View messageImage, MessageEntity messageEntity) {
         if (messageEntity.isIncoming()) {
             if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
                     && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
@@ -474,18 +479,47 @@ public class ChatActivity extends TelemeshBaseActivity {
             }
         }
 
-        String imagePath = messageEntity.getContentPath();
-        if (TextUtils.isEmpty(imagePath)) {
+        String contentPath = messageEntity.getContentPath();
+        if (TextUtils.isEmpty(contentPath)) {
             Toaster.showShort("Error message");
             return;
         }
 
-        if (!(new File(imagePath).exists())) {
+        if (!(new File(contentPath).exists())) {
             Toaster.showShort("File not found");
             return;
         }
 
-        zoomImageFromThumb(messageImage, imagePath);
+        if (ContentUtil.getInstance().isTypeImage(contentPath)) {
+            zoomImageFromThumb(messageImage, contentPath);
+        } else if (ContentUtil.getInstance().isTypeVideo(contentPath)) {
+            openVideo(contentPath);
+        }
+    }
+
+    private void openVideo(String videoPath) {
+        try {
+
+            File destinationFile = new File(videoPath);
+
+            Intent intent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                String packageName = getPackageName() + ".provider";
+                Uri apkUri = FileProvider.getUriForFile(this, packageName, destinationFile);
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(apkUri, "video/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else {
+                Uri apkUri = Uri.fromFile(destinationFile);
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(apkUri, "video/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void zoomImageFromThumb(final View thumbView, String imagePath) {

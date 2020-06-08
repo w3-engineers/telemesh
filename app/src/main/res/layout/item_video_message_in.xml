@@ -86,6 +86,16 @@
             app:layout_constraintEnd_toEndOf="@+id/hover"/>
 
         <ImageView
+            android:id="@+id/play"
+            app:layout_constraintStart_toStartOf="@+id/image_view_message"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_message"
+            app:layout_constraintTop_toTopOf="@+id/image_view_message"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_message"
+            android:layout_width="@dimen/width_40"
+            android:layout_height="@dimen/height_40"
+            android:src="@mipmap/video_play"/>
+
+        <ImageView
             android:id="@+id/view_failed"
             android:layout_width="@dimen/width_50"
             android:layout_height="@dimen/height_50"
@@ -96,6 +106,21 @@
             android:layout_marginBottom="@dimen/margin_10"
             app:layout_constraintBottom_toBottomOf="@+id/hover_view"
             app:layout_constraintStart_toStartOf="@+id/hover_view" />
+
+        <TextView
+            android:id="@+id/view_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"
+            android:textStyle="bold"
+            android:padding="@dimen/padding_5"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:textDurationResource="@{textMessage.contentInfo}"
+            app:layout_constraintBottom_toBottomOf="@+id/hover_view"
+            app:layout_constraintEnd_toEndOf="@+id/hover_view" />
 
         <at.grabner.circleprogress.CircleProgressView
             android:id="@+id/circleView"

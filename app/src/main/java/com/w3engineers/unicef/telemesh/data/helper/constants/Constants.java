@@ -138,12 +138,27 @@ public class Constants {
     }
 
     public interface MessageType {
+        int TYPE_DEFAULT = -1;
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
         int IMAGE_MESSAGE = 102;
+        int VIDEO_MESSAGE = 103;
+        int AUDIO_MESSAGE = 104;
+        int MISC_MESSAGE = 105;
+        int COMPRESS_MESSAGE = 106;
+        int APK_MESSAGE = 107;
         int BROADCAST_IMAGE = 200;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
+    }
+
+    public interface ContentMessageBody {
+        String IMAGE_MESSAGE = "Image";
+        String VIDEO_MESSAGE = "Video";
+        String AUDIO_MESSAGE = "Audio";
+        String MISC_MESSAGE = "File";
+        String COMPRESS_MESSAGE = "File";
+        String APK_MESSAGE = "Apk";
     }
 
     public interface FavouriteStatus {
@@ -271,6 +286,9 @@ public class Constants {
 
         int IMG_INCOMING = 21;
         int IMG_OUTGOING = 22;
+
+        int VID_INCOMING = 31;
+        int VID_OUTGOING = 32;
     }
 
     public interface ServiceContentState {

@@ -22,6 +22,8 @@ import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageOutBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemTextMessageOutBinding;
+import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageInBinding;
+import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageOutBinding;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import at.grabner.circleprogress.CircleProgressView;
@@ -68,6 +70,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                         return Constants.ViewHolderType.TEXT_INCOMING;
                     case Constants.MessageType.IMAGE_MESSAGE:
                         return Constants.ViewHolderType.IMG_INCOMING;
+                    case Constants.MessageType.VIDEO_MESSAGE:
+                        return Constants.ViewHolderType.VID_INCOMING;
                 }
             } else {
                 switch (chatEntity.getMessageType()) {
@@ -75,6 +79,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                         return Constants.ViewHolderType.TEXT_OUTGOING;
                     case Constants.MessageType.IMAGE_MESSAGE:
                         return Constants.ViewHolderType.IMG_OUTGOING;
+                    case Constants.MessageType.VIDEO_MESSAGE:
+                        return Constants.ViewHolderType.VID_OUTGOING;
                 }
             }
         }
@@ -99,6 +105,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         } else if (viewType == Constants.ViewHolderType.IMG_OUTGOING) {
             ItemImageMessageOutBinding itemImageMessageOutBinding = ItemImageMessageOutBinding.inflate(inflater, viewGroup, false);
             return new ImageMessageOutHolder(itemImageMessageOutBinding);
+        } else if (viewType == Constants.ViewHolderType.VID_INCOMING) {
+            ItemVideoMessageInBinding itemVideoMessageInBinding = ItemVideoMessageInBinding.inflate(inflater, viewGroup, false);
+            return new VideoMessageInHolder(itemVideoMessageInBinding);
+        } else if (viewType == Constants.ViewHolderType.VID_OUTGOING) {
+            ItemVideoMessageOutBinding itemVideoMessageOutBinding = ItemVideoMessageOutBinding.inflate(inflater, viewGroup, false);
+            return new VideoMessageOutHolder(itemVideoMessageOutBinding);
         } else {
             ItemMessageSeparatorBinding itemMessageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
             return new SeparatorViewHolder(itemMessageSeparatorBinding);
@@ -114,7 +126,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         } else {
             baseViewHolder.clearView();
         }
-
     }
 
     void addAvatarIndex(int index) {
@@ -139,16 +150,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         public TextMessageInHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageInBinding) viewDataBinding;
-            ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.white));
-
-            binding.imageProfile.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(avatarIndex));
-
         }
 
         @Override
         protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
+            binding.setAvatarIndex(avatarIndex);
+            ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
+                    ContextCompat.getColor(mContext, R.color.white));
         }
 
         @Override
@@ -161,8 +170,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         public TextMessageOutHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemTextMessageOutBinding) viewDataBinding;
-           /* ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
-                    ContextCompat.getColor(mContext, R.color.white));*/
         }
 
         @Override
@@ -181,12 +188,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         public ImageMessageInHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemImageMessageInBinding) viewDataBinding;
-            binding.imageProfile.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(avatarIndex));
         }
 
         @Override
         protected void bindView(@NonNull MessageEntity messageEntity) {
             binding.setTextMessage(messageEntity);
+            binding.setAvatarIndex(avatarIndex);
 
             incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
             incomingLoadingEffect(binding.circleView, messageEntity);
@@ -224,6 +231,90 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         public ImageMessageOutHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
             binding = (ItemImageMessageOutBinding) viewDataBinding;
+        }
+
+        @Override
+        protected void bindView(@NonNull MessageEntity messageEntity) {
+            binding.setTextMessage(messageEntity);
+            binding.setChatViewModel(chatViewModel);
+
+            outgoingLoadingEffect(binding.circleView, messageEntity);
+
+            binding.viewFailed.setVisibility(View.GONE);
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
+                binding.viewFailed.setVisibility(View.VISIBLE);
+            } else {
+                binding.viewFailed.setVisibility(View.GONE);
+            }
+
+            binding.imageViewMessage.setTag(R.id.image_view_message, messageEntity);
+            binding.imageViewMessage.setOnClickListener(clickListener);
+
+            binding.hover.setTag(R.id.image_view_message, messageEntity);
+            binding.hover.setOnClickListener(clickListener);
+
+            binding.hoverView.setTag(R.id.image_view_message, messageEntity);
+            binding.hoverView.setOnClickListener(clickListener);
+
+            binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
+            binding.viewFailed.setOnClickListener(clickListener);
+
+            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+        }
+
+        @Override
+        protected void clearView() { binding.imageViewMessage.invalidate(); }
+    }
+
+    private class VideoMessageInHolder extends GenericViewHolder {
+        private ItemVideoMessageInBinding binding;
+
+        public VideoMessageInHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+            binding = (ItemVideoMessageInBinding) viewDataBinding;
+        }
+
+        @Override
+        protected void bindView(@NonNull MessageEntity messageEntity) {
+            binding.setTextMessage(messageEntity);
+            binding.setAvatarIndex(avatarIndex);
+
+            incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
+            incomingLoadingEffect(binding.circleView, messageEntity);
+
+            binding.viewFailed.setVisibility(View.GONE);
+            if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                    || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
+                binding.viewFailed.setVisibility(View.VISIBLE);
+            } else {
+                binding.viewFailed.setVisibility(View.GONE);
+            }
+
+            binding.imageViewMessage.setTag(R.id.image_view_message, messageEntity);
+            binding.imageViewMessage.setOnClickListener(clickListener);
+
+            binding.hover.setTag(R.id.image_view_message, messageEntity);
+            binding.hover.setOnClickListener(clickListener);
+
+            binding.hoverView.setTag(R.id.image_view_message, messageEntity);
+            binding.hoverView.setOnClickListener(clickListener);
+
+            binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
+            binding.viewFailed.setOnClickListener(clickListener);
+
+            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+        }
+
+        @Override
+        protected void clearView() { binding.imageViewMessage.invalidate(); }
+    }
+
+    private class VideoMessageOutHolder extends GenericViewHolder {
+        private ItemVideoMessageOutBinding binding;
+
+        public VideoMessageOutHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+            binding = (ItemVideoMessageOutBinding) viewDataBinding;
         }
 
         @Override

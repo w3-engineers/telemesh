@@ -59,11 +59,11 @@
             android:layout_height="@dimen/height_50"
             android:src="@mipmap/error_failed"
             android:visibility="gone"
-            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:padding="@dimen/padding_5"
             app:layout_constraintBottom_toBottomOf="@+id/hover_view"
-            app:layout_constraintStart_toStartOf="@+id/hover_view" />
+            app:layout_constraintEnd_toEndOf="@+id/hover_view" />
 
         <at.grabner.circleprogress.CircleProgressView
             android:id="@+id/circleView"

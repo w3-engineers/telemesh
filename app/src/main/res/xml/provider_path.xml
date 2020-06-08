@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+
+    <cache-path
+        name="my_cache"
+        path="." />
+    <cache-path
+        name="cache"
+        path="." />
+    <external-cache-path
+        name="external_cache"
+        path="." />
+    <files-path
+        name="files"
+        path="." />
+
+    <external-path
+        name="external_files"
+        path="." />
+    <external-files-path
+        name="external-files-path"
+        path="." />
+
+    <files-path
+        name="my_images"
+        path="IMAGES/" />
+    <files-path
+        name="my_videos"
+        path="VIDEOS/" />
+    <files-path
+        name="my_audios"
+        path="AUDIOS/" />
+    <files-path
+        name="my_files"
+        path="Download/" />
+
+    <cache-path
+        name="my_images"
+        path="images/" />
+
+    <external-path name="my_images" path="." />
+
+</paths>

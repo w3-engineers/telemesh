@@ -1,19 +1,24 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.google.android.gms.common.util.IOUtils;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -61,7 +66,7 @@ public class ContentUtil {
                 }
                 else{
                     cursor.close();
-                    File tempImageFile = prepareFile();
+                    File tempImageFile = prepareFile("");
                     if (tempImageFile == null)
                         return null;
                     tempImageFile.deleteOnExit();
@@ -86,6 +91,136 @@ public class ContentUtil {
                 cursor.close();
             }
         }
+    }
+
+    public String getFilePathFromUri(Uri uri) {
+        String selection = null;
+        String[] selectionArgs = null;
+        Context context = TeleMeshApplication.getContext();
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                if(cursor != null){
+                    int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                    if(column_index != -1){
+                        if (cursor.moveToFirst()) {
+                            String path = cursor.getString(column_index);
+                            cursor.close();
+                            return path;
+                        }
+                    }
+                    else{
+                        cursor.close();
+                        File tempImageFile = prepareFile("");
+                        tempImageFile.deleteOnExit();
+                        try(OutputStream outputStream = new FileOutputStream(tempImageFile)){
+                            InputStream imageInputStream = context.getContentResolver().openInputStream(uri);
+                            if(imageInputStream != null){
+                                IOUtils.copyStream(imageInputStream, outputStream);
+                                imageInputStream.close();
+                                outputStream.close();
+                                return tempImageFile.getAbsolutePath();
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public String compressImage(String filePath) {
+        try {
+            Context context = TeleMeshApplication.getContext();
+            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
+
+            return SiliCompressor.with(context).compress(filePath, contentFolder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
+    public String compressVideo(String filePath) {
+        try {
+            Context context = TeleMeshApplication.getContext();
+            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
+
+            return SiliCompressor.with(context).compressVideo(filePath, contentFolder.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
+    public String getThumbnailFromVideoPath(String videoPath) {
+        Bitmap thumbImage = ThumbnailUtils.createVideoThumbnail(videoPath,
+                MediaStore.Images.Thumbnails.MINI_KIND);
+
+        File file = prepareThumbFile();
+        if (file.exists ()) file.delete ();
+        try {
+
+            FileOutputStream out = new FileOutputStream(file);
+            thumbImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file.getAbsolutePath();
     }
 
     public String getThumbnailFromImagePath(String imagePath) {
@@ -140,10 +275,12 @@ public class ContentUtil {
 
             File copyFile;
 
+            String extension = originalFilePath.substring(originalFilePath.lastIndexOf("."));
+
             if (isThumb) {
                 copyFile = prepareThumbFile();
             } else {
-                copyFile = prepareFile();
+                copyFile = prepareFile(extension);
             }
 
             if (copyFile != null) {
@@ -154,43 +291,40 @@ public class ContentUtil {
         return null;
     }
 
-    private File prepareFile() {
+    private File prepareFile(String extension) {
         try {
-            Context context = TeleMeshApplication.getContext();
-            File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                    context.getString(R.string.app_name));
-            if (!file.exists()) {
-                file.mkdirs();
+            if (TextUtils.isEmpty(extension)) {
+                extension = ".jpg";
             }
+            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
 
-            File contentFolder = new File(file.getAbsolutePath() + "/" +
-                    Constants.DirectoryName.ContentFolder);
-            if (!contentFolder.exists()) {
-                contentFolder.mkdirs();
-            }
-
-            String fileName = "IMG_" + System.currentTimeMillis();
-            return File.createTempFile(fileName, ".jpg", contentFolder);
+            String fileName = "CONTENT_" + System.currentTimeMillis();
+            return File.createTempFile(fileName, extension, contentFolder);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    private File getFileDirectory(String folderName) {
+        Context context = TeleMeshApplication.getContext();
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                context.getString(R.string.app_name));
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        File contentFolder = new File(file.getAbsolutePath() + "/" +
+                folderName);
+        if (!contentFolder.exists()) {
+            contentFolder.mkdirs();
+        }
+        return contentFolder;
+    }
+
     private File prepareThumbFile() {
         try {
-            Context context = TeleMeshApplication.getContext();
-            File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                    context.getString(R.string.app_name));
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
-            File contentFolder = new File(file.getAbsolutePath() + "/" +
-                    Constants.DirectoryName.ContentThumbFolder);
-            if (!contentFolder.exists()) {
-                contentFolder.mkdirs();
-            }
+            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentThumbFolder);
 
             String fileName = "IMG_THUMB_" + System.currentTimeMillis();
             return File.createTempFile(fileName, ".jpg", contentFolder);
@@ -198,5 +332,114 @@ public class ContentUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public long getMediaDuration(String path) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(TeleMeshApplication.getContext(), Uri.parse(path));
+        int duration = mediaPlayer != null ? mediaPlayer.getDuration() : 0;
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        if (duration == 0) {
+            return 0;
+        }
+        return duration;
+    }
+
+    public static String getMediaTime(long milliseconds) {
+        String TimerString = "";
+        String secondsString;
+
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+        if (hours > 0) {
+            TimerString = hours + ":";
+        }
+        if (seconds < 10) {
+            secondsString = "0" + seconds;
+        } else {
+            secondsString = "" + seconds;
+        }
+
+        TimerString = TimerString + minutes + ":" + secondsString;
+
+        return TimerString;
+    }
+
+    public String getContentMessageBody(String path) {
+        if (TextUtils.isEmpty(path))
+            return "";
+
+        if (isTypeImage(path)) {
+            return Constants.ContentMessageBody.IMAGE_MESSAGE;
+        } else if (isTypeVideo(path)) {
+            return Constants.ContentMessageBody.VIDEO_MESSAGE;
+        } else if (isTypeAudio(path)) {
+            return Constants.ContentMessageBody.AUDIO_MESSAGE;
+        } else if (isTypeMisc(path)) {
+            return Constants.ContentMessageBody.MISC_MESSAGE;
+        } else if (isTypeCompress(path)) {
+            return Constants.ContentMessageBody.COMPRESS_MESSAGE;
+        } else if (isTypeApp(path)) {
+            return Constants.ContentMessageBody.APK_MESSAGE;
+        }
+
+        return "";
+    }
+
+    public int getContentMessageType(String path) {
+        if (TextUtils.isEmpty(path))
+            return Constants.MessageType.TYPE_DEFAULT;
+
+        if (isTypeImage(path)) {
+            return Constants.MessageType.IMAGE_MESSAGE;
+        } else if (isTypeVideo(path)) {
+            return Constants.MessageType.VIDEO_MESSAGE;
+        } else if (isTypeAudio(path)) {
+            return Constants.MessageType.AUDIO_MESSAGE;
+        } else if (isTypeMisc(path)) {
+            return Constants.MessageType.MISC_MESSAGE;
+        } else if (isTypeCompress(path)) {
+            return Constants.MessageType.COMPRESS_MESSAGE;
+        } else if (isTypeApp(path)) {
+            return Constants.MessageType.APK_MESSAGE;
+        }
+
+        return Constants.MessageType.TYPE_DEFAULT;
+    }
+
+    public boolean isTypeImage(String path) {
+        return path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
+                || path.endsWith(".gif") || path.endsWith(".bmp");
+    }
+
+    public boolean isTypeVideo(String path) {
+        return path.endsWith(".3gp") || path.endsWith(".mpg") || path.endsWith(".mpeg")
+                || path.endsWith(".mpe") || path.endsWith(".mp4") || path.endsWith(".avi")
+                || path.endsWith(".mov") || path.endsWith(".mkv") || path.endsWith(".webm");
+    }
+
+    public boolean isTypeAudio(String path) {
+        return path.endsWith(".m4p") || path.endsWith(".3gpp") || path.endsWith(".mp3")
+                || path.endsWith(".wma") || path.endsWith(".wav") || path.endsWith(".ogg")
+                || path.endsWith(".m4a") || path.endsWith(".aac") || path.endsWith(".ota")
+                || path.endsWith(".imy") || path.endsWith(".rtx") || path.endsWith(".rtttl")
+                || path.endsWith(".xmf") || path.endsWith(".mid") || path.endsWith(".mxmf")
+                || path.endsWith(".amr") || path.endsWith(".flac");
+    }
+
+    public boolean isTypeMisc(String path) {
+        return path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".rtf")
+                || path.endsWith(".pdf") || path.endsWith(".ppt") || path.endsWith(".pptx")
+                || path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".txt");
+    }
+
+    public boolean isTypeCompress(String path) {
+        return path.endsWith(".zip") || path.endsWith(".rar");
+    }
+
+    public boolean isTypeApp(String url) {
+        return url.endsWith(".apk");
     }
 }

@@ -6,13 +6,9 @@ import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,15 +17,12 @@ import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-import com.w3engineers.unicef.util.helper.ContentGsonBuilder;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 import java.util.Calendar;
-
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
 
 /*
  * ============================================================================
@@ -76,7 +69,7 @@ public class UIHelper {
         if (TextUtils.isEmpty(contentInfoText))
             return;
 
-        ContentInfo contentInfo = ContentGsonBuilder.getInstance().getContentInfoObj(contentInfoText);
+        ContentInfo contentInfo = GsonBuilder.getInstance().getContentInfoObj(contentInfoText);
         if (contentInfo != null) {
             String duration = ContentUtil.getMediaTime(contentInfo.getDuration()) + "";
             if (!TextUtils.isEmpty(duration)) {

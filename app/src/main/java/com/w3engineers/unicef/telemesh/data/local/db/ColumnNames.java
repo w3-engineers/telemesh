@@ -23,6 +23,13 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_REGISTRATION_TIME = "registration_time";
     String COLUMN_USER_CONFIG_VERSION = "config_version";
 
+    //Users table
+    String COLUMN_GROUP_NAME = "group_name";
+    String COLUMN_GROUP_AVATAR = "avatar";
+    String COLUMN_GROUP_ID = "group_id";
+    String COLUMN_GROUP_CREATION_TIME = "group_creation_time";
+    String COLUMN_GROUP_ADMIN_INFO = "group_admin_info";
+    String COLUMN_GROUP_MEMBERS_INFO = "group_members_info";
 
     /**
      * Message table column

@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -23,7 +22,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
-import com.w3engineers.unicef.util.helper.ContentGsonBuilder;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
@@ -204,7 +203,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             ContentInfo contentInfo = new ContentInfo();
             contentInfo.setDuration(videoDuration);
 
-            String contentInfoText = ContentGsonBuilder.getInstance().getContentInfoJson(contentInfo);
+            String contentInfoText = GsonBuilder.getInstance().getContentInfoJson(contentInfo);
             messageEntity.setContentInfo(contentInfoText);
         }
 

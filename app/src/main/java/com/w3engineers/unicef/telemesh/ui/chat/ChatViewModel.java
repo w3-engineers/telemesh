@@ -144,6 +144,9 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     private void startContentMessageProcess(String userId, String contentPath) {
         if (ContentUtil.getInstance().isTypeImage(contentPath)) {
+            // Without compress
+//            sendContentMessage(userId, contentPath);
+            // With compress
             compressImageContentMessage(userId, contentPath);
         } else {
             sendContentMessage(userId, contentPath);

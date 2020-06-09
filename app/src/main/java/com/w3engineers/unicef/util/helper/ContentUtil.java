@@ -411,13 +411,24 @@ public class ContentUtil {
 
     public boolean isTypeImage(String path) {
         return path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
-                || path.endsWith(".gif") || path.endsWith(".bmp");
+                || path.endsWith(".pjpeg") || path.endsWith(".rgb") || path.endsWith(".webp")
+                || path.endsWith(".gif") || path.endsWith(".bmp") || path.endsWith(".ico");
     }
 
     public boolean isTypeVideo(String path) {
         return path.endsWith(".3gp") || path.endsWith(".mpg") || path.endsWith(".mpeg")
                 || path.endsWith(".mpe") || path.endsWith(".mp4") || path.endsWith(".avi")
-                || path.endsWith(".mov") || path.endsWith(".mkv") || path.endsWith(".webm");
+                || path.endsWith(".wmv") || path.endsWith(".ogv") || path.endsWith(".flv")
+                || path.endsWith(".3g2") || path.endsWith(".uvh") || path.endsWith(".uvm")
+                || path.endsWith(".uvu") || path.endsWith(".uvp") || path.endsWith(".uvs")
+                || path.endsWith(".uvv") || path.endsWith(".fvt") || path.endsWith(".f4v")
+                || path.endsWith(".fli") || path.endsWith(".h261") || path.endsWith(".h263")
+                || path.endsWith(".h264") || path.endsWith(".jpm") || path.endsWith(".jpgv")
+                || path.endsWith(".m4v") || path.endsWith(".asf") || path.endsWith(".pyv")
+                || path.endsWith(".wm") || path.endsWith(".wmx") || path.endsWith(".wvx")
+                || path.endsWith(".mj2") || path.endsWith(".mxu") || path.endsWith(".movie")
+                || path.endsWith(".mov") || path.endsWith(".mkv") || path.endsWith(".webm")
+                || path.endsWith(".qt") || path.endsWith(".viv");
     }
 
     public boolean isTypeAudio(String path) {

@@ -91,7 +91,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     @NonNull
     public static HashMap<String, DataModel> rmDataMap = new HashMap<>();
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public RmDataHelper() {
         dataSource = Source.getDbSource();
@@ -289,6 +289,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         rightMeshDataSource.checkUserIsConnected(liveUserId);
                     }
                 }, Throwable::printStackTrace));
+
+        GroupDataHelper.getInstance().groupDataObserver();
     }
 
     /**
@@ -674,7 +676,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private String getMyMeshId() {
+    protected String getMyMeshId() {
         return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
     }
 

@@ -18,7 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
         indices = {@Index(value = {ColumnNames.COLUMN_GROUP_ID}, unique = true)})
 public class GroupEntity extends DbBaseEntity {
 
-    @Nullable
+    @NonNull
     @ColumnInfo(name = ColumnNames.COLUMN_GROUP_ID)
     public String groupId;
 
@@ -85,7 +85,7 @@ public class GroupEntity extends DbBaseEntity {
         }
     };
 
-    @Nullable
+    @NonNull
     public String getGroupId() {
         return groupId;
     }

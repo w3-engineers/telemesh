@@ -29,6 +29,9 @@ public class GroupEntity extends DbBaseEntity {
     @ColumnInfo(name = ColumnNames.COLUMN_GROUP_AVATAR)
     public int avatarIndex;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_GROUP_OWN_STATUS)
+    public int ownStatus;
+
     @ColumnInfo(name = ColumnNames.COLUMN_GROUP_CREATION_TIME)
     public long groupCreationTime;
 
@@ -54,6 +57,7 @@ public class GroupEntity extends DbBaseEntity {
         dest.writeLong(this.groupCreationTime);
         dest.writeString(this.adminInfo);
         dest.writeString(this.membersInfo);
+        dest.writeInt(this.ownStatus);
         dest.writeInt(this.hasUnreadMessage);
     }
 
@@ -65,6 +69,7 @@ public class GroupEntity extends DbBaseEntity {
         this.groupCreationTime = in.readLong();
         this.adminInfo = in.readString();
         this.membersInfo = in.readString();
+        this.ownStatus = in.readInt();
         this.hasUnreadMessage = in.readInt();
     }
 
@@ -79,4 +84,80 @@ public class GroupEntity extends DbBaseEntity {
             return new GroupEntity[size];
         }
     };
+
+    @Nullable
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public GroupEntity setGroupId(@Nullable String groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    @Nullable
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public GroupEntity setGroupName(@Nullable String groupName) {
+        this.groupName = groupName;
+        return this;
+    }
+
+    public int getAvatarIndex() {
+        return avatarIndex;
+    }
+
+    public GroupEntity setAvatarIndex(int avatarIndex) {
+        this.avatarIndex = avatarIndex;
+        return this;
+    }
+
+    public int getOwnStatus() {
+        return ownStatus;
+    }
+
+    public GroupEntity setOwnStatus(int ownStatus) {
+        this.ownStatus = ownStatus;
+        return this;
+    }
+
+    public long getGroupCreationTime() {
+        return groupCreationTime;
+    }
+
+    public GroupEntity setGroupCreationTime(long groupCreationTime) {
+        this.groupCreationTime = groupCreationTime;
+        return this;
+    }
+
+    @Nullable
+    public String getAdminInfo() {
+        return adminInfo;
+    }
+
+    public GroupEntity setAdminInfo(@Nullable String adminInfo) {
+        this.adminInfo = adminInfo;
+        return this;
+    }
+
+    @Nullable
+    public String getMembersInfo() {
+        return membersInfo;
+    }
+
+    public GroupEntity setMembersInfo(@Nullable String membersInfo) {
+        this.membersInfo = membersInfo;
+        return this;
+    }
+
+    public int getHasUnreadMessage() {
+        return hasUnreadMessage;
+    }
+
+    public GroupEntity setHasUnreadMessage(int hasUnreadMessage) {
+        this.hasUnreadMessage = hasUnreadMessage;
+        return this;
+    }
 }

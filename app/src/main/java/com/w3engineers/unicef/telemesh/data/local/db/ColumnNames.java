@@ -27,6 +27,7 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_GROUP_NAME = "group_name";
     String COLUMN_GROUP_AVATAR = "avatar";
     String COLUMN_GROUP_ID = "group_id";
+    String COLUMN_GROUP_OWN_STATUS = "group_own_status";
     String COLUMN_GROUP_CREATION_TIME = "group_creation_time";
     String COLUMN_GROUP_ADMIN_INFO = "group_admin_info";
     String COLUMN_GROUP_MEMBERS_INFO = "group_members_info";

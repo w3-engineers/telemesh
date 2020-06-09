@@ -76,8 +76,5 @@ app/src/main/assets/point_guide.json
 app/src/main/cpp/native-lib.cpp
 app/src/main/cpp/CMakeLists.txt
 
-app/src/main/jniLibs/armeabi-v7a/libnative-lib.so
-app/src/main/jniLibs/x86/libnative-lib.so
-
 #output.json
 app/debug/output.json

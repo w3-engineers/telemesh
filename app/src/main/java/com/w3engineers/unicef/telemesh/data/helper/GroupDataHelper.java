@@ -2,6 +2,8 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+
 public class GroupDataHelper extends RmDataHelper {
 
     private static GroupDataHelper groupDataHelper = new GroupDataHelper();
@@ -19,6 +21,8 @@ public class GroupDataHelper extends RmDataHelper {
 
     }
 
+    private void sendGroupCreationInfo(GroupEntity groupEntity) {
 
+    }
 
 }

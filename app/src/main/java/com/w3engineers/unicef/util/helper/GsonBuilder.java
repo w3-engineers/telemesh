@@ -3,6 +3,7 @@ package com.w3engineers.unicef.util.helper;
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 public class GsonBuilder {
@@ -36,5 +37,13 @@ public class GsonBuilder {
 
     public GroupAdminInfo getGroupAdminInfoObj(String adminInfoText) {
         return gson.fromJson(adminInfoText, GroupAdminInfo.class);
+    }
+
+    public String getGroupModelJson(GroupModel groupModel) {
+        return gson.toJson(groupModel);
+    }
+
+    public GroupModel getGroupModelObj(String groupModelText) {
+        return gson.fromJson(groupModelText, GroupModel.class);
     }
 }

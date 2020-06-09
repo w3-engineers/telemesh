@@ -160,4 +160,20 @@ public class GroupEntity extends DbBaseEntity {
         this.hasUnreadMessage = hasUnreadMessage;
         return this;
     }
+
+    public GroupModel toGroupModel() {
+        return new GroupModel().setGroupName(getGroupName())
+                .setGroupId(getGroupId())
+                .setAvatar(getAvatarIndex())
+                .setAdminInfo(getAdminInfo())
+                .setMemberInfo(getMembersInfo());
+    }
+
+    public GroupEntity toGroupEntity(GroupModel groupModel) {
+        return setGroupId(groupModel.getGroupId())
+                .setGroupName(groupModel.getGroupName())
+                .setAvatarIndex(groupModel.getAvatar())
+                .setMembersInfo(groupModel.getMemberInfo())
+                .setAdminInfo(groupModel.getAdminInfo());
+    }
 }

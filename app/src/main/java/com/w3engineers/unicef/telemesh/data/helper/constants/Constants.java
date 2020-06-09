@@ -296,4 +296,16 @@ public class Constants {
         int PROGRESS = 1;
         int SUCCESS = 2;
     }
+
+    public interface GroupUserOwnState {
+        int GROUP_CREATE = 1;
+        int GROUP_PENDING = 2;
+        int GROUP_JOINED = 3;
+    }
+
+    public interface GroupUserEvent {
+        int EVENT_PENDING = 1;
+        int EVENT_JOINED = 2;
+        int EVENT_LEAVE = 3;
+    }
 }

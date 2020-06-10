@@ -14,6 +14,7 @@
     <string name="title_personal_fragment">ব্যক্তিগত যোগাযোগ</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_settings_fragment">সেটিংস</string>
+    <string name="title_conversation_fragment">কথোপকথন</string>
 
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">বেরিয়ে যাওয়ার জন্য ব্যাক বাটন আবার চাপুন</string>
@@ -26,6 +27,7 @@
     <string name="app_version">সংস্করণ:</string>
 
     <string name="no_contact_available">কাছাকাছি কাউকে পাওয়া যায়নি</string>
+    <string name="no_conversation">কোনো কথোপকথন হয়নি</string>
     <string name="no_message_available">কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view

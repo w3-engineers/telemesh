@@ -13,9 +13,12 @@ import android.util.Log;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +66,13 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         userDataSource = UserDataSource.getInstance();
     }
 
-
     public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
     }
 
-    /*public void setSearchText(String searchText) {
-        this.searchableText = searchText;
-    }*/
+    public void openGroupMessage(@NonNull GroupEntity userEntity) {
+//        openUserMessage.postValue(userEntity);
+    }
 
     public int getUserAvatarByIndex(int imageIndex) {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);
@@ -116,8 +118,6 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                     }
 
                 }, Throwable::printStackTrace));
-
-        //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
     public void setUserMessageWithFavouriteData(List<UserEntity> userEntities) {
@@ -158,8 +158,6 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                     }
 
                 }, Throwable::printStackTrace));
-
-        //  favoriteEntityList = userDataSource.getFavouriteUsers();
     }
 
 

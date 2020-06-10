@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
-import android.arch.paging.PagedList;
 import android.arch.paging.PagedListAdapter;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
@@ -17,9 +16,6 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemDiscoveredBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapter.GenericViewHolder> {
 

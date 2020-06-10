@@ -43,6 +43,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner_holder" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/group_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_holder" />
+
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/empty_layout"

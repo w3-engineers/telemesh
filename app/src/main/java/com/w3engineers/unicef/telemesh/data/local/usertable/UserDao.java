@@ -142,6 +142,11 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")
     abstract int updateFavouriteStatus(String meshId, int favouriteStatus);
 
+    @NonNull
+    @Query("SELECT " + ColumnNames.COLUMN_USER_NAME + " FROM " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_MESH_ID + " IN (:ids)")
+    abstract Flowable<List<String>> getGroupMembersName(String ids);
+
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE "

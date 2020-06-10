@@ -182,4 +182,8 @@ public class UserDataSource {
     public int updateBroadcastUserConfigVersion(int versionCode, String userId) {
         return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
     }
+
+    public Flowable<List<String>> getGroupMembersName(String ids) {
+        return mUserDao.getGroupMembersName(ids);
+    }
 }

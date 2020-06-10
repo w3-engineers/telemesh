@@ -171,48 +171,6 @@ public class DiscoverFragment extends BaseFragment {
         }
     }
 
-/*    private void initSearchView(SearchView searchView) {
-
-        getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
-                .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
-                .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged()*//*.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())*//*
-                .subscribeWith(searchContacts()));
-
-    }*/
-
-/*    public DisposableObserver<String> searchContacts() {
-        return new DisposableObserver<String>() {
-
-            boolean isSearchStart = false;
-
-            @Override
-            public void onNext(String string) {
-
-                if (!isSearchStart) {
-                    //searchLoading();
-                    isSearchStart = true;
-                }
-
-                if (discoverViewModel != null) {
-                    Timber.d("Search query: %s", string);
-                    discoverViewModel.startSearch(string, discoverViewModel.getCurrentUserList());
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Timber.e("onError: %s", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                Timber.e("onError: Complete");
-            }
-        };
-    }*/
-
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
             Timber.tag("SearchIssue").d("Discover page Search query: %s", query);
@@ -228,34 +186,6 @@ public class DiscoverFragment extends BaseFragment {
             getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
             mSearchItem = menu.findItem(R.id.action_search);
-            // Resolve search option visibility problem when contact is appeared from starting point
- /*           searchViewControl(userEntityList);
-
-            mSearchView = mSearchItem.getActionView().findViewById(R.id.search_view);
-
-
-            // mSearchView = (SearchView) mSearchItem.getActionView();
-            mSearchView.setQueryHint(getString(R.string.search));
-
-            mSearchView.setIconified(true);
-
-            ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-            searchClose.setImageResource(R.mipmap.ic_cross_grey);
-
-            // Getting EditText view from search view and change cursor color
-            AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            try {
-                // Fixed value for getting cursor drawable from Edit text or search view
-                Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
-                mCursorDrawableRes.setAccessible(true);
-                mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            searchCollapseListener(mSearchItem, mSearchView);
-
-            initSearchView(mSearchView);*/
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -270,23 +200,6 @@ public class DiscoverFragment extends BaseFragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                searchView.setBackgroundColor(getResources().getColor(R.color.white));
-                searchView.setMaxWidth(Integer.MAX_VALUE);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                //searchView.setBackgroundColor(-1);
-                return true;
-            }
-        });
-    }*/
 
     private void searchViewControl(List<UserEntity> userEntities) {
         boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
@@ -325,34 +238,13 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
-
-        /*if (getActivity() != null) {
-            ((MainActivity) getActivity()).enableLoading();
-        }*/
     }
 
     public void enableEmpty() {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
-
-        /*if (getActivity() != null) {
-            ((MainActivity) getActivity()).disableLoading();
-        }*/
     }
-
-    /*protected void searchLoading() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
-                fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
-                fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
-
-                // ((MainActivity) getActivity()).enableLoading();
-            });
-        }
-    }*/
 
     // General API's and initialization area
     private void init() {
@@ -362,9 +254,6 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
-    //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
         meshContactAdapter = new DiscoverAdapter(discoverViewModel);
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);

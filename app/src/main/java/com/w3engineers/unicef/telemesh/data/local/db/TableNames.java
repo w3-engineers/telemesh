@@ -17,5 +17,5 @@ public interface TableNames {
     String APP_SHARE_COUNT = "AppShareCount";
     String MESH_LOG = "MeshLog";
     String FEEDBACK = "Feedback";
-    String GROUP = "group";
+    String GROUP = "group_table";
 }

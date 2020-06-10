@@ -16,7 +16,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/empty_layout"
@@ -114,6 +114,17 @@
             android:visibility="visible"
             app:emptyImage="@{R.drawable.img_contact_empty}"
             app:emptyMessage="@{@string/no_contact_available}" />-->
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/button_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_baseline_chat"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

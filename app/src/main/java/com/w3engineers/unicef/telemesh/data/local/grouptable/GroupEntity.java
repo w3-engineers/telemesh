@@ -18,7 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
         indices = {@Index(value = {ColumnNames.COLUMN_GROUP_ID}, unique = true)})
 public class GroupEntity extends DbBaseEntity {
 
-    @Nullable
+    @NonNull
     @ColumnInfo(name = ColumnNames.COLUMN_GROUP_ID)
     public String groupId;
 
@@ -85,7 +85,7 @@ public class GroupEntity extends DbBaseEntity {
         }
     };
 
-    @Nullable
+    @NonNull
     public String getGroupId() {
         return groupId;
     }
@@ -159,5 +159,21 @@ public class GroupEntity extends DbBaseEntity {
     public GroupEntity setHasUnreadMessage(int hasUnreadMessage) {
         this.hasUnreadMessage = hasUnreadMessage;
         return this;
+    }
+
+    public GroupModel toGroupModel() {
+        return new GroupModel().setGroupName(getGroupName())
+                .setGroupId(getGroupId())
+                .setAvatar(getAvatarIndex())
+                .setAdminInfo(getAdminInfo())
+                .setMemberInfo(getMembersInfo());
+    }
+
+    public GroupEntity toGroupEntity(GroupModel groupModel) {
+        return setGroupId(groupModel.getGroupId())
+                .setGroupName(groupModel.getGroupName())
+                .setAvatarIndex(groupModel.getAvatar())
+                .setMembersInfo(groupModel.getMemberInfo())
+                .setAdminInfo(groupModel.getAdminInfo());
     }
 }

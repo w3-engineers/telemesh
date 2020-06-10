@@ -135,6 +135,10 @@ public class Constants {
         byte CONTENT_MESSAGE = 0x16;
         byte REQ_CONTENT_MESSAGE = 0x17;
         byte SUCCESS_CONTENT_MESSAGE = 0x18;
+
+        byte EVENT_GROUP_CREATION = 0x19;
+        byte EVENT_GROUP_JOIN = 0x20;
+        byte EVENT_GROUP_LEAVE = 0x21;
     }
 
     public interface MessageType {
@@ -295,5 +299,18 @@ public class Constants {
         int FAILED = 0;
         int PROGRESS = 1;
         int SUCCESS = 2;
+    }
+
+    public interface GroupUserOwnState {
+        int GROUP_CREATE = 1;
+        int GROUP_PENDING = 2;
+        int GROUP_JOINED = 3;
+        int GROUP_LEAVE = 4;
+    }
+
+    public interface GroupUserEvent {
+        int EVENT_PENDING = 1;
+        int EVENT_JOINED = 2;
+        int EVENT_LEAVE = 3;
     }
 }

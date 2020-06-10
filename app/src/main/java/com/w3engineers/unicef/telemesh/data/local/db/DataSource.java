@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 import io.reactivex.Flowable;
@@ -41,6 +42,11 @@ public interface DataSource {
     void setMeshInitiated(boolean isInitiated);
 
     Flowable<Boolean> getMeshInitiated();
+
+    void setGroupUserEvent(GroupEntity groupEntity);
+
+    @Nullable
+    Flowable<GroupEntity> getGroupUserEvent();
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     //void setMyMode(int mode);

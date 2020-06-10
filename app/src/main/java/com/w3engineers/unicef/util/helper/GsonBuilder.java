@@ -1,9 +1,15 @@
 package com.w3engineers.unicef.util.helper;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GsonBuilder {
 
@@ -22,19 +28,29 @@ public class GsonBuilder {
         return gson.fromJson(contentInfoText, ContentInfo.class);
     }
 
-    public String getGroupMemberInfoJson(GroupMembersInfo groupMembersInfo) {
-        return gson.toJson(groupMembersInfo);
+    public String getGroupMemberInfoJson(ArrayList<GroupMembersInfo> groupMembersInfos) {
+        return gson.toJson(groupMembersInfos);
     }
 
-    public GroupMembersInfo getGroupMemberInfoObj(String memberInfoText) {
-        return gson.fromJson(memberInfoText, GroupMembersInfo.class);
+    public ArrayList<GroupMembersInfo> getGroupMemberInfoObj(String memberInfoText) {
+        Type founderListType = new TypeToken<ArrayList<GroupMembersInfo>>(){}.getType();
+        return gson.fromJson(memberInfoText, founderListType);
     }
 
-    public String getGroupAdminInfoJson(GroupAdminInfo groupAdminInfo) {
-        return gson.toJson(groupAdminInfo);
+    public String getGroupAdminInfoJson(ArrayList<GroupAdminInfo> groupAdminInfos) {
+        return gson.toJson(groupAdminInfos);
     }
 
-    public GroupAdminInfo getGroupAdminInfoObj(String adminInfoText) {
-        return gson.fromJson(adminInfoText, GroupAdminInfo.class);
+    public ArrayList<GroupAdminInfo> getGroupAdminInfoObj(String adminInfoText) {
+        Type founderListType = new TypeToken<ArrayList<GroupAdminInfo>>(){}.getType();
+        return gson.fromJson(adminInfoText, founderListType);
+    }
+
+    public String getGroupModelJson(GroupModel groupModel) {
+        return gson.toJson(groupModel);
+    }
+
+    public GroupModel getGroupModelObj(String groupModelText) {
+        return gson.fromJson(groupModelText, GroupModel.class);
     }
 }

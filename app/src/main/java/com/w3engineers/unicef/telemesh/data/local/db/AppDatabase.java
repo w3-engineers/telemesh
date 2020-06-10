@@ -23,6 +23,8 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDao;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDao;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
@@ -49,7 +51,8 @@ import java.util.List;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class, AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class},
+        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class,
+        AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class, GroupEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
@@ -74,6 +77,8 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract AppShareCountDao appShareCountDao();
 
     public abstract FeedbackDao feedbackDao();
+
+    public abstract GroupDao groupDao();
 
     @NonNull
     public abstract MeshLogDao meshLogDao();

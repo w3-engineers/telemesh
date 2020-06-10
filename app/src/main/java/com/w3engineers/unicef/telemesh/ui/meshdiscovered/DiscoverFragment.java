@@ -22,16 +22,12 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
-import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class DiscoverFragment extends BaseFragment {
@@ -111,6 +107,9 @@ public class DiscoverFragment extends BaseFragment {
                 if (userEntities != null && userEntities.size() > 0) {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
+
+                    fragmentDiscoverBinding.buttonMessage.show();
+
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
@@ -201,6 +200,31 @@ public class DiscoverFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.button_message) {
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        }
+    }
+
+    /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                searchView.setBackgroundColor(getResources().getColor(R.color.white));
+                searchView.setMaxWidth(Integer.MAX_VALUE);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                //searchView.setBackgroundColor(-1);
+                return true;
+            }
+        });
+    }*/
+
     private void searchViewControl(List<UserEntity> userEntities) {
         boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
         mSearchItem.setVisible(isSearchVisible);
@@ -221,7 +245,9 @@ public class DiscoverFragment extends BaseFragment {
                     try {
                         enableEmpty();
                         setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
-                    } catch (Exception e) { e.printStackTrace(); }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             };
 
@@ -244,16 +270,29 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
+
+
+        fragmentDiscoverBinding.buttonMessage.hide();
+
+
+        /*if (getActivity() != null) {
+            ((MainActivity) getActivity()).disableLoading();
+        }*/
     }
 
     // General API's and initialization area
     private void init() {
+
+        setClickListener(fragmentDiscoverBinding.buttonMessage);
         initAllText();
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
         meshContactAdapter = new DiscoverAdapter(discoverViewModel);
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);

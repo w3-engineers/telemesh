@@ -50,10 +50,12 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
-        <activity android:name=".ui.termofuse.TermsOfUseActivity"></activity>
+        <activity android:name=".ui.groupcreate.GroupCreateActivity"></activity>
+        <activity android:name=".ui.termofuse.TermsOfUseActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.editprofile.EditProfileActivity" />
-        <!--<activity android:name=".ui.importwallet.ImportWalletActivity" />
+        <!--
+<activity android:name=".ui.importwallet.ImportWalletActivity" />
         <activity
             android:name=".ui.security.SecurityActivity"
             android:screenOrientation="portrait"
@@ -64,7 +66,8 @@
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".ui.profilechoice.ProfileChoiceActivity"
-            android:theme="@style/NoActionBarTheme" />-->
+            android:theme="@style/NoActionBarTheme" />
+        -->
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize">
@@ -72,7 +75,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
         <activity
             android:name=".ui.createuser.CreateUserActivity"
             android:theme="@style/AppTheme"
@@ -94,11 +96,6 @@
         <activity
             android:name=".ui.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
-        <!--<service
-            android:name="com.w3engineers.unicef.util.helper.BulletinJobService"
-            android:label="Word service"
-            android:permission="android.permission.BIND_JOB_SERVICE" />-->
     </application>
 
 </manifest>

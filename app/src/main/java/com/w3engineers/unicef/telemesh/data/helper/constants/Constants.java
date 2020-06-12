@@ -171,8 +171,9 @@ public class Constants {
     }
 
     public interface SpinnerItem {
-        int FAVOURITE = 0;
-        int ALL = 1;
+        int GROUP = 0;
+        int FAVOURITE = 1;
+        int ALL = 2;
     }
 
     public interface UserStatus {

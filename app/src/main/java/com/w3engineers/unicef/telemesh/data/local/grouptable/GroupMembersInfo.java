@@ -8,15 +8,17 @@ public class GroupMembersInfo {
         return i;
     }
 
-    public void setMemberId(String userId) {
+    public GroupMembersInfo setMemberId(String userId) {
         this.i = userId;
+        return this;
     }
 
     public int getMemberStatus() {
         return s;
     }
 
-    public void setMemberStatus(int status) {
+    public GroupMembersInfo setMemberStatus(int status) {
         this.s = status;
+        return this;
     }
 }

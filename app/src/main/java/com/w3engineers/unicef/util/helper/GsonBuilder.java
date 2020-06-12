@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 import java.lang.reflect.Type;
@@ -52,5 +53,13 @@ public class GsonBuilder {
 
     public GroupModel getGroupModelObj(String groupModelText) {
         return gson.fromJson(groupModelText, GroupModel.class);
+    }
+
+    public String getGroupNameModelJson(GroupNameModel groupNameModel) {
+        return gson.toJson(groupNameModel);
+    }
+
+    public GroupNameModel getGroupNameModelObj(String groupNameModelText) {
+        return gson.fromJson(groupNameModelText, GroupNameModel.class);
     }
 }

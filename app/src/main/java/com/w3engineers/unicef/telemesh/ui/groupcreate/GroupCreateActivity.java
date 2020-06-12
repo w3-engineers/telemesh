@@ -69,6 +69,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity {
                 //Todo We have to open user selector view
                 break;
             case R.id.button_go:
+                List<UserEntity> userEntities = mGroupCreateAdapter.getCurrentList();
+                mViewModel.createGroup(userEntities);
                 //Todo we have to go create a group and goto chat page
                 break;
         }
@@ -127,7 +129,7 @@ public class GroupCreateActivity extends TelemeshBaseActivity {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getDiscoveViewModel(getApplication());
+                return (T) ServiceLocator.getInstance().getGroupCreateViewModel(getApplication());
             }
         }).get(GroupCreateViewModel.class);
     }

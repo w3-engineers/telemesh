@@ -25,10 +25,12 @@ import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.conversations.ConversationAdapter;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -63,6 +65,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private boolean isLoaded = false;
     private SearchView mSearchView;
 
+    private PagedList<GroupEntity> groupList;
     private PagedList<UserEntity> favouriteList;
     private PagedList<UserEntity> msgWithFavList;
     private int currentSelection = 0;
@@ -99,30 +102,29 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private void userDataOperation() {
         if (meshContactViewModel != null) {
 
+            initDataObserver();
+
+            meshContactViewModel.startGroupObserver();
             meshContactViewModel.startFavouriteObserver();
             meshContactViewModel.startAllMessagedWithFavouriteObserver();
-
-            initDataObserver();
 
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
                 setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
                 if (userEntities != null && userEntities.size() > 0) {
-                    fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-
+                    controlEmpty(false);
                     getAdapter().submitList(userEntities);
 
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-                        enableLoading();
+                        controlEmpty(false);
 
                         isLoaded = true;
                         Runnable runnable = () -> {
                             fragmentMeshcontactBinding.tvMessage.setText("No User Found");
-                            enableEmpty();
+                            controlEmpty(true);
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
                     }
@@ -132,7 +134,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             meshContactViewModel.backUserEntity.observe(this, userEntities -> {
                 userEntityList = userEntities;
             });
-
         }
     }
 
@@ -203,21 +204,27 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
-    private void enableLoading() {
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+    private void controlList(boolean isGroup) {
+        fragmentMeshcontactBinding.contactRecyclerView.setVisibility(View.GONE);
+        fragmentMeshcontactBinding.groupRecyclerView.setVisibility(View.GONE);
+        if (isGroup) {
+            fragmentMeshcontactBinding.groupRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            fragmentMeshcontactBinding.contactRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void enableEmpty() {
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+    private void controlEmpty(boolean isShow) {
+        if (isShow) {
+            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+        } else {
+            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+        }
     }
 
     private void initSpinner() {
-
-        // Spinner click listener
         fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
 
-
-        // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
         categories.add("Group");
         categories.add("Favourite");
@@ -230,18 +237,28 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     // General API's and initialization area
     private void init() {
-        initAllText();
+        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
         meshContactViewModel = getViewModel();
 
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
         fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);
+
+        fragmentMeshcontactBinding.groupRecyclerView.setItemAnimator(null);
+        fragmentMeshcontactBinding.groupRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ConversationAdapter conversationAdapter = new ConversationAdapter(meshContactViewModel);
+        fragmentMeshcontactBinding.groupRecyclerView.setAdapter(conversationAdapter);
     }
 
     private MeshContactAdapter getAdapter() {
         return (MeshContactAdapter) fragmentMeshcontactBinding
                 .contactRecyclerView.getAdapter();
+    }
+
+    private ConversationAdapter getConversationAdapter() {
+        return (ConversationAdapter) fragmentMeshcontactBinding
+                .groupRecyclerView.getAdapter();
     }
 
     private MeshContactViewModel getViewModel() {
@@ -254,16 +271,17 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }).get(MeshContactViewModel.class);
     }
 
-    private void initAllText() {
-        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currentSelection = position;
-        if (position == Constants.SpinnerItem.FAVOURITE) {
+        if (position == Constants.SpinnerItem.GROUP) {
+            controlList(true);
+            updateGroupAdapterData(groupList);
+        } else if (position == Constants.SpinnerItem.FAVOURITE) {
+            controlList(false);
             updateAdapterByData(favouriteList);
         } else if (position == Constants.SpinnerItem.ALL) {
+            controlList(false);
             updateAdapterByData(msgWithFavList);
         }
     }
@@ -275,6 +293,14 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void initDataObserver() {
         if (meshContactViewModel != null) {
+
+            meshContactViewModel.groupEntityList.observe(this, groupEntities -> {
+                if (groupEntities != null) {
+                    groupList = groupEntities;
+                    updateGroupAdapterData(groupEntities);
+                }
+            });
+
             meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                 if (userEntities != null) {
                     isLoaded = false;
@@ -304,18 +330,24 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }
     }
 
+    private void updateGroupAdapterData(PagedList<GroupEntity> groupEntities) {
+        getConversationAdapter().submitList(groupEntities);
+
+        if (groupEntities != null && groupEntities.size() > 0) {
+            controlEmpty(false);
+        } else {
+            controlEmpty(true);
+        }
+    }
+
     private void updateAdapterByData(PagedList<UserEntity> userEntities) {
         getAdapter().submitList(userEntities);
         userEntityList = userEntities;
 
         if (userEntityList != null && userEntityList.size() > 0) {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-            }
+            controlEmpty(false);
         } else {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.GONE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-            }
+            controlEmpty(true);
         }
     }
 }

@@ -8,10 +8,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Flowable;
+
 public class GroupDataSource {
     private GroupDao mGroupDao;
     private ExecutorService mIoExecutor;
     private static GroupDataSource groupDataSource = new GroupDataSource();
+
+    public static GroupDataSource getInstance() {
+        return groupDataSource;
+    }
 
     private GroupDataSource() {
         mGroupDao = AppDatabase.getInstance().groupDao();
@@ -29,8 +35,20 @@ public class GroupDataSource {
         }
     }
 
-    public List<GroupEntity> getGroupList() {
+    public Flowable<List<GroupEntity>> getGroupList() {
         return mGroupDao.getAllGroups();
+    }
+
+    public Flowable<GroupEntity> getLastCreatedGroup() {
+        return mGroupDao.getLastCreatedGroup();
+    }
+
+    public GroupEntity getGroupById(String groupId) {
+        return mGroupDao.getGroupById(groupId);
+    }
+
+    public List<GroupEntity> getGroupByUserId(String userId) {
+        return mGroupDao.getGroupByUserId(userId);
     }
 
     public boolean joinAGroup(String groupId, String userId) {

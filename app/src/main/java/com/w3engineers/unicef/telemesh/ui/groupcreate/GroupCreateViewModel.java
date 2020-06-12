@@ -8,12 +8,22 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
+import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,14 +31,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
+    private GroupDataSource groupDataSource;
+
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
@@ -47,6 +61,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
     public GroupCreateViewModel(@NonNull Application application) {
         super(application);
         this.userDataSource = UserDataSource.getInstance();
+        groupDataSource = GroupDataSource.getInstance();
         userList = new ArrayList<>();
         tempNearByList = new ArrayList<>();
     }
@@ -67,6 +82,73 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
     MutableLiveData<UserEntity> openUserMessage() {
         return openUserMessage;
+    }
+
+    void createGroup(List<UserEntity> userEntities) {
+        if (userEntities == null || userEntities.isEmpty())
+            return;
+
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
+        ArrayList<GroupAdminInfo> groupAdminInfos = new ArrayList<>();
+        ArrayList<GroupUserNameMap> groupUserNameMaps = new ArrayList<>();
+
+        String myUserId = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.MY_USER_ID);
+
+        String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.USER_NAME);
+
+        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo();
+        myGroupMembersInfo.setMemberId(myUserId);
+        myGroupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
+        groupMembersInfos.add(myGroupMembersInfo);
+
+        for (UserEntity userEntity : userEntities) {
+
+            GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
+                    .setUserId(userEntity.getMeshId())
+                    .setUserName(userEntity.getUserName());
+            groupUserNameMaps.add(groupUserNameMap);
+
+            GroupMembersInfo groupMembersInfo = new GroupMembersInfo();
+            groupMembersInfo.setMemberId(userEntity.getMeshId());
+            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
+            groupMembersInfos.add(groupMembersInfo);
+        }
+
+        GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
+                .setUserId(myUserId)
+                .setUserName(myUserName);
+        groupUserNameMaps.add(groupUserNameMap);
+
+        GroupAdminInfo groupAdminInfo = new GroupAdminInfo();
+        groupAdminInfo.setAdminId(myUserId);
+        groupAdminInfo.setAdminStatus(true);
+
+        groupAdminInfos.add(groupAdminInfo);
+
+        String groupId = UUID.randomUUID().toString();
+
+        GroupNameModel groupNameModel = new GroupNameModel()
+                .setGroupName(CommonUtil.getGroupName(groupUserNameMaps))
+                .setGroupUserMap(groupUserNameMaps);
+
+        GroupEntity groupEntity = new GroupEntity()
+                .setGroupId(groupId)
+                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
+                .setOwnStatus(Constants.GroupUserOwnState.GROUP_CREATE)
+                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos))
+                .setAdminInfo(gsonBuilder.getGroupAdminInfoJson(groupAdminInfos))
+                .setGroupCreationTime(System.currentTimeMillis());
+
+        getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+
+                }));
     }
 
 

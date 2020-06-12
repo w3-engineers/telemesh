@@ -361,6 +361,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
                 ContentDataHelper.getInstance().contentMessageSuccessResponse(rawData);
                 break;
+
+            case Constants.DataType.EVENT_GROUP_CREATION:
+            case Constants.DataType.EVENT_GROUP_JOIN:
+            case Constants.DataType.EVENT_GROUP_LEAVE:
+                GroupDataHelper.getInstance().groupDataReceive(dataType, userId, rawData, isNewMessage);
+                break;
         }
     }
 
@@ -1033,6 +1039,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
 
             UserDataSource.getInstance().insertOrUpdateData(userEntity);
+
+            GroupDataHelper.getInstance().updateGroupUserInfo(userEntity);
         }
     }
 

@@ -2,13 +2,15 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Build;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
+
+import java.util.List;
 
 public class CommonUtil {
 
@@ -89,5 +91,17 @@ public class CommonUtil {
 
     public static void dismissDialog(){
         DialogUtil.dismissDialog();
+    }
+
+    public static String getGroupName(List<GroupUserNameMap> userNameMaps) {
+        String groupName = "";
+        for (GroupUserNameMap groupUserNameMap : userNameMaps) {
+            if (TextUtils.isEmpty(groupName)) {
+                groupName = groupUserNameMap.getUserName();
+            } else {
+                groupName = groupName + ", " + groupUserNameMap.getUserName();
+            }
+        }
+        return groupName;
     }
 }

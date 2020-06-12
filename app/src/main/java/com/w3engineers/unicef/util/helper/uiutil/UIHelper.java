@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
@@ -136,6 +137,16 @@ public class UIHelper {
             default:
                 v.setTypeface(null, Typeface.NORMAL);
                 break;
+        }
+    }
+
+    @BindingAdapter("groupName")
+    public static void setGroupName(TextView v, String groupName) {
+        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupName);
+        if (groupNameModel == null) {
+            v.setText(groupName);
+        } else {
+            v.setText(groupNameModel.getGroupName());
         }
     }
 

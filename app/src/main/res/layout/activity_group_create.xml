@@ -50,7 +50,7 @@
             android:layout_marginBottom="@dimen/margin_16"
             android:backgroundTint="@color/colorPrimary"
             android:src="@drawable/ic_baseline_arrow_forward"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

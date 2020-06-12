@@ -22,7 +22,7 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
     @NonNull
     public MeshContactViewModel meshContactViewModel;
 
-    ConversationAdapter(@NonNull MeshContactViewModel discoverViewModel) {
+    public ConversationAdapter(@NonNull MeshContactViewModel discoverViewModel) {
         super(DIFF_CALLBACK);
         this.meshContactViewModel = discoverViewModel;
     }

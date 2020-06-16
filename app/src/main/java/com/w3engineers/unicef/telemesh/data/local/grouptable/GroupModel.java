@@ -4,6 +4,7 @@ public class GroupModel {
 
     String n, i, ai, mi;
     int a;
+    long c;
 
     public String getGroupName() {
         return n;
@@ -47,6 +48,15 @@ public class GroupModel {
 
     public GroupModel setAvatar(int avatar) {
         this.a = avatar;
+        return this;
+    }
+
+    public long getCreatedTime() {
+        return c;
+    }
+
+    public GroupModel setCreatedTime(long createdTime) {
+        this.c = createdTime;
         return this;
     }
 }

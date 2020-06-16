@@ -56,6 +56,14 @@ public class MessageEntity extends ChatEntity {
     public String contentInfo;
 
     @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_GROUP_ID)
+    public String groupId;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_PLACE)
+    public boolean messagePlaceGroup;
+
+    @Nullable
     public String getMessage() {
         return message;
     }
@@ -121,6 +129,25 @@ public class MessageEntity extends ChatEntity {
 
     public MessageEntity setContentStatus(int contentStatus) {
         this.contentStatus = contentStatus;
+        return this;
+    }
+
+    @Nullable
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public MessageEntity setGroupId(@Nullable String groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    public boolean getMessagePlace() {
+        return messagePlaceGroup;
+    }
+
+    public MessageEntity setMessagePlace(boolean messagePlaceGroup) {
+        this.messagePlaceGroup = messagePlaceGroup;
         return this;
     }
 

@@ -8,16 +8,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.databinding.ItemGroupInfoBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageOutBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
@@ -65,25 +66,32 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     public int getItemViewType(int position) {
         ChatEntity chatEntity = getItem(position);
 
-        if (chatEntity != null && chatEntity.getMessageType() != Constants.MessageType.DATE_MESSAGE) {
+        if (chatEntity != null) {
 
-            if (chatEntity.isIncoming()) {
-                switch (chatEntity.getMessageType()) {
-                    case Constants.MessageType.TEXT_MESSAGE:
-                        return Constants.ViewHolderType.TEXT_INCOMING;
-                    case Constants.MessageType.IMAGE_MESSAGE:
-                        return Constants.ViewHolderType.IMG_INCOMING;
-                    case Constants.MessageType.VIDEO_MESSAGE:
-                        return Constants.ViewHolderType.VID_INCOMING;
+            if (chatEntity.getMessageType() != Constants.MessageType.DATE_MESSAGE) {
+
+                if (chatEntity.getMessageType() == Constants.MessageType.GROUP_INFO) {
+                    return Constants.ViewHolderType.GROUP_INFO;
                 }
-            } else {
-                switch (chatEntity.getMessageType()) {
-                    case Constants.MessageType.TEXT_MESSAGE:
-                        return Constants.ViewHolderType.TEXT_OUTGOING;
-                    case Constants.MessageType.IMAGE_MESSAGE:
-                        return Constants.ViewHolderType.IMG_OUTGOING;
-                    case Constants.MessageType.VIDEO_MESSAGE:
-                        return Constants.ViewHolderType.VID_OUTGOING;
+
+                if (chatEntity.isIncoming()) {
+                    switch (chatEntity.getMessageType()) {
+                        case Constants.MessageType.TEXT_MESSAGE:
+                            return Constants.ViewHolderType.TEXT_INCOMING;
+                        case Constants.MessageType.IMAGE_MESSAGE:
+                            return Constants.ViewHolderType.IMG_INCOMING;
+                        case Constants.MessageType.VIDEO_MESSAGE:
+                            return Constants.ViewHolderType.VID_INCOMING;
+                    }
+                } else {
+                    switch (chatEntity.getMessageType()) {
+                        case Constants.MessageType.TEXT_MESSAGE:
+                            return Constants.ViewHolderType.TEXT_OUTGOING;
+                        case Constants.MessageType.IMAGE_MESSAGE:
+                            return Constants.ViewHolderType.IMG_OUTGOING;
+                        case Constants.MessageType.VIDEO_MESSAGE:
+                            return Constants.ViewHolderType.VID_OUTGOING;
+                    }
                 }
             }
         }
@@ -114,6 +122,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         } else if (viewType == Constants.ViewHolderType.VID_OUTGOING) {
             ItemVideoMessageOutBinding itemVideoMessageOutBinding = ItemVideoMessageOutBinding.inflate(inflater, viewGroup, false);
             return new VideoMessageOutHolder(itemVideoMessageOutBinding);
+        } else if (viewType == Constants.ViewHolderType.GROUP_INFO) {
+            ItemGroupInfoBinding itemGroupInfoBinding = ItemGroupInfoBinding.inflate(inflater, viewGroup, false);
+            return new GroupInfoViewHolder(itemGroupInfoBinding);
         } else {
             ItemMessageSeparatorBinding itemMessageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
             return new SeparatorViewHolder(itemMessageSeparatorBinding);
@@ -150,6 +161,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             return userEntity.getAvatarIndex();
         }
         return Constants.DEFAULT_AVATAR;
+    }
+
+    private String getUserName(MessageEntity messageEntity) {
+        UserEntity userEntity = userMap.get(messageEntity.friendsId);
+        if (userEntity != null) {
+            return userEntity.getUserName();
+        }
+        return "";
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -461,5 +480,27 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         @Override
         protected void clearView() { binding.textViewSeprator.invalidate(); }
+    }
+
+    private class GroupInfoViewHolder extends GenericViewHolder {
+        private ItemGroupInfoBinding binding;
+
+        protected GroupInfoViewHolder(ViewDataBinding viewDataBinding) {
+            super(viewDataBinding.getRoot());
+            binding = (ItemGroupInfoBinding) viewDataBinding;
+        }
+
+        @Override
+        protected void bindView(@NonNull MessageEntity item) {
+            String name = getUserName(item);
+            binding.groupInfo.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(name)) {
+                binding.groupInfo.setVisibility(View.VISIBLE);
+                binding.groupInfo.setText(name + " " + item.getMessage());
+            }
+        }
+
+        @Override
+        protected void clearView() { binding.groupInfo.invalidate(); }
     }
 }

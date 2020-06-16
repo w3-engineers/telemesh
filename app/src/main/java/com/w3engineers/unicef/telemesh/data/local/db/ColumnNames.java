@@ -42,6 +42,7 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_MESSAGE_TYPE = "message_type";
     String COLUMN_MESSAGE_TIME = "time";
     String COLUMN_MESSAGE_STATUS = "message_status";
+    String COLUMN_MESSAGE_PLACE = "message_place";
 
     String COLUMN_CONTENT_ID = "content_id";
     String COLUMN_CONTENT_PATH = "content_path";

@@ -117,8 +117,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         mChatViewModel = getViewModel();
         initComponent();
 
-        subscribeForMessages(threadId);
         subscribeForThreadEvent(threadId);
+        subscribeForMessages(threadId);
+        subscribeForFinishEvent();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -253,11 +254,23 @@ public class ChatActivity extends TelemeshBaseActivity {
             }
 
             if (Text.isNotEmpty(userId)) {
-                mChatViewModel.getAllMessage(userId).observe(this, chatEntities -> {
-                    mChatViewModel.prepareDateSpecificChat(chatEntities);
-                });
+                if (isGroup) {
+                    mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
+                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+                    });
+                } else {
+                    mChatViewModel.getAllMessage(userId).observe(this, chatEntities -> {
+                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+                    });
+                }
             }
         }
+    }
+
+    private void subscribeForFinishEvent() {
+        mChatViewModel.getFinishForGroupLeave().observe(this, aBoolean -> {
+            finish();
+        });
     }
 
 
@@ -348,12 +361,11 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.group_join:
-                mChatViewModel.groupAttachmentAction(mGroupEntity, true);
+                mChatViewModel.groupJoinAction(mGroupEntity);
                 break;
 
             case R.id.group_deny:
-                mChatViewModel.groupAttachmentAction(mGroupEntity, false);
-                finish();
+                mChatViewModel.groupLeaveAction(mGroupEntity);
                 break;
         }
     }

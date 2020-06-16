@@ -152,6 +152,7 @@ public class Constants {
         int COMPRESS_MESSAGE = 106;
         int APK_MESSAGE = 107;
         int BROADCAST_IMAGE = 200;
+        int GROUP_INFO = 300;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -163,6 +164,12 @@ public class Constants {
         String MISC_MESSAGE = "File";
         String COMPRESS_MESSAGE = "File";
         String APK_MESSAGE = "Apk";
+    }
+
+    public interface GroupEventMessageBody {
+        String CREATED = "Created this Group";
+        String JOINED = "Joined";
+        String LEAVE = "Left";
     }
 
     public interface FavouriteStatus {
@@ -294,6 +301,8 @@ public class Constants {
 
         int VID_INCOMING = 31;
         int VID_OUTGOING = 32;
+
+        int GROUP_INFO = 33;
     }
 
     public interface ServiceContentState {
@@ -313,5 +322,10 @@ public class Constants {
         int EVENT_PENDING = 1;
         int EVENT_JOINED = 2;
         int EVENT_LEAVE = 3;
+    }
+
+    public interface MessagePlace {
+        boolean MESSAGE_PLACE_GROUP = true;
+        boolean MESSAGE_PLACE_P2P = false;
     }
 }

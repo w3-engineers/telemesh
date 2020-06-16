@@ -75,7 +75,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
 
     private CompositeDisposable compositeDisposable;
-    private  MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
+    private MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
+    private MutableLiveData<Boolean> finishForGroupLeave = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -106,6 +107,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     @NonNull
     public LiveData<List<ChatEntity>> getAllMessage(@NonNull String meshId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllMessages(meshId));
+    }
+
+    @NonNull
+    public LiveData<List<ChatEntity>> getAllGroupMessage(@NonNull String threadId) {
+        return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllGroupMessages(threadId));
     }
 
     /**
@@ -153,10 +159,33 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return userDataSource.getGroupMembers(userList);
     }
 
-    void groupAttachmentAction(GroupEntity groupEntity, boolean isJoin) {
-        groupEntity.setOwnStatus(isJoin ? Constants.GroupUserOwnState.GROUP_JOINED
-                : Constants.GroupUserOwnState.GROUP_LEAVE);
+    void groupJoinAction(GroupEntity groupEntity) {
+        groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_JOINED);
         dataSource.setGroupUserEvent(groupEntity);
+    }
+
+    void groupLeaveAction(GroupEntity groupEntity) {
+        getCompositeDisposable().add(deleteGroupOperation(groupEntity.groupId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+                    groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_LEAVE);
+                    dataSource.setGroupUserEvent(groupEntity);
+                    finishForGroupLeave.postValue(true);
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<Integer> deleteGroupOperation(String groupId) {
+        return Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(groupDataSource.deleteGroupById(groupId));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
     }
 
     /**
@@ -339,6 +368,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
         return mutableChatList;
+    }
+
+    @NonNull
+    public MutableLiveData<Boolean> getFinishForGroupLeave() {
+        return finishForGroupLeave;
     }
 
     /**

@@ -165,6 +165,7 @@ public class GroupEntity extends DbBaseEntity {
         return new GroupModel().setGroupName(getGroupName())
                 .setGroupId(getGroupId())
                 .setAvatar(getAvatarIndex())
+                .setCreatedTime(getGroupCreationTime())
                 .setAdminInfo(getAdminInfo())
                 .setMemberInfo(getMembersInfo());
     }
@@ -174,6 +175,7 @@ public class GroupEntity extends DbBaseEntity {
                 .setGroupName(groupModel.getGroupName())
                 .setAvatarIndex(groupModel.getAvatar())
                 .setMembersInfo(groupModel.getMemberInfo())
-                .setAdminInfo(groupModel.getAdminInfo());
+                .setAdminInfo(groupModel.getAdminInfo())
+                .setGroupCreationTime(groupModel.getCreatedTime());
     }
 }

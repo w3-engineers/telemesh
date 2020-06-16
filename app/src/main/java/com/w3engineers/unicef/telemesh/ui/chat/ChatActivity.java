@@ -390,7 +390,8 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
-        if (chatEntities != null && chatEntities.size() > 0) {
+        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && mGroupEntity != null
+                && mGroupEntity.getOwnStatus() != Constants.GroupUserOwnState.GROUP_JOINED)) {
             if (mViewBinging != null) {
                 mViewBinging.emptyLayout.setVisibility(View.GONE);
             }

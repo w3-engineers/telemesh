@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -40,6 +43,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private View.OnClickListener clickListener;
     private HashMap<String, UserEntity> userMap;
+    private HashMap<String, String> userNameMap;
 
     @NonNull
     public Context mContext;
@@ -52,6 +56,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         super(DIFF_CALLBACK);
         mContext = context;
         userMap = new HashMap<>();
+        userNameMap = new HashMap<>();
+
         this.chatViewModel = chatViewModel;
         this.clickListener = onClickListener;
     }
@@ -70,7 +76,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
             if (chatEntity.getMessageType() != Constants.MessageType.DATE_MESSAGE) {
 
-                if (chatEntity.getMessageType() == Constants.MessageType.GROUP_INFO) {
+                if (chatEntity.getMessageType() == Constants.MessageType.GROUP_CREATE
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_JOIN
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_LEAVE) {
                     return Constants.ViewHolderType.GROUP_INFO;
                 }
 
@@ -150,6 +158,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         notifyDataSetChanged();
     }
 
+    void setUserNameMap(List<GroupUserNameMap> userNameMaps) {
+
+        for (GroupUserNameMap groupUserNameMap : userNameMaps) {
+            userNameMap.put(groupUserNameMap.getUserId(), groupUserNameMap.getUserName());
+        }
+        notifyDataSetChanged();
+    }
+
     void addAvatarIndex(UserEntity userEntity) {
         userMap.put(userEntity.meshId, userEntity);
         notifyDataSetChanged();
@@ -164,11 +180,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private String getUserName(MessageEntity messageEntity) {
-        UserEntity userEntity = userMap.get(messageEntity.friendsId);
-        if (userEntity != null) {
-            return userEntity.getUserName();
-        }
-        return "";
+        return userNameMap.get(messageEntity.friendsId);
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -493,10 +505,27 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity item) {
             String name = getUserName(item);
-            binding.groupInfo.setVisibility(View.GONE);
+            binding.groupInfoBlock.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(name)) {
-                binding.groupInfo.setVisibility(View.VISIBLE);
+                binding.groupInfoBlock.setVisibility(View.VISIBLE);
                 binding.groupInfo.setText(name + " " + item.getMessage());
+
+                int resourceId = -1;
+                switch (item.getMessageType()) {
+                    case Constants.MessageType.GROUP_CREATE:
+                        resourceId = R.mipmap.create_group;
+                        break;
+
+                    case Constants.MessageType.GROUP_JOIN:
+                        resourceId = R.mipmap.user_join;
+                        break;
+
+                    case Constants.MessageType.GROUP_LEAVE:
+                        resourceId = R.mipmap.user_leave;
+                        break;
+                }
+
+                Glide.with(App.getContext()).load(resourceId).into(binding.infoIcon);
             }
         }
 

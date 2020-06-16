@@ -163,7 +163,7 @@ public class GroupDataHelper extends RmDataHelper {
             groupDataSource.insertOrUpdateGroup(groupEntity);
 
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.CREATED,
-                    groupEntity.getGroupCreationTime());
+                    groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -248,7 +248,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.JOINED,
-                    0);
+                    0, Constants.MessageType.GROUP_JOIN);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,7 +306,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.LEAVE,
-                    0);
+                    0, Constants.MessageType.GROUP_LEAVE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -341,7 +341,7 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void setGroupInfo(String userId, String groupId, String message, long time) {
+    private void setGroupInfo(String userId, String groupId, String message, long time, int type) {
         String messageId = UUID.randomUUID().toString();
 
         MessageEntity messageEntity = new MessageEntity()
@@ -356,7 +356,7 @@ public class GroupDataHelper extends RmDataHelper {
         ChatEntity chatEntity = messageEntity
                 .setFriendsId(userId)
                 .setMessageId(messageId)
-                .setMessageType(Constants.MessageType.GROUP_INFO)
+                .setMessageType(type)
                 .setStatus(Constants.MessageStatus.STATUS_READ)
                 .setTime(time)
                 .setIncoming(true);

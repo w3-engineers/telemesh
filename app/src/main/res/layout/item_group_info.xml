@@ -3,11 +3,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/group_info_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_marginTop="@dimen/margin_7"
         android:layout_marginBottom="@dimen/margin_7">
+
+        <ImageView
+            android:id="@+id/info_icon"
+            android:src="@mipmap/create_group"
+            android:layout_width="@dimen/width_25"
+            android:layout_height="@dimen/height_25"
+            android:layout_marginEnd="@dimen/margin_7"/>
 
         <TextView
             android:id="@+id/group_info"
@@ -21,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </layout>
 

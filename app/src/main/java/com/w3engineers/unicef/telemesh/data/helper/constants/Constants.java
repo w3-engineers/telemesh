@@ -152,7 +152,9 @@ public class Constants {
         int COMPRESS_MESSAGE = 106;
         int APK_MESSAGE = 107;
         int BROADCAST_IMAGE = 200;
-        int GROUP_INFO = 300;
+        int GROUP_CREATE = 301;
+        int GROUP_JOIN = 302;
+        int GROUP_LEAVE = 303;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }

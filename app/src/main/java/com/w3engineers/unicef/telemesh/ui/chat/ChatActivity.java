@@ -38,6 +38,7 @@ import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -48,6 +49,7 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import com.zhihu.matisse.Matisse;
@@ -283,6 +285,12 @@ public class ChatActivity extends TelemeshBaseActivity {
                     if (groupEntity != null && mViewBinging != null) {
 
                         setUiComponent();
+                        GroupNameModel groupNameModel = GsonBuilder.getInstance()
+                                .getGroupNameModelObj(groupEntity.getGroupName());
+
+                        if (mChatPagedAdapter != null) {
+                            mChatPagedAdapter.setUserNameMap(groupNameModel.getGroupUserMap());
+                        }
                         processGroupUsersComponent();
                     }
                 });

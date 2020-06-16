@@ -19,7 +19,7 @@ import io.reactivex.Flowable;
 @Dao
 public abstract class GroupDao extends BaseDao<GroupEntity> {
 
-    @Query("SELECT * FROM " + TableNames.GROUP + " ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")
+    @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " IS NOT NULL ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")
     abstract Flowable<List<GroupEntity>> getAllGroups();
 
     @NonNull

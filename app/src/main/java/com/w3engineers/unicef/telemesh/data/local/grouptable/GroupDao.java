@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.support.annotation.NonNull;
@@ -29,6 +30,12 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
     abstract GroupEntity getGroupById(String groupId);
 
+    @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
+    abstract LiveData<GroupEntity> getLiveGroupById(String groupId);
+
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " LIKE :userId")
     abstract List<GroupEntity> getGroupByUserId(String userId);
+
+    @Query("DELETE FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
+    abstract int deleteGroupById(String groupId);
 }

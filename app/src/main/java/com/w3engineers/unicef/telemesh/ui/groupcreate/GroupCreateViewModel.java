@@ -153,7 +153,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
 
     public void startUserObserver() {
-        getCompositeDisposable().add(userDataSource.getAllOnlineUsers()
+        getCompositeDisposable().add(userDataSource.getAllUsersForGroup()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {

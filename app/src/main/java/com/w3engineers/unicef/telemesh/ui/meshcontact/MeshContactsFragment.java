@@ -140,15 +140,25 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private void openUserMessage() {
         if (meshContactViewModel != null) {
             meshContactViewModel.openUserMessage().observe(this, userEntity -> {
-
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
 
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
+                    intent.putExtra(GroupEntity.class.getName(), false);
                     startActivity(intent);
                 }
+            });
 
+            meshContactViewModel.openGroupMessage().observe(this, groupEntity -> {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideSearchBar();
+
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), groupEntity.getGroupId());
+                    intent.putExtra(GroupEntity.class.getName(), true);
+                    startActivity(intent);
+                }
             });
         }
     }

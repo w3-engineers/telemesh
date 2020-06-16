@@ -17,6 +17,7 @@ import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemImageMessageOutBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageSeparatorBinding;
@@ -26,6 +27,9 @@ import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageOutBinding;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
+import java.util.HashMap;
+import java.util.List;
+
 import at.grabner.circleprogress.CircleProgressView;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
@@ -33,8 +37,8 @@ import static com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity
 
 public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPagedAdapterRevised.GenericViewHolder> {
 
-    private int avatarIndex;
     private View.OnClickListener clickListener;
+    private HashMap<String, UserEntity> userMap;
 
     @NonNull
     public Context mContext;
@@ -46,6 +50,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                                    View.OnClickListener onClickListener) {
         super(DIFF_CALLBACK);
         mContext = context;
+        userMap = new HashMap<>();
         this.chatViewModel = chatViewModel;
         this.clickListener = onClickListener;
     }
@@ -54,9 +59,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     @Override
     public int getItemCount() {
         return super.getItemCount();
-
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -128,9 +131,25 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
     }
 
-    void addAvatarIndex(int index) {
-        this.avatarIndex = index;
+    void addAvatarIndex(List<UserEntity> userEntities) {
+
+        for (UserEntity userEntity : userEntities) {
+            userMap.put(userEntity.meshId, userEntity);
+        }
         notifyDataSetChanged();
+    }
+
+    void addAvatarIndex(UserEntity userEntity) {
+        userMap.put(userEntity.meshId, userEntity);
+        notifyDataSetChanged();
+    }
+
+    private int getAvatarIndex(MessageEntity messageEntity) {
+        UserEntity userEntity = userMap.get(messageEntity.friendsId);
+        if (userEntity != null) {
+            return userEntity.getAvatarIndex();
+        }
+        return Constants.DEFAULT_AVATAR;
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -155,7 +174,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity item) {
             binding.setTextMessage(item);
-            binding.setAvatarIndex(avatarIndex);
+            binding.setAvatarIndex(getAvatarIndex(item));
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.white));
         }
@@ -193,7 +212,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity messageEntity) {
             binding.setTextMessage(messageEntity);
-            binding.setAvatarIndex(avatarIndex);
+            binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
             incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
             incomingLoadingEffect(binding.circleView, messageEntity);
@@ -277,7 +296,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity messageEntity) {
             binding.setTextMessage(messageEntity);
-            binding.setAvatarIndex(avatarIndex);
+            binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
             incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
             incomingLoadingEffect(binding.circleView, messageEntity);

@@ -9,6 +9,7 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.List;
 
@@ -100,6 +101,18 @@ public class CommonUtil {
                 groupName = groupUserNameMap.getUserName();
             } else {
                 groupName = groupName + ", " + groupUserNameMap.getUserName();
+            }
+        }
+        return groupName;
+    }
+
+    public static String getGroupUsersName(List<UserEntity> userEntities) {
+        String groupName = "";
+        for (UserEntity userEntity : userEntities) {
+            if (TextUtils.isEmpty(groupName)) {
+                groupName = userEntity.getUserName();
+            } else {
+                groupName = groupName + ", " + userEntity.getUserName();
             }
         }
         return groupName;

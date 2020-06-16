@@ -16,14 +16,12 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -39,6 +37,7 @@ import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -47,6 +46,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -72,18 +72,15 @@ public class ChatActivity extends TelemeshBaseActivity {
      */
     private ChatViewModel mChatViewModel;
     private UserEntity mUserEntity;
-    private String userId;
-    //private ChatAdapter mChatAdapter;
-    //private  ChatPagedAdapter mChatPagedAdapter;
+    private GroupEntity mGroupEntity;
+    private String threadId;
+    private boolean isGroup;
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
-    //private ActivityChatBinding mViewBinging;
     @Nullable
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable
     public LayoutManagerWithSmoothScroller mLinearLayoutManager;
-
-
 
     @Override
     protected int getLayoutId() {
@@ -109,53 +106,87 @@ public class ChatActivity extends TelemeshBaseActivity {
     public void startUI() {
         super.startUI();
         Intent intent = getIntent();
-        userId = intent.getStringExtra(UserEntity.class.getName());
+        threadId = intent.getStringExtra(UserEntity.class.getName());
+        isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
-        if (TextUtils.isEmpty(userId)) { finish(); return; }
+        if (TextUtils.isEmpty(threadId)) { finish(); return; }
 
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 
         mChatViewModel = getViewModel();
-
         initComponent();
-        subscribeForMessages(userId);
-        subscribeForUserEvent(userId);
+
+        subscribeForMessages(threadId);
+        subscribeForThreadEvent(threadId);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (mViewBinging != null) {
-            mViewBinging.imageProfile.setOnClickListener(this);
-            mViewBinging.textViewLastName.setOnClickListener(this);
-
-            mViewBinging.setUserEntity(mUserEntity);
-            //mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
+        if (Text.isNotEmpty(threadId)) {
+            mChatViewModel.updateAllMessageStatus(threadId);
         }
-
-
-        if (Text.isNotEmpty(userId)) {
-            mChatViewModel.updateAllMessageStatus(userId);
-        }
-
-//        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-//        BulletinTimeScheduler.getInstance().initNoInternetCallback(isMobileDataOn -> showHideInternetWarning(myMode, isMobileDataOn));
-//        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
+    private void setUiComponent() {
+        if (mViewBinging == null)
+            return;
+
+        if (isGroup) {
+            if (mGroupEntity != null) {
+                mViewBinging.imageProfile.setBackgroundResource(R.mipmap.group_white_circle);
+                UIHelper.setGroupName(mViewBinging.textViewLastName, mGroupEntity.groupName);
+                mViewBinging.imageView.setVisibility(View.GONE);
+
+                mViewBinging.groupBlock.setVisibility(View.GONE);
+                mViewBinging.chatMessageBar.setVisibility(View.GONE);
+
+                if (mGroupEntity.getOwnStatus() != Constants.GroupUserOwnState.GROUP_JOINED) {
+                    mViewBinging.groupBlock.setVisibility(View.VISIBLE);
+                } else {
+                    mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            if (mUserEntity != null) {
+
+                UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
+                mViewBinging.textViewLastName.setText(mUserEntity.userName);
+                String subTitle = mUserEntity.isOnline > 0 ? getString(R.string.active_online) : getString(R.string.active_offline);
+                mViewBinging.textViewActiveNow.setText(subTitle);
+                mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
+
+                mViewBinging.groupBlock.setVisibility(View.GONE);
+                mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void processGroupUsersComponent() {
+        if (isGroup && mGroupEntity != null) {
+            mChatViewModel.getGroupUsersById(mGroupEntity.membersInfo)
+                    .observe(this, userEntities -> {
+                        if (mChatPagedAdapter != null) {
+                            mChatPagedAdapter.addAvatarIndex(userEntities);
+                        }
+                        String subTitle = CommonUtil.getGroupUsersName(userEntities);
+                        mViewBinging.textViewActiveNow.setText(subTitle);
+                    });
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (Text.isNotEmpty(userId)) {
-            mChatViewModel.setCurrentUser(userId);
+        if (Text.isNotEmpty(threadId)) {
+            mChatViewModel.setCurrentUser(threadId);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         mChatViewModel.setCurrentUser(null);
     }
 
@@ -167,7 +198,6 @@ public class ChatActivity extends TelemeshBaseActivity {
     private void initComponent() {
         mChatPagedAdapter = new ChatPagedAdapterRevised(this, mChatViewModel, this);
         mChatPagedAdapter.registerAdapterDataObserver(new AdapterDataSetObserver());
-
 
         mLinearLayoutManager = new LayoutManagerWithSmoothScroller(this);
 
@@ -185,8 +215,9 @@ public class ChatActivity extends TelemeshBaseActivity {
             mViewBinging.chatRv.setLayoutManager(mLinearLayoutManager);
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
-            setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage);
-            //  mViewBinging.emptyViewId.setOnClickListener(this);
+            setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage,
+                    mViewBinging.imageProfile, mViewBinging.textViewLastName, mViewBinging.groupDeny,
+                    mViewBinging.groupJoin);
         }
 
         clearNotification();
@@ -196,8 +227,8 @@ public class ChatActivity extends TelemeshBaseActivity {
      * Remove current user notification
      */
     private void clearNotification() {
-        if (Text.isNotEmpty(userId)) {
-            int notificationId = Math.abs(userId.hashCode());
+        if (Text.isNotEmpty(threadId)) {
+            int notificationId = Math.abs(threadId.hashCode());
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancel(notificationId);
         }
@@ -226,30 +257,39 @@ public class ChatActivity extends TelemeshBaseActivity {
                     mChatViewModel.prepareDateSpecificChat(chatEntities);
                 });
             }
-
         }
     }
 
 
-    private void subscribeForUserEvent(String userId) {
-        if (Text.isNotEmpty(userId)) {
+    private void subscribeForThreadEvent(String threadId) {
+        if (Text.isNotEmpty(threadId)) {
 
-            mChatViewModel.getUserById(userId).observe(this, userEntity -> {
-                mUserEntity = userEntity;
-                if (userEntity != null && mViewBinging != null) {
-                    mViewBinging.setUserEntity(userEntity);
-                    mViewBinging.imageView.setBackgroundResource(activeStatusResource(userEntity.getOnlineStatus()));
+            if (isGroup) {
+                mChatViewModel.getLiveGroupById(threadId).observe(this, groupEntity -> {
+                    mGroupEntity = groupEntity;
+                    if (groupEntity != null && mViewBinging != null) {
 
-                    if (mChatPagedAdapter != null) {
-                        mChatPagedAdapter.addAvatarIndex(mUserEntity.getAvatarIndex());
+                        setUiComponent();
+                        processGroupUsersComponent();
                     }
-                }
-            });
+                });
+            } else {
+                mChatViewModel.getUserById(threadId).observe(this, userEntity -> {
+                    mUserEntity = userEntity;
+                    if (userEntity != null && mViewBinging != null) {
+
+                        setUiComponent();
+
+                        if (mChatPagedAdapter != null) {
+                            mChatPagedAdapter.addAvatarIndex(userEntity);
+                        }
+                    }
+                });
+            }
         }
     }
 
     private int activeStatusResource(int userActiveStatus) {
-
         if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
             return R.mipmap.ic_mesh_online;
         } else if (userActiveStatus == Constants.UserStatus.HB_ONLINE || userActiveStatus == Constants.UserStatus.HB_MESH_ONLINE) {
@@ -306,6 +346,15 @@ public class ChatActivity extends TelemeshBaseActivity {
                     resendFailedMessage(failedMessage);
                 }
                 break;
+
+            case R.id.group_join:
+                mChatViewModel.groupAttachmentAction(mGroupEntity, true);
+                break;
+
+            case R.id.group_deny:
+                mChatViewModel.groupAttachmentAction(mGroupEntity, false);
+                finish();
+                break;
         }
     }
 
@@ -353,15 +402,6 @@ public class ChatActivity extends TelemeshBaseActivity {
         finish();
     }
 
-    /*private void loadMainActivity() {
-        // When user comes in chat screen using notification
-        if (isTaskRoot()) {
-            Intent newTask = new Intent(this, MainActivity.class);
-            newTask.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(newTask);
-        }
-    }*/
-
     private ChatViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -372,18 +412,6 @@ public class ChatActivity extends TelemeshBaseActivity {
             }
         }).get(ChatViewModel.class);
     }
-
-    /*private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
-        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
-            if (isMobileDataOn) {
-                mViewBinging.textViewNoInternet.setVisibility(View.GONE);
-            } else {
-                mViewBinging.textViewNoInternet.setVisibility(View.VISIBLE);
-            }
-        } else {
-            mViewBinging.textViewNoInternet.setVisibility(View.GONE);
-        }
-    }*/
 
     protected void requestToOpenGallery() {
         Dexter.withActivity(this).withPermissions(

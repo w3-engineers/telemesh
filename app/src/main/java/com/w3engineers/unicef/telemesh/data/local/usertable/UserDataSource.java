@@ -88,6 +88,10 @@ public class UserDataSource {
         return mUserDao.getAllOnlineUsers();
     }
 
+    @NonNull
+    public Flowable<List<UserEntity>> getAllUsersForGroup() {
+        return mUserDao.getAllUsersForGroup();
+    }
 
     @NonNull
     public Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers() {
@@ -183,7 +187,7 @@ public class UserDataSource {
         return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
     }
 
-    public Flowable<List<String>> getGroupMembersName(String ids) {
-        return mUserDao.getGroupMembersName(ids);
+    public LiveData<List<UserEntity>> getGroupMembers(List<String> whereCluse) {
+        return mUserDao.getGroupMembers(whereCluse);
     }
 }

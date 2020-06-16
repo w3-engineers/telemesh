@@ -9,12 +9,20 @@ import android.arch.paging.PagedList;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.data.helper.GroupDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -58,6 +66,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     private MessageSourceData messageSourceData;
     private UserDataSource userDataSource;
+    private GroupDataSource groupDataSource;
     private DataSource dataSource;
 
     private static final int INITIAL_LOAD_KEY = 0;
@@ -79,6 +88,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
         compositeDisposable = new CompositeDisposable();
         userDataSource  = UserDataSource.getInstance();
+        groupDataSource = GroupDataSource.getInstance();
         dataSource = Source.getDbSource();
     }
 
@@ -107,6 +117,46 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
      */
     public void setCurrentUser(@Nullable String userId) {
         dataSource.setCurrentUser(userId);
+    }
+
+    /**
+     * This API concerned for tracking offline and online the chat current chat user
+     * @param threadId -
+     * @return -
+     */
+    @NonNull
+    public LiveData<UserEntity> getUserById(@NonNull String threadId){
+        return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(threadId));
+    }
+
+    @NonNull
+    public LiveData<GroupEntity> getLiveGroupById(@NonNull String threadId){
+        return groupDataSource.getLiveGroupById(threadId);
+    }
+
+    @NonNull
+    public LiveData<List<UserEntity>> getGroupUsersById(@NonNull String membersInfo){
+
+        List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(membersInfo);
+
+        String myMeshId = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.MY_USER_ID);
+
+        List<String> userList = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (!groupMembersInfo.getMemberId().equals(myMeshId)) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        return userDataSource.getGroupMembers(userList);
+    }
+
+    void groupAttachmentAction(GroupEntity groupEntity, boolean isJoin) {
+        groupEntity.setOwnStatus(isJoin ? Constants.GroupUserOwnState.GROUP_JOINED
+                : Constants.GroupUserOwnState.GROUP_LEAVE);
+        dataSource.setGroupUserEvent(groupEntity);
     }
 
     /**
@@ -247,7 +297,6 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity,
                                                 int messageType) {
 
-
         ChatEntity chatEntity;
         chatEntity = messageEntity;
 
@@ -287,26 +336,10 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return Single.fromCallable(() -> messageSourceData.updateUnreadToReadFailed(friendsId));
     }
 
-    /**
-     * This API concerned for tracking offline and online the chat current chat user
-     * @param meshId -
-     * @return -
-     */
-    @NonNull
-    public LiveData<UserEntity> getUserById(@NonNull String meshId){
-        return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(meshId));
-    }
-
     @NonNull
     public LiveData<PagedList<ChatEntity>> getChatEntityWithDate() {
         return mutableChatList;
     }
-
-    /*public void messageOperation(@NonNull ChatEntity chatEntity) {
-        chatEntity.setStatus(Constants.MessageStatus.STATUS_SENDING);
-        messageInsertionProcess(chatEntity);
-        dataSource.reSendMessage(chatEntity);
-    }*/
 
     /**
      * chunk by chunk data load will be applicable.
@@ -377,8 +410,6 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                     groupedHashMap.put(hashMapKey, chatEntitySet);
                 }
             }
-
-
         }
 
         //Generate list from map
@@ -414,15 +445,9 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 consolidatedList.add(messageEntity);
 
             }
-
             consolidatedList.addAll(Objects.requireNonNull(groupedHashMap.get(millisecond)));
-
         }
-
         return consolidatedList;
     }
-
-
-
 
 }

@@ -14,7 +14,9 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,12 +176,12 @@ public class GroupDataHelper extends RmDataHelper {
             String groupMemberInfoText = GsonBuilder.getInstance().getGroupMemberInfoJson(groupMembersInfos);
             groupEntity.setMembersInfo(groupMemberInfoText);
 
-            // TODO Group 2 - Update group databases
+            groupDataSource.insertOrUpdateGroup(groupEntity);
 
         } else if (groupEntity.getOwnStatus() == Constants.GroupUserOwnState.GROUP_LEAVE) {
             groupEvent = Constants.DataType.EVENT_GROUP_LEAVE;
 
-            // TODO Group 3 - Delete group databases
+            groupDataSource.deleteGroupById(groupEntity.groupId);
         }
 
         if (groupMembersInfos != null) {
@@ -323,6 +325,7 @@ public class GroupDataHelper extends RmDataHelper {
             }
 
             groupNameModel.setGroupUserMap(groupUserNameMaps);
+            groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
             String groupNameText = GsonBuilder.getInstance().getGroupNameModelJson(groupNameModel);
 
             groupEntity.setGroupName(groupNameText);

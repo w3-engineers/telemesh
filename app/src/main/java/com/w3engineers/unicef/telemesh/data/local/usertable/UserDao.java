@@ -73,6 +73,11 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllOnlineUsers();
 
+    @Query("SELECT * FROM " + TableNames.USERS + " ORDER BY CASE " + ColumnNames.COLUMN_USER_IS_ONLINE
+            + " WHEN " + Constants.UserStatus.OFFLINE + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
+    abstract Flowable<List<UserEntity>> getAllUsersForGroup();
+
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
@@ -143,9 +148,8 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     abstract int updateFavouriteStatus(String meshId, int favouriteStatus);
 
     @NonNull
-    @Query("SELECT " + ColumnNames.COLUMN_USER_NAME + " FROM " + TableNames.USERS + " WHERE "
-            + ColumnNames.COLUMN_USER_MESH_ID + " IN (:ids)")
-    abstract Flowable<List<String>> getGroupMembersName(String ids);
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE mesh_id IN (:whereCl)")
+    abstract LiveData<List<UserEntity>> getGroupMembers(List<String> whereCl);
 
 
     @NonNull

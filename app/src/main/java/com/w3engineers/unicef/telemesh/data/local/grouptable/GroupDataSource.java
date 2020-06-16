@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
+import android.arch.lifecycle.LiveData;
+
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
@@ -47,8 +49,16 @@ public class GroupDataSource {
         return mGroupDao.getGroupById(groupId);
     }
 
+    public LiveData<GroupEntity> getLiveGroupById(String groupId) {
+        return mGroupDao.getLiveGroupById(groupId);
+    }
+
     public List<GroupEntity> getGroupByUserId(String userId) {
         return mGroupDao.getGroupByUserId(userId);
+    }
+
+    public int deleteGroupById(String groupId) {
+        return mGroupDao.deleteGroupById(groupId);
     }
 
     public boolean joinAGroup(String groupId, String userId) {

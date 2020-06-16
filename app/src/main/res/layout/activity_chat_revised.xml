@@ -65,7 +65,6 @@
                         android:layout_width="@dimen/width_40"
                         android:layout_height="@dimen/height_40"
                         app:civ_circle_background_color="@color/white"
-                        app:imageResource="@{userEntity.avatarIndex}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -80,7 +79,6 @@
                         android:ellipsize="end"
                         android:ems="@integer/three_dot_ems"
                         android:maxLines="1"
-                        android:text="@{userEntity.fullName}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_18"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -126,11 +124,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/chat_rv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="62dp"
-                android:layout_marginBottom="62dp"
+                android:layout_height="0dp"
                 android:scrollbars="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
+                app:layout_constraintBottom_toTopOf="@+id/group_block"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shadow_view" />
@@ -140,7 +136,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
+                app:layout_constraintBottom_toTopOf="@+id/group_block"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shadow_view">
@@ -183,6 +179,64 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/group_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_10"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/chat_message_bar">
+
+                <TextView
+                    android:id="@+id/group_attachment_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10"
+                    android:text="@string/want_to_join_this_group"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/group_devider"
+                    android:layout_width="@dimen/width_1"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/margin_10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/group_attachment_message" />
+
+                <Button
+                    android:id="@+id/group_deny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginEnd="@dimen/margin_5"
+                    android:background="@drawable/bg_stroke_primary_rectangular"
+                    android:text="@string/deny"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintEnd_toStartOf="@+id/group_devider"
+                    app:layout_constraintTop_toTopOf="@+id/group_devider" />
+
+                <Button
+                    android:id="@+id/group_join"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_40"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:background="@drawable/bg_solid_primary_rectangular"
+                    android:text="@string/join"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"
+                    app:layout_constraintStart_toEndOf="@+id/group_devider"
+                    app:layout_constraintTop_toTopOf="@+id/group_devider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/chat_message_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_55"
@@ -192,6 +246,7 @@
                 android:paddingTop="@dimen/margin_8"
                 android:paddingRight="@dimen/margin_16"
                 android:paddingBottom="@dimen/margin_8"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton
@@ -252,8 +307,8 @@
             android:id="@+id/expand_image_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:background="@color/black_60_opacity" />
+            android:background="@color/black_60_opacity"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/expanded_image"

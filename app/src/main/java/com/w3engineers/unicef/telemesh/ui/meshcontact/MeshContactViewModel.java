@@ -44,6 +44,8 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     private GroupDataSource groupDataSource;
 
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
+    private MutableLiveData<GroupEntity> openGroupMessage = new MutableLiveData<>();
+
     private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
 
@@ -76,8 +78,8 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         openUserMessage.postValue(userEntity);
     }
 
-    public void openGroupMessage(@NonNull GroupEntity userEntity) {
-//        openUserMessage.postValue(userEntity);
+    public void openGroupMessage(@NonNull GroupEntity groupEntity) {
+        openGroupMessage.postValue(groupEntity);
     }
 
     public int getUserAvatarByIndex(int imageIndex) {
@@ -94,6 +96,10 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     MutableLiveData<UserEntity> openUserMessage() {
         return openUserMessage;
+    }
+
+    MutableLiveData<GroupEntity> openGroupMessage() {
+        return openGroupMessage;
     }
 
     public void updateFavouriteStatus(String userId, int favouriteStatus) {

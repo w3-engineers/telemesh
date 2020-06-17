@@ -143,6 +143,10 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
             mSelectedUserAdapter.removeItem(item);
 
             mGroupCreateAdapter.deselectUser(item);
+
+            if (mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
+                mBinding.cardViewSelectedItem.setVisibility(View.GONE);
+            }
         }
     }
 

@@ -105,6 +105,8 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
     void deselectUser(UserEntity deselectedUser) {
         selectedUserList.remove(deselectedUser);
         notifyDataSetChanged();
+
+        //Todo we have to optimize notify management here
     }
 
 
@@ -171,9 +173,6 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
                 }
             });
 
-
-            //itemGroupCreateUserBinding.setUser(item);
-            //itemDiscoveredBinding.setDiscoverViewModel(discoverViewModel);
         }
 
         @Override

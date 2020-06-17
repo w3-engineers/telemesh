@@ -159,12 +159,12 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
                         selectedUserList.add(item);
                     }
 
-                    if (mListener != null) {
-                        mListener.onGetChangedItem(!itemGroupCreateUserBinding.checkBox.isChecked(),
-                                item);
-                    }
-
                     notifyItemChanged(position);
+                }
+
+                if (mListener != null) {
+                    mListener.onGetChangedItem(!itemGroupCreateUserBinding.checkBox.isChecked(),
+                            item);
                 }
             });
 

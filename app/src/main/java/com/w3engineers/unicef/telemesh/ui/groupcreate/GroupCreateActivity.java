@@ -107,20 +107,25 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
         // May be isAdd variable not need but in future we need it
 
 
-        if (mGroupCreateAdapter != null && !mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
-            mBinding.buttonGo.show();
-            mBinding.cardViewSelectedItem.setVisibility(View.VISIBLE);
-            setTitle(LanguageUtil.getString(R.string.new_group));
-        } else {
-            mBinding.buttonGo.hide();
-            clearSelectedUserAdapter();
-            setTitle(LanguageUtil.getString(R.string.new_chat));
-        }
+        if (mGroupCreateAdapter.isSelectionEnable()) {
 
-        if (isAdd) {
-            mSelectedUserAdapter.addItem(userEntity);
+            if (!mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
+                mBinding.buttonGo.show();
+                mBinding.cardViewSelectedItem.setVisibility(View.VISIBLE);
+                setTitle(LanguageUtil.getString(R.string.new_group));
+            } else {
+                mBinding.buttonGo.hide();
+                clearSelectedUserAdapter();
+                setTitle(LanguageUtil.getString(R.string.new_chat));
+            }
+
+            if (isAdd) {
+                mSelectedUserAdapter.addItem(userEntity);
+            } else {
+                mSelectedUserAdapter.removeItem(userEntity);
+            }
         } else {
-            mSelectedUserAdapter.removeItem(userEntity);
+            openUserMessage(userEntity);
         }
     }
 

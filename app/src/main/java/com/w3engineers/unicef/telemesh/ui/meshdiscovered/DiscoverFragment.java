@@ -95,6 +95,9 @@ public class DiscoverFragment extends BaseFragment {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
+                        fragmentDiscoverBinding.buttonMessage.show();
+                    }else{
+                        fragmentDiscoverBinding.buttonMessage.hide();
                     }
                 }
                 if (mSearchItem != null)
@@ -115,6 +118,7 @@ public class DiscoverFragment extends BaseFragment {
                     isLoaded = false;
 
                 } else {
+                    fragmentDiscoverBinding.buttonMessage.hide();
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         //enableLoading();

@@ -107,6 +107,10 @@
         <item name="android:paddingLeft">10dp</item>
     </style>
 
+    <style name="userSelectionStyle">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
 <!--    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">-->
 <!--        <item name="android:paddingLeft">5dp</item>-->
 <!--    </style>-->

@@ -37,6 +37,8 @@
     <dimen name="width_3">3dp</dimen>
     <dimen name="width_5">5dp</dimen>
     <dimen name="width_10">10dp</dimen>
+    <dimen name="width_15">15dp</dimen>
+    <dimen name="width_20">20dp</dimen>
     <dimen name="width_40">40dp</dimen>
     <dimen name="width_55">55dp</dimen>
     <dimen name="width_135">135dp</dimen>

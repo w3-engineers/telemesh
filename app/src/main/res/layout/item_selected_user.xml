@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/user_avatar_background"
+            android:layout_width="@dimen/width_50"
+            android:layout_height="@dimen/height_50"
+            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_15"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:background="@drawable/circle_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/width_50"
+            android:layout_height="@dimen/height_50"
+            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_15"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:padding="@dimen/padding_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/button_remove"
+            android:layout_width="@dimen/width_15"
+            android:layout_height="@dimen/height_15"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:contentDescription="@string/image"
+            android:src="@mipmap/delete"
+            app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
+            app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
+            app:layout_constraintStart_toEndOf="@+id/user_avatar_background"
+            app:layout_constraintTop_toTopOf="@+id/user_avatar_background" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
+            app:layout_constraintStart_toStartOf="@+id/user_avatar_background"
+            app:layout_constraintTop_toBottomOf="@+id/user_avatar_background"
+            tools:text="John doe" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

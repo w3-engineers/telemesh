@@ -1,10 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
 import android.arch.paging.PagedListAdapter;
+import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,15 +15,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupCreateUserBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreateAdapter.GenericViewHolder> {
 
+    private boolean isSelectionEnable;
 
-    GroupCreateAdapter() {
+    private List<UserEntity> selectedUserList = new ArrayList<>();
+    private Context mContext;
+    private ItemChangeListener mListener;
+
+    GroupCreateAdapter(Context context, ItemChangeListener listener) {
         super(DIFF_CALLBACK);
+        this.mContext = context;
+        this.mListener = listener;
     }
 
     public static final DiffUtil.ItemCallback<UserEntity> DIFF_CALLBACK =
@@ -67,7 +80,7 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
     public void onBindViewHolder(@NonNull GroupCreateAdapter.GenericViewHolder baseViewHolder, int position) {
         UserEntity userEntity = getItem(position);
         if (userEntity != null) {
-            baseViewHolder.bindView(userEntity);
+            baseViewHolder.bindView(userEntity, position);
         } else {
             // Null defines a placeholder item - PagedListAdapter automatically
             // invalidates this row when the actual object is loaded from the
@@ -76,14 +89,29 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
         }
     }
 
+    void setSelectionEnable(boolean value) {
+        this.isSelectionEnable = value;
+        this.selectedUserList.clear();
+    }
+
+    boolean isSelectionEnable() {
+        return isSelectionEnable;
+    }
+
+    List<UserEntity> getSelectedUserList() {
+        return selectedUserList;
+    }
+
+
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
-        protected abstract void bindView(@NonNull UserEntity item);
+        protected abstract void bindView(@NonNull UserEntity item, int position);
 
         protected abstract void clearView();
+
     }
 
     private class GroupCreateViewHolder extends GroupCreateAdapter.GenericViewHolder {
@@ -96,9 +124,44 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
 
 
         @Override
-        protected void bindView(@NonNull UserEntity item) {
+        protected void bindView(@NonNull UserEntity item, int position) {
             itemGroupCreateUserBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             itemGroupCreateUserBinding.userName.setText(item.userName);
+
+            itemGroupCreateUserBinding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
+                    .getAvatarImage(item.avatarIndex));
+
+            if (isSelectionEnable) {
+                itemGroupCreateUserBinding.checkBox.setVisibility(View.VISIBLE);
+            } else {
+                itemGroupCreateUserBinding.checkBox.setVisibility(View.INVISIBLE);
+            }
+
+            if (isSelected(item.meshId)) {
+                itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
+                itemGroupCreateUserBinding.checkBox.setChecked(true);
+            } else {
+                itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                itemGroupCreateUserBinding.checkBox.setChecked(false);
+            }
+
+            // Todo We have to replace the listener in separate section
+            itemGroupCreateUserBinding.getRoot().setOnClickListener(view -> {
+                if (isSelectionEnable) {
+                    if (itemGroupCreateUserBinding.checkBox.isChecked()) {
+                        selectedUserList.remove(item);
+                    } else {
+                        selectedUserList.add(item);
+                    }
+
+                    if (mListener != null) {
+                        mListener.onGetChangedItem(!itemGroupCreateUserBinding.checkBox.isChecked(),
+                                item);
+                    }
+
+                    notifyItemChanged(position);
+                }
+            });
 
 
             //itemGroupCreateUserBinding.setUser(item);
@@ -132,5 +195,21 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
             }
         }
 
+        //Todo we can optimize this section
+        private boolean isSelected(String userId) {
+            for (UserEntity entity : selectedUserList) {
+                if (entity.getMeshId().equals(userId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
+
+    interface ItemChangeListener {
+        void onGetChangedItem(boolean isAdd, UserEntity userEntity);
+    }
+
+
 }

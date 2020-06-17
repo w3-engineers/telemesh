@@ -45,8 +45,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
-    private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+
     private String selectChattedUser = null;
 
     private static final int INITIAL_LOAD_KEY = 0;
@@ -219,12 +218,5 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
         nearbyUsers.postValue(pagedStrings);
     }
-
-
-    @NonNull
-    public LiveData<PagedList<UserEntity>> getGetFilteredList() {
-        return filterUserList;
-    }
-
 
 }

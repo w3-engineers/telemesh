@@ -84,5 +84,7 @@
     <color name="black_20_opacity">#33000000</color>
     <color name="white_70_opacity">#B3FFFFFF</color>
 
+    <color name="selected_item_bg">#F2F2F2</color>
+
     <color name="spin_bar">#BBDEFB</color>
 </resources>

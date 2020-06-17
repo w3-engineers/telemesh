@@ -86,11 +86,9 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
         switch (view.getId()) {
             case R.id.image_view_create_group:
             case R.id.text_view_create_group:
-                //Todo We have to open user selector view
                 if (mGroupCreateAdapter != null) {
                     showOrHideGroupCreateView(true);
                 }
-                //Todo check user exists or not and show message
                 break;
             case R.id.button_go:
                 List<UserEntity> userEntities = mGroupCreateAdapter.getSelectedUserList();
@@ -128,15 +126,16 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
 
     /**
      * This section is used only for selection adapter
+     *
      * @param view The view that was clicked.
      * @param item The T type object that was clicked.
      */
     @Override
     public void onItemClick(View view, UserEntity item) {
-        if(view.getId() == R.id.button_remove){
-            //Todo we have to remove the item from user selection adapter
+        if (view.getId() == R.id.button_remove) {
+            mSelectedUserAdapter.removeItem(item);
 
-            //Todo we have to unselected item form Group create adapter
+            mGroupCreateAdapter.deselectUser(item);
         }
     }
 

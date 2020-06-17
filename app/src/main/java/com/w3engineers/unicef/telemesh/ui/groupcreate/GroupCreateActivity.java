@@ -98,6 +98,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                     mViewModel.createGroup(userEntities);
                 }
 
+                showOrHideGroupCreateView(false);
+
                 break;
         }
     }

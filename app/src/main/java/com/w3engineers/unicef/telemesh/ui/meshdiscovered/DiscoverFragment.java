@@ -95,6 +95,9 @@ public class DiscoverFragment extends BaseFragment {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
+                        fragmentDiscoverBinding.fabChat.show();
+                    }else{
+                        fragmentDiscoverBinding.fabChat.hide();
                     }
                 }
                 if (mSearchItem != null)
@@ -115,6 +118,7 @@ public class DiscoverFragment extends BaseFragment {
                     isLoaded = false;
 
                 } else {
+                    fragmentDiscoverBinding.fabChat.hide();
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         //enableLoading();
@@ -272,7 +276,7 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
 
-//        fragmentDiscoverBinding.buttonMessage.hide();
+//        fragmentDiscoverBinding.fabChat.hide();
 
 
         /*if (getActivity() != null) {

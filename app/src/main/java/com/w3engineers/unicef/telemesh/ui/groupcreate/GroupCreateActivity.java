@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -16,11 +17,13 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupCreateBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.util.List;
 
 
-public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCreateAdapter.ItemChangeListener {
+public class GroupCreateActivity extends TelemeshBaseActivity implements
+        GroupCreateAdapter.ItemChangeListener, ItemClickListener<UserEntity> {
 
     private ActivityGroupCreateBinding mBinding;
     private GroupCreateViewModel mViewModel;
@@ -83,11 +86,9 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
         switch (view.getId()) {
             case R.id.image_view_create_group:
             case R.id.text_view_create_group:
-                //Todo We have to open user selector view
                 if (mGroupCreateAdapter != null) {
                     showOrHideGroupCreateView(true);
                 }
-                //Todo check user exists or not and show message
                 break;
             case R.id.button_go:
                 List<UserEntity> userEntities = mGroupCreateAdapter.getSelectedUserList();
@@ -96,6 +97,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
                 } else {
                     mViewModel.createGroup(userEntities);
                 }
+
+                showOrHideGroupCreateView(false);
 
                 break;
         }
@@ -106,20 +109,44 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
         // May be isAdd variable not need but in future we need it
 
 
-        if (mGroupCreateAdapter != null && !mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
-            mBinding.buttonGo.show();
-            mBinding.cardViewSelectedItem.setVisibility(View.VISIBLE);
-            setTitle("New Group");
-        } else {
-            mBinding.buttonGo.hide();
-            clearSelectedUserAdapter();
-            setTitle("New Chat");
-        }
+        if (mGroupCreateAdapter.isSelectionEnable()) {
 
-        if (isAdd) {
-            mSelectedUserAdapter.addItem(userEntity);
+            if (!mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
+                mBinding.buttonGo.show();
+                mBinding.cardViewSelectedItem.setVisibility(View.VISIBLE);
+                setTitle(LanguageUtil.getString(R.string.new_group));
+            } else {
+                mBinding.buttonGo.hide();
+                clearSelectedUserAdapter();
+                setTitle(LanguageUtil.getString(R.string.new_chat));
+            }
+
+            if (isAdd) {
+                mSelectedUserAdapter.addItem(userEntity);
+            } else {
+                mSelectedUserAdapter.removeItem(userEntity);
+            }
         } else {
-            mSelectedUserAdapter.removeItem(userEntity);
+            openUserMessage(userEntity);
+        }
+    }
+
+    /**
+     * This section is used only for selection adapter
+     *
+     * @param view The view that was clicked.
+     * @param item The T type object that was clicked.
+     */
+    @Override
+    public void onItemClick(View view, UserEntity item) {
+        if (view.getId() == R.id.button_remove) {
+            mSelectedUserAdapter.removeItem(item);
+
+            mGroupCreateAdapter.deselectUser(item);
+
+            if (mGroupCreateAdapter.getSelectedUserList().isEmpty()) {
+                mBinding.cardViewSelectedItem.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -132,6 +159,7 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
         mBinding.recyclerViewUser.setAdapter(mGroupCreateAdapter);
 
         mSelectedUserAdapter = new SelectedUserAdapter();
+        mSelectedUserAdapter.setItemClickListener(this);
         mBinding.recyclerViewSelectedUser.setHasFixedSize(true);
         mBinding.recyclerViewSelectedUser.setAdapter(mSelectedUserAdapter);
 
@@ -191,8 +219,7 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
             mBinding.buttonGo.hide();
             clearSelectedUserAdapter();
 
-            //Todo we have to remove hard coded string
-            setTitle("New Chat");
+            setTitle(LanguageUtil.getString(R.string.new_chat));
         }
 
     }
@@ -201,6 +228,5 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements GroupCr
         mBinding.cardViewSelectedItem.setVisibility(View.GONE);
         mSelectedUserAdapter.clear();
     }
-
 
 }

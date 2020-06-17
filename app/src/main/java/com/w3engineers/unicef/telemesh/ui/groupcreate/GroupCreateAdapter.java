@@ -102,6 +102,13 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
         return selectedUserList;
     }
 
+    void deselectUser(UserEntity deselectedUser) {
+        selectedUserList.remove(deselectedUser);
+        notifyDataSetChanged();
+
+        //Todo we have to optimize notify management here
+    }
+
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {
@@ -159,17 +166,13 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
                         itemGroupCreateUserBinding.checkBox.setChecked(true, true);
                     }
 
-                    if (mListener != null) {
-                        mListener.onGetChangedItem(itemGroupCreateUserBinding.checkBox.isChecked(), item);
-                    }
+                }
 
-//                    notifyItemChanged(position);
+                if (mListener != null) {
+                    mListener.onGetChangedItem(itemGroupCreateUserBinding.checkBox.isChecked(), item);
                 }
             });
 
-
-            //itemGroupCreateUserBinding.setUser(item);
-            //itemDiscoveredBinding.setDiscoverViewModel(discoverViewModel);
         }
 
         @Override
@@ -188,7 +191,10 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
 
         private int activeStatusResource(int userActiveStatus) {
 
-            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
+            if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE
+                    || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE
+                    || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE
+                    || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
                 return R.mipmap.ic_mesh_online;
             } else if (userActiveStatus == Constants.UserStatus.HB_ONLINE || userActiveStatus == Constants.UserStatus.HB_MESH_ONLINE) {
                 return R.mipmap.ic_hb_online;
@@ -202,7 +208,7 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
         //Todo we can optimize this section
         private boolean isSelected(String userId) {
             for (UserEntity entity : selectedUserList) {
-                if (entity.getMeshId().equals(userId)) {
+                if (entity.getMeshId() != null && entity.getMeshId().equals(userId)) {
                     return true;
                 }
             }

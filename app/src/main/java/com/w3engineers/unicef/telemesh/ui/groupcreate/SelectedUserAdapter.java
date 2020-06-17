@@ -39,11 +39,12 @@ public class SelectedUserAdapter extends BaseAdapter<UserEntity> {
             binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
                     .getAvatarImage(item.avatarIndex));
             binding.textViewName.setText(item.userName);
+            setClickListener(binding.buttonRemove);
         }
 
         @Override
         public void onClick(View view) {
-
+            mItemClickListener.onItemClick(view, getItem(getAdapterPosition()));
         }
     }
 }

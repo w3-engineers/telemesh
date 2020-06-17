@@ -185,4 +185,7 @@
     <string name="accept">Accept</string>
     <string name="join">Join</string>
 
+    <string name="new_chat">নতুন চ্যাট</string>
+    <string name="new_group">নতুন গ্রুপ</string>
+
 </resources>

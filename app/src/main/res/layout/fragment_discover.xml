@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16"
             android:backgroundTint="@color/colorPrimary"
-            android:src="@drawable/ic_baseline_chat"
+            android:src="@mipmap/ic_baseline_chat"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

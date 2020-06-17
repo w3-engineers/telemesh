@@ -150,12 +150,6 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("SELECT * FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     public abstract Flowable<MessageEntity> getLastInsertedMessage();
 
-    /*@Query("SELECT " + ColumnNames.COLUMN_MESSAGE_TIME + ", (SELECT (COUNT(*)/" + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") FROM " + TableNames.MESSAGE +
-            " WHERE (((( SELECT COUNT(*) FROM " + TableNames.MESSAGE + ") % " + Constants.AppConstant.MESSAGE_SYNC_PLOT
-            + ") = " + Constants.AppConstant.DEFAULT + ")) AND (((SELECT COUNT(*) FROM " + TableNames.MESSAGE + ")/"
-            + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") != " + Constants.AppConstant.DEFAULT + ")) AS syncMessageCountToken"
-            + " FROM " + TableNames.MESSAGE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")*/
-
     @Query("SELECT (COUNT(*)/" + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") FROM " + TableNames.MESSAGE
             + " WHERE ((((SELECT COUNT(*) FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_IS_INCOMING
             + " = " + Constants.MessageType.MESSAGE_INCOMING + ")% " + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") = "
@@ -164,4 +158,12 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
             + Constants.AppConstant.MESSAGE_SYNC_PLOT + ") != " + Constants.AppConstant.DEFAULT + ") AND "
             + ColumnNames.COLUMN_IS_INCOMING + " = " + Constants.MessageType.MESSAGE_INCOMING)
     public abstract Flowable<Integer> getBlockMessageInfoForSync();
+
+    @Query("DELETE FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :messagePlace")
+    public abstract int clearP2pMessages(String threadId, boolean messagePlace);
+
+    @Query("DELETE FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :messagePlace")
+    public abstract int clearGroupMessages(String threadId, boolean messagePlace);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class GroupNameModel {
     private String gn;
+    private boolean c;
     private List<GroupUserNameMap> gm;
 
     public String getGroupName() {
@@ -22,6 +23,15 @@ public class GroupNameModel {
 
     public GroupNameModel setGroupUserMap(List<GroupUserNameMap> gm) {
         this.gm = gm;
+        return this;
+    }
+
+    public boolean isGroupNameChanged() {
+        return c;
+    }
+
+    public GroupNameModel setGroupNameChanged(boolean isChanged) {
+        this.c = isChanged;
         return this;
     }
 }

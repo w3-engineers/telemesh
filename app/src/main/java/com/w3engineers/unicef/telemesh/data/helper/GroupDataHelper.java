@@ -333,7 +333,9 @@ public class GroupDataHelper extends RmDataHelper {
             }
 
             groupNameModel.setGroupUserMap(groupUserNameMaps);
-            groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
+            if (!groupNameModel.isGroupNameChanged()) {
+                groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
+            }
             String groupNameText = GsonBuilder.getInstance().getGroupNameModelJson(groupNameModel);
 
             groupEntity.setGroupName(groupNameText);

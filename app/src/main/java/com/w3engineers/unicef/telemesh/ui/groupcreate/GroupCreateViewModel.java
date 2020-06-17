@@ -131,6 +131,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         String groupId = UUID.randomUUID().toString();
 
         GroupNameModel groupNameModel = new GroupNameModel()
+                .setGroupNameChanged(false)
                 .setGroupName(CommonUtil.getGroupName(groupUserNameMaps))
                 .setGroupUserMap(groupUserNameMaps);
 

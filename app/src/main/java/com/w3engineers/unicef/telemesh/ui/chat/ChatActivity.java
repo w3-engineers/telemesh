@@ -22,6 +22,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -33,8 +34,10 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.strom.util.helper.Toaster;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -77,6 +80,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private GroupEntity mGroupEntity;
     private String threadId;
     private boolean isGroup;
+    private MenuItem groupLeave;
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
     @Nullable
@@ -193,6 +197,33 @@ public class ChatActivity extends TelemeshBaseActivity {
         mChatViewModel.setCurrentUser(null);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat_page, menu);
+        if (!isGroup) {
+            menu.findItem(R.id.menu_group_leave).setVisible(false);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (isTaskRoot()) {
+                    chatFinishAndStartApp();
+                }
+                break;
+            case R.id.menu_group_leave:
+                mChatViewModel.groupLeaveAction(mGroupEntity);
+                break;
+            case R.id.menu_message_clear:
+                mChatViewModel.clearMessage(threadId, isGroup);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * <h1>Init view model and recycler view</h1>
@@ -289,7 +320,11 @@ public class ChatActivity extends TelemeshBaseActivity {
                                 .getGroupNameModelObj(groupEntity.getGroupName());
 
                         if (mChatPagedAdapter != null) {
-                            mChatPagedAdapter.setUserNameMap(groupNameModel.getGroupUserMap());
+
+                            String myUserId = SharedPref.getSharedPref(this)
+                                    .read(Constants.preferenceKey.MY_USER_ID);
+
+                            mChatPagedAdapter.setUserNameMap(groupNameModel.getGroupUserMap(), myUserId);
                         }
                         processGroupUsersComponent();
                     }
@@ -400,15 +435,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home && isTaskRoot()) {
-            chatFinishAndStartApp();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void chatFinishAndStartApp() {

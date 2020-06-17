@@ -188,6 +188,28 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         });
     }
 
+    void clearMessage(String threadId, boolean isGroup) {
+        getCompositeDisposable().add(clearMessages(threadId, isGroup)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<Integer> clearMessages(String threadId, boolean isGroup) {
+        return Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(messageSourceData.clearMessage(threadId, isGroup));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
+    }
+
     /**
      * <h1>Send message on IO thread</h1>
      *

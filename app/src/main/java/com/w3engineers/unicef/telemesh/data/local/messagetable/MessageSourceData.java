@@ -140,6 +140,14 @@ public class MessageSourceData {
         return messageDao.getBlockMessageInfoForSync();
     }
 
+    public int clearMessage(String threadId, boolean isGroup) {
+        if (isGroup) {
+            return messageDao.clearGroupMessages(threadId, isGroup);
+        } else {
+            return messageDao.clearP2pMessages(threadId, isGroup);
+        }
+    }
+
     // This api is not used in app layer
     /*public Boolean hasChatEntityExist(String friendsId, String messageId) {
         return messageDao.hasChatEntityExist(friendsId, messageId);

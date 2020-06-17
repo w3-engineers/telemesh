@@ -158,10 +158,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         notifyDataSetChanged();
     }
 
-    void setUserNameMap(List<GroupUserNameMap> userNameMaps) {
+    void setUserNameMap(List<GroupUserNameMap> userNameMaps, String myUserId) {
 
         for (GroupUserNameMap groupUserNameMap : userNameMaps) {
-            userNameMap.put(groupUserNameMap.getUserId(), groupUserNameMap.getUserName());
+            String name = groupUserNameMap.getUserName();
+            if (myUserId.equals(groupUserNameMap.getUserId())) {
+                name = "You";
+            }
+            userNameMap.put(groupUserNameMap.getUserId(), name);
         }
         notifyDataSetChanged();
     }

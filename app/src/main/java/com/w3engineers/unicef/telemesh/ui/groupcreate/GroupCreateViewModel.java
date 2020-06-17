@@ -45,6 +45,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
+    MutableLiveData<GroupEntity> groupUserList = new MutableLiveData<>();
 
     private String selectChattedUser = null;
 
@@ -147,7 +148,9 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-
+                    if(aLong>0){
+                        groupUserList.postValue(groupEntity);
+                    }
                 }));
     }
 

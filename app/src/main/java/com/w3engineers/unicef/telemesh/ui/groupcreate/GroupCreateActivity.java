@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -12,6 +13,7 @@ import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupCreateBinding;
@@ -164,6 +166,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
         mBinding.recyclerViewSelectedUser.setAdapter(mSelectedUserAdapter);
 
         userDataOperation();
+
+        observeGroupCreation();
     }
 
 
@@ -186,6 +190,19 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                 }
             });
 
+        }
+    }
+
+    private void observeGroupCreation() {
+        if (mViewModel != null) {
+            mViewModel.groupUserList.observe(this, entity -> {
+                if (entity != null) {
+                    Intent intent = new Intent(GroupCreateActivity.this, ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), entity.getGroupId());
+                    intent.putExtra(GroupEntity.class.getName(), true);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

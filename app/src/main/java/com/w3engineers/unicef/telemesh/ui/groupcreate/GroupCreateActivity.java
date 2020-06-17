@@ -32,6 +32,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
     private GroupCreateAdapter mGroupCreateAdapter;
     private SelectedUserAdapter mSelectedUserAdapter;
 
+    public static boolean IS_NEW_GROUP_CREATED;
+
     @Nullable
     public List<UserEntity> userEntityList;
 
@@ -54,6 +56,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
     public void startUI() {
         mBinding = (ActivityGroupCreateBinding) getViewDataBinding();
         mViewModel = getViewModel();
+
+        IS_NEW_GROUP_CREATED = false;
 
         initView();
     }
@@ -201,6 +205,10 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                     intent.putExtra(UserEntity.class.getName(), entity.getGroupId());
                     intent.putExtra(GroupEntity.class.getName(), true);
                     startActivity(intent);
+
+                    IS_NEW_GROUP_CREATED = true;
+
+                    finish();
                 }
             });
         }

@@ -52,6 +52,7 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
@@ -125,7 +126,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mainActivity = this;
 
 
-
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         bottomMenu = binding.bottomNavigation.getMenu();
@@ -180,6 +180,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     public void onResume() {
         super.onResume();
+
+        //Todo we have to optimize the below implementation
+        if (GroupCreateActivity.IS_NEW_GROUP_CREATED) {
+            GroupCreateActivity.IS_NEW_GROUP_CREATED = false;
+
+            if (mCurrentFragment != null
+                    && !(mCurrentFragment instanceof MeshContactsFragment)) {
+
+                binding.bottomNavigation.setSelectedItemId(R.id.action_contact);
+            }
+        }
     }
 
     @Override
@@ -478,7 +489,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
                 try {
                     mAppUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.FLEXIBLE, this, RC_APP_UPDATE);
-                } catch (IntentSender.SendIntentException e) { e.printStackTrace(); }
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
 
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();

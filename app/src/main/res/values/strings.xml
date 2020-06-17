@@ -188,5 +188,7 @@
     <string name="deny">Deny</string>
     <string name="accept">Accept</string>
     <string name="join">Join</string>
+    <string name="new_chat">New Chat</string>
+    <string name="new_group">New Group</string>
 
 </resources>

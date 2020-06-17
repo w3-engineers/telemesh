@@ -106,7 +106,7 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <CheckBox
+        <!--<CheckBox
             android:id="@+id/check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,6 +114,19 @@
             android:buttonTint="@color/colorPrimary"
             android:clickable="false"
             android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox
+            android:id="@+id/check_box"
+            android:layout_width="@dimen/height_25"
+            android:layout_height="@dimen/width_25"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingTop="10dp"
+            app:color_checked="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

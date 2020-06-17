@@ -116,7 +116,7 @@
             app:emptyMessage="@{@string/no_contact_available}" />-->
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/button_message"
+            android:id="@+id/fab_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16"

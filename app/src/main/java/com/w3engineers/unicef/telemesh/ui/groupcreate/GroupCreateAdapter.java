@@ -144,27 +144,30 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
 
             if (isSelected(item.meshId)) {
                 itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
-                itemGroupCreateUserBinding.checkBox.setChecked(true);
+                itemGroupCreateUserBinding.checkBox.setChecked(true, false);
             } else {
                 itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
-                itemGroupCreateUserBinding.checkBox.setChecked(false);
+                itemGroupCreateUserBinding.checkBox.setChecked(false, false);
             }
 
             // Todo We have to replace the listener in separate section
             itemGroupCreateUserBinding.getRoot().setOnClickListener(view -> {
                 if (isSelectionEnable) {
-                    if (itemGroupCreateUserBinding.checkBox.isChecked()) {
+
+                    if (isSelected(item.getMeshId())) {
                         selectedUserList.remove(item);
+                        itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                        itemGroupCreateUserBinding.checkBox.setChecked(false, true);
                     } else {
                         selectedUserList.add(item);
+                        itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
+                        itemGroupCreateUserBinding.checkBox.setChecked(true, true);
                     }
 
-                    notifyItemChanged(position);
                 }
 
                 if (mListener != null) {
-                    mListener.onGetChangedItem(!itemGroupCreateUserBinding.checkBox.isChecked(),
-                            item);
+                    mListener.onGetChangedItem(itemGroupCreateUserBinding.checkBox.isChecked(), item);
                 }
             });
 

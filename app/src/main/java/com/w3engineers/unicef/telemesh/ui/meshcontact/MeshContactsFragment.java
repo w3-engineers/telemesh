@@ -31,6 +31,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.conversations.ConversationAdapter;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -226,6 +227,17 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void controlEmpty(boolean isShow) {
         if (isShow) {
+            switch (currentSelection) {
+                case Constants.SpinnerItem.GROUP:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.group_empty);
+                    break;
+                case Constants.SpinnerItem.FAVOURITE:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.ic_no_favorite);
+                    break;
+                case Constants.SpinnerItem.ALL:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.ic_no_chat);
+                    break;
+            }
             fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
         } else {
             fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
@@ -259,6 +271,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.groupRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ConversationAdapter conversationAdapter = new ConversationAdapter(meshContactViewModel);
         fragmentMeshcontactBinding.groupRecyclerView.setAdapter(conversationAdapter);
+
+        setClickListener(fragmentMeshcontactBinding.fabChat);
     }
 
     private MeshContactAdapter getAdapter() {
@@ -299,6 +313,14 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.fab_chat) {
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        }
     }
 
     private void initDataObserver() {

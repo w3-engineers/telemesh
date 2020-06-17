@@ -59,7 +59,8 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " != "
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " != "
             + Constants.UserStatus.OFFLINE + " OR ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " = "
             + Constants.UserStatus.OFFLINE + " AND (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS "
             + Constants.MessageStatus.STATUS_UNREAD + " OR " + ColumnNames.COLUMN_MESSAGE_STATUS
@@ -88,8 +89,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == "
-            + Constants.FavouriteStatus.FAVOURITE + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND " + ColumnNames.COLUMN_USER_IS_FAVOURITE
+            + " == " + Constants.FavouriteStatus.FAVOURITE + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED
@@ -109,7 +111,8 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS NOT NULL OR "
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS NOT NULL OR "
             + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + ") ORDER BY CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD

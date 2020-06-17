@@ -38,13 +38,19 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
      * <p>The messages send or received with a very specific user
      * will be retrieve. User id must not empty</p>
      *
-     * @param friendsId : String (required) must not null or empty
+     * @param threadId : String (required) must not null or empty
      * @return : Flowable list of messaged
      */
 
     @NonNull
-    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :friendsId ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME+" ASC")
-    public abstract Flowable<List<MessageEntity>> getAllMessages(@NonNull String friendsId);
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+    public abstract Flowable<List<MessageEntity>> getAllMessages(@NonNull String threadId, boolean place);
+
+    @NonNull
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+    public abstract Flowable<List<MessageEntity>> getGroupAllMessages(@NonNull String threadId, boolean place);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long writeMessage(@NonNull MessageEntity messageEntity);

@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -11,6 +12,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -22,7 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class GroupDataHelper extends RmDataHelper {
@@ -56,7 +60,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         switch (dataType) {
             case Constants.DataType.EVENT_GROUP_CREATION:
-                receiveGroupCreationInfo(rawData);
+                receiveGroupCreationInfo(rawData, userId);
                 break;
             case Constants.DataType.EVENT_GROUP_JOIN:
                 receiveGroupForJoinEvent(rawData, userId);
@@ -93,7 +97,7 @@ public class GroupDataHelper extends RmDataHelper {
         groupDataSource.insertOrUpdateGroup(groupEntity);
     }
 
-    private void receiveGroupCreationInfo(byte[] rawData) {
+    private void receiveGroupCreationInfo(byte[] rawData, String userId) {
         try {
 
             GsonBuilder gsonBuilder = GsonBuilder.getInstance();
@@ -111,6 +115,7 @@ public class GroupDataHelper extends RmDataHelper {
                 groupEntity.setAvatarIndex(groupModel.getAvatar());
 
                 groupEntity.setAdminInfo(groupModel.getAdminInfo());
+                groupEntity.setGroupCreationTime(groupModel.getCreatedTime());
 
                 ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupModel.getMemberInfo());
 
@@ -156,6 +161,9 @@ public class GroupDataHelper extends RmDataHelper {
             groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_PENDING);
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
+
+            setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.CREATED,
+                    groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,8 +188,6 @@ public class GroupDataHelper extends RmDataHelper {
 
         } else if (groupEntity.getOwnStatus() == Constants.GroupUserOwnState.GROUP_LEAVE) {
             groupEvent = Constants.DataType.EVENT_GROUP_LEAVE;
-
-            groupDataSource.deleteGroupById(groupEntity.groupId);
         }
 
         if (groupMembersInfos != null) {
@@ -241,7 +247,8 @@ public class GroupDataHelper extends RmDataHelper {
             }
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
-
+            setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.JOINED,
+                    0, Constants.MessageType.GROUP_JOIN);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -298,7 +305,8 @@ public class GroupDataHelper extends RmDataHelper {
             }
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
-
+            setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.LEAVE,
+                    0, Constants.MessageType.GROUP_LEAVE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -331,6 +339,29 @@ public class GroupDataHelper extends RmDataHelper {
             groupEntity.setGroupName(groupNameText);
             groupDataSource.insertOrUpdateGroup(groupEntity);
         }
+    }
+
+    private void setGroupInfo(String userId, String groupId, String message, long time, int type) {
+        String messageId = UUID.randomUUID().toString();
+
+        MessageEntity messageEntity = new MessageEntity()
+                .setMessage(message)
+                .setGroupId(groupId)
+                .setMessagePlace(true);
+
+        if (time <= 0) {
+            time = System.currentTimeMillis();
+        }
+
+        ChatEntity chatEntity = messageEntity
+                .setFriendsId(userId)
+                .setMessageId(messageId)
+                .setMessageType(type)
+                .setStatus(Constants.MessageStatus.STATUS_READ)
+                .setTime(time)
+                .setIncoming(true);
+
+        MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
     }
 
     private void setGroupJoined(ArrayList<GroupMembersInfo> groupMembersInfos) {

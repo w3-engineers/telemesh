@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.ArrayList;
@@ -74,7 +75,14 @@ public class MessageSourceData {
     @NonNull
     public Flowable<List<ChatEntity>> getAllMessages(@NonNull String friendsId) {
 
-        return messageDao.getAllMessages(friendsId).flatMap(messageEntities ->
+        return messageDao.getAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_P2P).flatMap(messageEntities ->
+                Flowable.just(new ArrayList<>(messageEntities)));
+    }
+
+    @NonNull
+    public Flowable<List<ChatEntity>> getAllGroupMessages(@NonNull String friendsId) {
+
+        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP).flatMap(messageEntities ->
                 Flowable.just(new ArrayList<>(messageEntities)));
     }
 

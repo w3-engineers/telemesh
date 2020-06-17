@@ -79,7 +79,6 @@
                 android:layout_marginTop="@dimen/margin_50"
                 android:layout_marginRight="@dimen/margin_20"
                 android:contentDescription="@string/no_contact_available"
-                android:src="@mipmap/ic_no_favorite"
                 app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -101,6 +100,17 @@
 
 
         </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@mipmap/fab_chat"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

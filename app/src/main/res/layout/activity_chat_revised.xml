@@ -183,7 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_10"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/chat_message_bar">
 
                 <View
@@ -253,7 +253,7 @@
                 android:paddingTop="@dimen/margin_8"
                 android:paddingRight="@dimen/margin_16"
                 android:paddingBottom="@dimen/margin_8"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton

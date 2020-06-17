@@ -108,7 +108,7 @@ public class DiscoverFragment extends BaseFragment {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
 
-                    fragmentDiscoverBinding.buttonMessage.show();
+                    fragmentDiscoverBinding.fabChat.show();
 
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
@@ -203,7 +203,7 @@ public class DiscoverFragment extends BaseFragment {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.button_message) {
+        if (view.getId() == R.id.fab_chat) {
             startActivity(new Intent(getActivity(), GroupCreateActivity.class));
         }
     }
@@ -272,7 +272,7 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
 
-        fragmentDiscoverBinding.buttonMessage.hide();
+//        fragmentDiscoverBinding.buttonMessage.hide();
 
 
         /*if (getActivity() != null) {
@@ -283,7 +283,7 @@ public class DiscoverFragment extends BaseFragment {
     // General API's and initialization area
     private void init() {
 
-        setClickListener(fragmentDiscoverBinding.buttonMessage);
+        setClickListener(fragmentDiscoverBinding.fabChat);
         initAllText();
         discoverViewModel = getViewModel();
 

@@ -329,5 +329,8 @@ public class Constants {
     public interface MessagePlace {
         boolean MESSAGE_PLACE_GROUP = true;
         boolean MESSAGE_PLACE_P2P = false;
+
+        int VALUE_MESSAGE_PLACE_GROUP = 1;
+        int VALUE_MESSAGE_PLACE_P2P = 0;
     }
 }

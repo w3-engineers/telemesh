@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -36,6 +37,7 @@ public class Source implements DataSource {
     private BehaviorSubject<String> liveUserId = BehaviorSubject.create();
     private BehaviorSubject<Boolean> isMeshInitiated = BehaviorSubject.create();
     private BehaviorSubject<GroupEntity> groupUserEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupModel> groupRenameEvent = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -111,6 +113,17 @@ public class Source implements DataSource {
     @Override
     public Flowable<GroupEntity> getGroupUserEvent() {
         return groupUserEvent.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setGroupRenameEvent(GroupModel groupModel) {
+        groupRenameEvent.onNext(groupModel);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupModel> getGroupRenameEvent() {
+        return groupRenameEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 
     @Override

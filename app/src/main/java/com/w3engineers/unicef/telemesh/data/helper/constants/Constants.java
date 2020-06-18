@@ -140,6 +140,7 @@ public class Constants {
         byte EVENT_GROUP_CREATION = 0x19;
         byte EVENT_GROUP_JOIN = 0x20;
         byte EVENT_GROUP_LEAVE = 0x21;
+        byte EVENT_GROUP_RENAME = 0x22;
     }
 
     public interface MessageType {
@@ -156,6 +157,7 @@ public class Constants {
         int GROUP_CREATE = 301;
         int GROUP_JOIN = 302;
         int GROUP_LEAVE = 303;
+        int GROUP_RENAMED = 304;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -173,6 +175,7 @@ public class Constants {
         String CREATED = "Created this Group";
         String JOINED = "Joined";
         String LEAVE = "Left";
+        String RENAMED = "Renamed the group to";
     }
 
     public interface FavouriteStatus {

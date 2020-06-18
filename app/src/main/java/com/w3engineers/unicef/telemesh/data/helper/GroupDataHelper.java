@@ -52,6 +52,10 @@ public class GroupDataHelper extends RmDataHelper {
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupUserEvent())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(this::sendGroupForEvent, Throwable::printStackTrace));
+
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupRenameEvent())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::sendGroupNameChangeEvent, Throwable::printStackTrace));
     }
 
     void groupDataReceive(int dataType, String userId, byte[] rawData, boolean isNewMessage) {
@@ -67,6 +71,9 @@ public class GroupDataHelper extends RmDataHelper {
                 break;
             case Constants.DataType.EVENT_GROUP_LEAVE:
                 receiveGroupForLeaveEvent(rawData, userId);
+                break;
+            case Constants.DataType.EVENT_GROUP_RENAME:
+                receiveGroupNameChangedEvent(rawData, userId);
                 break;
         }
     }
@@ -310,6 +317,60 @@ public class GroupDataHelper extends RmDataHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendGroupNameChangeEvent(GroupModel groupModel) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String groupId = groupModel.getGroupId();
+        String newName = groupModel.getGroupName();
+
+        GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
+
+        GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
+        groupNameModel.setGroupName(newName).setGroupNameChanged(true);
+
+        String groupNameModelText = gsonBuilder.getGroupNameModelJson(groupNameModel);
+        groupEntity.setGroupName(groupNameModelText);
+
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+        setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
+                0, Constants.MessageType.GROUP_RENAMED);
+
+        String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        if (groupMembersInfos != null) {
+            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+                String userId = groupMembersInfo.getMemberId();
+                if (!userId.equals(getMyMeshId())) {
+                    dataSend(groupNameText.getBytes(), Constants.DataType.EVENT_GROUP_RENAME,
+                            userId, false);
+                }
+            }
+        }
+    }
+
+    private void receiveGroupNameChangedEvent(byte[] rawData, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String groupModelText = new String(rawData);
+        GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
+
+        GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
+
+        GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
+        groupNameModel.setGroupName(groupModel.getGroupName()).setGroupNameChanged(true);
+
+        String groupNameModelText = gsonBuilder.getGroupNameModelJson(groupNameModel);
+        groupEntity.setGroupName(groupNameModelText);
+
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+        setGroupInfo(userId, groupModel.getGroupId(),
+                Constants.GroupEventMessageBody.RENAMED + " " + groupModel.getGroupName(),
+                0, Constants.MessageType.GROUP_RENAMED);
     }
 
     public void updateGroupUserInfo(UserEntity userEntity) {

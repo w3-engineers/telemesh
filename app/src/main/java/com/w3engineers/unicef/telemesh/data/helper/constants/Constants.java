@@ -175,7 +175,7 @@ public class Constants {
         String CREATED = "Created this Group";
         String JOINED = "Joined";
         String LEAVE = "Left";
-        String RENAMED = "Renamed to";
+        String RENAMED = "Renamed the group to";
     }
 
     public interface FavouriteStatus {

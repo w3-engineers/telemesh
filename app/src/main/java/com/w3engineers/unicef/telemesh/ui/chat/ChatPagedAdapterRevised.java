@@ -78,7 +78,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
                 if (chatEntity.getMessageType() == Constants.MessageType.GROUP_CREATE
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_JOIN
-                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_LEAVE) {
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_LEAVE
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_RENAMED) {
                     return Constants.ViewHolderType.GROUP_INFO;
                 }
 
@@ -526,6 +527,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
                     case Constants.MessageType.GROUP_LEAVE:
                         resourceId = R.mipmap.user_leave;
+                        break;
+                    case Constants.MessageType.GROUP_RENAMED:
+                        resourceId = R.mipmap.ic_edit_group_info;
                         break;
                 }
 

@@ -131,6 +131,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
                 int groupMember = userEntities.size() + 1;
                 userEntities.add(getMyInfo());
                 mBinding.textViewParticipantsCount.setText(String.valueOf(groupMember));
+                mAdapter.clear();
                 mAdapter.addItem(userEntities);
             }
 

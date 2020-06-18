@@ -48,6 +48,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
+import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
@@ -115,7 +116,10 @@ public class ChatActivity extends TelemeshBaseActivity {
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
-        if (TextUtils.isEmpty(threadId)) { finish(); return; }
+        if (TextUtils.isEmpty(threadId)) {
+            finish();
+            return;
+        }
 
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
@@ -316,6 +320,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                     if (groupEntity != null && mViewBinging != null) {
 
                         setUiComponent();
+
                         GroupNameModel groupNameModel = GsonBuilder.getInstance()
                                 .getGroupNameModelObj(groupEntity.getGroupName());
 
@@ -372,13 +377,19 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
             case R.id.image_profile:
             case R.id.text_view_last_name:
-                Intent intent = new Intent(this, UserProfileActivity.class);
-                intent.putExtra(UserEntity.class.getName(), mUserEntity);
-                startActivity(intent);
+                if (isGroup) {
+                    Intent intent = new Intent(this, GroupDetailsActivity.class);
+                    intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, UserProfileActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), mUserEntity);
+                    startActivity(intent);
+                }
                 break;
 
             case R.id.image_view_pick_gallery_image:
-                if(mUserEntity != null && mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE) {
+                if (mUserEntity != null && mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE) {
                     requestToOpenGallery();
                 }
                 break;
@@ -398,7 +409,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 MessageEntity failedMessage = (MessageEntity) view.getTag(R.id.image_view_message);
                 if (failedMessage != null &&
                         (failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED
-                        || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
+                                || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
                     resendFailedMessage(failedMessage);
                 }
                 break;
@@ -530,10 +541,12 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
 
         @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) { }
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+        }
 
         @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) { }
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+        }
     }
 
     private Animator currentAnimator;
@@ -710,7 +723,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                         .ofFloat(mViewBinging.expandedImage, View.X, startBounds.left))
                         .with(ObjectAnimator
                                 .ofFloat(mViewBinging.expandedImage,
-                                        View.Y,startBounds.top))
+                                        View.Y, startBounds.top))
                         .with(ObjectAnimator
                                 .ofFloat(mViewBinging.expandedImage,
                                         View.SCALE_X, startScaleFinal))

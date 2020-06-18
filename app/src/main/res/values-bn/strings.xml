@@ -187,5 +187,11 @@
 
     <string name="new_chat">নতুন চ্যাট</string>
     <string name="new_group">নতুন গ্রুপ</string>
+    <string name="group_name_hint">নাম</string>
+    <string name="total_participants">মোট অংশগ্রহণকারীরা</string>
+    <string name="add_member">সদস্য যোগ করুন</string>
+    <string name="remove_group_member">Remove group member</string>
+    <string name="group_admin">গ্রুপ অ্যাডমিন</string>
+    <string name="leave_group">Leave group</string>
 
 </resources>

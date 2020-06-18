@@ -190,5 +190,12 @@
     <string name="join">Join</string>
     <string name="new_chat">New Chat</string>
     <string name="new_group">New Group</string>
+    <string name="group_name_hint">Name</string>
+    <string name="total_participants">Total participants</string>
+    <string name="add_member">Add member</string>
+    <string name="remove_group_member">Remove group member</string>
+    <string name="group_admin">Group Admin</string>
+    <string name="leave_group">Leave group</string>
+
 
 </resources>

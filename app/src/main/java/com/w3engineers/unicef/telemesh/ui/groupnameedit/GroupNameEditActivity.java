@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.ui.util.ToastUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -68,7 +69,7 @@ public class GroupNameEditActivity extends TelemeshBaseActivity {
     }
 
     private void initView() {
-        setClickListener(mBinding.opBack, mBinding.editTextName);
+        setClickListener(mBinding.opBack, mBinding.buttonDone);
 
         parseIntent();
 
@@ -89,11 +90,11 @@ public class GroupNameEditActivity extends TelemeshBaseActivity {
     private void saveName() {
         if (mBinding.editTextName.getText() != null) {
             String updatedName = mBinding.editTextName.getText().toString().trim();
-            if (updatedName.equals(mGroupName)) {
-                finish();
-            } else {
-                //Todo update name in database
+            if (!updatedName.equals(mGroupName)) {
+                mViewModel.updateGroupName(updatedName, mGroupId);
+                ToastUtil.showShort(this, getString(R.string.group_name_updated));
             }
+            finish();
         }
     }
 

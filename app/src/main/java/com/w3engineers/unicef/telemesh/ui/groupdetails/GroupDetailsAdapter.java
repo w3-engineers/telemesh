@@ -11,10 +11,20 @@ import com.w3engineers.mesh.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupMemberBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
+
+    private List<GroupAdminInfo> adminInfoList;
+
+    public GroupDetailsAdapter() {
+        adminInfoList = new ArrayList<>();
+    }
 
     @Override
     public boolean isEqual(UserEntity left, UserEntity right) {
@@ -26,6 +36,10 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemGroupMemberBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_group_member, parent, false);
         return new GroupDetailsVH(binding);
+    }
+
+    void submitAdminInfoList(List<GroupAdminInfo> adminList) {
+        this.adminInfoList = adminList;
     }
 
     class GroupDetailsVH extends BaseViewHolder<UserEntity> {
@@ -44,7 +58,13 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
             binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
                     .getAvatarImage(item.avatarIndex));
 
-            //Todo we have to show admin info here
+            if (isAdmin(item.getMeshId())) {
+                binding.imageViewRemove.setVisibility(View.INVISIBLE);
+                binding.textViewAdminInfo.setVisibility(View.VISIBLE);
+            } else {
+                binding.imageViewRemove.setVisibility(View.VISIBLE);
+                binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
@@ -66,6 +86,15 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
             } else {
                 return R.mipmap.ic_offline;
             }
+        }
+
+        private boolean isAdmin(String userId) {
+            for (GroupAdminInfo admin : adminInfoList) {
+                if (admin.getAdminId().equals(userId) && admin.getAdminStatus()) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

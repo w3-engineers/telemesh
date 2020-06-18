@@ -25,7 +25,8 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true">
 
 
                 <View
@@ -112,7 +113,7 @@
                         android:hint="@string/group_name_hint"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:maxLength="@{DefaultValue.GROUP_NAME_LIMIT}"
                         android:singleLine="true"
                         android:textSize="@dimen/text_body"
                         app:bet_baseColor="@color/message_text_color"

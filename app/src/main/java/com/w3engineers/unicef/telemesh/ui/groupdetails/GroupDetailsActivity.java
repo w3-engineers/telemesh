@@ -9,9 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
@@ -107,6 +110,9 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
             GroupNameModel groupNameModel = GsonBuilder.getInstance()
                     .getGroupNameModelObj(groupEntity.getGroupName());
 
+            List<GroupAdminInfo> adminInfo = GsonBuilder.getInstance().getGroupAdminInfoObj(groupEntity.getAdminInfo());
+            mAdapter.submitAdminInfoList(adminInfo);
+
             mBinding.editTextName.setText(groupNameModel.getGroupName());
 
             initGroupMembersInfoObserver(groupEntity.getMembersInfo());
@@ -123,13 +129,21 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
         mViewModel.getGroupUsersById(membersInfo).observe(this, userEntities -> {
             if (userEntities != null) {
                 int groupMember = userEntities.size() + 1;
+                userEntities.add(getMyInfo());
                 mBinding.textViewParticipantsCount.setText(String.valueOf(groupMember));
-
-
                 mAdapter.addItem(userEntities);
             }
 
         });
+    }
+
+    private UserEntity getMyInfo() {
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        return userEntity;
     }
 
     private GroupDetailsViewModel getViewModel() {
@@ -141,4 +155,5 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
             }
         }).get(GroupDetailsViewModel.class);
     }
+
 }

@@ -39,6 +39,7 @@ public class Constants {
         int MINIMUM_PASSWORD_LIMIT = 8;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
+        int GROUP_NAME_LIMIT = 50;
         int INTEGER_VALUE_ZERO = 0;
         int MAXIMUM_BADGE_VALUE = 99;
     }

@@ -29,6 +29,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
     private ActivityGroupDetailsBinding mBinding;
     private GroupDetailsViewModel mViewModel;
     private String groupId;
+    private GroupDetailsAdapter mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -82,6 +83,12 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
         setClickListener(mBinding.opBack, mBinding.textViewAddMember, mBinding.imageViewPen,
                 mBinding.textViewLeaveGroup);
 
+        mAdapter = new GroupDetailsAdapter();
+        mBinding.recyclerViewGroupMember.setHasFixedSize(true);
+        mBinding.recyclerViewGroupMember.setAdapter(mAdapter);
+
+        mBinding.nestedScrollView.setNestedScrollingEnabled(true);
+
         parseIntent();
 
         initGroupObserver();
@@ -115,7 +122,11 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
     private void initGroupMembersInfoObserver(String membersInfo) {
         mViewModel.getGroupUsersById(membersInfo).observe(this, userEntities -> {
             if (userEntities != null) {
-                mBinding.textViewParticipantsCount.setText(String.valueOf(userEntities.size()));
+                int groupMember = userEntities.size() + 1;
+                mBinding.textViewParticipantsCount.setText(String.valueOf(groupMember));
+
+
+                mAdapter.addItem(userEntities);
             }
 
         });

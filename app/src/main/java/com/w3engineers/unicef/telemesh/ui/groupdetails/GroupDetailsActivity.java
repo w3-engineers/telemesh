@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupDetailsBinding;
+import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
@@ -74,7 +75,10 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
                 //Todo open a add member page
                 break;
             case R.id.image_view_pen:
-                //Todo open group name edit page
+                Intent intent = new Intent(this, GroupNameEditActivity.class);
+                intent.putExtra(GroupEntity.class.getName(), groupId);
+                intent.putExtra(GroupNameEditActivity.class.getName(), mBinding.editTextName.getText().toString());
+                startActivity(intent);
                 break;
             case R.id.text_view_leave_group:
                 //Todo leave group operation perform

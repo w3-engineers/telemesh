@@ -50,7 +50,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
         tools:replace="android:name">
-        <activity android:name=".ui.groupdetails.GroupDetailsActivity"></activity>
+        <activity android:name=".ui.groupnameedit.GroupNameEditActivity"></activity>
+        <activity android:name=".ui.groupdetails.GroupDetailsActivity" />
         <activity android:name=".ui.groupcreate.GroupCreateActivity" />
         <activity android:name=".ui.termofuse.TermsOfUseActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity" />

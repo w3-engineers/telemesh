@@ -196,6 +196,7 @@
     <string name="remove_group_member">Remove group member</string>
     <string name="group_admin">Group Admin</string>
     <string name="leave_group">Leave group</string>
+    <string name="group_name_updated">Group Name updated</string>
 
 
 </resources>

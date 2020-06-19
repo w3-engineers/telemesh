@@ -10,7 +10,8 @@ Proprietary and confidential
 
 public class MessageModel {
 
-    private String m, i;
+    private String m, i, gi;
+    private boolean g;
     private int t;
 
     public String getMessage() {
@@ -37,6 +38,24 @@ public class MessageModel {
 
     public MessageModel setType(int t) {
         this.t = t;
+        return this;
+    }
+
+    public String getGroupId() {
+        return gi;
+    }
+
+    public MessageModel setGroupId(String groupId) {
+        this.gi = groupId;
+        return this;
+    }
+
+    public boolean isGroup() {
+        return g;
+    }
+
+    public MessageModel setIsGroup(boolean group) {
+        this.g = group;
         return this;
     }
 }

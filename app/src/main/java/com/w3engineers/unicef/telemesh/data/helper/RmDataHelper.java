@@ -252,9 +252,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
                         if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
                             String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
-
-                            dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
-                                    chatEntity.getFriendsId(), true);
+                            if (messageEntity.getMessagePlace()) {
+                                GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
+                                        messageModelString);
+                            } else {
+                                dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
+                                        messageEntity.getFriendsId(), true);
+                            }
                         } else {
                             ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
                         }
@@ -388,7 +392,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 Timber.e("Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
-                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())) {
+                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())
+                        || (!TextUtils.isEmpty(messageModel.getGroupId())
+                        && !messageModel.getGroupId().equals(dataSource.getCurrentUser()))) {
                     Timber.e("Un Read :: %s", chatEntity.getMessageId());
                     NotifyUtil.showNotification(chatEntity);
                     chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);

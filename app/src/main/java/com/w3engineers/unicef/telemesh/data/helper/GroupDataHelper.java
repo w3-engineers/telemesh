@@ -79,6 +79,23 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
+    public void sendTextMessageToGroup(String groupId, String messageTextData) {
+        GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        if (groupMembersInfos != null) {
+            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+                String userId = groupMembersInfo.getMemberId();
+                if (!userId.equals(getMyMeshId())) {
+                    dataSend(messageTextData.getBytes(), Constants.DataType.MESSAGE,
+                            userId, true);
+                }
+            }
+        }
+    }
+
     private void sendGroupCreationInfo(GroupEntity groupEntity) {
         GroupModel groupModel = groupEntity.toGroupModel();
         String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);

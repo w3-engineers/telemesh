@@ -155,7 +155,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mViewBinging.groupBlock.setVisibility(View.GONE);
                 mViewBinging.chatMessageBar.setVisibility(View.GONE);
 
-                if (isActiveOnGroup()) {
+                if (isInactiveOnGroup()) {
                     mViewBinging.groupBlock.setVisibility(View.VISIBLE);
                 } else {
                     mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
@@ -446,7 +446,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
-        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && isActiveOnGroup())) {
+        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && isInactiveOnGroup())) {
             if (mViewBinging != null) {
                 mViewBinging.emptyLayout.setVisibility(View.GONE);
             }
@@ -620,6 +620,11 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private boolean isActiveOnGroup() {
+        return mGroupEntity != null && mGroupEntity.getOwnStatus() ==
+                Constants.GroupUserOwnState.GROUP_JOINED;
+    }
+
+    private boolean isInactiveOnGroup() {
         return mGroupEntity != null && mGroupEntity.getOwnStatus() !=
                 Constants.GroupUserOwnState.GROUP_JOINED;
     }

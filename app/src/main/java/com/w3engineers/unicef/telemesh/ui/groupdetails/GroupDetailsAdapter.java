@@ -42,6 +42,10 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
         this.adminInfoList = adminList;
     }
 
+    List<GroupAdminInfo> getAdminInfoList() {
+        return adminInfoList;
+    }
+
     class GroupDetailsVH extends BaseViewHolder<UserEntity> {
 
         public GroupDetailsVH(ViewDataBinding viewDataBinding) {

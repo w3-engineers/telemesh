@@ -28,6 +28,7 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -159,10 +160,31 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 userEntities.add(getMyInfo());
                 mBinding.textViewParticipantsCount.setText(String.valueOf(groupMember));
                 mAdapter.clear();
-                mAdapter.addItem(userEntities);
+                mAdapter.addItem(sortMemberList(userEntities));
             }
 
         });
+    }
+
+    /**
+     * Sort member list. Admin users will be the top of the list
+     *
+     * @param memberList list of {@link UserEntity}
+     * @return
+     */
+    private List<UserEntity> sortMemberList(List<UserEntity> memberList) {
+        List<UserEntity> sortedMemberList = new ArrayList<>();
+        for (UserEntity entity : memberList) {
+            for (GroupAdminInfo adminInfo : mAdapter.getAdminInfoList()) {
+                if (adminInfo.getAdminStatus()
+                        && adminInfo.getAdminId().equals(entity.getMeshId())) {
+                    sortedMemberList.add(0, entity);
+                } else {
+                    sortedMemberList.add(entity);
+                }
+            }
+        }
+        return sortedMemberList;
     }
 
     private UserEntity getMyInfo() {

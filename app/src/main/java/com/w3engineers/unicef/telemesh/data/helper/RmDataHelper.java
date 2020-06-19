@@ -162,6 +162,23 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         syncUserWithBroadcastMessage(userId);
     }
 
+    public void myUserInfoAdd() {
+        String userId = getMyMeshId();
+
+        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+        String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        long regTime = sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME);
+
+        UserEntity userEntity = new UserEntity().setUserName(name)
+                .setAvatarIndex(avatarIndex)
+                .setMeshId(userId)
+                .setRegistrationTime(regTime)
+                .setOnlineStatus(Constants.UserStatus.OFFLINE);
+
+        UserDataSource.getInstance().insertOrUpdateData(userEntity);
+    }
+
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);

@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -22,18 +23,21 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupDetailsBinding;
 import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
+import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class GroupDetailsActivity extends TelemeshBaseActivity {
+public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntity> {
 
     private ActivityGroupDetailsBinding mBinding;
     private GroupDetailsViewModel mViewModel;
     private String groupId;
     private GroupDetailsAdapter mAdapter;
+    private SharedPref sharedPref;
 
     @Override
     protected int getLayoutId() {
@@ -49,6 +53,8 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
     public void startUI() {
         mBinding = (ActivityGroupDetailsBinding) getViewDataBinding();
         mViewModel = getViewModel();
+
+        sharedPref = SharedPref.getSharedPref(this);
 
         initView();
     }
@@ -86,11 +92,28 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
         }
     }
 
+    @Override
+    public void onItemClick(View view, UserEntity item) {
+        int id = view.getId();
+        if (id == R.id.image_view_remove) {
+            //Todo remove user form group
+        } else {
+            String userId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.putExtra(UserEntity.class.getName(), item);
+            if (userId.equals(item.meshId)) {
+                intent.putExtra(SettingsFragment.class.getName(), true);
+            }
+            startActivity(intent);
+        }
+    }
+
     private void initView() {
         setClickListener(mBinding.opBack, mBinding.textViewAddMember, mBinding.imageViewPen,
                 mBinding.textViewLeaveGroup);
 
         mAdapter = new GroupDetailsAdapter();
+        mAdapter.setItemClickListener(this);
         mBinding.recyclerViewGroupMember.setHasFixedSize(true);
         mBinding.recyclerViewGroupMember.setAdapter(mAdapter);
 
@@ -143,7 +166,6 @@ public class GroupDetailsActivity extends TelemeshBaseActivity {
     }
 
     private UserEntity getMyInfo() {
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
         userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);

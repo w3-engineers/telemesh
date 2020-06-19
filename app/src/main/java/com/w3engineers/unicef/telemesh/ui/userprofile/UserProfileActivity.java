@@ -93,6 +93,9 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         } else {
             mBinding.buttonExportProfile.setVisibility(View.GONE);
             mBinding.textViewEdit.setVisibility(View.GONE);
+
+            String title = String.format(LanguageUtil.getString(R.string.other_profile), userEntity.userName);
+            mBinding.textViewTitle.setText(title);
         }
 
         Bitmap qrImage = getWalletQr();

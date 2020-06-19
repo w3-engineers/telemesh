@@ -38,4 +38,5 @@ public class LanguageUtil {
     public static String getString(int resId){
        return TeleMeshApplication.getContext().getResources().getString(resId);
     }
+
 }

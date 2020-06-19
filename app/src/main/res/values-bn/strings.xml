@@ -194,5 +194,6 @@
     <string name="group_admin">গ্রুপ অ্যাডমিন</string>
     <string name="leave_group">Leave group</string>
     <string name="group_name_updated">গ্রুপের নাম আপডেট করা হয়েছে</string>
+    <string name="other_profile">%s এর প্রোফাইল দেখুন</string>
 
 </resources>

@@ -197,6 +197,6 @@
     <string name="group_admin">Group Admin</string>
     <string name="leave_group">Leave group</string>
     <string name="group_name_updated">Group Name updated</string>
-
+    <string name="other_profile">%s\'s Profile</string>
 
 </resources>

@@ -50,7 +50,10 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
 
         @Override
         public void bind(UserEntity item, ViewDataBinding viewDataBinding) {
+
             ItemGroupMemberBinding binding = (ItemGroupMemberBinding) viewDataBinding;
+
+            setClickListener(binding.getRoot(), binding.imageViewRemove);
 
             binding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             binding.userName.setText(item.userName);
@@ -69,7 +72,7 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
 
         @Override
         public void onClick(View view) {
-
+            mItemClickListener.onItemClick(view, getItem(getAdapterPosition()));
         }
 
         private int activeStatusResource(int userActiveStatus) {

@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class GroupDataHelper extends RmDataHelper {
 
@@ -55,7 +56,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupRenameEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendGroupNameChangeEvent, Throwable::printStackTrace));
+                .subscribe(this::sendAndUpdateGroupChangeEvent, Throwable::printStackTrace));
     }
 
     void groupDataReceive(int dataType, String userId, byte[] rawData, boolean isNewMessage) {
@@ -319,7 +320,7 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void sendGroupNameChangeEvent(GroupModel groupModel) {
+    private long sendGroupNameChangeEvent(GroupModel groupModel) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         String groupId = groupModel.getGroupId();
@@ -333,7 +334,8 @@ public class GroupDataHelper extends RmDataHelper {
         String groupNameModelText = gsonBuilder.getGroupNameModelJson(groupNameModel);
         groupEntity.setGroupName(groupNameModelText);
 
-        groupDataSource.insertOrUpdateGroup(groupEntity);
+        long result = groupDataSource.insertOrUpdateGroup(groupEntity);
+
         setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
                 0, Constants.MessageType.GROUP_RENAMED);
 
@@ -351,6 +353,16 @@ public class GroupDataHelper extends RmDataHelper {
                 }
             }
         }
+
+        return result;
+    }
+
+    private void sendAndUpdateGroupChangeEvent(GroupModel groupModel) {
+        compositeDisposable.add(Single.fromCallable(() -> sendGroupNameChangeEvent(groupModel))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
     }
 
     private void receiveGroupNameChangedEvent(byte[] rawData, String userId) {

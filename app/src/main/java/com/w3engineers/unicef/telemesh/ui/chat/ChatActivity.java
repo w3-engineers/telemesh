@@ -369,8 +369,8 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.image_view_send:
                 if (mViewBinging != null) {
                     String value = mViewBinging.editTextMessage.getText().toString().trim();
-                    if (!TextUtils.isEmpty(value) && mUserEntity != null && mUserEntity.meshId != null) {
-                        mChatViewModel.sendMessage(mUserEntity.meshId, value, true);
+                    if (!TextUtils.isEmpty(value)) {
+                        mChatViewModel.sendMessage(threadId, value, true);
                         mViewBinging.editTextMessage.setText("");
                     }
                 }
@@ -516,7 +516,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
                     List<Uri> images = Matisse.obtainResult(data);
-                    mChatViewModel.sendContentMessage(mUserEntity.meshId, images.get(0));
+                    mChatViewModel.sendContentMessage(threadId, images.get(0));
                 }
                 break;
         }

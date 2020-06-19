@@ -174,6 +174,8 @@ public class MessageEntity extends ChatEntity {
         return new MessageModel()
                 .setId(getMessageId())
                 .setMessage(getMessage())
+                .setIsGroup(getMessagePlace())
+                .setGroupId(getGroupId())
                 .setType(getMessageType());
     }
 
@@ -181,7 +183,9 @@ public class MessageEntity extends ChatEntity {
     @Override
     public ChatEntity toChatEntity(@NonNull MessageModel messageModel) {
 
-        MessageEntity messageEntity = setMessage(messageModel.getMessage());
+        MessageEntity messageEntity = setMessage(messageModel.getMessage())
+                .setMessagePlace(messageModel.isGroup())
+                .setGroupId(messageModel.getGroupId());
 
         messageEntity.setMessageId(messageModel.getId())
                 .setMessageType(messageModel.getType());

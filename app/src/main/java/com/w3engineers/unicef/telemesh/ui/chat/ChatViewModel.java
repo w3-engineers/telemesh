@@ -73,6 +73,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private static final int PAGE_SIZE = 70;
     private static final int PREFETCH_DISTANCE = 30;
 
+    private boolean isGroup;
 
     private CompositeDisposable compositeDisposable;
     private MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
@@ -91,6 +92,10 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         userDataSource  = UserDataSource.getInstance();
         groupDataSource = GroupDataSource.getInstance();
         dataSource = Source.getDbSource();
+    }
+
+    void setChatPageInfo(boolean isGroup) {
+        this.isGroup = isGroup;
     }
 
     @Override
@@ -146,8 +151,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(membersInfo);
 
-        String myMeshId = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.MY_USER_ID);
+        String myMeshId = getMyUserId();
 
         List<String> userList = new ArrayList<>();
         for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
@@ -162,6 +166,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     void groupJoinAction(GroupEntity groupEntity) {
         groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_JOINED);
         dataSource.setGroupUserEvent(groupEntity);
+    }
+
+    private String getMyUserId() {
+        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.MY_USER_ID);
     }
 
     void groupLeaveAction(GroupEntity groupEntity) {
@@ -213,18 +222,23 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     /**
      * <h1>Send message on IO thread</h1>
      *
-     * @param meshId        : Friends user id
+     * @param threadId        : Friends user id
      * @param message       : Message need to send
      * @param isTextMessage : is text or file
      */
-    public void sendMessage(@NonNull String meshId, @NonNull String message, boolean isTextMessage) {
+    public void sendMessage(@NonNull String threadId, @NonNull String message, boolean isTextMessage) {
 
         if (isTextMessage) {
 
             MessageEntity messageEntity = new MessageEntity()
-                    .setMessage(message);
+                    .setMessage(message).setMessagePlace(isGroup);
 
-            ChatEntity chatEntity = prepareChatEntityForText(meshId, messageEntity,
+            if (isGroup) {
+                messageEntity.setGroupId(threadId);
+                threadId = getMyUserId();
+            }
+
+            ChatEntity chatEntity = prepareChatEntityForText(threadId, messageEntity,
                     Constants.MessageType.TEXT_MESSAGE);
 
             messageInsertionProcess(chatEntity);

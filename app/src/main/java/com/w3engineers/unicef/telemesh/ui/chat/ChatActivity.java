@@ -153,7 +153,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mViewBinging.groupBlock.setVisibility(View.GONE);
                 mViewBinging.chatMessageBar.setVisibility(View.GONE);
 
-                if (mGroupEntity.getOwnStatus() != Constants.GroupUserOwnState.GROUP_JOINED) {
+                if (isActiveOnGroup()) {
                     mViewBinging.groupBlock.setVisibility(View.VISIBLE);
                 } else {
                     mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
@@ -223,7 +223,9 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mChatViewModel.groupLeaveAction(mGroupEntity);
                 break;
             case R.id.menu_message_clear:
-                mChatViewModel.clearMessage(threadId, isGroup);
+                if (isActiveOnGroup()) {
+                    mChatViewModel.clearMessage(threadId, isGroup);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -378,9 +380,11 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.image_profile:
             case R.id.text_view_last_name:
                 if (isGroup) {
-                    Intent intent = new Intent(this, GroupDetailsActivity.class);
-                    intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
-                    startActivity(intent);
+                    if (isActiveOnGroup()) {
+                        Intent intent = new Intent(this, GroupDetailsActivity.class);
+                        intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
+                        startActivity(intent);
+                    }
                 } else {
                     Intent intent = new Intent(this, UserProfileActivity.class);
                     intent.putExtra(UserEntity.class.getName(), mUserEntity);
@@ -436,8 +440,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
-        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && mGroupEntity != null
-                && mGroupEntity.getOwnStatus() != Constants.GroupUserOwnState.GROUP_JOINED)) {
+        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && isActiveOnGroup())) {
             if (mViewBinging != null) {
                 mViewBinging.emptyLayout.setVisibility(View.GONE);
             }
@@ -608,6 +611,11 @@ public class ChatActivity extends TelemeshBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isActiveOnGroup() {
+        return mGroupEntity != null && mGroupEntity.getOwnStatus() !=
+                Constants.GroupUserOwnState.GROUP_JOINED;
     }
 
     private void zoomImageFromThumb(final View thumbView, String imagePath) {

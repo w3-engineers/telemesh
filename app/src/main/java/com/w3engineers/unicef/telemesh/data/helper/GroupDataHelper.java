@@ -336,8 +336,9 @@ public class GroupDataHelper extends RmDataHelper {
 
         long result = groupDataSource.insertOrUpdateGroup(groupEntity);
 
-        setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
-                0, Constants.MessageType.GROUP_RENAMED);
+        //Todo we have to update this method calling system. Cause user table has no self information
+        /*setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
+                0, Constants.MessageType.GROUP_RENAMED);*/
 
         String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
 

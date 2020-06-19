@@ -39,6 +39,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     private String groupId;
     private GroupDetailsAdapter mAdapter;
     private SharedPref sharedPref;
+    private GroupEntity mGroupEntity;
 
     @Override
     protected int getLayoutId() {
@@ -88,7 +89,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 startActivity(intent);
                 break;
             case R.id.text_view_leave_group:
-                //Todo leave group operation perform
+                mViewModel.groupLeaveAction(mGroupEntity);
                 break;
         }
     }
@@ -133,6 +134,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     }
 
     private void populateInfoInView(GroupEntity groupEntity) {
+        this.mGroupEntity = groupEntity;
         if (groupEntity != null) {
 
             GroupNameModel groupNameModel = GsonBuilder.getInstance()
@@ -151,6 +153,15 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         if (groupId == null) finish();
 
         mViewModel.getLiveGroupById(groupId).observe(this, this::populateInfoInView);
+
+        mViewModel.finishForGroupLeave.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean != null && aBoolean) {
+                    finish();
+                }
+            }
+        });
     }
 
     private void initGroupMembersInfoObserver(String membersInfo) {

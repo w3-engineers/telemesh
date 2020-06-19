@@ -82,6 +82,8 @@ public class ChatActivity extends TelemeshBaseActivity {
     private String threadId;
     private boolean isGroup;
     private MenuItem groupLeave;
+    public static ChatActivity sInsatnce;
+
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
     @Nullable
@@ -384,7 +386,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.image_profile:
             case R.id.text_view_last_name:
                 if (isGroup) {
-                    if (isActiveOnGroup()) {
+                    if (!isActiveOnGroup()) {
                         Intent intent = new Intent(this, GroupDetailsActivity.class);
                         intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
                         startActivity(intent);

@@ -223,7 +223,11 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mChatViewModel.groupLeaveAction(mGroupEntity);
                 break;
             case R.id.menu_message_clear:
-                if (isActiveOnGroup()) {
+                if (isGroup) {
+                    if (isActiveOnGroup()) {
+                        mChatViewModel.clearMessage(threadId, isGroup);
+                    }
+                } else {
                     mChatViewModel.clearMessage(threadId, isGroup);
                 }
                 break;

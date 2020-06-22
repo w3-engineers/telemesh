@@ -82,7 +82,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private String threadId;
     private boolean isGroup;
     private MenuItem groupLeave;
-    public static ChatActivity sInsatnce;
+    public static ChatActivity sInstance;
 
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
@@ -114,6 +114,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     @Override
     public void startUI() {
         super.startUI();
+        sInstance = this;
         Intent intent = getIntent();
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
@@ -386,7 +387,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.image_profile:
             case R.id.text_view_last_name:
                 if (isGroup) {
-                    if (!isActiveOnGroup()) {
+                    if (isActiveOnGroup()) {
                         Intent intent = new Intent(this, GroupDetailsActivity.class);
                         intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
                         startActivity(intent);
@@ -434,6 +435,12 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
     }
 
+    @Override
+    protected void stopUI() {
+        super.stopUI();
+        sInstance = null;
+    }
+
     private void resendFailedMessage(MessageEntity failedMessage) {
         if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
             Toaster.showShort(mUserEntity.getUserName() + " is in offline.");
@@ -463,6 +470,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         startActivity(newTask);
         finish();
     }
+
 
     @Override
     public void onBackPressed() {

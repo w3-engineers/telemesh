@@ -22,6 +22,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupDetailsBinding;
+import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
@@ -154,11 +155,11 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
 
         mViewModel.getLiveGroupById(groupId).observe(this, this::populateInfoInView);
 
-        mViewModel.finishForGroupLeave.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean != null && aBoolean) {
-                    finish();
+        mViewModel.finishForGroupLeave.observe(this, aBoolean -> {
+            if (aBoolean != null && aBoolean) {
+                finish();
+                if (ChatActivity.sInstance != null) {
+                    ChatActivity.sInstance.finish();
                 }
             }
         });

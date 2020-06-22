@@ -7,11 +7,15 @@ import android.text.TextUtils;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+
+import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -38,6 +42,7 @@ public class Source implements DataSource {
     private BehaviorSubject<Boolean> isMeshInitiated = BehaviorSubject.create();
     private BehaviorSubject<GroupEntity> groupUserEvent = BehaviorSubject.create();
     private BehaviorSubject<GroupModel> groupRenameEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupMemberChangeModel> groupMemberAddEvent = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -130,6 +135,17 @@ public class Source implements DataSource {
     @Nullable
     public Flowable<ChatEntity> getReSendMessage() {
         return failedMessage.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setAddNewMemberEvent(GroupMemberChangeModel model) {
+        groupMemberAddEvent.onNext(model);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupMemberChangeModel> getGroupMembersAddEvent() {
+        return groupMemberAddEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)

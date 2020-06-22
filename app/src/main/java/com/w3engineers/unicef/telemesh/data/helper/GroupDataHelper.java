@@ -8,6 +8,7 @@ import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
@@ -57,6 +58,10 @@ public class GroupDataHelper extends RmDataHelper {
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupRenameEvent())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(this::sendAndUpdateGroupChangeEvent, Throwable::printStackTrace));
+
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMembersAddEvent())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(this::sendNewAddedMemberToOther, Throwable::printStackTrace));
     }
 
     void groupDataReceive(int dataType, String userId, byte[] rawData, boolean isNewMessage) {
@@ -168,6 +173,7 @@ public class GroupDataHelper extends RmDataHelper {
 
                             if (storedMembersInfo != null) {
                                 if (storedMembersInfo.getMemberStatus() == Constants.GroupUserEvent.EVENT_LEAVE) {
+                                    //Todo Mimo vai, may be You can get an exception  for remove while iterating
                                     groupMembersInfos.remove(groupMembersInfo);
                                 } else {
                                     groupMembersInfos.set(i, storedMembersInfo);
@@ -469,6 +475,15 @@ public class GroupDataHelper extends RmDataHelper {
                 }
             }
         }
+    }
+
+    private void sendNewAddedMemberToOther(GroupMemberChangeModel model) {
+        GroupEntity updatedGroupInfo = model.groupEntity;
+        List<UserEntity> newAddedUserList = model.changedUserList;
+
+        //Todo send group newly added info and other to exist user
+
+        // Todo send group create event to newly added users
     }
 
 }

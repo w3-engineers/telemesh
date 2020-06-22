@@ -4,8 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -53,6 +57,12 @@ public interface DataSource {
 
     @Nullable
     Flowable<GroupModel> getGroupRenameEvent();
+
+    void setAddNewMemberEvent(GroupMemberChangeModel model);
+
+    @Nullable
+    Flowable<GroupMemberChangeModel> getGroupMembersAddEvent();
+
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     //void setMyMode(int mode);

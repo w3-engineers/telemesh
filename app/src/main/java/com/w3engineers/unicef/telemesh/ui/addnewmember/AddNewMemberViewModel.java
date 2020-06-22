@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.addnewmember;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
@@ -10,9 +11,12 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
@@ -40,6 +44,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private GroupDataSource groupDataSource;
+    private DataSource dataSource;
 
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<GroupEntity> groupUserList = new MutableLiveData<>();
@@ -59,8 +64,60 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
         super(application);
         this.userDataSource = UserDataSource.getInstance();
         groupDataSource = GroupDataSource.getInstance();
+        dataSource = Source.getDbSource();
         userList = new ArrayList<>();
         tempNearByList = new ArrayList<>();
+    }
+
+    void addMembersInGroup(GroupEntity groupEntity, List<UserEntity> userList) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        // add member info
+        ArrayList<GroupMembersInfo> membersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+        for (UserEntity userEntity : userList) {
+            GroupMembersInfo groupMembersInfo = new GroupMembersInfo();
+            groupMembersInfo.setMemberId(userEntity.getMeshId());
+            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
+            membersInfos.add(groupMembersInfo);
+        }
+
+        //checking name group name contains user name or changed
+        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
+
+        List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
+        String expectedGroupName = CommonUtil.getGroupName(existGroupUserNameMap);
+
+        for (UserEntity userEntity : userList) {
+            GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
+                    .setUserId(userEntity.getMeshId())
+                    .setUserName(userEntity.getUserName());
+            existGroupUserNameMap.add(groupUserNameMap);
+        }
+        if (expectedGroupName.equals(groupNameModel.getGroupName())) {
+            // We have to change group name
+            groupNameModel.setGroupNameChanged(true)
+                    .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+        }
+
+
+        groupEntity.setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
+                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(membersInfos));
+
+        getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    if (aLong > 0) {
+                        groupUserList.postValue(groupEntity);
+                        GroupMemberChangeModel memberChangeModel = new GroupMemberChangeModel();
+                        memberChangeModel.changedUserList = userList;
+                        memberChangeModel.groupEntity = groupEntity;
+                        dataSource.setAddNewMemberEvent(memberChangeModel);
+                    }
+                }));
+
+
     }
 
     void createGroup(List<UserEntity> userEntities) {
@@ -127,18 +184,31 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    if(aLong>0){
+                    if (aLong > 0) {
                         groupUserList.postValue(groupEntity);
                     }
                 }));
     }
 
+    @NonNull
+    LiveData<GroupEntity> getLiveGroupById(@NonNull String threadId) {
+        return groupDataSource.getLiveGroupById(threadId);
+    }
 
-    public void startUserObserver() {
+
+    public void startUserObserver(List<String> existMemberList) {
         getCompositeDisposable().add(userDataSource.getAllUsersForGroup()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
+
+                    Iterator<UserEntity> i2 = userEntities.iterator();
+
+                    while (i2.hasNext()) {
+                        if (existMemberList.contains(i2.next().getMeshId())) {
+                            i2.remove();
+                        }
+                    }
 
                     Set<String> set = new HashSet<String>();
                     for (UserEntity o2 : userEntities) {
@@ -150,6 +220,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                             i.remove();
                         }
                     }
+
 
                     List<UserEntity> userEntityList = new ArrayList<>();
                     for (UserEntity diffElement : userList) {

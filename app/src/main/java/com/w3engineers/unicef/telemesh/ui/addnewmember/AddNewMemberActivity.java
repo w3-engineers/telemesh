@@ -1,28 +1,42 @@
 package com.w3engineers.unicef.telemesh.ui.addnewmember;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.View;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAddNewMemberBinding;
-import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsViewModel;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.SelectedUserAdapter;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AddNewMemberActivity extends TelemeshBaseActivity implements AddNewMemberAdapter.ItemChangeListener {
+public class AddNewMemberActivity extends TelemeshBaseActivity implements
+        AddNewMemberAdapter.ItemChangeListener, ItemClickListener<UserEntity> {
 
     private ActivityAddNewMemberBinding mBinding;
     private AddNewMemberViewModel mViewModel;
     private AddNewMemberAdapter mMemberAdapter;
+    private SelectedUserAdapter mSelectedUserAdapter;
+
+    private String mGroupId;
+
+    private GroupEntity mGroupEntity;
+    private List<String> mGroupMemberList;
 
     @Nullable
     public List<UserEntity> userEntityList;
@@ -35,6 +49,11 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements AddNew
     @Override
     protected int statusBarColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    @Override
+    protected int getToolbarId() {
+        return R.id.toolbar;
     }
 
     @Override
@@ -55,40 +74,120 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements AddNew
     }
 
     @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.button_go) {
+            mViewModel.addMembersInGroup(mGroupEntity, mMemberAdapter.getSelectedUserList());
+        }
+    }
+
+    @Override
     public void onGetChangedItem(boolean isAdd, UserEntity userEntity) {
-        //Todo add a selected view
+        if (!mMemberAdapter.getSelectedUserList().isEmpty()) {
+            mBinding.buttonGo.show();
+            mBinding.cardViewSelectedItem.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.buttonGo.hide();
+            clearSelectedUserAdapter();
+        }
+
+        if (isAdd) {
+            mSelectedUserAdapter.addItem(userEntity);
+        } else {
+            mSelectedUserAdapter.removeItem(userEntity);
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, UserEntity item) {
+        if (view.getId() == R.id.button_remove) {
+            mSelectedUserAdapter.removeItem(item);
+
+            mMemberAdapter.deselectUser(item);
+
+            if (mMemberAdapter.getSelectedUserList().isEmpty()) {
+                mBinding.cardViewSelectedItem.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void initView() {
 
         setClickListener(mBinding.buttonGo);
 
+        setTitle("Add member");
+
         mBinding.recyclerViewUser.setHasFixedSize(true);
         mMemberAdapter = new AddNewMemberAdapter(this, this);
         mBinding.recyclerViewUser.setAdapter(mMemberAdapter);
 
+        mSelectedUserAdapter = new SelectedUserAdapter();
+        mSelectedUserAdapter.setItemClickListener(this);
+        mBinding.recyclerViewSelectedUser.setHasFixedSize(true);
+        mBinding.recyclerViewSelectedUser.setAdapter(mSelectedUserAdapter);
+
+        parseIntent();
+
+        groupDataObserver();
+
         userDataOperation();
+    }
+
+    private void groupDataObserver() {
+        if (mGroupId == null) {
+            finish();
+            return;
+        }
+
+        mViewModel.getLiveGroupById(mGroupId).observe(this, groupEntity -> {
+            if (groupEntity != null) {
+                mGroupEntity = groupEntity;
+                generateMemberList(GsonBuilder.getInstance()
+                        .getGroupMemberInfoObj(groupEntity.getMembersInfo()));
+                mViewModel.startUserObserver(mGroupMemberList);
+            }
+        });
+
+        mViewModel.groupUserList.observe(this, groupEntity -> {
+            if (groupEntity != null) {
+                finish();
+            }
+        });
+
     }
 
     private void userDataOperation() {
 
-        if (mViewModel != null) {
+        mViewModel.nearbyUsers.observe(this, userEntities -> {
+            if (userEntities != null) {
+                mMemberAdapter.submitList(userEntities);
+                userEntityList = userEntities;
 
-            mViewModel.startUserObserver();
-
-            mViewModel.nearbyUsers.observe(this, userEntities -> {
-                if (userEntities != null) {
-                    mMemberAdapter.submitList(userEntities);
-                    userEntityList = userEntities;
-
-                    if (userEntityList != null && userEntityList.size() > 0) {
-                        //Todo we can show empty page
-                    } else {
-                        //Todo we can hide empty page
-                    }
+                if (userEntityList != null && userEntityList.size() > 0) {
+                    //Todo we can show empty page
+                } else {
+                    //Todo we can hide empty page
                 }
-            });
+            }
+        });
+    }
 
+    private void generateMemberList(List<GroupMembersInfo> groupAdminInfoList) {
+        mGroupMemberList = new ArrayList<>();
+        for (GroupMembersInfo info : groupAdminInfoList) {
+            mGroupMemberList.add(info.getMemberId());
+        }
+    }
+
+    private void clearSelectedUserAdapter() {
+        mBinding.cardViewSelectedItem.setVisibility(View.GONE);
+        mSelectedUserAdapter.clear();
+    }
+
+    private void parseIntent() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(GroupEntity.class.getName())) {
+            mGroupId = intent.getStringExtra(GroupEntity.class.getName());
         }
     }
 
@@ -101,6 +200,5 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements AddNew
             }
         }).get(AddNewMemberViewModel.class);
     }
-
 
 }

@@ -25,8 +25,6 @@ import java.util.List;
 
 public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemberAdapter.GenericViewHolder> {
 
-    private boolean isSelectionEnable;
-
     private List<UserEntity> selectedUserList = new ArrayList<>();
     private Context mContext;
     private AddNewMemberAdapter.ItemChangeListener mListener;
@@ -89,15 +87,6 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
         }
     }
 
-    void setSelectionEnable(boolean value) {
-        this.isSelectionEnable = value;
-        this.selectedUserList.clear();
-    }
-
-    boolean isSelectionEnable() {
-        return isSelectionEnable;
-    }
-
     List<UserEntity> getSelectedUserList() {
         return selectedUserList;
     }
@@ -138,11 +127,7 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
             itemGroupCreateUserBinding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
                     .getAvatarImage(item.avatarIndex));
 
-            if (isSelectionEnable) {
-                itemGroupCreateUserBinding.checkBox.setVisibility(View.VISIBLE);
-            } else {
-                itemGroupCreateUserBinding.checkBox.setVisibility(View.INVISIBLE);
-            }
+            itemGroupCreateUserBinding.checkBox.setVisibility(View.VISIBLE);
 
             if (isSelected(item.meshId)) {
                 itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
@@ -154,18 +139,15 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
 
             // Todo We have to replace the listener in separate section
             itemGroupCreateUserBinding.getRoot().setOnClickListener(view -> {
-                if (isSelectionEnable) {
 
-                    if (isSelected(item.getMeshId())) {
-                        selectedUserList.remove(item);
-                        itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
-                        itemGroupCreateUserBinding.checkBox.setChecked(false, true);
-                    } else {
-                        selectedUserList.add(item);
-                        itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
-                        itemGroupCreateUserBinding.checkBox.setChecked(true, true);
-                    }
-
+                if (isSelected(item.getMeshId())) {
+                    selectedUserList.remove(item);
+                    itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                    itemGroupCreateUserBinding.checkBox.setChecked(false, true);
+                } else {
+                    selectedUserList.add(item);
+                    itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.selected_item_bg));
+                    itemGroupCreateUserBinding.checkBox.setChecked(true, true);
                 }
 
                 if (mListener != null) {
@@ -178,15 +160,6 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
         @Override
         protected void clearView() {
             itemGroupCreateUserBinding.invalidateAll();
-        }
-
-
-        private String getHopIndicator(int userActiveStatus) {
-            if (userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE
-                    || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE)
-                return "";
-            else
-                return "";
         }
 
         private int activeStatusResource(int userActiveStatus) {

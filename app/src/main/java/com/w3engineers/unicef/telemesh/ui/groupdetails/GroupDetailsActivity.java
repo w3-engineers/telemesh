@@ -22,6 +22,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupDetailsBinding;
+import com.w3engineers.unicef.telemesh.ui.addnewmember.AddNewMemberActivity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
@@ -81,7 +82,9 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 break;
 
             case R.id.text_view_add_member:
-                //Todo open a add member page
+                Intent addMemberIntent = new Intent(this, AddNewMemberActivity.class);
+                addMemberIntent.putExtra(GroupEntity.class.getName(), groupId);
+                startActivity(addMemberIntent);
                 break;
             case R.id.image_view_pen:
                 Intent intent = new Intent(this, GroupNameEditActivity.class);

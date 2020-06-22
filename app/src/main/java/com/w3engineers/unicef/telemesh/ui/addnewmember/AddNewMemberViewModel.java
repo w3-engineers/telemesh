@@ -1,7 +1,6 @@
-package com.w3engineers.unicef.telemesh.ui.groupcreate;
+package com.w3engineers.unicef.telemesh.ui.addnewmember;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -38,7 +36,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class GroupCreateViewModel extends BaseRxAndroidViewModel {
+public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private GroupDataSource groupDataSource;
@@ -57,7 +55,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
     private List<UserEntity> tempNearByList;
     public List<UserEntity> userList;
 
-    public GroupCreateViewModel(@NonNull Application application) {
+    public AddNewMemberViewModel(@NonNull Application application) {
         super(application);
         this.userDataSource = UserDataSource.getInstance();
         groupDataSource = GroupDataSource.getInstance();

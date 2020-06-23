@@ -165,6 +165,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     void groupJoinAction(GroupEntity groupEntity) {
         groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_JOINED);
+        groupEntity.setGroupInfoId(UUID.randomUUID().toString());
         dataSource.setGroupUserEvent(groupEntity);
     }
 
@@ -179,6 +180,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
                     groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_LEAVE);
+                    groupEntity.setGroupInfoId(UUID.randomUUID().toString());
                     dataSource.setGroupUserEvent(groupEntity);
                     finishForGroupLeave.postValue(true);
                 }, Throwable::printStackTrace));

@@ -45,6 +45,8 @@ public class GroupEntity extends DbBaseEntity {
 
     public int hasUnreadMessage;
 
+    public String groupInfoId;
+
     public GroupEntity() {
     }
 
@@ -59,6 +61,7 @@ public class GroupEntity extends DbBaseEntity {
         dest.writeString(this.membersInfo);
         dest.writeInt(this.ownStatus);
         dest.writeInt(this.hasUnreadMessage);
+        dest.writeString(this.groupInfoId);
     }
 
     protected GroupEntity(@NonNull Parcel in) {
@@ -71,6 +74,7 @@ public class GroupEntity extends DbBaseEntity {
         this.membersInfo = in.readString();
         this.ownStatus = in.readInt();
         this.hasUnreadMessage = in.readInt();
+        this.groupInfoId = in.readString();
     }
 
     public static final Creator<GroupEntity> CREATOR = new Creator<GroupEntity>() {
@@ -158,6 +162,15 @@ public class GroupEntity extends DbBaseEntity {
 
     public GroupEntity setHasUnreadMessage(int hasUnreadMessage) {
         this.hasUnreadMessage = hasUnreadMessage;
+        return this;
+    }
+
+    public String getGroupInfoId() {
+        return groupInfoId;
+    }
+
+    public GroupEntity setGroupInfoId(String groupInfoId) {
+        this.groupInfoId = groupInfoId;
         return this;
     }
 

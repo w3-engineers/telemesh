@@ -2,7 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
 public class GroupModel {
 
-    String n, i, ai, mi;
+    String n, i, ai, mi, ii;
     int a;
     long c;
 
@@ -39,6 +39,15 @@ public class GroupModel {
 
     public GroupModel setMemberInfo(String memberInfo) {
         this.mi = memberInfo;
+        return this;
+    }
+
+    public String getInfoId() {
+        return ii;
+    }
+
+    public GroupModel setInfoId(String infoId) {
+        this.ii = infoId;
         return this;
     }
 

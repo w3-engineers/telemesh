@@ -6,6 +6,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -49,7 +52,9 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                 .getGroupMemberInfoObj(membersInfo);
         List<String> userList = new ArrayList<>();
         for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-            userList.add(groupMembersInfo.getMemberId());
+            if (!groupMembersInfo.getMemberId().equals(getMyUserId())) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
         }
 
         return userDataSource.getGroupMembers(userList);
@@ -77,6 +82,11 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
             });
             thread.start();
         });
+    }
+
+    private String getMyUserId() {
+        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.MY_USER_ID);
     }
 
 }

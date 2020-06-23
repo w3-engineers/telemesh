@@ -65,6 +65,11 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         tempNearByList = new ArrayList<>();
     }
 
+    private String getMyUserId() {
+        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.MY_USER_ID);
+    }
+
     void createGroup(List<UserEntity> userEntities) {
         if (userEntities == null || userEntities.isEmpty())
             return;

@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
@@ -45,6 +46,7 @@ public class GroupEntity extends DbBaseEntity {
 
     public int hasUnreadMessage;
 
+    @Ignore
     public String groupInfoId;
 
     public GroupEntity() {

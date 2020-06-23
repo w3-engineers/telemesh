@@ -120,74 +120,9 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
     }
 
-    void createGroup(List<UserEntity> userEntities) {
-        if (userEntities == null || userEntities.isEmpty())
-            return;
-
-        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-        ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
-        ArrayList<GroupAdminInfo> groupAdminInfos = new ArrayList<>();
-        ArrayList<GroupUserNameMap> groupUserNameMaps = new ArrayList<>();
-
-        String myUserId = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+    private String getMyUserId() {
+        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.MY_USER_ID);
-
-        String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.USER_NAME);
-
-        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo();
-        myGroupMembersInfo.setMemberId(myUserId);
-        myGroupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
-        groupMembersInfos.add(myGroupMembersInfo);
-
-        for (UserEntity userEntity : userEntities) {
-
-            GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
-                    .setUserId(userEntity.getMeshId())
-                    .setUserName(userEntity.getUserName());
-            groupUserNameMaps.add(groupUserNameMap);
-
-            GroupMembersInfo groupMembersInfo = new GroupMembersInfo();
-            groupMembersInfo.setMemberId(userEntity.getMeshId());
-            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
-            groupMembersInfos.add(groupMembersInfo);
-        }
-
-        GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
-                .setUserId(myUserId)
-                .setUserName(myUserName);
-        groupUserNameMaps.add(groupUserNameMap);
-
-        GroupAdminInfo groupAdminInfo = new GroupAdminInfo();
-        groupAdminInfo.setAdminId(myUserId);
-        groupAdminInfo.setAdminStatus(true);
-
-        groupAdminInfos.add(groupAdminInfo);
-
-        String groupId = UUID.randomUUID().toString();
-
-        GroupNameModel groupNameModel = new GroupNameModel()
-                .setGroupNameChanged(false)
-                .setGroupName(CommonUtil.getGroupName(groupUserNameMaps))
-                .setGroupUserMap(groupUserNameMaps);
-
-        GroupEntity groupEntity = new GroupEntity()
-                .setGroupId(groupId)
-                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
-                .setOwnStatus(Constants.GroupUserOwnState.GROUP_CREATE)
-                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos))
-                .setAdminInfo(gsonBuilder.getGroupAdminInfoJson(groupAdminInfos))
-                .setGroupCreationTime(System.currentTimeMillis());
-
-        getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> {
-                    if (aLong > 0) {
-                        groupUserList.postValue(groupEntity);
-                    }
-                }));
     }
 
     @NonNull
@@ -197,7 +132,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
 
     public void startUserObserver(List<String> existMemberList) {
-        getCompositeDisposable().add(userDataSource.getAllUsersForGroup()
+        getCompositeDisposable().add(userDataSource.getAllUsersForGroup(getMyUserId())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {

@@ -11,6 +11,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,6 +41,7 @@ public class GroupNameEditViewModel extends BaseRxAndroidViewModel {
         GroupModel groupModel = new GroupModel();
         groupModel.setGroupName(groupName);
         groupModel.setGroupId(groupId);
+        groupModel.setInfoId(UUID.randomUUID().toString());
         dataSource.setGroupRenameEvent(groupModel);
     }
 }

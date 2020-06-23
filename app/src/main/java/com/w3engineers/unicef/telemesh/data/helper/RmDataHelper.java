@@ -924,7 +924,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void newUserAnalyticsSend() {
         compositeDisposable.add(Single.fromCallable(() ->
-                UserDataSource.getInstance().getUnSyncedUsers())
+                UserDataSource.getInstance().getUnSyncedUsers(getMyMeshId()))
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(newMeshUserCounts -> {
                     AnalyticsDataHelper.getInstance().processNewNodesForAnalytics(newMeshUserCounts);
@@ -933,7 +933,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void updateSyncedUser() {
         compositeDisposable.add(Single.fromCallable(() ->
-                UserDataSource.getInstance().updateUserSynced())
+                UserDataSource.getInstance().updateUserSynced(getMyMeshId()))
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(syncedUserCounts -> {
                 }, Throwable::printStackTrace));

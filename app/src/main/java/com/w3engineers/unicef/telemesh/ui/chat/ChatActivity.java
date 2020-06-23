@@ -80,8 +80,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private UserEntity mUserEntity;
     private GroupEntity mGroupEntity;
     private String threadId;
-    private boolean isGroup;
-    private MenuItem groupLeave;
+    private boolean isGroup, isChatAvailable;
     public static ChatActivity sInstance;
 
     @Nullable
@@ -128,6 +127,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         setTitle("");
 
         mChatViewModel = getViewModel();
+        mChatViewModel.setChatPageInfo(isGroup);
         initComponent();
 
         subscribeForThreadEvent(threadId);
@@ -426,6 +426,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.group_join:
+                activeMessagePart();
                 mChatViewModel.groupJoinAction(mGroupEntity);
                 break;
 
@@ -453,13 +454,38 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
-        if ((chatEntities != null && chatEntities.size() > 0) || (isGroup && isInactiveOnGroup())) {
+        if (chatEntities != null && chatEntities.size() > 0) {
+            isChatAvailable = true;
+            if ((isGroup && isInactiveOnGroup())) {
+                if (mViewBinging != null) {
+                    mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
+                    mViewBinging.chatRv.setVisibility(View.GONE);
+                }
+            } else {
+                if (mViewBinging != null) {
+                    mViewBinging.emptyLayout.setVisibility(View.GONE);
+                    mViewBinging.chatRv.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            isChatAvailable = false;
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
+                mViewBinging.chatRv.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void activeMessagePart() {
+        if (isChatAvailable) {
             if (mViewBinging != null) {
                 mViewBinging.emptyLayout.setVisibility(View.GONE);
+                mViewBinging.chatRv.setVisibility(View.VISIBLE);
             }
         } else {
             if (mViewBinging != null) {
                 mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
+                mViewBinging.chatRv.setVisibility(View.GONE);
             }
         }
     }

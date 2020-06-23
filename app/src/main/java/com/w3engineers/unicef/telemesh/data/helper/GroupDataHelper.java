@@ -103,6 +103,7 @@ public class GroupDataHelper extends RmDataHelper {
 
     private void sendGroupCreationInfo(GroupEntity groupEntity) {
         GroupModel groupModel = groupEntity.toGroupModel();
+        groupModel.setInfoId(UUID.randomUUID().toString());
         String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
 
         ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
@@ -194,7 +195,8 @@ public class GroupDataHelper extends RmDataHelper {
             groupDataSource.insertOrUpdateGroup(groupEntity);
 
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.CREATED,
-                    groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE);
+                    groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE,
+                    groupModel.getInfoId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +204,9 @@ public class GroupDataHelper extends RmDataHelper {
 
     private void sendGroupForEvent(GroupEntity groupEntity) {
 
-        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
         byte groupEvent = -1;
@@ -221,12 +225,18 @@ public class GroupDataHelper extends RmDataHelper {
             groupEvent = Constants.DataType.EVENT_GROUP_LEAVE;
         }
 
+        GroupModel groupModel = new GroupModel()
+                .setGroupId(groupEntity.getGroupId())
+                .setInfoId(groupEntity.getGroupInfoId());
+
+        String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
+
         if (groupMembersInfos != null) {
             for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
                 String userId = groupMembersInfo.getMemberId();
                 if (!userId.equals(getMyMeshId())) {
-                    dataSend(groupEntity.getGroupId().getBytes(),
-                            groupEvent, userId, false);
+                    dataSend(groupNameText.getBytes(), groupEvent,
+                            userId, false);
                 }
             }
         }
@@ -234,7 +244,14 @@ public class GroupDataHelper extends RmDataHelper {
 
     private void receiveGroupForJoinEvent(byte[] rawData, String userId) {
         try {
-            String groupId = new String(rawData);
+
+            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+            String groupModelText = new String(rawData);
+            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
+
+            String groupId = groupModel.getGroupId();
+
             GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
             if (groupEntity == null) {
@@ -246,13 +263,13 @@ public class GroupDataHelper extends RmDataHelper {
                         .setMemberStatus(Constants.GroupUserEvent.EVENT_JOINED);
                 groupMembersInfos.add(groupMembersInfo);
 
-                String groupMemberInfoText = GsonBuilder.getInstance()
+                String groupMemberInfoText = gsonBuilder
                         .getGroupMemberInfoJson(groupMembersInfos);
                 groupEntity.setMembersInfo(groupMemberInfoText);
 
             } else {
                 String groupMemberInfoText = groupEntity.getMembersInfo();
-                ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                         .getGroupMemberInfoObj(groupMemberInfoText);
 
                 boolean isMemberUpdate = false;
@@ -272,14 +289,13 @@ public class GroupDataHelper extends RmDataHelper {
                     groupMembersInfos.add(groupMembersInfo);
                 }
 
-                groupMemberInfoText = GsonBuilder.getInstance()
-                        .getGroupMemberInfoJson(groupMembersInfos);
+                groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
                 groupEntity.setMembersInfo(groupMemberInfoText);
             }
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.JOINED,
-                    0, Constants.MessageType.GROUP_JOIN);
+                    0, Constants.MessageType.GROUP_JOIN, groupModel.getInfoId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -287,7 +303,13 @@ public class GroupDataHelper extends RmDataHelper {
 
     private void receiveGroupForLeaveEvent(byte[] rawData, String userId) {
         try {
-            String groupId = new String(rawData);
+            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+            String groupModelText = new String(rawData);
+            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
+
+            String groupId = groupModel.getGroupId();
+
             GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
             if (groupEntity == null) {
@@ -299,13 +321,13 @@ public class GroupDataHelper extends RmDataHelper {
                         .setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);
                 groupMembersInfos.add(groupMembersInfo);
 
-                String groupMemberInfoText = GsonBuilder.getInstance()
+                String groupMemberInfoText = gsonBuilder
                         .getGroupMemberInfoJson(groupMembersInfos);
                 groupEntity.setMembersInfo(groupMemberInfoText);
 
             } else {
                 String groupMemberInfoText = groupEntity.getMembersInfo();
-                ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                         .getGroupMemberInfoObj(groupMemberInfoText);
 
                 boolean isMemberLeaved = false;
@@ -330,14 +352,13 @@ public class GroupDataHelper extends RmDataHelper {
                     groupMembersInfos.add(groupMembersInfo);
                 }
 
-                groupMemberInfoText = GsonBuilder.getInstance()
-                        .getGroupMemberInfoJson(groupMembersInfos);
+                groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
                 groupEntity.setMembersInfo(groupMemberInfoText);
             }
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.LEAVE,
-                    0, Constants.MessageType.GROUP_LEAVE);
+                    0, Constants.MessageType.GROUP_LEAVE, groupModel.getInfoId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -359,9 +380,8 @@ public class GroupDataHelper extends RmDataHelper {
 
         long result = groupDataSource.insertOrUpdateGroup(groupEntity);
 
-        //Todo we have to update this method calling system. Cause user table has no self information
-        /*setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
-                0, Constants.MessageType.GROUP_RENAMED);*/
+        setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
+                0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
 
         String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
 
@@ -406,7 +426,7 @@ public class GroupDataHelper extends RmDataHelper {
         groupDataSource.insertOrUpdateGroup(groupEntity);
         setGroupInfo(userId, groupModel.getGroupId(),
                 Constants.GroupEventMessageBody.RENAMED + " " + groupModel.getGroupName(),
-                0, Constants.MessageType.GROUP_RENAMED);
+                0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
     }
 
     public void updateGroupUserInfo(UserEntity userEntity) {
@@ -440,8 +460,11 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void setGroupInfo(String userId, String groupId, String message, long time, int type) {
-        String messageId = UUID.randomUUID().toString();
+    private void setGroupInfo(String userId, String groupId, String message, long time,
+                              int type, String messageId) {
+        if (TextUtils.isEmpty(messageId)) {
+            messageId = UUID.randomUUID().toString();
+        }
 
         MessageEntity messageEntity = new MessageEntity()
                 .setMessage(message)

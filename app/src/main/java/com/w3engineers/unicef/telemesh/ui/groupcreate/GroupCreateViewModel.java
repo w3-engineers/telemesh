@@ -75,8 +75,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         ArrayList<GroupAdminInfo> groupAdminInfos = new ArrayList<>();
         ArrayList<GroupUserNameMap> groupUserNameMaps = new ArrayList<>();
 
-        String myUserId = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.MY_USER_ID);
+        String myUserId = getMyUserId();
 
         String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.USER_NAME);
@@ -137,7 +136,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
 
     public void startUserObserver() {
-        getCompositeDisposable().add(userDataSource.getAllUsersForGroup()
+        getCompositeDisposable().add(userDataSource.getAllUsersForGroup(getMyUserId())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {

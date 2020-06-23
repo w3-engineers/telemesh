@@ -55,8 +55,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
             + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
-            + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID + ") AS M INNER JOIN "
-            + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
+            + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID
+            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE ( " + ColumnNames.COLUMN_USER_IS_ONLINE + " != "
@@ -73,10 +74,11 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllOnlineUsers();
 
-    @Query("SELECT * FROM " + TableNames.USERS + " ORDER BY CASE " + ColumnNames.COLUMN_USER_IS_ONLINE
-            + " WHEN " + Constants.UserStatus.OFFLINE + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId"
+            + " ORDER BY CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
+            + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
-    abstract Flowable<List<UserEntity>> getAllUsersForGroup();
+    abstract Flowable<List<UserEntity>> getAllUsersForGroup(String myMeshId);
 
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -84,12 +86,13 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
             + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
-            + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID + ") AS M INNER JOIN "
-            + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
+            + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID
+            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
-            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND " + ColumnNames.COLUMN_USER_IS_FAVOURITE
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " /*+ ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND "*/ + ColumnNames.COLUMN_USER_IS_FAVOURITE
             + " == " + Constants.FavouriteStatus.FAVOURITE + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
@@ -106,13 +109,14 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
             + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
-            + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID + ") AS M INNER JOIN "
+            + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID + ") AS M INNER JOIN "
             + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
             + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
-            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
-            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " AND (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS NOT NULL OR "
-            + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + ") ORDER BY CASE "
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE ((" + ColumnNames.COLUMN_MESSAGE_STATUS
+            + " IS NOT NULL AND " + ColumnNames.COLUMN_MESSAGE_PLACE + " == " + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P
+            + ") OR " + ColumnNames.COLUMN_USER_IS_FAVOURITE + " == " + Constants.FavouriteStatus.FAVOURITE + ") ORDER BY CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED
@@ -134,12 +138,14 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     public abstract List<UserEntity> getLivePeers();
 
     @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + ", " + ColumnNames.COLUMN_USER_REGISTRATION_TIME
-            + " FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0)
-    public abstract List<UserEntity.NewMeshUserCount> getUnSyncedUsers();
+            + " FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0
+            + " AND " + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId")
+    public abstract List<UserEntity.NewMeshUserCount> getUnSyncedUsers(String myMeshId);
 
     @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 1
-            + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0)
-    abstract int updateUserToSynced();
+            + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0 + " AND "
+            + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId")
+    abstract int updateUserToSynced(String myMeshId);
 
     @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_ONLINE + " = :activityStatus"
             + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " = :meshId")

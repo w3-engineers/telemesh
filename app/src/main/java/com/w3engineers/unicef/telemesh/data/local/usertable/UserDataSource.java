@@ -89,8 +89,8 @@ public class UserDataSource {
     }
 
     @NonNull
-    public Flowable<List<UserEntity>> getAllUsersForGroup() {
-        return mUserDao.getAllUsersForGroup();
+    public Flowable<List<UserEntity>> getAllUsersForGroup(String myUserId) {
+        return mUserDao.getAllUsersForGroup(myUserId);
     }
 
     @NonNull
@@ -129,12 +129,12 @@ public class UserDataSource {
         mUserDao.deleteUser(userId);
     }
 
-    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers() {
-        return mUserDao.getUnSyncedUsers();
+    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers(String myUserId) {
+        return mUserDao.getUnSyncedUsers(myUserId);
     }
 
-    public int updateUserSynced() {
-        return mUserDao.updateUserToSynced();
+    public int updateUserSynced(String myUserId) {
+        return mUserDao.updateUserToSynced(myUserId);
     }
 
     @SuppressLint("LintError")

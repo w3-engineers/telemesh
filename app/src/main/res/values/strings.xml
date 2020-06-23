@@ -198,5 +198,7 @@
     <string name="leave_group">Leave group</string>
     <string name="group_name_updated">Group Name updated</string>
     <string name="other_profile">%s\'s Profile</string>
+    <string name="only_admin_can_add_member">Only admin can add a member</string>
+    <string name="add_new_member">Add new member</string>
 
 </resources>

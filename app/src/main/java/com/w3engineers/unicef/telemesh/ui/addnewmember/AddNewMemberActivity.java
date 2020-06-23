@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAddNewMemberBinding;
 import com.w3engineers.unicef.telemesh.ui.groupcreate.SelectedUserAdapter;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +116,7 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
 
         setClickListener(mBinding.buttonGo);
 
-        setTitle("Add member");
+        setTitle(LanguageUtil.getString(R.string.add_new_member));
 
         mBinding.recyclerViewUser.setHasFixedSize(true);
         mMemberAdapter = new AddNewMemberAdapter(this, this);

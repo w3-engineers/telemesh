@@ -9,10 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.ui.util.ToastUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
@@ -28,6 +30,7 @@ import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,6 +45,9 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     private GroupDetailsAdapter mAdapter;
     private SharedPref sharedPref;
     private GroupEntity mGroupEntity;
+    private String myUserId;
+    private List<GroupAdminInfo> adminInfoList;
+    private boolean amIAdmin;
 
     @Override
     protected int getLayoutId() {
@@ -82,9 +88,13 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 break;
 
             case R.id.text_view_add_member:
-                Intent addMemberIntent = new Intent(this, AddNewMemberActivity.class);
-                addMemberIntent.putExtra(GroupEntity.class.getName(), groupId);
-                startActivity(addMemberIntent);
+                if (amIAdmin) {
+                    Intent addMemberIntent = new Intent(this, AddNewMemberActivity.class);
+                    addMemberIntent.putExtra(GroupEntity.class.getName(), groupId);
+                    startActivity(addMemberIntent);
+                } else {
+                    Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_add_member));
+                }
                 break;
             case R.id.image_view_pen:
                 Intent intent = new Intent(this, GroupNameEditActivity.class);
@@ -104,10 +114,9 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         if (id == R.id.image_view_remove) {
             //Todo remove user form group
         } else {
-            String userId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
             Intent intent = new Intent(this, UserProfileActivity.class);
             intent.putExtra(UserEntity.class.getName(), item);
-            if (userId.equals(item.meshId)) {
+            if (myUserId.equals(item.meshId)) {
                 intent.putExtra(SettingsFragment.class.getName(), true);
             }
             startActivity(intent);
@@ -118,6 +127,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         setClickListener(mBinding.opBack, mBinding.textViewAddMember, mBinding.imageViewPen,
                 mBinding.textViewLeaveGroup);
 
+        myUserId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
         mAdapter = new GroupDetailsAdapter();
         mAdapter.setItemClickListener(this);
         mBinding.recyclerViewGroupMember.setHasFixedSize(true);
@@ -144,10 +154,12 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
             GroupNameModel groupNameModel = GsonBuilder.getInstance()
                     .getGroupNameModelObj(groupEntity.getGroupName());
 
-            List<GroupAdminInfo> adminInfo = GsonBuilder.getInstance().getGroupAdminInfoObj(groupEntity.getAdminInfo());
-            mAdapter.submitAdminInfoList(adminInfo);
+            adminInfoList = GsonBuilder.getInstance().getGroupAdminInfoObj(groupEntity.getAdminInfo());
+            mAdapter.submitAdminInfoList(adminInfoList);
 
             mBinding.editTextName.setText(groupNameModel.getGroupName());
+
+            updateMyAdminStatus();
 
             initGroupMembersInfoObserver(groupEntity.getMembersInfo());
         }
@@ -208,6 +220,15 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
         return userEntity;
+    }
+
+    private void updateMyAdminStatus() {
+        for (GroupAdminInfo adminInfo : adminInfoList) {
+            if (myUserId.equals(adminInfo.getAdminId())) {
+                amIAdmin = true;
+                break;
+            }
+        }
     }
 
     private GroupDetailsViewModel getViewModel() {

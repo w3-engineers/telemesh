@@ -409,12 +409,18 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 Timber.e("Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
-                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())
-                        || (!TextUtils.isEmpty(messageModel.getGroupId())
-                        && !messageModel.getGroupId().equals(dataSource.getCurrentUser()))) {
-                    Timber.e("Un Read :: %s", chatEntity.getMessageId());
-                    NotifyUtil.showNotification(chatEntity);
-                    chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                String currentThread = dataSource.getCurrentUser();
+
+                if (TextUtils.isEmpty(currentThread) || !userId.equals(dataSource.getCurrentUser())) {
+
+//                    (!TextUtils.isEmpty(messageModel.getGroupId())
+//                            && !messageModel.getGroupId().equals(dataSource.getCurrentUser()))
+
+                    if (TextUtils.isEmpty(messageModel.getGroupId()) || !messageModel.getGroupId().equals(currentThread)) {
+                        Timber.e("Un Read :: %s", chatEntity.getMessageId());
+                        NotifyUtil.showNotification(chatEntity);
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    }
                 }
 
                 MessageSourceData.getInstance().insertOrUpdateData(chatEntity);

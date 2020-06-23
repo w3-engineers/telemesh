@@ -40,7 +40,6 @@
             android:layout_marginEnd="@dimen/margin_50"
             android:background="@drawable/bg_message_item_rounded_box"
             android:fontFamily="@font/poppins_regular"
-            android:gravity="center"
             android:maxWidth="@dimen/width_250"
             android:paddingStart="@dimen/padding_15"
             android:paddingTop="@dimen/padding_10"

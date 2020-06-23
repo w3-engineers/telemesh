@@ -48,21 +48,46 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/name"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginEnd="@dimen/margin_10"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_18"
-            app:groupName="@{groupItem.groupName}"
+            app:layout_constraintTop_toTopOf="@+id/user_avatar"
             app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
             app:layout_constraintStart_toEndOf="@id/user_avatar"
-            app:layout_constraintEnd_toStartOf="@+id/message_count"
-            app:layout_constraintTop_toTopOf="@id/user_avatar" />
+            app:layout_constraintEnd_toStartOf="@+id/message_count" >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18"
+                app:groupName="@{groupItem.groupName}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/person_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_3"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/light_grey"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/message_count"
@@ -71,8 +96,6 @@
             android:layout_marginEnd="@dimen/margin_15"
             android:background="@drawable/circular_badge"
             android:gravity="center"
-            android:text="@{groupItem.hasUnreadMessage+ ``}"
-            android:visibility="@{groupItem.hasUnreadMessage > 0 ? View.VISIBLE : View.GONE}"
             android:maxLines="@integer/max_line_1"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_10sp"

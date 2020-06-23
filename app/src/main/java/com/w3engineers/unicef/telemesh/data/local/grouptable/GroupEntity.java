@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
@@ -45,7 +46,16 @@ public class GroupEntity extends DbBaseEntity {
 
     public int hasUnreadMessage;
 
+    @Ignore
     public String groupInfoId;
+
+    public String lastMessage;
+
+    public String lastPersonName;
+
+    public String lastPersonId;
+
+    public int lastMessageType;
 
     public GroupEntity() {
     }
@@ -62,6 +72,10 @@ public class GroupEntity extends DbBaseEntity {
         dest.writeInt(this.ownStatus);
         dest.writeInt(this.hasUnreadMessage);
         dest.writeString(this.groupInfoId);
+        dest.writeString(this.lastMessage);
+        dest.writeString(this.lastPersonName);
+        dest.writeString(this.lastPersonId);
+        dest.writeInt(this.lastMessageType);
     }
 
     protected GroupEntity(@NonNull Parcel in) {
@@ -75,6 +89,10 @@ public class GroupEntity extends DbBaseEntity {
         this.ownStatus = in.readInt();
         this.hasUnreadMessage = in.readInt();
         this.groupInfoId = in.readString();
+        this.lastMessage = in.readString();
+        this.lastPersonName = in.readString();
+        this.lastPersonId = in.readString();
+        this.lastMessageType = in.readInt();
     }
 
     public static final Creator<GroupEntity> CREATOR = new Creator<GroupEntity>() {
@@ -171,6 +189,15 @@ public class GroupEntity extends DbBaseEntity {
 
     public GroupEntity setGroupInfoId(String groupInfoId) {
         this.groupInfoId = groupInfoId;
+        return this;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public GroupEntity setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
         return this;
     }
 

@@ -3,13 +3,17 @@ package com.w3engineers.unicef.telemesh.ui.conversations;
 import android.arch.paging.PagedListAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -32,7 +36,9 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull GroupEntity oldItem, @NonNull GroupEntity newItem) {
-                    return oldItem.getGroupId().equalsIgnoreCase(newItem.getGroupId());
+                    return !TextUtils.isEmpty(oldItem.getGroupId())
+                            && !TextUtils.isEmpty(newItem.getGroupId()) &&
+                            oldItem.getGroupId().equalsIgnoreCase(newItem.getGroupId());
                 }
 
                 @Override
@@ -89,6 +95,59 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
         protected void bindView(@NonNull GroupEntity groupEntity) {
             itemConversationBinding.setGroupItem(groupEntity);
             itemConversationBinding.setViewModel(meshContactViewModel);
+
+            itemConversationBinding.messageCount.setVisibility(View.INVISIBLE);
+            itemConversationBinding.name.setTypeface(null, Typeface.NORMAL);
+
+            if (TextUtils.isEmpty(groupEntity.lastMessage) || isInactiveOnGroup(groupEntity)) {
+                itemConversationBinding.personMessage.setVisibility(View.GONE);
+            } else {
+                if (isSystemMessage(groupEntity.lastMessageType)) {
+                    itemConversationBinding.personMessage.setText(groupEntity.lastPersonName + " " + groupEntity.lastMessage);
+                } else {
+                    String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You:" : groupEntity.lastPersonName + ":";
+                    itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);
+                }
+            }
+
+            if (groupEntity.hasUnreadMessage > 0) {
+
+                if (isInactiveOnGroup(groupEntity)) {
+                    itemConversationBinding.name.setTypeface(null, Typeface.NORMAL);
+                    itemConversationBinding.messageCount.setVisibility(View.INVISIBLE);
+                    itemConversationBinding.messageCount.setText("");
+                } else {
+                    itemConversationBinding.name.setTypeface(null, Typeface.BOLD);
+                    itemConversationBinding.messageCount.setVisibility(View.VISIBLE);
+                    itemConversationBinding.messageCount.setText("" + groupEntity.hasUnreadMessage);
+                }
+
+            } else {
+                itemConversationBinding.name.setTypeface(null, Typeface.NORMAL);
+                itemConversationBinding.messageCount.setVisibility(View.INVISIBLE);
+                itemConversationBinding.messageCount.setText("");
+            }
+        }
+
+        private boolean isSystemMessage(int messageType) {
+            switch (messageType) {
+                case Constants.MessageType.GROUP_CREATE:
+                case Constants.MessageType.GROUP_JOIN:
+                case Constants.MessageType.GROUP_LEAVE:
+                case Constants.MessageType.GROUP_RENAMED:
+                    return true;
+            }
+            return false;
+        }
+
+        private String getMyUserId() {
+            return SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                    .read(Constants.preferenceKey.MY_USER_ID);
+        }
+
+        private boolean isInactiveOnGroup(GroupEntity mGroupEntity) {
+            return mGroupEntity != null && mGroupEntity.getOwnStatus() !=
+                    Constants.GroupUserOwnState.GROUP_JOINED;
         }
 
         @Override

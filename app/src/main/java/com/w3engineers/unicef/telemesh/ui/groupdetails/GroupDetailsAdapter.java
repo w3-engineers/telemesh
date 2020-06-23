@@ -21,9 +21,11 @@ import java.util.List;
 public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
 
     private List<GroupAdminInfo> adminInfoList;
+    private String myId;
 
-    public GroupDetailsAdapter() {
+    public GroupDetailsAdapter(String myUserId) {
         adminInfoList = new ArrayList<>();
+        this.myId = myUserId;
     }
 
     @Override
@@ -65,13 +67,25 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
             binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
                     .getAvatarImage(item.avatarIndex));
 
-            if (isAdmin(item.getMeshId())) {
+            if (item.getMeshId().equals(myId)) {
                 binding.imageViewRemove.setVisibility(View.INVISIBLE);
-                binding.textViewAdminInfo.setVisibility(View.VISIBLE);
+
+                if (isAdmin(item.getMeshId())) {
+                    binding.textViewAdminInfo.setVisibility(View.VISIBLE);
+                } else {
+                    binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
+                }
+
             } else {
-                binding.imageViewRemove.setVisibility(View.VISIBLE);
-                binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
+                if (isAdmin(item.getMeshId())) {
+                    binding.imageViewRemove.setVisibility(View.INVISIBLE);
+                    binding.textViewAdminInfo.setVisibility(View.VISIBLE);
+                } else {
+                    binding.imageViewRemove.setVisibility(View.VISIBLE);
+                    binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
+                }
             }
+
         }
 
         @Override

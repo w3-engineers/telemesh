@@ -132,7 +132,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 mBinding.textViewLeaveGroup);
 
         myUserId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
-        mAdapter = new GroupDetailsAdapter();
+        mAdapter = new GroupDetailsAdapter(myUserId);
         mAdapter.setItemClickListener(this);
         mBinding.recyclerViewGroupMember.setHasFixedSize(true);
         mBinding.recyclerViewGroupMember.setAdapter(mAdapter);

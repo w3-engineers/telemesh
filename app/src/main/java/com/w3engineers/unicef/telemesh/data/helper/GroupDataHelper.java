@@ -2,9 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -19,7 +17,6 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
-import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +78,9 @@ public class GroupDataHelper extends RmDataHelper {
             case Constants.DataType.EVENT_GROUP_RENAME:
                 receiveGroupNameChangedEvent(rawData, userId);
                 break;
+            case Constants.DataType.EVENT_GROUP_MEMBER_ADD:
+                receiveGroupMemberAddEvent(rawData, userId);
+                break;
         }
     }
 
@@ -138,6 +138,7 @@ public class GroupDataHelper extends RmDataHelper {
             GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
 
             if (groupEntity == null) {
+
                 groupEntity = new GroupEntity().toGroupEntity(groupModel);
             } else {
 
@@ -187,7 +188,6 @@ public class GroupDataHelper extends RmDataHelper {
 
                 groupEntity.setMembersInfo(storedMemberInfoText);
             }
-
 
             groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_PENDING);
 
@@ -477,13 +477,119 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
+    /**
+     * This method is responsible for handle new member added in the exists group
+     *
+     * @param rawData The group member added info received
+     * @param userId  sender id
+     */
+    private void receiveGroupMemberAddEvent(byte[] rawData, String userId) {
+        try {
+            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+            String groupModelText = new String(rawData);
+            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
+
+            GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
+
+            List<String> newAddedMemberList = new ArrayList<>();
+
+            if (groupEntity == null) {
+                /*
+                  GroupEntity null refers that this user did not
+                  receive any group information before
+                 */
+
+                groupEntity = new GroupEntity().toGroupEntity(groupModel);
+            } else {
+                groupEntity.setGroupName(groupModel.getGroupName());
+                groupEntity.setAvatarIndex(groupModel.getAvatar());
+
+                groupEntity.setAdminInfo(groupModel.getAdminInfo());
+                groupEntity.setGroupCreationTime(groupModel.getCreatedTime());
+
+                //This is the all member list in the received group
+                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupModel.getMemberInfo());
+
+                String existsMemberInfo = groupEntity.getMembersInfo();
+
+                if (TextUtils.isEmpty(existsMemberInfo)) {
+                    // This indicate that this user have no group create information
+                    // So ignore to to notify that new user invited
+                    existsMemberInfo = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+                    //We not use that now
+                } else {
+                    // The group is old. And some member information is exists
+
+                    ArrayList<GroupMembersInfo> existMemberInfoList = gsonBuilder
+                            .getGroupMemberInfoObj(existsMemberInfo);
+
+                    List<String> oldMemberIdList = new ArrayList<>();
+                    for (GroupMembersInfo membersInfo : existMemberInfoList) {
+                        oldMemberIdList.add(membersInfo.getMemberId());
+                    }
+
+                    for (GroupMembersInfo membersInfo : groupMembersInfos) {
+                        if (!oldMemberIdList.contains(membersInfo.getMemberId())) {
+                            newAddedMemberList.add(membersInfo.getMemberId());
+                        }
+                    }
+
+                }
+                //Todo If user receive the group join event then group member add event what happen
+            }
+
+
+            //Todo check newAddedMemberList is empty or not. This list is for new added member list
+            groupEntity.setMembersInfo(groupModel.getMemberInfo());
+
+            groupDataSource.insertOrUpdateGroup(groupEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * It is responsible for two things
+     * 1. For sending updated group information including new added members
+     * 2. Send group join request to new added members.
+     * <p>
+     * There are two different events.
+     *
+     * @param model {@link GroupMemberChangeModel} It is contain the Update group
+     *              information and list of new added member
+     */
     private void sendNewAddedMemberToOther(GroupMemberChangeModel model) {
         GroupEntity updatedGroupInfo = model.groupEntity;
         List<UserEntity> newAddedUserList = model.changedUserList;
+        List<String> newAddedUserIdList = convertUserModelToIds(newAddedUserList);
 
-        //Todo send group newly added info and other to exist user
+        GroupModel groupModel = updatedGroupInfo.toGroupModel();
+        String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
 
-        // Todo send group create event to newly added users
+        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(updatedGroupInfo.getMembersInfo());
+
+        for (GroupMembersInfo membersInfo : groupMembersInfos) {
+            if (!newAddedUserIdList.contains(membersInfo.getMemberId())) {
+                dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_ADD,
+                        membersInfo.getMemberId(), false);
+            }
+        }
+
+        // Send group creation event to new added members
+        for (String userId : newAddedUserIdList) {
+            dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_CREATION,
+                    userId, false);
+        }
+    }
+
+    private List<String> convertUserModelToIds(List<UserEntity> userList) {
+        List<String> userIdList = new ArrayList<>();
+        for (UserEntity entity : userList) {
+            userIdList.add(entity.getMeshId());
+        }
+        return userIdList;
     }
 
 }

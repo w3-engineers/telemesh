@@ -49,7 +49,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
-import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -387,6 +386,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.EVENT_GROUP_JOIN:
             case Constants.DataType.EVENT_GROUP_LEAVE:
             case Constants.DataType.EVENT_GROUP_RENAME:
+            case Constants.DataType.EVENT_GROUP_MEMBER_ADD:
                 GroupDataHelper.getInstance().groupDataReceive(dataType, userId, rawData, isNewMessage);
                 break;
         }

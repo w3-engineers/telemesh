@@ -43,6 +43,7 @@ public class Source implements DataSource {
     private BehaviorSubject<GroupEntity> groupUserEvent = BehaviorSubject.create();
     private BehaviorSubject<GroupModel> groupRenameEvent = BehaviorSubject.create();
     private BehaviorSubject<GroupMemberChangeModel> groupMemberAddEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupMemberChangeModel> groupMemberRemoveEvent = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -146,6 +147,17 @@ public class Source implements DataSource {
     @Override
     public Flowable<GroupMemberChangeModel> getGroupMembersAddEvent() {
         return groupMemberAddEvent.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setGroupMemberRemoveEvent(GroupMemberChangeModel model) {
+        groupMemberRemoveEvent.onNext(model);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupMemberChangeModel> getGroupMemberRemoveEvent() {
+        return groupMemberRemoveEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)

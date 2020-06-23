@@ -14,12 +14,14 @@ import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -69,6 +71,45 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                     dataSource.setGroupUserEvent(groupEntity);
                     finishForGroupLeave.postValue(true);
                 }, Throwable::printStackTrace));
+    }
+
+    void memberRemoveAction(GroupEntity groupEntity, UserEntity userEntity) {
+
+        ArrayList<GroupMembersInfo> groupMemberList = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        GroupMembersInfo removedMemberInfo = null;
+
+        for (GroupMembersInfo membersInfo : groupMemberList) {
+            if (userEntity.getMeshId() != null &&
+                    userEntity.getMeshId().equals(membersInfo.getMemberId())) {
+                removedMemberInfo = membersInfo;
+                break;
+            }
+        }
+
+        if (removedMemberInfo != null) {
+            groupMemberList.remove(removedMemberInfo);
+        } else {
+            return;
+        }
+
+        groupEntity.setMembersInfo(GsonBuilder.getInstance()
+                .getGroupMemberInfoJson(groupMemberList));
+
+        getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    if (aLong > 0) {
+                        GroupMemberChangeModel memberChangeModel = new GroupMemberChangeModel();
+                        List<UserEntity> memberList = new ArrayList<>();
+                        memberList.add(userEntity);
+                        memberChangeModel.groupEntity = groupEntity;
+                        memberChangeModel.changedUserList = memberList;
+                        dataSource.setGroupMemberRemoveEvent(memberChangeModel);
+                    }
+                }));
     }
 
     private Single<Integer> deleteGroupOperation(String groupId) {

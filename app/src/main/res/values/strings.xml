@@ -200,5 +200,6 @@
     <string name="other_profile">%s\'s Profile</string>
     <string name="only_admin_can_add_member">Only admin can add a member</string>
     <string name="add_new_member">Add new member</string>
+    <string name="only_admin_can_remove_member">Only admin can remove a member</string>
 
 </resources>

@@ -141,7 +141,8 @@ public class Constants {
         byte EVENT_GROUP_JOIN = 0x20;
         byte EVENT_GROUP_LEAVE = 0x21;
         byte EVENT_GROUP_RENAME = 0x22;
-        byte EVENT_GROUP_MEMBER_ADD = 0x2e;
+        byte EVENT_GROUP_MEMBER_ADD = 0x23;
+        byte EVENT_GROUP_MEMBER_REMOVE = 0x24;
     }
 
     public interface MessageType {

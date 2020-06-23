@@ -112,7 +112,11 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     public void onItemClick(View view, UserEntity item) {
         int id = view.getId();
         if (id == R.id.image_view_remove) {
-            //Todo remove user form group
+            if (amIAdmin) {
+                mViewModel.memberRemoveAction(mGroupEntity, item);
+            } else {
+                Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_remove_member));
+            }
         } else {
             Intent intent = new Intent(this, UserProfileActivity.class);
             intent.putExtra(UserEntity.class.getName(), item);

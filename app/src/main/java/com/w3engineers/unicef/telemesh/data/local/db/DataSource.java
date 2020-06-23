@@ -63,6 +63,11 @@ public interface DataSource {
     @Nullable
     Flowable<GroupMemberChangeModel> getGroupMembersAddEvent();
 
+    void setGroupMemberRemoveEvent(GroupMemberChangeModel model);
+
+    @Nullable
+    Flowable<GroupMemberChangeModel> getGroupMemberRemoveEvent();
+
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     //void setMyMode(int mode);

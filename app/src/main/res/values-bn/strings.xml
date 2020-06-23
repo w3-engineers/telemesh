@@ -197,5 +197,6 @@
     <string name="other_profile">%s এর প্রোফাইল দেখুন</string>
     <string name="only_admin_can_add_member">কেবল অ্যাডমিন একজন সদস্য যুক্ত করতে পারবেন</string>
     <string name="add_new_member">নতুন সদস্য যুক্ত করুন</string>
+    <string name="only_admin_can_remove_member">শুধুমাত্র অ্যাডমিন কোনও সদস্যকে সরাতে পারবেন</string>
 
 </resources>

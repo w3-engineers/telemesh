@@ -341,6 +341,8 @@ public class ChatActivity extends TelemeshBaseActivity {
                             mChatPagedAdapter.setUserNameMap(groupNameModel.getGroupUserMap(), myUserId);
                         }
                         processGroupUsersComponent();
+                    } else {
+                        finish();
                     }
                 });
             } else {

@@ -166,6 +166,11 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
             updateMyAdminStatus();
 
             initGroupMembersInfoObserver(groupEntity.getMembersInfo());
+        } else {
+            finish();
+            if (ChatActivity.sInstance != null) {
+                ChatActivity.sInstance.finish();
+            }
         }
     }
 

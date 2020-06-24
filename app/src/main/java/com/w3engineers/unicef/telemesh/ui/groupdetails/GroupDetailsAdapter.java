@@ -60,8 +60,11 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
             ItemGroupMemberBinding binding = (ItemGroupMemberBinding) viewDataBinding;
 
             setClickListener(binding.getRoot(), binding.imageViewRemove);
-
-            binding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
+            if (item.getMeshId().equals(myId)) {
+                binding.userMeshStatus.setBackgroundResource(activeStatusResource(Constants.UserStatus.WIFI_ONLINE));
+            } else {
+                binding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
+            }
             binding.userName.setText(item.userName);
 
             binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()

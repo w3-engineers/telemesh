@@ -165,9 +165,9 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
                 userEntityList = userEntities;
 
                 if (userEntityList != null && userEntityList.size() > 0) {
-                    //Todo we can show empty page
+                    mBinding.emptyLayout.setVisibility(View.GONE);
                 } else {
-                    //Todo we can hide empty page
+                    mBinding.emptyLayout.setVisibility(View.VISIBLE);
                 }
             }
         });

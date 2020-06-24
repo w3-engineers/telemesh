@@ -97,10 +97,14 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 }
                 break;
             case R.id.image_view_pen:
-                Intent intent = new Intent(this, GroupNameEditActivity.class);
-                intent.putExtra(GroupEntity.class.getName(), groupId);
-                intent.putExtra(GroupNameEditActivity.class.getName(), mBinding.editTextName.getText().toString());
-                startActivity(intent);
+                if(amIAdmin) {
+                    Intent intent = new Intent(this, GroupNameEditActivity.class);
+                    intent.putExtra(GroupEntity.class.getName(), groupId);
+                    intent.putExtra(GroupNameEditActivity.class.getName(), mBinding.editTextName.getText().toString());
+                    startActivity(intent);
+                }else{
+                    Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_change_group_name));
+                }
                 break;
             case R.id.text_view_leave_group:
                 mViewModel.groupLeaveAction(mGroupEntity);

@@ -199,5 +199,6 @@
     <string name="add_new_member">নতুন সদস্য যুক্ত করুন</string>
     <string name="only_admin_can_remove_member">শুধুমাত্র অ্যাডমিন কোনও সদস্যকে সরাতে পারবেন</string>
     <string name="no_user_available">এখনও কাউকে পাওয়া যায় নি</string>
+    <string name="only_admin_can_change_group_name">কেবল অ্যাডমিনই গ্রুপের নাম পরিবর্তন করতে পারবেন</string>
 
 </resources>

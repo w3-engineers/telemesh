@@ -5,10 +5,17 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.ItemClickListener;
@@ -20,8 +27,11 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAddNewMemberBinding;
 import com.w3engineers.unicef.telemesh.ui.groupcreate.SelectedUserAdapter;
+import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
+import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +49,8 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
     private GroupEntity mGroupEntity;
     private List<String> mGroupMemberList;
 
+    public MenuItem mSearchItem;
+
     @Nullable
     public List<UserEntity> userEntityList;
 
@@ -55,6 +67,11 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
     @Override
     protected int getToolbarId() {
         return R.id.toolbar;
+    }
+
+    @Override
+    protected int getMenuId() {
+        return R.menu.menu_search_contact;
     }
 
     @Override
@@ -77,8 +94,21 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.button_go) {
-            mViewModel.addMembersInGroup(mGroupEntity, mMemberAdapter.getSelectedUserList());
+        switch (view.getId()) {
+            case R.id.button_go:
+                mViewModel.addMembersInGroup(mGroupEntity, mMemberAdapter.getSelectedUserList());
+                break;
+            case R.id.image_view_cross:
+                if (TextUtils.isEmpty(mBinding.searchBar.editTextSearch.getText())) {
+                    hideSearchBar();
+                } else {
+                    mBinding.searchBar.editTextSearch.setText("");
+                }
+                break;
+            case R.id.image_view_back:
+                mBinding.searchBar.editTextSearch.setText("");
+                hideSearchBar();
+                break;
         }
     }
 
@@ -112,9 +142,36 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchItem = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            showSearchBar();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBinding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
+            mBinding.searchBar.editTextSearch.setText("");
+            hideSearchBar();
+            return;
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initView() {
 
-        setClickListener(mBinding.buttonGo);
+        setClickListener(mBinding.buttonGo,
+                mBinding.searchBar.imageViewBack,
+                mBinding.searchBar.imageViewCross);
 
         setTitle(LanguageUtil.getString(R.string.add_new_member));
 
@@ -128,6 +185,8 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
         mBinding.recyclerViewSelectedUser.setAdapter(mSelectedUserAdapter);
 
         parseIntent();
+
+        initSearchListener();
 
         groupDataObserver();
 
@@ -166,9 +225,24 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
 
                 if (userEntityList != null && userEntityList.size() > 0) {
                     mBinding.emptyLayout.setVisibility(View.GONE);
+                    if (mSearchItem != null) {
+                        mSearchItem.setVisible(true);
+                    }
                 } else {
                     mBinding.emptyLayout.setVisibility(View.VISIBLE);
+                    if (mSearchItem != null) {
+                        mSearchItem.setVisible(false);
+                    }
                 }
+            }
+        });
+
+        mViewModel.filterUserList.observe(this, userEntities -> {
+            mMemberAdapter.submitList(userEntities);
+            if (userEntities.size() > 0) {
+                mBinding.emptyLayout.setVisibility(View.GONE);
+            } else {
+                mBinding.emptyLayout.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -190,6 +264,41 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
         if (intent.hasExtra(GroupEntity.class.getName())) {
             mGroupId = intent.getStringExtra(GroupEntity.class.getName());
         }
+    }
+
+    public void showSearchBar() {
+        mBinding.mainToolbar.setVisibility(View.INVISIBLE);
+        mBinding.searchBar.getRoot().setVisibility(View.VISIBLE);
+
+        mBinding.searchBar.editTextSearch.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mBinding.searchBar.editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public void hideSearchBar() {
+        mBinding.mainToolbar.setVisibility(View.VISIBLE);
+        mBinding.searchBar.getRoot().setVisibility(View.INVISIBLE);
+        UIHelper.hideKeyboardFrom(this, mBinding.searchBar.editTextSearch);
+    }
+
+    private void initSearchListener() {
+
+        mBinding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mViewModel.startSearch(s.toString(), mViewModel.getCurrentUserList());
+            }
+        });
     }
 
     private AddNewMemberViewModel getViewModel() {

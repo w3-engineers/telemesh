@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -47,6 +49,10 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<GroupEntity> groupUserList = new MutableLiveData<>();
+
+    MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+
+    MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
 
     private String selectChattedUser = null;
 
@@ -183,7 +189,12 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
                     userList.addAll(userEntityList);
 
-                    setUserData(userList);
+                    if (!TextUtils.isEmpty(searchableText)) {
+                        backUserEntity.postValue(userList);
+                        startSearch(searchableText, userList);
+                    } else {
+                        setUserData(userList);
+                    }
 
                 }, Throwable::printStackTrace));
     }
@@ -205,6 +216,54 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                 .build();
 
         nearbyUsers.postValue(pagedStrings);
+    }
+
+    public List<UserEntity> getCurrentUserList() {
+        return userList;
+    }
+
+    public void startSearch(@NonNull String searchText, @Nullable List<UserEntity> userEntities) {
+
+        searchableText = searchText;
+
+        if (userEntities != null) {
+
+            if (TextUtils.isEmpty(searchText)) {
+                setUserData(userEntities);
+                return;
+            }
+
+            List<UserEntity> filteredItemList = new ArrayList<>();
+
+            for (UserEntity user : userEntities) {
+
+                if (user.getFullName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                    filteredItemList.add(user);
+                }
+
+            }
+
+            UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(filteredItemList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
+
+
+            PagedList<UserEntity> pagedStrings = new PagedList.Builder<>(userSearchDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
+
+
+            filterUserList.postValue(pagedStrings);
+
+        } else {
+//            Timber.tag("SearchIssue").d("user list null");
+        }
     }
 
 }

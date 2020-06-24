@@ -32,6 +32,20 @@
             app:layout_constraintTop_toTopOf="@+id/text_view_message" />
 
         <TextView
+            android:id="@+id/user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@+id/image_profile"
+            app:layout_constraintStart_toStartOf="@id/image_profile"
+            app:layout_constraintEnd_toEndOf="@id/image_profile"/>
+
+        <TextView
             android:id="@+id/text_view_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

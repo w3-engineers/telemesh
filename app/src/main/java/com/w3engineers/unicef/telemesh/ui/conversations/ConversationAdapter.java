@@ -103,7 +103,8 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
                 itemConversationBinding.personMessage.setVisibility(View.GONE);
             } else {
                 if (isSystemMessage(groupEntity.lastMessageType)) {
-                    itemConversationBinding.personMessage.setText(groupEntity.lastPersonName + " " + groupEntity.lastMessage);
+                    String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You" : groupEntity.lastPersonName;
+                    itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);
                 } else {
                     String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You:" : groupEntity.lastPersonName + ":";
                     itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);

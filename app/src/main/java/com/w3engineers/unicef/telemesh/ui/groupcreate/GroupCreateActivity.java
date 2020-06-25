@@ -74,7 +74,7 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mGroupCreateAdapter != null) {
+      /*  if (mGroupCreateAdapter != null) {
             if (mGroupCreateAdapter.isSelectionEnable()) {
                 showOrHideGroupCreateView(false);
             } else {
@@ -82,7 +82,9 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
             }
         } else {
             super.onBackPressed();
-        }
+        }*/
+
+        super.onBackPressed();
 
     }
 
@@ -168,6 +170,10 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
         mSelectedUserAdapter.setItemClickListener(this);
         mBinding.recyclerViewSelectedUser.setHasFixedSize(true);
         mBinding.recyclerViewSelectedUser.setAdapter(mSelectedUserAdapter);
+
+        setTitle(LanguageUtil.getString(R.string.new_chat));
+
+        showOrHideGroupCreateView(true);
 
         userDataOperation();
 

@@ -414,9 +414,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 if (TextUtils.isEmpty(currentThread) || !userId.equals(dataSource.getCurrentUser())) {
 
-//                    (!TextUtils.isEmpty(messageModel.getGroupId())
-//                            && !messageModel.getGroupId().equals(dataSource.getCurrentUser()))
-
                     if (TextUtils.isEmpty(messageModel.getGroupId()) || !messageModel.getGroupId().equals(currentThread)) {
                         Timber.e("Un Read :: %s", chatEntity.getMessageId());
                         NotifyUtil.showNotification(chatEntity);
@@ -1206,138 +1203,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         FeedbackDataSource.getInstance().deleteFeedbackById(feedbackModel.getFeedbackId());
     }
 
-    /////////////////////Broadcast config file/////////////////////////////
-
-    // TODO update configuration process need to switch in service layer - mimo
-    /*public void syncConfigFileAndBroadcast(boolean isUpdate, ConfigurationCommand configurationCommand) {
-        if (isUpdate) {
-            String configText = new Gson().toJson(configurationCommand);
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
-
-            rightMeshDataSource.saveUpdateUserInfo();
-
-            Log.v("MIMO_SAHA::", "Config version: " + configurationCommand.getConfigVersionCode());
-
-            DataModel dataModel = new DataModel()
-                    .setRawData(configText.getBytes())
-                    .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
-
-            compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                    .getLocalWithBackConfigUsers(configurationCommand.getConfigVersionCode()))
-                    .subscribeOn(Schedulers.newThread())
-                    .subscribe(users -> {
-
-                        ExecutorService service = Executors.newSingleThreadExecutor();
-                        service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
-
-                        updateBackdatedConfigUsersVersion(configurationCommand.getConfigVersionCode());
-
-                    }, Throwable::printStackTrace));
+    public void destroy() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+            compositeDisposable.dispose();
         }
     }
-
-    private void updateBackdatedConfigUsersVersion(int version) {
-        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                .updateBackConfigUsers(version))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(updatedUsersCount -> {
-                    Timber.e("backdated user update %s", updatedUsersCount);
-                }, Throwable::printStackTrace));
-    }
-
-    private void updateBroadcasterConfigVersion(int version, String userId) {
-        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                .updateBroadcastUserConfigVersion(version, userId))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(updatedUsersCount -> {
-                    Timber.e("broadcast user update %s", updatedUsersCount);
-                }, Throwable::printStackTrace));
-    }
-
-    public void configFileSendToOthers(int versionCode, String userId) {
-
-        int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
-
-        if (versionCode < myConfigVersion) {
-
-            String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
-
-            if (!TextUtils.isEmpty(configText)) {
-
-                DataModel dataModel = new DataModel()
-                        .setRawData(configText.getBytes())
-                        .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
-
-                ExecutorService service = Executors.newSingleThreadExecutor();
-                service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, false));
-            }
-        }
-    }
-
-    private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage, String userId) {
-        if (isNewMessage) {
-
-            String configText = new String(rawData);
-            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
-
-            int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
-
-            if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
-
-                prepareRightMeshDataSource();
-
-                rightMeshDataSource.sendConfigToViper(configurationCommand);
-
-                rightMeshDataSource.saveUpdateUserInfo();
-
-                updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
-            }
-
-            // check token guide version and request token_guide
-            int myTokenGuideVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE);
-            if (myTokenGuideVersion < configurationCommand.getTokenGuideVersion()) {
-                // request toke guide info
-                requestTokenGuideInfo(userId);
-            }
-        }
-    }
-
-    private void requestTokenGuideInfo(String userId) {
-        TokenGuideRequestModel model = new TokenGuideRequestModel();
-        model.setRequest("Request");
-        String jsonText = new Gson().toJson(model);
-
-        dataSend(jsonText.getBytes(), Constants.DataType.TOKEN_GUIDE_REQUEST, userId, false);
-    }
-
-    private void sendTokenGuideInfo(String userId, boolean isNewMessage) {
-        if (!isNewMessage) return;
-
-        PointGuideLine guideLine = rightMeshDataSource.requestTokenGuideline();
-
-        if (guideLine != null) {
-            String guidelineInfo = new Gson().toJson(guideLine);
-
-            dataSend(guidelineInfo.getBytes(), Constants.DataType.TOKEN_GUIDE_INFO, userId, false);
-        }
-    }
-
-    private void tokenGuidelineReceivedFromOther(byte[] rawData, boolean isNewMessage) {
-        if (!isNewMessage) return;
-
-        String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
-        if (!TextUtils.isEmpty(configText)) {
-            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
-        }
-
-        String guidelineInfo = new String(rawData);
-        rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);
-    }*/
 
 
 }

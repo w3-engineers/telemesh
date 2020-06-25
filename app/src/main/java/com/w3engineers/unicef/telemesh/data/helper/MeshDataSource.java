@@ -84,10 +84,10 @@ public class MeshDataSource extends ViperUtil {
         SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
 
         if (!isPrepared) {
+            isPrepared = true;
             RmDataHelper.getInstance().prepareDataObserver();
             HandlerUtil.postBackground(() -> RmDataHelper.getInstance().myUserInfoAdd());
             TextToImageHelper.writeWalletAddressToImage(meshId);
-            isPrepared = true;
         }
 
         Constants.IsMeshInit = true;

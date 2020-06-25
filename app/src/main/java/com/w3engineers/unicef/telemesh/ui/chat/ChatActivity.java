@@ -55,6 +55,7 @@ import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
+import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -267,7 +268,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                     mViewBinging.groupJoin);
         }
 
-        clearNotification();
+        NotifyUtil.clearNotification(threadId);
     }
 
     /**

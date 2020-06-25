@@ -83,6 +83,11 @@ public class ImageUtil {
         return getCroppedBitmap(bitmap);
     }
 
+    public static Bitmap getResourceImageBitmap(int imageResourceId) {
+        Bitmap bitmap = BitmapFactory.decodeResource(TeleMeshApplication.getContext().getResources(), imageResourceId);
+        return getCroppedBitmap(bitmap);
+    }
+
     @Nullable
     private static Bitmap getCroppedBitmap(@Nullable Bitmap bitmap) {
 

@@ -19,6 +19,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.NotifyUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -202,6 +203,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
 
+            NotifyUtil.showGroupEventNotification(userId, groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.CREATED,
                     groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE,
                     groupEntity.getGroupId());
@@ -321,8 +323,7 @@ public class GroupDataHelper extends RmDataHelper {
             GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
             if (groupEntity == null) {
-                groupEntity = new GroupEntity()
-                        .setGroupId(groupId);
+                groupEntity = new GroupEntity().setGroupId(groupId);
 
                 ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
                 GroupMembersInfo groupMembersInfo = new GroupMembersInfo().setMemberId(userId)

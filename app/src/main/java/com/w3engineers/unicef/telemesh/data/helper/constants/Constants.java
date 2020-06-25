@@ -181,6 +181,7 @@ public class Constants {
         String LEAVE = "Left";
         String RENAMED = "Renamed the group to";
         String MEMBER_ADD = "invited";
+        String MEMBER_REMOVED = "removed";
     }
 
     public interface FavouriteStatus {

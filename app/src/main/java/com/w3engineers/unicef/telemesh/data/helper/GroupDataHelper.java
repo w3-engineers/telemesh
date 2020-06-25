@@ -64,7 +64,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMemberRemoveEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendRemovedMemberToOther, Throwable::printStackTrace));
+                .subscribe(this::removeNewMemberOperation, Throwable::printStackTrace));
     }
 
     void groupDataReceive(int dataType, String userId, byte[] rawData, boolean isNewMessage) {
@@ -571,7 +571,6 @@ public class GroupDataHelper extends RmDataHelper {
             }
 
 
-            //Todo check newAddedMemberList is empty or not. This list is for new added member list
             groupEntity.setMembersInfo(groupModel.getMemberInfo());
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
@@ -719,13 +718,31 @@ public class GroupDataHelper extends RmDataHelper {
 
                 groupDataSource.insertOrUpdateGroup(groupEntity);
 
-                //Todo mimo vai, Add a message event that this user is removed
+                List<GroupUserNameMap> userNameMaps = GsonBuilder.getInstance()
+                        .getGroupNameModelObj(groupEntity.getGroupName())
+                        .getGroupUserMap();
+                if (userNameMaps != null) {
+                    String removedUseName = getGroupMemberName(removedUser.getMemberId(), userNameMaps);
+                    if (!TextUtils.isEmpty(removedUseName)) {
+                        setGroupInfo(userId, groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_REMOVED
+                                        + " " + removedUseName,
+                                0, Constants.MessageType.GROUP_MEMBER_REMOVE, groupModel.getInfoId());
+                    }
+                }
 
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void removeNewMemberOperation(GroupMemberChangeModel model) {
+        compositeDisposable.add(Single.fromCallable(() -> sendRemovedMemberToOther(model))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -736,7 +753,7 @@ public class GroupDataHelper extends RmDataHelper {
      *
      * @param model
      */
-    private void sendRemovedMemberToOther(GroupMemberChangeModel model) {
+    private boolean sendRemovedMemberToOther(GroupMemberChangeModel model) {
         GroupEntity groupEntity = model.groupEntity;
         UserEntity removedUser = model.changedUserList.get(0);
 
@@ -757,6 +774,11 @@ public class GroupDataHelper extends RmDataHelper {
         List<GroupMembersInfo> existsMemberList = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
+        // Send self message that i removed a user
+        setGroupInfo(getMyMeshId(), groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_REMOVED
+                        + " " + removedUser.getUserName(),
+                0, Constants.MessageType.GROUP_MEMBER_REMOVE, groupModel.getInfoId());
+
         //now send to other group member that one member is removed
         for (GroupMembersInfo info : existsMemberList) {
             if (!info.getMemberId().equals(getMyMeshId())) {
@@ -768,6 +790,7 @@ public class GroupDataHelper extends RmDataHelper {
         dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
                 removedUser.getMeshId(), false);
 
+        return true;
     }
 
     private List<String> convertUserModelToIds(List<UserEntity> userList) {

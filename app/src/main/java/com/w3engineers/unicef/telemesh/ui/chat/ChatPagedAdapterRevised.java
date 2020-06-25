@@ -80,7 +80,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_JOIN
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_LEAVE
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_RENAMED
-                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_MEMBER_ADD) {
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_MEMBER_ADD
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_MEMBER_REMOVE) {
                     return Constants.ViewHolderType.GROUP_INFO;
                 }
 
@@ -219,7 +220,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.textViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.textViewMessage.invalidate();
+        }
     }
 
     private class TextMessageOutHolder extends GenericViewHolder {
@@ -237,7 +240,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.textViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.textViewMessage.invalidate();
+        }
     }
 
     private class ImageMessageInHolder extends GenericViewHolder {
@@ -280,7 +285,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.imageViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.imageViewMessage.invalidate();
+        }
     }
 
     private class ImageMessageOutHolder extends GenericViewHolder {
@@ -321,7 +328,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.imageViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.imageViewMessage.invalidate();
+        }
     }
 
     private class VideoMessageInHolder extends GenericViewHolder {
@@ -364,7 +373,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.imageViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.imageViewMessage.invalidate();
+        }
     }
 
     private class VideoMessageOutHolder extends GenericViewHolder {
@@ -405,7 +416,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.imageViewMessage.invalidate(); }
+        protected void clearView() {
+            binding.imageViewMessage.invalidate();
+        }
     }
 
     private void incomingShimmerEffect(ShimmerLayout shimmerLayout, MessageEntity messageEntity) {
@@ -499,7 +512,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.textViewSeprator.invalidate(); }
+        protected void clearView() {
+            binding.textViewSeprator.invalidate();
+        }
     }
 
     private class GroupInfoViewHolder extends GenericViewHolder {
@@ -530,6 +545,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                         break;
 
                     case Constants.MessageType.GROUP_LEAVE:
+                    case Constants.MessageType.GROUP_MEMBER_REMOVE:
                         resourceId = R.mipmap.user_leave;
                         break;
                     case Constants.MessageType.GROUP_RENAMED:
@@ -542,6 +558,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
 
         @Override
-        protected void clearView() { binding.groupInfo.invalidate(); }
+        protected void clearView() {
+            binding.groupInfo.invalidate();
+        }
     }
 }

@@ -391,6 +391,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RmDataHelper.getInstance().destroy();
         sInstance = null;
         unregisterReceiver(mGpsSwitchStateReceiver);
     }

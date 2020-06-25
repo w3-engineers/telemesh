@@ -414,9 +414,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 if (TextUtils.isEmpty(currentThread) || !userId.equals(dataSource.getCurrentUser())) {
 
-//                    (!TextUtils.isEmpty(messageModel.getGroupId())
-//                            && !messageModel.getGroupId().equals(dataSource.getCurrentUser()))
-
                     if (TextUtils.isEmpty(messageModel.getGroupId()) || !messageModel.getGroupId().equals(currentThread)) {
                         Timber.e("Un Read :: %s", chatEntity.getMessageId());
                         NotifyUtil.showNotification(chatEntity);

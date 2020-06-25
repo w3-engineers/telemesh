@@ -213,6 +213,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.setAvatarIndex(getAvatarIndex(item));
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.white));
+            String name = getUserName(item);
+            binding.userName.setText("" + name);
         }
 
         @Override

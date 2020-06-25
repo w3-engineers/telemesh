@@ -22,6 +22,21 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " IS NOT NULL ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")
     abstract Flowable<List<GroupEntity>> getAllGroups();
 
+    @Query("SELECT * FROM " + TableNames.GROUP + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
+            + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
+            + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID, " + ColumnNames.COLUMN_MESSAGE
+            + " AS lastMessage, (SELECT " + ColumnNames.COLUMN_USER_NAME + " from " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_MESH_ID + " = " + ColumnNames.COLUMN_FRIENDS_ID + ") AS lastPersonName, "
+            + ColumnNames.COLUMN_MESSAGE_TYPE + " AS lastMessageType, " + ColumnNames.COLUMN_FRIENDS_ID
+            + " AS lastPersonId FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE
+            + " == " + Constants.MessagePlace.VALUE_MESSAGE_PLACE_GROUP + " GROUP BY " + ColumnNames.COLUMN_GROUP_ID
+            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_GROUP_ID
+            + " = M." + "group_id" + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
+            + TableNames.GROUP + "." + "group_id" + " = MESS." + ColumnNames.COLUMN_GROUP_ID
+            + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " IS NOT NULL ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")
+    abstract Flowable<List<GroupEntity>> getAllGroupsWithCount();
+
     @NonNull
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_OWN_STATUS + " = "
             + Constants.GroupUserOwnState.GROUP_CREATE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")

@@ -111,7 +111,6 @@ public class GroupDataHelper extends RmDataHelper {
 
     private void sendGroupCreationInfo(GroupEntity groupEntity) {
         GroupModel groupModel = groupEntity.toGroupModel();
-        groupModel.setInfoId(UUID.randomUUID().toString());
         String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
 
         ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
@@ -204,7 +203,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.CREATED,
                     groupEntity.getGroupCreationTime(), Constants.MessageType.GROUP_CREATE,
-                    groupModel.getInfoId());
+                    groupEntity.getGroupId());
         } catch (Exception e) {
             e.printStackTrace();
         }

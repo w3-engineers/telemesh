@@ -109,6 +109,11 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     public abstract long updateMessageAsRead(@NonNull String friendsId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
+            " = " + Constants.MessageStatus.STATUS_READ + " WHERE " + ColumnNames.COLUMN_GROUP_ID +
+            " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
+    public abstract long updateMessageAsReadForGroup(@NonNull String friendsId);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
             " = " + Constants.MessageStatus.STATUS_FAILED + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID +
             " LIKE :friendsId AND " + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD_FAILED)
     public abstract long updateMessageAsReadFailed(@NonNull String friendsId);

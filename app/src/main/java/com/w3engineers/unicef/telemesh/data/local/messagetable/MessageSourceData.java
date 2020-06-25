@@ -109,6 +109,10 @@ public class MessageSourceData {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
+    public long updateUnreadToReadForGroup(@NonNull String friendsId) {
+        return messageDao.updateMessageAsReadForGroup(friendsId);
+    }
+
     public long updateUnreadToReadFailed(@NonNull String friendsId) {
         return messageDao.updateMessageAsReadFailed(friendsId);
     }

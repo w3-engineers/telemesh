@@ -396,7 +396,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     private Single<Long> updateMessageStatus(String friendsId) {
-        return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
+        if (isGroup) {
+            return Single.fromCallable(() -> messageSourceData.updateUnreadToReadForGroup(friendsId));
+        } else {
+            return Single.fromCallable(() -> messageSourceData.updateUnreadToRead(friendsId));
+        }
     }
 
     private Single<Long> updateFailedMessageStatus(String friendsId) {

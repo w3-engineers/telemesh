@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
@@ -59,7 +60,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMembersAddEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendNewAddedMemberToOther, Throwable::printStackTrace));
+                .subscribe(this::addNewMemberOperation, Throwable::printStackTrace));
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMemberRemoveEvent())
                 .subscribeOn(Schedulers.newThread())
@@ -574,9 +575,37 @@ public class GroupDataHelper extends RmDataHelper {
             groupEntity.setMembersInfo(groupModel.getMemberInfo());
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
+
+            List<GroupUserNameMap> userNameMaps = GsonBuilder.getInstance()
+                    .getGroupNameModelObj(groupEntity.getGroupName())
+                    .getGroupUserMap();
+
+            if (userNameMaps != null) {
+                for (String memberId : newAddedMemberList) {
+                    String removedUseName = getGroupMemberName(memberId, userNameMaps);
+                    if (!TextUtils.isEmpty(removedUseName)) {
+                        setGroupInfo(userId, groupModel.getGroupId(), Constants.GroupEventMessageBody.MEMBER_ADD
+                                        + " " + removedUseName,
+                                0, Constants.MessageType.GROUP_MEMBER_ADD, groupModel.getInfoId());
+                    } else {
+                        Log.d("GroupAddTest", "Username is empty");
+                    }
+                }
+            } else {
+                Log.d("GroupAddTest", "Username map null");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addNewMemberOperation(GroupMemberChangeModel model) {
+        compositeDisposable.add(Single.fromCallable(() -> sendNewAddedMemberToOther(model))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -589,7 +618,7 @@ public class GroupDataHelper extends RmDataHelper {
      * @param model {@link GroupMemberChangeModel} It is contain the Update group
      *              information and list of new added member
      */
-    private void sendNewAddedMemberToOther(GroupMemberChangeModel model) {
+    private boolean sendNewAddedMemberToOther(GroupMemberChangeModel model) {
         GroupEntity updatedGroupInfo = model.groupEntity;
         List<UserEntity> newAddedUserList = model.changedUserList;
         List<String> newAddedUserIdList = convertUserModelToIds(newAddedUserList);
@@ -600,9 +629,17 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(updatedGroupInfo.getMembersInfo());
 
+        // add self message that I added a user
+
+        for (UserEntity entity : newAddedUserList) {
+            setGroupInfo(getMyMeshId(), updatedGroupInfo.groupId, Constants.GroupEventMessageBody.MEMBER_ADD
+                            + " " + entity.getUserName(),
+                    0, Constants.MessageType.GROUP_MEMBER_ADD, groupModel.getInfoId());
+        }
+
         for (GroupMembersInfo membersInfo : groupMembersInfos) {
             if (!newAddedUserIdList.contains(membersInfo.getMemberId())
-                    && membersInfo.getMemberId().equals(getMyMeshId())) {
+                    && !membersInfo.getMemberId().equals(getMyMeshId())) {
                 dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_ADD,
                         membersInfo.getMemberId(), false);
             }
@@ -613,6 +650,7 @@ public class GroupDataHelper extends RmDataHelper {
             dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_CREATION,
                     userId, false);
         }
+        return true;
     }
 
     private void receiveGroupMemberRemoveEvent(byte[] rawData, String userId) {
@@ -738,6 +776,19 @@ public class GroupDataHelper extends RmDataHelper {
             userIdList.add(entity.getMeshId());
         }
         return userIdList;
+    }
+
+    private String getGroupMemberName(String userId, List<GroupUserNameMap> memberNameMap) {
+        String name = "";
+
+        for (GroupUserNameMap nameMap : memberNameMap) {
+            if (nameMap.getUserId().equals(userId)) {
+                name = nameMap.getUserName();
+                break;
+            }
+        }
+
+        return name;
     }
 
 }

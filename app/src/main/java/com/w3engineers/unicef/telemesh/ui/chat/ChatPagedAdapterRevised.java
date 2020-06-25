@@ -79,7 +79,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                 if (chatEntity.getMessageType() == Constants.MessageType.GROUP_CREATE
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_JOIN
                         || chatEntity.getMessageType() == Constants.MessageType.GROUP_LEAVE
-                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_RENAMED) {
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_RENAMED
+                        || chatEntity.getMessageType() == Constants.MessageType.GROUP_MEMBER_ADD) {
                     return Constants.ViewHolderType.GROUP_INFO;
                 }
 
@@ -524,6 +525,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                         break;
 
                     case Constants.MessageType.GROUP_JOIN:
+                    case Constants.MessageType.GROUP_MEMBER_ADD: //Todo May be we can change icon for invite or add
                         resourceId = R.mipmap.user_join;
                         break;
 

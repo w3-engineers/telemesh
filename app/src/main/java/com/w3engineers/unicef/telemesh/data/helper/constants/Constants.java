@@ -160,6 +160,8 @@ public class Constants {
         int GROUP_JOIN = 302;
         int GROUP_LEAVE = 303;
         int GROUP_RENAMED = 304;
+        int GROUP_MEMBER_ADD = 305;
+        int GROUP_MEMBER_REMOVE = 306;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
     }
@@ -178,6 +180,7 @@ public class Constants {
         String JOINED = "Joined";
         String LEAVE = "Left";
         String RENAMED = "Renamed the group to";
+        String MEMBER_ADD = "invited";
     }
 
     public interface FavouriteStatus {

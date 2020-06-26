@@ -697,12 +697,37 @@ public class GroupDataHelper extends RmDataHelper {
 
                         if (groupMembersInfo.getMemberId().equals(removedUser.getMemberId())) {
                             if (!TextUtils.isEmpty(groupEntity.getGroupName())) {
+                                GroupNameModel nameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
+                                String expectedName = CommonUtil.getGroupName(nameModel.getGroupUserMap());
+
+                                GroupUserNameMap removedUserNameMap = null;
+                                for (GroupUserNameMap nameMap : nameModel.getGroupUserMap()) {
+                                    if (nameMap.getUserId().equals(removedUser.getMemberId())) {
+                                        removedUserNameMap = nameMap;
+                                        break;
+                                    }
+                                }
+
+                                if (removedUserNameMap != null) {
+                                    nameModel.getGroupUserMap().remove(removedUserNameMap);
+                                }
+
+                                if (nameModel.getGroupName().equals(expectedName)) {
+                                    //Means the group name still contains user name
+                                    nameModel.setGroupNameChanged(true)
+                                            .setGroupName(CommonUtil.getGroupName(
+                                                    nameModel.getGroupUserMap()
+                                            ));
+                                    groupEntity.setGroupName(gsonBuilder.getGroupNameModelJson(nameModel));
+                                }
+
                                 groupMembersInfos.remove(groupMembersInfo);
                             } else {
                                 groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);//Todo tariqul change this event later
                                 groupMembersInfos.set(i, groupMembersInfo);
                             }
                             isMemberLeaved = true;
+                            break;
                         }
                     }
 

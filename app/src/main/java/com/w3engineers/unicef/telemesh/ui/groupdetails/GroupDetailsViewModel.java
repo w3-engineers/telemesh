@@ -86,7 +86,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
         GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
 
         List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
-        String expectedGroupName = CommonUtil.getGroupName(existGroupUserNameMap);
+
 
         GroupMembersInfo removedMemberInfo = null;
 
@@ -118,9 +118,8 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
         }
 
 
-        if (expectedGroupName.equals(groupNameModel.getGroupName())) {
-            groupNameModel.setGroupNameChanged(false)
-                    .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+        if (!groupNameModel.isGroupNameChanged()) {
+            groupNameModel.setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
         }
 
         groupEntity.setMembersInfo(gsonBuilder

@@ -91,7 +91,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
         GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
 
         List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
-        String expectedGroupName = CommonUtil.getGroupName(existGroupUserNameMap);
+
 
         for (UserEntity userEntity : userList) {
             GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
@@ -99,10 +99,9 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                     .setUserName(userEntity.getUserName());
             existGroupUserNameMap.add(groupUserNameMap);
         }
-        if (expectedGroupName.equals(groupNameModel.getGroupName())) {
+        if (!groupNameModel.isGroupNameChanged()) {
             // We have to change group name
-            groupNameModel.setGroupNameChanged(false)
-                    .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+            groupNameModel.setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
         }
 
 

@@ -16,8 +16,11 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
@@ -74,9 +77,16 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
     }
 
     void memberRemoveAction(GroupEntity groupEntity, UserEntity userEntity) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         ArrayList<GroupMembersInfo> groupMemberList = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        //checking name group name contains user name or changed
+        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
+
+        List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
+        String expectedGroupName = CommonUtil.getGroupName(existGroupUserNameMap);
 
         GroupMembersInfo removedMemberInfo = null;
 
@@ -94,8 +104,29 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
             return;
         }
 
-        groupEntity.setMembersInfo(GsonBuilder.getInstance()
-                .getGroupMemberInfoJson(groupMemberList));
+        // remove the user from group name map
+        GroupUserNameMap removedUserNameMap = null;
+        for (GroupUserNameMap nameMap : existGroupUserNameMap) {
+            if (nameMap.getUserId().equals(userEntity.getMeshId())) {
+                removedUserNameMap = nameMap;
+                break;
+            }
+        }
+
+        if (removedUserNameMap != null) {
+            existGroupUserNameMap.remove(removedUserNameMap);
+        }
+
+
+        if (expectedGroupName.equals(groupNameModel.getGroupName())) {
+            groupNameModel.setGroupNameChanged(true)
+                    .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+        }
+
+        groupEntity.setMembersInfo(gsonBuilder
+                .getGroupMemberInfoJson(groupMemberList))
+                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel));
+
 
         getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
                 .subscribeOn(Schedulers.newThread())

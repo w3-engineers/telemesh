@@ -119,7 +119,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
 
 
         if (expectedGroupName.equals(groupNameModel.getGroupName())) {
-            groupNameModel.setGroupNameChanged(true)
+            groupNameModel.setGroupNameChanged(false)
                     .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
         }
 

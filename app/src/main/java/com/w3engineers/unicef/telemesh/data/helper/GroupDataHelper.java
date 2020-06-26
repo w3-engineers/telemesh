@@ -714,7 +714,7 @@ public class GroupDataHelper extends RmDataHelper {
 
                                 if (nameModel.getGroupName().equals(expectedName)) {
                                     //Means the group name still contains user name
-                                    nameModel.setGroupNameChanged(true)
+                                    nameModel.setGroupNameChanged(false)
                                             .setGroupName(CommonUtil.getGroupName(
                                                     nameModel.getGroupUserMap()
                                             ));

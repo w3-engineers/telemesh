@@ -101,7 +101,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
         }
         if (expectedGroupName.equals(groupNameModel.getGroupName())) {
             // We have to change group name
-            groupNameModel.setGroupNameChanged(true)
+            groupNameModel.setGroupNameChanged(false)
                     .setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
         }
 

@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupCreateUserBinding;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemberAdapter.GenericViewHolder> {
@@ -141,7 +142,7 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
             itemGroupCreateUserBinding.getRoot().setOnClickListener(view -> {
 
                 if (isSelected(item.getMeshId())) {
-                    selectedUserList.remove(item);
+                    removeSelectedUser(item.getMeshId());
                     itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
                     itemGroupCreateUserBinding.checkBox.setChecked(false, true);
                 } else {
@@ -186,6 +187,19 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
                 }
             }
             return false;
+        }
+
+        private void removeSelectedUser(String userId) {
+            UserEntity removedUser = null;
+            for (UserEntity entity : selectedUserList) {
+                if (entity.getMeshId() != null && entity.getMeshId().equals(userId)) {
+                    removedUser = entity;
+                    break;
+                }
+            }
+            if (removedUser != null) {
+                selectedUserList.remove(removedUser);
+            }
         }
 
     }

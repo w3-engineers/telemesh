@@ -192,6 +192,8 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                     mGroupCreateAdapter.submitList(userEntities);
                     userEntityList = userEntities;
 
+                    updateSelectedAdapterItem();
+
                     if (userEntityList != null && userEntityList.size() > 0) {
                         //Todo we can hide create group title
                     } else {
@@ -201,6 +203,33 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
             });
 
         }
+    }
+
+    private void updateSelectedAdapterItem() {
+        if (mSelectedUserAdapter.getItemCount() > 0
+                && userEntityList != null
+                && userEntityList.size() > 0) {
+
+            for (UserEntity userEntity : mSelectedUserAdapter.getItems()) {
+                UserEntity updatedUser = getSelectedUser(userEntity.getMeshId());
+                if (updatedUser != null) {
+                    userEntity.setUserName(updatedUser.getUserName());
+                    userEntity.setAvatarIndex(updatedUser.getAvatarIndex());
+                }
+            }
+            mSelectedUserAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private UserEntity getSelectedUser(String userId) {
+        if (userEntityList != null) {
+            for (UserEntity userEntity : userEntityList) {
+                if (userEntity.getMeshId().equals(userId)) {
+                    return userEntity;
+                }
+            }
+        }
+        return null;
     }
 
     private void observeGroupCreation() {

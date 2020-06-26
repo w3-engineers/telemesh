@@ -157,7 +157,7 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
                 if (isSelectionEnable) {
 
                     if (isSelected(item.getMeshId())) {
-                        selectedUserList.remove(item);
+                        removeSelectedUser(item.getMeshId());
                         itemGroupCreateUserBinding.mainItem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
                         itemGroupCreateUserBinding.checkBox.setChecked(false, true);
                     } else {
@@ -213,6 +213,19 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
                 }
             }
             return false;
+        }
+
+        private void removeSelectedUser(String userId) {
+            UserEntity removedUser = null;
+            for (UserEntity entity : selectedUserList) {
+                if (entity.getMeshId() != null && entity.getMeshId().equals(userId)) {
+                    removedUser = entity;
+                    break;
+                }
+            }
+            if (removedUser != null) {
+                selectedUserList.remove(removedUser);
+            }
         }
 
     }

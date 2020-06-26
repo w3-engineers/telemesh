@@ -223,6 +223,8 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
                 mMemberAdapter.submitList(userEntities);
                 userEntityList = userEntities;
 
+                updateSelectedAdapterItem(userEntityList);
+
                 if (userEntityList != null && userEntityList.size() > 0) {
                     mBinding.emptyLayout.setVisibility(View.GONE);
                     if (mSearchItem != null) {
@@ -239,12 +241,42 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
 
         mViewModel.filterUserList.observe(this, userEntities -> {
             mMemberAdapter.submitList(userEntities);
-            if (userEntities.size() > 0) {
+
+            updateSelectedAdapterItem(userEntities);
+
+            if (userEntities != null && userEntities.size() > 0) {
                 mBinding.emptyLayout.setVisibility(View.GONE);
             } else {
                 mBinding.emptyLayout.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void updateSelectedAdapterItem(List<UserEntity> totalUserList) {
+        if (mSelectedUserAdapter.getItemCount() > 0
+                && userEntityList != null
+                && userEntityList.size() > 0) {
+
+            for (UserEntity userEntity : mSelectedUserAdapter.getItems()) {
+                UserEntity updatedUser = getSelectedUser(userEntity.getMeshId(), totalUserList);
+                if (updatedUser != null) {
+                    userEntity.setUserName(updatedUser.getUserName());
+                    userEntity.setAvatarIndex(updatedUser.getAvatarIndex());
+                }
+            }
+            mSelectedUserAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private UserEntity getSelectedUser(String userId, List<UserEntity> totalUserList) {
+        if (totalUserList != null) {
+            for (UserEntity userEntity : totalUserList) {
+                if (userEntity.getMeshId().equals(userId)) {
+                    return userEntity;
+                }
+            }
+        }
+        return null;
     }
 
     private void generateMemberList(List<GroupMembersInfo> groupAdminInfoList) {

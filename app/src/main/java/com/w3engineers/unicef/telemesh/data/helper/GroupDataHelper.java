@@ -365,6 +365,35 @@ public class GroupDataHelper extends RmDataHelper {
                 groupEntity.setMembersInfo(groupMemberInfoText);
             }
 
+            String groupName = groupEntity.getGroupName();
+
+            if (!TextUtils.isEmpty(groupName)) {
+                GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
+
+                List<GroupUserNameMap> groupUserNameMaps = groupNameModel.getGroupUserMap();
+
+                boolean isRemoveFromMap = false;
+                for (int i = (groupUserNameMaps.size() - 1); i >= 0; i--) {
+                    GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
+
+                    if (groupUserNameMap.getUserId().equals(userId)) {
+                        groupUserNameMaps.remove(groupUserNameMap);
+                        isRemoveFromMap = true;
+                    }
+                }
+
+                if (isRemoveFromMap) {
+                    if (!groupNameModel.isGroupNameChanged()) {
+                        groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
+                    }
+                    groupNameModel.setGroupUserMap(groupUserNameMaps);
+
+                    groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
+                    groupEntity.setGroupName(groupName);
+                }
+
+            }
+
             groupDataSource.insertOrUpdateGroup(groupEntity);
             setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.LEAVE,
                     0, Constants.MessageType.GROUP_LEAVE, groupModel.getInfoId());

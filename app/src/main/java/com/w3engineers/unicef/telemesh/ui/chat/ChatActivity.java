@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -84,8 +85,11 @@ public class ChatActivity extends TelemeshBaseActivity {
     private boolean isGroup, isChatAvailable;
     public static ChatActivity sInstance;
 
+    private int topMargin = 120, bottomMargin = 120, extendedBottomMargin = 190;
+
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
+    private PagedList<ChatEntity> chatEntities;
     @Nullable
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable
@@ -132,7 +136,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         initComponent();
 
         subscribeForThreadEvent(threadId);
-        subscribeForMessages(threadId);
+//        subscribeForMessages(threadId);
         subscribeForFinishEvent();
 
         if (getSupportActionBar() != null) {
@@ -159,7 +163,9 @@ public class ChatActivity extends TelemeshBaseActivity {
 
                 if (isInactiveOnGroup()) {
                     mViewBinging.groupBlock.setVisibility(View.VISIBLE);
+                    UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, extendedBottomMargin);
                 } else {
+                    UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
                     mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -174,6 +180,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
                 mViewBinging.groupBlock.setVisibility(View.GONE);
                 mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
+                UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
             }
         }
     }
@@ -272,17 +279,6 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     /**
-     * Remove current user notification
-     */
-    private void clearNotification() {
-        if (Text.isNotEmpty(threadId)) {
-            int notificationId = Math.abs(threadId.hashCode());
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.cancel(notificationId);
-        }
-    }
-
-    /**
      * Using LiveData observer here we will observe the messages
      * from local db.
      * if any new message get inserted into db with the help of LifeData
@@ -295,6 +291,19 @@ public class ChatActivity extends TelemeshBaseActivity {
 
             if (mChatPagedAdapter != null) {
                 mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
+                    if (isGroup) {
+                        if (isActiveOnGroup()) {
+                            controlEmptyView(chatEntities);
+                            mChatPagedAdapter.submitList(chatEntities);
+                        } else {
+                            this.chatEntities = chatEntities;
+                        }
+                    } else {
+                        controlEmptyView(chatEntities);
+                        mChatPagedAdapter.submitList(chatEntities);
+                    }
+                });
+                mChatViewModel.getCreatedInfoList().observe(ChatActivity.this, chatEntities -> {
                     controlEmptyView(chatEntities);
                     mChatPagedAdapter.submitList(chatEntities);
                 });
@@ -302,9 +311,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
             if (Text.isNotEmpty(userId)) {
                 if (isGroup) {
-                    mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
-                        mChatViewModel.prepareDateSpecificChat(chatEntities);
-                    });
+                    groupMessageFetch(userId);
                 } else {
                     mChatViewModel.getAllMessage(userId).observe(this, chatEntities -> {
                         mChatViewModel.prepareDateSpecificChat(chatEntities);
@@ -312,6 +319,15 @@ public class ChatActivity extends TelemeshBaseActivity {
                 }
             }
         }
+    }
+
+    private void groupMessageFetch(String userId) {
+        if (isInactiveOnGroup()) {
+            mChatViewModel.getCreateGroupInfo(userId);
+        }
+        mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
+            mChatViewModel.prepareDateSpecificChat(chatEntities);
+        });
     }
 
     private void subscribeForFinishEvent() {
@@ -327,6 +343,9 @@ public class ChatActivity extends TelemeshBaseActivity {
             if (isGroup) {
                 mChatViewModel.getLiveGroupById(threadId).observe(this, groupEntity -> {
                     mGroupEntity = groupEntity;
+
+                    subscribeForMessages(threadId);
+
                     if (groupEntity != null && mViewBinging != null) {
 
                         setUiComponent();
@@ -349,6 +368,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             } else {
                 mChatViewModel.getUserById(threadId).observe(this, userEntity -> {
                     mUserEntity = userEntity;
+                    subscribeForMessages(threadId);
                     if (userEntity != null && mViewBinging != null) {
 
                         setUiComponent();
@@ -458,17 +478,9 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     private void controlEmptyView(List<ChatEntity> chatEntities) {
         if (chatEntities != null && chatEntities.size() > 0) {
-            isChatAvailable = true;
-            if ((isGroup && isInactiveOnGroup())) {
-                if (mViewBinging != null) {
-                    mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
-                    mViewBinging.chatRv.setVisibility(View.GONE);
-                }
-            } else {
-                if (mViewBinging != null) {
-                    mViewBinging.emptyLayout.setVisibility(View.GONE);
-                    mViewBinging.chatRv.setVisibility(View.VISIBLE);
-                }
+            if (mViewBinging != null) {
+                mViewBinging.emptyLayout.setVisibility(View.GONE);
+                mViewBinging.chatRv.setVisibility(View.VISIBLE);
             }
         } else {
             isChatAvailable = false;
@@ -480,16 +492,9 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void activeMessagePart() {
-        if (isChatAvailable) {
-            if (mViewBinging != null) {
-                mViewBinging.emptyLayout.setVisibility(View.GONE);
-                mViewBinging.chatRv.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (mViewBinging != null) {
-                mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
-                mViewBinging.chatRv.setVisibility(View.GONE);
-            }
+        UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
+        if (chatEntities != null && mChatPagedAdapter != null && chatEntities.size() > 0) {
+            mChatPagedAdapter.submitList(chatEntities);
         }
     }
 

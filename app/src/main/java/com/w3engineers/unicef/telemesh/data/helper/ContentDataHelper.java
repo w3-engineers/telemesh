@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -16,7 +17,9 @@ import com.w3engineers.unicef.util.helper.NotifyUtil;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
 import timber.log.Timber;
 
 public class ContentDataHelper extends RmDataHelper {
@@ -184,15 +187,32 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Cross check between sender and receiver +++++++++++++++++++++++++++++++++
 
-    protected void requestedContentMessageSend(byte[] rawData, String userId) {
+    protected void requestedForFullContent(byte[] rawData, String userId) {
+        Log.v("MIMO_SAHA:", "Request for full content: ");
+        compositeDisposable.add(Single.just(requestedContentMessageSend(rawData, userId))
+                .delay(1000, TimeUnit.SECONDS)
+                .subscribe());
+    }
+
+    protected boolean requestedContentMessageSend(byte[] rawData, String userId) {
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("MIMO_SAHA:", "Start to send for full content: ");
+
         if (rawData == null)
-            return;
+            return false;
         String messageId = new String(rawData);
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
         if (messageEntity != null && !messageEntity.isIncoming()) {
             contentMessageSend(messageEntity, userId, true);
         }
+        return true;
     }
 
     protected void contentMessageSuccessResponse(byte[] rawData) {

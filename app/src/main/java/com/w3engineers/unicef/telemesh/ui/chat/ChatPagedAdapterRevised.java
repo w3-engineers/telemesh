@@ -175,6 +175,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     void addAvatarIndex(UserEntity userEntity) {
         userMap.put(userEntity.meshId, userEntity);
+        userNameMap.put(userEntity.getMeshId(), userEntity.getUserName());
         notifyDataSetChanged();
     }
 

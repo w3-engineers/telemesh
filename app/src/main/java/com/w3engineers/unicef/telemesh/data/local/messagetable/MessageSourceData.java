@@ -82,8 +82,14 @@ public class MessageSourceData {
     @NonNull
     public Flowable<List<ChatEntity>> getAllGroupMessages(@NonNull String friendsId) {
 
-        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP).flatMap(messageEntities ->
+        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP)
+                .flatMap(messageEntities ->
                 Flowable.just(new ArrayList<>(messageEntities)));
+    }
+
+    @NonNull
+    public MessageEntity getCreateGroupInfo(@NonNull String friendsId) {
+        return messageDao.getCreateGroupInfo(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP);
     }
 
     @NonNull

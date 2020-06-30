@@ -77,6 +77,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     private CompositeDisposable compositeDisposable;
     private MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
+    private MutableLiveData<PagedList<ChatEntity>> mutableCreatedInfoList = new MutableLiveData<>();
     private MutableLiveData<Boolean> finishForGroupLeave = new MutableLiveData<>();
 
     /**
@@ -117,6 +118,32 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     @NonNull
     public LiveData<List<ChatEntity>> getAllGroupMessage(@NonNull String threadId) {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllGroupMessages(threadId));
+    }
+
+    @NonNull
+    public void getCreateGroupInfo(@NonNull String threadId) {
+
+        getCompositeDisposable().add(fetchGroupCreateInfo(threadId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(chatEntity -> {
+                    List<ChatEntity> chatEntities = new ArrayList<>();
+                    chatEntities.add(chatEntity);
+                    prepareDateSpecificCreatedInfo(chatEntities);
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<ChatEntity> fetchGroupCreateInfo(String threadId) {
+        return Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(messageSourceData.getCreateGroupInfo(threadId));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
     }
 
     /**
@@ -413,6 +440,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     @NonNull
+    public LiveData<PagedList<ChatEntity>> getCreatedInfoList() {
+        return mutableCreatedInfoList;
+    }
+
+    @NonNull
     public MutableLiveData<Boolean> getFinishForGroupLeave() {
         return finishForGroupLeave;
     }
@@ -448,6 +480,32 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
             // here mutable live data is used to pass the updated value
             mutableChatList.postValue(pagedStrings);
+        }
+    }
+
+    public void prepareDateSpecificCreatedInfo(@Nullable List<ChatEntity> chatEntityList) {
+
+        if (chatEntityList != null) {
+
+            List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
+
+            ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
+
+            PagedList.Config myConfig = new PagedList.Config.Builder()
+                    .setEnablePlaceholders(true)
+                    .setPrefetchDistance(PREFETCH_DISTANCE)
+                    .setPageSize(PAGE_SIZE)
+                    .build();
+
+
+            PagedList<ChatEntity> pagedStrings = new PagedList.Builder<>(chatEntityListDataSource, myConfig)
+                    .setInitialKey(INITIAL_LOAD_KEY)
+                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build();
+
+            // here mutable live data is used to pass the updated value
+            mutableCreatedInfoList.postValue(pagedStrings);
         }
     }
 

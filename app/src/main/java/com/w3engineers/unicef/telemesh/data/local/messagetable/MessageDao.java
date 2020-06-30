@@ -52,6 +52,12 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
             + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
     public abstract Flowable<List<MessageEntity>> getGroupAllMessages(@NonNull String threadId, boolean place);
 
+    @NonNull
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place AND " + ColumnNames.COLUMN_MESSAGE_TYPE + " = "
+            + Constants.MessageType.GROUP_CREATE + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+    public abstract MessageEntity getCreateGroupInfo(@NonNull String threadId, boolean place);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long writeMessage(@NonNull MessageEntity messageEntity);
 

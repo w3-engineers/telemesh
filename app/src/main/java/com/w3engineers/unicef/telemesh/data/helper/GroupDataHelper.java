@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -482,6 +484,39 @@ public class GroupDataHelper extends RmDataHelper {
                 GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
                 if (groupUserNameMap.getUserId().equals(userEntity.getMeshId())) {
                     groupUserNameMap.setUserName(userEntity.getUserName());
+
+                    groupUserNameMaps.set(i, groupUserNameMap);
+                }
+            }
+
+            groupNameModel.setGroupUserMap(groupUserNameMaps);
+            if (!groupNameModel.isGroupNameChanged()) {
+                groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
+            }
+            String groupNameText = GsonBuilder.getInstance().getGroupNameModelJson(groupNameModel);
+
+            groupEntity.setGroupName(groupNameText);
+            groupDataSource.insertOrUpdateGroup(groupEntity);
+        }
+    }
+
+    public void updateMyUserInfo() {
+        List<GroupEntity> groupEntities = groupDataSource.getAllGroup();
+
+        String myNewName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.USER_NAME);
+
+        for (GroupEntity groupEntity : groupEntities) {
+
+            GroupNameModel groupNameModel = GsonBuilder.getInstance()
+                    .getGroupNameModelObj(groupEntity.getGroupName());
+            List<GroupUserNameMap> groupUserNameMaps = groupNameModel.getGroupUserMap();
+
+            for (int i = 0; i < groupUserNameMaps.size(); i++) {
+
+                GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
+                if (groupUserNameMap.getUserId().equals(getMyMeshId())) {
+                    groupUserNameMap.setUserName(myNewName);
 
                     groupUserNameMaps.set(i, groupUserNameMap);
                 }

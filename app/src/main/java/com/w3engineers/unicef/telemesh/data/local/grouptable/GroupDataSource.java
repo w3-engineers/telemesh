@@ -41,6 +41,10 @@ public class GroupDataSource {
         return mGroupDao.getAllGroupsWithCount();
     }
 
+    public List<GroupEntity> getAllGroup() {
+        return mGroupDao.getAllGroups();
+    }
+
     public Flowable<GroupEntity> getLastCreatedGroup() {
         return mGroupDao.getLastCreatedGroup();
     }

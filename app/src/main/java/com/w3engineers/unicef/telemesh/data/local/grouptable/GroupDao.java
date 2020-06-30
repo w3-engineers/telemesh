@@ -22,7 +22,7 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " IS NOT NULL ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")
     abstract Flowable<List<GroupEntity>> getAllGroups();
 
-    @Query("SELECT * FROM " + TableNames.GROUP + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
+    @Query("SELECT *, group_table.group_id FROM " + TableNames.GROUP + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
             + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID, " + ColumnNames.COLUMN_MESSAGE

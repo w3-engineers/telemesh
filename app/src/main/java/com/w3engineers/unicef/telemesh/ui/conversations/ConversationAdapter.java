@@ -102,6 +102,7 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
             if (TextUtils.isEmpty(groupEntity.lastMessage) || isInactiveOnGroup(groupEntity)) {
                 itemConversationBinding.personMessage.setVisibility(View.GONE);
             } else {
+                itemConversationBinding.personMessage.setVisibility(View.VISIBLE);
                 if (isSystemMessage(groupEntity.lastMessageType)) {
                     String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You" : groupEntity.lastPersonName;
                     itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);

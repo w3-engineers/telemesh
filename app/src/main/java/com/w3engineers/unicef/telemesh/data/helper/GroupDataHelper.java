@@ -692,6 +692,8 @@ public class GroupDataHelper extends RmDataHelper {
             GroupMembersInfo removedUser = GsonBuilder.getInstance()
                     .getGroupMemberInfoObj(groupModel.getMemberInfo()).get(0);
 
+            GroupUserNameMap removedUserNameMap = null;
+
             if (removedUser.getMemberId().equals(getMyMeshId())) {
                 // This is the removed user section
                 groupDataSource.deleteGroupById(groupModel.getGroupId());
@@ -728,7 +730,6 @@ public class GroupDataHelper extends RmDataHelper {
                             if (!TextUtils.isEmpty(groupEntity.getGroupName())) {
                                 GroupNameModel nameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
 
-                                GroupUserNameMap removedUserNameMap = null;
                                 for (GroupUserNameMap nameMap : nameModel.getGroupUserMap()) {
                                     if (nameMap.getUserId().equals(removedUser.getMemberId())) {
                                         removedUserNameMap = nameMap;
@@ -771,11 +772,9 @@ public class GroupDataHelper extends RmDataHelper {
 
                 groupDataSource.insertOrUpdateGroup(groupEntity);
 
-                List<GroupUserNameMap> userNameMaps = GsonBuilder.getInstance()
-                        .getGroupNameModelObj(groupEntity.getGroupName())
-                        .getGroupUserMap();
-                if (userNameMaps != null) {
-                    String removedUseName = getGroupMemberName(removedUser.getMemberId(), userNameMaps);
+
+                if (removedUserNameMap != null) {
+                    String removedUseName = removedUserNameMap.getUserName();
                     if (!TextUtils.isEmpty(removedUseName)) {
                         setGroupInfo(userId, groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_REMOVED
                                         + " " + removedUseName,

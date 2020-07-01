@@ -1101,6 +1101,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(users -> {
 
+                    GroupDataHelper.getInstance().updateMyUserInfo();
                     ExecutorService service = Executors.newSingleThreadExecutor();
                     service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
 

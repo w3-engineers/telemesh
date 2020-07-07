@@ -120,9 +120,9 @@
 
         <com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox
             android:id="@+id/check_box"
-            android:layout_width="@dimen/height_25"
-            android:layout_height="@dimen/width_25"
-            android:layout_marginEnd="@dimen/margin_8"
+            android:layout_width="@dimen/height_20"
+            android:layout_height="@dimen/width_20"
+            android:layout_marginEnd="@dimen/margin_15"
             android:clickable="false"
             android:focusable="false"
             android:paddingTop="10dp"

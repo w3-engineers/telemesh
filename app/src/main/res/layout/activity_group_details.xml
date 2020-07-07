@@ -28,7 +28,6 @@
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true">
 
-
                 <View
                     android:id="@+id/top_gradient"
                     android:layout_width="match_parent"
@@ -150,7 +149,7 @@
                     android:id="@+id/text_view_total_participants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_20"
                     android:text="@string/total_participants"
                     android:textColor="@color/message_text_color"
                     app:layout_constraintStart_toStartOf="@+id/image_view_pen"
@@ -171,41 +170,51 @@
                     android:id="@+id/separator_2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_20"
                     android:background="@color/divider_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_total_participants" />
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_view_add_member"
+                    android:layout_width="@dimen/width_50"
+                    android:layout_height="@dimen/height_50"
+                    android:layout_marginStart="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:src="@mipmap/ic_add_member"
+                    app:layout_constraintTop_toBottomOf="@+id/separator_2"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
                 <TextView
                     android:id="@+id/text_view_add_member"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@mipmap/ic_add_member"
-                    android:drawablePadding="@dimen/padding_10"
                     android:gravity="center|start"
+                    android:layout_marginStart="@dimen/margin_10"
                     android:paddingTop="@dimen/padding_10"
                     android:paddingBottom="@dimen/padding_10"
                     android:text="@string/add_member"
                     android:textColor="@color/background_color"
                     app:layout_constraintEnd_toEndOf="@+id/text_view_participants_count"
-                    app:layout_constraintStart_toStartOf="@+id/text_view_total_participants"
-                    app:layout_constraintTop_toBottomOf="@+id/separator_2" />
+                    app:layout_constraintStart_toEndOf="@+id/image_view_add_member"
+                    app:layout_constraintTop_toTopOf="@+id/image_view_add_member"
+                    app:layout_constraintBottom_toBottomOf="@+id/image_view_add_member"/>
 
                 <View
                     android:id="@+id/separator_3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_10"
                     android:background="@color/divider_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_add_member" />
+                    app:layout_constraintTop_toBottomOf="@+id/image_view_add_member" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_group_member"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_10"
                     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -224,12 +233,14 @@
                     android:drawablePadding="@dimen/padding_10"
                     android:gravity="start|center"
                     android:paddingTop="@dimen/padding_10"
+                    android:layout_marginStart="@dimen/margin_15"
+                    android:layout_marginEnd="@dimen/margin_15"
                     android:paddingBottom="@dimen/padding_10"
                     android:text="Leave group"
                     android:textColor="@color/sunset_orange"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/text_view_add_member"
-                    app:layout_constraintStart_toStartOf="@+id/text_view_add_member"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_view_group_member" />
 
 

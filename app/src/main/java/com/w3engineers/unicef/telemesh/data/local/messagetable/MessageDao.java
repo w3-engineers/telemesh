@@ -130,6 +130,11 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
+    public abstract long changeSendMessageStatusByUserId(int fromStatus, int toStatus, String userId);
+
+    @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " LIKE :userId AND "
             + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
             + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
     public abstract long changeMessageStatusByUserFrom(int fromContentStatus, int fromStatus,

@@ -127,7 +127,9 @@ public class MessageSourceData {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
-
+    public long changeSendMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeSendMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
 
 
     public long changeMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {

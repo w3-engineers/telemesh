@@ -84,6 +84,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private String threadId;
     private boolean isGroup, isChatAvailable;
     public static ChatActivity sInstance;
+    private boolean isMessageLoad;
 
     private int topMargin = 120, bottomMargin = 120, extendedBottomMargin = 190;
 
@@ -119,6 +120,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     public void startUI() {
         super.startUI();
         sInstance = this;
+        isMessageLoad = false;
         Intent intent = getIntent();
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
@@ -344,7 +346,10 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mChatViewModel.getLiveGroupById(threadId).observe(this, groupEntity -> {
                     mGroupEntity = groupEntity;
 
-                    subscribeForMessages(threadId);
+                    if (!isMessageLoad) {
+                        isMessageLoad = true;
+                        subscribeForMessages(threadId);
+                    }
 
                     if (groupEntity != null && mViewBinging != null) {
 
@@ -368,7 +373,10 @@ public class ChatActivity extends TelemeshBaseActivity {
             } else {
                 mChatViewModel.getUserById(threadId).observe(this, userEntity -> {
                     mUserEntity = userEntity;
-                    subscribeForMessages(threadId);
+                    if (!isMessageLoad) {
+                        isMessageLoad = true;
+                        subscribeForMessages(threadId);
+                    }
                     if (userEntity != null && mViewBinging != null) {
 
                         setUiComponent();

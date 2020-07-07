@@ -85,7 +85,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
         //checking name group name contains user name or changed
         GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
 
-        List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
+        List<GroupUserNameMap> existGroupUserNameMap = new ArrayList<>(groupNameModel.getGroupUserMap());
 
 
         GroupMembersInfo removedMemberInfo = null;

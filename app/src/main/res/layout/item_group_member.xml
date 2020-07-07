@@ -85,7 +85,7 @@
             android:id="@+id/image_view_remove"
             android:layout_width="@dimen/height_25"
             android:layout_height="@dimen/width_25"
-            android:layout_marginEnd="@dimen/margin_8"
+            android:layout_marginEnd="@dimen/margin_15"
             android:contentDescription="@string/remove_group_member"
             android:src="@mipmap/delete"
             android:visibility="invisible"

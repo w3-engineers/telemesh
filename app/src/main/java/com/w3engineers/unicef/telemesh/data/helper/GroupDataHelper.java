@@ -372,7 +372,7 @@ public class GroupDataHelper extends RmDataHelper {
             if (!TextUtils.isEmpty(groupName)) {
                 GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
 
-                List<GroupUserNameMap> groupUserNameMaps = groupNameModel.getGroupUserMap();
+                List<GroupUserNameMap> groupUserNameMaps = new ArrayList<>(groupNameModel.getGroupUserMap());
 
                 boolean isRemoveFromMap = false;
                 for (int i = (groupUserNameMaps.size() - 1); i >= 0; i--) {
@@ -388,7 +388,7 @@ public class GroupDataHelper extends RmDataHelper {
                     if (!groupNameModel.isGroupNameChanged()) {
                         groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
                     }
-                    groupNameModel.setGroupUserMap(groupUserNameMaps);
+//                    groupNameModel.setGroupUserMap(groupUserNameMaps);
 
                     groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
                     groupEntity.setGroupName(groupName);
@@ -763,27 +763,6 @@ public class GroupDataHelper extends RmDataHelper {
 
                         if (groupMembersInfo.getMemberId().equals(removedUser.getMemberId())) {
                             if (!TextUtils.isEmpty(groupEntity.getGroupName())) {
-                                GroupNameModel nameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
-
-                                for (GroupUserNameMap nameMap : nameModel.getGroupUserMap()) {
-                                    if (nameMap.getUserId().equals(removedUser.getMemberId())) {
-                                        removedUserNameMap = nameMap;
-                                        break;
-                                    }
-                                }
-
-                                if (removedUserNameMap != null) {
-                                    nameModel.getGroupUserMap().remove(removedUserNameMap);
-                                }
-
-                                if (!nameModel.isGroupNameChanged()) {
-                                    //Means the group name still contains user name
-                                    nameModel.setGroupName(CommonUtil.getGroupName(
-                                            nameModel.getGroupUserMap()
-                                    ));
-                                }
-                                groupEntity.setGroupName(gsonBuilder.getGroupNameModelJson(nameModel));
-
                                 groupMembersInfos.remove(groupMembersInfo);
                             } else {
                                 groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);//Todo tariqul change this event later
@@ -803,6 +782,36 @@ public class GroupDataHelper extends RmDataHelper {
 
                     groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
                     groupEntity.setMembersInfo(groupMemberInfoText);
+                }
+
+                String groupName = groupEntity.getGroupName();
+
+                if (!TextUtils.isEmpty(groupName)) {
+                    GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
+
+                    List<GroupUserNameMap> groupUserNameMaps = new ArrayList<>(groupNameModel.getGroupUserMap());
+
+                    boolean isRemoveFromMap = false;
+                    for (int i = (groupUserNameMaps.size() - 1); i >= 0; i--) {
+                        GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
+
+                        if (groupUserNameMap.getUserId().equals(removedUser.getMemberId())) {
+                            removedUserNameMap = groupUserNameMap;
+                            groupUserNameMaps.remove(groupUserNameMap);
+                            isRemoveFromMap = true;
+                        }
+                    }
+
+                    if (isRemoveFromMap) {
+                        if (!groupNameModel.isGroupNameChanged()) {
+                            groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
+                        }
+//                    groupNameModel.setGroupUserMap(groupUserNameMaps);
+
+                        groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
+                        groupEntity.setGroupName(groupName);
+                    }
+
                 }
 
                 groupDataSource.insertOrUpdateGroup(groupEntity);

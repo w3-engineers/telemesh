@@ -108,8 +108,7 @@ public class NotifyUtil {
         if (userEntity == null)
             return;
 
-        String message = userEntity.getFullName() + " created " + GsonBuilder.getInstance()
-                .getGroupNameModelObj(groupEntity.getGroupName()).getGroupName() + " group";
+        String message = userEntity.getFullName() + " created a group";
 
         Bitmap imageBitmap = ImageUtil.getResourceImageBitmap(R.mipmap.group_blue_circle);
         setNotification(builder, message, "Group", imageBitmap);

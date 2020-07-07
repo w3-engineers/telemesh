@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -229,6 +230,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userLeave(@NonNull String peerId) {
 
         // FAILED MAINTAINED
+
+        MessageSourceData.getInstance().changeSendMessageStatusByUserId(
+                Constants.MessageStatus.STATUS_SENDING_START,
+                Constants.MessageStatus.STATUS_FAILED, peerId);
+
         MessageSourceData.getInstance().changeMessageStatusByUserId(
                 Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                 Constants.MessageStatus.STATUS_FAILED, peerId);
@@ -579,6 +585,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     /*if (isServiceStop) {
                         stopMeshProcess();
                     }*/
+                    Log.v("MIMO_SAHA", "User offline " + integer);
                     updateMessageStatus();
                 }, Throwable::printStackTrace));
     }
@@ -598,6 +605,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateMessageStatus() {
         compositeDisposable.add(updateMessageStatusFailed()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    Log.v("MIMO_SAHA", "Msg send failed " + integer);
                     updateReceiveMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -616,6 +624,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    Log.v("MIMO_SAHA", "Msg receive failed " + integer);
                     updateReceiveUnreadMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -627,7 +636,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_UNREAD_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-
+                    Log.v("MIMO_SAHA", "Msg receive unread failed " + integer);
                 }, Throwable::printStackTrace));
     }
 

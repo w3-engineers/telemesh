@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:gravity="center"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
             app:layout_constraintStart_toStartOf="@+id/user_avatar_background"

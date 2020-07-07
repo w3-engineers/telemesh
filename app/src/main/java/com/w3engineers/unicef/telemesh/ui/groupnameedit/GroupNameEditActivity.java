@@ -82,6 +82,7 @@ public class GroupNameEditActivity extends TelemeshBaseActivity {
             mGroupName = intent.getStringExtra(GroupNameEditActivity.class.getName());
 
             mBinding.editTextName.setText(mGroupName);
+            mBinding.editTextName.setSelection(mGroupName.length());
         }
     }
 

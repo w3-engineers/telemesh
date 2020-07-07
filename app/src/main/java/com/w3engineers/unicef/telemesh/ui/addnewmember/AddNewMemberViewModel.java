@@ -78,7 +78,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         // add member info
-        ArrayList<GroupMembersInfo> membersInfos = GsonBuilder.getInstance()
+        ArrayList<GroupMembersInfo> membersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
         for (UserEntity userEntity : userList) {
             GroupMembersInfo groupMembersInfo = new GroupMembersInfo();

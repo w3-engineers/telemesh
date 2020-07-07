@@ -87,6 +87,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 finish();
                 break;
 
+            case R.id.image_view_add_member:
             case R.id.text_view_add_member:
                 if (amIAdmin) {
                     Intent addMemberIntent = new Intent(this, AddNewMemberActivity.class);
@@ -133,7 +134,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
 
     private void initView() {
         setClickListener(mBinding.opBack, mBinding.textViewAddMember, mBinding.imageViewPen,
-                mBinding.textViewLeaveGroup);
+                mBinding.textViewLeaveGroup, mBinding.imageViewAddMember);
 
         myUserId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
         mAdapter = new GroupDetailsAdapter(myUserId);

@@ -72,6 +72,7 @@ public class ContentDataHelper extends RmDataHelper {
 
             switch (messageType) {
                 case Constants.MessageType.IMAGE_MESSAGE:
+                case Constants.MessageType.VIDEO_MESSAGE:
                     setContentMessage(contentModel, isNewMessage);
                     break;
                 case Constants.MessageType.BROADCAST_IMAGE:
@@ -374,6 +375,14 @@ public class ContentDataHelper extends RmDataHelper {
                 }
 
             } else {
+                MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
+                if (messageEntity != null) {
+                    if (!messageEntity.isIncoming()) {
+                        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_RECEIVED) {
+                            ackStatus = messageEntity.getStatus();
+                        }
+                    }
+                }
                 dataSource.updateMessageStatus(messageId, ackStatus);
             }
         } catch (Exception e) {
@@ -704,7 +713,9 @@ public class ContentDataHelper extends RmDataHelper {
                 if (messageEntity.isIncoming()) {
                     inComingFailedToGeneral(messageEntity);
                 } else {
-                    messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                    if (messageEntity.getStatus() != Constants.MessageStatus.STATUS_RECEIVED) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                    }
                 }
 
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
@@ -732,6 +743,25 @@ public class ContentDataHelper extends RmDataHelper {
                     .setContentDataType(Constants.DataType.CONTENT_MESSAGE);
         }
         return null;
+    }
+
+    private ContentMetaInfo getContentMetaInfoByContentId(String contentId) {
+        ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
+        try {
+            MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
+            if (messageEntity != null) {
+                byte contentType = !TextUtils.isEmpty(messageEntity.getContentPath()) ?
+                        Constants.DataType.CONTENT_MESSAGE : Constants.DataType.CONTENT_THUMB_MESSAGE;
+                contentMetaInfo.setMessageId(messageEntity.getMessageId())
+                        .setMessageType(messageEntity.getMessageType())
+                        .setIsContent(false).setMetaInfo(messageEntity.getContentInfo())
+                        .setContentType(contentType);
+                return contentMetaInfo;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contentMetaInfo;
     }
 
     // -----------------------------------------------------------
@@ -865,6 +895,12 @@ public class ContentDataHelper extends RmDataHelper {
 
             ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
+            if (contentMetaInfo == null) {
+                contentMetaInfo = getContentMetaInfoByContentId(contentId);
+                contentReceiveModel.setContentMetaInfo(contentMetaInfo);
+                contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+            }
+
             if (contentMetaInfo != null && !contentMetaInfo.getIsContent()
                     && contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
                 String messageId = contentMetaInfo.getMessageId();
@@ -904,6 +940,10 @@ public class ContentDataHelper extends RmDataHelper {
             ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
             String contentPath = null, thumbPath = null;
+
+            if (contentMetaInfo == null) {
+                contentMetaInfo = getContentMetaInfoByContentId(contentId);
+            }
 
             if (contentStatus) {
                 switch (contentMetaInfo.getContentType()) {

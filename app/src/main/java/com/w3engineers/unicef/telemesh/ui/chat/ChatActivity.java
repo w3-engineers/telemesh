@@ -5,12 +5,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
@@ -35,14 +33,11 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -54,7 +49,6 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
-import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -84,7 +78,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private String threadId;
     private boolean isGroup, isChatAvailable;
     public static ChatActivity sInstance;
-    private boolean isMessageLoad;
+    private boolean isThreadLoaded;
 
     private int topMargin = 120, bottomMargin = 120, extendedBottomMargin = 190;
 
@@ -120,7 +114,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     public void startUI() {
         super.startUI();
         sInstance = this;
-        isMessageLoad = false;
+        isThreadLoaded = false;
         Intent intent = getIntent();
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
@@ -137,8 +131,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         mChatViewModel.setChatPageInfo(isGroup);
         initComponent();
 
+        processGroupLiveUsers();
         subscribeForThreadEvent(threadId);
-//        subscribeForMessages(threadId);
+        subscribeForMessages(threadId);
         subscribeForFinishEvent();
 
         if (getSupportActionBar() != null) {
@@ -159,17 +154,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mViewBinging.imageProfile.setBackgroundResource(R.mipmap.group_white_circle);
                 UIHelper.setGroupName(mViewBinging.textViewLastName, mGroupEntity.groupName);
                 mViewBinging.imageView.setVisibility(View.GONE);
-
-                mViewBinging.groupBlock.setVisibility(View.GONE);
-                mViewBinging.chatMessageBar.setVisibility(View.GONE);
-
-                if (isInactiveOnGroup()) {
-                    mViewBinging.groupBlock.setVisibility(View.VISIBLE);
-                    UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, extendedBottomMargin);
-                } else {
-                    UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
-                    mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
-                }
             }
         } else {
             if (mUserEntity != null) {
@@ -179,25 +163,25 @@ public class ChatActivity extends TelemeshBaseActivity {
                 String subTitle = mUserEntity.isOnline > 0 ? getString(R.string.active_online) : getString(R.string.active_offline);
                 mViewBinging.textViewActiveNow.setText(subTitle);
                 mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
-
-                mViewBinging.groupBlock.setVisibility(View.GONE);
-                mViewBinging.chatMessageBar.setVisibility(View.VISIBLE);
-                UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
             }
         }
     }
 
-    private void processGroupUsersComponent() {
-        if (isGroup && mGroupEntity != null) {
-            mChatViewModel.getGroupUsersById(mGroupEntity.membersInfo)
-                    .observe(this, userEntities -> {
-                        if (mChatPagedAdapter != null) {
-                            mChatPagedAdapter.addAvatarIndex(userEntities);
-                        }
-                        String subTitle = CommonUtil.getGroupUsersName(userEntities);
-                        mViewBinging.textViewActiveNow.setText(subTitle);
-                    });
-        }
+    private void processGroupAllUsers() {
+        mChatViewModel.getAllGroupUsersById(mGroupEntity.membersInfo).observe(this,
+                userEntities -> {
+                    if (mChatPagedAdapter != null && userEntities != null) {
+                        mChatPagedAdapter.addAvatarIndex(userEntities, mChatViewModel.getMyUserEntity());
+                    }
+                });
+    }
+
+    private void processGroupLiveUsers() {
+        mChatViewModel.getGroupLiveMembers().observe(this,
+                userEntities -> {
+                    String subTitle = CommonUtil.getGroupUsersName(userEntities);
+                    mViewBinging.textViewActiveNow.setText(subTitle);
+                });
     }
 
     @Override
@@ -236,13 +220,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mChatViewModel.groupLeaveAction(mGroupEntity);
                 break;
             case R.id.menu_message_clear:
-                if (isGroup) {
-                    if (isActiveOnGroup()) {
-                        mChatViewModel.clearMessage(threadId, isGroup);
-                    }
-                } else {
-                    mChatViewModel.clearMessage(threadId, isGroup);
-                }
+                mChatViewModel.clearMessage(threadId, isGroup);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -273,8 +251,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
             setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage,
-                    mViewBinging.imageProfile, mViewBinging.textViewLastName, mViewBinging.groupDeny,
-                    mViewBinging.groupJoin);
+                    mViewBinging.imageProfile, mViewBinging.textViewLastName);
         }
 
         NotifyUtil.clearNotification(threadId);
@@ -293,19 +270,6 @@ public class ChatActivity extends TelemeshBaseActivity {
 
             if (mChatPagedAdapter != null) {
                 mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
-                    if (isGroup) {
-                        if (isActiveOnGroup()) {
-                            controlEmptyView(chatEntities);
-                            mChatPagedAdapter.submitList(chatEntities);
-                        } else {
-                            this.chatEntities = chatEntities;
-                        }
-                    } else {
-                        controlEmptyView(chatEntities);
-                        mChatPagedAdapter.submitList(chatEntities);
-                    }
-                });
-                mChatViewModel.getCreatedInfoList().observe(ChatActivity.this, chatEntities -> {
                     controlEmptyView(chatEntities);
                     mChatPagedAdapter.submitList(chatEntities);
                 });
@@ -313,7 +277,9 @@ public class ChatActivity extends TelemeshBaseActivity {
 
             if (Text.isNotEmpty(userId)) {
                 if (isGroup) {
-                    groupMessageFetch(userId);
+                    mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
+                        mChatViewModel.prepareDateSpecificChat(chatEntities);
+                    });
                 } else {
                     mChatViewModel.getAllMessage(userId).observe(this, chatEntities -> {
                         mChatViewModel.prepareDateSpecificChat(chatEntities);
@@ -323,21 +289,11 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
     }
 
-    private void groupMessageFetch(String userId) {
-        if (isInactiveOnGroup()) {
-            mChatViewModel.getCreateGroupInfo(userId);
-        }
-        mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
-            mChatViewModel.prepareDateSpecificChat(chatEntities);
-        });
-    }
-
     private void subscribeForFinishEvent() {
         mChatViewModel.getFinishForGroupLeave().observe(this, aBoolean -> {
             finish();
         });
     }
-
 
     private void subscribeForThreadEvent(String threadId) {
         if (Text.isNotEmpty(threadId)) {
@@ -346,26 +302,11 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mChatViewModel.getLiveGroupById(threadId).observe(this, groupEntity -> {
                     mGroupEntity = groupEntity;
 
-                    if (!isMessageLoad) {
-                        isMessageLoad = true;
-                        subscribeForMessages(threadId);
-                    }
-
                     if (groupEntity != null && mViewBinging != null) {
 
                         setUiComponent();
-
-                        GroupNameModel groupNameModel = GsonBuilder.getInstance()
-                                .getGroupNameModelObj(groupEntity.getGroupName());
-
-                        if (mChatPagedAdapter != null) {
-
-                            String myUserId = SharedPref.getSharedPref(this)
-                                    .read(Constants.preferenceKey.MY_USER_ID);
-
-                            mChatPagedAdapter.setUserNameMap(groupNameModel.getGroupUserMap(), myUserId);
-                        }
-                        processGroupUsersComponent();
+                        processGroupAllUsers();
+                        mChatViewModel.getLiveGroupUsersById(mGroupEntity.membersInfo);
                     } else {
                         finish();
                     }
@@ -373,10 +314,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             } else {
                 mChatViewModel.getUserById(threadId).observe(this, userEntity -> {
                     mUserEntity = userEntity;
-                    if (!isMessageLoad) {
-                        isMessageLoad = true;
-                        subscribeForMessages(threadId);
-                    }
+
                     if (userEntity != null && mViewBinging != null) {
 
                         setUiComponent();
@@ -418,11 +356,9 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.image_profile:
             case R.id.text_view_last_name:
                 if (isGroup) {
-                    if (isActiveOnGroup()) {
-                        Intent intent = new Intent(this, GroupDetailsActivity.class);
-                        intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(this, GroupDetailsActivity.class);
+                    intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, UserProfileActivity.class);
                     intent.putExtra(UserEntity.class.getName(), mUserEntity);
@@ -454,15 +390,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                                 || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
                     resendFailedMessage(failedMessage);
                 }
-                break;
-
-            case R.id.group_join:
-                activeMessagePart();
-                mChatViewModel.groupJoinAction(mGroupEntity);
-                break;
-
-            case R.id.group_deny:
-                mChatViewModel.groupLeaveAction(mGroupEntity);
                 break;
         }
     }
@@ -496,13 +423,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                 mViewBinging.emptyLayout.setVisibility(View.VISIBLE);
                 mViewBinging.chatRv.setVisibility(View.GONE);
             }
-        }
-    }
-
-    private void activeMessagePart() {
-        UIHelper.setMargins(mViewBinging.chatRv, 0, topMargin, 0, bottomMargin);
-        if (chatEntities != null && mChatPagedAdapter != null && chatEntities.size() > 0) {
-            mChatPagedAdapter.submitList(chatEntities);
         }
     }
 
@@ -667,16 +587,6 @@ public class ChatActivity extends TelemeshBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private boolean isActiveOnGroup() {
-        return mGroupEntity != null && mGroupEntity.getOwnStatus() ==
-                Constants.GroupUserOwnState.GROUP_JOINED;
-    }
-
-    private boolean isInactiveOnGroup() {
-        return mGroupEntity != null && mGroupEntity.getOwnStatus() !=
-                Constants.GroupUserOwnState.GROUP_JOINED;
     }
 
     private void zoomImageFromThumb(final View thumbView, String imagePath) {

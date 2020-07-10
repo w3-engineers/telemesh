@@ -1,7 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
@@ -10,14 +9,11 @@ import android.text.TextUtils;
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
@@ -77,56 +73,40 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
-        ArrayList<GroupAdminInfo> groupAdminInfos = new ArrayList<>();
-        ArrayList<GroupUserNameMap> groupUserNameMaps = new ArrayList<>();
 
         String myUserId = getMyUserId();
 
         String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.USER_NAME);
 
-        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo();
-        myGroupMembersInfo.setMemberId(myUserId);
-        myGroupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
+        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
+                .setMemberId(myUserId)
+                .setUserName(myUserName)
+                .setMemberStatus(Constants.GroupEvent.GROUP_JOINED)
+                .setIsAdmin(true);
         groupMembersInfos.add(myGroupMembersInfo);
 
         for (UserEntity userEntity : userEntities) {
 
-            GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
-                    .setUserId(userEntity.getMeshId())
-                    .setUserName(userEntity.getUserName());
-            groupUserNameMaps.add(groupUserNameMap);
+            GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                    .setMemberId(userEntity.getMeshId())
+                    .setUserName(userEntity.getUserName())
+                    .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
 
-            GroupMembersInfo groupMembersInfo = new GroupMembersInfo();
-            groupMembersInfo.setMemberId(userEntity.getMeshId());
-            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
             groupMembersInfos.add(groupMembersInfo);
         }
-
-        GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
-                .setUserId(myUserId)
-                .setUserName(myUserName);
-        groupUserNameMaps.add(groupUserNameMap);
-
-        GroupAdminInfo groupAdminInfo = new GroupAdminInfo();
-        groupAdminInfo.setAdminId(myUserId);
-        groupAdminInfo.setAdminStatus(true);
-
-        groupAdminInfos.add(groupAdminInfo);
 
         String groupId = UUID.randomUUID().toString();
 
         GroupNameModel groupNameModel = new GroupNameModel()
-                .setGroupNameChanged(false)
-                .setGroupName(CommonUtil.getGroupName(groupUserNameMaps))
-                .setGroupUserMap(groupUserNameMaps);
+                .setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
 
         GroupEntity groupEntity = new GroupEntity()
                 .setGroupId(groupId)
                 .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
-                .setOwnStatus(Constants.GroupUserOwnState.GROUP_CREATE)
+                .setOwnStatus(Constants.GroupEvent.GROUP_CREATE)
                 .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos))
-                .setAdminInfo(gsonBuilder.getGroupAdminInfoJson(groupAdminInfos))
+                .setAdminInfo(myUserId)
                 .setGroupCreationTime(System.currentTimeMillis());
 
         getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))

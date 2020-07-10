@@ -99,7 +99,7 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
             itemConversationBinding.messageCount.setVisibility(View.INVISIBLE);
             itemConversationBinding.name.setTypeface(null, Typeface.NORMAL);
 
-            if (TextUtils.isEmpty(groupEntity.lastMessage) || isInactiveOnGroup(groupEntity)) {
+            if (TextUtils.isEmpty(groupEntity.lastMessage)) {
                 itemConversationBinding.personMessage.setVisibility(View.GONE);
             } else {
                 itemConversationBinding.personMessage.setVisibility(View.VISIBLE);

@@ -48,15 +48,15 @@ public interface DataSource {
 
     Flowable<Boolean> getMeshInitiated();
 
-    void setGroupUserEvent(GroupEntity groupEntity);
+    void setGroupUserLeaveEvent(GroupEntity groupEntity);
 
     @Nullable
-    Flowable<GroupEntity> getGroupUserEvent();
+    Flowable<GroupEntity> getGroupUserLeaveEvent();
 
-    void setGroupRenameEvent(GroupModel groupModel);
+    void setGroupInfoChangeEvent(GroupModel groupModel);
 
     @Nullable
-    Flowable<GroupModel> getGroupRenameEvent();
+    Flowable<GroupModel> getGroupInfoChangeEvent();
 
     void setAddNewMemberEvent(GroupMemberChangeModel model);
 

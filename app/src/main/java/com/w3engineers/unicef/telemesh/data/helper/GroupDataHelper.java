@@ -2,19 +2,16 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -53,13 +50,13 @@ public class GroupDataHelper extends RmDataHelper {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(this::sendGroupCreationInfo, Throwable::printStackTrace));
 
-        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupUserEvent())
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupUserLeaveEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendGroupForEvent, Throwable::printStackTrace));
+                .subscribe(this::sendGroupLeaveEvent, Throwable::printStackTrace));
 
-        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupRenameEvent())
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupInfoChangeEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendAndUpdateGroupChangeEvent, Throwable::printStackTrace));
+                .subscribe(this::sendGroupInfoChangeEvent, Throwable::printStackTrace));
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMembersAddEvent())
                 .subscribeOn(Schedulers.newThread())
@@ -67,7 +64,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupMemberRemoveEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::removeNewMemberOperation, Throwable::printStackTrace));
+                .subscribe(this::removeMemberOperation, Throwable::printStackTrace));
     }
 
     void groupDataReceive(int dataType, String userId, byte[] rawData, boolean isNewMessage) {
@@ -78,14 +75,11 @@ public class GroupDataHelper extends RmDataHelper {
             case Constants.DataType.EVENT_GROUP_CREATION:
                 receiveGroupCreationInfo(rawData, userId);
                 break;
-            case Constants.DataType.EVENT_GROUP_JOIN:
-                receiveGroupForJoinEvent(rawData, userId);
-                break;
             case Constants.DataType.EVENT_GROUP_LEAVE:
-                receiveGroupForLeaveEvent(rawData, userId);
+                receiveGroupUserLeaveEvent(rawData, userId);
                 break;
             case Constants.DataType.EVENT_GROUP_RENAME:
-                receiveGroupNameChangedEvent(rawData, userId);
+                receiveGroupInfoChangeEvent(rawData, userId);
                 break;
             case Constants.DataType.EVENT_GROUP_MEMBER_ADD:
                 receiveGroupMemberAddEvent(rawData, userId);
@@ -102,40 +96,23 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        if (groupMembersInfos != null) {
-            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-                String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId())) {
-                    dataSend(messageTextData.getBytes(), Constants.DataType.MESSAGE,
-                            userId, true);
-                }
-            }
-        }
+        sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE, groupMembersInfos);
     }
 
-    private void sendGroupCreationInfo(GroupEntity groupEntity) {
-        GroupModel groupModel = groupEntity.toGroupModel();
-        String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
+    ///////////////////////////////////////////////////////////////
 
-        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+    private void sendGroupCreationInfo(GroupEntity groupEntity) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        GroupModel groupModel = groupEntity.toGroupModel();
+        String groupModelText = gsonBuilder.getGroupModelJson(groupModel);
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        if (groupMembersInfos != null) {
-            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-                String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId())) {
-                    dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_CREATION, userId, false);
-                }
-            }
-        }
+        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_CREATION, groupMembersInfos);
 
-        setGroupJoined(groupMembersInfos);
-
-        String groupMemberInfoText = GsonBuilder.getInstance().getGroupMemberInfoJson(groupMembersInfos);
-
-        groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_JOINED);
-        groupEntity.setMembersInfo(groupMemberInfoText);
-
+        groupEntity.setOwnStatus(Constants.GroupEvent.GROUP_JOINED);
         groupDataSource.insertOrUpdateGroup(groupEntity);
     }
 
@@ -160,9 +137,10 @@ public class GroupDataHelper extends RmDataHelper {
                 groupEntity.setAdminInfo(groupModel.getAdminInfo());
                 groupEntity.setGroupCreationTime(groupModel.getCreatedTime());
 
-                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupModel.getMemberInfo());
-
                 String storedMemberInfoText = groupEntity.getMembersInfo();
+
+                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
+                        .getGroupMemberInfoObj(groupModel.getMemberInfo());
 
                 if (TextUtils.isEmpty(storedMemberInfoText)) {
                     storedMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
@@ -176,32 +154,26 @@ public class GroupDataHelper extends RmDataHelper {
                         groupMembersInfoHashMap.put(groupMembersInfo.getMemberId(), groupMembersInfo);
                     }
 
-                    for (int i = (groupMembersInfos.size() - 1); i >= 0; i--) {
+                    for (int i = 0; i < groupMembersInfos.size(); i++) {
                         GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
-
                         if (groupMembersInfoHashMap.containsKey(groupMembersInfo.getMemberId())) {
 
-                            GroupMembersInfo storedMembersInfo = groupMembersInfoHashMap
+                            GroupMembersInfo storedGroupMemberInfo = groupMembersInfoHashMap
                                     .get(groupMembersInfo.getMemberId());
 
-                            if (storedMembersInfo != null) {
-                                if (storedMembersInfo.getMemberStatus() == Constants.GroupUserEvent.EVENT_LEAVE) {
-                                    //Todo Mimo vai, may be You can get an exception  for remove while iterating
-                                    groupMembersInfos.remove(groupMembersInfo);
-                                } else {
-                                    groupMembersInfos.set(i, storedMembersInfo);
-                                }
+                            if (storedGroupMemberInfo != null) {
+                                groupMembersInfo.setMemberStatus(storedGroupMemberInfo.getMemberStatus());
+                                groupMembersInfos.set(i, groupMembersInfo);
                             }
                         }
                     }
-
                     storedMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
                 }
 
                 groupEntity.setMembersInfo(storedMemberInfoText);
             }
 
-            groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_PENDING);
+            groupEntity.setOwnStatus(Constants.GroupEvent.GROUP_JOINED);
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
 
@@ -214,106 +186,28 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void sendGroupForEvent(GroupEntity groupEntity) {
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    private void sendGroupLeaveEvent(GroupEntity groupEntity) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        byte groupEvent = -1;
-
-        if (groupEntity.getOwnStatus() == Constants.GroupUserOwnState.GROUP_JOINED) {
-
-            groupEvent = Constants.DataType.EVENT_GROUP_JOIN;
-            setGroupJoined(groupMembersInfos);
-
-            String groupMemberInfoText = GsonBuilder.getInstance().getGroupMemberInfoJson(groupMembersInfos);
-            groupEntity.setMembersInfo(groupMemberInfoText);
-
-            groupDataSource.insertOrUpdateGroup(groupEntity);
-
-        } else if (groupEntity.getOwnStatus() == Constants.GroupUserOwnState.GROUP_LEAVE) {
-            groupEvent = Constants.DataType.EVENT_GROUP_LEAVE;
-        }
+        byte groupEvent = Constants.DataType.EVENT_GROUP_LEAVE;
 
         GroupModel groupModel = new GroupModel()
                 .setGroupId(groupEntity.getGroupId())
                 .setInfoId(groupEntity.getGroupInfoId());
 
-        String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
+        String groupModelText = gsonBuilder.getGroupModelJson(groupModel);
 
-        if (groupMembersInfos != null) {
-            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-                String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId())) {
-                    dataSend(groupNameText.getBytes(), groupEvent,
-                            userId, false);
-                }
-            }
-        }
+        sendDataToAllMembers(groupModelText, groupEvent, groupMembersInfos);
     }
 
-    private void receiveGroupForJoinEvent(byte[] rawData, String userId) {
-        try {
-
-            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-            String groupModelText = new String(rawData);
-            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
-
-            String groupId = groupModel.getGroupId();
-
-            GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
-
-            if (groupEntity == null) {
-                groupEntity = new GroupEntity()
-                        .setGroupId(groupId);
-
-                ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
-                GroupMembersInfo groupMembersInfo = new GroupMembersInfo().setMemberId(userId)
-                        .setMemberStatus(Constants.GroupUserEvent.EVENT_JOINED);
-                groupMembersInfos.add(groupMembersInfo);
-
-                String groupMemberInfoText = gsonBuilder
-                        .getGroupMemberInfoJson(groupMembersInfos);
-                groupEntity.setMembersInfo(groupMemberInfoText);
-
-            } else {
-                String groupMemberInfoText = groupEntity.getMembersInfo();
-                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
-                        .getGroupMemberInfoObj(groupMemberInfoText);
-
-                boolean isMemberUpdate = false;
-                for (int i = 0; i < groupMembersInfos.size(); i++) {
-                    GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
-
-                    if (groupMembersInfo.getMemberId().equals(userId)) {
-                        groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_JOINED);
-                        groupMembersInfos.set(i, groupMembersInfo);
-                        isMemberUpdate = true;
-                    }
-                }
-
-                if (!isMemberUpdate) {
-                    GroupMembersInfo groupMembersInfo = new GroupMembersInfo().setMemberId(userId)
-                            .setMemberStatus(Constants.GroupUserEvent.EVENT_JOINED);
-                    groupMembersInfos.add(groupMembersInfo);
-                }
-
-                groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
-                groupEntity.setMembersInfo(groupMemberInfoText);
-            }
-
-            groupDataSource.insertOrUpdateGroup(groupEntity);
-            setGroupInfo(userId, groupEntity.getGroupId(), Constants.GroupEventMessageBody.JOINED,
-                    0, Constants.MessageType.GROUP_JOIN, groupModel.getInfoId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void receiveGroupForLeaveEvent(byte[] rawData, String userId) {
+    private void receiveGroupUserLeaveEvent(byte[] rawData, String userId) {
         try {
             GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
@@ -321,45 +215,43 @@ public class GroupDataHelper extends RmDataHelper {
             GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
 
             String groupId = groupModel.getGroupId();
+            ArrayList<GroupMembersInfo> groupMembersInfos;
 
             GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
             if (groupEntity == null) {
                 groupEntity = new GroupEntity().setGroupId(groupId);
 
-                ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
-                GroupMembersInfo groupMembersInfo = new GroupMembersInfo().setMemberId(userId)
-                        .setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);
+                groupMembersInfos = new ArrayList<>();
+                GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                        .setMemberId(userId)
+                        .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
                 groupMembersInfos.add(groupMembersInfo);
 
-                String groupMemberInfoText = gsonBuilder
-                        .getGroupMemberInfoJson(groupMembersInfos);
+                String groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
                 groupEntity.setMembersInfo(groupMemberInfoText);
 
             } else {
                 String groupMemberInfoText = groupEntity.getMembersInfo();
-                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
-                        .getGroupMemberInfoObj(groupMemberInfoText);
+                groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupMemberInfoText);
 
                 boolean isMemberLeaved = false;
 
-                for (int i = (groupMembersInfos.size() - 1); i >= 0; i--) {
+                for (int i = 0; i < groupMembersInfos.size(); i++) {
                     GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
 
                     if (groupMembersInfo.getMemberId().equals(userId)) {
-                        if (!TextUtils.isEmpty(groupEntity.getGroupName())) {
-                            groupMembersInfos.remove(groupMembersInfo);
-                        } else {
-                            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);
-                            groupMembersInfos.set(i, groupMembersInfo);
-                        }
+
+                        groupMembersInfo.setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+                        groupMembersInfos.set(i, groupMembersInfo);
                         isMemberLeaved = true;
                     }
                 }
 
                 if (!isMemberLeaved) {
-                    GroupMembersInfo groupMembersInfo = new GroupMembersInfo().setMemberId(userId)
-                            .setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);
+                    GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                            .setMemberId(userId)
+                            .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
                     groupMembersInfos.add(groupMembersInfo);
                 }
 
@@ -372,28 +264,11 @@ public class GroupDataHelper extends RmDataHelper {
             if (!TextUtils.isEmpty(groupName)) {
                 GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
 
-                List<GroupUserNameMap> groupUserNameMaps = new ArrayList<>(groupNameModel.getGroupUserMap());
-
-                boolean isRemoveFromMap = false;
-                for (int i = (groupUserNameMaps.size() - 1); i >= 0; i--) {
-                    GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
-
-                    if (groupUserNameMap.getUserId().equals(userId)) {
-                        groupUserNameMaps.remove(groupUserNameMap);
-                        isRemoveFromMap = true;
-                    }
-                }
-
-                if (isRemoveFromMap) {
-                    if (!groupNameModel.isGroupNameChanged()) {
-                        groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
-                    }
-//                    groupNameModel.setGroupUserMap(groupUserNameMaps);
-
+                if (!groupNameModel.isGroupNameChanged()) {
+                    groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
                     groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
                     groupEntity.setGroupName(groupName);
                 }
-
             }
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
@@ -404,7 +279,18 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private long sendGroupNameChangeEvent(GroupModel groupModel) {
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    private void sendGroupInfoChangeEvent(GroupModel groupModel) {
+        compositeDisposable.add(Single.fromCallable(() -> sendGroupInfoChange(groupModel))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
+    }
+
+    private long sendGroupInfoChange(GroupModel groupModel) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         String groupId = groupModel.getGroupId();
@@ -420,36 +306,20 @@ public class GroupDataHelper extends RmDataHelper {
 
         long result = groupDataSource.insertOrUpdateGroup(groupEntity);
 
-        setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
-                0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
-
         String groupNameText = gsonBuilder.getGroupModelJson(groupModel);
 
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        if (groupMembersInfos != null) {
-            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-                String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId())) {
-                    dataSend(groupNameText.getBytes(), Constants.DataType.EVENT_GROUP_RENAME,
-                            userId, false);
-                }
-            }
-        }
+        sendDataToAllMembers(groupNameText, Constants.DataType.EVENT_GROUP_RENAME, groupMembersInfos);
+
+        setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
+                0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
 
         return result;
     }
 
-    private void sendAndUpdateGroupChangeEvent(GroupModel groupModel) {
-        compositeDisposable.add(Single.fromCallable(() -> sendGroupNameChangeEvent(groupModel))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(result -> {
-                    Timber.d("Result: %s", result);
-                }, Throwable::printStackTrace));
-    }
-
-    private void receiveGroupNameChangedEvent(byte[] rawData, String userId) {
+    private void receiveGroupInfoChangeEvent(byte[] rawData, String userId) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         String groupModelText = new String(rawData);
@@ -469,69 +339,62 @@ public class GroupDataHelper extends RmDataHelper {
                 0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
     }
 
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
     public void updateGroupUserInfo(UserEntity userEntity) {
         String updatedUserId = "%" + userEntity.getMeshId() + "%";
         List<GroupEntity> groupEntities = groupDataSource.getGroupByUserId(updatedUserId);
 
         for (GroupEntity groupEntity : groupEntities) {
-
-            GroupNameModel groupNameModel = GsonBuilder.getInstance()
-                    .getGroupNameModelObj(groupEntity.getGroupName());
-            List<GroupUserNameMap> groupUserNameMaps = groupNameModel.getGroupUserMap();
-
-            for (int i = 0; i < groupUserNameMaps.size(); i++) {
-
-                GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
-                if (groupUserNameMap.getUserId().equals(userEntity.getMeshId())) {
-                    groupUserNameMap.setUserName(userEntity.getUserName());
-
-                    groupUserNameMaps.set(i, groupUserNameMap);
-                }
-            }
-
-            groupNameModel.setGroupUserMap(groupUserNameMaps);
-            if (!groupNameModel.isGroupNameChanged()) {
-                groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
-            }
-            String groupNameText = GsonBuilder.getInstance().getGroupNameModelJson(groupNameModel);
-
-            groupEntity.setGroupName(groupNameText);
-            groupDataSource.insertOrUpdateGroup(groupEntity);
+            setGroupInfoUpdate(groupEntity, userEntity.getUserName(), userEntity.getMeshId());
         }
     }
 
     public void updateMyUserInfo() {
         List<GroupEntity> groupEntities = groupDataSource.getAllGroup();
-
         String myNewName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.USER_NAME);
+        String myMeshId = getMyMeshId();
 
         for (GroupEntity groupEntity : groupEntities) {
-
-            GroupNameModel groupNameModel = GsonBuilder.getInstance()
-                    .getGroupNameModelObj(groupEntity.getGroupName());
-            List<GroupUserNameMap> groupUserNameMaps = groupNameModel.getGroupUserMap();
-
-            for (int i = 0; i < groupUserNameMaps.size(); i++) {
-
-                GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
-                if (groupUserNameMap.getUserId().equals(getMyMeshId())) {
-                    groupUserNameMap.setUserName(myNewName);
-
-                    groupUserNameMaps.set(i, groupUserNameMap);
-                }
-            }
-
-            groupNameModel.setGroupUserMap(groupUserNameMaps);
-            if (!groupNameModel.isGroupNameChanged()) {
-                groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
-            }
-            String groupNameText = GsonBuilder.getInstance().getGroupNameModelJson(groupNameModel);
-
-            groupEntity.setGroupName(groupNameText);
-            groupDataSource.insertOrUpdateGroup(groupEntity);
+            setGroupInfoUpdate(groupEntity, myNewName, myMeshId);
         }
     }
+
+    private void setGroupInfoUpdate(GroupEntity groupEntity, String updatedName, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        for (int i = 0; i < groupMembersInfos.size(); i++) {
+            GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
+
+            if (groupMembersInfo.getMemberId().equals(userId)) {
+                groupMembersInfo.setUserName(updatedName);
+                groupMembersInfos.set(i, groupMembersInfo);
+            }
+        }
+
+        String groupMemberInfosText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+        groupEntity.setMembersInfo(groupMemberInfosText);
+
+        String groupNameText = groupEntity.getGroupName();
+        if (!TextUtils.isEmpty(groupNameText)) {
+            GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupNameText);
+
+            if (!groupNameModel.isGroupNameChanged()) {
+                groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+                groupNameText = gsonBuilder.getGroupNameModelJson(groupNameModel);
+                groupEntity.setGroupName(groupNameText);
+            }
+        }
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+    }
+
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
     private void setGroupInfo(String userId, String groupId, String message, long time,
                               int type, String messageId) {
@@ -559,18 +422,77 @@ public class GroupDataHelper extends RmDataHelper {
         MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
     }
 
-    private void setGroupJoined(ArrayList<GroupMembersInfo> groupMembersInfos) {
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    private void addNewMemberOperation(GroupMemberChangeModel groupMemberChangeModel) {
+        compositeDisposable.add(Single.fromCallable(() -> sendNewMemberAddEvent(groupMemberChangeModel))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
+    }
+
+    /**
+     * It is responsible for two things
+     * 1. For sending updated group information including new added members
+     * 2. Send group join request to new added members.
+     * <p>
+     * There are two different events.
+     *
+     * @param groupMemberChangeModel {@link GroupMemberChangeModel} It is contain the Update group
+     *              information and list of new added member
+     */
+    private boolean sendNewMemberAddEvent(GroupMemberChangeModel groupMemberChangeModel) {
+
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        GroupEntity groupEntity = groupMemberChangeModel.groupEntity;
+        ArrayList<GroupMembersInfo> newMembersInfos = groupMemberChangeModel.newMembersInfo;
+        String infoId = groupMemberChangeModel.infoId;
+
+        List<String> newAddedUserIdList = CommonUtil.getGroupMembersId(newMembersInfos);
+
+        GroupModel groupModelForNewMembers = groupEntity.toGroupModel().setInfoId(infoId);
+        String groupModelTextForNewMembers = gsonBuilder.getGroupModelJson(groupModelForNewMembers);
+
+        sendDataToAllMembers(groupModelTextForNewMembers,
+                Constants.DataType.EVENT_GROUP_CREATION, newMembersInfos);
+
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
+                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+        String newMembersInfoList = gsonBuilder.getGroupMemberInfoJson(newMembersInfos);
+
+        GroupModel groupModelForExistingUsers = new GroupModel()
+                .setGroupId(groupEntity.getGroupId())
+                .setMemberInfo(newMembersInfoList)
+                .setInfoId(infoId);
+        String groupModelTextForExistingMembers = gsonBuilder.getGroupModelJson(groupModelForExistingUsers);
+
         if (groupMembersInfos != null) {
-            for (int i = 0; i < groupMembersInfos.size(); i++) {
-                GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
+            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
 
-                if (groupMembersInfo.getMemberId().equals(getMyMeshId())) {
-                    groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_JOINED);
+                String userId = groupMembersInfo.getMemberId();
+                if (!userId.equals(getMyMeshId()) && !newAddedUserIdList.contains(userId) &&
+                        groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
 
-                    groupMembersInfos.set(i, groupMembersInfo);
+                    dataSend(groupModelTextForExistingMembers.getBytes(),
+                            Constants.DataType.EVENT_GROUP_MEMBER_ADD,
+                            userId, false);
                 }
             }
         }
+
+        // add self message that I added a user
+
+        for (int i = 0; i < newMembersInfos.size(); i++) {
+            GroupMembersInfo groupMembersInfo = newMembersInfos.get(i);
+            setGroupInfo(getMyMeshId(), groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_ADD
+                            + " " + groupMembersInfo.getUserName(),
+                    0, Constants.MessageType.GROUP_MEMBER_ADD, (infoId + "" + i));
+        }
+        return true;
     }
 
     /**
@@ -587,76 +509,48 @@ public class GroupDataHelper extends RmDataHelper {
             GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
 
             GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
-
-            List<String> newAddedMemberList = new ArrayList<>();
+            ArrayList<GroupMembersInfo> newGroupMembersInfos = gsonBuilder
+                    .getGroupMemberInfoObj(groupModel.getMemberInfo());
 
             if (groupEntity == null) {
-                /*
-                  GroupEntity null refers that this user did not
-                  receive any group information before
-                 */
 
-                groupEntity = new GroupEntity().toGroupEntity(groupModel);
+                groupEntity = new GroupEntity()
+                        .setGroupId(groupModel.getGroupId())
+                        .setMembersInfo(groupModel.getMemberInfo());
             } else {
-                groupEntity.setGroupName(groupModel.getGroupName());
-                groupEntity.setAvatarIndex(groupModel.getAvatar());
 
-                groupEntity.setAdminInfo(groupModel.getAdminInfo());
-                groupEntity.setGroupCreationTime(groupModel.getCreatedTime());
+                String existingGroupMembersInfoText = groupEntity.getMembersInfo();
 
-                //This is the all member list in the received group
-                ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupModel.getMemberInfo());
+                ArrayList<GroupMembersInfo> existingMembersInfos = gsonBuilder
+                        .getGroupMemberInfoObj(existingGroupMembersInfoText);
 
-                String existsMemberInfo = groupEntity.getMembersInfo();
+                ArrayList<GroupMembersInfo> groupMembersInfos = CommonUtil
+                        .mergeGroupMembersInfo(existingMembersInfos, newGroupMembersInfos);
 
-                if (TextUtils.isEmpty(existsMemberInfo)) {
-                    // This indicate that this user have no group create information
-                    // So ignore to to notify that new user invited
-                    existsMemberInfo = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
-                    //We not use that now
-                } else {
-                    // The group is old. And some member information is exists
+                existingGroupMembersInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+                groupEntity.setMembersInfo(existingGroupMembersInfoText);
 
-                    ArrayList<GroupMembersInfo> existMemberInfoList = gsonBuilder
-                            .getGroupMemberInfoObj(existsMemberInfo);
+                String groupNameModelText = groupEntity.getGroupName();
+                if (!TextUtils.isEmpty(groupNameModelText)) {
 
-                    List<String> oldMemberIdList = new ArrayList<>();
-                    for (GroupMembersInfo membersInfo : existMemberInfoList) {
-                        oldMemberIdList.add(membersInfo.getMemberId());
+                    GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupNameModelText);
+
+                    if (!groupNameModel.isGroupNameChanged()) {
+                        // We have to change group name
+                        groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+                        groupNameModelText = gsonBuilder.getGroupNameModelJson(groupNameModel);
+                        groupEntity.setGroupName(groupNameModelText);
                     }
-
-                    for (GroupMembersInfo membersInfo : groupMembersInfos) {
-                        if (!oldMemberIdList.contains(membersInfo.getMemberId())) {
-                            newAddedMemberList.add(membersInfo.getMemberId());
-                        }
-                    }
-
                 }
-                //Todo If user receive the group join event then group member add event what happen
             }
-
-
-            groupEntity.setMembersInfo(groupModel.getMemberInfo());
 
             groupDataSource.insertOrUpdateGroup(groupEntity);
 
-            List<GroupUserNameMap> userNameMaps = GsonBuilder.getInstance()
-                    .getGroupNameModelObj(groupEntity.getGroupName())
-                    .getGroupUserMap();
-
-            if (userNameMaps != null) {
-                for (String memberId : newAddedMemberList) {
-                    String removedUseName = getGroupMemberName(memberId, userNameMaps);
-                    if (!TextUtils.isEmpty(removedUseName)) {
-                        setGroupInfo(userId, groupModel.getGroupId(), Constants.GroupEventMessageBody.MEMBER_ADD
-                                        + " " + removedUseName,
-                                0, Constants.MessageType.GROUP_MEMBER_ADD, groupModel.getInfoId());
-                    } else {
-                        Log.d("GroupAddTest", "Username is empty");
-                    }
-                }
-            } else {
-                Log.d("GroupAddTest", "Username map null");
+            for (int i = 0; i < newGroupMembersInfos.size(); i++) {
+                GroupMembersInfo groupMembersInfo = newGroupMembersInfos.get(i);
+                setGroupInfo(userId, groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_ADD
+                                + " " + groupMembersInfo.getUserName(),
+                        0, Constants.MessageType.GROUP_MEMBER_ADD, (groupModel.getInfoId() + "" + i));
             }
 
         } catch (Exception e) {
@@ -664,177 +558,11 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void addNewMemberOperation(GroupMemberChangeModel model) {
-        compositeDisposable.add(Single.fromCallable(() -> sendNewAddedMemberToOther(model))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(result -> {
-                    Timber.d("Result: %s", result);
-                }, Throwable::printStackTrace));
-    }
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
-    /**
-     * It is responsible for two things
-     * 1. For sending updated group information including new added members
-     * 2. Send group join request to new added members.
-     * <p>
-     * There are two different events.
-     *
-     * @param model {@link GroupMemberChangeModel} It is contain the Update group
-     *              information and list of new added member
-     */
-    private boolean sendNewAddedMemberToOther(GroupMemberChangeModel model) {
-        GroupEntity updatedGroupInfo = model.groupEntity;
-        List<UserEntity> newAddedUserList = model.changedUserList;
-        List<String> newAddedUserIdList = convertUserModelToIds(newAddedUserList);
-
-        GroupModel groupModel = updatedGroupInfo.toGroupModel();
-        String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
-
-        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
-                .getGroupMemberInfoObj(updatedGroupInfo.getMembersInfo());
-
-        // add self message that I added a user
-
-        for (UserEntity entity : newAddedUserList) {
-            setGroupInfo(getMyMeshId(), updatedGroupInfo.groupId, Constants.GroupEventMessageBody.MEMBER_ADD
-                            + " " + entity.getUserName(),
-                    0, Constants.MessageType.GROUP_MEMBER_ADD, groupModel.getInfoId());
-        }
-
-        for (GroupMembersInfo membersInfo : groupMembersInfos) {
-            if (!newAddedUserIdList.contains(membersInfo.getMemberId())
-                    && !membersInfo.getMemberId().equals(getMyMeshId())) {
-                dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_ADD,
-                        membersInfo.getMemberId(), false);
-            }
-        }
-
-        // Send group creation event to new added members
-        for (String userId : newAddedUserIdList) {
-            dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_CREATION,
-                    userId, false);
-        }
-        return true;
-    }
-
-    private void receiveGroupMemberRemoveEvent(byte[] rawData, String userId) {
-        try {
-            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-            String groupModelText = new String(rawData);
-            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
-
-            GroupMembersInfo removedUser = GsonBuilder.getInstance()
-                    .getGroupMemberInfoObj(groupModel.getMemberInfo()).get(0);
-
-            GroupUserNameMap removedUserNameMap = null;
-
-            if (removedUser.getMemberId().equals(getMyMeshId())) {
-                // This is the removed user section
-                groupDataSource.deleteGroupById(groupModel.getGroupId());
-            } else {
-                //This is group's other member section
-                GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
-
-                if (groupEntity == null) {
-                    //That mean this user did not get group create information
-
-                    groupEntity = new GroupEntity()
-                            .setGroupId(groupModel.getGroupId());
-
-                    ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
-                    GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
-                            .setMemberId(removedUser.getMemberId())
-                            .setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE); //Todo tariqul change this event later
-                    groupMembersInfos.add(groupMembersInfo);
-
-                    String groupMemberInfoText = gsonBuilder
-                            .getGroupMemberInfoJson(groupMembersInfos);
-                    groupEntity.setMembersInfo(groupMemberInfoText);
-                } else {
-                    String groupMemberInfoText = groupEntity.getMembersInfo();
-                    ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
-                            .getGroupMemberInfoObj(groupMemberInfoText);
-
-                    boolean isMemberLeaved = false;
-
-                    for (int i = (groupMembersInfos.size() - 1); i >= 0; i--) {
-                        GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
-
-                        if (groupMembersInfo.getMemberId().equals(removedUser.getMemberId())) {
-                            if (!TextUtils.isEmpty(groupEntity.getGroupName())) {
-                                groupMembersInfos.remove(groupMembersInfo);
-                            } else {
-                                groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE);//Todo tariqul change this event later
-                                groupMembersInfos.set(i, groupMembersInfo);
-                            }
-                            isMemberLeaved = true;
-                            break;
-                        }
-                    }
-
-                    if (!isMemberLeaved) {
-                        GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
-                                .setMemberId(removedUser.getMemberId())
-                                .setMemberStatus(Constants.GroupUserEvent.EVENT_LEAVE); //Todo tariqul change this event later
-                        groupMembersInfos.add(groupMembersInfo);
-                    }
-
-                    groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
-                    groupEntity.setMembersInfo(groupMemberInfoText);
-                }
-
-                String groupName = groupEntity.getGroupName();
-
-                if (!TextUtils.isEmpty(groupName)) {
-                    GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
-
-                    List<GroupUserNameMap> groupUserNameMaps = new ArrayList<>(groupNameModel.getGroupUserMap());
-
-                    boolean isRemoveFromMap = false;
-                    for (int i = (groupUserNameMaps.size() - 1); i >= 0; i--) {
-                        GroupUserNameMap groupUserNameMap = groupUserNameMaps.get(i);
-
-                        if (groupUserNameMap.getUserId().equals(removedUser.getMemberId())) {
-                            removedUserNameMap = groupUserNameMap;
-                            groupUserNameMaps.remove(groupUserNameMap);
-                            isRemoveFromMap = true;
-                        }
-                    }
-
-                    if (isRemoveFromMap) {
-                        if (!groupNameModel.isGroupNameChanged()) {
-                            groupNameModel.setGroupName(CommonUtil.getGroupName(groupUserNameMaps));
-                        }
-//                    groupNameModel.setGroupUserMap(groupUserNameMaps);
-
-                        groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
-                        groupEntity.setGroupName(groupName);
-                    }
-
-                }
-
-                groupDataSource.insertOrUpdateGroup(groupEntity);
-
-
-                if (removedUserNameMap != null) {
-                    String removedUseName = removedUserNameMap.getUserName();
-                    if (!TextUtils.isEmpty(removedUseName)) {
-                        setGroupInfo(userId, groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_REMOVED
-                                        + " " + removedUseName,
-                                0, Constants.MessageType.GROUP_MEMBER_REMOVE, groupModel.getInfoId());
-                    }
-                }
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void removeNewMemberOperation(GroupMemberChangeModel model) {
-        compositeDisposable.add(Single.fromCallable(() -> sendRemovedMemberToOther(model))
+    private void removeMemberOperation(GroupMemberChangeModel groupMemberChangeModel) {
+        compositeDisposable.add(Single.fromCallable(() -> sendRemoveMemberEvent(groupMemberChangeModel))
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(result -> {
                     Timber.d("Result: %s", result);
@@ -847,67 +575,145 @@ public class GroupDataHelper extends RmDataHelper {
      * <p>
      * And this method is also notify the removed user
      *
-     * @param model
+     * @param groupMemberChangeModel
      */
-    private boolean sendRemovedMemberToOther(GroupMemberChangeModel model) {
-        GroupEntity groupEntity = model.groupEntity;
-        UserEntity removedUser = model.changedUserList.get(0);
+    private boolean sendRemoveMemberEvent(GroupMemberChangeModel groupMemberChangeModel) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
-        GroupModel groupModel = new GroupModel();
+        GroupEntity groupEntity = groupMemberChangeModel.groupEntity;
+        UserEntity removedUser = groupMemberChangeModel.removeUser;
+        String infoId = groupMemberChangeModel.infoId;
 
-        groupModel.setGroupId(groupEntity.getGroupId());
+        ArrayList<GroupMembersInfo> removeMemberInfos = new ArrayList<>();
+        GroupMembersInfo removeMembersInfo = new GroupMembersInfo().setMemberId(removedUser.getMeshId());
+        removeMemberInfos.add(removeMembersInfo);
 
-        GroupMembersInfo membersInfo = new GroupMembersInfo();
-        membersInfo.setMemberId(removedUser.getMeshId());
-        ArrayList<GroupMembersInfo> removeUserMap = new ArrayList<>();
-        removeUserMap.add(membersInfo);
-        String removedMemberString = GsonBuilder.getInstance().getGroupMemberInfoJson(removeUserMap);
+        String removedMemberInfoText = gsonBuilder.getGroupMemberInfoJson(removeMemberInfos);
 
-        groupModel.setMemberInfo(removedMemberString);
+        GroupModel groupModel = new GroupModel()
+                .setGroupId(groupEntity.getGroupId())
+                .setMemberInfo(removedMemberInfoText)
+                .setInfoId(infoId);
 
         String groupModelText = GsonBuilder.getInstance().getGroupModelJson(groupModel);
 
-        List<GroupMembersInfo> existsMemberList = GsonBuilder.getInstance()
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_MEMBER_REMOVE, groupMembersInfos);
+
+        dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
+                removedUser.getMeshId(), false);
 
         // Send self message that i removed a user
         setGroupInfo(getMyMeshId(), groupEntity.groupId, Constants.GroupEventMessageBody.MEMBER_REMOVED
                         + " " + removedUser.getUserName(),
                 0, Constants.MessageType.GROUP_MEMBER_REMOVE, groupModel.getInfoId());
 
-        //now send to other group member that one member is removed
-        for (GroupMembersInfo info : existsMemberList) {
-            if (!info.getMemberId().equals(getMyMeshId())) {
-                dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
-                        info.getMemberId(), false);
-            }
-        }
-
-        dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
-                removedUser.getMeshId(), false);
-
         return true;
     }
 
-    private List<String> convertUserModelToIds(List<UserEntity> userList) {
-        List<String> userIdList = new ArrayList<>();
-        for (UserEntity entity : userList) {
-            userIdList.add(entity.getMeshId());
+    private void receiveGroupMemberRemoveEvent(byte[] rawData, String userId) {
+        try {
+            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+            String groupModelText = new String(rawData);
+            GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
+
+            GroupMembersInfo removedUser = gsonBuilder.getGroupMemberInfoObj(groupModel.getMemberInfo()).get(0);
+
+            GroupMembersInfo removeGroupMembersInfo = null;
+
+            if (removedUser.getMemberId().equals(getMyMeshId())) {
+                // This is the removed user section
+                groupDataSource.deleteGroupById(groupModel.getGroupId());
+            } else {
+                //This is group's other member section
+                GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
+                ArrayList<GroupMembersInfo> groupMembersInfos;
+
+                if (groupEntity == null) {
+                    //That mean this user did not get group create information
+
+                    groupEntity = new GroupEntity().setGroupId(groupModel.getGroupId());
+
+                    groupMembersInfos = new ArrayList<>();
+                    GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                            .setMemberId(removedUser.getMemberId())
+                            .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+                    groupMembersInfos.add(groupMembersInfo);
+
+                    String groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+                    groupEntity.setMembersInfo(groupMemberInfoText);
+                } else {
+                    String groupMemberInfoText = groupEntity.getMembersInfo();
+                    groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupMemberInfoText);
+
+                    boolean isMemberLeaved = false;
+
+                    for (int i = 0; i < groupMembersInfos.size(); i++) {
+                        GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
+
+                        if (groupMembersInfo.getMemberId().equals(removedUser.getMemberId())) {
+
+                            removeGroupMembersInfo = groupMembersInfo;
+
+                            groupMembersInfo.setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+                            groupMembersInfos.set(i, groupMembersInfo);
+                            isMemberLeaved = true;
+                        }
+                    }
+
+                    if (!isMemberLeaved) {
+                        GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                                .setMemberId(removedUser.getMemberId())
+                                .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+                        groupMembersInfos.add(groupMembersInfo);
+                    }
+
+                    groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+                    groupEntity.setMembersInfo(groupMemberInfoText);
+                }
+
+                String groupName = groupEntity.getGroupName();
+
+                if (!TextUtils.isEmpty(groupName)) {
+                    GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupName);
+
+                    if (!groupNameModel.isGroupNameChanged()) {
+                        groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+                        groupName = gsonBuilder.getGroupNameModelJson(groupNameModel);
+                        groupEntity.setGroupName(groupName);
+                    }
+                }
+
+                groupDataSource.insertOrUpdateGroup(groupEntity);
+            }
+
+            if (removeGroupMembersInfo != null) {
+                String removedUseName = removeGroupMembersInfo.getUserName();
+                if (!TextUtils.isEmpty(removedUseName)) {
+                    setGroupInfo(userId, groupModel.getGroupId(),
+                            Constants.GroupEventMessageBody.MEMBER_REMOVED + " " + removedUseName,
+                            0, Constants.MessageType.GROUP_MEMBER_REMOVE, groupModel.getInfoId());
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return userIdList;
     }
 
-    private String getGroupMemberName(String userId, List<GroupUserNameMap> memberNameMap) {
-        String name = "";
-
-        for (GroupUserNameMap nameMap : memberNameMap) {
-            if (nameMap.getUserId().equals(userId)) {
-                name = nameMap.getUserName();
-                break;
+    private void sendDataToAllMembers(String data, byte type, ArrayList<GroupMembersInfo> groupMembersInfos) {
+        if (groupMembersInfos != null) {
+            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+                String userId = groupMembersInfo.getMemberId();
+                if (!userId.equals(getMyMeshId()) &&
+                        groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                    dataSend(data.getBytes(), type, userId, (type == Constants.DataType.MESSAGE));
+                }
             }
         }
-
-        return name;
     }
 
 }

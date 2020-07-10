@@ -20,7 +20,9 @@ import android.view.inputmethod.InputMethodManager;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.ItemClickListener;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -281,8 +283,10 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
 
     private void generateMemberList(List<GroupMembersInfo> groupAdminInfoList) {
         mGroupMemberList = new ArrayList<>();
-        for (GroupMembersInfo info : groupAdminInfoList) {
-            mGroupMemberList.add(info.getMemberId());
+        for (GroupMembersInfo groupMembersInfo : groupAdminInfoList) {
+            if (groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                mGroupMemberList.add(groupMembersInfo.getMemberId());
+            }
         }
     }
 

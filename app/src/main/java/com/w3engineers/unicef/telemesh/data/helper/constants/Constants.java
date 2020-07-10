@@ -336,6 +336,12 @@ public class Constants {
         int EVENT_LEAVE = 3;
     }
 
+    public interface GroupEvent {
+        int GROUP_CREATE = 1;
+        int GROUP_JOINED = 2;
+        int GROUP_LEAVE = 3;
+    }
+
     public interface MessagePlace {
         boolean MESSAGE_PLACE_GROUP = true;
         boolean MESSAGE_PLACE_P2P = false;

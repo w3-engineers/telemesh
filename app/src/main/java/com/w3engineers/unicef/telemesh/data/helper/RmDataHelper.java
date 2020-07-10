@@ -389,7 +389,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
 
             case Constants.DataType.EVENT_GROUP_CREATION:
-            case Constants.DataType.EVENT_GROUP_JOIN:
             case Constants.DataType.EVENT_GROUP_LEAVE:
             case Constants.DataType.EVENT_GROUP_RENAME:
             case Constants.DataType.EVENT_GROUP_MEMBER_ADD:

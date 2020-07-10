@@ -9,7 +9,6 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -17,15 +16,14 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -57,7 +55,8 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                 .getGroupMemberInfoObj(membersInfo);
         List<String> userList = new ArrayList<>();
         for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-            if (!groupMembersInfo.getMemberId().equals(getMyUserId())) {
+            if (!groupMembersInfo.getMemberId().equals(getMyUserId())
+                    && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
                 userList.add(groupMembersInfo.getMemberId());
             }
         }
@@ -70,8 +69,9 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                    groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_LEAVE);
-                    dataSource.setGroupUserEvent(groupEntity);
+                    groupEntity.setOwnStatus(Constants.GroupEvent.GROUP_LEAVE);
+                    groupEntity.setGroupInfoId(UUID.randomUUID().toString());
+                    dataSource.setGroupUserLeaveEvent(groupEntity);
                     finishForGroupLeave.postValue(true);
                 }, Throwable::printStackTrace));
     }
@@ -79,53 +79,28 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
     void memberRemoveAction(GroupEntity groupEntity, UserEntity userEntity) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
-        ArrayList<GroupMembersInfo> groupMemberList = GsonBuilder.getInstance()
+        ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
+        for (int i = 0; i < groupMembersInfos.size(); i++) {
+
+            GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
+
+            if (groupMembersInfo.getMemberId().equals(userEntity.getMeshId())) {
+                groupMembersInfo.setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+                groupMembersInfos.set(i, groupMembersInfo);
+            }
+        }
+
+        groupEntity.setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos));
+
         //checking name group name contains user name or changed
-        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
-
-        List<GroupUserNameMap> existGroupUserNameMap = new ArrayList<>(groupNameModel.getGroupUserMap());
-
-
-        GroupMembersInfo removedMemberInfo = null;
-
-        for (GroupMembersInfo membersInfo : groupMemberList) {
-            if (userEntity.getMeshId() != null &&
-                    userEntity.getMeshId().equals(membersInfo.getMemberId())) {
-                removedMemberInfo = membersInfo;
-                break;
-            }
-        }
-
-        if (removedMemberInfo != null) {
-            groupMemberList.remove(removedMemberInfo);
-        } else {
-            return;
-        }
-
-        // remove the user from group name map
-        GroupUserNameMap removedUserNameMap = null;
-        for (GroupUserNameMap nameMap : existGroupUserNameMap) {
-            if (nameMap.getUserId().equals(userEntity.getMeshId())) {
-                removedUserNameMap = nameMap;
-                break;
-            }
-        }
-
-        if (removedUserNameMap != null) {
-            existGroupUserNameMap.remove(removedUserNameMap);
-        }
-
+        GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
 
         if (!groupNameModel.isGroupNameChanged()) {
-            groupNameModel.setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+            groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+            groupEntity.setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel));
         }
-
-        groupEntity.setMembersInfo(gsonBuilder
-                .getGroupMemberInfoJson(groupMemberList))
-                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel));
-
 
         getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
                 .subscribeOn(Schedulers.newThread())
@@ -133,10 +108,9 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                 .subscribe(aLong -> {
                     if (aLong > 0) {
                         GroupMemberChangeModel memberChangeModel = new GroupMemberChangeModel();
-                        List<UserEntity> memberList = new ArrayList<>();
-                        memberList.add(userEntity);
                         memberChangeModel.groupEntity = groupEntity;
-                        memberChangeModel.changedUserList = memberList;
+                        memberChangeModel.removeUser = userEntity;
+                        memberChangeModel.infoId = UUID.randomUUID().toString();
                         dataSource.setGroupMemberRemoveEvent(memberChangeModel);
                     }
                 }));

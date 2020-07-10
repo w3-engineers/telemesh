@@ -77,8 +77,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     private CompositeDisposable compositeDisposable;
     private MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
-    private MutableLiveData<PagedList<ChatEntity>> mutableCreatedInfoList = new MutableLiveData<>();
     private MutableLiveData<Boolean> finishForGroupLeave = new MutableLiveData<>();
+    private MutableLiveData<List<UserEntity>> groupLiveMembers = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -120,32 +120,6 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return LiveDataReactiveStreams.fromPublisher(messageSourceData.getAllGroupMessages(threadId));
     }
 
-    @NonNull
-    public void getCreateGroupInfo(@NonNull String threadId) {
-
-        getCompositeDisposable().add(fetchGroupCreateInfo(threadId)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(chatEntity -> {
-                    List<ChatEntity> chatEntities = new ArrayList<>();
-                    chatEntities.add(chatEntity);
-                    prepareDateSpecificCreatedInfo(chatEntities);
-                }, Throwable::printStackTrace));
-    }
-
-    private Single<ChatEntity> fetchGroupCreateInfo(String threadId) {
-        return Single.create(emitter -> {
-            Thread thread = new Thread(() -> {
-                try {
-                    emitter.onSuccess(messageSourceData.getCreateGroupInfo(threadId));
-                } catch (Exception e) {
-                    emitter.onError(e);
-                }
-            });
-            thread.start();
-        });
-    }
-
     /**
      * <h1>Init chatting user </h1>
      * <p>To recognize which message need to pass UI</p>
@@ -173,7 +147,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     @NonNull
-    public LiveData<List<UserEntity>> getGroupUsersById(@NonNull String membersInfo){
+    public LiveData<List<UserEntity>> getAllGroupUsersById(String membersInfo){
 
         List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(membersInfo);
@@ -190,10 +164,41 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return userDataSource.getGroupMembers(userList);
     }
 
-    void groupJoinAction(GroupEntity groupEntity) {
-        groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_JOINED);
-        groupEntity.setGroupInfoId(UUID.randomUUID().toString());
-        dataSource.setGroupUserEvent(groupEntity);
+    public void getLiveGroupUsersById(String membersInfo){
+
+        List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(membersInfo);
+
+        String myMeshId = getMyUserId();
+
+        List<String> userList = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (!groupMembersInfo.getMemberId().equals(myMeshId)
+                    && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        getCompositeDisposable().add(getLiveGroupMembers(userList)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntities -> {
+                    groupLiveMembers.postValue(userEntities);
+                }));
+
+    }
+
+    private Single<List<UserEntity>> getLiveGroupMembers(List<String> userList) {
+        return Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(userDataSource.getLiveGroupMembers(userList));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
     }
 
     private String getMyUserId() {
@@ -201,14 +206,21 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 .read(Constants.preferenceKey.MY_USER_ID);
     }
 
+    public UserEntity getMyUserEntity() {
+        int myAvatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .readInt(Constants.preferenceKey.IMAGE_INDEX);
+        return new UserEntity().setUserName("You").setMeshId(getMyUserId())
+                .setAvatarIndex(myAvatarIndex);
+    }
+
     void groupLeaveAction(GroupEntity groupEntity) {
         getCompositeDisposable().add(deleteGroupOperation(groupEntity.groupId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
-                    groupEntity.setOwnStatus(Constants.GroupUserOwnState.GROUP_LEAVE);
+                    groupEntity.setOwnStatus(Constants.GroupEvent.GROUP_LEAVE);
                     groupEntity.setGroupInfoId(UUID.randomUUID().toString());
-                    dataSource.setGroupUserEvent(groupEntity);
+                    dataSource.setGroupUserLeaveEvent(groupEntity);
                     finishForGroupLeave.postValue(true);
                 }, Throwable::printStackTrace));
     }
@@ -440,13 +452,12 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     @NonNull
-    public LiveData<PagedList<ChatEntity>> getCreatedInfoList() {
-        return mutableCreatedInfoList;
-    }
-
-    @NonNull
     public MutableLiveData<Boolean> getFinishForGroupLeave() {
         return finishForGroupLeave;
+    }
+
+    public MutableLiveData<List<UserEntity>> getGroupLiveMembers() {
+        return groupLiveMembers;
     }
 
     /**
@@ -482,33 +493,6 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             mutableChatList.postValue(pagedStrings);
         }
     }
-
-    public void prepareDateSpecificCreatedInfo(@Nullable List<ChatEntity> chatEntityList) {
-
-        if (chatEntityList != null) {
-
-            List<ChatEntity> chatList = groupDataIntoHashMap(chatEntityList);
-
-            ChatEntityListDataSource chatEntityListDataSource = new ChatEntityListDataSource(chatList);
-
-            PagedList.Config myConfig = new PagedList.Config.Builder()
-                    .setEnablePlaceholders(true)
-                    .setPrefetchDistance(PREFETCH_DISTANCE)
-                    .setPageSize(PAGE_SIZE)
-                    .build();
-
-
-            PagedList<ChatEntity> pagedStrings = new PagedList.Builder<>(chatEntityListDataSource, myConfig)
-                    .setInitialKey(INITIAL_LOAD_KEY)
-                    .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.
-                    .setFetchExecutor(Executors.newSingleThreadExecutor())
-                    .build();
-
-            // here mutable live data is used to pass the updated value
-            mutableCreatedInfoList.postValue(pagedStrings);
-        }
-    }
-
 
     /**
      * group chat entities according to date.

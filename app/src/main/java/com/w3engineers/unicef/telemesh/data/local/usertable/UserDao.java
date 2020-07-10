@@ -159,6 +159,9 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE mesh_id IN (:whereCl)")
     abstract LiveData<List<UserEntity>> getGroupMembers(List<String> whereCl);
 
+    @NonNull
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE mesh_id IN (:whereCl)")
+    abstract List<UserEntity> getGroupLiveMembers(List<String> whereCl);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE "

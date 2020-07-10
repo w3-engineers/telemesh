@@ -39,7 +39,7 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_OWN_STATUS + " = "
-            + Constants.GroupUserOwnState.GROUP_CREATE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
+            + Constants.GroupEvent.GROUP_CREATE + " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     abstract Flowable<GroupEntity> getLastCreatedGroup();
 
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
@@ -48,7 +48,7 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
     abstract LiveData<GroupEntity> getLiveGroupById(String groupId);
 
-    @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " LIKE :userId")
+    @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_MEMBERS_INFO + " LIKE :userId")
     abstract List<GroupEntity> getGroupByUserId(String userId);
 
     @Query("DELETE FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")

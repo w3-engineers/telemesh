@@ -8,9 +8,12 @@ import android.text.TextUtils;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommonUtil {
@@ -94,7 +97,7 @@ public class CommonUtil {
         DialogUtil.dismissDialog();
     }
 
-    public static String getGroupName(List<GroupUserNameMap> userNameMaps) {
+    /*public static String getGroupName(List<GroupUserNameMap> userNameMaps) {
         String groupName = "";
         for (GroupUserNameMap groupUserNameMap : userNameMaps) {
             if (TextUtils.isEmpty(groupName)) {
@@ -104,6 +107,59 @@ public class CommonUtil {
             }
         }
         return groupName;
+    }*/
+
+    public static String getGroupNameByUser(List<GroupMembersInfo> groupMembersInfos) {
+        String groupName = "";
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                if (TextUtils.isEmpty(groupName)) {
+                    groupName = groupMembersInfo.getUserName();
+                } else {
+                    groupName = groupName + ", " + groupMembersInfo.getUserName();
+                }
+            }
+        }
+        return groupName;
+    }
+
+    public static List<String> getGroupMembersId(List<GroupMembersInfo> groupMembersInfos) {
+        List<String> groupMembersId = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            groupMembersId.add(groupMembersInfo.getMemberId());
+        }
+        return groupMembersId;
+    }
+
+    public static ArrayList<GroupMembersInfo> mergeGroupMembersInfo(ArrayList<GroupMembersInfo> existingMembers,
+                                             List<GroupMembersInfo> newMembers) {
+        HashMap<String, GroupMembersInfo> groupMembersMap = new HashMap<>();
+        for (GroupMembersInfo groupMembersInfo : newMembers) {
+            groupMembersMap.put(groupMembersInfo.getMemberId(), groupMembersInfo);
+        }
+
+        for (int i = 0; i < existingMembers.size(); i++) {
+
+            GroupMembersInfo groupMembersInfo = existingMembers.get(i);
+            String userId = groupMembersInfo.getMemberId();
+            GroupMembersInfo newMemberInfo = groupMembersMap.get(userId);
+
+            if (newMemberInfo != null) {
+                groupMembersInfo.setUserName(newMemberInfo.getUserName())
+                        .setMemberStatus(newMemberInfo.getMemberStatus());
+                existingMembers.set(i, groupMembersInfo);
+                groupMembersMap.remove(userId);
+            }
+        }
+
+        for (GroupMembersInfo groupMembersInfo : newMembers) {
+            String userId = groupMembersInfo.getMemberId();
+            GroupMembersInfo newMemberInfo = groupMembersMap.get(userId);
+            if (newMemberInfo != null) {
+                existingMembers.add(groupMembersInfo);
+            }
+        }
+        return existingMembers;
     }
 
     public static String getGroupUsersName(List<UserEntity> userEntities) {

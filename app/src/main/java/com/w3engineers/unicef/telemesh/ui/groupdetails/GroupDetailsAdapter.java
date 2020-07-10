@@ -11,7 +11,7 @@ import com.w3engineers.mesh.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupMemberBinding;
 
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
 
-    private List<GroupAdminInfo> adminInfoList;
+    private List<GroupMembersInfo> adminInfoList;
     private String myId;
 
     public GroupDetailsAdapter(String myUserId) {
@@ -40,11 +40,11 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
         return new GroupDetailsVH(binding);
     }
 
-    void submitAdminInfoList(List<GroupAdminInfo> adminList) {
+    void submitAdminInfoList(List<GroupMembersInfo> adminList) {
         this.adminInfoList = adminList;
     }
 
-    List<GroupAdminInfo> getAdminInfoList() {
+    List<GroupMembersInfo> getAdminInfoList() {
         return adminInfoList;
     }
 
@@ -113,8 +113,8 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
         }
 
         private boolean isAdmin(String userId) {
-            for (GroupAdminInfo admin : adminInfoList) {
-                if (admin.getAdminId().equals(userId) && admin.getAdminStatus()) {
+            for (GroupMembersInfo groupMembersInfo : adminInfoList) {
+                if (groupMembersInfo.getMemberId().equals(userId) && groupMembersInfo.isAdmin()) {
                     return true;
                 }
             }

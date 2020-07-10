@@ -111,24 +111,24 @@ public class Source implements DataSource {
     }
 
     @Override
-    public void setGroupUserEvent(GroupEntity groupEntity) {
+    public void setGroupUserLeaveEvent(GroupEntity groupEntity) {
         groupUserEvent.onNext(groupEntity);
     }
 
     @Nullable
     @Override
-    public Flowable<GroupEntity> getGroupUserEvent() {
+    public Flowable<GroupEntity> getGroupUserLeaveEvent() {
         return groupUserEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 
     @Override
-    public void setGroupRenameEvent(GroupModel groupModel) {
+    public void setGroupInfoChangeEvent(GroupModel groupModel) {
         groupRenameEvent.onNext(groupModel);
     }
 
     @Nullable
     @Override
-    public Flowable<GroupModel> getGroupRenameEvent() {
+    public Flowable<GroupModel> getGroupInfoChangeEvent() {
         return groupRenameEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 

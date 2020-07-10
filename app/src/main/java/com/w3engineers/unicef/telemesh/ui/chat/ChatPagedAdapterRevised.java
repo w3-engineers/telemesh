@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -43,7 +42,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private View.OnClickListener clickListener;
     private HashMap<String, UserEntity> userMap;
-    private HashMap<String, String> userNameMap;
 
     @NonNull
     public Context mContext;
@@ -56,7 +54,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         super(DIFF_CALLBACK);
         mContext = context;
         userMap = new HashMap<>();
-        userNameMap = new HashMap<>();
 
         this.chatViewModel = chatViewModel;
         this.clickListener = onClickListener;
@@ -153,29 +150,16 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
     }
 
-    void addAvatarIndex(List<UserEntity> userEntities) {
-
+    void addAvatarIndex(List<UserEntity> userEntities, UserEntity myUserEntity) {
         for (UserEntity userEntity : userEntities) {
             userMap.put(userEntity.meshId, userEntity);
         }
-        notifyDataSetChanged();
-    }
-
-    void setUserNameMap(List<GroupUserNameMap> userNameMaps, String myUserId) {
-
-        for (GroupUserNameMap groupUserNameMap : userNameMaps) {
-            String name = groupUserNameMap.getUserName();
-            if (myUserId.equals(groupUserNameMap.getUserId())) {
-                name = "You";
-            }
-            userNameMap.put(groupUserNameMap.getUserId(), name);
-        }
+        userMap.put(myUserEntity.meshId, myUserEntity);
         notifyDataSetChanged();
     }
 
     void addAvatarIndex(UserEntity userEntity) {
         userMap.put(userEntity.meshId, userEntity);
-        userNameMap.put(userEntity.getMeshId(), userEntity.getUserName());
         notifyDataSetChanged();
     }
 
@@ -188,7 +172,11 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private String getUserName(MessageEntity messageEntity) {
-        return userNameMap.get(messageEntity.friendsId);
+        UserEntity userEntity =  userMap.get(messageEntity.friendsId);
+        if (userEntity != null) {
+            return userEntity.getUserName();
+        }
+        return "";
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -537,20 +525,27 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
                 int resourceId = -1;
                 switch (item.getMessageType()) {
                     case Constants.MessageType.GROUP_CREATE:
-                        resourceId = R.mipmap.create_group;
+                        resourceId = R.mipmap.gr_create;
                         break;
 
                     case Constants.MessageType.GROUP_JOIN:
+                        resourceId = R.mipmap.gr_join_color;
+                        break;
+
                     case Constants.MessageType.GROUP_MEMBER_ADD: //Todo May be we can change icon for invite or add
-                        resourceId = R.mipmap.user_join;
+                        resourceId = R.mipmap.gr_invite_color;
                         break;
 
                     case Constants.MessageType.GROUP_LEAVE:
-                    case Constants.MessageType.GROUP_MEMBER_REMOVE:
-                        resourceId = R.mipmap.user_leave;
+                        resourceId = R.mipmap.gr_leave_color;
                         break;
+
+                    case Constants.MessageType.GROUP_MEMBER_REMOVE:
+                        resourceId = R.mipmap.gr_remove_color;
+                        break;
+
                     case Constants.MessageType.GROUP_RENAMED:
-                        resourceId = R.mipmap.ic_edit_group_info;
+                        resourceId = R.mipmap.gr_edit;
                         break;
                 }
 

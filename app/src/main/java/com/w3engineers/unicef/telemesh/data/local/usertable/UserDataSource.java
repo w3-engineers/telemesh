@@ -190,4 +190,8 @@ public class UserDataSource {
     public LiveData<List<UserEntity>> getGroupMembers(List<String> whereCluse) {
         return mUserDao.getGroupMembers(whereCluse);
     }
+
+    public List<UserEntity> getLiveGroupMembers(List<String> whereCluse) {
+        return mUserDao.getGroupLiveMembers(whereCluse);
+    }
 }

@@ -42,6 +42,6 @@ public class GroupNameEditViewModel extends BaseRxAndroidViewModel {
         groupModel.setGroupName(groupName);
         groupModel.setGroupId(groupId);
         groupModel.setInfoId(UUID.randomUUID().toString());
-        dataSource.setGroupRenameEvent(groupModel);
+        dataSource.setGroupInfoChangeEvent(groupModel);
     }
 }

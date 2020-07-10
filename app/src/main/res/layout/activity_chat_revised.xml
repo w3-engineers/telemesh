@@ -126,7 +126,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_block"
+                android:layout_marginBottom="62dp"
+                android:layout_marginTop="62dp"
+                app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shadow_view" />
@@ -136,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_block"
+                app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shadow_view">
@@ -179,144 +181,69 @@
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/bottom_block"
+                android:id="@+id/chat_message_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/height_55"
+                android:background="@color/white"
+                android:paddingStart="@dimen/margin_16"
+                android:paddingLeft="@dimen/margin_16"
+                android:paddingTop="@dimen/margin_8"
+                android:paddingRight="@dimen/margin_16"
+                android:paddingBottom="@dimen/margin_8"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/group_block"
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/image_view_pick_gallery_image"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/margin_10"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/chat_message_bar">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/padding_3"
-                        android:layout_margin="0dp"
-                        android:background="@drawable/shadow_reverse"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/group_attachment_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginEnd="@dimen/margin_10"
-                        android:text="@string/want_to_join_this_group"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:id="@+id/group_devider"
-                        android:layout_width="@dimen/width_1"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/margin_10"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/group_attachment_message" />
-
-                    <Button
-                        android:id="@+id/group_deny"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/height_40"
-                        android:layout_marginEnd="@dimen/margin_5"
-                        android:background="@drawable/bg_stroke_primary_rectangular"
-                        android:text="@string/deny"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_16"
-                        app:layout_constraintEnd_toStartOf="@+id/group_devider"
-                        app:layout_constraintTop_toTopOf="@+id/group_devider" />
-
-                    <Button
-                        android:id="@+id/group_join"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/height_40"
-                        android:layout_marginStart="@dimen/margin_5"
-                        android:background="@drawable/bg_solid_primary_rectangular"
-                        android:text="@string/join"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_16"
-                        app:layout_constraintStart_toEndOf="@+id/group_devider"
-                        app:layout_constraintTop_toTopOf="@+id/group_devider" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/chat_message_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_55"
+                    android:autoMirrored="true"
                     android:background="@color/white"
-                    android:paddingStart="@dimen/margin_16"
-                    android:paddingLeft="@dimen/margin_16"
-                    android:paddingTop="@dimen/margin_8"
-                    android:paddingRight="@dimen/margin_16"
-                    android:paddingBottom="@dimen/margin_8"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    android:contentDescription="@string/chat_send_button_description"
+                    android:padding="@dimen/padding_8"
+                    android:rotationY="@integer/locale_mirror_flip"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/gellary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    tools:targetApi="kitkat" />
 
-                    <ImageButton
-                        android:id="@+id/image_view_pick_gallery_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:autoMirrored="true"
-                        android:background="@color/white"
-                        android:contentDescription="@string/chat_send_button_description"
-                        android:padding="@dimen/padding_8"
-                        android:rotationY="@integer/locale_mirror_flip"
-                        android:scaleType="fitCenter"
-                        android:src="@mipmap/gellary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.5"
-                        tools:targetApi="kitkat" />
+                <EditText
+                    android:id="@+id/edit_text_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_16"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="@string/type_message"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/image_view_send"
+                    app:layout_constraintStart_toEndOf="@+id/image_view_pick_gallery_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="Autofill" />
 
-                    <EditText
-                        android:id="@+id/edit_text_message"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_16"
-                        android:layout_marginEnd="@dimen/margin_16"
-                        android:background="@null"
-                        android:ems="10"
-                        android:hint="@string/type_message"
-                        android:inputType="textCapSentences|textMultiLine"
-                        android:textAllCaps="false"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/image_view_send"
-                        app:layout_constraintStart_toEndOf="@+id/image_view_pick_gallery_image"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="Autofill" />
-
-                    <ImageButton
-                        android:id="@+id/image_view_send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:autoMirrored="true"
-                        android:background="@color/white"
-                        android:contentDescription="@string/chat_send_button_description"
-                        android:padding="@dimen/padding_8"
-                        android:rotationY="@integer/locale_mirror_flip"
-                        android:scaleType="fitCenter"
-                        android:src="@mipmap/ic_send_cyan"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.5"
-                        tools:targetApi="kitkat" />
-                </android.support.constraint.ConstraintLayout>
-
+                <ImageButton
+                    android:id="@+id/image_view_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoMirrored="true"
+                    android:background="@color/white"
+                    android:contentDescription="@string/chat_send_button_description"
+                    android:padding="@dimen/padding_8"
+                    android:rotationY="@integer/locale_mirror_flip"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_send_cyan"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    tools:targetApi="kitkat" />
             </android.support.constraint.ConstraintLayout>
-
-
 
         </android.support.constraint.ConstraintLayout>
 

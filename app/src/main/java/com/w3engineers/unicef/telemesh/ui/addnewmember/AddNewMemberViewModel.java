@@ -19,7 +19,6 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupUserNameMap;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
@@ -33,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -78,35 +78,32 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         // add member info
-        ArrayList<GroupMembersInfo> membersInfos = gsonBuilder
+        ArrayList<GroupMembersInfo> existingMembersInfo = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+        ArrayList<GroupMembersInfo> newMembersInfo = new ArrayList<>();
+
         for (UserEntity userEntity : userList) {
-            GroupMembersInfo groupMembersInfo = new GroupMembersInfo();
-            groupMembersInfo.setMemberId(userEntity.getMeshId());
-            groupMembersInfo.setMemberStatus(Constants.GroupUserEvent.EVENT_PENDING);
-            membersInfos.add(groupMembersInfo);
+
+            GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                    .setMemberId(userEntity.getMeshId())
+                    .setUserName(userEntity.getUserName())
+                    .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
+            newMembersInfo.add(groupMembersInfo);
         }
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = CommonUtil
+                .mergeGroupMembersInfo(existingMembersInfo, newMembersInfo);
 
         //checking name group name contains user name or changed
-        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupEntity.getGroupName());
+        GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
 
-        List<GroupUserNameMap> existGroupUserNameMap = groupNameModel.getGroupUserMap();
-
-
-        for (UserEntity userEntity : userList) {
-            GroupUserNameMap groupUserNameMap = new GroupUserNameMap()
-                    .setUserId(userEntity.getMeshId())
-                    .setUserName(userEntity.getUserName());
-            existGroupUserNameMap.add(groupUserNameMap);
-        }
         if (!groupNameModel.isGroupNameChanged()) {
             // We have to change group name
-            groupNameModel.setGroupName(CommonUtil.getGroupName(existGroupUserNameMap));
+            groupNameModel.setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
         }
 
-
         groupEntity.setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
-                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(membersInfos));
+                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos));
 
         getCompositeDisposable().add(Single.just(groupDataSource.insertOrUpdateGroup(groupEntity))
                 .subscribeOn(Schedulers.newThread())
@@ -115,13 +112,12 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                     if (aLong > 0) {
                         groupUserList.postValue(groupEntity);
                         GroupMemberChangeModel memberChangeModel = new GroupMemberChangeModel();
-                        memberChangeModel.changedUserList = userList;
+                        memberChangeModel.newMembersInfo = newMembersInfo;
                         memberChangeModel.groupEntity = groupEntity;
+                        memberChangeModel.infoId = UUID.randomUUID().toString();
                         dataSource.setAddNewMemberEvent(memberChangeModel);
                     }
                 }));
-
-
     }
 
     private String getMyUserId() {

@@ -95,6 +95,8 @@
 -keep class * extends org.web3j.abi.TypeReference
 -keep class * extends org.web3j.abi.datatypes.Type
 
+-keep public class com.w3engineers.unicef.TeleMeshApplication {*;}
+
 #Don't warn about Web3j's java.lang.SafeVarargs
 #-dontwarn java.lang.SafeVarargs
 -dontwarn org.slf4j.**

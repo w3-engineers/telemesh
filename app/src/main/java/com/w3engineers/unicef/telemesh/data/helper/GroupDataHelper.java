@@ -6,15 +6,18 @@ import android.text.TextUtils;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
@@ -87,6 +90,12 @@ public class GroupDataHelper extends RmDataHelper {
             case Constants.DataType.EVENT_GROUP_MEMBER_REMOVE:
                 receiveGroupMemberRemoveEvent(rawData, userId);
                 break;
+            case Constants.DataType.EVENT_GROUP_DATA_RELAY:
+                receiveTheRelayMessage(rawData, userId);
+                break;
+            case Constants.DataType.EVENT_GROUP_DATA_FORWARD:
+                receiveForwardMessage(rawData, userId);
+                break;
         }
     }
 
@@ -96,7 +105,8 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE, groupMembersInfos);
+        sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE,
+                groupEntity.getAdminInfo(), groupMembersInfos);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -110,7 +120,8 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_CREATION, groupMembersInfos);
+        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_CREATION,
+                groupEntity.getAdminInfo(), groupMembersInfos);
 
         groupEntity.setOwnStatus(Constants.GroupEvent.GROUP_JOINED);
         groupDataSource.insertOrUpdateGroup(groupEntity);
@@ -204,7 +215,8 @@ public class GroupDataHelper extends RmDataHelper {
 
         String groupModelText = gsonBuilder.getGroupModelJson(groupModel);
 
-        sendDataToAllMembers(groupModelText, groupEvent, groupMembersInfos);
+        sendDataToAllMembers(groupModelText, groupEvent,
+                groupEntity.getAdminInfo(), groupMembersInfos);
     }
 
     private void receiveGroupUserLeaveEvent(byte[] rawData, String userId) {
@@ -311,7 +323,8 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        sendDataToAllMembers(groupNameText, Constants.DataType.EVENT_GROUP_RENAME, groupMembersInfos);
+        sendDataToAllMembers(groupNameText, Constants.DataType.EVENT_GROUP_RENAME,
+                groupEntity.getAdminInfo(), groupMembersInfos);
 
         setGroupInfo(getMyMeshId(), groupId, Constants.GroupEventMessageBody.RENAMED + " " + newName,
                 0, Constants.MessageType.GROUP_RENAMED, groupModel.getInfoId());
@@ -441,7 +454,7 @@ public class GroupDataHelper extends RmDataHelper {
      * There are two different events.
      *
      * @param groupMemberChangeModel {@link GroupMemberChangeModel} It is contain the Update group
-     *              information and list of new added member
+     *                               information and list of new added member
      */
     private boolean sendNewMemberAddEvent(GroupMemberChangeModel groupMemberChangeModel) {
 
@@ -456,8 +469,8 @@ public class GroupDataHelper extends RmDataHelper {
         GroupModel groupModelForNewMembers = groupEntity.toGroupModel().setInfoId(infoId);
         String groupModelTextForNewMembers = gsonBuilder.getGroupModelJson(groupModelForNewMembers);
 
-        sendDataToAllMembers(groupModelTextForNewMembers,
-                Constants.DataType.EVENT_GROUP_CREATION, newMembersInfos);
+        sendDataToAllMembers(groupModelTextForNewMembers, Constants.DataType.EVENT_GROUP_CREATION,
+                groupEntity.getAdminInfo(), newMembersInfos);
 
 
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
@@ -471,17 +484,17 @@ public class GroupDataHelper extends RmDataHelper {
         String groupModelTextForExistingMembers = gsonBuilder.getGroupModelJson(groupModelForExistingUsers);
 
         if (groupMembersInfos != null) {
+            ArrayList<GroupMembersInfo> existingMembers = new ArrayList<>();
             for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
 
                 String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId()) && !newAddedUserIdList.contains(userId) &&
-                        groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
-
-                    dataSend(groupModelTextForExistingMembers.getBytes(),
-                            Constants.DataType.EVENT_GROUP_MEMBER_ADD,
-                            userId, false);
+                if (!newAddedUserIdList.contains(userId)) {
+                    existingMembers.add(groupMembersInfo);
                 }
             }
+
+            sendDataToAllMembers(groupModelTextForExistingMembers, Constants.DataType.EVENT_GROUP_MEMBER_ADD,
+                    groupEntity.getAdminInfo(), existingMembers);
         }
 
         // add self message that I added a user
@@ -600,7 +613,8 @@ public class GroupDataHelper extends RmDataHelper {
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
                 .getGroupMemberInfoObj(groupEntity.getMembersInfo());
 
-        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_MEMBER_REMOVE, groupMembersInfos);
+        sendDataToAllMembers(groupModelText, Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
+                groupEntity.getAdminInfo(), groupMembersInfos);
 
         dataSend(groupModelText.getBytes(), Constants.DataType.EVENT_GROUP_MEMBER_REMOVE,
                 removedUser.getMeshId(), false);
@@ -704,16 +718,81 @@ public class GroupDataHelper extends RmDataHelper {
         }
     }
 
-    private void sendDataToAllMembers(String data, byte type, ArrayList<GroupMembersInfo> groupMembersInfos) {
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    private void sendDataToAllMembers(String data, byte type, String adminId,
+                                      ArrayList<GroupMembersInfo> groupMembersInfos) {
+
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
         if (groupMembersInfos != null) {
-            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-                String userId = groupMembersInfo.getMemberId();
-                if (!userId.equals(getMyMeshId()) &&
-                        groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+
+            List<String> liveMembersId = CommonUtil.getGroupLiveMembersId(groupMembersInfos);
+            liveMembersId.remove(getMyMeshId());
+
+            List<UserEntity> availableUsers = UserDataSource.getInstance()
+                    .getLiveGroupMembers(liveMembersId);
+
+            if (liveMembersId.size() == availableUsers.size()) {
+
+                for(String userId : liveMembersId) {
                     dataSend(data.getBytes(), type, userId, (type == Constants.DataType.MESSAGE));
+                }
+
+            } else {
+
+                for (UserEntity userEntity : availableUsers) {
+                    String userId = userEntity.getMeshId();
+                    if (!userId.equals(getMyMeshId())) {
+                        dataSend(data.getBytes(), type, userId, (type == Constants.DataType.MESSAGE));
+                        liveMembersId.remove(userId);
+                    }
+                }
+
+                if (liveMembersId.size() > 0) {
+                    // TODO we have lots of work in here for getting the invitor person for relay message
+                    RelayGroupModel relayGroupModel = new RelayGroupModel()
+                            .setData(data).setType(type).setUsers(liveMembersId);
+
+                    String relayGroupText = gsonBuilder.getRelayGroupModelJson(relayGroupModel);
+                    dataSend(relayGroupText.getBytes(), Constants.DataType.EVENT_GROUP_DATA_RELAY,
+                            adminId, false);
                 }
             }
         }
+    }
+
+    private void receiveTheRelayMessage(byte[] rawData, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String relayGroupModelText = new String(rawData);
+        RelayGroupModel relayGroupModel = gsonBuilder.getRelayGroupModelObj(relayGroupModelText);
+
+        ForwardGroupModel forwardGroupModel = new ForwardGroupModel()
+                .setData(relayGroupModel.getData()).setSender(userId)
+                .setType(relayGroupModel.getType());
+
+        String forwardGroupModelText = gsonBuilder.getForwarderGroupModelJson(forwardGroupModel);
+
+        for (String receiverId : relayGroupModel.getUsers()) {
+            dataSend(forwardGroupModelText.getBytes(), Constants.DataType.EVENT_GROUP_DATA_FORWARD,
+                    receiverId, false);
+        }
+    }
+
+    private void receiveForwardMessage(byte[] rawData, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String forwardGroupModelText = new String(rawData);
+        ForwardGroupModel forwardGroupModel = gsonBuilder.getForwarderGroupModelObj(forwardGroupModelText);
+
+        DataModel dataModel = new DataModel()
+                .setUserId(forwardGroupModel.getSender())
+                .setRawData(forwardGroupModel.getData().getBytes())
+                .setDataType(forwardGroupModel.getType());
+
+        dataReceive(dataModel, true);
     }
 
 }

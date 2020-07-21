@@ -143,6 +143,8 @@ public class Constants {
         byte EVENT_GROUP_RENAME = 0x22;
         byte EVENT_GROUP_MEMBER_ADD = 0x23;
         byte EVENT_GROUP_MEMBER_REMOVE = 0x24;
+        byte EVENT_GROUP_DATA_RELAY = 0x25;
+        byte EVENT_GROUP_DATA_FORWARD = 0x26;
     }
 
     public interface MessageType {

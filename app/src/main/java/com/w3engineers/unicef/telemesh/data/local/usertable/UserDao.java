@@ -160,7 +160,8 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     abstract LiveData<List<UserEntity>> getGroupMembers(List<String> whereCl);
 
     @NonNull
-    @Query("SELECT * FROM " + TableNames.USERS + " WHERE mesh_id IN (:whereCl)")
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID
+            + " IN (:whereCl) AND " + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE)
     abstract List<UserEntity> getGroupLiveMembers(List<String> whereCl);
 
     @NonNull

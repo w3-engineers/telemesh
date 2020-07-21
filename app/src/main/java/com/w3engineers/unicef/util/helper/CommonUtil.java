@@ -131,6 +131,16 @@ public class CommonUtil {
         return groupMembersId;
     }
 
+    public static List<String> getGroupLiveMembersId(List<GroupMembersInfo> groupMembersInfos) {
+        List<String> groupMembersId = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                groupMembersId.add(groupMembersInfo.getMemberId());
+            }
+        }
+        return groupMembersId;
+    }
+
     public static ArrayList<GroupMembersInfo> mergeGroupMembersInfo(ArrayList<GroupMembersInfo> existingMembers,
                                              List<GroupMembersInfo> newMembers) {
         HashMap<String, GroupMembersInfo> groupMembersMap = new HashMap<>();

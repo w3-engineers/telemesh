@@ -393,6 +393,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.EVENT_GROUP_RENAME:
             case Constants.DataType.EVENT_GROUP_MEMBER_ADD:
             case Constants.DataType.EVENT_GROUP_MEMBER_REMOVE:
+            case Constants.DataType.EVENT_GROUP_DATA_RELAY:
+            case Constants.DataType.EVENT_GROUP_DATA_FORWARD:
                 GroupDataHelper.getInstance().groupDataReceive(dataType, userId, rawData, isNewMessage);
                 break;
         }

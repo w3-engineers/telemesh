@@ -2,15 +2,15 @@ package com.w3engineers.unicef.util.helper;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupAdminInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GsonBuilder {
 
@@ -38,13 +38,20 @@ public class GsonBuilder {
         return gson.fromJson(memberInfoText, founderListType);
     }
 
-    public String getGroupAdminInfoJson(ArrayList<GroupAdminInfo> groupAdminInfos) {
-        return gson.toJson(groupAdminInfos);
+    public String getRelayGroupModelJson(RelayGroupModel relayGroupModel) {
+        return gson.toJson(relayGroupModel);
     }
 
-    public ArrayList<GroupAdminInfo> getGroupAdminInfoObj(String adminInfoText) {
-        Type founderListType = new TypeToken<ArrayList<GroupAdminInfo>>(){}.getType();
-        return gson.fromJson(adminInfoText, founderListType);
+    public RelayGroupModel getRelayGroupModelObj(String relayGroupModelText) {
+        return gson.fromJson(relayGroupModelText, RelayGroupModel.class);
+    }
+
+    public String getForwarderGroupModelJson(ForwardGroupModel forwardGroupModel) {
+        return gson.toJson(forwardGroupModel);
+    }
+
+    public ForwardGroupModel getForwarderGroupModelObj(String forwardGroupModelText) {
+        return gson.fromJson(forwardGroupModelText, ForwardGroupModel.class);
     }
 
     public String getGroupModelJson(GroupModel groupModel) {

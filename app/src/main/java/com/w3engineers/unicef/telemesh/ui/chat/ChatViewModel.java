@@ -30,6 +30,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -171,13 +172,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
         String myMeshId = getMyUserId();
 
-        List<String> userList = new ArrayList<>();
-        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-            if (!groupMembersInfo.getMemberId().equals(myMeshId)
-                    && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
-                userList.add(groupMembersInfo.getMemberId());
-            }
-        }
+        List<String> userList = CommonUtil.getGroupLiveMembersId(groupMembersInfos);
+        userList.remove(myMeshId);
 
         getCompositeDisposable().add(getLiveGroupMembers(userList)
                 .subscribeOn(Schedulers.newThread())

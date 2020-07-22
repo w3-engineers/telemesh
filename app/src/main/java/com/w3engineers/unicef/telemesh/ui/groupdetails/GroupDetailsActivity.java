@@ -141,6 +141,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
 
         parseIntent();
 
+        initGroupMembersInfoObserver();
         initGroupObserver();
     }
 
@@ -173,10 +174,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
             mAdapter.submitAdminInfoList(adminInfoList);
 
             mBinding.editTextName.setText(groupNameModel.getGroupName());
-
-//            updateMyAdminStatus();
-
-            initGroupMembersInfoObserver(groupEntity.getMembersInfo());
+            mViewModel.startMemberObserver(groupEntity.getMembersInfo());
         } else {
             finish();
             if (ChatActivity.sInstance != null) {
@@ -200,8 +198,8 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         });
     }
 
-    private void initGroupMembersInfoObserver(String membersInfo) {
-        mViewModel.getGroupUsersById(membersInfo).observe(this, userEntities -> {
+    private void initGroupMembersInfoObserver() {
+        mViewModel.userListsData.observe(this, userEntities -> {
             if (userEntities != null) {
                 int groupMember = userEntities.size() + 1;
                 userEntities.add(getMyInfo());
@@ -209,7 +207,6 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 mAdapter.clear();
                 mAdapter.addItem(sortMemberList(userEntities));
             }
-
         });
     }
 

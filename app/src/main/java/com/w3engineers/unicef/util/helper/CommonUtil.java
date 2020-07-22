@@ -9,6 +9,7 @@ import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
@@ -172,15 +173,41 @@ public class CommonUtil {
         return existingMembers;
     }
 
-    public static String getGroupUsersName(List<UserEntity> userEntities) {
+    public static String getGroupUsersName(List<UserEntity> userEntities, String myMeshId) {
         String groupName = "";
-        for (UserEntity userEntity : userEntities) {
-            if (TextUtils.isEmpty(groupName)) {
-                groupName = userEntity.getUserName();
-            } else {
-                groupName = groupName + ", " + userEntity.getUserName();
+        if (userEntities != null) {
+            for (UserEntity userEntity : userEntities) {
+                String name = userEntity.getUserName();
+                if (myMeshId.equals(userEntity.getMeshId())) {
+                    name = "You";
+                }
+                if (TextUtils.isEmpty(groupName)) {
+                    groupName = name;
+                } else {
+                    groupName = groupName + ", " + name;
+                }
             }
         }
         return groupName;
+    }
+
+    public static String getUserName(GroupEntity groupEntity, String myUserId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+        if (groupEntity.lastPersonId.equals(myUserId)) {
+            return "You";
+        } else {
+            if (!TextUtils.isEmpty(groupEntity.lastPersonName)) {
+                return groupEntity.lastPersonName;
+            } else {
+                List<GroupMembersInfo> groupMembersInfos = gsonBuilder
+                        .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+                for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+                    if (groupEntity.lastPersonId.equals(groupMembersInfo.getMemberId())) {
+                        return groupMembersInfo.getUserName();
+                    }
+                }
+            }
+        }
+        return "";
     }
 }

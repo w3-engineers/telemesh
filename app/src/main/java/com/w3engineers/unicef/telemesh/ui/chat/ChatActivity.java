@@ -131,7 +131,9 @@ public class ChatActivity extends TelemeshBaseActivity {
         mChatViewModel.setChatPageInfo(isGroup);
         initComponent();
 
+        processGroupAllUsers();
         processGroupLiveUsers();
+
         subscribeForThreadEvent(threadId);
         subscribeForMessages(threadId);
         subscribeForFinishEvent();
@@ -168,7 +170,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void processGroupAllUsers() {
-        mChatViewModel.getAllGroupUsersById(mGroupEntity.membersInfo).observe(this,
+        mChatViewModel.getGroupAllMembers().observe(this,
                 userEntities -> {
                     if (mChatPagedAdapter != null && userEntities != null) {
                         mChatPagedAdapter.addAvatarIndex(userEntities, mChatViewModel.getMyUserEntity());
@@ -179,7 +181,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     private void processGroupLiveUsers() {
         mChatViewModel.getGroupLiveMembers().observe(this,
                 userEntities -> {
-                    String subTitle = CommonUtil.getGroupUsersName(userEntities);
+                    String subTitle = CommonUtil.getGroupUsersName(userEntities, mChatViewModel.getMyUserId());
                     mViewBinging.textViewActiveNow.setText(subTitle);
                 });
     }
@@ -305,8 +307,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                     if (groupEntity != null && mViewBinging != null) {
 
                         setUiComponent();
-                        processGroupAllUsers();
-                        mChatViewModel.getLiveGroupUsersById(mGroupEntity.membersInfo);
+                        mChatViewModel.processGroupUser(mGroupEntity.membersInfo);
                     } else {
                         finish();
                     }

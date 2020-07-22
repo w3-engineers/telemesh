@@ -4,7 +4,7 @@ import android.renderscript.BaseObj;
 
 public class GroupMembersInfo {
     String i, n;
-    int s;
+    int s, p;
     boolean a;
 
     public String getMemberId() {
@@ -40,6 +40,15 @@ public class GroupMembersInfo {
 
     public GroupMembersInfo setUserName(String n) {
         this.n = n;
+        return this;
+    }
+
+    public int getAvatarPicture() {
+        return p;
+    }
+
+    public GroupMembersInfo setAvatarPicture(int picture) {
+        this.p = picture;
         return this;
     }
 }

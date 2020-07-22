@@ -78,11 +78,14 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
         String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
                 .setMemberId(myUserId)
                 .setUserName(myUserName)
                 .setMemberStatus(Constants.GroupEvent.GROUP_JOINED)
+                .setAvatarPicture(avatarIndex)
                 .setIsAdmin(true);
         groupMembersInfos.add(myGroupMembersInfo);
 
@@ -91,6 +94,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
             GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
                     .setMemberId(userEntity.getMeshId())
                     .setUserName(userEntity.getUserName())
+                    .setAvatarPicture(userEntity.getAvatarIndex())
                     .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
 
             groupMembersInfos.add(groupMembersInfo);

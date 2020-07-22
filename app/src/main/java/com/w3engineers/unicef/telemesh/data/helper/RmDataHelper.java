@@ -162,6 +162,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         syncUserWithBroadcastMessage(userId);
     }
 
+    public void onDemandUserAdd(String userId) {
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+        if (userEntity == null) {
+            userEntity = new UserEntity().setMeshId(userId)
+                    .setOnlineStatus(getActiveStatus(0));
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
+    }
+
     public void myUserInfoAdd() {
         String userId = getMyMeshId();
 

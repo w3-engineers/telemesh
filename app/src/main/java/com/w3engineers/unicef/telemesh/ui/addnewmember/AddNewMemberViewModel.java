@@ -86,6 +86,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
 
             GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
                     .setMemberId(userEntity.getMeshId())
+                    .setAvatarPicture(userEntity.getAvatarIndex())
                     .setUserName(userEntity.getUserName())
                     .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
             newMembersInfo.add(groupMembersInfo);

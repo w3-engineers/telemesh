@@ -55,7 +55,9 @@ public class GroupDataHelper extends RmDataHelper {
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupUserLeaveEvent())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendGroupLeaveEvent, Throwable::printStackTrace));
+                .subscribe(this::sendGroupLeave, throwable -> {
+                    throwable.printStackTrace();
+                }));
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getGroupInfoChangeEvent())
                 .subscribeOn(Schedulers.newThread())
@@ -200,7 +202,15 @@ public class GroupDataHelper extends RmDataHelper {
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-    private void sendGroupLeaveEvent(GroupEntity groupEntity) {
+    private void sendGroupLeave(GroupEntity groupEntity) {
+        compositeDisposable.add(Single.fromCallable(() -> sendGroupLeaveEvent(groupEntity))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(result -> {
+                    Timber.d("Result: %s", result);
+                }, Throwable::printStackTrace));
+    }
+
+    private boolean sendGroupLeaveEvent(GroupEntity groupEntity) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
@@ -217,6 +227,7 @@ public class GroupDataHelper extends RmDataHelper {
 
         sendDataToAllMembers(groupModelText, groupEvent,
                 groupEntity.getAdminInfo(), groupMembersInfos);
+        return true;
     }
 
     private void receiveGroupUserLeaveEvent(byte[] rawData, String userId) {
@@ -360,7 +371,8 @@ public class GroupDataHelper extends RmDataHelper {
         List<GroupEntity> groupEntities = groupDataSource.getGroupByUserId(updatedUserId);
 
         for (GroupEntity groupEntity : groupEntities) {
-            setGroupInfoUpdate(groupEntity, userEntity.getUserName(), userEntity.getMeshId());
+            setGroupInfoUpdate(groupEntity, userEntity.getUserName(),
+                    userEntity.getMeshId(), userEntity.getAvatarIndex());
         }
     }
 
@@ -368,14 +380,16 @@ public class GroupDataHelper extends RmDataHelper {
         List<GroupEntity> groupEntities = groupDataSource.getAllGroup();
         String myNewName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .readInt(Constants.preferenceKey.IMAGE_INDEX);
         String myMeshId = getMyMeshId();
 
         for (GroupEntity groupEntity : groupEntities) {
-            setGroupInfoUpdate(groupEntity, myNewName, myMeshId);
+            setGroupInfoUpdate(groupEntity, myNewName, myMeshId, avatarIndex);
         }
     }
 
-    private void setGroupInfoUpdate(GroupEntity groupEntity, String updatedName, String userId) {
+    private void setGroupInfoUpdate(GroupEntity groupEntity, String updatedName, String userId, int avatarIndex) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
@@ -386,6 +400,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             if (groupMembersInfo.getMemberId().equals(userId)) {
                 groupMembersInfo.setUserName(updatedName);
+                groupMembersInfo.setAvatarPicture(avatarIndex);
                 groupMembersInfos.set(i, groupMembersInfo);
             }
         }
@@ -721,6 +736,40 @@ public class GroupDataHelper extends RmDataHelper {
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
+    private void receiveTheRelayMessage(byte[] rawData, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String relayGroupModelText = new String(rawData);
+        RelayGroupModel relayGroupModel = gsonBuilder.getRelayGroupModelObj(relayGroupModelText);
+
+        ForwardGroupModel forwardGroupModel = new ForwardGroupModel()
+                .setData(relayGroupModel.getData()).setSender(userId)
+                .setType(relayGroupModel.getType());
+
+        String forwardGroupModelText = gsonBuilder.getForwarderGroupModelJson(forwardGroupModel);
+
+        for (String receiverId : relayGroupModel.getUsers()) {
+            dataSend(forwardGroupModelText.getBytes(), Constants.DataType.EVENT_GROUP_DATA_FORWARD,
+                    receiverId, false);
+        }
+    }
+
+    private void receiveForwardMessage(byte[] rawData, String userId) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        String forwardGroupModelText = new String(rawData);
+        ForwardGroupModel forwardGroupModel = gsonBuilder.getForwarderGroupModelObj(forwardGroupModelText);
+
+        onDemandUserAdd(forwardGroupModel.getSender());
+
+        DataModel dataModel = new DataModel()
+                .setUserId(forwardGroupModel.getSender())
+                .setRawData(forwardGroupModel.getData().getBytes())
+                .setDataType(forwardGroupModel.getType());
+
+        dataReceive(dataModel, true);
+    }
+
     private void sendDataToAllMembers(String data, byte type, String adminId,
                                       ArrayList<GroupMembersInfo> groupMembersInfos) {
 
@@ -762,37 +811,4 @@ public class GroupDataHelper extends RmDataHelper {
             }
         }
     }
-
-    private void receiveTheRelayMessage(byte[] rawData, String userId) {
-        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-        String relayGroupModelText = new String(rawData);
-        RelayGroupModel relayGroupModel = gsonBuilder.getRelayGroupModelObj(relayGroupModelText);
-
-        ForwardGroupModel forwardGroupModel = new ForwardGroupModel()
-                .setData(relayGroupModel.getData()).setSender(userId)
-                .setType(relayGroupModel.getType());
-
-        String forwardGroupModelText = gsonBuilder.getForwarderGroupModelJson(forwardGroupModel);
-
-        for (String receiverId : relayGroupModel.getUsers()) {
-            dataSend(forwardGroupModelText.getBytes(), Constants.DataType.EVENT_GROUP_DATA_FORWARD,
-                    receiverId, false);
-        }
-    }
-
-    private void receiveForwardMessage(byte[] rawData, String userId) {
-        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-        String forwardGroupModelText = new String(rawData);
-        ForwardGroupModel forwardGroupModel = gsonBuilder.getForwarderGroupModelObj(forwardGroupModelText);
-
-        DataModel dataModel = new DataModel()
-                .setUserId(forwardGroupModel.getSender())
-                .setRawData(forwardGroupModel.getData().getBytes())
-                .setDataType(forwardGroupModel.getType());
-
-        dataReceive(dataModel, true);
-    }
-
 }

@@ -187,7 +187,7 @@ public class UserDataSource {
         return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
     }
 
-    public LiveData<List<UserEntity>> getGroupMembers(List<String> whereCluse) {
+    public Flowable<List<UserEntity>> getGroupMembers(List<String> whereCluse) {
         return mUserDao.getGroupMembers(whereCluse);
     }
 

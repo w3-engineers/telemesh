@@ -79,7 +79,9 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private CompositeDisposable compositeDisposable;
     private MutableLiveData<PagedList<ChatEntity>> mutableChatList = new MutableLiveData<>();
     private MutableLiveData<Boolean> finishForGroupLeave = new MutableLiveData<>();
+    private MutableLiveData<List<UserEntity>> groupAllMembers = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> groupLiveMembers = new MutableLiveData<>();
+    private MutableLiveData<List<UserEntity>> groupLiveMembersWithOutMe = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -147,57 +149,36 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return groupDataSource.getLiveGroupById(threadId);
     }
 
-    @NonNull
-    public LiveData<List<UserEntity>> getAllGroupUsersById(String membersInfo){
-
+    public void processGroupUser(String membersInfo) {
         List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
                 .getGroupMemberInfoObj(membersInfo);
 
+        List<UserEntity> allMembers = new ArrayList<>();
+        List<UserEntity> liveMembers = new ArrayList<>();
+        List<UserEntity> liveMembersWithOutMe = new ArrayList<>();
+
         String myMeshId = getMyUserId();
 
-        List<String> userList = new ArrayList<>();
         for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-            if (!groupMembersInfo.getMemberId().equals(myMeshId)) {
-                userList.add(groupMembersInfo.getMemberId());
+            UserEntity userEntity = new UserEntity()
+                    .setMeshId(groupMembersInfo.getMemberId())
+                    .setAvatarIndex(groupMembersInfo.getAvatarPicture())
+                    .setUserName(groupMembersInfo.getUserName());
+
+            allMembers.add(userEntity);
+            if (groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                liveMembers.add(userEntity);
+                if (!groupMembersInfo.getMemberId().equals(myMeshId)) {
+                    liveMembersWithOutMe.add(userEntity);
+                }
             }
         }
-
-        return userDataSource.getGroupMembers(userList);
+        groupAllMembers.postValue(allMembers);
+        groupLiveMembers.postValue(liveMembers);
+        groupLiveMembersWithOutMe.postValue(liveMembersWithOutMe);
     }
 
-    public void getLiveGroupUsersById(String membersInfo){
-
-        List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
-                .getGroupMemberInfoObj(membersInfo);
-
-        String myMeshId = getMyUserId();
-
-        List<String> userList = CommonUtil.getGroupLiveMembersId(groupMembersInfos);
-        userList.remove(myMeshId);
-
-        getCompositeDisposable().add(getLiveGroupMembers(userList)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userEntities -> {
-                    groupLiveMembers.postValue(userEntities);
-                }));
-
-    }
-
-    private Single<List<UserEntity>> getLiveGroupMembers(List<String> userList) {
-        return Single.create(emitter -> {
-            Thread thread = new Thread(() -> {
-                try {
-                    emitter.onSuccess(userDataSource.getLiveGroupMembers(userList));
-                } catch (Exception e) {
-                    emitter.onError(e);
-                }
-            });
-            thread.start();
-        });
-    }
-
-    private String getMyUserId() {
+    public String getMyUserId() {
         return SharedPref.getSharedPref(TeleMeshApplication.getContext())
                 .read(Constants.preferenceKey.MY_USER_ID);
     }
@@ -452,8 +433,16 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         return finishForGroupLeave;
     }
 
+    public MutableLiveData<List<UserEntity>> getGroupAllMembers() {
+        return groupAllMembers;
+    }
+
     public MutableLiveData<List<UserEntity>> getGroupLiveMembers() {
         return groupLiveMembers;
+    }
+
+    public MutableLiveData<List<UserEntity>> getGroupLiveMembersWithOutMe() {
+        return groupLiveMembersWithOutMe;
     }
 
     /**

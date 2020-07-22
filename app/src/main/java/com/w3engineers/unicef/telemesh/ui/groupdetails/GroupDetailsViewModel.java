@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
@@ -22,6 +23,7 @@ import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +37,8 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
     private DataSource dataSource;
 
     MutableLiveData<Boolean> finishForGroupLeave = new MutableLiveData<>();
+    MutableLiveData<List<UserEntity>> userListsData = new MutableLiveData<>();
+    HashMap<String, GroupMembersInfo> membersInfoHashMap = new HashMap<>();
 
     public GroupDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -48,7 +52,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
         return groupDataSource.getLiveGroupById(threadId);
     }
 
-    @NonNull
+    /*@NonNull
     LiveData<List<UserEntity>> getGroupUsersById(@NonNull String membersInfo) {
 
         List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
@@ -61,8 +65,52 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
             }
         }
 
+
+
         return userDataSource.getGroupMembers(userList);
+    }*/
+
+    public void startMemberObserver(String membersInfo) {
+        List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                .getGroupMemberInfoObj(membersInfo);
+        List<String> userList = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            membersInfoHashMap.put(groupMembersInfo.getMemberId(), groupMembersInfo);
+
+            if (!groupMembersInfo.getMemberId().equals(getMyUserId())
+                    && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        getCompositeDisposable().add(userDataSource.getGroupMembers(userList)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::alignAllGroupMembers, throwable -> {
+                    throwable.printStackTrace();
+                }));
     }
+
+    private void alignAllGroupMembers(List<UserEntity> userEntities) {
+        for (int i = 0; i < userEntities.size(); i++) {
+
+            UserEntity userEntity = userEntities.get(i);
+            if (TextUtils.isEmpty(userEntity.getUserName())) {
+
+                GroupMembersInfo groupMembersInfo = membersInfoHashMap.get(userEntity.getMeshId());
+                if (groupMembersInfo != null) {
+
+                    userEntity.setUserName(groupMembersInfo.getUserName())
+                            .setAvatarIndex(groupMembersInfo.getAvatarPicture());
+                    userEntities.set(i, userEntity);
+                }
+            }
+        }
+
+        userListsData.postValue(userEntities);
+    }
+
+
 
     void groupLeaveAction(GroupEntity groupEntity) {
         getCompositeDisposable().add(deleteGroupOperation(groupEntity.groupId)

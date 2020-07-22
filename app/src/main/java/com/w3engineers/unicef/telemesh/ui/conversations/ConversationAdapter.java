@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemConversationBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 
 public class ConversationAdapter extends PagedListAdapter<GroupEntity, ConversationAdapter.GenericViewHolder> {
 
@@ -104,10 +105,10 @@ public class ConversationAdapter extends PagedListAdapter<GroupEntity, Conversat
             } else {
                 itemConversationBinding.personMessage.setVisibility(View.VISIBLE);
                 if (isSystemMessage(groupEntity.lastMessageType)) {
-                    String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You" : groupEntity.lastPersonName;
+                    String personName = CommonUtil.getUserName(groupEntity, getMyUserId());
                     itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);
                 } else {
-                    String personName = groupEntity.lastPersonId.equals(getMyUserId()) ? "You:" : groupEntity.lastPersonName + ":";
+                    String personName = CommonUtil.getUserName(groupEntity, getMyUserId()) + ":";
                     itemConversationBinding.personMessage.setText(personName + " " + groupEntity.lastMessage);
                 }
             }

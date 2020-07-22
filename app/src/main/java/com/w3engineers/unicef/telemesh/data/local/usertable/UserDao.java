@@ -74,10 +74,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllOnlineUsers();
 
-    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId"
-            + " ORDER BY CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
-            + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
-            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId AND "
+            + ColumnNames.COLUMN_USER_NAME + " IS NOT NULL ORDER BY CASE " + ColumnNames.COLUMN_USER_IS_ONLINE
+            + " WHEN " + Constants.UserStatus.OFFLINE + " THEN " + Constants.UserStatus.OFFLINE + " ELSE "
+            + Constants.UserStatus.WIFI_ONLINE + " END DESC, " + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
     abstract Flowable<List<UserEntity>> getAllUsersForGroup(String myMeshId);
 
     @NonNull
@@ -157,7 +157,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE mesh_id IN (:whereCl)")
-    abstract LiveData<List<UserEntity>> getGroupMembers(List<String> whereCl);
+    abstract Flowable<List<UserEntity>> getGroupMembers(List<String> whereCl);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_MESH_ID

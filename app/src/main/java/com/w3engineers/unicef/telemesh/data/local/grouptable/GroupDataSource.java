@@ -61,6 +61,10 @@ public class GroupDataSource {
         return mGroupDao.getGroupByUserId(userId);
     }
 
+    public String getGroupAdminByUserId(String userId) {
+        return mGroupDao.getGroupAdminByUserId(userId);
+    }
+
     public int deleteGroupById(String groupId) {
         return mGroupDao.deleteGroupById(groupId);
     }

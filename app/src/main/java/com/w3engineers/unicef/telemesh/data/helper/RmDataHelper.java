@@ -1085,12 +1085,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         if (userEntity != null) {
 
-            userEntity = userEntity.updateUserEntity(userModel);
+            if (TextUtils.isEmpty(userEntity.getUserName())) {
+                userEntity = userEntity.updateUserEntity(userModel);
+            } else {
+                userEntity = userEntity.updateUserEntity(userModel);
+                prepareRightMeshDataSource();
+                rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
 
-            rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
-
-            UserDataSource.getInstance().insertOrUpdateData(userEntity);
-
+                UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            }
             GroupDataHelper.getInstance().updateGroupUserInfo(userEntity);
         }
     }
@@ -1125,6 +1128,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
 
                 }, Throwable::printStackTrace));
+
+        compositeDisposable.add(GroupDataHelper.getInstance()
+                .syncUserUpdateInfoForUnDiscovered(updateInfo, Constants.DataType.USER_UPDATE_INFO)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe());
     }
 
     // APP update process

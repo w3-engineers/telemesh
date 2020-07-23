@@ -175,6 +175,10 @@ public class UserDataSource {
         return mUserDao.getAllFabMessagedActiveUserIds();
     }
 
+    public List<String> getAllUnDiscoveredUsers(String myMeshId) {
+        return mUserDao.getAllUnDiscoveredUsers(myMeshId);
+    }
+
     public List<String> getLocalWithBackConfigUsers(int versionCode) {
         return mUserDao.getLocalWithBackConfigUsers(versionCode);
     }

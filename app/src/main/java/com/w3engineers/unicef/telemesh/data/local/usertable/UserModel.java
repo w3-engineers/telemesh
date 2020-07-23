@@ -11,7 +11,7 @@ Proprietary and confidential
 public class UserModel {
 
     private String n, userId;
-    private int i, cv;
+    private int i;
     private long t;
 
     public String getName() {

@@ -421,6 +421,44 @@ public class GroupDataHelper extends RmDataHelper {
         groupDataSource.insertOrUpdateGroup(groupEntity);
     }
 
+    public Single<Boolean> syncUserUpdateInfoForUnDiscovered(String data, byte type) {
+        return Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(syncUpdateInfoForUnDiscovered(data, type));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
+    }
+
+    private boolean syncUpdateInfoForUnDiscovered(String data, byte type) {
+        List<String> userIds = UserDataSource.getInstance().getAllUnDiscoveredUsers(getMyMeshId());
+
+        for (String unDisCoverUserId : userIds) {
+            sendMyInfoToUndiscovered(unDisCoverUserId, data, type);
+        }
+        return true;
+    }
+
+    private void sendMyInfoToUndiscovered(String userId, String data, byte type) {
+        String updatedUserId = "%" + userId + "%";
+        String adminId = groupDataSource.getGroupAdminByUserId(updatedUserId);
+
+        List<String> liveMembersId = new ArrayList<>();
+        liveMembersId.add(userId);
+
+        RelayGroupModel relayGroupModel = new RelayGroupModel()
+                .setData(data).setType(type).setUsers(liveMembersId);
+
+        String relayGroupText = GsonBuilder.getInstance().getRelayGroupModelJson(relayGroupModel);
+        dataSend(relayGroupText.getBytes(), Constants.DataType.EVENT_GROUP_DATA_RELAY,
+                adminId, false);
+
+    }
+
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
@@ -769,6 +807,9 @@ public class GroupDataHelper extends RmDataHelper {
 
         dataReceive(dataModel, true);
     }
+
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
     private void sendDataToAllMembers(String data, byte type, String adminId,
                                       ArrayList<GroupMembersInfo> groupMembersInfos) {

@@ -23,6 +23,9 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -162,8 +165,16 @@ public class NotifyUtil {
         if (TextUtils.isEmpty(groupName)) {
             return false;
         }
-        String title = userEntity.getFullName() + " messaged in " + GsonBuilder.getInstance()
-                .getGroupNameModelObj(groupName).getGroupName();
+
+        GroupMembersInfo groupMembersInfo = CommonUtil.getGroupMemberInfo(groupEntity.getMembersInfo(),
+                userEntity.getMeshId());
+        String userName = groupMembersInfo != null ? groupMembersInfo.getUserName() : "";
+
+        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupName);
+
+        groupName = groupNameModel.isGroupNameChanged() ? groupNameModel.getGroupName() : "a group";
+
+        String title = userName + " messaged in " + groupName;
         setNotification(builder, message, title, imageBitmap);
         return true;
     }

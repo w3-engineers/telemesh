@@ -223,6 +223,16 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE + ")")
     abstract Single<List<String>> getAllFabMessagedActiveUserIds();
 
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId AND " + ColumnNames.COLUMN_USER_NAME
+            + " IS NOT NULL")
+    abstract Single<List<String>> getAllUsersForUpdate(String myMeshId);
+
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE "
+            + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId AND " + ColumnNames.COLUMN_USER_NAME
+            + " IS NULL")
+    abstract List<String> getAllUnDiscoveredUsers(String myMeshId);
+
     /*@Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS + " WHERE "
             + ColumnNames.COLUMN_USER_IS_ONLINE + " != " + Constants.UserStatus.OFFLINE)
     abstract Single<List<String>> getAllActiveUsers();*/

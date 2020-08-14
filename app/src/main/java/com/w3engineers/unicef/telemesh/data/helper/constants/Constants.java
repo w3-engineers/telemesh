@@ -302,7 +302,7 @@ public class Constants {
     }
 
     public interface DirectoryName {
-        String ContentFolder = "Content";
+        String ContentFolder = ".content";
         String ContentThumbFolder = ".contentThumb";
     }
 

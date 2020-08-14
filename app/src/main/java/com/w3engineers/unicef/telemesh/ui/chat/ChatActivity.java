@@ -368,7 +368,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.image_view_pick_gallery_image:
-                if (mUserEntity != null && mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE) {
+                if (mUserEntity != null /*&& mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE*/) {
                     requestToOpenGallery();
                 }
                 break;
@@ -405,10 +405,10 @@ public class ChatActivity extends TelemeshBaseActivity {
         if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
             Toaster.showShort(mUserEntity.getUserName() + " is in offline.");
             return;
-        } else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {
+        } /*else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {
             Toaster.showShort(mUserEntity.getUserName() + " locally not connected.");
             return;
-        }
+        }*/
         mChatViewModel.resendContentMessage(failedMessage);
     }
 

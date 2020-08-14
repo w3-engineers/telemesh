@@ -42,7 +42,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     private GroupEntity mGroupEntity;
     private String myUserId;
     private List<GroupMembersInfo> adminInfoList = new ArrayList<>();
-    private boolean amIAdmin;
+    private boolean amIAdmin, amICreator;
 
     @Override
     protected int getLayoutId() {
@@ -145,6 +145,22 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         initGroupObserver();
     }
 
+    private void viewControl() {
+        mBinding.imageViewAddMember.setVisibility(View.GONE);
+        mBinding.textViewAddMember.setVisibility(View.GONE);
+        mBinding.separator3.setVisibility(View.GONE);
+        if (amICreator) {
+            mBinding.imageViewAddMember.setVisibility(View.VISIBLE);
+            mBinding.textViewAddMember.setVisibility(View.VISIBLE);
+            mBinding.separator3.setVisibility(View.VISIBLE);
+        }
+
+        mBinding.imageViewPen.setVisibility(View.GONE);
+        if (amIAdmin) {
+            mBinding.imageViewPen.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void parseIntent() {
         Intent intent = getIntent();
         if (intent.hasExtra(GroupEntity.class.getName())) {
@@ -171,7 +187,12 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                 }
             }
 
-            mAdapter.submitAdminInfoList(adminInfoList);
+            if (myUserId.equals(groupEntity.getAdminInfo())) {
+                amICreator = true;
+            }
+
+            viewControl();
+            mAdapter.submitAdminInfoList(adminInfoList, amIAdmin);
 
             mBinding.editTextName.setText(groupNameModel.getGroupName());
             mViewModel.startMemberObserver(groupEntity.getMembersInfo());
@@ -237,15 +258,6 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
         return userEntity;
     }
-
-    /*private void updateMyAdminStatus() {
-        for (GroupAdminInfo adminInfo : adminInfoList) {
-            if (myUserId.equals(adminInfo.getAdminId())) {
-                amIAdmin = true;
-                break;
-            }
-        }
-    }*/
 
     private GroupDetailsViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {

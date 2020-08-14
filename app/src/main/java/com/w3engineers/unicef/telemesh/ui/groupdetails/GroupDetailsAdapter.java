@@ -22,6 +22,7 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
 
     private List<GroupMembersInfo> adminInfoList;
     private String myId;
+    private boolean amIAdmin;
 
     public GroupDetailsAdapter(String myUserId) {
         adminInfoList = new ArrayList<>();
@@ -40,8 +41,9 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
         return new GroupDetailsVH(binding);
     }
 
-    void submitAdminInfoList(List<GroupMembersInfo> adminList) {
+    void submitAdminInfoList(List<GroupMembersInfo> adminList, boolean amIAdmin) {
         this.adminInfoList = adminList;
+        this.amIAdmin = amIAdmin;
     }
 
     List<GroupMembersInfo> getAdminInfoList() {
@@ -80,12 +82,14 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
                 }
 
             } else {
+                binding.imageViewRemove.setVisibility(View.INVISIBLE);
+                binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
                 if (isAdmin(item.getMeshId())) {
-                    binding.imageViewRemove.setVisibility(View.INVISIBLE);
                     binding.textViewAdminInfo.setVisibility(View.VISIBLE);
                 } else {
-                    binding.imageViewRemove.setVisibility(View.VISIBLE);
-                    binding.textViewAdminInfo.setVisibility(View.INVISIBLE);
+                    if (amIAdmin) {
+                        binding.imageViewRemove.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 

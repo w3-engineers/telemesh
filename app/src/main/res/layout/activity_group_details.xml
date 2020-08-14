@@ -96,6 +96,7 @@
                     style="@style/signup_editext_style"
                     android:textColorHint="@color/hint_text_color"
                     app:hintTextAppearance="@style/hint_style"
+                    android:layout_marginStart="@dimen/margin_15"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/image_view_pen"
                     app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
@@ -150,9 +151,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_20"
+                    android:layout_marginStart="@dimen/margin_15"
                     android:text="@string/total_participants"
                     android:textColor="@color/message_text_color"
-                    app:layout_constraintStart_toStartOf="@+id/image_view_pen"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/separator_1" />
 
                 <TextView

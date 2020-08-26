@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
@@ -25,6 +26,7 @@ public class SendDataTask implements Callable {
     // across the whole application lifecycle
     private ViperData viperData;
     private ViperContentData viperContentData;
+    private ViperBroadcastData viperBroadcastData;
     private ViperUtil viperUtil;
     private String peerId;
 
@@ -47,6 +49,15 @@ public class SendDataTask implements Callable {
     @NonNull
     public SendDataTask setMeshData(@Nullable ViperData mMeshData) {
         this.viperData = mMeshData;
+        return this;
+    }
+
+    public ViperBroadcastData getViperBroadcastData() {
+        return viperBroadcastData;
+    }
+
+    public SendDataTask setViperBroadcastData(ViperBroadcastData viperBroadcastData) {
+        this.viperBroadcastData = viperBroadcastData;
         return this;
     }
 
@@ -78,6 +89,7 @@ public class SendDataTask implements Callable {
 
             ViperData viperData = getViperData();
             ViperContentData viperContentData = getViperContentData();
+            ViperBroadcastData viperBroadcastData = getViperBroadcastData();
 
             if (getViperUtil() != null) {
                 if (viperData != null) {
@@ -86,6 +98,10 @@ public class SendDataTask implements Callable {
 
                 if (viperContentData != null) {
                     return getViperUtil().sendContentMessage(getPeerId(), viperContentData);
+                }
+
+                if (viperBroadcastData != null) {
+                    return getViperUtil().sendLocalBroadcast(viperBroadcastData);
                 }
             }
 

@@ -14,8 +14,10 @@ import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
@@ -115,6 +117,16 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
+    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, boolean isNotificationEnable) {
+        ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
+        viperBroadcastData.broadcastId = broadcastId;
+        viperBroadcastData.metaData = metaData;
+        viperBroadcastData.contentPath = contentPath;
+        viperBroadcastData.isNotificationEnable = isNotificationEnable;
+
+        broadcastManager.addBroadCastMessage(getBroadcastDataTask(viperBroadcastData));
+    }
+
     public void DataSend(@NonNull DataModel dataModel, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
         for (String receiverId : receiverIds) {
             DataSend(dataModel, receiverId, isNotificationEnable);
@@ -123,6 +135,10 @@ public class MeshDataSource extends ViperUtil {
 
     private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
+    }
+
+    private SendDataTask getBroadcastDataTask(ViperBroadcastData viperBroadcastData) {
+        return new SendDataTask().setViperBroadcastData(viperBroadcastData).setBaseRmDataSource(this);
     }
 
     public void ContentDataSend(ContentModel contentModel, boolean notificationEnable) {
@@ -246,6 +262,15 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void pendingContents(ContentPendingModel contentPendingModel) {
         ContentDataHelper.getInstance().pendingContents(contentPendingModel);
+    }
+
+    @Override
+    protected void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        BroadcastDataModel broadcastDataModel = gsonBuilder.getBroadcastDataModelObj(metaData);
+        BroadcastDataHelper.getInstance().broadcastDataReceive(broadcastDataModel.broadcastType,
+                broadcastId, broadcastDataModel.rawData, userId, contentPath);
     }
 
     public void saveUpdateUserInfo() {

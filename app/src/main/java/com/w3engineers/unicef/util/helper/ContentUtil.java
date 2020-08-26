@@ -28,6 +28,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ContentUtil {
 
@@ -265,6 +272,47 @@ public class ContentUtil {
         return file.getAbsolutePath();
     }
 
+    public String getContentFromUrl(String fileURL) {
+        OkHttpClient client = new OkHttpClient();
+
+        String filePath = null;
+
+        Request request = new Request.Builder().url(fileURL).build();
+        Response response;
+        try {
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to download file: " + response);
+            }
+
+            fileURL = java.net.URLDecoder.decode(fileURL, StandardCharsets.UTF_8.name());
+
+            String fileName = getFileNameFromURL(fileURL);
+            File file = getFileFromName(fileName);
+
+            if (file != null) {
+
+                FileOutputStream fos = new FileOutputStream(file.getAbsolutePath());
+                fos.write(response.body().bytes());
+                fos.close();
+            }
+
+            if (file != null) {
+                filePath = file.getAbsolutePath();
+
+                if (isTypeImage(filePath)) {
+                    filePath = compressImage(filePath);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            filePath = null;
+        }
+
+        return filePath;
+    }
+
     public String getCopiedFilePath(String originalFilePath, boolean isThumb) {
 
         if (TextUtils.isEmpty(originalFilePath))
@@ -304,6 +352,52 @@ public class ContentUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private File getFileFromName(String fileName) {
+        try {
+            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
+            String extension = fileName.substring(fileName.lastIndexOf("."));
+            return File.createTempFile(fileName, extension, contentFolder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getFileNameFromURL(String url) {
+        if (url == null) {
+            return "";
+        }
+        try {
+            URL resource = new URL(url);
+            String host = resource.getHost();
+            if (host.length() > 0 && url.endsWith(host)) {
+                // handle ...example.com
+                return "";
+            }
+        } catch (MalformedURLException e) {
+            return "";
+        }
+
+        int startIndex = url.lastIndexOf('/') + 1;
+        int length = url.length();
+
+        // find end index for ?
+        int lastQMPos = url.lastIndexOf('?');
+        if (lastQMPos == -1) {
+            lastQMPos = length;
+        }
+
+        // find end index for #
+        int lastHashPos = url.lastIndexOf('#');
+        if (lastHashPos == -1) {
+            lastHashPos = length;
+        }
+
+        // calculate the end index
+        int endIndex = Math.min(lastQMPos, lastHashPos);
+        return url.substring(startIndex, endIndex);
     }
 
     private File getFileDirectory(String folderName) {

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
@@ -25,7 +26,7 @@ public class RefreshJobWorker extends Worker {
     @Override
     public Result doWork() {
         BulletinTimeScheduler.getInstance().processesForInternetConnection();
-        RmDataHelper.getInstance().requestWsMessage();
+        BroadcastDataHelper.getInstance().requestForBroadcast();
         return Result.success();
     }
 

@@ -32,6 +32,7 @@ import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
+import com.w3engineers.mesh.application.data.model.BroadcastEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.FilePendingEvent;
@@ -61,6 +62,7 @@ import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
@@ -239,6 +241,14 @@ public abstract class ViperUtil {
                 pendingContents(contentPendingModel);
             }
         });
+
+        AppDataObserver.on().startObserver(ApiEvent.BROADCAST_EVENT, event -> {
+            BroadcastEvent broadcastEvent = (BroadcastEvent) event;
+            if (broadcastEvent != null) {
+                receiveBroadcast(broadcastEvent.getUserId(), broadcastEvent.getBroadcastId(),
+                        broadcastEvent.getMetaData(), broadcastEvent.getContentPath());
+            }
+        });
     }
 
     public void showPermissionEventAlert(int hardwareEvent, List<String> permissions, Activity activity) {
@@ -388,6 +398,17 @@ public abstract class ViperUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String sendLocalBroadcast(ViperBroadcastData viperBroadcastData) {
+        try {
+            viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
+                    viperBroadcastData.metaData, viperBroadcastData.contentPath,
+                    viperBroadcastData.isNotificationEnable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int getUserActiveStatus(String nodeId) {
@@ -616,4 +637,6 @@ public abstract class ViperUtil {
     protected abstract void contentReceiveDone(String contentId, boolean contentStatus);
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
+
+    protected abstract void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath);
 }

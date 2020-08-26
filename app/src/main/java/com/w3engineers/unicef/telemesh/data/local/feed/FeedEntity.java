@@ -51,6 +51,10 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public boolean feedReadStatus;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_CONTENT_INFO)
+    @Nullable
+    public String feedContentInfo;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -98,6 +102,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public FeedEntity setFeedContentInfo(@Nullable String feedContentInfo) {
+        this.feedContentInfo = feedContentInfo;
+        return this;
+    }
+
     @Nullable
     public String getFeedId() {
         return feedId;
@@ -132,6 +141,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedReadStatus;
     }
 
+    @Nullable
+    public String getFeedContentInfo() {
+        return feedContentInfo;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -141,6 +155,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedDetail = in.readString();
         feedTime = in.readString();
         feedReadStatus = in.readByte() != 0;
+        feedContentInfo = in.readString();
     }
 
     @Override
@@ -153,6 +168,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedDetail);
         dest.writeString(feedTime);
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
+        dest.writeString(feedContentInfo);
     }
 
     @Override
@@ -192,6 +208,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return new BulletinModel()
                 .setId(getFeedId())
                 .setMessage(getFeedDetail())
+                .setHeaderTitle(getFeedTitle())
                 .setTime(getFeedTime());
     }
 
@@ -199,6 +216,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     public FeedEntity toFeedEntity(@NonNull BulletinModel bulletinModel) {
         return new FeedEntity().setFeedDetail(bulletinModel.getMessage())
                 .setFeedId(bulletinModel.getId())
-                .setFeedTime(bulletinModel.getTime());
+                .setFeedTime(bulletinModel.getTime())
+                .setFeedTitle(bulletinModel.getHeaderTitle());
     }
 }

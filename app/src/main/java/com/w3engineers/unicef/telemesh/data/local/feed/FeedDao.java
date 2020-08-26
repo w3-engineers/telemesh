@@ -16,7 +16,7 @@ import java.util.List;
 @Dao
 public abstract class FeedDao extends BaseDao<FeedEntity> {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long insertFeed(@NonNull FeedEntity feedEntity);
 
 

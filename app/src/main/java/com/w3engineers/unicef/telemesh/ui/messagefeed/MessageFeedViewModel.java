@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
@@ -63,7 +64,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
 
     public void requestBroadcastMessage() {
         if(NetworkMonitor.isOnline()) {
-            RmDataHelper.getInstance().requestWsMessage();
+            BroadcastDataHelper.getInstance().requestForBroadcast();
         }
     }
 

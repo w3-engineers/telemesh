@@ -10,7 +10,6 @@ Proprietary and confidential
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
@@ -46,9 +45,9 @@ public class BroadcastWebSocket extends WebSocketListener {
         try {
             JSONObject jsonObject = new JSONObject(text);
             if (jsonObject.has("status")) {
-                RmDataHelper.getInstance().processBroadcastAck(text);
+                BroadcastDataHelper.getInstance().responseBroadcastAck(text);
             } else {
-                RmDataHelper.getInstance().processBroadcastMessage(text);
+                BroadcastDataHelper.getInstance().responseBroadcastMsg(text);
             }
         } catch (JSONException e) { e.printStackTrace(); }
 

@@ -246,7 +246,8 @@ public abstract class ViperUtil {
             BroadcastEvent broadcastEvent = (BroadcastEvent) event;
             if (broadcastEvent != null) {
                 receiveBroadcast(broadcastEvent.getUserId(), broadcastEvent.getBroadcastId(),
-                        broadcastEvent.getMetaData(), broadcastEvent.getContentPath());
+                        broadcastEvent.getMetaData(), broadcastEvent.getContentPath(),
+                        broadcastEvent.getContentMeta());
             }
         });
     }
@@ -404,6 +405,7 @@ public abstract class ViperUtil {
         try {
             viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
                     viperBroadcastData.metaData, viperBroadcastData.contentPath,
+                    viperBroadcastData.contentMeta,
                     viperBroadcastData.isNotificationEnable);
         } catch (Exception e) {
             e.printStackTrace();
@@ -638,5 +640,5 @@ public abstract class ViperUtil {
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
-    protected abstract void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath);
+    protected abstract void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta);
 }

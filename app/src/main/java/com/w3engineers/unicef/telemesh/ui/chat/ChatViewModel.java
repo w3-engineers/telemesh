@@ -297,6 +297,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     private void sendContentMessage(String userId, String path) {
+        Log.v("CONTENT_BROADCAST:","IMAGE_PATH: " + path);
         getCompositeDisposable().add(getThumbnailPath(path)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(thumbPath -> {

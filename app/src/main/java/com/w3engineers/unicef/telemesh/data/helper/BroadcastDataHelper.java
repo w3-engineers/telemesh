@@ -8,7 +8,6 @@ import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
-import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
@@ -18,20 +17,15 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
-import com.w3engineers.unicef.telemesh.data.local.feed.WaitingFeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.UUID;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -58,10 +52,10 @@ public class BroadcastDataHelper extends RmDataHelper {
         return broadcastDataHelper;
     }
 
-    public void broadcastDataReceive(byte broadcastType, String broadcastId, String metaData, String userId, String contentPath) {
+    public void broadcastDataReceive(byte broadcastType, String broadcastId, String metaData, String userId, String contentPath, String contentMeta) {
         switch (broadcastType) {
             case Constants.DataType.MESSAGE_FEED:
-                receiveLocalBroadcast(userId, broadcastId, metaData, contentPath);
+                receiveLocalBroadcast(userId, broadcastId, metaData, contentPath, contentMeta);
                 break;
         }
     }
@@ -95,6 +89,16 @@ public class BroadcastDataHelper extends RmDataHelper {
 
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
+
+    int i = 0;
+    public void demoTextBroadcast() {
+        BulletinFeed bulletinFeed = new BulletinFeed();
+        bulletinFeed.setCreatedAt("2020-08-27T05:58:32.485Z")
+                .setMessageBody("Hello message " + (++i))
+                .setMessageId(UUID.randomUUID().toString());
+        String bulletinData = new Gson().toJson(bulletinFeed);
+        responseBroadcastMsg(bulletinData);
+    }
 
     private BroadcastCommand getBroadcastMsgRequestCommand(String lat, String lang,
                                                            List<String> localActiveUsers) {
@@ -254,14 +258,17 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {
+        if (TextUtils.isEmpty(contentPath))
+            contentPath = "/storage/emulated/0/Telemesh/.content/IMG_20200827_190424.jpg";
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
         BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);
 
         String metaData = gsonBuilder.getBulletinModelJson(bulletinModel);
-        broadcastDataSend(feedEntity.getFeedId(), Constants.DataType.MESSAGE_FEED, metaData, contentPath, true);
+        broadcastDataSend(feedEntity.getFeedId(), Constants.DataType.MESSAGE_FEED, metaData,
+                contentPath, "contentUrl", true);
     }
 
-    private void receiveLocalBroadcast(String userId, String broadcastId, String metaData, String contentPath) {
+    private void receiveLocalBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         BulletinModel bulletinModel = gsonBuilder.getBulletinModelObj(metaData);

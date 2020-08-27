@@ -117,11 +117,12 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, boolean isNotificationEnable) {
+    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, String contentMeta, boolean isNotificationEnable) {
         ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
         viperBroadcastData.broadcastId = broadcastId;
         viperBroadcastData.metaData = metaData;
         viperBroadcastData.contentPath = contentPath;
+        viperBroadcastData.contentMeta = contentMeta;
         viperBroadcastData.isNotificationEnable = isNotificationEnable;
 
         broadcastManager.addBroadCastMessage(getBroadcastDataTask(viperBroadcastData));
@@ -265,12 +266,12 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath) {
+    protected void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         BroadcastDataModel broadcastDataModel = gsonBuilder.getBroadcastDataModelObj(metaData);
         BroadcastDataHelper.getInstance().broadcastDataReceive(broadcastDataModel.broadcastType,
-                broadcastId, broadcastDataModel.rawData, userId, contentPath);
+                broadcastId, broadcastDataModel.rawData, userId, contentPath, contentMeta);
     }
 
     public void saveUpdateUserInfo() {

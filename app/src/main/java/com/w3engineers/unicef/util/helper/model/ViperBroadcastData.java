@@ -13,5 +13,6 @@ public class ViperBroadcastData {
     public String broadcastId;
     public String metaData;
     public String contentPath;
+    public String contentMeta;
     public boolean isNotificationEnable;
 }

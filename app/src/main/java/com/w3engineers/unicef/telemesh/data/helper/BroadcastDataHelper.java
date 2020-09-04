@@ -275,8 +275,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {
-        if (!TextUtils.isEmpty(contentPath))
-            contentPath = contentPath.substring(1);
+//        if (!TextUtils.isEmpty(contentPath))
+//            contentPath = contentPath.substring(1);
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
         BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);

@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -287,7 +288,7 @@ public class ContentUtil {
 
             fileURL = java.net.URLDecoder.decode(fileURL, StandardCharsets.UTF_8.name());
 
-            String fileName = getFileNameFromURL(fileURL);
+            String fileName = generateFileName(fileURL);
             File file = getFileFromName(fileName);
 
             if (file != null) {
@@ -359,6 +360,16 @@ public class ContentUtil {
             File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
             String extension = fileName.substring(fileName.lastIndexOf("."));
             return File.createTempFile(fileName, extension, contentFolder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String generateFileName(String fileUrl) {
+        try {
+            String extension = fileUrl.substring(fileUrl.lastIndexOf("."));
+            return UUID.randomUUID().toString() + extension;
         } catch (Exception e) {
             e.printStackTrace();
         }

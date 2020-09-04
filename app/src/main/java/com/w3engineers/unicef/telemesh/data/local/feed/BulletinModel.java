@@ -10,7 +10,7 @@ Proprietary and confidential
 
 public class BulletinModel {
 
-    private String i, m, t, h, c;
+    private String i, m, t, h, c, u;
 
     public String getId() {
         return i;
@@ -54,6 +54,15 @@ public class BulletinModel {
 
     public BulletinModel setContentUrl(String c) {
         this.c = c;
+        return this;
+    }
+
+    public String getUploaderName() {
+        return u;
+    }
+
+    public BulletinModel setUploaderName(String u) {
+        this.u = u;
         return this;
     }
 }

@@ -93,7 +93,7 @@ public class BroadcastDataHelperDep extends RmDataHelper {
                         .insertOrUpdateData(feedEntity))
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(aLong -> {
-                            if (aLong != -1) {
+                            if (aLong != null) {
                                 if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
                                     BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(
                                             feedEntity.getFeedId()).setBulletinOwnerStatus(Constants.Bulletin.OTHERS)

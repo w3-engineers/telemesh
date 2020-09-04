@@ -94,6 +94,9 @@ public class BroadcastDataHelper extends RmDataHelper {
     public void demoTextBroadcast() {
         BulletinFeed bulletinFeed = new BulletinFeed();
         bulletinFeed.setCreatedAt("2020-08-27T05:58:32.485Z")
+                .setUploaderInfo("W3 Engineers")
+                .setMessageType(Constants.BroadcastMessageType.TEXT_BROADCAST)
+                .setMessageTitle("Text broadcast test")
                 .setMessageBody("Hello message " + (++i))
                 .setMessageId(UUID.randomUUID().toString());
         String bulletinData = new Gson().toJson(bulletinFeed);
@@ -143,24 +146,37 @@ public class BroadcastDataHelper extends RmDataHelper {
 
             sendBroadcastAck(bulletinFeed.getMessageId(), getMyMeshId());
 
-            String broadcastContentPath = /*bulletinFeed.getMessageBody()*/ "";
+            String broadcastContentPath;
 
-            downloadFeedContentQueue.add(broadcastContentPath);
+            if (bulletinFeed.getMessageType() <= Constants.BroadcastMessageType.TEXT_BROADCAST) {
+                broadcastContentPath = "";
+            } else {
+                String messageBody = bulletinFeed.getMessageBody();
+                if (TextUtils.isEmpty(messageBody)) {
+                    bulletinFeed.setMessageBody(Constants.BroadcastMessage.IMAGE_BROADCAST);
+                }
+                broadcastContentPath = "https://dashboard.telemesh.net/message/download?filename="
+                        + bulletinFeed.getFileName();
 
-            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
+                downloadFeedContentQueue.add(broadcastContentPath);
+            }
 
-            FeedContentModel feedContentModel = new FeedContentModel();
-            String contentInfo = GsonBuilder.getInstance().getFeedContentModelJson(feedContentModel);
-            feedEntity.setFeedContentInfo(contentInfo);
+            FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed).setFeedReadStatus(false);
 
-            feedEntityHashMap.put(bulletinFeed.getMessageBody(), feedEntity);
+            if (!TextUtils.isEmpty(broadcastContentPath)) {
+                FeedContentModel feedContentModel = new FeedContentModel().setContentUrl(broadcastContentPath);
+                String contentInfo = GsonBuilder.getInstance().getFeedContentModelJson(feedContentModel);
+                feedEntity.setFeedContentInfo(contentInfo);
+
+                feedEntityHashMap.put(broadcastContentPath, feedEntity);
+            }
 
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(feedEntity))
                     .subscribeOn(Schedulers.newThread())
-                    .subscribe(aLong -> {
-                        if (aLong != -1) {
-                            if (!TextUtils.isEmpty(broadcastContentPath)) {
+                    .subscribe(insertedFeedEntity -> {
+                        if (insertedFeedEntity != null) {
+                            if (!TextUtils.isEmpty(insertedFeedEntity.getFeedContentInfo())) {
                                 initBroadcastContentDownload();
                             } else {
                                 sendLocalBroadcast(feedEntity, null, null);
@@ -212,6 +228,7 @@ public class BroadcastDataHelper extends RmDataHelper {
             contentInfo = gsonBuilder.getFeedContentModelJson(feedContentModel);
             feedEntity.setFeedContentInfo(contentInfo);
 
+            sendLocalBroadcast(feedEntity, downloadContentUrl, downloadContentPath);
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(feedEntity))
                     .subscribeOn(Schedulers.newThread())
@@ -258,8 +275,9 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {
-        if (TextUtils.isEmpty(contentPath))
-            contentPath = "/storage/emulated/0/Telemesh/.content/IMG_20200827_190424.jpg";
+        if (!TextUtils.isEmpty(contentPath))
+            contentPath = contentPath.substring(1);
+
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
         BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);
 
@@ -274,6 +292,14 @@ public class BroadcastDataHelper extends RmDataHelper {
         BulletinModel bulletinModel = gsonBuilder.getBulletinModelObj(metaData);
         if (bulletinModel != null) {
             FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinModel);
+
+            if (!TextUtils.isEmpty(contentPath)) {
+                contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
+                FeedContentModel feedContentModel = new FeedContentModel().setContentPath(contentPath)
+                        .setContentUrl(bulletinModel.getContentUrl());
+                String contentInfo = gsonBuilder.getFeedContentModelJson(feedContentModel);
+                feedEntity.setFeedContentInfo(contentInfo);
+            }
 
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(feedEntity))

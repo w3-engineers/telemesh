@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_10"
             android:fontFamily="@font/poppins_regular"
-            android:text="@string/unicef"
+            android:text="@{feedEntity.feedProviderName}"
             android:textColor="@color/message_text_color"
             android:textSize="@dimen/text_size_16"
             android:typeface='@{feedEntity.feedReadStatus ?"normal" : "bold"}'

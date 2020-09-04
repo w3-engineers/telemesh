@@ -30,4 +30,7 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
 
     @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_READ_STATUS + " = 0 ")
     public abstract LiveData<List<FeedEntity>> getAllUnreadFeed();
+
+    @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
+    public abstract LiveData<FeedEntity> getFeedEntityById(String feedId);
 }

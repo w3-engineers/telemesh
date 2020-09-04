@@ -64,7 +64,8 @@ public class MessageFeedViewModel extends BaseRxViewModel {
 
     public void requestBroadcastMessage() {
 //        if(NetworkMonitor.isOnline()) {
-            BroadcastDataHelper.getInstance().demoTextBroadcast();
+//            BroadcastDataHelper.getInstance().demoTextBroadcast();
+        BroadcastDataHelper.getInstance().requestForBroadcast();
 //        }
     }
 

@@ -45,7 +45,7 @@
                     android:fontFamily="@font/poppins_regular"
                     android:maxLines="1"
                     android:paddingTop="@dimen/margin_5"
-                    android:text="@string/unicef"
+                    android:text="@{feedEntity.feedProviderName}"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_18"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_8"
                     android:layout_marginTop="@dimen/margin_16"
-                    android:text="@string/unicef"
+                    android:text="@{feedEntity.feedProviderName}"
                     android:textColor="@color/message_text_color"
                     android:textSize="@dimen/text_size_16"
                     app:layout_constraintStart_toEndOf="@+id/image"
@@ -121,19 +121,52 @@
                     app:layout_constraintTop_toBottomOf="@+id/date" />
 
                 <TextView
-                    android:id="@+id/message"
+                    android:id="@+id/message_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_16"
                     android:layout_marginEnd="@dimen/margin_16"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="@{feedEntity.feedDetail}"
+                    android:text="@{feedEntity.feedTitle}"
+                    android:textStyle="bold"
                     android:textColor="@color/message_text_color"
                     android:textSize="@dimen/text_size_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/image"
                     app:layout_constraintTop_toBottomOf="@+id/time" />
 
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/chat_sub_item_color"
+                    android:textSize="@dimen/text_size_16"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/image"
+                    app:layout_constraintTop_toBottomOf="@+id/message_title" />
+
+                <com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
+                    android:id="@+id/image_view_message"
+                    android:background="@color/black"
+                    android:src="@mipmap/gellary"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:visibility="gone"
+                    android:layout_marginEnd="@dimen/margin_16"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintTop_toBottomOf="@+id/message_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/image"
+                    app:bottomLeftRadius="0.006"
+                    app:bottomRightRadius="0.006"
+                    app:imageShape="rounded_rectangle"
+                    app:shapeColor="@color/colorChatGray"
+                    app:topLeftRadius="0.006"
+                    app:topRightRadius="0.006"/>
 
             </android.support.constraint.ConstraintLayout>
 

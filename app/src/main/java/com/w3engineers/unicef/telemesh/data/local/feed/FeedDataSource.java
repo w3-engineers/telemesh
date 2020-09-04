@@ -29,15 +29,20 @@ public class FeedDataSource {
         return feedDataSource;
     }
 
-    public long insertOrUpdateData(@NonNull FeedEntity feedEntity) {
+    public FeedEntity insertOrUpdateData(@NonNull FeedEntity feedEntity) {
 
         Callable<Long> insertCallable = () -> feedDao.insertFeed(feedEntity);
 
         try {
-            return mIoExecutor.submit(insertCallable).get();
+            long insertId = mIoExecutor.submit(insertCallable).get();
+            if (insertId != -1) {
+                return feedEntity;
+            } else {
+                return null;
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return 0;
+            return null;
         }
     }
 
@@ -49,6 +54,11 @@ public class FeedDataSource {
     @NonNull
     public LiveData<List<FeedEntity>> getAllUnreadFeeds() {
         return feedDao.getAllUnreadFeed();
+    }
+
+    @NonNull
+    public LiveData<FeedEntity> getLiveFeedEntity(String feedId) {
+        return feedDao.getFeedEntityById(feedId);
     }
 
     public long updateFeedMessageReadStatus(@NonNull String feedId) {

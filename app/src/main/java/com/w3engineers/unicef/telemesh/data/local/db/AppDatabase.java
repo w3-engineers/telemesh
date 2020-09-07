@@ -134,6 +134,9 @@ public abstract class AppDatabase extends BaseDatabase {
     private static String FEED_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
             + ColumnNames.COLUMN_FEED_CONTENT_INFO + " TEXT";
 
+    private static String FEED_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
+            + ColumnNames.COLUMN_FEED_CONTENT_INFO + " INTEGER";
+
     @NonNull
     public static AppDatabase getInstance() {
 
@@ -166,7 +169,7 @@ public abstract class AppDatabase extends BaseDatabase {
                         MESSAGE_TABLE_MIGRATION_4, MESSAGE_TABLE_MIGRATION_5,
                         MESSAGE_TABLE_MIGRATION_6, MESSAGE_TABLE_MIGRATION_7,
                         MESSAGE_TABLE_MIGRATION_8, GROUP_TABLE_MIGRATION,
-                        FEED_TABLE_MIGRATION_1));
+                        FEED_TABLE_MIGRATION_1, FEED_TABLE_MIGRATION_2));
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,

@@ -55,6 +55,10 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public String feedContentInfo;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_TIME_MILLIS)
+    @Nullable
+    public long feedTimeMillis;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -107,6 +111,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public FeedEntity setFeedTimeMillis(long feedTimeMillis) {
+        this.feedTimeMillis = feedTimeMillis;
+        return this;
+    }
+
     @Nullable
     public String getFeedId() {
         return feedId;
@@ -146,6 +155,10 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedContentInfo;
     }
 
+    public long getFeedTimeMillis() {
+        return feedTimeMillis;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -156,6 +169,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedTime = in.readString();
         feedReadStatus = in.readByte() != 0;
         feedContentInfo = in.readString();
+        feedTimeMillis = in.readLong();
     }
 
     @Override
@@ -169,6 +183,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedTime);
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
         dest.writeString(feedContentInfo);
+        dest.writeLong(feedTimeMillis);
     }
 
     @Override

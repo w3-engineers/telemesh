@@ -148,6 +148,21 @@ public class TimeUtil {
         return "";
     }
 
+
+    public static long getServerTimeToMillis(@NonNull String serverTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            return sdf.parse(serverTime).getTime();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+
     public static Date stringToDate(String date) {
         String dateFormat1 = "dd-MM-yyyy";
         SimpleDateFormat format = new SimpleDateFormat(dateFormat1, Locale.US);

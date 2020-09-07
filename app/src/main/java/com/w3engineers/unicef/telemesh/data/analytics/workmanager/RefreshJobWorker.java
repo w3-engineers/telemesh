@@ -26,7 +26,7 @@ public class RefreshJobWorker extends Worker {
     @Override
     public Result doWork() {
         BulletinTimeScheduler.getInstance().processesForInternetConnection();
-        BroadcastDataHelper.getInstance().requestForBroadcast();
+//        BroadcastDataHelper.getInstance().requestForBroadcast();
         return Result.success();
     }
 

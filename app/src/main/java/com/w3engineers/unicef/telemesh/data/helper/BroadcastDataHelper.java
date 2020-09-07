@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LocationUtil;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,6 +147,10 @@ public class BroadcastDataHelper extends RmDataHelper {
 
             sendBroadcastAck(bulletinFeed.getMessageId(), getMyMeshId());
 
+            FeedEntity existingFeedEntity = FeedDataSource.getInstance().getFeedById(bulletinFeed.getMessageId());
+            if (existingFeedEntity != null)
+                return;
+
             String broadcastContentPath;
 
             if (bulletinFeed.getMessageType() <= Constants.BroadcastMessageType.TEXT_BROADCAST) {
@@ -161,7 +166,9 @@ public class BroadcastDataHelper extends RmDataHelper {
                 downloadFeedContentQueue.add(broadcastContentPath);
             }
 
-            FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed).setFeedReadStatus(false);
+            FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
+                    .setFeedReadStatus(false)
+                    .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinFeed.getCreatedAt()));
 
             if (!TextUtils.isEmpty(broadcastContentPath)) {
                 FeedContentModel feedContentModel = new FeedContentModel().setContentUrl(broadcastContentPath);
@@ -213,6 +220,12 @@ public class BroadcastDataHelper extends RmDataHelper {
 
         FeedEntity feedEntity = feedEntityHashMap.get(downloadContentUrl);
         if (feedEntity != null) {
+
+            FeedEntity existingFeedEntity = FeedDataSource.getInstance().getFeedById(feedEntity.getFeedId());
+            if (existingFeedEntity != null) {
+                feedEntity = existingFeedEntity;
+            }
+
             GsonBuilder gsonBuilder = GsonBuilder.getInstance();
             String contentInfo = feedEntity.getFeedContentInfo();
 
@@ -229,8 +242,9 @@ public class BroadcastDataHelper extends RmDataHelper {
             feedEntity.setFeedContentInfo(contentInfo);
 
             sendLocalBroadcast(feedEntity, downloadContentUrl, downloadContentPath);
+            FeedEntity finalFeedEntity = feedEntity;
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
-                    .insertOrUpdateData(feedEntity))
+                    .insertOrUpdateData(finalFeedEntity))
                     .subscribeOn(Schedulers.newThread())
                     .subscribe());
         }
@@ -291,7 +305,13 @@ public class BroadcastDataHelper extends RmDataHelper {
 
         BulletinModel bulletinModel = gsonBuilder.getBulletinModelObj(metaData);
         if (bulletinModel != null) {
-            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinModel);
+
+            FeedEntity existingFeedEntity = FeedDataSource.getInstance().getFeedById(bulletinModel.getId());
+            if (existingFeedEntity != null)
+                return;
+
+            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinModel)
+                    .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinModel.getTime()));
 
             if (!TextUtils.isEmpty(contentPath)) {
                 contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);

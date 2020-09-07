@@ -46,6 +46,18 @@ public class FeedDataSource {
         }
     }
 
+    public FeedEntity getFeedById(@NonNull String feedId) {
+
+        Callable<FeedEntity> insertCallable = () -> feedDao.getFeedById(feedId);
+
+        try {
+            return mIoExecutor.submit(insertCallable).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @NonNull
     public LiveData<List<FeedEntity>> loadFeeds() {
         return feedDao.getAllFeed();

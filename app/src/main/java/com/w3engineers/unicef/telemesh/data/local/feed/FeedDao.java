@@ -20,7 +20,7 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
     public abstract long insertFeed(@NonNull FeedEntity feedEntity);
 
 
-    @Query("SELECT * FROM " + TableNames.FEED + " ORDER BY " + ColumnNames.ID + " DESC")
+    @Query("SELECT * FROM " + TableNames.FEED + " ORDER BY " + ColumnNames.COLUMN_FEED_TIME_MILLIS + " DESC")
     @NonNull
     public abstract LiveData<List<FeedEntity>> getAllFeed();
 
@@ -33,4 +33,7 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
 
     @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
     public abstract LiveData<FeedEntity> getFeedEntityById(String feedId);
+
+    @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
+    public abstract FeedEntity getFeedById(String feedId);
 }

@@ -278,10 +278,12 @@ public class ContentUtil {
 
         String filePath = null;
 
-        Request request = new Request.Builder().url(fileURL).build();
+        Request.Builder request = new Request.Builder()
+                .addHeader("x-api-key", "c3e47202-2386-4efe-b57d-3784e894b629")
+                .url(fileURL);
         Response response;
         try {
-            response = client.newCall(request).execute();
+            response = client.newCall(request.build()).execute();
             if (!response.isSuccessful()) {
                 throw new IOException("Failed to download file: " + response);
             }

@@ -12,6 +12,7 @@ import android.view.View;
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
@@ -35,6 +36,18 @@ public class MessageFeedFragment extends BaseFragment {
         mMessageFeedBinding = (FragmentMessageFeedBinding) getViewDataBinding();
         initGui();
         subscribeForMessageFeed();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BroadcastDataHelper.getInstance().setIsFeedPageEnable(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BroadcastDataHelper.getInstance().setIsFeedPageEnable(false);
     }
 
     /**

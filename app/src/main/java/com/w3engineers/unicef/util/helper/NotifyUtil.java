@@ -20,6 +20,7 @@ import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -31,6 +32,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import java.util.List;
 
@@ -47,6 +49,9 @@ public class NotifyUtil {
     private static final String CHANNEL_ID = "notification_channel_3";
     private static final UserDataSource userDataSource = UserDataSource.getInstance();
     private static final GroupDataSource groupDataSource = GroupDataSource.getInstance();
+
+    private static final String broadcastMessageId = "broadcastMessageId";
+    private static int broadcastMessageCount = 0;
 
     public static void showNotification(@NonNull ChatEntity chatEntity) {
         Context context = TeleMeshApplication.getContext();
@@ -119,6 +124,35 @@ public class NotifyUtil {
         showNotification(context, builder, groupEntity.getGroupId());
     }
 
+    public static void showBroadcastEventNotification() {
+        Context context = TeleMeshApplication.getContext();
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(Long.toString(TimeUtil.toCurrentTime()));
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(BroadcastDataHelper.class.getSimpleName(), true);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = getNotificationBuilder(context);
+        builder.setContentIntent(pendingIntent);
+
+        broadcastMessageCount = broadcastMessageCount + 1;
+
+        String message = String.format(context.getResources().getString(R.string.broadcast_notification),
+                broadcastMessageCount);;
+
+        Bitmap imageBitmap = ImageUtil.getResourceImageBitmap(R.mipmap.group_blue_circle);
+        setNotification(builder, message, "Broadcast", imageBitmap);
+
+        showNotification(context, builder, broadcastMessageId);
+    }
+
+    public static void cancelBroadcastMessage() {
+        broadcastMessageCount = 0;
+        clearNotification(broadcastMessageId);
+    }
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context) {
         String channelId;

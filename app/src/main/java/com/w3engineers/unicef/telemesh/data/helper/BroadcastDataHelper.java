@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LocationUtil;
+import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     private List<String> downloadFeedContentQueue;
     private boolean isDownloadModeBusy = false;
 
+    private static boolean isFeedPageEnable = false;
+
     private BroadcastDataHelper() {
         feedEntityHashMap = new HashMap<>();
         downloadFeedContentQueue = new ArrayList<>();
@@ -58,6 +61,13 @@ public class BroadcastDataHelper extends RmDataHelper {
             case Constants.DataType.MESSAGE_FEED:
                 receiveLocalBroadcast(userId, broadcastId, metaData, contentPath, contentMeta);
                 break;
+        }
+    }
+
+    public void setIsFeedPageEnable(boolean isFeedPageEnable) {
+        BroadcastDataHelper.isFeedPageEnable = isFeedPageEnable;
+        if (isFeedPageEnable) {
+            NotifyUtil.cancelBroadcastMessage();
         }
     }
 
@@ -160,6 +170,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                 if (TextUtils.isEmpty(messageBody)) {
                     bulletinFeed.setMessageBody(Constants.BroadcastMessage.IMAGE_BROADCAST);
                 }
+//                https://dashboard.telemesh.net/message/read_image?filename=photo_1599560858132-18920443-images.jpeg%27
                 broadcastContentPath = "https://dashboard.telemesh.net/message/download?filename="
                         + bulletinFeed.getFileName();
 
@@ -319,6 +330,10 @@ public class BroadcastDataHelper extends RmDataHelper {
                         .setContentUrl(bulletinModel.getContentUrl());
                 String contentInfo = gsonBuilder.getFeedContentModelJson(feedContentModel);
                 feedEntity.setFeedContentInfo(contentInfo);
+            }
+
+            if (!isFeedPageEnable) {
+                NotifyUtil.showBroadcastEventNotification();
             }
 
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()

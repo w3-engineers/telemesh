@@ -77,6 +77,8 @@ public class BulletinDetails extends TelemeshBaseActivity {
 
         loadFeedEntityData(feedEntity);
 
+        bulletinViewModel.updateFeedEntity(feedEntity.getFeedId());
+
         bulletinViewModel.getLiveFeedEntity(feedEntity.getFeedId()).observe(this, this::loadFeedEntityData);
     }
 

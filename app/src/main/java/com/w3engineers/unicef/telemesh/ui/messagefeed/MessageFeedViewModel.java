@@ -59,7 +59,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      * @param feedEntity selected feed entity
      */
     public void postMessageFeedEntity(@NonNull FeedEntity feedEntity) {
-        updateFeedEntity(feedEntity);
+        mSelectedFeedEntityObservable.postValue(feedEntity);
     }
 
     public void requestBroadcastMessage() {
@@ -75,7 +75,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    mSelectedFeedEntityObservable.postValue(feedEntity);
+
                 }, Throwable::printStackTrace));
     }
 

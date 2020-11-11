@@ -341,7 +341,7 @@ public class TelemeshTest {
 
             securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
 
-            addDelay(1000);
+            addDelay(5000);
         }
 
         uiTest_02();

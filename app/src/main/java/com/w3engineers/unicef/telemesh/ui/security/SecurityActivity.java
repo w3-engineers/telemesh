@@ -141,7 +141,7 @@ public class SecurityActivity extends BaseActivity {
 
                         if (report.areAllPermissionsGranted()) {
 
-                            CustomDialogUtil.showProgressDialog(SecurityActivity.this);
+//                            CustomDialogUtil.showProgressDialog(SecurityActivity.this);
 
                             HandlerUtil.postBackground(() -> goNext(isSkip), 100);
                         }
@@ -160,6 +160,9 @@ public class SecurityActivity extends BaseActivity {
                 }).withErrorListener(error -> requestMultiplePermissions(isSkip)).onSameThread().check();
     }
 
+    public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
+    public String friendAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
+    public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
 
 
     protected void goNext(boolean isSkip) {
@@ -173,6 +176,8 @@ public class SecurityActivity extends BaseActivity {
 
         String finalPassword = password;
 
+//        processCompleted(myAddress, publicKey, finalPassword);
+
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
@@ -182,7 +187,7 @@ public class SecurityActivity extends BaseActivity {
             @Override
             public void onWalletLoadError(String errorMessage) {
                 runOnUiThread(() -> {
-                    CustomDialogUtil.dismissProgressDialog();
+//                    CustomDialogUtil.dismissProgressDialog();
                     Toaster.showShort(errorMessage);
                 });
             }
@@ -191,7 +196,7 @@ public class SecurityActivity extends BaseActivity {
 
     public void processCompleted(String address, String publickKey, String finalPassword) {
 
-        CustomDialogUtil.dismissProgressDialog();
+//        CustomDialogUtil.dismissProgressDialog();
 
         if (mViewModel.storeData(mUserName, mAvatarIndex, finalPassword, address, publickKey)) {
 
@@ -200,7 +205,7 @@ public class SecurityActivity extends BaseActivity {
                     WalletAddressHelper.writeDefaultAddress(address, SecurityActivity.this);
                 }
 
-                CustomDialogUtil.dismissProgressDialog();
+//                CustomDialogUtil.dismissProgressDialog();
 
                 Intent intent = new Intent(SecurityActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

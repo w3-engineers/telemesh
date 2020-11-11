@@ -344,7 +344,7 @@ public class TelemeshTest {
             addDelay(5000);
         }
 
-        dumpThreads();
+//        dumpThreads();
 
         uiTest_02();
 

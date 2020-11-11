@@ -344,8 +344,22 @@ public class TelemeshTest {
             addDelay(5000);
         }
 
+        dumpThreads();
+
         uiTest_02();
 
+    }
+
+    private void dumpThreads() {
+        int activeCount = Thread.activeCount();
+        Thread[] threads = new Thread[activeCount];
+        Thread.enumerate(threads);
+        for (Thread thread : threads) {
+            System.err.println(thread.getName() + ": " + thread.getState());
+            for (StackTraceElement stackTraceElement : thread.getStackTrace()) {
+                System.err.println("\t" + stackTraceElement);
+            }
+        }
     }
 
 //    @Test
@@ -366,12 +380,22 @@ public class TelemeshTest {
 
         addDelay(1000);*/
 
-        ViewInteraction settingsTab = onView(
+        Activity currentActivity = getActivityInstance();
+        if (currentActivity instanceof MainActivity) {
+            Activity finalCurrentActivity = currentActivity;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) finalCurrentActivity).initBottomBar(true);
+                }
+            });
+        }
+        /*ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
-        settingsTab.perform(click());
+        settingsTab.perform(click());*/
 
-        addDelay(1000);
+        addDelay(2000);
 
         ViewInteraction profileRow = onView(
                 allOf(withId(R.id.layout_view_profile),

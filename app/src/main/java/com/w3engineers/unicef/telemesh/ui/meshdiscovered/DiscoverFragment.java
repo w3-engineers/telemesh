@@ -314,7 +314,7 @@ public class DiscoverFragment extends BaseFragment {
         //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
         fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
-        fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
+//        fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).enableLoading();
@@ -324,7 +324,7 @@ public class DiscoverFragment extends BaseFragment {
     public void enableEmpty() {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
-        fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
+//        fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();

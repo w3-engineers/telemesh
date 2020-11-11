@@ -52,7 +52,7 @@ public class SplashActivityTest2 {
     public String defaultPassword = "mesh_123";
 
     @Test
-    public void splashActivityTest2() {
+    public void ui_test_01() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -163,10 +163,31 @@ public class SplashActivityTest2 {
         }
     }
 
+    private void dumpThreads() {
+        int activeCount = Thread.activeCount();
+        Thread[] threads = new Thread[activeCount];
+        Thread.enumerate(threads);
+        for (Thread thread : threads) {
+            System.err.println(thread.getName() + ": " + thread.getState());
+            for (StackTraceElement stackTraceElement : thread.getStackTrace()) {
+                System.err.println("\t" + stackTraceElement);
+            }
+        }
+    }
+
     @Test
-    public void startToOpenSettings() {
+    public void ui_test_02() {
         try {
             Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        */
+/*dumpThreads();
+
+        try {
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -179,13 +200,46 @@ public class SplashActivityTest2 {
                     ((MainActivity) currentActivity).stopAnimation();
                 }
             });
+        }*//*
+
+
+        */
+/*try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*//*
+
+
+        Activity currentActivity = getActivityInstance();
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+//                    ViewInteraction bottomNavigationItemView = onView(allOf(withId(R.id.action_message_feed), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2)));
+//                    bottomNavigationItemView.perform(click());
+                    ((MainActivity) currentActivity).initBottomBar(true);
+                }
+            });
         }
 
-        ViewInteraction bottomNavigationItemView = onView(allOf(withId(R.id.action_message_feed), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2)));
-        bottomNavigationItemView.perform(click());
+//        ViewInteraction bottomNavigationItemView = onView(allOf(withId(R.id.action_message_feed), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2)));
+//        bottomNavigationItemView.perform(click());
 
         try {
             Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction profileRow = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        profileRow.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

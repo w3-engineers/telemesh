@@ -136,7 +136,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         bottomMenu = binding.bottomNavigation.getMenu();
-        initBottomBar();
+        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        initBottomBar(fromSettings);
         initAllText();
         mViewModel = getViewModel();
 
@@ -298,9 +299,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }).get(MainActivityViewModel.class);
     }
 
-    private void initBottomBar() {
-
-        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+    public void initBottomBar(boolean fromSettings) {
 
         /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
         if (isRestart) {

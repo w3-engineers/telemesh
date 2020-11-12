@@ -413,24 +413,29 @@ public class TelemeshTest {
                 allOf(withId(R.id.image_profile),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        updateProfileImageSelection.perform(scrollTo(), click());
+        try {
+            updateProfileImageSelection.perform(scrollTo(), click());
 
-        addDelay(1000);
+            addDelay(1000);
 
-        ViewInteraction profileImageSelect = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
-        profileImageSelect.perform(click());
+            ViewInteraction profileImageSelect = onView(
+                    allOf(childAtPosition(allOf(withId(R.id.recycler_view),
+                            childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
+            profileImageSelect.perform(click());
 
-        addDelay(1000);
+            addDelay(1000);
 
-        ViewInteraction profileUpdateDone = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(
-                                childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        profileUpdateDone.perform(click());
+            ViewInteraction profileUpdateDone = onView(
+                    allOf(withId(R.id.menu_done),
+                            childAtPosition(
+                                    childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
+            profileUpdateDone.perform(click());
 
-        addDelay(2500);
+            addDelay(2500);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         currentActivity = getActivityInstance();
 

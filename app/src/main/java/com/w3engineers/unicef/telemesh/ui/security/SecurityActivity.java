@@ -28,7 +28,6 @@ import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.WalletUtil;
 import com.w3engineers.unicef.util.helper.CommonUtil;
-import com.w3engineers.unicef.util.helper.CustomDialogUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;

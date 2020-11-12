@@ -131,7 +131,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Constants.IS_LOADING_ENABLE = false;
         mainActivity = this;
 
-        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
+//        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -252,9 +252,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     public void onResume() {
         super.onResume();
-        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-        initNoNetworkCallback(myMode);
-        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
+//        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+//        initNoNetworkCallback(myMode);
+//        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.view.ViewParent;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivityNew;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
 
 import org.hamcrest.Description;
@@ -184,44 +185,24 @@ public class SplashActivityTest2 {
         }
 
         */
-/*dumpThreads();
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Activity currentActivity = getActivityInstance();
-        if (currentActivity instanceof MainActivity) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    ((MainActivity) currentActivity).stopAnimation();
-                }
-            });
-        }*//*
-
-
-        */
-/*try {
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*//*
-
-
-        Activity currentActivity = getActivityInstance();
-        if (currentActivity instanceof MainActivity) {
+/*Activity currentActivity = getActivityInstance();
+        if (currentActivity instanceof MainActivityNew) {
+            Activity finalCurrentActivity = currentActivity;
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
 //                    ViewInteraction bottomNavigationItemView = onView(allOf(withId(R.id.action_message_feed), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2)));
 //                    bottomNavigationItemView.perform(click());
-                    ((MainActivity) currentActivity).initBottomBar(true);
+                    ((MainActivityNew) finalCurrentActivity).initBottomBar(true);
                 }
             });
-        }
+        }*//*
+
+
+        ViewInteraction settingsTab = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
+        settingsTab.perform(click());
 
 //        ViewInteraction bottomNavigationItemView = onView(allOf(withId(R.id.action_message_feed), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2)));
 //        bottomNavigationItemView.perform(click());
@@ -232,11 +213,23 @@ public class SplashActivityTest2 {
             e.printStackTrace();
         }
 
-        ViewInteraction profileRow = onView(
+        ViewInteraction constraintLayout = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(
+                                allOf(withId(R.id.layout_settings),
+                                        childAtPosition(
+                                                withId(R.id.layout_scroll),
+                                                0)),
+                                0)));
+        constraintLayout.perform(scrollTo(), click());
+
+        */
+/*ViewInteraction profileRow = onView(
                 allOf(withId(R.id.layout_view_profile),
                         childAtPosition(allOf(withId(R.id.layout_settings),
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
-        profileRow.perform(scrollTo(), click());
+        profileRow.perform(scrollTo(), click());*//*
+
 
         try {
             Thread.sleep(1000);

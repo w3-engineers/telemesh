@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
-                <!--<com.skyfishjy.library.RippleBackground
+                <com.skyfishjy.library.RippleBackground
                     android:id="@+id/ripple_background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -44,7 +44,7 @@
                     app:rb_rippleAmount="4"
                     app:rb_scale="6">
 
-                </com.skyfishjy.library.RippleBackground>-->
+                </com.skyfishjy.library.RippleBackground>
 
 
             </android.support.constraint.ConstraintLayout>

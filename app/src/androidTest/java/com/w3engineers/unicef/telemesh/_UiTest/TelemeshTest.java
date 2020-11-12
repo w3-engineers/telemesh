@@ -366,7 +366,7 @@ public class TelemeshTest {
 
         addDelay(1000);*/
 
-        addDelay(5000);
+        addDelay(3800);
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),

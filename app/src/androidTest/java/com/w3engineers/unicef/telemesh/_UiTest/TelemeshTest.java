@@ -344,11 +344,11 @@ public class TelemeshTest {
             addDelay(1000);
         }
 
-        uiTest_02();
+//        uiTest_02();
 
     }
 
-//    @Test
+    @Test
     public void uiTest_02() {
 
         /*addDelay(3800);
@@ -366,12 +366,14 @@ public class TelemeshTest {
 
         addDelay(1000);*/
 
+        addDelay(5000);
+
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
         settingsTab.perform(click());
 
-        addDelay(1000);
+        addDelay(2000);
 
         ViewInteraction profileRow = onView(
                 allOf(withId(R.id.layout_view_profile),
@@ -379,7 +381,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
         profileRow.perform(scrollTo(), click());
 
-        addDelay(1000);
+        addDelay(2000);
 
         ViewInteraction editButton = onView(
                 allOf(withId(R.id.text_view_edit),

@@ -482,7 +482,17 @@ public class TelemeshTest {
                 allOf(withId(R.id.menu_done),
                         childAtPosition(
                                 childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        profileUpdateDone.perform(click());
+        try {
+            profileUpdateDone.perform(click());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            currentActivity = getActivityInstance();
+
+            if (currentActivity instanceof ProfileImageActivity) {
+                ((ProfileImageActivity) currentActivity).actionDone();
+            }
+        }
 
         addDelay(2500);
 

@@ -896,12 +896,14 @@ public class TelemeshTest {
 
         mDevice.pressBack();
 
+        addDelay(1500);
+
         ViewInteraction favoriteTab = onView(
                 allOf(withId(R.id.action_contact),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
         favoriteTab.perform(click());
 
-        addDelay(1000);
+        addDelay(1500);
 
         ViewInteraction discoverTab = onView(
                 allOf(withId(R.id.action_discover),

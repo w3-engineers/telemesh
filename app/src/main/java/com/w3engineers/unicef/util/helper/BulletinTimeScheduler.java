@@ -44,7 +44,7 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    public BulletinTimeScheduler connectivityRegister() {
+    /*public BulletinTimeScheduler connectivityRegister() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
@@ -53,7 +53,7 @@ public class BulletinTimeScheduler {
 
     public void initNoInternetCallback(NoInternetCallback callback) {
         this.noInternetCallback = callback;
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {

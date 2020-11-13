@@ -587,7 +587,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+    /*private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
         if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
             if (isMobileDataOn) {
                 binding.textViewNoInternet.setVisibility(View.GONE);
@@ -597,13 +597,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         } else {
             binding.textViewNoInternet.setVisibility(View.GONE);
         }
-    }
+    }*/
 
-    private void initNoNetworkCallback(int myMode) {
+    /*private void initNoNetworkCallback(int myMode) {
         sheduler.initNoInternetCallback(isMobileDataOn -> {
             showHideInternetWarning(myMode, isMobileDataOn);
         });
-    }
+    }*/
 
     private void initSearchListener() {
 

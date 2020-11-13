@@ -432,13 +432,24 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(500);
+        addDelay(1500);
 
         ViewInteraction updateProfileImageSelection = onView(
                 allOf(withId(R.id.image_profile),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        updateProfileImageSelection.perform(scrollTo(), click());
+        try {
+            updateProfileImageSelection.perform(scrollTo(), click());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            ViewInteraction updateProfileImageViaCameraSelection = onView(
+                    allOf(withId(R.id.image_view_camera),
+                            childAtPosition(allOf(withId(R.id.image_layout),
+                                    childAtPosition(withId(R.id.scrollview), 0)), 7)));
+            updateProfileImageViaCameraSelection.perform(scrollTo(), click());
+        }
+
 
         addDelay(3000);
 
@@ -898,17 +909,21 @@ public class TelemeshTest {
 
         addDelay(1500);
 
-        ViewInteraction favoriteTab = onView(
-                allOf(withId(R.id.action_contact),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
-        favoriteTab.perform(click());
+        try {
+            ViewInteraction favoriteTab = onView(
+                    allOf(withId(R.id.action_contact),
+                            childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+            favoriteTab.perform(click());
 
-        addDelay(1500);
+            addDelay(1500);
 
-        ViewInteraction discoverTab = onView(
-                allOf(withId(R.id.action_discover),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
-        discoverTab.perform(click());
+            ViewInteraction discoverTab = onView(
+                    allOf(withId(R.id.action_discover),
+                            childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+            discoverTab.perform(click());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         addDelay(1000);
 

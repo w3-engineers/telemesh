@@ -131,12 +131,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         Constants.IS_LOADING_ENABLE = false;
         mainActivity = this;
 
-        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
+//        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         bottomMenu = binding.bottomNavigation.getMenu();
-        initBottomBar();
+        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        initBottomBar(fromSettings);
         initAllText();
         mViewModel = getViewModel();
 
@@ -251,9 +252,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     public void onResume() {
         super.onResume();
-        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-        initNoNetworkCallback(myMode);
-        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
+//        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+//        initNoNetworkCallback(myMode);
+//        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
     @Override
@@ -298,9 +299,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }).get(MainActivityViewModel.class);
     }
 
-    private void initBottomBar() {
-
-        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+    public void initBottomBar(boolean fromSettings) {
 
         /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
         if (isRestart) {
@@ -588,7 +587,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+    /*private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
         if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
             if (isMobileDataOn) {
                 binding.textViewNoInternet.setVisibility(View.GONE);
@@ -598,13 +597,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         } else {
             binding.textViewNoInternet.setVisibility(View.GONE);
         }
-    }
+    }*/
 
-    private void initNoNetworkCallback(int myMode) {
+    /*private void initNoNetworkCallback(int myMode) {
         sheduler.initNoInternetCallback(isMobileDataOn -> {
             showHideInternetWarning(myMode, isMobileDataOn);
         });
-    }
+    }*/
 
     private void initSearchListener() {
 

@@ -44,7 +44,7 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    public BulletinTimeScheduler connectivityRegister() {
+    /*public BulletinTimeScheduler connectivityRegister() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(new NetworkCheckReceiver(), intentFilter);
@@ -53,7 +53,7 @@ public class BulletinTimeScheduler {
 
     public void initNoInternetCallback(NoInternetCallback callback) {
         this.noInternetCallback = callback;
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public boolean isMobileDataEnable() {
@@ -123,7 +123,7 @@ public class BulletinTimeScheduler {
                     Constants.IS_DATA_ON = false;
                 }
 
-                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
+//                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
             }
         }
     }
@@ -140,11 +140,11 @@ public class BulletinTimeScheduler {
     }
 
 
-    private void sendNoInternetCallbackToUi(boolean haveInternet) {
+    /*private void sendNoInternetCallbackToUi(boolean haveInternet) {
         if (noInternetCallback != null) {
             noInternetCallback.onGetAvailableInternet(haveInternet);
         }
-    }
+    }*/
 
    /* private void uploadLogFile() {
         Log.d("ParseFileUpload", "Upload file call");

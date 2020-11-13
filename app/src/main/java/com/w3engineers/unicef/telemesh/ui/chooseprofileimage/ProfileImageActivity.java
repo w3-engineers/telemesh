@@ -69,17 +69,20 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
         switch (id) {
             case R.id.menu_done:
-                if (selectedItem == -1) {
-                    Toaster.showShort(getResources().getString(R.string.select_avatar));
-                } else {
-                    Intent intent = getIntent();
-                    intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-
+                actionDone();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void actionDone() {
+        if (selectedItem == -1) {
+            Toaster.showShort(getResources().getString(R.string.select_avatar));
+        } else {
+            Intent intent = getIntent();
+            intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override

@@ -160,6 +160,9 @@ public class SecurityActivity extends BaseActivity {
                 }).withErrorListener(error -> requestMultiplePermissions(isSkip)).onSameThread().check();
     }
 
+//    public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
+//    public String friendAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
+//    public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
 
 
     protected void goNext(boolean isSkip) {
@@ -172,6 +175,8 @@ public class SecurityActivity extends BaseActivity {
         }
 
         String finalPassword = password;
+
+//        processCompleted(myAddress, publicKey, finalPassword);
 
         WalletUtil.getInstance(this).createWallet(password, new WalletPrepareListener() {
             @Override

@@ -113,9 +113,9 @@ public class ChatActivity extends TelemeshBaseActivity {
             mChatViewModel.updateAllMessageStatus(userId);
         }
 
-        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-        BulletinTimeScheduler.getInstance().initNoInternetCallback(isMobileDataOn -> showHideInternetWarning(myMode, isMobileDataOn));
-        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
+//        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
+//        BulletinTimeScheduler.getInstance().initNoInternetCallback(isMobileDataOn -> showHideInternetWarning(myMode, isMobileDataOn));
+//        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
     }
 
 
@@ -321,7 +321,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         }).get(ChatViewModel.class);
     }
 
-    private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
+    /*private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
         if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
             if (isMobileDataOn) {
                 mViewBinging.textViewNoInternet.setVisibility(View.GONE);
@@ -331,7 +331,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         } else {
             mViewBinging.textViewNoInternet.setVisibility(View.GONE);
         }
-    }
+    }*/
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
 

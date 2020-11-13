@@ -123,7 +123,7 @@ public class BulletinTimeScheduler {
                     Constants.IS_DATA_ON = false;
                 }
 
-                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
+//                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
             }
         }
     }
@@ -140,11 +140,11 @@ public class BulletinTimeScheduler {
     }
 
 
-    private void sendNoInternetCallbackToUi(boolean haveInternet) {
+    /*private void sendNoInternetCallbackToUi(boolean haveInternet) {
         if (noInternetCallback != null) {
             noInternetCallback.onGetAvailableInternet(haveInternet);
         }
-    }
+    }*/
 
    /* private void uploadLogFile() {
         Log.d("ParseFileUpload", "Upload file call");

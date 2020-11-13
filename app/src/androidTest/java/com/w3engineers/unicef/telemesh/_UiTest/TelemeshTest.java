@@ -447,7 +447,7 @@ public class TelemeshTest {
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
         profileImageSelect.perform(click());
 
-        addDelay(1000);
+        addDelay(2000);
 
         ViewInteraction profileUpdateDone = onView(
                 allOf(withId(R.id.menu_done),

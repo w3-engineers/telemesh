@@ -391,6 +391,8 @@ public class TelemeshTest {
             });
         }*/
 
+        Activity currentActivity;
+
         addDelay(5000);
 
         ViewInteraction settingsTab = onView(
@@ -447,7 +449,18 @@ public class TelemeshTest {
                     allOf(withId(R.id.image_view_camera),
                             childAtPosition(allOf(withId(R.id.image_layout),
                                     childAtPosition(withId(R.id.scrollview), 0)), 7)));
-            updateProfileImageViaCameraSelection.perform(scrollTo(), click());
+
+            try {
+                updateProfileImageViaCameraSelection.perform(scrollTo(), click());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+
+                currentActivity = getActivityInstance();
+
+                if (currentActivity instanceof EditProfileActivity) {
+                    ((EditProfileActivity) currentActivity).openProfileImageChooser();
+                }
+            }
         }
 
 

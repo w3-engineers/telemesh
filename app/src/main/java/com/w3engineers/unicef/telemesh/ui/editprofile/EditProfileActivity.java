@@ -79,24 +79,28 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
-                UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
-                Intent intent = new Intent(this, ProfileImageActivity.class);
-                int currentImageIndex = mViewModel.getImageIndex();
-
-                SharedPref sharedPref = SharedPref.getSharedPref(this);
-                int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-                if (currentImageIndex < 0) {
-                    currentImageIndex = oldImageIndex;
-                }
-
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
-                startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
+                openProfileImageChooser();
                 break;
             case R.id.image_view_back:
                 finish();
                 break;
 
         }
+    }
+
+    public void openProfileImageChooser() {
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+        Intent intent = new Intent(this, ProfileImageActivity.class);
+        int currentImageIndex = mViewModel.getImageIndex();
+
+        SharedPref sharedPref = SharedPref.getSharedPref(this);
+        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        if (currentImageIndex < 0) {
+            currentImageIndex = oldImageIndex;
+        }
+
+        intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
+        startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
     }
 
     @Override

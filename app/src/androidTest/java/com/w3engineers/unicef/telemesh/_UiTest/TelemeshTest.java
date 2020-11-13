@@ -469,7 +469,12 @@ public class TelemeshTest {
         ViewInteraction profileImageSelect = onView(
                 allOf(childAtPosition(allOf(withId(R.id.recycler_view),
                         childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
-        profileImageSelect.perform(click());
+
+        try {
+            profileImageSelect.perform(click());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         addDelay(2000);
 

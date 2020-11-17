@@ -2,6 +2,9 @@ package com.w3engineers.unicef.util.helper;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
@@ -68,5 +71,29 @@ public class GsonBuilder {
 
     public GroupNameModel getGroupNameModelObj(String groupNameModelText) {
         return gson.fromJson(groupNameModelText, GroupNameModel.class);
+    }
+
+    public String getFeedContentModelJson(FeedContentModel relayGroupModel) {
+        return gson.toJson(relayGroupModel);
+    }
+
+    public FeedContentModel getFeedContentModelObj(String feedContentModel) {
+        return gson.fromJson(feedContentModel, FeedContentModel.class);
+    }
+
+    public String getBulletinModelJson(BulletinModel bulletinModel) {
+        return gson.toJson(bulletinModel);
+    }
+
+    public BulletinModel getBulletinModelObj(String bulletinModel) {
+        return gson.fromJson(bulletinModel, BulletinModel.class);
+    }
+
+    public String getBroadcastDataModelJson(BroadcastDataModel broadcastDataModel) {
+        return gson.toJson(broadcastDataModel);
+    }
+
+    public BroadcastDataModel getBroadcastDataModelObj(String broadcastDataModel) {
+        return gson.fromJson(broadcastDataModel, BroadcastDataModel.class);
     }
 }

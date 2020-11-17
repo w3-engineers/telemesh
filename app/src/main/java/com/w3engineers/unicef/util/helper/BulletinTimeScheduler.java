@@ -40,20 +40,7 @@ public class BulletinTimeScheduler {
         return bulletinTimeScheduler;
     }
 
-    /*public BulletinTimeScheduler connectivityRegister() {
-     *//*IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        context.registerReceiver(new NetworkCheckReceiver(), intentFilter);*//*
-        return this;
-    }*/
-
-    /*public void initNoInternetCallback(NoInternetCallback callback) {
-        this.noInternetCallback = callback;
-    }*/
-
     public void processesForInternetConnection() {
-        RmDataHelper.getInstance().sendPendingAck();
-
         if (!Constants.IS_LOG_UPLOADING_START) {
             Constants.IS_LOG_UPLOADING_START = true;
 
@@ -62,90 +49,10 @@ public class BulletinTimeScheduler {
         }
     }
 
-    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public boolean isMobileDataEnable() {
-        int state = getNetworkState();
-        if (state == DATA) {
-            return true;
-        } else {
-            Util.cancelJob(context);
-            return false;
-        }
-    }*/
-
-    /*protected int getNetworkState() {
-        ConnectivityManager connectivitymanager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] networkInfo = connectivitymanager.getAllNetworkInfo();
-
-        for (NetworkInfo netInfo : networkInfo) {
-
-            *//*if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
-                if (netInfo.isConnected())
-                    return WIFI;*//*
-            if (netInfo.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (netInfo.isConnected())
-                    return DATA;
-        }
-        return 0;
-    }*/
-
-    /*public class NetworkCheckReceiver extends BroadcastReceiver {
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-
-                boolean noConnectivity = intent.getBooleanExtra(
-                        ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-
-                if (!noConnectivity) {
-                    int state = getNetworkState();
-                    if (state == DATA) {
-                        Constants.IS_DATA_ON = true;
-                        RmDataHelper.getInstance().sendPendingAck();
-                        resetScheduler(context);
-
-                        ConfigSyncUtil.getInstance().startConfigurationSync(context, false);
-
-                        if (!Constants.IS_LOG_UPLOADING_START) {
-                            Constants.IS_LOG_UPLOADING_START = true;
-
-                            String downloadLink = AppCredentials.getInstance().getFileRepoLink() + "updatedJSon.json";
-                            new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
-
-
-                            RmDataHelper.getInstance().uploadLogFile();
-                            RmDataHelper.getInstance().sendPendingFeedback();
-                        }
-
-                    } else {
-                        Constants.IS_DATA_ON = false;
-                    }
-                } else {
-                    // No action needed
-                    Constants.IS_DATA_ON = false;
-                }
-
-                sendNoInternetCallbackToUi(Constants.IS_DATA_ON);
-            }
-        }
-    }*/
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void resetScheduler(@NonNull Context context) {
 
-
-//        Util.cancelJob(context);
-//        Util.scheduleJob(context);
     }
-
-    /*public void setScheduler(Context context) {
-        Log.v("MIMO_SAHA::", "Job exist: " + Util.isJobExist(context));
-        if (Util.isJobExist(context)) return;
-        Util.scheduleJob(context);
-    }*/
 
     public void checkAppUpdate() {
 
@@ -165,26 +72,4 @@ public class BulletinTimeScheduler {
             }
         }
     }
-
-    /*@NonNull
-    public NetworkCheckReceiver getReceiver() {
-        return new NetworkCheckReceiver();
-    }*/
-
-
-    /*private void sendNoInternetCallbackToUi(boolean haveInternet) {
-        if (noInternetCallback != null) {
-            noInternetCallback.onGetAvailableInternet(haveInternet);
-        }
-    }*/
-
-   /* private void uploadLogFile() {
-        Log.d("ParseFileUpload", "Upload file call");
-        File sdCard = Environment.getExternalStorageDirectory();
-        File directory = new File(sdCard.getAbsolutePath() +
-                "/MeshRnD");
-        File[] files = directory.listFiles();
-
-        AnalyticsDataHelper.getInstance().sendLogFileInServer(files[4], "testUser", Constants.getDeviceName());
-    }*/
 }

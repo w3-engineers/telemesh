@@ -237,6 +237,15 @@ public class Constants {
         int OTHERS = 0;
     }
 
+    public interface BroadcastMessageType {
+        int TEXT_BROADCAST = 1;
+        int IMAGE_BROADCAST = 2;
+    }
+
+    public interface BroadcastMessage {
+        String IMAGE_BROADCAST = "Image Broadcast";
+    }
+
     public interface AnalyticsResponseType {
         byte MESSAGE_COUNT = 1;
         byte NEW_USER_COUNT = 2;

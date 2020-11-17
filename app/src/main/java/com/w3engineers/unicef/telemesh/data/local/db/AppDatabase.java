@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.w3engineers.ext.strom.App;
+import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNames;
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
 import com.w3engineers.ext.strom.util.Text;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -112,6 +113,30 @@ public abstract class AppDatabase extends BaseDatabase {
     private static String MESSAGE_TABLE_MIGRATION_6 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
             + ColumnNames.COLUMN_CONTENT_STATUS + " INTEGER NOT NULL DEFAULT 0";
 
+    private static String MESSAGE_TABLE_MIGRATION_7 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_GROUP_ID + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_8 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String GROUP_TABLE_MIGRATION = "CREATE TABLE IF NOT EXISTS " + TableNames.GROUP +
+            " (" + BaseColumnNames.ID + " INTEGER PRIMARY KEY NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_ID + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_NAME + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_AVATAR + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_OWN_STATUS + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_CREATION_TIME + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_ADMIN_INFO + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_MEMBERS_INFO + " TEXT, "
+            + "hasUnreadMessage INTEGER NOT NULL, " + "lastMessage TEXT, "
+            + "lastPersonName TEXT, " + "lastPersonId TEXT, " + "lastMessageType INTEGER NOT NULL)";
+
+    private static String FEED_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
+            + ColumnNames.COLUMN_FEED_CONTENT_INFO + " TEXT";
+
+    private static String FEED_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
+            + ColumnNames.COLUMN_FEED_CONTENT_INFO + " INTEGER";
+
     @NonNull
     public static AppDatabase getInstance() {
 
@@ -142,7 +167,9 @@ public abstract class AppDatabase extends BaseDatabase {
                 new BaseMigration(BuildConfig.VERSION_CODE, MESSAGE_TABLE_MIGRATION_1,
                         MESSAGE_TABLE_MIGRATION_2, MESSAGE_TABLE_MIGRATION_3,
                         MESSAGE_TABLE_MIGRATION_4, MESSAGE_TABLE_MIGRATION_5,
-                        MESSAGE_TABLE_MIGRATION_6));
+                        MESSAGE_TABLE_MIGRATION_6, MESSAGE_TABLE_MIGRATION_7,
+                        MESSAGE_TABLE_MIGRATION_8, GROUP_TABLE_MIGRATION,
+                        FEED_TABLE_MIGRATION_1, FEED_TABLE_MIGRATION_2));
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,

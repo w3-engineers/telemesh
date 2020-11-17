@@ -8,14 +8,23 @@ Proprietary and confidential
 ============================================================================
 */
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class BulletinFeed {
 
+    @SerializedName("uploaderInfo")
+    @Expose
+    private String uploaderInfo;
+    @SerializedName("messageType")
+    @Expose
+    private long messageType;
+    @SerializedName("messageTitle")
+    @Expose
+    private String messageTitle;
+    @SerializedName("fileName")
+    @Expose
+    private String fileName;
     @SerializedName("messageId")
     @Expose
     private String messageId;
@@ -25,38 +34,78 @@ public class BulletinFeed {
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
+    @SerializedName("expiredAt")
+    @Expose
+    private String expiredAt;
 
-    @Nullable
+    public String getUploaderInfo() {
+        return uploaderInfo;
+    }
+
+    public BulletinFeed setUploaderInfo(String uploaderInfo) {
+        this.uploaderInfo = uploaderInfo;
+        return this;
+    }
+
+    public long getMessageType() {
+        return messageType;
+    }
+
+    public BulletinFeed setMessageType(long messageType) {
+        this.messageType = messageType;
+        return this;
+    }
+
+    public String getMessageTitle() {
+        return messageTitle;
+    }
+
+    public BulletinFeed setMessageTitle(String messageTitle) {
+        this.messageTitle = messageTitle;
+        return this;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public BulletinFeed setFileName(String fileName) {
+        this.fileName = fileName;
+        return this;
+    }
+
     public String getMessageId() {
         return messageId;
     }
 
-    @NonNull
-    public BulletinFeed setMessageId(@Nullable String messageId) {
+    public BulletinFeed setMessageId(String messageId) {
         this.messageId = messageId;
         return this;
     }
 
-    @Nullable
     public String getMessageBody() {
         return messageBody;
     }
 
-    @NonNull
-    public BulletinFeed setMessageBody(@Nullable String messageBody) {
+    public BulletinFeed setMessageBody(String messageBody) {
         this.messageBody = messageBody;
         return this;
     }
 
-    @Nullable
     public String getCreatedAt() {
         return createdAt;
     }
 
-    @NonNull
-    public BulletinFeed setCreatedAt(@Nullable String createdAt) {
+    public BulletinFeed setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
+    public String getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(String expiredAt) {
+        this.expiredAt = expiredAt;
+    }
 }

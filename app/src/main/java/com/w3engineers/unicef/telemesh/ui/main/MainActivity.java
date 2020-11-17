@@ -46,6 +46,7 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -129,7 +130,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         bottomMenu = binding.bottomNavigation.getMenu();
-        initBottomBar();
+        initBottomBar(getIntent());
         initAllText();
         mViewModel = getViewModel();
 
@@ -221,9 +222,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }).get(MainActivityViewModel.class);
     }
 
-    private void initBottomBar() {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
-        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        initBottomBar(intent);
+    }
+
+    private void initBottomBar(Intent intent) {
+
+        boolean fromSettings = intent.getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        boolean fromBroadcast = intent.getBooleanExtra(BroadcastDataHelper.class.getSimpleName(), false);
 
         Fragment mFragment = null;
         String title;
@@ -232,6 +241,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             menuItem.setChecked(true);
             mFragment = new SettingsFragment();
             title = LanguageUtil.getString(R.string.title_settings_fragment);
+        } else if (fromBroadcast) {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_message_feed);
+            menuItem.setChecked(true);
+            mFragment = new MessageFeedFragment();
+            title = LanguageUtil.getString(R.string.title_message_feed_fragment);
+//            hideFeedBadge();
         } else {
             MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
@@ -247,6 +262,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
+        if (fromBroadcast) {
+            hideFeedBadge();
+        }
     }
 
     // Again this api will be enable when its functionality will be added
@@ -316,6 +334,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (itemView != null) {
 
             ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
+            constraintLayoutContainer.setVisibility(View.GONE);
             TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
             if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
@@ -338,6 +357,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
         if (constraintLayoutContainer == null) return;
+        constraintLayoutContainer.setVisibility(View.GONE);
         if (!(mCurrentFragment instanceof MessageFeedFragment)) {
             if (latestCount > latestMessageCount) {
                 constraintLayoutContainer.setVisibility(View.VISIBLE);

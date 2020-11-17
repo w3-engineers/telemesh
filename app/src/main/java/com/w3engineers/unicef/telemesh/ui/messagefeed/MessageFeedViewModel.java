@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
@@ -58,13 +59,14 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      * @param feedEntity selected feed entity
      */
     public void postMessageFeedEntity(@NonNull FeedEntity feedEntity) {
-        updateFeedEntity(feedEntity);
+        mSelectedFeedEntityObservable.postValue(feedEntity);
     }
 
     public void requestBroadcastMessage() {
-        if(NetworkMonitor.isOnline()) {
-            RmDataHelper.getInstance().requestWsMessage();
-        }
+//        if(NetworkMonitor.isOnline()) {
+//            BroadcastDataHelper.getInstance().demoTextBroadcast();
+        BroadcastDataHelper.getInstance().requestForBroadcast();
+//        }
     }
 
     private void updateFeedEntity(FeedEntity feedEntity) {
@@ -73,7 +75,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    mSelectedFeedEntityObservable.postValue(feedEntity);
+
                 }, Throwable::printStackTrace));
     }
 

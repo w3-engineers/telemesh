@@ -5,6 +5,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint_layout_badge"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

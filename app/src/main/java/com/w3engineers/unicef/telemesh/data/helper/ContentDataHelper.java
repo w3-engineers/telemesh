@@ -844,44 +844,48 @@ public class ContentDataHelper extends RmDataHelper {
     // Callback action +++++++++++++++++++++++++++++++++++++++++++++++++++++
     void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
 
-        Timber.tag("FileMessage").v(" Start id: %s", contentId);
+        try {
+            Timber.tag("FileMessage").v(" Start id: %s", contentId);
 
-        ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
+            ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
 
-        ContentMetaInfo contentMetaInfo = null;
+            ContentMetaInfo contentMetaInfo = null;
 
-        if (metaData != null) {
-            String contentMessageText = new String(metaData);
-            contentMetaInfo = new Gson().fromJson(contentMessageText,
-                    ContentMetaInfo.class);
-        }
-
-        if (contentReceiveModel == null) {
-            contentReceiveModel = new ContentReceiveModel();
-        }
-
-        contentReceiveModel
-                .setContentId(contentId)
-                .setContentPath(contentPath)
-                .setUserId(userId)
-                .setContentMetaInfo(contentMetaInfo)
-                .setSuccessStatus(true);
-
-        if (contentMetaInfo != null && !contentMetaInfo.getIsContent()) {
-
-            ContentMetaInfo finalContentMetaInfo = contentMetaInfo;
-
-            HandlerUtil.postBackground(() -> updateMessageStatus(finalContentMetaInfo.getMessageId()));
-
-            if (contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
-                HandlerUtil.postBackground(() -> {
-                    setMessageContentId(finalContentMetaInfo.getMessageId(),
-                            contentId, contentPath);
-
-                });
+            if (metaData != null) {
+                String contentMessageText = new String(metaData);
+                contentMetaInfo = new Gson().fromJson(contentMessageText,
+                        ContentMetaInfo.class);
             }
+
+            if (contentReceiveModel == null) {
+                contentReceiveModel = new ContentReceiveModel();
+            }
+
+            contentReceiveModel
+                    .setContentId(contentId)
+                    .setContentPath(contentPath)
+                    .setUserId(userId)
+                    .setContentMetaInfo(contentMetaInfo)
+                    .setSuccessStatus(true);
+
+            if (contentMetaInfo != null && !contentMetaInfo.getIsContent()) {
+
+                ContentMetaInfo finalContentMetaInfo = contentMetaInfo;
+
+                HandlerUtil.postBackground(() -> updateMessageStatus(finalContentMetaInfo.getMessageId()));
+
+                if (contentMetaInfo.getContentType() == Constants.DataType.CONTENT_MESSAGE) {
+                    HandlerUtil.postBackground(() -> {
+                        setMessageContentId(finalContentMetaInfo.getMessageId(),
+                                contentId, contentPath);
+
+                    });
+                }
+            }
+            contentReceiveModelHashMap.put(contentId, contentReceiveModel);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        contentReceiveModelHashMap.put(contentId, contentReceiveModel);
     }
 
     void contentReceiveInProgress(String contentId, int progress) {

@@ -16,11 +16,11 @@ import java.util.List;
 @Dao
 public abstract class FeedDao extends BaseDao<FeedEntity> {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long insertFeed(@NonNull FeedEntity feedEntity);
 
 
-    @Query("SELECT * FROM " + TableNames.FEED + " ORDER BY " + ColumnNames.ID + " DESC")
+    @Query("SELECT * FROM " + TableNames.FEED + " ORDER BY " + ColumnNames.COLUMN_FEED_TIME_MILLIS + " DESC")
     @NonNull
     public abstract LiveData<List<FeedEntity>> getAllFeed();
 
@@ -30,4 +30,10 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
 
     @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_READ_STATUS + " = 0 ")
     public abstract LiveData<List<FeedEntity>> getAllUnreadFeed();
+
+    @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
+    public abstract LiveData<FeedEntity> getFeedEntityById(String feedId);
+
+    @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
+    public abstract FeedEntity getFeedById(String feedId);
 }

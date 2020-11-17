@@ -51,6 +51,18 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public boolean feedReadStatus;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_CONTENT_INFO)
+    @Nullable
+    public String feedContentInfo;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_TIME_MILLIS)
+    @Nullable
+    public long feedTimeMillis;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_EXPIRE_TIME)
+    @Nullable
+    public String feedExpireTime;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -98,6 +110,21 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public FeedEntity setFeedContentInfo(@Nullable String feedContentInfo) {
+        this.feedContentInfo = feedContentInfo;
+        return this;
+    }
+
+    public FeedEntity setFeedTimeMillis(long feedTimeMillis) {
+        this.feedTimeMillis = feedTimeMillis;
+        return this;
+    }
+
+    public FeedEntity setFeedExpireTime(String feedExpireTime) {
+        this.feedExpireTime = feedExpireTime;
+        return this;
+    }
+
     @Nullable
     public String getFeedId() {
         return feedId;
@@ -132,6 +159,20 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedReadStatus;
     }
 
+    @Nullable
+    public String getFeedContentInfo() {
+        return feedContentInfo;
+    }
+
+    public long getFeedTimeMillis() {
+        return feedTimeMillis;
+    }
+
+    @Nullable
+    public String getFeedExpireTime() {
+        return feedExpireTime;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -141,6 +182,9 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedDetail = in.readString();
         feedTime = in.readString();
         feedReadStatus = in.readByte() != 0;
+        feedContentInfo = in.readString();
+        feedTimeMillis = in.readLong();
+        feedExpireTime = in.readString();
     }
 
     @Override
@@ -153,6 +197,9 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedDetail);
         dest.writeString(feedTime);
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
+        dest.writeString(feedContentInfo);
+        dest.writeLong(feedTimeMillis);
+        dest.writeString(feedExpireTime);
     }
 
     @Override
@@ -188,10 +235,23 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     }
 
     @NonNull
+    public FeedEntity prepareFeedEntity(@NonNull BulletinFeed bulletinFeed) {
+        return new FeedEntity()
+                .setFeedId(bulletinFeed.getMessageId())
+                .setFeedProviderName(bulletinFeed.getUploaderInfo())
+                .setFeedTitle(bulletinFeed.getMessageTitle())
+                .setFeedDetail(bulletinFeed.getMessageBody())
+                .setFeedTime(bulletinFeed.getCreatedAt())
+                .setFeedExpireTime(bulletinFeed.getExpiredAt());
+    }
+
+    @NonNull
     public BulletinModel toTelemeshBulletin() {
         return new BulletinModel()
                 .setId(getFeedId())
                 .setMessage(getFeedDetail())
+                .setHeaderTitle(getFeedTitle())
+                .setUploaderName(getFeedProviderName())
                 .setTime(getFeedTime());
     }
 
@@ -199,6 +259,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     public FeedEntity toFeedEntity(@NonNull BulletinModel bulletinModel) {
         return new FeedEntity().setFeedDetail(bulletinModel.getMessage())
                 .setFeedId(bulletinModel.getId())
-                .setFeedTime(bulletinModel.getTime());
+                .setFeedTime(bulletinModel.getTime())
+                .setFeedTitle(bulletinModel.getHeaderTitle())
+                .setFeedProviderName(bulletinModel.getUploaderName());
     }
 }

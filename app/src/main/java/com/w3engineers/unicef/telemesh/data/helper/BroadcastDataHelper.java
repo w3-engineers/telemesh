@@ -36,6 +36,9 @@ import okhttp3.Request;
 
 public class BroadcastDataHelper extends RmDataHelper {
 
+//    public String mLatitude = "22.824922";
+//    public String mLongitude = "89.551327";
+
     public String mLatitude;
     public String mLongitude;
 
@@ -308,7 +311,7 @@ public class BroadcastDataHelper extends RmDataHelper {
 
         String metaData = gsonBuilder.getBulletinModelJson(bulletinModel);
         broadcastDataSend(feedEntity.getFeedId(), Constants.DataType.MESSAGE_FEED, metaData,
-                contentPath, "contentUrl", true);
+                contentPath, "contentUrl", feedEntity.getFeedExpireTime(), true);
     }
 
     private void receiveLocalBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta) {

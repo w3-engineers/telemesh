@@ -405,7 +405,7 @@ public abstract class ViperUtil {
         try {
             viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
                     viperBroadcastData.metaData, viperBroadcastData.contentPath,
-                    viperBroadcastData.contentMeta,
+                    viperBroadcastData.contentMeta, viperBroadcastData.expiryTime,
                     viperBroadcastData.isNotificationEnable);
         } catch (Exception e) {
             e.printStackTrace();

@@ -117,12 +117,13 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, String contentMeta, boolean isNotificationEnable) {
+    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
         ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
         viperBroadcastData.broadcastId = broadcastId;
         viperBroadcastData.metaData = metaData;
         viperBroadcastData.contentPath = contentPath;
         viperBroadcastData.contentMeta = contentMeta;
+        viperBroadcastData.expiryTime = expiryTime;
         viperBroadcastData.isNotificationEnable = isNotificationEnable;
 
         broadcastManager.addBroadCastMessage(getBroadcastDataTask(viperBroadcastData));

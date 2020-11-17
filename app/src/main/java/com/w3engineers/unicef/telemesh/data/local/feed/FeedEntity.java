@@ -59,6 +59,10 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public long feedTimeMillis;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_EXPIRE_TIME)
+    @Nullable
+    public String feedExpireTime;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -116,6 +120,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public FeedEntity setFeedExpireTime(String feedExpireTime) {
+        this.feedExpireTime = feedExpireTime;
+        return this;
+    }
+
     @Nullable
     public String getFeedId() {
         return feedId;
@@ -159,6 +168,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedTimeMillis;
     }
 
+    @Nullable
+    public String getFeedExpireTime() {
+        return feedExpireTime;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -170,6 +184,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedReadStatus = in.readByte() != 0;
         feedContentInfo = in.readString();
         feedTimeMillis = in.readLong();
+        feedExpireTime = in.readString();
     }
 
     @Override
@@ -184,6 +199,7 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
         dest.writeString(feedContentInfo);
         dest.writeLong(feedTimeMillis);
+        dest.writeString(feedExpireTime);
     }
 
     @Override
@@ -225,7 +241,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 .setFeedProviderName(bulletinFeed.getUploaderInfo())
                 .setFeedTitle(bulletinFeed.getMessageTitle())
                 .setFeedDetail(bulletinFeed.getMessageBody())
-                .setFeedTime(bulletinFeed.getCreatedAt());
+                .setFeedTime(bulletinFeed.getCreatedAt())
+                .setFeedExpireTime(bulletinFeed.getExpiredAt());
     }
 
     @NonNull

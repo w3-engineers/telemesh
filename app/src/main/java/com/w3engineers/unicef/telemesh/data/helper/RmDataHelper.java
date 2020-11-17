@@ -333,7 +333,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     protected void broadcastDataSend(String broadcastId, byte type, String metaData,
-                                     String contentPath, String contentMeta, boolean isNotificationEnable) {
+                                     String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
@@ -347,7 +347,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.broadcastDataSend(broadcastId, broadcastMetaData,
-                contentPath, contentMeta, isNotificationEnable));
+                contentPath, contentMeta, expiryTime, isNotificationEnable));
     }
 
     /**

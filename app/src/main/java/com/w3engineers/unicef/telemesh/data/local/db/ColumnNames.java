@@ -63,6 +63,7 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_FEED_READ_STATUS = "feed_read_status";
     String COLUMN_FEED_CONTENT_INFO = "feed_content_info";
     String COLUMN_FEED_TIME_MILLIS = "feed_title_millis";
+    String COLUMN_FEED_EXPIRE_TIME = "feed_exp_time";
 
     /**
      * Bulletin track table column

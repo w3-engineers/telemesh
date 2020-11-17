@@ -14,5 +14,6 @@ public class ViperBroadcastData {
     public String metaData;
     public String contentPath;
     public String contentMeta;
+    public String expiryTime;
     public boolean isNotificationEnable;
 }

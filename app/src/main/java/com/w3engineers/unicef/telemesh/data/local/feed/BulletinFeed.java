@@ -34,6 +34,9 @@ public class BulletinFeed {
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
+    @SerializedName("expiredAt")
+    @Expose
+    private String expiredAt;
 
     public String getUploaderInfo() {
         return uploaderInfo;
@@ -98,4 +101,11 @@ public class BulletinFeed {
         return this;
     }
 
+    public String getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(String expiredAt) {
+        this.expiredAt = expiredAt;
+    }
 }

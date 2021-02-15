@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -81,5 +81,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/text_view_update"
             app:layout_constraintEnd_toStartOf="@+id/text_view_update"
             app:layout_constraintTop_toTopOf="@+id/text_view_update" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

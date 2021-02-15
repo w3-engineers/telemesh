@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +14,6 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileImageBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.util.helper.ImageUtil;
-import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 

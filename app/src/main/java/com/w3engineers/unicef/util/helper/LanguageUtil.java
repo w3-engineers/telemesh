@@ -3,12 +3,11 @@ package com.w3engineers.unicef.util.helper;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import java.util.Locale;
 

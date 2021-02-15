@@ -1,34 +1,9 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
-import android.arch.paging.PagedList;
-import android.arch.persistence.room.Room;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.paging.PagedList;
+import androidx.room.Room;
+import androidx.test.rule.ActivityTestRule;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.telemesh.util.LiveDataTestUtil;
-import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
-import com.w3engineers.unicef.telemesh.util.TestObserver;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.util.List;
-
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;

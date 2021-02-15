@@ -1,9 +1,9 @@
 package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.app.Activity;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Process;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 
 import com.w3engineers.ext.strom.util.helper.Toaster;

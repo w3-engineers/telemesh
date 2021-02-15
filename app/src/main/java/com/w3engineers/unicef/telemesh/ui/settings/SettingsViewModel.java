@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
@@ -19,8 +19,6 @@ import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEnt
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
-
-import java.util.logging.Handler;
 
 /*
  * ============================================================================

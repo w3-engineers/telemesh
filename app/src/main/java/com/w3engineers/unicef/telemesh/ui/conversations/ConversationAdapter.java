@@ -1,12 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.conversations;
 
-import android.arch.paging.PagedListAdapter;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
+import androidx.paging.PagedListAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,6 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemConversationBinding;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.util.helper.CommonUtil;

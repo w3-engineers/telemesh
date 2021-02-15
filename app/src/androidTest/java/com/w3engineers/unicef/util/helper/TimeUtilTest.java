@@ -1,6 +1,6 @@
 package com.w3engineers.unicef.util.helper;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.TextUtils;
 
 import org.junit.Before;

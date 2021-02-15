@@ -2,7 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.ext.strom.App;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;

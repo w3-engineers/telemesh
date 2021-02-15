@@ -8,7 +8,7 @@
         <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.groupnameedit.GroupNameEditActivity">
@@ -76,7 +76,7 @@
             app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_layout"
             style="@style/signup_editext_style"
             android:layout_marginStart="@dimen/margin_15"
@@ -107,7 +107,7 @@
 
             </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.w3engineers.ext.strom.application.ui.widget.BaseButton
@@ -125,5 +125,5 @@
             app:layout_constraintTop_toBottomOf="@+id/name_layout"
             app:layout_goneMarginTop="@dimen/margin_20" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.conversations;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;

@@ -35,7 +35,6 @@ import java.util.TimeZone;
  */
 
 public class InstantServer {
-
     private int port;
     private static InstantServer instantServer = new InstantServer();
     private int downloadContent = 0;

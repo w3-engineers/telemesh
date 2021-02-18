@@ -11,15 +11,25 @@ import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.telemesh.data.provider.ViewModelProviderFactory;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.walleter.wallet.WalletService;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class SplashActivity extends BaseActivity {
+
+
+    SplashViewModel splashViewModel;
+
+    @Inject
+    ViewModelProviderFactory providerFactory;
+
 
     @Override
     protected int getLayoutId() {
@@ -30,7 +40,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void startUI() {
 
-        SplashViewModel splashViewModel = getViewModel();
+        //splashViewModel = getViewModel();
+        splashViewModel = ViewModelProviders.of(this, providerFactory).get(SplashViewModel.class);
         ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();
 
         activitySplashBinding.setSplashViewModel(splashViewModel);

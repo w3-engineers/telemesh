@@ -14,6 +14,8 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
+import javax.inject.Inject;
+
 
 /*
  * ============================================================================
@@ -26,6 +28,7 @@ public class SplashViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> isUserRegistered = new MutableLiveData<>();
 
+    @Inject
     public SplashViewModel(@NonNull Application application) {
         super(application);
     }

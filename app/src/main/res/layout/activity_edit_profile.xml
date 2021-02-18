@@ -12,7 +12,7 @@
         <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_background"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/name_layout"
                     style="@style/signup_editext_style"
                     android:textColorHint="@color/hint_text_color"
@@ -168,7 +168,7 @@
 
                     </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/image_view_pen"
@@ -204,10 +204,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

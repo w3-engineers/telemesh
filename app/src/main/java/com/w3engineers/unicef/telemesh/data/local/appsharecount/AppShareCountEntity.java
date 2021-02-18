@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.appsharecount;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 

@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.bulletindetails;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;

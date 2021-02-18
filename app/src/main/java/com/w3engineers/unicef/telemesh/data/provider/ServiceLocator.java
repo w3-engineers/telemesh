@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;

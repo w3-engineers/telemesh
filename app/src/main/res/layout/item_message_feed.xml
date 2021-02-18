@@ -17,7 +17,7 @@
             type="com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_regular"
@@ -103,5 +103,5 @@
             app:layout_constraintEnd_toEndOf="@+id/sender_time"
             app:layout_constraintStart_toStartOf="@+id/sender_name" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

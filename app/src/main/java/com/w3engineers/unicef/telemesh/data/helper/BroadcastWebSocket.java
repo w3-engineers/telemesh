@@ -8,8 +8,9 @@ Proprietary and confidential
 ============================================================================
 */
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
@@ -34,6 +35,7 @@ public class BroadcastWebSocket extends WebSocketListener {
 
     @Override
     public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
+        Log.e("broadcast_test", "This is broadcast test on open is called");
         if (broadcastCommand != null) {
             String broadcastString = new Gson().toJson(broadcastCommand);
             webSocket.send(broadcastString);
@@ -42,6 +44,7 @@ public class BroadcastWebSocket extends WebSocketListener {
 
     @Override
     public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
+        Log.e("broadcast_test", "This is broadcast test text");
         try {
             JSONObject jsonObject = new JSONObject(text);
             if (jsonObject.has("status")) {
@@ -57,6 +60,7 @@ public class BroadcastWebSocket extends WebSocketListener {
     @Override
     public void onMessage(@NonNull WebSocket webSocket, @NonNull okio.ByteString bytes) {
         //Timber.tag("MIMO_SAHA:").v("Message: %s", bytes);
+        Log.e("broadcast_test", "This is broadcast test byte");
     }
     @Override
     public void onClosing(@NonNull WebSocket webSocket, int code, @Nullable String reason) {

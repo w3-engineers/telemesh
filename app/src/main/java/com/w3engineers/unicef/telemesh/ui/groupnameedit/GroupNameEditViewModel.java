@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.groupnameedit;
 
 import android.app.Application;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;

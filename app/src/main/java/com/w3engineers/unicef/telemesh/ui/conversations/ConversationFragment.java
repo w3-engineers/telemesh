@@ -1,9 +1,9 @@
 package com.w3engineers.unicef.telemesh.ui.conversations;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseFragment;

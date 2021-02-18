@@ -1,10 +1,9 @@
 package com.w3engineers.unicef.telemesh.ui.meshcontact;
 
-import android.arch.paging.PositionalDataSource;
-import android.support.annotation.NonNull;
+import androidx.paging.PositionalDataSource;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;

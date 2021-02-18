@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 

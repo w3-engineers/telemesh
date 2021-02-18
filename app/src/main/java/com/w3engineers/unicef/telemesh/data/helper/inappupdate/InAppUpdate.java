@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
@@ -48,8 +48,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.List;
-
-import timber.log.Timber;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 /*

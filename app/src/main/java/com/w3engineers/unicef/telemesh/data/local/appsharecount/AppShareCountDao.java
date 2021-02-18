@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.local.appsharecount;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;

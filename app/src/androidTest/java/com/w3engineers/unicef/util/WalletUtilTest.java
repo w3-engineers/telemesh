@@ -1,20 +1,16 @@
 package com.w3engineers.unicef.util;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.TextUtils;
 
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
-import com.w3engineers.walleter.wallet.Web3jWalletHelper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
 
 import static org.junit.Assert.*;
 

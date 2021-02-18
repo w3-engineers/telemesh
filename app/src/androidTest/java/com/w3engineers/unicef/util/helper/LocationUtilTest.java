@@ -2,8 +2,8 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.location.Location;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.TextUtils;
 
 import com.google.android.gms.location.LocationResult;

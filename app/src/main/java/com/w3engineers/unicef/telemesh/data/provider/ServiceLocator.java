@@ -1,13 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
-import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;

@@ -1,12 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 /*
  * ============================================================================

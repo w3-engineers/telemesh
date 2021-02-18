@@ -1,14 +1,14 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.DataSource;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.RoomWarnings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.RoomWarnings;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;

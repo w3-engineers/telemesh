@@ -11,9 +11,8 @@ Proprietary and confidential
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;

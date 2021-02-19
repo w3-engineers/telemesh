@@ -6,17 +6,14 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Environment;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import com.google.android.gms.location.LocationResult;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

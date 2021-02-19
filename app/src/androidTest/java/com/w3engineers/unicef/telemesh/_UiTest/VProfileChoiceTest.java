@@ -6,15 +6,14 @@ import androidx.room.Room;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 import android.view.View;
@@ -42,7 +41,8 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.util.Collection;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

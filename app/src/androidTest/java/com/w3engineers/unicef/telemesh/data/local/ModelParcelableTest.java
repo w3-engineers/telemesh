@@ -2,8 +2,9 @@ package com.w3engineers.unicef.telemesh.data.local;
 
 import android.content.Context;
 import android.os.Parcel;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;

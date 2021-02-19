@@ -3,13 +3,11 @@ package com.w3engineers.unicef.util.helper.uiutil;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.widget.ImageView;
-
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

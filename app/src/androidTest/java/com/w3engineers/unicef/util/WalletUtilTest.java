@@ -1,10 +1,10 @@
 package com.w3engineers.unicef.util;
 
 import android.content.Context;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.TextUtils;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
 

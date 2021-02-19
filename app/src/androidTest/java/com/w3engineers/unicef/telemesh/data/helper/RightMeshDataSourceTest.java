@@ -2,9 +2,10 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import androidx.room.Room;
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;

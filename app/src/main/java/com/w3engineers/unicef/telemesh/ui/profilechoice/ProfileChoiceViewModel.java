@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.profilechoice;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.annotation.NonNull;
 
 /*
  * ============================================================================

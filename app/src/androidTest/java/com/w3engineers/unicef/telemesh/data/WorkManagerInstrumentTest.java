@@ -2,11 +2,11 @@ package com.w3engineers.unicef.telemesh.data;
 
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiDevice;
+
 import android.util.Log;
 
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.work.Configuration;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;

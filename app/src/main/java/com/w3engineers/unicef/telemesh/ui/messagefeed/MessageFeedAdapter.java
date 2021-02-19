@@ -2,17 +2,14 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.databinding.BindingAdapter;
-import android.databinding.ViewDataBinding;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ViewDataBinding;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;

@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.pager;
 
-import android.arch.paging.PositionalDataSource;
-import android.support.annotation.NonNull;
+import androidx.paging.PositionalDataSource;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 

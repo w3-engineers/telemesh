@@ -1,8 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.analytics.workmanager;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;

@@ -1,15 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.editprofile;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;

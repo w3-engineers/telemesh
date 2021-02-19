@@ -1,13 +1,14 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
+
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;

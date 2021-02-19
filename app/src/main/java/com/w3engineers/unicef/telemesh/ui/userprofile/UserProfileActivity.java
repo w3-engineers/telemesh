@@ -1,29 +1,24 @@
 package com.w3engineers.unicef.telemesh.ui.userprofile;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.StyleSpan;
+import androidx.annotation.NonNull;
+
 import android.util.Base64;
 import android.view.View;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -32,7 +27,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
-import com.w3engineers.unicef.util.helper.LocationUtil;
 
 public class UserProfileActivity extends TelemeshBaseActivity {
 

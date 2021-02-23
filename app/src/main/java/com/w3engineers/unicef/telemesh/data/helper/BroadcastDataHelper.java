@@ -142,7 +142,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     }
 
     private void requestBroadcastMsg(List<String> localActiveUsers) {
-        if (NetworkMonitor.isOnline()) {
+    //    if (NetworkMonitor.isOnline()) {
+        if (NetworkMonitor.getNetwork() !=null){
             OkHttpClient.Builder client1 = new OkHttpClient.Builder();
             OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
 
@@ -152,6 +153,7 @@ public class BroadcastDataHelper extends RmDataHelper {
             client.newWebSocket(request, listener);
             client.dispatcher().executorService().shutdown();
         }
+     //   }
     }
 
     public void responseBroadcastMsg(@NonNull String broadcastText) {

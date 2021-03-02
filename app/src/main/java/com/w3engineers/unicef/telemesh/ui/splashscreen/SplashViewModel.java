@@ -37,6 +37,7 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void getUserRegistrationStatus() {
 
+
         RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
 
         Handler handler = new Handler(Looper.getMainLooper());

@@ -30,6 +30,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void startUI() {
 
+        // Todo: Need to add dependency
         SplashViewModel splashViewModel = getViewModel();
         ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();
 

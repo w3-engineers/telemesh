@@ -15,7 +15,7 @@
 A mesh network based off-grid messaging application powered by blockchain technology.
 
 ## Mission Statement
-The freedom of connectivity to the edge of the world
+The freedom of connectivity to the edge of the world.
 
 
 ## Telemesh Documentation

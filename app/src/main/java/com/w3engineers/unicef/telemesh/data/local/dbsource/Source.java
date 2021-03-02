@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -12,7 +12,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 

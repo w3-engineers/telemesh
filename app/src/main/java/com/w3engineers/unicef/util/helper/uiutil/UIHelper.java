@@ -2,16 +2,14 @@ package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.app.Activity;
 import android.content.Context;
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,9 +21,6 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.Calendar;
-
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
 
 /*
  * ============================================================================

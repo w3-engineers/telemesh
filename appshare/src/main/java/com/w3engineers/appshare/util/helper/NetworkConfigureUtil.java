@@ -4,9 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
 

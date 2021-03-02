@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.chooseprofileimage.ProfileImageActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_image_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,6 +33,6 @@
             layout="@layout/empty_layout"
             android:visibility="gone" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

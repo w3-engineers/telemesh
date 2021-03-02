@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.local.feed;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 

@@ -1,8 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.broadcast;
 
 import android.os.Process;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 

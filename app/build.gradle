@@ -4,6 +4,11 @@ plugins {
     id 'com.google.gms.google-services'
     //id 'io.fabric'
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion '28.0.3'
@@ -98,6 +103,9 @@ android {
             version "3.10.2"
         }
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
 }
 
@@ -119,6 +127,9 @@ dependencies {
     implementation deps.lifecycle.extensions
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     annotationProcessor deps.lifecycle.compiler
 
     //LiveDataReactStream
@@ -194,6 +205,16 @@ dependencies {
     debugImplementation deps.inappstoragereader
 //    implementation deps.viper
    implementation project(path: ':viper')
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+
+
+
+    /*implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test10:release@aar'){
+        transitive=true
+    }*/
 }
 
 coveralls {
@@ -207,4 +228,7 @@ tasks.coveralls {
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+repositories {
+    mavenCentral()
 }

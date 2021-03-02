@@ -17,7 +17,10 @@ import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 
 import timber.log.Timber;
 
+// @AndroidEntryPoint generates an individual Hilt component for each Android class in your project.
+
 public class SplashActivity extends BaseActivity {
+
 
     @Override
     protected int getLayoutId() {
@@ -27,6 +30,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void startUI() {
+
 
         SplashViewModel splashViewModel = getViewModel();
         ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();

@@ -15,6 +15,10 @@ import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 
+
+
+
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -22,9 +26,12 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
  * Proprietary and confidential
  * ============================================================================
  */
+
+
 public class SplashViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> isUserRegistered = new MutableLiveData<>();
+
 
     public SplashViewModel(@NonNull Application application) {
         super(application);

@@ -15,7 +15,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.di.AppComponent;
-import com.w3engineers.unicef.telemesh.data.di.DaggerAppComponent;
+
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -36,7 +36,7 @@ public class TeleMeshApplication extends MeshApp {
 
     // 2. Reference to the application graph that is used across the whole app
     // Next create ViewModelProviderFactory.java
-    AppComponent appComponent = DaggerAppComponent.create();
+
 
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;

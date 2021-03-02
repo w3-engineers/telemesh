@@ -166,8 +166,8 @@ quickly:
 
 #### <a name="submitpr"></a>Submitting Pull Requests
 
-**Important**: We are not accepting major feature requests or PRs that contain major new features
- or breaking changes at this time but we are welcoming to plan it for future or, we can discuss further offline.
+**Important**: We are not accepting major feature requests or PRs that contain new features or breaking changes at this time. 
+However, we are welcoming to plan it for the future or we can discuss it further offline.
 
 
 ## Feature requests <a name="featurereq"></a>

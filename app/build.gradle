@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.github.kt3k.coveralls'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -192,6 +193,7 @@ dependencies {
     api deps.local_server
 //    debugImplementation deps.inappstoragereader
     implementation deps.viper
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation project(path: ':viper')
 }
 
@@ -206,4 +208,7 @@ tasks.coveralls {
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+repositories {
+    mavenCentral()
 }

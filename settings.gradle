@@ -1,6 +1,6 @@
 include ':app', ':appshare', ':localserver'/*, ':viper', ':paylib', ':wallet_gen'*/
 
-// Remove RM-Lib
+// Remove Right Mesh-Lib
 /*pluginManagement.repositories {
     jcenter()
     google()

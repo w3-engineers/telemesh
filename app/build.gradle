@@ -193,6 +193,9 @@ dependencies {
 //    debugImplementation deps.inappstoragereader
     implementation deps.viper
     //implementation project(path: ':viper')
+    def dagger_version = "2.32"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
 }
 
 coveralls {

@@ -25,6 +25,9 @@ import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -32,10 +35,11 @@ import io.reactivex.Single;
  * Using the Room database as a data source.
  */
 
+
 public class UserDataSource {
 
     private static UserDataSource userDataSource;
-    private final UserDao mUserDao;
+    public UserDao mUserDao;
 
 //    private static ExecutorService executorService;
 
@@ -43,13 +47,13 @@ public class UserDataSource {
 //        mUserDao = AppDatabase.getInstance().userDao();
 //    }
 
-    /**
-     * This constructor is restricted and only used in unit test class
-     *
-     * @param userDao -> provide dao from unit test class
-     */
-    public UserDataSource(@NonNull UserDao userDao) {
-        mUserDao = userDao;
+
+    @Inject
+    public UserDataSource(/*@NonNull UserDao userDao*/) {
+        /*mUserDao = userDao;*/
+        // It's factory pattern
+        // we need to invoke it via injection
+        mUserDao = AppDatabase.getInstance().userDao();
     }
 
     @NonNull
@@ -62,14 +66,11 @@ public class UserDataSource {
 
     /**
      * This constructor is restricted and only used in unit test class
-     *
-     * @param userDao -> provide dao from unit test class
      */
     @NonNull
     public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
-            userDataSource = new UserDataSource(userDao);
-//            executorService = Executors.newSingleThreadExecutor();
+            userDataSource = new UserDataSource();
         }
         return userDataSource;
     }

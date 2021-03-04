@@ -41,7 +41,7 @@ public class UserDataSourceTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        SUT = new UserDataSource(appDatabase.userDao());
+        SUT = new UserDataSource();
     }
 
     @After

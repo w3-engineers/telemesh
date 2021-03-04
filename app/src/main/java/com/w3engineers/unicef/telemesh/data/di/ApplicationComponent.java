@@ -16,7 +16,7 @@ import dagger.Component;
  * Additionally, it simplifies testing by allowing you to use a custom application class in tests.
  */
 
-@Component
+@Component(modules = StorageModule.class)
 public interface ApplicationComponent {
 
     // With the inject(MainActivityViewModel mainActivityViewModel) method in the @Component interface,

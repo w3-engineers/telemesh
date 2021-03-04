@@ -40,6 +40,8 @@ public class UserDataSource {
 
     private static UserDataSource userDataSource;
     public UserDao mUserDao;
+    @Inject
+    public AppDatabase appDatabase;
 
 //    private static ExecutorService executorService;
 
@@ -49,10 +51,11 @@ public class UserDataSource {
 
 
     @Inject
-    public UserDataSource() {
+    public UserDataSource(AppDatabase appDatabase) {
         // It's factory pattern
         // we need to invoke it via injection
-        mUserDao = AppDatabase.getInstance().userDao();
+        this.appDatabase = appDatabase;
+        mUserDao = appDatabase.userDao();
     }
 
     public UserDataSource(@NonNull UserDao userDao){
@@ -73,7 +76,7 @@ public class UserDataSource {
     @NonNull
     public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
-            userDataSource = new UserDataSource();
+            userDataSource = new UserDataSource(userDao);
         }
         return userDataSource;
     }

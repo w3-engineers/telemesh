@@ -116,9 +116,9 @@ public abstract class AppDatabase extends BaseDatabase {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
-                    Context context = App.getContext();
 
-                    sInstance = createDbWithMigration(context); //normally initial version is always 21
+
+                    sInstance = createDbWithMigration(); //normally initial version is always 21
                 }
             }
         }
@@ -126,9 +126,9 @@ public abstract class AppDatabase extends BaseDatabase {
         return (AppDatabase) sInstance;
     }
 
-    private static AppDatabase createDbWithMigration(Context context) {
+    public static AppDatabase createDbWithMigration() {
 
-        return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
+        return createDb(App.getContext(), App.getContext().getString(R.string.app_name), AppDatabase.class,
                 initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE, ""));

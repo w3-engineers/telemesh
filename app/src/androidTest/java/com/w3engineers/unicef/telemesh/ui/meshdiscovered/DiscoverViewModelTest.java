@@ -51,7 +51,7 @@ public class DiscoverViewModelTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = new UserDataSource();
+        userDataSource = new UserDataSource(appDatabase.userDao());
 
         SUT = new DiscoverViewModel((Application) InstrumentationRegistry.getContext().getApplicationContext());
 

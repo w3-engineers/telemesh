@@ -70,7 +70,7 @@ public class MeshContactViewModelTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = new UserDataSource();
+        userDataSource = new UserDataSource(appDatabase.userDao());
 
         SUT = new MeshContactViewModel((Application) InstrumentationRegistry.getContext().getApplicationContext());
 

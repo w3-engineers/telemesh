@@ -49,11 +49,14 @@ public class UserDataSource {
 
 
     @Inject
-    public UserDataSource(/*@NonNull UserDao userDao*/) {
-        /*mUserDao = userDao;*/
+    public UserDataSource() {
         // It's factory pattern
         // we need to invoke it via injection
         mUserDao = AppDatabase.getInstance().userDao();
+    }
+
+    public UserDataSource(@NonNull UserDao userDao){
+        mUserDao = userDao;
     }
 
     @NonNull

@@ -42,7 +42,7 @@ public class MessageSourceDataTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
 
-        userDataSource = new UserDataSource();
+        userDataSource = new UserDataSource(appDatabase.userDao());
 
         SUT = new MessageSourceData(appDatabase.messageDao());
     }

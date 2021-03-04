@@ -27,7 +27,7 @@ versions.arch_core = "1.1.1"
 versions.room = "1.1.1"
 versions.lifecycle = "1.1.1"
 versions.support = "28.0.0"
-versions.dagger = "2.15"
+
 versions.junit = "4.12"
 versions.espresso = "3.0.2"
 versions.retrofit = "2.6.0"
@@ -125,14 +125,6 @@ retrofit.mock = "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
 deps.retrofit = retrofit
 deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${versions.okhttp_logging_interceptor}"
 
-def dagger = [:]
-dagger.runtime = "com.google.dagger:dagger:$versions.dagger"
-dagger.android = "com.google.dagger:dagger-android:$versions.dagger"
-dagger.android_support = "com.google.dagger:dagger-android-support:$versions.dagger"
-dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
-dagger.android_support_compiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
-
-deps.dagger = dagger
 
 def espresso = [:]
 espresso.core = "com.android.support.test.espresso:espresso-core:$versions.espresso"

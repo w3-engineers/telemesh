@@ -1,11 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
-
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
@@ -15,6 +12,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountLocalWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountSendServerWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
@@ -29,8 +27,12 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.parse.Parse.getApplicationContext;
 
 public class MainActivityViewModel extends BaseRxViewModel {
 
@@ -49,13 +51,20 @@ public class MainActivityViewModel extends BaseRxViewModel {
     // FeedDataSource instance
     private FeedDataSource mFeedDataSource;
     private MessageSourceData messageSourceData;
-    private UserDataSource userDataSource;
+
+    @Inject
+    UserDataSource userDataSource;
+
     private DataSource dataSource;
     private MutableLiveData<Integer> myModeLiveData;
     private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
 
     public MainActivityViewModel() {
-        userDataSource = UserDataSource.getInstance();
+        // TODO: DI
+        //userDataSource = UserDataSource.getInstance();
+
+        ((TeleMeshApplication) getApplicationContext()).appComponent.inject(this);
+
         messageSourceData = MessageSourceData.getInstance();
         mFeedDataSource = FeedDataSource.getInstance();
         mWorkManager = WorkManager.getInstance();
@@ -72,7 +81,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
 
     private Single<Integer> updateUserToOffline() {
         return Single.fromCallable(() ->
-                UserDataSource.getInstance().updateUserToOffline());
+                userDataSource.updateUserToOffline());
     }
 
     /*public LiveData<Integer> getMyUserMode() {

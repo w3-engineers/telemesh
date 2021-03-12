@@ -40,7 +40,8 @@ import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivit
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.security.SecurityActivity;
-import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
+
+import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivityK;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.hamcrest.Description;
@@ -78,7 +79,7 @@ import static org.hamcrest.Matchers.anything;
 public class TelemeshTest {
 
     @Rule
-    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
+    public ActivityTestRule<SplashActivityK> mActivityTestRule = new ActivityTestRule<>(SplashActivityK.class);
 
 
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());

@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 /*
  * ============================================================================
@@ -56,6 +58,9 @@ import java.util.List;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {
+
+    @Inject
+    Context context;
 
     private static final int initialVersion = 1;
 

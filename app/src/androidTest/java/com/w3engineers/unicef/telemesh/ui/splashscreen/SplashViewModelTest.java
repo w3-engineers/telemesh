@@ -26,7 +26,7 @@ public class SplashViewModelTest {
     private SplashViewModel SUT;
 
     @Rule
-    public ActivityTestRule<SplashActivity> rule  = new ActivityTestRule<>(SplashActivity.class);
+    public ActivityTestRule<SplashActivityK> rule  = new ActivityTestRule<>(SplashActivityK.class);
 
     @Before
     public void setUp() {

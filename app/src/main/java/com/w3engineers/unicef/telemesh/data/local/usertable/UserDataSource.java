@@ -17,6 +17,8 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +45,7 @@ public class UserDataSource {
     @Inject
     public AppDatabase appDatabase;
 
+
 //    private static ExecutorService executorService;
 
 //    private UserDataSource() {
@@ -52,8 +55,6 @@ public class UserDataSource {
 
     @Inject
     public UserDataSource(AppDatabase appDatabase) {
-        // It's factory pattern
-        // we need to invoke it via injection
         this.appDatabase = appDatabase;
         mUserDao = appDatabase.userDao();
     }

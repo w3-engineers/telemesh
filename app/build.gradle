@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.github.kt3k.coveralls'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -196,6 +197,9 @@ dependencies {
     def dagger_version = "2.32"
     implementation "com.google.dagger:dagger:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 coveralls {
@@ -209,4 +213,7 @@ tasks.coveralls {
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+repositories {
+    mavenCentral()
 }

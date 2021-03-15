@@ -69,6 +69,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
     }
 
     public void textEditControl(@NonNull EditText editText) {
+
         getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
                 .map(input -> input.editable() + "")
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())

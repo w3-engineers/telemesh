@@ -35,7 +35,7 @@ public class Constants {
         int NEG_INTEGER_ONE = -1;
         int DELAY_INTERVAL = 3000;
         int DOUBLE_PRESS_INTERVAL = 2000;
-        int MINIMUM_TEXT_LIMIT = 2;
+        int MINIMUM_TEXT_LIMIT = 4;
         int MINIMUM_PASSWORD_LIMIT = 8;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;

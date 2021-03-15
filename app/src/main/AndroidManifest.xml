@@ -71,10 +71,6 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".ui.createuser.CreateUserActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.splashscreen.SplashActivityK"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
@@ -84,6 +80,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.createuser.CreateUserActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity android:name=".ui.chooseprofileimage.ProfileImageActivity" />
         <activity android:name=".ui.userprofile.UserProfileActivity" />
         <activity android:name=".ui.aboutus.AboutUsActivity" />

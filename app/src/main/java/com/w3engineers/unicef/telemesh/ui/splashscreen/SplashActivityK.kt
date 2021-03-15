@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.w3engineers.unicef.telemesh.R
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator
@@ -16,8 +15,8 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity
 import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity
 import com.w3engineers.unicef.util.helper.CommonUtil
 import com.w3engineers.walleter.wallet.WalletService
-import timber.log.Timber
 import kotlinx.android.synthetic.main.activity_splash.*
+import timber.log.Timber
 
 class SplashActivityK: AppCompatActivity() {
 

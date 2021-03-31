@@ -49,7 +49,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     // Relatively faster then direct sub query, still expecting some more performance improvement of this query
     // Should be exactly minimum value
 
-    @NonNull
+    /*@NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
@@ -65,6 +65,27 @@ public abstract class UserDao extends BaseDao<UserEntity> {
             + Constants.UserStatus.OFFLINE + " AND (" + ColumnNames.COLUMN_MESSAGE_STATUS + " IS "
             + Constants.MessageStatus.STATUS_UNREAD + " OR " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " IS " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " ))) ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
+            + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
+            + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED
+            + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " ELSE " + Constants.MessageStatus.STATUS_READ
+            + " END) END ASC, CASE " + ColumnNames.COLUMN_USER_IS_ONLINE + " WHEN " + Constants.UserStatus.OFFLINE
+            + " THEN " + Constants.UserStatus.OFFLINE + " ELSE " + Constants.UserStatus.WIFI_ONLINE + " END DESC, "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_NAME + " COLLATE NOCASE ASC")
+    abstract Flowable<List<UserEntity>> getAllOnlineUsers();*/
+
+    @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.USERS + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE "
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
+            + " THEN 1 " + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED + " THEN 1 "
+            + " ELSE 0 END) AS hasUnreadMessage, MAX(" + ColumnNames.ID + ") AS MAXID FROM "
+            + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE + " == "
+            + Constants.MessagePlace.VALUE_MESSAGE_PLACE_P2P + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID
+            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_FRIENDS_ID + " = M."
+            + ColumnNames.COLUMN_FRIENDS_ID + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
+            + TableNames.USERS + "." + ColumnNames.COLUMN_USER_MESH_ID + " = MESS."
+            + ColumnNames.COLUMN_FRIENDS_ID + " ORDER BY CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " WHEN NULL THEN " + Constants.MessageStatus.STATUS_READ + " ELSE (CASE "
             + ColumnNames.COLUMN_MESSAGE_STATUS + " WHEN " + Constants.MessageStatus.STATUS_UNREAD
             + " THEN " + Constants.MessageStatus.STATUS_UNREAD + " WHEN " + Constants.MessageStatus.STATUS_UNREAD_FAILED

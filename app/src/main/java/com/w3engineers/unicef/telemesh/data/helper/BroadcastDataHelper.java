@@ -302,6 +302,25 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
 
+    public void testLocalBroadcast() {
+        String path = "/storage/emulated/0/Telemesh/.contentThumb/IMG_THUMB_16096692238798057327923817114542.jpg";
+
+        BulletinFeed bulletinFeed = new BulletinFeed();
+        bulletinFeed.setCreatedAt("2021-03-27T05:58:32.485Z")
+                .setUploaderInfo("W3 Engineers")
+                .setMessageType(Constants.BroadcastMessageType.IMAGE_BROADCAST)
+                .setMessageTitle("Text broadcast test")
+                .setMessageBody("Hello message " + (++i))
+                .setMessageId(UUID.randomUUID().toString())
+                .setExpiredAt("2021-04-27T05:58:32.485Z");
+
+        FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
+                .setFeedReadStatus(false)
+                .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinFeed.getCreatedAt()));
+
+        sendLocalBroadcast(feedEntity, path, path);
+    }
+
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {
 //        if (!TextUtils.isEmpty(contentPath))
 //            contentPath = contentPath.substring(1);

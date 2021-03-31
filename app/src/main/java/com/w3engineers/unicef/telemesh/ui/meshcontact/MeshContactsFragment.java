@@ -87,7 +87,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         setHasOptionsMenu(true);
         // controlEmptyLayout();
         title = LanguageUtil.getString(R.string.title_personal_fragment);
-        setTitle(title);
+        ((MainActivity) getActivity()).setToolbarTitle(title);
 
         init();
         initSpinner();
@@ -111,7 +111,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
+                ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_personal_fragment));
                 if (userEntities != null && userEntities.size() > 0) {
                     controlEmpty(false);
                     getAdapter().submitList(userEntities);
@@ -211,7 +211,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
+            ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_personal_fragment));
         }
     }
 

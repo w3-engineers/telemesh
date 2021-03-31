@@ -58,7 +58,7 @@ public class DiscoverFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
         controlEmptyLayout();
-        setTitle(title);
+        ((MainActivity) getActivity()).setToolbarTitle(title);
 
         init();
 
@@ -106,7 +106,7 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
                 if (userEntities != null && userEntities.size() > 0) {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
@@ -234,7 +234,7 @@ public class DiscoverFragment extends BaseFragment {
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+            ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
         }
     }
 
@@ -248,7 +248,7 @@ public class DiscoverFragment extends BaseFragment {
                 if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                        ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

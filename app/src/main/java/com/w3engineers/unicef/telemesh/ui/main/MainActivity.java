@@ -324,6 +324,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+        setToolbarTitle(title);
+    }
+
+    public void setToolbarTitle(String title) {
+        String myName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
+                .read(Constants.preferenceKey.USER_NAME);
+        title = title + " [" + myName + "]";
         setTitle(title);
     }
 

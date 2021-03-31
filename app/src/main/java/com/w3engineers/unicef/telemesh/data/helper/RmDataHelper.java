@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -124,6 +125,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull UserModel userModel) {
 
         String userId = userModel.getUserId();
+        if (userId == null || !userId.startsWith("0x")) {
+            Log.e("User Add: ", "Error id: " + userId);
+            return;
+        }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
@@ -151,6 +156,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void onDemandUserAdd(String userId) {
+        if (userId == null || !userId.startsWith("0x")) {
+            Log.e("Forward User Id: ", "Error id: " + userId);
+            return;
+        }
         UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
         if (userEntity == null) {
             userEntity = new UserEntity().setMeshId(userId)
@@ -200,11 +209,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         switch (userActiveStatus) {
             case 1:
                 return Constants.UserStatus.WIFI_ONLINE;
-            case 2:
+            case 10:
                 return Constants.UserStatus.BLE_ONLINE;
             case 3:
                 return Constants.UserStatus.WIFI_MESH_ONLINE;
-            case 4:
+            case 11:
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;
@@ -308,10 +317,26 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     if (!TextUtils.isEmpty(liveUserId)) {
                         prepareRightMeshDataSource();
                         rightMeshDataSource.checkUserIsConnected(liveUserId);
+                        int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
+
+                        HandlerUtil.postBackground(()-> {
+                            updateUserActiveStatus(liveUserId, userActiveType);
+                        });
                     }
                 }, Throwable::printStackTrace));
 
         GroupDataHelper.getInstance().groupDataObserver();
+    }
+
+    private void updateUserActiveStatus(String userId, int userActiveStatus) {
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        Log.v("MIMO_SAHA","S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+        if (userEntity != null) {
+            userEntity.setOnlineStatus(userConnectivityStatus);
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
     }
 
     /**

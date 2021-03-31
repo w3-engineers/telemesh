@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -50,6 +52,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private List<UserEntity> tempNearByList;
     public List<UserEntity> userList;
+    private String myMeshId = null;
 
     public DiscoverViewModel(@NonNull Application application) {
         super(application);
@@ -68,6 +71,13 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     public void selectedChattedUser(String selectChattedUser) {
         this.selectChattedUser = selectChattedUser;
+    }
+
+    private String getMyMeshId() {
+        if (TextUtils.isEmpty(myMeshId)) {
+            myMeshId = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+        }
+        return myMeshId;
     }
 
     /*public void setSearchText(String searchText) {
@@ -96,54 +106,69 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     }
 
     public void startUserObserver() {
+
         getCompositeDisposable().add(userDataSource.getAllOnlineUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    Set<String> set = new HashSet<String>();
-                    for (UserEntity o2 : userEntities) {
-                        set.add(o2.getMeshId());
-                    }
-                    Iterator<UserEntity> i = userList.iterator();
-                    while (i.hasNext()) {
-                        if (set.contains(i.next().getMeshId())) {
-                            i.remove();
-                        }
-                    }
+                    if (userEntities != null) {
 
-                    List<UserEntity> userEntityList = new ArrayList<>();
-                    for (UserEntity diffElement : userList) {
-                        UserEntity userEntity = new UserEntity();
-                        userEntity.setMeshId(diffElement.getMeshId());
-                        userEntity.setUserName(diffElement.getUserName());
-                        userEntity.setAvatarIndex(diffElement.getAvatarIndex());
-                        userEntity.setIsFavourite(diffElement.getIsFavourite());
-                        userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
-                        userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
+                        if (!TextUtils.isEmpty(getMyMeshId())) {
 
-                        userEntityList.add(userEntity);
-                    }
+                            Iterator<UserEntity> userEntityIterator = userEntities.iterator();
 
-                    userList.clear();
-                    userList.addAll(userEntities);
-
-                    if(!userEntityList.isEmpty()) {
-                        Collections.sort(userEntityList, (o1, o2) -> {
-                            if (o1.getUserName() != null && o2.getUserName() != null) {
-                                return o1.getUserName().compareTo(o2.getUserName());
+                            while (userEntityIterator.hasNext()) {
+                                if (getMyMeshId().equals(userEntityIterator.next().getMeshId())) {
+                                    userEntityIterator.remove();
+                                }
                             }
-                            return 0;
-                        });
-                    }
+                        }
 
-                    userList.addAll(userEntityList);
+                        Set<String> set = new HashSet<String>();
+                        for (UserEntity o2 : userEntities) {
+                            set.add(o2.getMeshId());
+                        }
+                        Iterator<UserEntity> i = userList.iterator();
+                        while (i.hasNext()) {
+                            if (set.contains(i.next().getMeshId())) {
+                                i.remove();
+                            }
+                        }
 
-                    if (!TextUtils.isEmpty(searchableText)) {
-                        backUserEntity.postValue(userList);
-                        startSearch(searchableText, userList);
-                    } else {
-                        setUserData(userList);
+                        List<UserEntity> userEntityList = new ArrayList<>();
+                        for (UserEntity diffElement : userList) {
+                            UserEntity userEntity = new UserEntity();
+                            userEntity.setMeshId(diffElement.getMeshId());
+                            userEntity.setUserName(diffElement.getUserName());
+                            userEntity.setAvatarIndex(diffElement.getAvatarIndex());
+                            userEntity.setIsFavourite(diffElement.getIsFavourite());
+                            userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                            userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
+
+                            userEntityList.add(userEntity);
+                        }
+
+                        userList.clear();
+                        userList.addAll(userEntities);
+
+                        if(!userEntityList.isEmpty()) {
+                            Collections.sort(userEntityList, (o1, o2) -> {
+                                if (o1.getUserName() != null && o2.getUserName() != null) {
+                                    return o1.getUserName().compareTo(o2.getUserName());
+                                }
+                                return 0;
+                            });
+                        }
+
+                        userList.addAll(userEntityList);
+
+                        if (!TextUtils.isEmpty(searchableText)) {
+                            backUserEntity.postValue(userList);
+                            startSearch(searchableText, userList);
+                        } else {
+                            setUserData(userList);
+                        }
                     }
 
                 }, Throwable::printStackTrace));

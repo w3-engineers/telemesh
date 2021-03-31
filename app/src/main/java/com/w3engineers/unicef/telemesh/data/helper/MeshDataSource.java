@@ -300,5 +300,4 @@ public class MeshDataSource extends ViperUtil {
     public void checkUserIsConnected(String userId) {
         checkUserConnectionStatus(userId);
     }
-
 }

@@ -303,7 +303,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     public void testLocalBroadcast() {
-        String path = "/storage/emulated/0/Telemesh/.contentThumb/IMG_THUMB_16096692238798057327923817114542.jpg";
+        String path = "/storage/emulated/0/broad.jpg";
 
         BulletinFeed bulletinFeed = new BulletinFeed();
         bulletinFeed.setCreatedAt("2021-03-27T05:58:32.485Z")

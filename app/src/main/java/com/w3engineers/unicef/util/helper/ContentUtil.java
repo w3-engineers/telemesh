@@ -330,12 +330,13 @@ public class ContentUtil {
 
             if (isThumb) {
                 copyFile = prepareThumbFile();
+                originalFile.renameTo(copyFile);
             } else {
-                copyFile = prepareFile(extension);
+                copyFile = originalFile;
             }
 
             if (copyFile != null) {
-                originalFile.renameTo(copyFile);
+//                originalFile.renameTo(copyFile);
                 return copyFile.getAbsolutePath();
             }
         }

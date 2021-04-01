@@ -13,6 +13,8 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 @Dao
 public abstract class FeedDao extends BaseDao<FeedEntity> {
 
@@ -36,4 +38,7 @@ public abstract class FeedDao extends BaseDao<FeedEntity> {
 
     @Query("SELECT * FROM " + TableNames.FEED + " WHERE " + ColumnNames.COLUMN_FEED_ID + " = :feedId ")
     public abstract FeedEntity getFeedById(String feedId);
+
+    @Query("SELECT COUNT ( " + ColumnNames.COLUMN_FEED_ID + " ) FROM " + TableNames.FEED)
+    public abstract Single<Integer> getRowCount();
 }

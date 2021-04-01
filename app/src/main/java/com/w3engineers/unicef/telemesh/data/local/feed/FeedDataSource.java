@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Single;
+
 public class FeedDataSource {
 
     private FeedDao feedDao;
@@ -71,6 +73,11 @@ public class FeedDataSource {
     @NonNull
     public LiveData<FeedEntity> getLiveFeedEntity(String feedId) {
         return feedDao.getFeedEntityById(feedId);
+    }
+
+    @NonNull
+    public Single<Integer> getRowCount() {
+        return feedDao.getRowCount();
     }
 
     public long updateFeedMessageReadStatus(@NonNull String feedId) {

@@ -305,20 +305,31 @@ public class BroadcastDataHelper extends RmDataHelper {
     public void testLocalBroadcast() {
         String path = "/storage/emulated/0/broad.jpg";
 
-        BulletinFeed bulletinFeed = new BulletinFeed();
-        bulletinFeed.setCreatedAt("2021-03-27T05:58:32.485Z")
-                .setUploaderInfo("W3 Engineers")
-                .setMessageType(Constants.BroadcastMessageType.IMAGE_BROADCAST)
-                .setMessageTitle("Text broadcast test")
-                .setMessageBody("Hello message " + (++i))
-                .setMessageId(UUID.randomUUID().toString())
-                .setExpiredAt("2021-04-27T05:58:32.485Z");
+        compositeDisposable.add(FeedDataSource.getInstance().getRowCount()
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(integerSingle -> {
 
-        FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
-                .setFeedReadStatus(false)
-                .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinFeed.getCreatedAt()));
+                    BulletinFeed bulletinFeed = new BulletinFeed();
+                    bulletinFeed.setCreatedAt("2021-03-27T05:58:32.485Z")
+                            .setUploaderInfo("W3 Engineers")
+                            .setMessageType(Constants.BroadcastMessageType.IMAGE_BROADCAST)
+                            .setMessageTitle("Text broadcast test " + integerSingle)
+                            .setMessageBody("Hello message " + (++i))
+                            .setMessageId(UUID.randomUUID().toString())
+                            .setExpiredAt("2021-04-27T05:58:32.485Z");
 
-        sendLocalBroadcast(feedEntity, path, path);
+                    FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
+                            .setFeedReadStatus(false)
+                            .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinFeed.getCreatedAt()));
+
+                    compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
+                            .insertOrUpdateData(feedEntity))
+                            .subscribeOn(Schedulers.newThread())
+                            .subscribe());
+
+                    sendLocalBroadcast(feedEntity, path, path);
+
+                }));
     }
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {

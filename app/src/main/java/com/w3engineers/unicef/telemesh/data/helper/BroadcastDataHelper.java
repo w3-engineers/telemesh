@@ -36,11 +36,11 @@ import okhttp3.Request;
 
 public class BroadcastDataHelper extends RmDataHelper {
 
-//    public String mLatitude = "22.824922";
-//    public String mLongitude = "89.551327";
+    public String mLatitude = "22.824922";
+    public String mLongitude = "89.551327";
 
-    public String mLatitude;
-    public String mLongitude;
+//    public String mLatitude;
+//    public String mLongitude;
 
     private static BroadcastDataHelper broadcastDataHelper = new BroadcastDataHelper();
     private HashMap<String, FeedEntity> feedEntityHashMap;
@@ -142,16 +142,18 @@ public class BroadcastDataHelper extends RmDataHelper {
     }
 
     private void requestBroadcastMsg(List<String> localActiveUsers) {
-        if (NetworkMonitor.isOnline()) {
+//        if (NetworkMonitor.isOnline()) {
             OkHttpClient.Builder client1 = new OkHttpClient.Builder();
-            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
+
+//            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
+            OkHttpClient client = client1.build();
 
             Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
             BroadcastWebSocket listener = new BroadcastWebSocket();
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(mLatitude, mLongitude, localActiveUsers));
             client.newWebSocket(request, listener);
             client.dispatcher().executorService().shutdown();
-        }
+//        }
     }
 
     public void responseBroadcastMsg(@NonNull String broadcastText) {
@@ -303,7 +305,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     public void testLocalBroadcast() {
-        String path = "/storage/emulated/0/broad.jpg";
+//        String path = "/storage/emulated/0/broad.jpg";
+        String path = null;
 
         compositeDisposable.add(FeedDataSource.getInstance().getRowCount()
                 .subscribeOn(Schedulers.newThread())
@@ -312,7 +315,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                     BulletinFeed bulletinFeed = new BulletinFeed();
                     bulletinFeed.setCreatedAt("2021-03-27T05:58:32.485Z")
                             .setUploaderInfo("W3 Engineers")
-                            .setMessageType(Constants.BroadcastMessageType.IMAGE_BROADCAST)
+                            .setMessageType(Constants.BroadcastMessageType.TEXT_BROADCAST)
                             .setMessageTitle("Text broadcast test " + integerSingle)
                             .setMessageBody("Hello message " + (++i))
                             .setMessageId(UUID.randomUUID().toString())

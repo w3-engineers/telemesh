@@ -217,7 +217,6 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     protected void contentMessageSuccessResponse(byte[] rawData) {
-
         if (rawData == null)
             return;
         String messageId = new String(rawData);
@@ -663,7 +662,6 @@ public class ContentDataHelper extends RmDataHelper {
         setProgressInfoInMap(contentModel, true);
     }
 
-    // --------------------------------------------------------
 
     // DB update task +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.MeshUserDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
@@ -37,7 +38,7 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void getUserRegistrationStatus() {
 
-        RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
+        MeshUserDataHelper.getInstance().resetUserToOfflineBasedOnService();
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> isUserRegistered.postValue(SharedPref.getSharedPref(getApplication()

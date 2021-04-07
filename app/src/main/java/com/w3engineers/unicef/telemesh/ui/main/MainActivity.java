@@ -46,7 +46,10 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppUpdateDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.MeshMessageDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.MeshUserDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -419,6 +422,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     protected void onDestroy() {
         super.onDestroy();
         RmDataHelper.getInstance().destroy();
+        MeshUserDataHelper.getInstance().destroy();
+        MeshMessageDataHelper.getInstance().destroy();
+        AppUpdateDataHelper.getInstance().destroy();
         sInstance = null;
         unregisterReceiver(mGpsSwitchStateReceiver);
     }
@@ -524,7 +530,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                RmDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
+                AppUpdateDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
             }
         });
     }

@@ -23,11 +23,13 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.work.WorkInfo;
 
@@ -47,6 +49,7 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.LocationTracker;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -67,7 +70,7 @@ import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
-public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener, DexterPermissionHelper.PermissionCallback {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
@@ -76,9 +79,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     NotificationBadgeBinding notificationBadgeBinding;
     @SuppressLint("StaticFieldLeak")
     private static MainActivity sInstance;
+
     private BulletinTimeScheduler sheduler;
     private Fragment mCurrentFragment;
 
+    Context mContext;
+    LocationTracker locationTracker;
     private int latestUserCount;
     private int latestMessageCount;
 
@@ -114,6 +120,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void startUI() {
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
+        mContext = this;
+
         super.startUI();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -157,17 +165,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
         StorageUtil.getFreeMemory();
 
-        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+       // registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        filter.addAction(Intent.ACTION_PROVIDER_CHANGED);
+        registerReceiver(mGpsSwitchStateReceiver, filter);
 
         checkAppBlockerAvailable();
 
     }
 
     protected void requestMultiplePermissions() {
-
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-
-                },
+        DexterPermissionHelper.getInstance().requestForPermission(this,this,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -496,12 +504,27 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
 //                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
-                if (statusOfGPS) {
+               // boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+                if (isGpsEnabled || isNetworkEnabled) {
+                    //location is enabled
+                    Log.e("gps_staus", "gps has been on");
+                    locationTracker = new LocationTracker(mContext, MainActivity.this);
+                    CommonUtil.dismissDialog();
+                } else {
+                    //location is disabled
+                    Log.e("gps_staus", "gps has been off");
+                    CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
+                }
+
+      /*          if (statusOfGPS) {
                     CommonUtil.dismissDialog();
                 } else {
                     CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
-                }
+                }*/
             }
         }
     };
@@ -607,5 +630,25 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 AppBlockerUtil.openAppBlockerDialog(MainActivity.this, versionName);
             }
         }, 10 * 1000);
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        locationTracker = new LocationTracker(mContext, MainActivity.this);
+
+        // Check if GPS enabled
+        if (locationTracker.canGetLocation()) {
+
+            double latitude = locationTracker.getLatitude();
+            double longitude = locationTracker.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // Can't get location.
+            // GPS or network is not enabled.
+            // Ask user to enable GPS/network in settings.
+            locationTracker.showSettingsAlert();
+        }
     }
 }

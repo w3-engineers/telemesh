@@ -39,9 +39,6 @@ public class BroadcastDataHelper extends RmDataHelper {
     public String mLatitude = "22.824922";
     public String mLongitude = "89.551327";
 
-//    public String mLatitude;
-//    public String mLongitude;
-
     private static BroadcastDataHelper broadcastDataHelper = new BroadcastDataHelper();
     private HashMap<String, FeedEntity> feedEntityHashMap;
     private List<String> downloadFeedContentQueue;

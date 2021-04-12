@@ -49,8 +49,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     private BroadcastDataHelper() {
         feedEntityHashMap = new HashMap<>();
         downloadFeedContentQueue = new ArrayList<>();
-        mLatitude = String.valueOf(LocationTracker.getInstance().latitude);
-        mLongitude = String.valueOf(LocationTracker.getInstance().longitude);
+        mLatitude = String.valueOf(LocationTracker.getInstance().getLatitude());
+        mLongitude = String.valueOf(LocationTracker.getInstance().getLongitude());
     }
 
     @NonNull
@@ -90,8 +90,8 @@ public class BroadcastDataHelper extends RmDataHelper {
             });*/
 
 
-            mLatitude = String.valueOf(LocationTracker.getInstance().latitude);
-            mLongitude = String.valueOf(LocationTracker.getInstance().longitude);
+            mLatitude = String.valueOf(LocationTracker.getInstance().getLatitude());
+            mLongitude = String.valueOf(LocationTracker.getInstance().getLongitude());
 
             getLocalUserCount();
 

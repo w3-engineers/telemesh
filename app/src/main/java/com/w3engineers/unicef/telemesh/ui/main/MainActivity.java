@@ -507,7 +507,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-                if (isGpsEnabled && isNetworkEnabled) {
+                if (isGpsEnabled || isNetworkEnabled) {
                     //location is enabled
                     Log.e("gps_staus", "gps has been on");
                     LocationTracker.getInstance().getLocation();

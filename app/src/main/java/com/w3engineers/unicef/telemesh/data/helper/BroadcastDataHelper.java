@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.w3engineers.mesh.util.NetworkMonitor;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
@@ -20,7 +18,6 @@ import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
-import com.w3engineers.unicef.util.helper.LocationUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -36,8 +33,11 @@ import okhttp3.Request;
 
 public class BroadcastDataHelper extends RmDataHelper {
 
-    public String mLatitude = "22.824922";
-    public String mLongitude = "89.551327";
+    public String mLatitude = "";
+    public String mLongitude = "";
+
+    public String constantLatitude = "22.824922"; // This value will be used when no data found
+    public String constantLongitude = "89.551327"; // This value will be used when no data found
 
     private static BroadcastDataHelper broadcastDataHelper = new BroadcastDataHelper();
     private HashMap<String, FeedEntity> feedEntityHashMap;
@@ -49,6 +49,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     private BroadcastDataHelper() {
         feedEntityHashMap = new HashMap<>();
         downloadFeedContentQueue = new ArrayList<>();
+        mLatitude = String.valueOf(LocationTracker.getInstance().latitude);
+        mLongitude = String.valueOf(LocationTracker.getInstance().longitude);
     }
 
     @NonNull
@@ -77,7 +79,7 @@ public class BroadcastDataHelper extends RmDataHelper {
 
     private void requestInitBroadcastMsg() {
         if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
-            LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {
+   /*         LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {
 
                 LocationUtil.getInstance().removeListener();
 
@@ -85,7 +87,14 @@ public class BroadcastDataHelper extends RmDataHelper {
                 mLongitude = lang;
 
                 getLocalUserCount();
-            });
+            });*/
+
+
+            mLatitude = String.valueOf(LocationTracker.getInstance().latitude);
+            mLongitude = String.valueOf(LocationTracker.getInstance().longitude);
+
+            getLocalUserCount();
+
         } else {
             getLocalUserCount();
         }
@@ -102,6 +111,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     int i = 0;
+
     public void demoTextBroadcast() {
         BulletinFeed bulletinFeed = new BulletinFeed();
         bulletinFeed.setCreatedAt("2020-08-27T05:58:32.485Z")
@@ -140,16 +150,21 @@ public class BroadcastDataHelper extends RmDataHelper {
 
     private void requestBroadcastMsg(List<String> localActiveUsers) {
 //        if (NetworkMonitor.isOnline()) {
-            OkHttpClient.Builder client1 = new OkHttpClient.Builder();
+        OkHttpClient.Builder client1 = new OkHttpClient.Builder();
 
 //            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
-            OkHttpClient client = client1.build();
+        OkHttpClient client = client1.build();
 
-            Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-            BroadcastWebSocket listener = new BroadcastWebSocket();
+        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
+        BroadcastWebSocket listener = new BroadcastWebSocket();
+        if (TextUtils.isEmpty(mLatitude) && TextUtils.isEmpty(mLongitude)) {
+            listener.setBroadcastCommand(getBroadcastMsgRequestCommand(constantLatitude, constantLongitude, localActiveUsers));
+        } else {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(mLatitude, mLongitude, localActiveUsers));
-            client.newWebSocket(request, listener);
-            client.dispatcher().executorService().shutdown();
+        }
+
+        client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
 //        }
     }
 
@@ -340,7 +355,7 @@ public class BroadcastDataHelper extends RmDataHelper {
         BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);
 
         String metaData = gsonBuilder.getBulletinModelJson(bulletinModel);
-        broadcastDataSend(feedEntity.getFeedId(), Constants.DataType.MESSAGE_FEED, metaData,
+        broadcastDataSend(feedEntity.getFeedId(), feedEntity.latitude, feedEntity.longitude, Constants.DataType.MESSAGE_FEED, metaData,
                 contentPath, "contentUrl", feedEntity.getFeedExpireTime(), true);
     }
 

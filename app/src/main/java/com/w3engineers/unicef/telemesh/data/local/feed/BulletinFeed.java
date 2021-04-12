@@ -38,6 +38,9 @@ public class BulletinFeed {
     @Expose
     private String expiredAt;
 
+    private String latitude;
+    private String longitude;
+
     public String getUploaderInfo() {
         return uploaderInfo;
     }
@@ -107,5 +110,21 @@ public class BulletinFeed {
 
     public void setExpiredAt(String expiredAt) {
         this.expiredAt = expiredAt;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

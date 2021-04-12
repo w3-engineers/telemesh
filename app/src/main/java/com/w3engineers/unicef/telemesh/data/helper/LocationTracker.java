@@ -35,7 +35,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 public class LocationTracker extends Service {
     private static LocationTracker locationTracker;
 
-    private Context mContext;
+    private static Context mContext;
+    private static Activity mActivity;
 
     // Flag for GPS status
     boolean isGPSEnabled = false;
@@ -59,19 +60,27 @@ public class LocationTracker extends Service {
     // Declaring a Location Manager
     protected LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationClient;
-    Activity activity;
 
-    public static LocationTracker getInstance(Context context, Activity activity) {
+    public static LocationTracker onInstance(Context context, Activity activity) {
         if (locationTracker == null) {
             return locationTracker = new LocationTracker(context, activity);
         }
         return locationTracker;
     }
 
-    public LocationTracker(Context context, Activity activity) {
-        this.mContext = context;
-        this.activity = activity;
-        getLocation();
+    public static LocationTracker getInstance() {
+        if (locationTracker == null && mContext !=null && mActivity !=null) {
+            return onInstance(mContext, mActivity);
+        }
+        return locationTracker;
+    }
+
+    private LocationTracker(Context context, Activity activity) {
+        if (context !=null && activity !=null){
+            this.mContext = context;
+            this.mActivity = activity;
+            getLocation();
+        }
     }
 
     public Location getLocation() {
@@ -93,8 +102,8 @@ public class LocationTracker extends Service {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     int requestPermissionsCode = 50;
-                    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
+                    if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
                     }
 
@@ -115,8 +124,8 @@ public class LocationTracker extends Service {
                 // If GPS enabled, get latitude/longitude using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
+                        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
                         } else {
                             locationManager.requestLocationUpdates(
@@ -141,9 +150,9 @@ public class LocationTracker extends Service {
             }
 
             if (location == null) {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
-                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(mActivity);
+                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
                 }
                 fusedLocationClient.getLastLocation()

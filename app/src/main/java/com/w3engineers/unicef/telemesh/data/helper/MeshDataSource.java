@@ -117,9 +117,11 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
+    public void broadcastDataSend(String broadcastId, String latitude, String longitude, String metaData, String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
         ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
         viperBroadcastData.broadcastId = broadcastId;
+        viperBroadcastData.latitude = latitude;
+        viperBroadcastData.longitude = longitude;
         viperBroadcastData.metaData = metaData;
         viperBroadcastData.contentPath = contentPath;
         viperBroadcastData.contentMeta = contentMeta;
@@ -267,7 +269,7 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta) {
+    protected void receiveBroadcast(String userId, String broadcastId, String latitude, String longitude, String metaData, String contentPath, String contentMeta) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         BroadcastDataModel broadcastDataModel = gsonBuilder.getBroadcastDataModelObj(metaData);

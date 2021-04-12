@@ -11,6 +11,8 @@ Proprietary and confidential
 public class ViperBroadcastData {
 
     public String broadcastId;
+    public String latitude;
+    public String longitude;
     public String metaData;
     public String contentPath;
     public String contentMeta;

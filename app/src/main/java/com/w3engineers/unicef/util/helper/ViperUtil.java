@@ -246,6 +246,7 @@ public abstract class ViperUtil {
             BroadcastEvent broadcastEvent = (BroadcastEvent) event;
             if (broadcastEvent != null) {
                 receiveBroadcast(broadcastEvent.getUserId(), broadcastEvent.getBroadcastId(),
+                        broadcastEvent.getLatitude(), broadcastEvent.getLongitude(),
                         broadcastEvent.getMetaData(), broadcastEvent.getContentPath(),
                         broadcastEvent.getContentMeta());
             }
@@ -404,6 +405,7 @@ public abstract class ViperUtil {
     public String sendLocalBroadcast(ViperBroadcastData viperBroadcastData) {
         try {
             viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
+                    viperBroadcastData.latitude, viperBroadcastData.longitude,
                     viperBroadcastData.metaData, viperBroadcastData.contentPath,
                     viperBroadcastData.contentMeta, viperBroadcastData.expiryTime,
                     viperBroadcastData.isNotificationEnable);
@@ -649,5 +651,5 @@ public abstract class ViperUtil {
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
-    protected abstract void receiveBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta);
+    protected abstract void receiveBroadcast(String userId, String broadcastId, String latitude,  String longitude, String metaData, String contentPath, String contentMeta);
 }

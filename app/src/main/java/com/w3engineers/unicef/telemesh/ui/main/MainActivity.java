@@ -84,7 +84,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Fragment mCurrentFragment;
 
     Context mContext;
-    LocationTracker locationTracker;
     private int latestUserCount;
     private int latestMessageCount;
 
@@ -428,6 +427,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         super.onDestroy();
         RmDataHelper.getInstance().destroy();
         sInstance = null;
+        LocationTracker.getInstance().stopListener();
         unregisterReceiver(mGpsSwitchStateReceiver);
     }
 
@@ -503,28 +503,20 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
-//                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-               // boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                 boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-                if (isGpsEnabled || isNetworkEnabled) {
+                if (isGpsEnabled && isNetworkEnabled) {
                     //location is enabled
                     Log.e("gps_staus", "gps has been on");
-                    locationTracker = new LocationTracker(mContext, MainActivity.this);
+                    LocationTracker.getInstance().getLocation();
                     CommonUtil.dismissDialog();
                 } else {
                     //location is disabled
                     Log.e("gps_staus", "gps has been off");
                     CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
                 }
-
-      /*          if (statusOfGPS) {
-                    CommonUtil.dismissDialog();
-                } else {
-                    CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
-                }*/
             }
         }
     };
@@ -579,11 +571,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
             openAppBlocker(currentVersionName);
         }
-
     }
 
     public void popupSnackbarForCompleteUpdate() {
-
         Snackbar snackbar =
                 Snackbar.make(
                         findViewById(R.id.main_view),
@@ -605,8 +595,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if ((mCurrentFragment instanceof MessageFeedFragment)) {
 
             Constants.IS_DATA_ON = true;
-            RmDataHelper.getInstance().mLatitude = "22.8456";
-            RmDataHelper.getInstance().mLongitude = "89.5403";
+         //   RmDataHelper.getInstance().mLatitude = "22.8456";
+          //  RmDataHelper.getInstance().mLongitude = "89.5403";
 
             MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
             messageFeedFragment.swipeRefreshOperation();
@@ -621,9 +611,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     public void openAppBlocker(String versionName) {
         Constants.IS_APP_BLOCKER_ON = true;
-
         // App blocker ui open test
-
         HandlerUtil.postForeground(new Runnable() {
             @Override
             public void run() {
@@ -634,13 +622,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onPermissionGranted() {
-        locationTracker = new LocationTracker(mContext, MainActivity.this);
+     //   locationTracker = new LocationTracker(mContext, MainActivity.this);
+
+        LocationTracker.onInstance(mContext, MainActivity.this);
 
         // Check if GPS enabled
-        if (locationTracker.canGetLocation()) {
+        if (LocationTracker.getInstance().canGetLocation()) {
 
-            double latitude = locationTracker.getLatitude();
-            double longitude = locationTracker.getLongitude();
+            double latitude = LocationTracker.getInstance().getLatitude();
+            double longitude = LocationTracker.getInstance().getLongitude();
 
             // \n is for new line
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -648,7 +638,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             // Can't get location.
             // GPS or network is not enabled.
             // Ask user to enable GPS/network in settings.
-            locationTracker.showSettingsAlert();
+          //  LocationTracker.getInstance().showSettingsAlert();
+            CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
         }
     }
 }

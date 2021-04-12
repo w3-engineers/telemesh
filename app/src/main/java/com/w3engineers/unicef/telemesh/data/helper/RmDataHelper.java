@@ -11,7 +11,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.NetworkMonitor;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -73,8 +72,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     protected DataSource dataSource;
 
-    public String mLatitude;
-    public String mLongitude;
 
     @SuppressLint("UseSparseArrays")
     @NonNull
@@ -319,7 +316,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         rightMeshDataSource.checkUserIsConnected(liveUserId);
                         int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
 
-                        HandlerUtil.postBackground(()-> {
+                        HandlerUtil.postBackground(() -> {
                             updateUserActiveStatus(liveUserId, userActiveType);
                         });
                     }
@@ -331,7 +328,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateUserActiveStatus(String userId, int userActiveStatus) {
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
-        Log.v("MIMO_SAHA","S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
+        Log.v("MIMO_SAHA", "S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
         UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
         if (userEntity != null) {
             userEntity.setOnlineStatus(userConnectivityStatus);
@@ -357,7 +354,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
     }
 
-    protected void broadcastDataSend(String broadcastId, byte type, String metaData,
+    protected void broadcastDataSend(String broadcastId, String latitude, String longitude, byte type, String metaData,
                                      String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
@@ -371,7 +368,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         prepareRightMeshDataSource();
 
         ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(() -> rightMeshDataSource.broadcastDataSend(broadcastId, broadcastMetaData,
+        service.execute(() -> rightMeshDataSource.broadcastDataSend(broadcastId, latitude, longitude, broadcastMetaData,
                 contentPath, contentMeta, expiryTime, isNotificationEnable));
     }
 

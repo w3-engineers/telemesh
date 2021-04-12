@@ -63,6 +63,10 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public String feedExpireTime;
 
+    public String latitude;
+
+    public String longitude;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -173,6 +177,28 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedExpireTime;
     }
 
+    @Nullable
+    public String getLatitude() {
+        return latitude;
+    }
+
+    @NonNull
+    public FeedEntity setLatitude(@Nullable String latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    @Nullable
+    public String getLongitude() {
+        return longitude;
+    }
+
+    @Nullable
+    public FeedEntity setLongitude(@NonNull String longitude) {
+        this.longitude = longitude;
+        return this;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -185,6 +211,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedContentInfo = in.readString();
         feedTimeMillis = in.readLong();
         feedExpireTime = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
     }
 
     @Override
@@ -200,6 +228,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedContentInfo);
         dest.writeLong(feedTimeMillis);
         dest.writeString(feedExpireTime);
+        dest.writeString(latitude);
+        dest.writeString(longitude);
     }
 
     @Override
@@ -242,7 +272,9 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 .setFeedTitle(bulletinFeed.getMessageTitle())
                 .setFeedDetail(bulletinFeed.getMessageBody())
                 .setFeedTime(bulletinFeed.getCreatedAt())
-                .setFeedExpireTime(bulletinFeed.getExpiredAt());
+                .setFeedExpireTime(bulletinFeed.getExpiredAt())
+                .setLatitude(bulletinFeed.getLatitude())
+                .setLongitude(bulletinFeed.getLongitude());
     }
 
     @NonNull

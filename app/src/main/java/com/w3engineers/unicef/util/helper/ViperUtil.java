@@ -651,5 +651,5 @@ public abstract class ViperUtil {
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
-    protected abstract void receiveBroadcast(String userId, String broadcastId, String latitude,  String longitude, String metaData, String contentPath, String contentMeta);
+    protected abstract void receiveBroadcast(String userId, String broadcastId, double latitude,  double longitude, String metaData, String contentPath, String contentMeta);
 }

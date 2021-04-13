@@ -63,9 +63,11 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public String feedExpireTime;
 
-    public String latitude;
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_LATITUDE)
+    public double latitude;
 
-    public String longitude;
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_LONGITUDE)
+    public double longitude;
 
     // Empty constructor for Room database
     public FeedEntity() {
@@ -177,24 +179,22 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedExpireTime;
     }
 
-    @Nullable
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
     @NonNull
-    public FeedEntity setLatitude(@Nullable String latitude) {
+    public FeedEntity setLatitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
 
-    @Nullable
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
     @Nullable
-    public FeedEntity setLongitude(@NonNull String longitude) {
+    public FeedEntity setLongitude(double longitude) {
         this.longitude = longitude;
         return this;
     }
@@ -211,8 +211,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedContentInfo = in.readString();
         feedTimeMillis = in.readLong();
         feedExpireTime = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     @Override
@@ -228,8 +228,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedContentInfo);
         dest.writeLong(feedTimeMillis);
         dest.writeString(feedExpireTime);
-        dest.writeString(latitude);
-        dest.writeString(longitude);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 
     @Override

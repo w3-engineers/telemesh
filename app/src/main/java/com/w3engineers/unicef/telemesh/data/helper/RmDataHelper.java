@@ -354,7 +354,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
     }
 
-    protected void broadcastDataSend(String broadcastId, String latitude, String longitude, byte type, String metaData,
+    protected void broadcastDataSend(String broadcastId, double latitude, double longitude, byte type, String metaData,
                                      String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();

@@ -38,8 +38,8 @@ public class BulletinFeed {
     @Expose
     private String expiredAt;
 
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
 
     public String getUploaderInfo() {
         return uploaderInfo;
@@ -112,19 +112,19 @@ public class BulletinFeed {
         this.expiredAt = expiredAt;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 }

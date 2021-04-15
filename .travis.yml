@@ -46,3 +46,14 @@ after_failure:
   - lynx --dump com.android.builder.testing.ConnectedDevice.html > myConnectedDevice.log
   - lynx --dump com.android.builder.testing.html > myTesting.log
   - for file in *.log; do echo "$file"; echo "====================="; cat "$file"; done || true
+
+# safelist
+branches:
+  only:
+    - master
+    - /^features-.*$/
+
+# Skipping a build
+  #[skip <KEYWORD>]
+  #where <KEYWORD> is either ci, travis, travis ci, travis-ci, or travisci. For example,
+  #[skip travis] Update README

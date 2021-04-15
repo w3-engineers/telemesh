@@ -29,7 +29,7 @@ Please find here [Contributing Guideline](https://github.com/w3-engineers/teleme
 
 ## Reporting Issues 
 
-If you face any bug or have any particular feature request please go [here](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue)
+If you face any bug or have any particular feature request please go to [here](https://github.com/w3-engineers/telemesh/blob/master/CONTRIBUTING.md#reportissue)
 
     
 

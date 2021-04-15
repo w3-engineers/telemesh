@@ -51,7 +51,7 @@ after_failure:
 branches:
   only:
     - master
-    - /^features-.*$/
+    - /^(?i:feature)-.*$/
 
 # Skipping a build
   #[skip <KEYWORD>]

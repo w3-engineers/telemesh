@@ -15,25 +15,25 @@ public class GeoLocation {
 
     @SerializedName("latitude")
     @Expose
-    private String latitude;
+    private double latitude;
     @SerializedName("longitude")
     @Expose
-    private String longitude;
+    private double longitude;
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public GeoLocation setLatitude(String latitude) {
+    public GeoLocation setLatitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public GeoLocation setLongitude(String longitude) {
+    public GeoLocation setLongitude(double longitude) {
         this.longitude = longitude;
         return this;
     }

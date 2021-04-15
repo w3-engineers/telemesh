@@ -33,11 +33,10 @@ import okhttp3.Request;
 
 public class BroadcastDataHelper extends RmDataHelper {
 
-    public String mLatitude = "";
-    public String mLongitude = "";
+    private double mLatitude, mLongitude;
 
-    public String constantLatitude = "22.824922"; // This value will be used when no data found
-    public String constantLongitude = "89.551327"; // This value will be used when no data found
+    public double constantLatitude = 22.824922; // This value will be used when no data found
+    public double constantLongitude = 89.551327; // This value will be used when no data found
 
     private static BroadcastDataHelper broadcastDataHelper = new BroadcastDataHelper();
     private HashMap<String, FeedEntity> feedEntityHashMap;
@@ -49,8 +48,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     private BroadcastDataHelper() {
         feedEntityHashMap = new HashMap<>();
         downloadFeedContentQueue = new ArrayList<>();
-        mLatitude = String.valueOf(LocationTracker.getInstance().getLatitude());
-        mLongitude = String.valueOf(LocationTracker.getInstance().getLongitude());
+        mLatitude = LocationTracker.getInstance().getLatitude();
+        mLongitude = LocationTracker.getInstance().getLongitude();
     }
 
     @NonNull
@@ -78,7 +77,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     }
 
     private void requestInitBroadcastMsg() {
-        if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
+        if (mLatitude == 0.0 || mLongitude == 0.0) {
    /*         LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {
 
                 LocationUtil.getInstance().removeListener();
@@ -90,8 +89,8 @@ public class BroadcastDataHelper extends RmDataHelper {
             });*/
 
 
-            mLatitude = String.valueOf(LocationTracker.getInstance().getLatitude());
-            mLongitude = String.valueOf(LocationTracker.getInstance().getLongitude());
+            mLatitude = LocationTracker.getInstance().getLatitude();
+            mLongitude = LocationTracker.getInstance().getLongitude();
 
             getLocalUserCount();
 
@@ -124,7 +123,7 @@ public class BroadcastDataHelper extends RmDataHelper {
         responseBroadcastMsg(bulletinData);
     }
 
-    private BroadcastCommand getBroadcastMsgRequestCommand(String lat, String lang,
+    private BroadcastCommand getBroadcastMsgRequestCommand(double lat, double lang,
                                                            List<String> localActiveUsers) {
         Payload payload = new Payload();
 
@@ -157,7 +156,7 @@ public class BroadcastDataHelper extends RmDataHelper {
 
         Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
-        if (TextUtils.isEmpty(mLatitude) && TextUtils.isEmpty(mLongitude)) {
+        if (mLatitude== 0.0  && mLongitude == 0.0) {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(constantLatitude, constantLongitude, localActiveUsers));
         } else {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(mLatitude, mLongitude, localActiveUsers));

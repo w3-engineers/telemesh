@@ -427,7 +427,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         super.onDestroy();
         RmDataHelper.getInstance().destroy();
         sInstance = null;
-        LocationTracker.getInstance().stopListener();
+        LocationTracker.getInstance(mContext).stopListener();
         unregisterReceiver(mGpsSwitchStateReceiver);
     }
 
@@ -510,7 +510,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 if (isGpsEnabled || isNetworkEnabled) {
                     //location is enabled
                     Log.e("gps_staus", "gps has been on");
-                    LocationTracker.getInstance().getLocation();
+                    LocationTracker.getInstance(mContext).getLocation();
                     CommonUtil.dismissDialog();
                 } else {
                     //location is disabled
@@ -624,13 +624,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void onPermissionGranted() {
      //   locationTracker = new LocationTracker(mContext, MainActivity.this);
 
-        LocationTracker.onInstance(mContext, MainActivity.this);
+        LocationTracker.getInstance(mContext).getLocation();
 
         // Check if GPS enabled
-        if (LocationTracker.getInstance().canGetLocation()) {
+        if (LocationTracker.getInstance(mContext).canGetLocation()) {
 
-            double latitude = LocationTracker.getInstance().getLatitude();
-            double longitude = LocationTracker.getInstance().getLongitude();
+            double latitude = LocationTracker.getInstance(mContext).getLatitude();
+            double longitude = LocationTracker.getInstance(mContext).getLongitude();
 
             // \n is for new line
             Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();

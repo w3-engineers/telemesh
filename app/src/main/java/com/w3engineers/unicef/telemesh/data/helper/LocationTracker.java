@@ -9,6 +9,7 @@ Proprietary and confidential
 */
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -22,7 +23,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -31,6 +31,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import io.reactivex.annotations.NonNull;
 
 public class LocationTracker extends Service {
     private static LocationTracker locationTracker;
@@ -61,28 +63,40 @@ public class LocationTracker extends Service {
     protected LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationClient;
 
-    public static LocationTracker onInstance(Context context, Activity activity) {
+    private LocationTracker() {
+    }
+
+/*    public static LocationTracker onInstance(Context context, Activity activity) {
         if (locationTracker == null) {
             return locationTracker = new LocationTracker(context, activity);
+        }
+        return locationTracker;
+    }*/
+
+    public static LocationTracker getInstance(Context context) {
+        if (locationTracker == null) {
+            synchronized (LocationTracker.class) {
+                locationTracker = new LocationTracker(context);
+            }
         }
         return locationTracker;
     }
 
     public static LocationTracker getInstance() {
-        if (locationTracker == null && mContext !=null && mActivity !=null) {
-            return onInstance(mContext, mActivity);
+        if (locationTracker == null) {
+            synchronized (LocationTracker.class) {
+                locationTracker = new LocationTracker();
+            }
         }
         return locationTracker;
     }
 
-    private LocationTracker(Context context, Activity activity) {
-        if (context !=null && activity !=null){
-            this.mContext = context;
-            this.mActivity = activity;
-            getLocation();
-        }
+    private LocationTracker(Context context) {
+        this.mContext = context;
+        //   getLocation();
     }
 
+    @SuppressLint("MissingPermission")
     public Location getLocation() {
         try {
 
@@ -102,10 +116,9 @@ public class LocationTracker extends Service {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     int requestPermissionsCode = 50;
-                    if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            /*        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
-
-                    }
+                }*/
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -124,33 +137,33 @@ public class LocationTracker extends Service {
                 // If GPS enabled, get latitude/longitude using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                       /* if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
-                        } else {
-                            locationManager.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER,
-                                    MIN_TIME_BW_UPDATES,
-                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, mLocationListener);
-                            Log.d("GPS Enabled", "GPS Enabled");
-                            if (locationManager != null) {
+                        } else {*/
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                MIN_TIME_BW_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, mLocationListener);
+                        Log.d("GPS Enabled", "GPS Enabled");
+                        if (locationManager != null) {
 
-                                location = locationManager
-                                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                                if (location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                }
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
                             }
                         }
+                        //  }
                     }
-
                 }
             }
 
-            if (location == null) {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(mActivity);
+
+            if (location == null & mContext != null) {
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 

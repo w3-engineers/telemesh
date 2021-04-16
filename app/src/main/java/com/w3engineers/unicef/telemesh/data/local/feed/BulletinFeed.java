@@ -37,8 +37,11 @@ public class BulletinFeed {
     @SerializedName("expiredAt")
     @Expose
     private String expiredAt;
-
+    @SerializedName("latitude")
+    @Expose
     private double latitude;
+    @SerializedName("longitude")
+    @Expose
     private double longitude;
 
     public String getUploaderInfo() {
@@ -108,23 +111,26 @@ public class BulletinFeed {
         return expiredAt;
     }
 
-    public void setExpiredAt(String expiredAt) {
+    public BulletinFeed setExpiredAt(String expiredAt) {
         this.expiredAt = expiredAt;
+        return this;
     }
 
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public BulletinFeed setLatitude(double latitude) {
         this.latitude = latitude;
+        return this;
     }
 
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public BulletinFeed setLongitude(double longitude) {
         this.longitude = longitude;
+        return this;
     }
 }

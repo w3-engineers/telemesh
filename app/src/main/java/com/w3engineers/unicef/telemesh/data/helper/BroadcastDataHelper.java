@@ -127,7 +127,7 @@ public class BroadcastDataHelper extends RmDataHelper {
         Payload payload = new Payload();
 
         GeoLocation geoLocation = new GeoLocation()
-                .setLatitude(lat).setLongitude(lang);
+                .setLatitude(lat + "").setLongitude(lang + "");
 
         payload.setGeoLocation(geoLocation);
 
@@ -139,10 +139,12 @@ public class BroadcastDataHelper extends RmDataHelper {
             payload.setConnectedClientEthIds(new ArrayList<>());
         }
 
+        String myMeshId = getMyMeshId();
+
         return new BroadcastCommand().setEvent("connect")
                 .setToken(AppCredentials.getInstance().getBroadCastToken())
-                .setBaseStationId(getMyMeshId())
-                .setClientId(getMyMeshId())
+                .setBaseStationId(myMeshId)
+                .setClientId(myMeshId)
                 .setPayload(payload);
     }
 
@@ -153,7 +155,7 @@ public class BroadcastDataHelper extends RmDataHelper {
 //            OkHttpClient client = client1.socketFactory(NetworkMonitor.getNetwork().getSocketFactory()).build();
         OkHttpClient client = client1.build();
 
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
+        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()/*"http://192.168.10.203:8080/websocket"*/).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
         if (mLatitude== 0.0  && mLongitude == 0.0) {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(constantLatitude, constantLongitude, localActiveUsers));
@@ -329,7 +331,9 @@ public class BroadcastDataHelper extends RmDataHelper {
                             .setMessageTitle("Text broadcast test " + integerSingle)
                             .setMessageBody("Hello message " + (++i))
                             .setMessageId(UUID.randomUUID().toString())
-                            .setExpiredAt("2021-04-27T05:58:32.485Z");
+                            .setExpiredAt("2021-04-27T05:58:32.485Z")
+                            .setLatitude(22.815698421025385)
+                            .setLongitude(89.55433391932894);
 
                     FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
                             .setFeedReadStatus(false)

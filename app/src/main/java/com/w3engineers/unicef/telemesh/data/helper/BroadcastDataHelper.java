@@ -93,7 +93,6 @@ public class BroadcastDataHelper extends RmDataHelper {
             mLongitude = LocationTracker.getInstance().getLongitude();
 
             getLocalUserCount();
-
         } else {
             getLocalUserCount();
         }

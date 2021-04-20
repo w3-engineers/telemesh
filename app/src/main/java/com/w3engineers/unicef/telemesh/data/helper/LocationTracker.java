@@ -8,23 +8,15 @@ Proprietary and confidential
 ============================================================================
 */
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,13 +24,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import io.reactivex.annotations.NonNull;
 
 public class LocationTracker extends Service {
     private static LocationTracker locationTracker;
 
     private static Context mContext;
-    private static Activity mActivity;
+    // private static Activity mActivity;
+
+    private Executor executor;
 
     // Flag for GPS status
     boolean isGPSEnabled = false;
@@ -54,7 +52,7 @@ public class LocationTracker extends Service {
     double longitude; // Longitude
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;  //1000; // 10 meters 5
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;  //1000; // 10 meters 5
 
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 0; //1000 * 60 * 1; // 1 minute 0
@@ -93,6 +91,7 @@ public class LocationTracker extends Service {
 
     private LocationTracker(Context context) {
         this.mContext = context;
+        executor = Executors.newSingleThreadExecutor();
         //   getLocation();
     }
 
@@ -159,47 +158,53 @@ public class LocationTracker extends Service {
                         //  }
                     }
                 }
-            }
 
-
-            if (location == null & mContext != null) {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
-                if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (location == null & mContext != null) {
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
+          /*      if (ContextCompat.checkSelfPermission(mActiivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
-                }
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    Log.d("LocationDemoActivity", "Success trying to get last GPS location");
-                                    // Logic to handle location object
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
+                }*/
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        Log.d("LocationDemoActivity", "Success trying to get last GPS location");
+                                        // Logic to handle location object
+                                        latitude = location.getLatitude();
+                                        longitude = location.getLongitude();
+                                    }
                                 }
-                            }
 
-                        })
+                            })
 
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("LocationDemoActivity", "Error trying to get last GPS location");
-                                e.printStackTrace();
-                            }
-                        });
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("LocationDemoActivity", "Error trying to get last GPS location");
+                                    e.printStackTrace();
+                                }
+                            });
+                }
+
+                if (latitude == 0.0 || longitude == 0.0){
+                    getLastKnownLocation();
+                }
             }
 
+
+
+
             //Age of location returned from LocationServices
-            if (location != null) {
+    /*        if (location != null) {
                 long locationAge = System.currentTimeMillis() - location.getTime();
                 if (locationAge <= 60 * 1000) { // not older than 60 seconds
 
                 }
             }
-
+*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,13 +213,36 @@ public class LocationTracker extends Service {
         return location;
     }
 
+    @SuppressLint("MissingPermission")
+    private Location getLastKnownLocation() {
+        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
 
-    /**
-     * Stop using GPS listener
-     * Calling this function will stop using GPS in your app.
-     */
-    public void stopUsingGPS() {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, mLocationListener);
 
+            Location l = locationManager.getLastKnownLocation(provider);
+
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null
+                    || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Log.d("found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        if (bestLocation == null) {
+            return null;
+        }else {
+            latitude = bestLocation.getLatitude();
+            latitude = bestLocation.getLongitude();
+        }
+        return bestLocation;
     }
 
 
@@ -279,39 +307,6 @@ public class LocationTracker extends Service {
     }
 
 
-    /**
-     * Function to show settings alert dialog.
-     * On pressing the Settings button it will launch Settings Options.
-     */
-    public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        // Setting Dialog Title
-        alertDialog.setTitle("GPS is settings");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-
-        // On pressing the Settings button.
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
-            }
-        });
-
-        // On pressing the cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
-    }
-
-
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -319,18 +314,8 @@ public class LocationTracker extends Service {
 
     public void stopListener() {
         if (locationManager != null) {
-
-  /*          if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }*/
             locationManager.removeUpdates(mLocationListener);
         }
     }
 }
+

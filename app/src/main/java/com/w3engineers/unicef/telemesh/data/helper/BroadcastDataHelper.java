@@ -157,7 +157,7 @@ public class BroadcastDataHelper extends RmDataHelper {
 
         Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()/*"http://192.168.10.203:8080/websocket"*/).build();
         BroadcastWebSocket listener = new BroadcastWebSocket();
-        if (mLatitude== 0.0  && mLongitude == 0.0) {
+        if (mLatitude == 0.0 && mLongitude == 0.0) {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(constantLatitude, constantLongitude, localActiveUsers));
         } else {
             listener.setBroadcastCommand(getBroadcastMsgRequestCommand(mLatitude, mLongitude, localActiveUsers));
@@ -357,7 +357,7 @@ public class BroadcastDataHelper extends RmDataHelper {
         BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);
 
         String metaData = gsonBuilder.getBulletinModelJson(bulletinModel);
-        broadcastDataSend(feedEntity.getFeedId(), feedEntity.latitude, feedEntity.longitude, Constants.DataType.MESSAGE_FEED, metaData,
+        broadcastDataSend(feedEntity.getFeedId(), feedEntity.latitude, feedEntity.longitude, feedEntity.range, feedEntity.broadcastAddress, Constants.DataType.MESSAGE_FEED, metaData,
                 contentPath, "contentUrl", feedEntity.getFeedExpireTime(), true);
     }
 

@@ -68,6 +68,9 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_FEED_LATITUDE = "latitude";
     String COLUMN_FEED_LONGITUDE = "longitude";
 
+    String COLUMN_FEED_RANGE = "range";
+    String COLUMN_FEED_BROADCASTADDRESS = "broadcastAddress";
+
     /**
      * Bulletin track table column
      */

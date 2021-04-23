@@ -13,6 +13,8 @@ public class ViperBroadcastData {
     public String broadcastId;
     public double latitude;
     public double longitude;
+    public double range;
+    public String broadcastAddress;
     public String metaData;
     public String contentPath;
     public String contentMeta;

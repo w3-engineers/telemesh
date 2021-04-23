@@ -49,7 +49,6 @@ public class FeedDataSource {
     }
 
     public FeedEntity getFeedById(@NonNull String feedId) {
-
         Callable<FeedEntity> insertCallable = () -> feedDao.getFeedById(feedId);
 
         try {

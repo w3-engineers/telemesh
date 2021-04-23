@@ -69,6 +69,12 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @ColumnInfo(name = ColumnNames.COLUMN_FEED_LONGITUDE)
     public double longitude;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_RANGE)
+    public double range;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_BROADCASTADDRESS)
+    public String broadcastAddress;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -199,6 +205,26 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public double getRange() {
+        return range;
+    }
+
+    @Nullable
+    public FeedEntity setRange(double range) {
+        this.range = range;
+        return this;
+    }
+
+    public String getBroadcastAddress() {
+        return broadcastAddress;
+    }
+
+    @Nullable
+    public FeedEntity setBroadcastAddress(String broadcastAddress) {
+        this.broadcastAddress = broadcastAddress;
+        return this;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -213,6 +239,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedExpireTime = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        range = in.readDouble();
+        broadcastAddress = in.readString();
     }
 
     @Override
@@ -230,6 +258,8 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedExpireTime);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(range);
+        dest.writeString(broadcastAddress);
     }
 
     @Override
@@ -274,7 +304,9 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
                 .setFeedTime(bulletinFeed.getCreatedAt())
                 .setFeedExpireTime(bulletinFeed.getExpiredAt())
                 .setLatitude(bulletinFeed.getLatitude())
-                .setLongitude(bulletinFeed.getLongitude());
+                .setLongitude(bulletinFeed.getLongitude())
+                .setRange(bulletinFeed.getRange())
+                .setBroadcastAddress(bulletinFeed.getBroadcastAddress());
     }
 
     @NonNull

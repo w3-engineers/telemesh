@@ -406,6 +406,7 @@ public abstract class ViperUtil {
         try {
             viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
                     viperBroadcastData.latitude, viperBroadcastData.longitude,
+                    viperBroadcastData.range, viperBroadcastData.broadcastAddress,
                     viperBroadcastData.metaData, viperBroadcastData.contentPath,
                     viperBroadcastData.contentMeta, viperBroadcastData.expiryTime,
                     viperBroadcastData.isNotificationEnable);

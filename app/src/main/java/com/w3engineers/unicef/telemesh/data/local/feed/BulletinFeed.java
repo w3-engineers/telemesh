@@ -44,6 +44,14 @@ public class BulletinFeed {
     @Expose
     private double longitude;
 
+    @SerializedName("range")
+    @Expose
+    private double range;
+
+    @SerializedName("broadcastAddress")
+    @Expose
+    private String broadcastAddress;
+
     public String getUploaderInfo() {
         return uploaderInfo;
     }
@@ -131,6 +139,24 @@ public class BulletinFeed {
 
     public BulletinFeed setLongitude(double longitude) {
         this.longitude = longitude;
+        return this;
+    }
+
+    public double getRange() {
+        return range;
+    }
+
+    public BulletinFeed setRange(double range) {
+        this.range = range;
+        return this;
+    }
+
+    public String getBroadcastAddress() {
+        return broadcastAddress;
+    }
+
+    public BulletinFeed setBroadcastAddress(String broadcastAddress) {
+        this.broadcastAddress = broadcastAddress;
         return this;
     }
 }

@@ -52,6 +52,7 @@ import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
+import com.w3engineers.models.BroadcastData;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -404,12 +405,21 @@ public abstract class ViperUtil {
 
     public String sendLocalBroadcast(ViperBroadcastData viperBroadcastData) {
         try {
-            viperClient.sendBroadcastData(viperBroadcastData.broadcastId,
-                    viperBroadcastData.latitude, viperBroadcastData.longitude,
-                    viperBroadcastData.range, viperBroadcastData.broadcastAddress,
-                    viperBroadcastData.metaData, viperBroadcastData.contentPath,
-                    viperBroadcastData.contentMeta, viperBroadcastData.expiryTime,
-                    viperBroadcastData.isNotificationEnable);
+            BroadcastData broadcastData = new BroadcastData();
+            broadcastData.setBroadcastId(viperBroadcastData.broadcastId);
+            broadcastData.setLatitude(viperBroadcastData.latitude);
+            broadcastData.setLongitude(viperBroadcastData.longitude);
+            broadcastData.setRange(viperBroadcastData.range);
+            broadcastData.setBroadcastAddress(viperBroadcastData.broadcastAddress);
+            broadcastData.setMetaData(viperBroadcastData.metaData);
+            broadcastData.setContentPath(viperBroadcastData.contentPath);
+            broadcastData.setContentMeta(viperBroadcastData.contentMeta);
+            broadcastData.setExpiryTime(viperBroadcastData.expiryTime);
+            broadcastData.setNotificationEnable(viperBroadcastData.isNotificationEnable);
+            broadcastData.setAppToken(context.getPackageName());
+
+
+            viperClient.sendBroadcastData(broadcastData);
         } catch (Exception e) {
             e.printStackTrace();
         }

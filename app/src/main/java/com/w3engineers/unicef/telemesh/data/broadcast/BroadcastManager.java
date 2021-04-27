@@ -127,6 +127,7 @@ public class BroadcastManager {
         mRunningTaskList.add(future);
 
         try {
+
             String result = (String) future.get();
             if (broadcastSendCallback != null) {
                 ViperData viperData = sendDataTask.getViperData();

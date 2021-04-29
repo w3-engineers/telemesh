@@ -14,6 +14,8 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -774,31 +776,44 @@ public class ContentDataHelper extends RmDataHelper {
     /////////??????????????????????????????????????????????????????/////////
     /////////??????????????????????????????????????????????????????/////////
 
-    void contentDataSend(String contentId, ContentModel contentModel) {
+    void contentDataSend(String contentInfo, ContentModel contentModel) {
 
         if (contentModel.isRequestFromReceiver() || contentModel.isContent()) {
             return;
         }
 
-        if (!TextUtils.isEmpty(contentId)) {
+        if (!TextUtils.isEmpty(contentInfo)) {
 
-            if (contentModel.isThumbSend()) {
+            try {
+                JSONObject jsonObject = new JSONObject(contentInfo);
+                boolean success = jsonObject.getBoolean("success");
+                String msg = jsonObject.getString("msg");
 
-                ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+                if (success) {
+                    if (contentModel.isThumbSend()) {
 
-                if (contentSendModel == null) {
-                    contentSendModel = new ContentSendModel();
+                        ContentSendModel contentSendModel = contentSendModelHashMap.get(msg);
+
+                        if (contentSendModel == null) {
+                            contentSendModel = new ContentSendModel();
+                        }
+
+                        contentSendModel.contentId = msg;
+                        contentSendModel.messageId = contentModel.getMessageId();
+                        contentSendModel.userId = contentModel.getUserId();
+                        contentSendModel.successStatus = true;
+                        contentSendModel.contentDataType = contentModel.getContentDataType();
+
+                        HandlerUtil.postBackground(() -> setMessageContentId(contentModel.getMessageId(),
+                                msg, contentModel.getContentPath()));
+                        contentSendModelHashMap.put(msg, contentSendModel);
+                    }
+                } else {
+                    contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+                    HandlerUtil.postBackground(() -> contentReceive(contentModel, false));
                 }
-
-                contentSendModel.contentId = contentId;
-                contentSendModel.messageId = contentModel.getMessageId();
-                contentSendModel.userId = contentModel.getUserId();
-                contentSendModel.successStatus = true;
-                contentSendModel.contentDataType = contentModel.getContentDataType();
-
-                HandlerUtil.postBackground(() -> setMessageContentId(contentModel.getMessageId(),
-                        contentId, contentModel.getContentPath()));
-                contentSendModelHashMap.put(contentId, contentSendModel);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);

@@ -310,21 +310,22 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     }
 
     @NonNull
-    public BulletinModel toTelemeshBulletin() {
-        return new BulletinModel()
-                .setId(getFeedId())
-                .setMessage(getFeedDetail())
-                .setHeaderTitle(getFeedTitle())
+    public BroadcastMeta toBroadcastMeta() {
+        return new BroadcastMeta()
                 .setUploaderName(getFeedProviderName())
-                .setTime(getFeedTime());
+                .setMessageTitle(getFeedTitle())
+                .setMessageBody(getFeedDetail())
+                .setCreationTime(getFeedTime())
+                .setBroadcastAddress(getBroadcastAddress());
     }
 
     @NonNull
-    public FeedEntity toFeedEntity(@NonNull BulletinModel bulletinModel) {
-        return new FeedEntity().setFeedDetail(bulletinModel.getMessage())
-                .setFeedId(bulletinModel.getId())
-                .setFeedTime(bulletinModel.getTime())
-                .setFeedTitle(bulletinModel.getHeaderTitle())
-                .setFeedProviderName(bulletinModel.getUploaderName());
+    public FeedEntity toFeedEntity(@NonNull BroadcastMeta broadcastMeta) {
+
+        return setFeedProviderName(broadcastMeta.getUploaderName())
+                .setFeedTitle(broadcastMeta.getMessageTitle())
+                .setFeedDetail(broadcastMeta.getMessageBody())
+                .setFeedTime(broadcastMeta.getCreationTime())
+                .setBroadcastAddress(broadcastMeta.getBroadcastAddress());
     }
 }

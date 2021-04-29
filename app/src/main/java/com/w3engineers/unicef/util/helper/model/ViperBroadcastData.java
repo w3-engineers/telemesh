@@ -11,13 +11,10 @@ Proprietary and confidential
 public class ViperBroadcastData {
 
     public String broadcastId;
+    public String metaData;
     public double latitude;
     public double longitude;
     public double range;
-    public String broadcastAddress;
-    public String metaData;
-    public String contentPath;
-    public String contentMeta;
     public String expiryTime;
-    public boolean isNotificationEnable;
+    public String contentPath;
 }

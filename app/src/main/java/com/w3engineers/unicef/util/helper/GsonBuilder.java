@@ -3,7 +3,7 @@ package com.w3engineers.unicef.util.helper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataModel;
-import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
@@ -81,12 +81,12 @@ public class GsonBuilder {
         return gson.fromJson(feedContentModel, FeedContentModel.class);
     }
 
-    public String getBulletinModelJson(BulletinModel bulletinModel) {
-        return gson.toJson(bulletinModel);
+    public String getBroadcastMetaJson(BroadcastMeta broadcastMeta) {
+        return gson.toJson(broadcastMeta);
     }
 
-    public BulletinModel getBulletinModelObj(String bulletinModel) {
-        return gson.fromJson(bulletinModel, BulletinModel.class);
+    public BroadcastMeta getBroadcastMetaObj(String bulletinModel) {
+        return gson.fromJson(bulletinModel, BroadcastMeta.class);
     }
 
     public String getBroadcastDataModelJson(BroadcastDataModel broadcastDataModel) {

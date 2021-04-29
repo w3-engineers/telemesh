@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.support.annotation.NonNull;
@@ -150,3 +151,4 @@ public class BroadcastDataHelperDep extends RmDataHelper {
                 .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
     }
 }
+*/

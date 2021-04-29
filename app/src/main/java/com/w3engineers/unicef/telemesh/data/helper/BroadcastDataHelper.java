@@ -8,8 +8,8 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
-import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
@@ -57,14 +57,6 @@ public class BroadcastDataHelper extends RmDataHelper {
         return broadcastDataHelper;
     }
 
-    public void broadcastDataReceive(byte broadcastType, String broadcastId, String metaData, String userId, String contentPath, String contentMeta) {
-        switch (broadcastType) {
-            case Constants.DataType.MESSAGE_FEED:
-                receiveLocalBroadcast(userId, broadcastId, metaData, contentPath, contentMeta);
-                break;
-        }
-    }
-
     public void setIsFeedPageEnable(boolean isFeedPageEnable) {
         BroadcastDataHelper.isFeedPageEnable = isFeedPageEnable;
         if (isFeedPageEnable) {
@@ -109,18 +101,6 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
 
     int i = 0;
-
-    public void demoTextBroadcast() {
-        BulletinFeed bulletinFeed = new BulletinFeed();
-        bulletinFeed.setCreatedAt("2020-08-27T05:58:32.485Z")
-                .setUploaderInfo("W3 Engineers")
-                .setMessageType(Constants.BroadcastMessageType.TEXT_BROADCAST)
-                .setMessageTitle("Text broadcast test")
-                .setMessageBody("Hello message " + (++i))
-                .setMessageId(UUID.randomUUID().toString());
-        String bulletinData = new Gson().toJson(bulletinFeed);
-        responseBroadcastMsg(bulletinData);
-    }
 
     private BroadcastCommand getBroadcastMsgRequestCommand(double lat, double lang,
                                                            List<String> localActiveUsers) {
@@ -187,15 +167,13 @@ public class BroadcastDataHelper extends RmDataHelper {
                 if (TextUtils.isEmpty(messageBody)) {
                     bulletinFeed.setMessageBody(Constants.BroadcastMessage.IMAGE_BROADCAST);
                 }
-//                https://dashboard.telemesh.net/message/read_image?filename=photo_1599560858132-18920443-images.jpeg%27
                 broadcastContentPath = "https://dashboard.telemesh.net/message/download?filename="
                         + bulletinFeed.getFileName();
 
                 downloadFeedContentQueue.add(broadcastContentPath);
             }
 
-            FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed)
-                    .setFeedReadStatus(false)
+            FeedEntity feedEntity = new FeedEntity().prepareFeedEntity(bulletinFeed).setFeedReadStatus(false)
                     .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinFeed.getCreatedAt()));
 
             if (!TextUtils.isEmpty(broadcastContentPath)) {
@@ -214,7 +192,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                             if (!TextUtils.isEmpty(insertedFeedEntity.getFeedContentInfo())) {
                                 initBroadcastContentDownload();
                             } else {
-                                sendLocalBroadcast(feedEntity, null, null);
+                                sendLocalBroadcast(feedEntity, null);
                             }
                         }
                     }, Throwable::printStackTrace));
@@ -269,7 +247,7 @@ public class BroadcastDataHelper extends RmDataHelper {
             contentInfo = gsonBuilder.getFeedContentModelJson(feedContentModel);
             feedEntity.setFeedContentInfo(contentInfo);
 
-            sendLocalBroadcast(feedEntity, downloadContentUrl, downloadContentPath);
+            sendLocalBroadcast(feedEntity, downloadContentPath);
             FeedEntity finalFeedEntity = feedEntity;
             compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
                     .insertOrUpdateData(finalFeedEntity))
@@ -344,40 +322,39 @@ public class BroadcastDataHelper extends RmDataHelper {
                             .subscribeOn(Schedulers.newThread())
                             .subscribe());
 
-                    sendLocalBroadcast(feedEntity, path, path);
+                    sendLocalBroadcast(feedEntity, path);
 
                 }));
     }
 
-    private void sendLocalBroadcast(FeedEntity feedEntity, String contentUrl, String contentPath) {
-//        if (!TextUtils.isEmpty(contentPath))
-//            contentPath = contentPath.substring(1);
+    private void sendLocalBroadcast(FeedEntity feedEntity, String contentPath) {
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-        BulletinModel bulletinModel = feedEntity.toTelemeshBulletin().setContentUrl(contentUrl);
+        BroadcastMeta broadcastMeta = feedEntity.toBroadcastMeta();
 
-        String metaData = gsonBuilder.getBulletinModelJson(bulletinModel);
-        broadcastDataSend(feedEntity.getFeedId(), feedEntity.latitude, feedEntity.longitude, feedEntity.range, feedEntity.broadcastAddress, Constants.DataType.MESSAGE_FEED, metaData,
-                contentPath, "contentUrl", feedEntity.getFeedExpireTime(), true);
+        String broadcastMetaData = gsonBuilder.getBroadcastMetaJson(broadcastMeta);
+
+        broadcastDataSend(feedEntity.getFeedId(), broadcastMetaData, contentPath, feedEntity.getLatitude(),
+                feedEntity.getLongitude(), feedEntity.getRange(), feedEntity.getFeedExpireTime());
     }
 
-    private void receiveLocalBroadcast(String userId, String broadcastId, String metaData, String contentPath, String contentMeta) {
+    public void receiveLocalBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
-        BulletinModel bulletinModel = gsonBuilder.getBulletinModelObj(metaData);
-        if (bulletinModel != null) {
+        BroadcastMeta broadcastMeta = gsonBuilder.getBroadcastMetaObj(metaData);
+        if (broadcastMeta != null) {
 
-            FeedEntity existingFeedEntity = FeedDataSource.getInstance().getFeedById(bulletinModel.getId());
+            FeedEntity existingFeedEntity = FeedDataSource.getInstance().getFeedById(broadcastId);
             if (existingFeedEntity != null)
                 return;
 
-            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinModel)
-                    .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(bulletinModel.getTime()));
+            FeedEntity feedEntity = new FeedEntity().toFeedEntity(broadcastMeta)
+                    .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(broadcastMeta.getCreationTime()));
 
             if (!TextUtils.isEmpty(contentPath)) {
                 contentPath = ContentUtil.getInstance().getCopiedFilePath(contentPath, false);
-                FeedContentModel feedContentModel = new FeedContentModel().setContentPath(contentPath)
-                        .setContentUrl(bulletinModel.getContentUrl());
+                FeedContentModel feedContentModel = new FeedContentModel().setContentPath(contentPath);
+
                 String contentInfo = gsonBuilder.getFeedContentModelJson(feedContentModel);
                 feedEntity.setFeedContentInfo(contentInfo);
             }

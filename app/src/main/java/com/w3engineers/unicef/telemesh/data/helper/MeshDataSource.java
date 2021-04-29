@@ -117,19 +117,15 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void broadcastDataSend(String broadcastId, double latitude, double longitude, double range, String broadcastAddress, String metaData, String contentPath, String contentMeta, String expiryTime, boolean isNotificationEnable) {
+    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime) {
         ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
         viperBroadcastData.broadcastId = broadcastId;
+        viperBroadcastData.metaData = metaData;
+        viperBroadcastData.contentPath = contentPath;
         viperBroadcastData.latitude = latitude;
         viperBroadcastData.longitude = longitude;
         viperBroadcastData.range = range;
-        viperBroadcastData.broadcastAddress = broadcastAddress;
-        viperBroadcastData.metaData = metaData;
-        viperBroadcastData.contentPath = contentPath;
-        viperBroadcastData.contentMeta = contentMeta;
         viperBroadcastData.expiryTime = expiryTime;
-        viperBroadcastData.isNotificationEnable = isNotificationEnable;
-
         broadcastManager.addBroadCastMessage(getBroadcastDataTask(viperBroadcastData));
     }
 
@@ -271,12 +267,8 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void receiveBroadcast(String userId, String broadcastId, double latitude, double longitude, String metaData, String contentPath, String contentMeta) {
-        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
-
-        BroadcastDataModel broadcastDataModel = gsonBuilder.getBroadcastDataModelObj(metaData);
-        BroadcastDataHelper.getInstance().broadcastDataReceive(broadcastDataModel.broadcastType,
-                broadcastId, broadcastDataModel.rawData, userId, contentPath, contentMeta);
+    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime) {
+        BroadcastDataHelper.getInstance().receiveLocalBroadcast(broadcastId, metaData, contentPath, latitude, longitude, range, expiryTime);
     }
 
     public void saveUpdateUserInfo() {

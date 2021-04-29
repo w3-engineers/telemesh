@@ -246,10 +246,10 @@ public abstract class ViperUtil {
         AppDataObserver.on().startObserver(ApiEvent.BROADCAST_EVENT, event -> {
             BroadcastEvent broadcastEvent = (BroadcastEvent) event;
             if (broadcastEvent != null) {
-                receiveBroadcast(broadcastEvent.getUserId(), broadcastEvent.getBroadcastId(),
-                        broadcastEvent.getLatitude(), broadcastEvent.getLongitude(),
-                        broadcastEvent.getMetaData(), broadcastEvent.getContentPath(),
-                        broadcastEvent.getContentMeta());
+                receiveBroadcast(broadcastEvent.getBroadcastId(), broadcastEvent.getMetaData(),
+                        broadcastEvent.getContentPath(), broadcastEvent.getLatitude(),
+                        broadcastEvent.getLongitude(), broadcastEvent.getRange(),
+                        broadcastEvent.getExpiryTime());
             }
         });
     }
@@ -407,17 +407,14 @@ public abstract class ViperUtil {
         try {
             BroadcastData broadcastData = new BroadcastData();
             broadcastData.setBroadcastId(viperBroadcastData.broadcastId);
+            broadcastData.setMetaData(viperBroadcastData.metaData);
+            broadcastData.setContentPath(viperBroadcastData.contentPath);
+
             broadcastData.setLatitude(viperBroadcastData.latitude);
             broadcastData.setLongitude(viperBroadcastData.longitude);
             broadcastData.setRange(viperBroadcastData.range);
-            broadcastData.setBroadcastAddress(viperBroadcastData.broadcastAddress);
-            broadcastData.setMetaData(viperBroadcastData.metaData);
-            broadcastData.setContentPath(viperBroadcastData.contentPath);
-            broadcastData.setContentMeta(viperBroadcastData.contentMeta);
             broadcastData.setExpiryTime(viperBroadcastData.expiryTime);
-            broadcastData.setNotificationEnable(viperBroadcastData.isNotificationEnable);
             broadcastData.setAppToken(context.getPackageName());
-
 
             viperClient.sendBroadcastData(broadcastData);
         } catch (Exception e) {
@@ -662,5 +659,5 @@ public abstract class ViperUtil {
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
-    protected abstract void receiveBroadcast(String userId, String broadcastId, double latitude,  double longitude, String metaData, String contentPath, String contentMeta);
+    protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime);
 }

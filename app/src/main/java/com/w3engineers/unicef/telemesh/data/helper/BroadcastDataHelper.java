@@ -348,7 +348,7 @@ public class BroadcastDataHelper extends RmDataHelper {
             if (existingFeedEntity != null)
                 return;
 
-            FeedEntity feedEntity = new FeedEntity().toFeedEntity(broadcastMeta)
+            FeedEntity feedEntity = new FeedEntity().setFeedId(broadcastId).toFeedEntity(broadcastMeta)
                     .setFeedTimeMillis(TimeUtil.getServerTimeToMillis(broadcastMeta.getCreationTime()));
 
             if (!TextUtils.isEmpty(contentPath)) {

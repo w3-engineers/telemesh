@@ -309,7 +309,8 @@ public class BroadcastDataHelper extends RmDataHelper {
                             .setMessageTitle("Text broadcast test " + integerSingle)
                             .setMessageBody("Hello message " + (++i))
                             .setMessageId(UUID.randomUUID().toString())
-                            .setExpiredAt("2021-04-27T05:58:32.485Z")
+                            .setExpiredAt("2021-05-1T05:58:32.485Z")
+                            .setRange(10.0)
                             .setLatitude(22.815698421025385)
                             .setLongitude(89.55433391932894);
 

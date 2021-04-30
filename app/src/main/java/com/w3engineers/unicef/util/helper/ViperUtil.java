@@ -54,6 +54,7 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.mesh.util.lib.mesh.ViperClient;
 import com.w3engineers.models.BroadcastData;
 import com.w3engineers.models.ContentMetaInfo;
+import com.w3engineers.models.FileData;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -611,7 +612,12 @@ public abstract class ViperUtil {
                         return contentId;
                     }
                 } else {
-                    String sendId = viperClient.sendFileMessage(peerId, contentPath, contentMessageString.getBytes());
+                    FileData fileData = new FileData()
+                            .setReceiverID(peerId).setFilePath(contentPath)
+                            .setMsgMetaData(contentMessageString.getBytes()).setAppToken(context.getPackageName());
+
+                    String sendId = viperClient.sendFileMessage(fileData);
+
                     Timber.tag("FileMessage").v("SendId: " + sendId);
                     return sendId;
                 }

@@ -798,7 +798,7 @@ public class GroupDataHelper extends RmDataHelper {
         String forwardGroupModelText = new String(rawData);
         ForwardGroupModel forwardGroupModel = gsonBuilder.getForwarderGroupModelObj(forwardGroupModelText);
 
-        onDemandUserAdd(forwardGroupModel.getSender());
+        MeshUserDataHelper.getInstance().onDemandUserAdd(forwardGroupModel.getSender());
 
         DataModel dataModel = new DataModel()
                 .setUserId(forwardGroupModel.getSender())

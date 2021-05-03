@@ -88,7 +88,7 @@ public class MeshDataSource extends ViperUtil {
         if (!isPrepared) {
             isPrepared = true;
             RmDataHelper.getInstance().prepareDataObserver();
-            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().myUserInfoAdd());
+            HandlerUtil.postBackground(() -> MeshUserDataHelper.getInstance().myUserInfoAdd());
             TextToImageHelper.writeWalletAddressToImage(meshId);
         }
 
@@ -176,7 +176,7 @@ public class MeshDataSource extends ViperUtil {
 
                 if (userModel != null) {
                     userModel.setUserId(peerId);
-                    HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+                    HandlerUtil.postBackground(() -> MeshUserDataHelper.getInstance().userAdd(userModel));
                 }
             }
         } catch (Exception e) {
@@ -190,7 +190,7 @@ public class MeshDataSource extends ViperUtil {
         if (!TextUtils.isEmpty(peerId)) {
             if (userModel != null) {
                 userModel.setUserId(peerId);
-                HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userAdd(userModel));
+                HandlerUtil.postBackground(() -> MeshUserDataHelper.getInstance().userAdd(userModel));
             }
         }
     }
@@ -205,7 +205,7 @@ public class MeshDataSource extends ViperUtil {
     protected void peerRemove(@NonNull String peerId) {
 
         if (!TextUtils.isEmpty(peerId)) {
-            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().userLeave(peerId));
+            HandlerUtil.postBackground(() -> MeshUserDataHelper.getInstance().userLeave(peerId));
         }
     }
 
@@ -243,7 +243,7 @@ public class MeshDataSource extends ViperUtil {
 
     @Override
     protected boolean isNodeAvailable(String nodeId, int userActiveStatus) {
-        return RmDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
+        return MeshUserDataHelper.getInstance().userExistedOperation(nodeId, userActiveStatus);
     }
 
     @Override

@@ -116,77 +116,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    /**
-     * after inserting the message to the db
-     * here we will fetch the last inserted message that will be
-     * sent via RM.
-     * <p>
-     * Only for outgoing message this method will be responsible
-     */
-    @SuppressLint("CheckResult")
-    public void prepareDataObserver() {
-
-        AnalyticsDataHelper.getInstance().analyticsDataObserver();
-
-        // This observer only for message send
-        compositeDisposable.add(dataSource.getLastChatData()
-                .subscribeOn(Schedulers.io())
-                .subscribe(chatEntity -> {
-
-                    if (!chatEntity.isIncoming() && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
-
-                        MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
-                            if (messageEntity.getMessagePlace()) {
-                                GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
-                                        messageModelString);
-                            } else {
-                                dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
-                                        messageEntity.getFriendsId(), true);
-                            }
-                        } else {
-                            ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
-                        }
-
-                    }
-                }, Throwable::printStackTrace));
-
-        // This observer only for re send
-        compositeDisposable.add(Objects.requireNonNull(dataSource.getReSendMessage())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(chatEntity -> {
-
-                    if (!chatEntity.isIncoming() && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
-                        MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
-
-                            dataSend(messageModelString.getBytes(),
-                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
-                        }
-                    } else {
-                        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
-                    }
-                }, Throwable::printStackTrace));
-
-        compositeDisposable.add(Objects.requireNonNull(dataSource.getLiveUserId())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(liveUserId -> {
-
-                    if (!TextUtils.isEmpty(liveUserId)) {
-                        prepareRightMeshDataSource();
-                        rightMeshDataSource.checkUserIsConnected(liveUserId);
-                        int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
-
-                        HandlerUtil.postBackground(() -> {
-                            MeshUserDataHelper.getInstance().updateUserActiveStatus(liveUserId, userActiveType);
-                        });
-                    }
-                }, Throwable::printStackTrace));
-
-        GroupDataHelper.getInstance().groupDataObserver();
-    }
 
     /**
      * This api is responsible for creating a data model and send data to RM
@@ -242,15 +171,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
             case Constants.DataType.APP_SHARE_COUNT:
               //  AppUpdateDataHelper.getInstance().saveAppShareCount(rawData, isAckSuccess);
-                saveAppShareCount(rawData, isAckSuccess);
+                AppDataHelper.getInstance().saveAppShareCount(rawData, isAckSuccess);
                 break;
             case Constants.DataType.VERSION_HANDSHAKING:
               //  AppUpdateDataHelper.getInstance().versionCrossMatching(rawData, userId, isAckSuccess);
-                versionCrossMatching(rawData, userId, isAckSuccess);
+                AppDataHelper.getInstance().versionCrossMatching(rawData, userId, isAckSuccess);
                 break;
             case Constants.DataType.SERVER_LINK:
              //   AppUpdateDataHelper.getInstance().startAppUpdate(rawData, isAckSuccess, userId);
-                startAppUpdate(rawData, isAckSuccess, userId);
+                AppDataHelper.getInstance().startAppUpdate(rawData, isAckSuccess, userId);
                 break;
             case Constants.DataType.FEEDBACK_TEXT:
                 MeshMessageDataHelper.getInstance().parseFeedbackText(rawData, isAckSuccess);
@@ -279,148 +208,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
         }
     }
-
-    private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
-        try {
-
-            String shareCountString = new String(rawData);
-
-            ShareCountModel shareCountModel = new Gson().fromJson(shareCountString, ShareCountModel.class);
-            AppShareCountEntity entity = new AppShareCountEntity().toAppShareCountEntity(shareCountModel);
-
-            if (!isAckSuccess) {
-                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
-                        .insertAppShareCount(entity))
-                        .subscribeOn(Schedulers.newThread())
-                        .subscribe(longResult -> {
-                            if (longResult > 1) {
-//                                Timber.tag("AppShareCount").d("Data saved");
-                            }
-                        }, Throwable::printStackTrace));
-
-
-            } else {
-                compositeDisposable.add(Single.fromCallable(() -> AppShareCountDataService.getInstance()
-                        .updateSentShareCount(entity.getUserId(), entity.getDate()))
-                        .subscribeOn(Schedulers.newThread())
-                        .subscribe(longResult -> {
-                            if (longResult > 1) {
-//                                Timber.tag("AppShareCount").d("Data Deleted");
-                            }
-                        }, Throwable::printStackTrace));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
-        if (isAckSuccess) return;
-
-        String appVersionData = new String(rawData);
-        Timber.tag("InAppUpdateTest").d("version rcv: " + appVersionData + " userId: " + userId);
-        InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
-
-        InAppUpdateModel myVersionModel = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
-
-        InAppUpdate instance = InAppUpdate.getInstance(TeleMeshApplication.getContext());
-
-        String myServerLink = instance.getMyLocalServerLink();
-        Timber.tag("InAppUpdateTest").d("My version Code: %s", myVersionModel.getVersionCode());
-        if (myVersionModel.getVersionCode() > versionModel.getVersionCode()) {
-
-            if (myServerLink != null) {
-                // start my server
-                if (!instance.isServerRunning()) {
-                    instance.prepareLocalServer();
-                }
-
-                InAppUpdateModel model = new InAppUpdateModel();
-                model.setUpdateLink(myServerLink);
-                String data = new Gson().toJson(model);
-                dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
-
-                Timber.tag("InAppUpdateTest").d("My version is Big: ");
-            }
-        } else if (versionModel.getVersionCode() > myVersionModel.getVersionCode()) {
-            if (versionModel.getUpdateType() == Constants.AppUpdateType.BLOCKER) {
-                if (MainActivity.getInstance() != null) {
-                    MainActivity.getInstance().openAppBlocker(versionModel.getVersionName());
-                }
-            }
-        }
-    }
-
-    private void startAppUpdate(byte[] rawData, boolean isAckSuccess, String userId) {
-        if (isAckSuccess) return;
-
-        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
-
-        int userConnectivityStatus = MeshUserDataHelper.getInstance().getActiveStatus(userActiveStatus);
-
-        if (userConnectivityStatus != Constants.UserStatus.WIFI_ONLINE) {
-            return;
-        }
-
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-            long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-            long days = (System.currentTimeMillis() - saveTime) / (24 * 60 * 60 * 1000);
-
-            if (days <= 2) return;
-        }
-
-        String appVersionData = new String(rawData);
-        InAppUpdateModel versionModel = new Gson().fromJson(appVersionData, InAppUpdateModel.class);
-
-        //AppInstaller.downloadApkFile(versionModel.getUpdateLink(), MainActivity.getInstance());
-
-        if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-            //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-            if (MainActivity.getInstance() == null) return;
-            InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), versionModel.getUpdateLink());
-        }
-
-    }
-
-    public void appUpdateFromOtherServer(int type, String normalUpdateJson) {
-
-        // check app update for internet;
-
-        if (type == Constants.AppUpdateType.BLOCKER) {
-            if (NetworkMonitor.isOnline()) {
-                InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
-
-                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance(), NetworkMonitor.getNetwork());
-            }
-
-        } else {
-            HandlerUtil.postForeground(() -> {
-                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-                    if (MainActivity.getInstance() == null) return;
-
-                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-                        long dif = System.currentTimeMillis() - saveTime;
-                        long days = dif / (24 * 60 * 60 * 1000);
-
-                        if (days <= 2) return;
-                    }
-
-                    // We can show the dialog directly by creating a json file
-
-                    InAppUpdate.getInstance(MainActivity.getInstance()).showAppInstallDialog(normalUpdateJson, MainActivity.getInstance());
-
-                    // InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
-                }
-            }, TimeUnit.SECONDS.toMillis(5));
-        }
-
-    }
-
 
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
         try {

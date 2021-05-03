@@ -24,15 +24,14 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MeshUserDataHelper {
-    private static MeshUserDataHelper meshUserDataHelper = new MeshUserDataHelper();
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
-   // private static MeshUserDataHelper meshUserDataHelper;
 
-    public static MeshUserDataHelper getInstance() {
-  /*      if (meshUserDataHelper == null) {
-            meshUserDataHelper = new MeshUserDataHelper();
-        }*/
-        return meshUserDataHelper;
+    private static class SingletonHelper{
+        private static final MeshUserDataHelper INSTANCE = new MeshUserDataHelper();
+    }
+
+    public static MeshUserDataHelper getInstance(){
+        return SingletonHelper.INSTANCE;
     }
 
     /**
@@ -185,7 +184,6 @@ public class MeshUserDataHelper {
             compositeDisposable.dispose();
         }
     }
-
 
     /**
      * This APi is responsible for returning connectivity type

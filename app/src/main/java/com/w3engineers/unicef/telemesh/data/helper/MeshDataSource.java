@@ -87,7 +87,7 @@ public class MeshDataSource extends ViperUtil {
 
         if (!isPrepared) {
             isPrepared = true;
-            RmDataHelper.getInstance().prepareDataObserver();
+            MeshMessageDataHelper.getInstance().prepareDataObserver();
             HandlerUtil.postBackground(() -> MeshUserDataHelper.getInstance().myUserInfoAdd());
             TextToImageHelper.writeWalletAddressToImage(meshId);
         }

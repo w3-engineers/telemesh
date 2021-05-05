@@ -74,7 +74,9 @@ public class LocationTracker extends Service {
     public static LocationTracker getInstance(Context context) {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                locationTracker = new LocationTracker(context);
+                if(locationTracker == null){
+                    locationTracker = new LocationTracker(context);
+                }
             }
         }
         return locationTracker;
@@ -83,7 +85,9 @@ public class LocationTracker extends Service {
     public static LocationTracker getInstance() {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                locationTracker = new LocationTracker();
+                if (locationTracker == null){
+                    locationTracker = new LocationTracker();
+                }
             }
         }
         return locationTracker;

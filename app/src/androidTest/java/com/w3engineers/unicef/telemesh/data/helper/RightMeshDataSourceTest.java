@@ -27,11 +27,7 @@ import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
-import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
-import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
 import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -335,7 +331,7 @@ public class RightMeshDataSourceTest {
 
         addDelay(1000);
 
-        RmDataHelper.getInstance().prepareDataObserver();
+        MeshMessageDataHelper.getInstance().prepareDataObserver();
 
         addDelay(3000);
 
@@ -479,9 +475,9 @@ public class RightMeshDataSourceTest {
     public void configDataSyncTest() {
         addDelay(500);
 
-        ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
+   //     ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
 
-        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
+   //     RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
 
         addDelay(2000);
     }

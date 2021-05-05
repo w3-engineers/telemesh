@@ -104,7 +104,9 @@ public class MeshMessageDataHelper extends RmDataHelper{
 
                     if (!TextUtils.isEmpty(liveUserId)) {
                         prepareRightMeshDataSource();
-                        rightMeshDataSource.checkUserIsConnected(liveUserId);
+
+                        rightMeshDataSource.checkUserIsConnected(liveUserId); //TODO: could be removed
+
                         int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
 
                         HandlerUtil.postBackground(() -> {

@@ -64,17 +64,13 @@ public class LocationTracker extends Service {
     private LocationTracker() {
     }
 
-/*    public static LocationTracker onInstance(Context context, Activity activity) {
-        if (locationTracker == null) {
-            return locationTracker = new LocationTracker(context, activity);
-        }
-        return locationTracker;
-    }*/
 
     public static LocationTracker getInstance(Context context) {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                locationTracker = new LocationTracker(context);
+                if(locationTracker == null){
+                    locationTracker = new LocationTracker(context);
+                }
             }
         }
         return locationTracker;
@@ -83,7 +79,9 @@ public class LocationTracker extends Service {
     public static LocationTracker getInstance() {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                locationTracker = new LocationTracker();
+                if (locationTracker ==null){
+                    locationTracker = new LocationTracker();
+                }
             }
         }
         return locationTracker;

@@ -48,6 +48,7 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.AppDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.LocationTracker;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -539,7 +540,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                RmDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
+                AppDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
             }
         });
     }

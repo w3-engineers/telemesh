@@ -1072,7 +1072,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void destroy() {
         if (compositeDisposable != null) {
             compositeDisposable.clear();
-            compositeDisposable.dispose();
+//            compositeDisposable.dispose();
         }
     }
 

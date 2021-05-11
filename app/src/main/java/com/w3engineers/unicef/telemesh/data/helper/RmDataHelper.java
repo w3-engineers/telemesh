@@ -266,63 +266,109 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         AnalyticsDataHelper.getInstance().analyticsDataObserver();
 
         // This observer only for message send
-        compositeDisposable.add(dataSource.getLastChatData()
+        /*compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
-                .subscribe(chatEntity -> {
-
-                    if (!chatEntity.isIncoming() && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
-
-                        MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
-                            if (messageEntity.getMessagePlace()) {
-                                GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
-                                        messageModelString);
-                            } else {
-                                dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
-                                        messageEntity.getFriendsId(), true);
-                            }
-                        } else {
-                            ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
-                        }
-
-                    }
-                }, Throwable::printStackTrace));
+                .subscribe(this::handleMessageSend, Throwable::printStackTrace));
 
         // This observer only for re send
         compositeDisposable.add(Objects.requireNonNull(dataSource.getReSendMessage())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(chatEntity -> {
-
-                    if (!chatEntity.isIncoming() && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
-                        MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
-                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
-
-                            dataSend(messageModelString.getBytes(),
-                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
-                        }
-                    } else {
-                        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
-                    }
-                }, Throwable::printStackTrace));
+                .subscribe(this::handleResend, Throwable::printStackTrace));
 
         compositeDisposable.add(Objects.requireNonNull(dataSource.getLiveUserId())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(liveUserId -> {
-
-                    if (!TextUtils.isEmpty(liveUserId)) {
-                        prepareRightMeshDataSource();
-                        rightMeshDataSource.checkUserIsConnected(liveUserId);
-                        int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
-
-                        HandlerUtil.postBackground(() -> {
-                            updateUserActiveStatus(liveUserId, userActiveType);
-                        });
-                    }
-                }, Throwable::printStackTrace));
+                .subscribe(this::handleLiveUserId, Throwable::printStackTrace));*/
 
         GroupDataHelper.getInstance().groupDataObserver();
+    }
+
+    private Boolean messageSend(ChatEntity chatEntity) {
+        if (!chatEntity.isIncoming() && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
+            MessageEntity messageEntity = (MessageEntity) chatEntity;
+            if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                if (messageEntity.getMessagePlace()) {
+                    GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
+                            messageModelString);
+                } else {
+                    dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
+                            messageEntity.getFriendsId(), true);
+                }
+            } else {
+                ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
+            }
+        }
+        return true;
+    }
+
+    @SuppressLint("CheckResult")
+    public void handleMessageSend(ChatEntity chatEntity) {
+        Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(messageSend(chatEntity));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
+    }
+
+    private Boolean messageResend(ChatEntity chatEntity) {
+        if (!chatEntity.isIncoming() && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
+            MessageEntity messageEntity = (MessageEntity) chatEntity;
+            if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+
+                dataSend(messageModelString.getBytes(),
+                        Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+            }
+        } else {
+            ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
+        }
+        return true;
+    }
+
+    @SuppressLint("CheckResult")
+    public void handleResend(ChatEntity chatEntity) {
+        Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(messageResend(chatEntity));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
+    }
+
+    public Boolean actionLiveUserId(String liveUserId) {
+        if (!TextUtils.isEmpty(liveUserId)) {
+            prepareRightMeshDataSource();
+            rightMeshDataSource.checkUserIsConnected(liveUserId);
+            int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
+
+            HandlerUtil.postBackground(() -> {
+                updateUserActiveStatus(liveUserId, userActiveType);
+            });
+        }
+        return true;
+    }
+
+    @SuppressLint("CheckResult")
+    public void handleLiveUserId(String liveUserId) {
+        Single.create(emitter -> {
+            Thread thread = new Thread(() -> {
+                try {
+                    emitter.onSuccess(actionLiveUserId(liveUserId));
+                } catch (Exception e) {
+                    emitter.onError(e);
+                }
+            });
+            thread.start();
+        });
     }
 
     private void updateUserActiveStatus(String userId, int userActiveStatus) {

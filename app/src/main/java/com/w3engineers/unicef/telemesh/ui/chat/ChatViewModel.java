@@ -16,6 +16,7 @@ import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.GroupDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
@@ -132,6 +133,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
      */
     public void setCurrentUser(@Nullable String userId) {
         dataSource.setCurrentUser(userId);
+        RmDataHelper.getInstance().handleLiveUserId(userId);
     }
 
     /**
@@ -322,7 +324,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
             messageInsertionProcess(messageEntity);
-            dataSource.reSendMessage(messageEntity);
+            RmDataHelper.getInstance().handleResend(messageEntity);
+//            dataSource.reSendMessage(messageEntity);
         }
     }
 
@@ -365,7 +368,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 }, throwable -> {
                     Log.v("FileMessage", "Error: " + throwable.getMessage());
                 }));
-
+        RmDataHelper.getInstance().handleMessageSend(chatEntity);
     }
 
     private Single<Long> insertMessageData(MessageEntity messageEntity) {

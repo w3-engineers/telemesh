@@ -301,9 +301,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return true;
     }
 
-    @SuppressLint("CheckResult")
     public void handleMessageSend(ChatEntity chatEntity) {
-        Single.create(emitter -> {
+        compositeDisposable.add(singleMessageSend(chatEntity)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe());
+    }
+
+    private Single<Boolean> singleMessageSend(ChatEntity chatEntity) {
+        return Single.create(emitter -> {
             Thread thread = new Thread(() -> {
                 try {
                     emitter.onSuccess(messageSend(chatEntity));
@@ -330,9 +335,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return true;
     }
 
-    @SuppressLint("CheckResult")
     public void handleResend(ChatEntity chatEntity) {
-        Single.create(emitter -> {
+        compositeDisposable.add(singleMessageResend(chatEntity)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe());
+    }
+
+    private Single<Boolean> singleMessageResend(ChatEntity chatEntity) {
+        return Single.create(emitter -> {
             Thread thread = new Thread(() -> {
                 try {
                     emitter.onSuccess(messageResend(chatEntity));
@@ -357,9 +367,14 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return true;
     }
 
-    @SuppressLint("CheckResult")
     public void handleLiveUserId(String liveUserId) {
-        Single.create(emitter -> {
+        compositeDisposable.add(singleLiveUserId(liveUserId)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe());
+    }
+
+    private Single<Boolean> singleLiveUserId(String liveUserId) {
+        return Single.create(emitter -> {
             Thread thread = new Thread(() -> {
                 try {
                     emitter.onSuccess(actionLiveUserId(liveUserId));

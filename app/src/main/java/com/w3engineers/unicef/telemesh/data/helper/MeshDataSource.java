@@ -64,6 +64,10 @@ public class MeshDataSource extends ViperUtil {
         return rightMeshDataSource;
     }
 
+    public static MeshDataSource getInstance() {
+        return rightMeshDataSource;
+    }
+
     @Override
     protected void onMesh(String myMeshId) {
         meshInited(myMeshId);

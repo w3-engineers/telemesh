@@ -5,11 +5,13 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
@@ -33,7 +35,11 @@ public class SplashActivity extends BaseActivity {
 
         activitySplashBinding.setSplashViewModel(splashViewModel);
 
-        MeshDataSource.isPrepared = false;
+        if (MeshDataSource.getInstance() != null && MeshDataSource.isPrepared) {
+            RmDataHelper.getInstance().prepareDataObserver();
+        } else {
+            MeshDataSource.isPrepared = false;
+        }
 
         splashViewModel.getUserRegistrationStatus();
         ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);

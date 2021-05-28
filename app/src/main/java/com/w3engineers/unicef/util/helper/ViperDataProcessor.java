@@ -13,7 +13,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.TeleMeshApplication;
@@ -138,8 +138,7 @@ public class ViperDataProcessor {
     public void processUpdateAppConfigJson(String configData) {
 
         UpdateConfigModel updateConfigModel;
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        sharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
+        SharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
 
         updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
 
@@ -155,9 +154,9 @@ public class ViperDataProcessor {
 
             if (BuildConfig.VERSION_CODE < versionCode) {
 
-                sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
-                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
-                sharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
+                SharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+                SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
+                SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
 
                 if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
                     String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);

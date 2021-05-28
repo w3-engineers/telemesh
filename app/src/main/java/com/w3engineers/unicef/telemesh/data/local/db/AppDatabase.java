@@ -1,19 +1,17 @@
 package com.w3engineers.unicef.telemesh.data.local.db;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
-import android.arch.persistence.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.w3engineers.ext.strom.App;
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNames;
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
-import com.w3engineers.ext.strom.util.Text;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDao;
@@ -32,6 +30,8 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.base.database.BaseColumnNames;
+import com.w3engineers.unicef.util.base.database.BaseDatabase;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 
 import java.util.ArrayList;
@@ -148,7 +148,7 @@ public abstract class AppDatabase extends BaseDatabase {
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
-                    Context context = App.getContext();
+                    Context context = TeleMeshApplication.getContext();
 
                     sInstance = createDbWithMigration(context); //normally initial version is always 21
                 }
@@ -257,7 +257,7 @@ public abstract class AppDatabase extends BaseDatabase {
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
                         if (baseMigration.getQueryScript().length > 0) {
                             for (String query : baseMigration.getQueryScript()) {
-                                if (Text.isNotEmpty(query)) {
+                                if (!TextUtils.isEmpty(query)) {
                                     Log.d("DatabaseMigration", "Query: " + query);
                                     database.execSQL(query);
                                 }

@@ -13,7 +13,7 @@ buildscript {
         }*/
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
         classpath 'com.google.gms:google-services:4.3.4'
@@ -32,6 +32,21 @@ allprojects {
         jcenter()
         google()
         maven { url "https://jitpack.io" }
+        maven {
+
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+            def mavenUrl = properties.getProperty('MAVEN_AWS_URL')
+            def access = properties.getProperty('ACCESS_KEY')
+            def secret = properties.getProperty('SECRET_KEY')
+
+            url mavenUrl
+            credentials(AwsCredentials) {
+                accessKey access
+                secretKey secret
+            }
+        }
     }
 }
 

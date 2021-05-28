@@ -14,11 +14,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
+
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,10 +26,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.ApiEvent;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.application.data.model.BroadcastEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
@@ -68,7 +66,6 @@ import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -476,9 +473,8 @@ public abstract class ViperUtil {
     public void saveUserInfo(UserModel userModel) {
 
         try {
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
 
-            String address = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            String address = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
             viperClient.updateMyInfo(userModel.getName(), userModel.getImage());
         } catch (Exception e) {
@@ -493,11 +489,11 @@ public abstract class ViperUtil {
         }
     }
 
-    public void sendTokenGuidelineInfoToViper(String guideLine) {
+    /*public void sendTokenGuidelineInfoToViper(String guideLine) {
         if (guideLine != null && viperClient != null) {
             viperClient.sendPointGuidelineForUpdate(guideLine);
         }
-    }
+    }*/
 
     protected void checkUserConnectionStatus(String userId) {
         try {
@@ -557,7 +553,7 @@ public abstract class ViperUtil {
         try {
 
             if (deviceName.equalsIgnoreCase(manufacturer)) {
-                isPermissionNeeded = !SharedPref.getSharedPref(context).readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
+                isPermissionNeeded = !SharedPref.readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
             }
         } catch (Exception e) { e.printStackTrace(); }
 
@@ -572,7 +568,7 @@ public abstract class ViperUtil {
         builder.setMessage(activity.getString(R.string.permission_xiomi));
         builder.setPositiveButton(Html.fromHtml("<b>" + activity.getString(com.w3engineers.mesh.R.string.ok) + "<b>"), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                SharedPref.getSharedPref(context).write(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE, true);
+                SharedPref.write(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE, true);
                 activity.startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 100);
             }
         });

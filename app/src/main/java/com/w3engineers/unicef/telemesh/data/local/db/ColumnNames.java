@@ -8,7 +8,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
  * ============================================================================
  */
 
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNames;
+import com.w3engineers.unicef.util.base.database.BaseColumnNames;
 
 public interface ColumnNames extends BaseColumnNames {
     //Users table

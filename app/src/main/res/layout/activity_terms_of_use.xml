@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_next"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_40"
@@ -48,10 +48,10 @@
             android:text="@string/signup"
             android:textAllCaps="false"
             android:textColor="@color/new_user_button_color"
-            app:bb_drawable="@drawable/ractangular_white"
+            android:background="@drawable/ractangular_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

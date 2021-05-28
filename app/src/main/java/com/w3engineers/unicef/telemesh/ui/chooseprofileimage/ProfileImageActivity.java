@@ -1,20 +1,19 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
-import com.w3engineers.ext.strom.application.ui.base.ItemClickListener;
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileImageBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.base.ui.BaseActivity;
+import com.w3engineers.unicef.util.base.ui.ItemClickListener;
 import com.w3engineers.unicef.util.helper.ImageUtil;
-import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class ProfileImageActivity extends BaseActivity implements ItemClickListener<Integer> {
 
@@ -70,7 +69,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
         switch (id) {
             case R.id.menu_done:
                 if (selectedItem == -1) {
-                    Toaster.showShort(getResources().getString(R.string.select_avatar));
+                    Toast.makeText(this, getResources().getString(R.string.select_avatar), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = getIntent();
                     intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);

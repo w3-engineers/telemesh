@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_background"
@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_feed_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,12 +42,12 @@
             android:text="@string/send_feedback"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            android:background="@drawable/drawable_button_bg_with_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

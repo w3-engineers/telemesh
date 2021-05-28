@@ -5,36 +5,34 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.w3engineers.ext.strom.util.Text;
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -47,6 +45,8 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
@@ -57,8 +57,6 @@ import com.zhihu.matisse.MimeType;
 
 import java.io.File;
 import java.util.List;
-
-import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -142,7 +140,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (Text.isNotEmpty(threadId)) {
+        if (!TextUtils.isEmpty(threadId)) {
             mChatViewModel.updateAllMessageStatus(threadId);
         }
     }
@@ -189,7 +187,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (Text.isNotEmpty(threadId)) {
+        if (!TextUtils.isEmpty(threadId)) {
             mChatViewModel.setCurrentUser(threadId);
         }
     }
@@ -268,7 +266,7 @@ public class ChatActivity extends TelemeshBaseActivity {
      * @param userId
      */
     private void subscribeForMessages(String userId) {
-        if (Text.isNotEmpty(userId)) {
+        if (!TextUtils.isEmpty(userId)) {
 
             if (mChatPagedAdapter != null) {
                 mChatViewModel.getChatEntityWithDate().observe(ChatActivity.this, chatEntities -> {
@@ -277,7 +275,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 });
             }
 
-            if (Text.isNotEmpty(userId)) {
+            if (!TextUtils.isEmpty(userId)) {
                 if (isGroup) {
                     mChatViewModel.getAllGroupMessage(userId).observe(this, chatEntities -> {
                         mChatViewModel.prepareDateSpecificChat(chatEntities);
@@ -298,7 +296,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void subscribeForThreadEvent(String threadId) {
-        if (Text.isNotEmpty(threadId)) {
+        if (!TextUtils.isEmpty(threadId)) {
 
             if (isGroup) {
                 mChatViewModel.getLiveGroupById(threadId).observe(this, groupEntity -> {
@@ -403,7 +401,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     private void resendFailedMessage(MessageEntity failedMessage) {
         if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
-            Toaster.showShort(mUserEntity.getUserName() + " is in offline.");
+            Toast.makeText(this, mUserEntity.getUserName() + " is in offline.", Toast.LENGTH_SHORT).show();
             return;
         } /*else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {
             Toaster.showShort(mUserEntity.getUserName() + " locally not connected.");
@@ -506,13 +504,13 @@ public class ChatActivity extends TelemeshBaseActivity {
 
         @Override
         public void onChanged() {
-            Timber.e("onChanged");
+            Log.e("ChatActivity", "onChanged");
         }
 
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            Timber.e("onItemRangeInserted");
+            Log.e("ChatActivity", "onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
             if (mLinearLayoutManager != null && mViewBinging != null && mChatPagedAdapter != null) {
                 mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,
@@ -537,24 +535,24 @@ public class ChatActivity extends TelemeshBaseActivity {
         if (messageEntity.isIncoming()) {
             if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
                     && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
-                Toaster.showShort("Message was failed");
+                Toast.makeText(this, "Message was failed", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
-                Toaster.showShort("Message is receiving");
+                Toast.makeText(this, "Message is receiving", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
         String contentPath = messageEntity.getContentPath();
         if (TextUtils.isEmpty(contentPath)) {
-            Toaster.showShort("Error message");
+            Toast.makeText(this, "Error message", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!(new File(contentPath).exists())) {
-            Toaster.showShort("File not found");
+            Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
             return;
         }
 

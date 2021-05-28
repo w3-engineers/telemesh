@@ -2,24 +2,21 @@ package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.local.meshlog.MeshLogManager;
-import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
@@ -33,6 +30,7 @@ import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 
@@ -76,11 +74,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         switch (id) {
             case R.id.layout_view_profile:
                 // Showing user profile
-                SharedPref sharedPref = SharedPref.getSharedPref(mActivity);
                 UserEntity userEntity = new UserEntity();
-                userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
-                userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-                userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+                userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+                userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+                userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);
                 intent.putExtra(UserEntity.class.getName(), userEntity);
                 intent.putExtra(SettingsFragment.class.getName(), true);
@@ -106,7 +103,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.layout_show_log:
 //                startActivity(new Intent(mActivity, MeshLogHistoryActivity.class));
-                MeshLogManager.openActivity(getActivity());
+                meshLogAction();
+//                MeshLogManager.openActivity(getActivity());
                 break;
             /*case R.id.layout_diagram_map:
 //                startActivity(new Intent(mActivity, ConnectivityDiagramActiviy.class));
@@ -133,9 +131,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void appUpdateAction() {
         if (MainActivity.getInstance() != null) {
-            String url = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.UPDATE_APP_URL).replace(InAppUpdate.MAIN_APK, "");
+            String url = SharedPref.read(Constants.preferenceKey.UPDATE_APP_URL).replace(InAppUpdate.MAIN_APK, "");
             if (hasEnoughStorage()) {
-                AppInstaller.downloadApkFile(url, MainActivity.getInstance(), NetworkMonitor.getNetwork());
+                AppInstaller.downloadApkFile(url, MainActivity.getInstance(), DataManager.on().getNetwork());
             }
         }
     }
@@ -152,6 +150,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private void meshLogAction() {
+        if (isMeshInit()) {
+            DataManager.on().openMeshLogUI();
+        }
+    }
+
     private void shareAppOperation() {
         if (hasEnoughStorage()) {
             settingsViewModel.startInAppShareProcess();
@@ -160,7 +164,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private byte[] getImageByteArray() {
 
-        int imageIndex = SharedPref.getSharedPref(getActivity()).readInt(Constants.preferenceKey.IMAGE_INDEX);
+        int imageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -172,7 +176,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         if (Constants.IsMeshInit) {
             isMeshInit = true;
         } else {
-            Toaster.showShort(LanguageUtil.getString(R.string.mesh_not_initiated));
+            Toast.makeText(mActivity, LanguageUtil.getString(R.string.mesh_not_initiated), Toast.LENGTH_SHORT).show();
         }
         return isMeshInit;
     }
@@ -182,7 +186,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
             hasEnoughStorage = true;
         } else {
-            Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+            Toast.makeText(mActivity, LanguageUtil.getString(R.string.phone_storage_not_enough), Toast.LENGTH_SHORT).show();
         }
         return hasEnoughStorage;
     }
@@ -254,13 +258,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
-        if (NetworkMonitor.isOnline()) {
-            long version = SharedPref.getSharedPref(mActivity).readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
+//        if (NetworkMonitor.isOnline()) {
+            long version = SharedPref.readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
             if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
                 mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
                 mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
             }
-        }
+//        }
     }
 
     private void initView() {

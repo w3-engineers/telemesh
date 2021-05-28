@@ -2,22 +2,17 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.PagedList;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.data.helper.GroupDataHelper;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
-import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -30,9 +25,9 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.ChatEntityListDataSource;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
-import com.w3engineers.unicef.util.helper.CommonUtil;
-import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.util.helper.ContentUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
@@ -50,7 +45,6 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 /*
  * ============================================================================
@@ -179,13 +173,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     public String getMyUserId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.MY_USER_ID);
+        return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
     public UserEntity getMyUserEntity() {
-        int myAvatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .readInt(Constants.preferenceKey.IMAGE_INDEX);
+        int myAvatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         return new UserEntity().setUserName("You").setMeshId(getMyUserId())
                 .setAvatarIndex(myAvatarIndex);
     }
@@ -269,9 +261,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(contentPath ->{
                     startContentMessageProcess(userId, contentPath);
-                }, throwable -> {
-                    Timber.tag("FileMessage").e(throwable);
-                }));
+                }, Throwable::printStackTrace));
     }
 
     private void startContentMessageProcess(String userId, String contentPath) {
@@ -291,9 +281,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(compressedImagePath ->{
                     sendContentMessage(userId, compressedImagePath);
-                }, throwable -> {
-                    Timber.tag("FileMessage").e(throwable);
-                }));
+                }, Throwable::printStackTrace));
     }
 
     private void sendContentMessage(String userId, String path) {
@@ -302,9 +290,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(thumbPath -> {
                     prepareContentMessage(userId, path, thumbPath);
-                }, throwable -> {
-                    Timber.tag("FileMessage").e(throwable);
-                }));
+                }, Throwable::printStackTrace));
     }
 
     private Single<String> getThumbnailPath(String originalPath) {

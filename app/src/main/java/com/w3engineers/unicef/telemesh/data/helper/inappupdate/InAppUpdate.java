@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.Network;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -15,11 +15,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
@@ -136,20 +135,18 @@ public class InAppUpdate {
                 setAppUpdateProcess(false);
 
                 if (finalUrl1.contains("config")) {
-                    SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, versionCode);
-                    SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_URL, finalUrl1);
+                    SharedPref.write(Constants.preferenceKey.UPDATE_APP_VERSION, versionCode);
+                    SharedPref.write(Constants.preferenceKey.UPDATE_APP_URL, finalUrl1);
                 }
 
             });
-
-            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
 
 
             binding.checkboxAskMeLater.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    sharedPref.write(Constants.preferenceKey.ASK_ME_LATER, isChecked);
-                    sharedPref.write(Constants.preferenceKey.ASK_ME_LATER_TIME, System.currentTimeMillis());
+                    SharedPref.write(Constants.preferenceKey.ASK_ME_LATER, isChecked);
+                    SharedPref.write(Constants.preferenceKey.ASK_ME_LATER_TIME, System.currentTimeMillis());
                 }
             });
 
@@ -161,7 +158,7 @@ public class InAppUpdate {
                 if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
                     AppInstaller.downloadApkFile(finalUrl, context, null);
                 } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.phone_storage_not_enough));
+                    Toast.makeText(context, LanguageUtil.getString(R.string.phone_storage_not_enough), Toast.LENGTH_SHORT).show();
                 }
 
             });

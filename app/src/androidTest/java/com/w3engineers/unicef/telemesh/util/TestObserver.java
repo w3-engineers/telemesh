@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.util;
 
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

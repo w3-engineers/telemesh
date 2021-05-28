@@ -1,18 +1,16 @@
 package com.w3engineers.unicef.telemesh.ui.editprofile;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -20,6 +18,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -81,8 +81,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 Intent intent = new Intent(this, ProfileImageActivity.class);
                 int currentImageIndex = mViewModel.getImageIndex();
 
-                SharedPref sharedPref = SharedPref.getSharedPref(this);
-                int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+                int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
                 if (currentImageIndex < 0) {
                     currentImageIndex = oldImageIndex;
                 }
@@ -130,7 +129,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             if (isNeedToUpdate()) {
                 if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
-                    Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+                    Toast.makeText(this, LanguageUtil.getString(R.string.profile_updated_successfully), Toast.LENGTH_SHORT).show();
                     mViewModel.sendUserInfoToAll();
                     finish();
                 }
@@ -151,9 +150,8 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     private boolean isNeedToUpdate() {
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
-        String oldName = sharedPref.read(Constants.preferenceKey.USER_NAME);
-        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String oldName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         int currentImageIndex = mViewModel.getImageIndex();
 
@@ -182,7 +180,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     private void initAllText() {
         mBinding.textViewCreateProfile.setText(LanguageUtil.getString(R.string.update_profile));
         mBinding.buttonUpdate.setText(LanguageUtil.getString(R.string.update));
-        mBinding.editTextName.setHint(LanguageUtil.getString(R.string.enter_first_name));
-        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
+//        mBinding.editTextName.setHint(LanguageUtil.getString(R.string.enter_first_name));
+//        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
     }
 }

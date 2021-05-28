@@ -1,10 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -378,10 +377,8 @@ public class GroupDataHelper extends RmDataHelper {
 
     public void updateMyUserInfo() {
         List<GroupEntity> groupEntities = groupDataSource.getAllGroup();
-        String myNewName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.USER_NAME);
-        int avatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String myNewName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         String myMeshId = getMyMeshId();
 
         for (GroupEntity groupEntity : groupEntities) {

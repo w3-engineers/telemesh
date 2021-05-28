@@ -4,17 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -118,7 +118,7 @@ public class AppInstaller {
         protected void onProgressUpdate(Pair<Integer, Long>... progress) {
 
             if (progress[0].first == 100) {
-                Toaster.showShort("Internet connection not available");
+                Toast.makeText(context, "Internet connection not available", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -132,7 +132,7 @@ public class AppInstaller {
             }
 
             if (progress[0].first == -1) {
-                Toaster.showShort("Download failed");
+                Toast.makeText(context, "Download failed", Toast.LENGTH_SHORT).show();
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }

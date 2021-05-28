@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
 import android.app.Application;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.paging.PagedList;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.paging.PagedList;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -18,6 +16,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
@@ -62,8 +61,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
     }
 
     private String getMyUserId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.MY_USER_ID);
+        return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
     void createGroup(List<UserEntity> userEntities) {
@@ -76,10 +74,8 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
         String myUserId = getMyUserId();
 
-        String myUserName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.USER_NAME);
-        int avatarIndex = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
                 .setMemberId(myUserId)

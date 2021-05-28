@@ -2,11 +2,10 @@ package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 import android.content.Intent;
 import android.view.View;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.base.ui.BaseActivity;
 
 public class TermsOfUseActivity extends BaseActivity {
 

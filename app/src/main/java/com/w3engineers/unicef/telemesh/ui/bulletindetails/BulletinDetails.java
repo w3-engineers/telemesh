@@ -12,25 +12,23 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityBulletinDetailsBinding;
-import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
@@ -85,12 +83,10 @@ public class BulletinDetails extends TelemeshBaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        switch (view.getId()) {
-            case R.id.image_view_message:
-                if (!TextUtils.isEmpty(contentPath)) {
-                    zoomImageFromThumb(view, contentPath);
-                }
-                break;
+        if (view.getId() == R.id.image_view_message) {
+            if (!TextUtils.isEmpty(contentPath)) {
+                zoomImageFromThumb(view, contentPath);
+            }
         }
     }
 

@@ -5,15 +5,15 @@ plugins {
 //    id 'io.fabric'
 }
 android {
-    compileSdkVersion build_versions.target_sdk
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.w3engineers.unicef.telemesh"
-        minSdkVersion build_versions.min_sdk
-        targetSdkVersion build_versions.target_sdk
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 13
         versionName "0.1.2-beta"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
 
         ndk {
@@ -105,21 +105,25 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //Support
-    implementation deps.support.app_compat
+
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    /*implementation deps.support.app_compat
     implementation deps.support.design
     implementation deps.constraint_layout
     implementation deps.support.recyclerview
     implementation deps.support.cardview
     implementation deps.support.animated_vector_drawable
     implementation deps.support.media_compact
-    implementation deps.support.v4
+    implementation deps.support.v4*/
 
     //lifecycle
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     annotationProcessor deps.lifecycle.compiler
+//    api deps.strom_remote
 
     //LiveDataReactStream
     implementation deps.livedata_reactive
@@ -199,8 +203,12 @@ dependencies {
     api deps.app_share
     api deps.local_server
     debugImplementation deps.inappstoragereader
+
+    implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test12:release@aar'){
+        transitive=true
+    }
 //    implementation deps.viper
-   implementation project(path: ':viper')
+//   implementation project(path: ':viper')
 }
 
 coveralls {

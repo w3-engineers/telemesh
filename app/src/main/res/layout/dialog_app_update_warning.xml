@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -57,7 +57,7 @@
             app:layout_constraintStart_toStartOf="@+id/text_view_warning"
             app:layout_constraintTop_toBottomOf="@+id/text_view_warning" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_update"
             style="@style/CustomButton"
             android:layout_width="wrap_content"
@@ -67,12 +67,12 @@
             android:text="@string/update"
             android:textAllCaps="true"
             android:textStyle="bold"
-            app:bb_drawable="@drawable/ractangular_gradient"
+            android:background="@drawable/ractangular_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkbox_ask_me_later" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_cancel"
             style="@style/CustomButton"
             android:layout_width="wrap_content"
@@ -82,10 +82,10 @@
             android:textColor="@color/new_user_button_color"
             android:textAllCaps="true"
             android:textStyle="bold"
-            app:bb_drawable="@drawable/ractangular_white"
+            android:background="@drawable/ractangular_white"
             app:layout_constraintBottom_toBottomOf="@+id/button_update"
             app:layout_constraintEnd_toStartOf="@+id/button_update" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

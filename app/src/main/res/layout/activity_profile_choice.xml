@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_profile_choice_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_create_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,12 +39,12 @@
             android:text="@string/i_m_a_new_user"
             android:textColor="@color/white"
             android:textAllCaps="false"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            android:background="@drawable/drawable_button_bg_with_color"
             app:layout_constraintBottom_toTopOf="@+id/button_import_account"
             app:layout_constraintEnd_toEndOf="@+id/button_import_account"
             app:layout_constraintStart_toStartOf="@+id/button_import_account" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_import_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -55,11 +55,11 @@
             android:textAllCaps="false"
             android:text="@string/i_m_a_returning_user"
             android:textColor="@color/white"
-            app:bb_drawable="@drawable/drawable_button_bg_with_border"
+            android:background="@drawable/drawable_button_bg_with_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

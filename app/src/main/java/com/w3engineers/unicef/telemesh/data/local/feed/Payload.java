@@ -1,7 +1,7 @@
 
 package com.w3engineers.unicef.telemesh.data.local.feed;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

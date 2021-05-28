@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.groupdetails;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -19,6 +17,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
@@ -178,8 +177,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
     }
 
     private String getMyUserId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.MY_USER_ID);
+        return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
 }

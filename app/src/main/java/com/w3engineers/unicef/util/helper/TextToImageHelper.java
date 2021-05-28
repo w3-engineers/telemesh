@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.google.zxing.WriterException;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
@@ -19,9 +19,7 @@ public class TextToImageHelper {
 
     public static void writeWalletAddressToImage(String walletAddress) {
 
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-
-        boolean isQrExist = !TextUtils.isEmpty(sharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE));
+        boolean isQrExist = !TextUtils.isEmpty(SharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE));
 
         if (!isQrExist) {
             AsyncTask.execute(() -> {
@@ -32,7 +30,7 @@ public class TextToImageHelper {
 
                     String bitmapAddress = BitMapToString(bitmap);
 
-                    sharedPref.write(Constants.preferenceKey.MY_WALLET_IMAGE, bitmapAddress);
+                    SharedPref.write(Constants.preferenceKey.MY_WALLET_IMAGE, bitmapAddress);
 
                 } catch (WriterException e) { e.printStackTrace(); }
             });

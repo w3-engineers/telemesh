@@ -1,6 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.local.grouptable;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 

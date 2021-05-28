@@ -12,7 +12,7 @@ import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
@@ -106,7 +106,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
                             trackMessageCount = messagePlotCount;
 
-                            String userId = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+                            String userId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
                             MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity.MessageAnalyticsEntity()
                                     .setTime(System.currentTimeMillis()).setSyncMessageCountToken(messagePlotCount).setUserId(userId);
@@ -149,12 +149,11 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         }
 
         if (newNodeModels.size() > 0) {
-            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
 
-            if (!sharedPref.readBoolean(Constants.preferenceKey.MY_SYNC_IS_DONE)) {
+            if (!SharedPref.readBoolean(Constants.preferenceKey.MY_SYNC_IS_DONE)) {
                 NewNodeModel newNodeModel = new NewNodeModel()
-                        .setUserAddingTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME))
-                        .setUserId(sharedPref.read(Constants.preferenceKey.MY_USER_ID));
+                        .setUserAddingTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME))
+                        .setUserId(SharedPref.read(Constants.preferenceKey.MY_USER_ID));
 
                 newNodeModels.add(newNodeModel);
             }
@@ -229,7 +228,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
         } else if (analyticsType == Constants.AnalyticsResponseType.NEW_USER_COUNT) {
             if (isSuccess) {
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_SYNC_IS_DONE, true);
+                SharedPref.write(Constants.preferenceKey.MY_SYNC_IS_DONE, true);
                 RmDataHelper.getInstance().updateSyncedUser();
             }
         } else if (analyticsType == Constants.AnalyticsResponseType.APP_SHARE_COUNT) {

@@ -2,21 +2,19 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.databinding.BindingAdapter;
-import android.databinding.ViewDataBinding;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ViewDataBinding;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMessageFeedBinding;
+import com.w3engineers.unicef.util.base.ui.BaseAdapter;
+import com.w3engineers.unicef.util.base.ui.BaseViewHolder;
 
 import java.util.List;
 
@@ -57,11 +55,11 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
 
     @Override
     @NonNull
-    public BaseAdapterViewHolder<FeedEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder<FeedEntity> newViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MessageFeedViewHolder(inflate(parent, R.layout.item_message_feed));
     }
 
-    protected class MessageFeedViewHolder extends BaseAdapterViewHolder<FeedEntity> {
+    protected class MessageFeedViewHolder extends BaseViewHolder<FeedEntity> {
         private ItemMessageFeedBinding mItemMessageFeedBinding;
 
         protected MessageFeedViewHolder(ViewDataBinding viewDataBinding) {
@@ -75,7 +73,7 @@ public class MessageFeedAdapter extends BaseAdapter<FeedEntity> {
          * @param feedEntity the required feed entity
          */
         @Override
-        public void bind(FeedEntity feedEntity) {
+        public void bind(FeedEntity feedEntity, ViewDataBinding viewDataBinding) {
             mItemMessageFeedBinding.setFeedEntity(feedEntity);
             mItemMessageFeedBinding.setMessageFeedViewModel(mMessageFeedViewModel);
            // setImageUrl(mItemMessageFeedBinding.senderIcon, feedEntity.getFeedProviderLogo(), mContext.getResources().getDrawable(R.mipmap.ic_unicef));

@@ -8,13 +8,13 @@
         <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/chat_background"
         tools:context=".ui.groupdetails.GroupDetailsActivity">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true">
@@ -91,7 +91,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/name_layout"
                     style="@style/signup_editext_style"
                     android:textColorHint="@color/hint_text_color"
@@ -101,12 +101,11 @@
                     app:layout_constraintStart_toEndOf="@+id/image_view_pen"
                     app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
 
-                    <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_15"
-                        android:background="@color/transparent_color"
                         android:backgroundTint="@color/new_user_button_color"
                         android:enabled="false"
                         android:fontFamily="@font/poppins_regular"
@@ -115,15 +114,11 @@
                         android:inputType="text"
                         android:maxLength="@{DefaultValue.GROUP_NAME_LIMIT}"
                         android:singleLine="true"
-                        android:textSize="@dimen/text_body"
-                        app:bet_baseColor="@color/message_text_color"
-                        app:bet_primaryColor="@color/new_user_button_color"
-                        app:bet_textColor="@color/message_text_color"
-                        app:bet_underlineColor="@color/message_text_color">
+                        android:textSize="@dimen/text_body">
 
-                    </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
+                    </com.google.android.material.textfield.TextInputEditText>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/image_view_pen"
@@ -213,11 +208,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image_view_add_member" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_group_member"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/separator_3"
@@ -238,7 +233,7 @@
                     android:layout_marginStart="@dimen/margin_15"
                     android:layout_marginEnd="@dimen/margin_15"
                     android:paddingBottom="@dimen/padding_10"
-                    android:text="Leave group"
+                    android:text="@string/leave_group"
                     android:textColor="@color/sunset_orange"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -246,10 +241,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/recycler_view_group_member" />
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,7 +15,7 @@
             type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_15"
@@ -134,6 +134,6 @@
             app:layout_constraintStart_toStartOf="@+id/image_view_message"
             app:layout_constraintTop_toBottomOf="@+id/image_view_message" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

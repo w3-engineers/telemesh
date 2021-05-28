@@ -1,18 +1,18 @@
 package com.w3engineers.unicef.telemesh.ui.feedback;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityFeedbackBinding;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
@@ -72,7 +72,7 @@ public class FeedbackActivity extends TelemeshBaseActivity {
         initAllText();
         mViewModel.feedbackResponse().observe(this, isSuccess -> {
             if (isSuccess != null && isSuccess) {
-                Toaster.showShort(LanguageUtil.getString(R.string.feedback_submitted_successfully));
+                Toast.makeText(this, LanguageUtil.getString(R.string.feedback_submitted_successfully), Toast.LENGTH_SHORT).show();
                 mBinding.editTextFeedback.setText("");
             }
         });
@@ -84,7 +84,7 @@ public class FeedbackActivity extends TelemeshBaseActivity {
         if (!TextUtils.isEmpty(feedBackText)) {
             mViewModel.sendFeedback(feedBackText);
         } else {
-            Toaster.showShort(LanguageUtil.getString(R.string.please_write_your_feedback));
+            Toast.makeText(this, LanguageUtil.getString(R.string.please_write_your_feedback), Toast.LENGTH_SHORT).show();
         }
     }
 

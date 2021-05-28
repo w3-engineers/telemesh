@@ -2,10 +2,10 @@ package com.w3engineers.unicef.telemesh.data.local.db;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseEntity;
+import com.w3engineers.unicef.util.base.database.BaseEntity;
 
 
 /*

@@ -12,11 +12,11 @@
     </data>
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -25,27 +25,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/message_feed_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
 
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/message_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:brv_emptyLayoutId="@id/empty_layout" />
+                    android:layout_height="match_parent" />
 
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/empty_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white">
 
-                    <android.support.constraint.Guideline
+                    <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,7 +80,7 @@
                         app:layout_constraintTop_toBottomOf="@id/empty_image_view" />
 
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!--<include
                     android:id="@+id/empty_layout"
@@ -90,12 +89,12 @@
                     app:emptyImage="@{R.drawable.img_message_empty}"
                     app:emptyMessage="@{@string/no_message_available}" />-->
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

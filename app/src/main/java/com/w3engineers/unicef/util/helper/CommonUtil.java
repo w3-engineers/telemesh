@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -85,10 +85,10 @@ public class CommonUtil {
 
     public static boolean isValidName(String name, Context context) {
         if (TextUtils.isEmpty(name)) {
-            Toaster.showShort(context.getResources().getString(R.string.please_enter_your_name));
+            Toast.makeText(context, context.getResources().getString(R.string.please_enter_your_name), Toast.LENGTH_SHORT).show();
             return false;
         } else if (name.length() < 2) {
-            Toaster.showShort(context.getResources().getString(R.string.enter_valid_name));
+            Toast.makeText(context, context.getResources().getString(R.string.enter_valid_name), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

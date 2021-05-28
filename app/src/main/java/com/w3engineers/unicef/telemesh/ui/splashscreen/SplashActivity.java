@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -16,8 +14,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
-
-import timber.log.Timber;
+import com.w3engineers.unicef.util.base.ui.BaseActivity;
 
 public class SplashActivity extends BaseActivity {
 
@@ -49,10 +46,8 @@ public class SplashActivity extends BaseActivity {
             Intent intent;
             if (aBoolean != null && aBoolean) {
                 // Go to contact page
-                Timber.d("User already created. Go next page");
                 intent = new Intent(SplashActivity.this, MainActivity.class);
             } else {
-                Timber.e("User not created. Go User create page");
                 //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
                 intent = new Intent(SplashActivity.this, TermsOfUseActivity.class);
             }

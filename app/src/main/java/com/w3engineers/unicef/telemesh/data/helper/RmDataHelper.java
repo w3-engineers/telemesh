@@ -4,14 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
@@ -40,7 +40,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
-import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -168,10 +167,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void myUserInfoAdd() {
         String userId = getMyMeshId();
 
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
-        int avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        long regTime = sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME);
+        String name = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        long regTime = SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME);
 
         UserEntity userEntity = new UserEntity().setUserName(name)
                 .setAvatarIndex(avatarIndex)
@@ -670,7 +668,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     protected String getMyMeshId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+        return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -783,10 +781,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // check app update for internet;
 
         if (type == Constants.AppUpdateType.BLOCKER) {
-            if (NetworkMonitor.isOnline()) {
+            if (DataManager.on().isNetworkOnline()) {
                 InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
 
-                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), MainActivity.getInstance(), NetworkMonitor.getNetwork());
+                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(),
+                        MainActivity.getInstance(), DataManager.on().getNetwork());
             }
 
         } else {
@@ -795,9 +794,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
                     if (MainActivity.getInstance() == null) return;
 
-                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-                    if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-                        long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+//                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                    if (SharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                        long saveTime = SharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
                         long dif = System.currentTimeMillis() - saveTime;
                         long days = dif / (24 * 60 * 60 * 1000);
 
@@ -913,10 +912,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void versionMessageHandshaking(String userId) {
         InAppUpdateModel model = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
 
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        int versionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        int versionCode = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
         if (BuildConfig.VERSION_CODE == versionCode) {
-            model.setUpdateType(sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE));
+            model.setUpdateType(SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE));
         }
 
         String data = new Gson().toJson(model);
@@ -972,9 +970,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             return;
         }
 
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-            long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+        if (SharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+            long saveTime = SharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
             long days = (System.currentTimeMillis() - saveTime) / (24 * 60 * 60 * 1000);
 
             if (days <= 2) return;

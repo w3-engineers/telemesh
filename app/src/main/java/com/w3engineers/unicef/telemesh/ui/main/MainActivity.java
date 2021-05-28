@@ -2,9 +2,12 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +15,12 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.LocationManager;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,12 +41,8 @@ import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
-import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
@@ -61,6 +58,8 @@ import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
@@ -335,8 +334,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     public void setToolbarTitle(String title) {
-        String myName = SharedPref.getSharedPref(TeleMeshApplication.getContext())
-                .read(Constants.preferenceKey.USER_NAME);
+        String myName = SharedPref.read(Constants.preferenceKey.USER_NAME);
         title = title + " [" + myName + "]";
         setTitle(title);
     }
@@ -445,7 +443,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
 
             this.doubleBackToExitPressedOnce = true;
-            Toaster.showShort(LanguageUtil.getString(R.string.double_press_exit));
+            Toast.makeText(this, LanguageUtil.getString(R.string.double_press_exit), Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
         }
     }
@@ -560,11 +558,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             };
 
     private void checkAppBlockerAvailable() {
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
 
-        int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
-        int currentVersionCode = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
-        String currentVersionName = sharedPref.read(Constants.preferenceKey.APP_UPDATE_VERSION_NAME);
+        int currentUpdateType = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+        int currentVersionCode = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        String currentVersionName = SharedPref.read(Constants.preferenceKey.APP_UPDATE_VERSION_NAME);
 
         if (BuildConfig.VERSION_CODE < currentVersionCode
                 && currentUpdateType == Constants.AppUpdateType.BLOCKER) {

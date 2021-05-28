@@ -1,13 +1,13 @@
 package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.app.Activity;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Process;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.util.NetworkMonitor;
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.DialogAppBlockerBinding;
@@ -31,8 +31,8 @@ public class AppBlockerUtil {
 
         binding.textViewUpdate.setOnClickListener(v -> {
 
-            if (NetworkMonitor.isOnline()) {
-                Toaster.showShort(LanguageUtil.getString(R.string.no_internet_connection));
+            if (DataManager.on().isNetworkOnline()) {
+                Toast.makeText(activity, LanguageUtil.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 return;
             }
 

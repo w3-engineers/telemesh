@@ -2,10 +2,10 @@ package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.app.Activity;
 import android.content.Context;
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.w3engineers.ext.strom.App;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
-import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.ContentUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
@@ -39,10 +39,10 @@ public class UIHelper {
     @BindingAdapter("imageResource")
     public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
 
+        Context context = TeleMeshApplication.getContext();
         String avatarName = Constants.drawables.AVATAR_IMAGE + resourceId;
-        Glide.with(App.getContext())
-                .load(App.getContext().getResources().getIdentifier(avatarName,
-                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, App.getContext().getPackageName()))
+        Glide.with(context).load(context.getResources().getIdentifier(avatarName,
+                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName()))
                 .into(imageView);
     }
 
@@ -63,7 +63,7 @@ public class UIHelper {
         } else {
             statusId = R.mipmap.ic_alert;
         }
-        Glide.with(App.getContext()).load(statusId).into(imageView);
+        Glide.with(TeleMeshApplication.getContext()).load(statusId).into(imageView);
     }
 
     @BindingAdapter("textDurationResource")
@@ -81,7 +81,7 @@ public class UIHelper {
     }
 
     public static void setImageInGlide(ImageView imageView, String imagePath) {
-        Glide.with(App.getContext()).load(imagePath).into(imageView);
+        Glide.with(TeleMeshApplication.getContext()).load(imagePath).into(imageView);
     }
 
    /* @NonNull
@@ -160,9 +160,9 @@ public class UIHelper {
 
             Calendar now = Calendar.getInstance();
             if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
-                return App.getContext().getResources().getString(R.string.today);
+                return TeleMeshApplication.getContext().getResources().getString(R.string.today);
             } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
-                return App.getContext().getResources().getString(R.string.yesterday);
+                return TeleMeshApplication.getContext().getResources().getString(R.string.yesterday);
             } else {
                 return TimeUtil.getDateString(messageEntity.time);
             }

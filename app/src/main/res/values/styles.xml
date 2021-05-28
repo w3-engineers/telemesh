@@ -52,6 +52,9 @@
         <item name="android:layout_marginLeft">@dimen/margin_10</item>
         <item name="android:layout_marginTop">@dimen/margin_30</item>
         <item name="android:colorAccent">@color/new_user_button_color</item>
+        <item name="colorControlNormal">@color/light_grey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
     <style name="hint_style">
@@ -109,6 +112,12 @@
 
     <style name="userSelectionStyle">
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_input_style">
+        <item name="colorControlNormal">@color/light_grey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
 <!--    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">-->

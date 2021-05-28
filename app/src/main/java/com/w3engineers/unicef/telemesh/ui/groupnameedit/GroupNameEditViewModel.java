@@ -1,15 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.groupnameedit;
 
 import android.app.Application;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

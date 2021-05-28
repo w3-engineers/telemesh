@@ -1,17 +1,17 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.w3engineers.mesh.application.ui.base.BaseAdapter;
-import com.w3engineers.mesh.application.ui.base.BaseViewHolder;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemSelectedUserBinding;
+import com.w3engineers.unicef.util.base.ui.BaseAdapter;
+import com.w3engineers.unicef.util.base.ui.BaseViewHolder;
 
 public class SelectedUserAdapter extends BaseAdapter<UserEntity> {
 

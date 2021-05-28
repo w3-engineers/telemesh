@@ -1,17 +1,14 @@
 package com.w3engineers.unicef.telemesh.ui.groupdetails;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.ItemClickListener;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -25,6 +22,9 @@ import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.ItemClickListener;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
@@ -38,7 +38,6 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     private GroupDetailsViewModel mViewModel;
     private String groupId;
     private GroupDetailsAdapter mAdapter;
-    private SharedPref sharedPref;
     private GroupEntity mGroupEntity;
     private String myUserId;
     private List<GroupMembersInfo> adminInfoList = new ArrayList<>();
@@ -58,8 +57,6 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     public void startUI() {
         mBinding = (ActivityGroupDetailsBinding) getViewDataBinding();
         mViewModel = getViewModel();
-
-        sharedPref = SharedPref.getSharedPref(this);
 
         initView();
     }
@@ -89,7 +86,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                     addMemberIntent.putExtra(GroupEntity.class.getName(), groupId);
                     startActivity(addMemberIntent);
                 } else {
-                    Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_add_member));
+                    Toast.makeText(this, LanguageUtil.getString(R.string.only_admin_can_add_member), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.image_view_pen:
@@ -99,7 +96,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
                     intent.putExtra(GroupNameEditActivity.class.getName(), mBinding.editTextName.getText().toString());
                     startActivity(intent);
                 }else{
-                    Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_change_group_name));
+                    Toast.makeText(this, LanguageUtil.getString(R.string.only_admin_can_change_group_name), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.text_view_leave_group:
@@ -115,7 +112,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
             if (amIAdmin) {
                 mViewModel.memberRemoveAction(mGroupEntity, item);
             } else {
-                Toaster.showShort(LanguageUtil.getString(R.string.only_admin_can_remove_member));
+                Toast.makeText(this, LanguageUtil.getString(R.string.only_admin_can_remove_member), Toast.LENGTH_SHORT).show();
             }
         } else {
             Intent intent = new Intent(this, UserProfileActivity.class);
@@ -131,7 +128,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
         setClickListener(mBinding.opBack, mBinding.textViewAddMember, mBinding.imageViewPen,
                 mBinding.textViewLeaveGroup, mBinding.imageViewAddMember);
 
-        myUserId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         mAdapter = new GroupDetailsAdapter(myUserId);
         mAdapter.setItemClickListener(this);
         mBinding.recyclerViewGroupMember.setHasFixedSize(true);
@@ -253,9 +250,9 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
 
     private UserEntity getMyInfo() {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
-        userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         return userEntity;
     }
 

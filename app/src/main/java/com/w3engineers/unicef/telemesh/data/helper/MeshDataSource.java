@@ -2,11 +2,11 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
@@ -14,7 +14,6 @@ import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
-import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
@@ -52,12 +51,10 @@ public class MeshDataSource extends ViperUtil {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
-
             UserModel userModel = new UserModel()
-                    .setName(sharedPref.read(Constants.preferenceKey.USER_NAME))
-                    .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
-                    .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
+                    .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                    .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                    .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
             rightMeshDataSource = new MeshDataSource(userModel);
         }
@@ -87,7 +84,7 @@ public class MeshDataSource extends ViperUtil {
     private void meshInited(String meshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
 
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
+        SharedPref.write(Constants.preferenceKey.MY_USER_ID, meshId);
 
         if (!isPrepared) {
             isPrepared = true;
@@ -279,12 +276,10 @@ public class MeshDataSource extends ViperUtil {
 
         Context context = TeleMeshApplication.getContext();
 
-        SharedPref sharedPref = SharedPref.getSharedPref(context);
-
         UserModel userModel = new UserModel()
-                .setName(sharedPref.read(Constants.preferenceKey.USER_NAME))
-                .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
-                .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
+                .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
         saveUserInfo(userModel);
 

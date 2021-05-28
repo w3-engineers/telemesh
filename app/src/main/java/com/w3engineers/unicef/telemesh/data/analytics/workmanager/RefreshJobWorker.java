@@ -1,15 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.analytics.workmanager;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;
+import androidx.annotation.NonNull;
 
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 
 public class RefreshJobWorker extends Worker {

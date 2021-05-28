@@ -1,14 +1,12 @@
 package com.w3engineers.unicef.telemesh.ui.addnewmember;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,10 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.ItemClickListener;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
-import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -29,8 +23,9 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAddNewMemberBinding;
 import com.w3engineers.unicef.telemesh.ui.groupcreate.SelectedUserAdapter;
-import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
-import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.ItemClickListener;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -96,21 +91,17 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        switch (view.getId()) {
-            case R.id.button_go:
-                mViewModel.addMembersInGroup(mGroupEntity, mMemberAdapter.getSelectedUserList());
-                break;
-            case R.id.image_view_cross:
-                if (TextUtils.isEmpty(mBinding.searchBar.editTextSearch.getText())) {
-                    hideSearchBar();
-                } else {
-                    mBinding.searchBar.editTextSearch.setText("");
-                }
-                break;
-            case R.id.image_view_back:
-                mBinding.searchBar.editTextSearch.setText("");
+        if (view.getId() == R.id.button_go) {
+            mViewModel.addMembersInGroup(mGroupEntity, mMemberAdapter.getSelectedUserList());
+        } else if (view.getId() == R.id.image_view_cross) {
+            if (TextUtils.isEmpty(mBinding.searchBar.editTextSearch.getText())) {
                 hideSearchBar();
-                break;
+            } else {
+                mBinding.searchBar.editTextSearch.setText("");
+            }
+        } else if (view.getId() == R.id.image_view_back) {
+            mBinding.searchBar.editTextSearch.setText("");
+            hideSearchBar();
         }
     }
 

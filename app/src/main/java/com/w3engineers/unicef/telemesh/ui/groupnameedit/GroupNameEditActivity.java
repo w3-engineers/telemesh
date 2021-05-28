@@ -1,21 +1,21 @@
 package com.w3engineers.unicef.telemesh.ui.groupnameedit;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityGroupNameEditBinding;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 
 
 public class GroupNameEditActivity extends TelemeshBaseActivity {
@@ -91,7 +91,7 @@ public class GroupNameEditActivity extends TelemeshBaseActivity {
             String updatedName = mBinding.editTextName.getText().toString().trim();
             if (!updatedName.equals(mGroupName)) {
                 mViewModel.updateGroupName(updatedName, mGroupId);
-                Toaster.showShort( getString(R.string.group_name_updated));
+                Toast.makeText(this, getString(R.string.group_name_updated), Toast.LENGTH_SHORT).show();
             }
             finish();
         }

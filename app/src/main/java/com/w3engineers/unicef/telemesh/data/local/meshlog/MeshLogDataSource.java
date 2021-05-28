@@ -1,6 +1,6 @@
 package com.w3engineers.unicef.telemesh.data.local.meshlog;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 

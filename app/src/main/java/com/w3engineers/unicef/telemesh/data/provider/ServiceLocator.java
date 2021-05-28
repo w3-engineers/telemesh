@@ -1,9 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
-
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
+import androidx.annotation.NonNull;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -25,6 +23,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 
 /*
  * ============================================================================

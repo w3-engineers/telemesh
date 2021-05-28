@@ -11,12 +11,12 @@ Proprietary and confidential
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
-import com.w3engineers.ext.strom.App;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.util.NetworkMonitor;
+
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -32,7 +32,7 @@ public class BulletinTimeScheduler {
     private NoInternetCallback noInternetCallback;
 
     private BulletinTimeScheduler() {
-        context = App.getContext();
+        context = TeleMeshApplication.getContext();
     }
 
     @NonNull
@@ -57,18 +57,17 @@ public class BulletinTimeScheduler {
     public void checkAppUpdate() {
 
         Log.d("FileDownload", "Downloading process start");
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        long saveTime = sharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
+        long saveTime = SharedPref.readLong(Constants.preferenceKey.APP_UPDATE_CHECK_TIME);
         long dif = System.currentTimeMillis() - saveTime;
         long days = dif / (24 * 60 * 60 * 1000);
         int hour = (int) ((dif - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
 
         if (saveTime == 0 || hour > 23) {
             Log.d("FileDownload", "Downloading process time match");
-            if (NetworkMonitor.isOnline()) {
+            if (DataManager.on().isNetworkOnline()) {
                 Log.d("FileDownload", "Online ");
                 // new UpdateAppConfigDownloadTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadLink);
-                InAppUpdate.getInstance(context).downloadAppUpdateConfig(NetworkMonitor.getNetwork());
+                InAppUpdate.getInstance(context).downloadAppUpdateConfig(DataManager.on().getNetwork());
             }
         }
     }

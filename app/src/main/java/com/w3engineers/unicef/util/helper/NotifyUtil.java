@@ -11,13 +11,11 @@ import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.w3engineers.ext.strom.util.Text;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
@@ -25,7 +23,6 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
-import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -33,8 +30,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-
-import java.util.List;
 
 /*
  * ============================================================================
@@ -224,7 +219,7 @@ public class NotifyUtil {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(imageBitmap);
 
-        if (SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)) {
+        if (SharedPref.readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED)) {
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
         }
@@ -248,7 +243,7 @@ public class NotifyUtil {
 
     public static void clearNotification(String notificationValue) {
         Context context = TeleMeshApplication.getContext();
-        if (Text.isNotEmpty(notificationValue)) {
+        if (!TextUtils.isEmpty(notificationValue)) {
             int notificationId = Math.abs(notificationValue.hashCode());
             NotificationManager manager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);

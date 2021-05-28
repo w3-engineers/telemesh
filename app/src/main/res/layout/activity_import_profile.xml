@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_import_profile_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_back">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_import_profile_scroll_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/image_view_onboard" />
 
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                <Button
                     android:id="@+id/button_continue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:visibility="visible"
-                    app:bb_drawable="@drawable/drawable_button_bg_with_color"
+                    android:background="@drawable/drawable_button_bg_with_color"
                     app:layout_constraintBottom_toTopOf="@+id/button_import_profile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +102,7 @@
                     app:layout_constraintStart_toStartOf="@+id/button_import_profile"
                     app:layout_constraintTop_toBottomOf="@+id/button_continue" />
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                <Button
                     android:id="@+id/button_import_profile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -113,16 +113,16 @@
                     android:text="@string/import_my_profile"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    app:bb_drawable="@drawable/drawable_button_bg_with_border"
+                    android:background="@drawable/drawable_button_bg_with_border"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button_continue" />
 
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,15 +1,15 @@
 package com.w3engineers.unicef.telemesh.ui.feedback;
 
 import android.app.Application;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.UUID;
 
@@ -54,13 +54,12 @@ public class FeedbackViewModel extends BaseRxAndroidViewModel {
     }
 
     private FeedbackEntity prepareFeedbackModel(String feedbackText) {
-        SharedPref sharedPref = SharedPref.getSharedPref(getApplication());
         FeedbackEntity entity = new FeedbackEntity();
         entity.setFeedback(feedbackText);
         entity.setFeedbackId(UUID.randomUUID().toString());
         entity.setTimeStamp(System.currentTimeMillis());
-        entity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
-        entity.setUserId(sharedPref.read(Constants.preferenceKey.MY_USER_ID));
+        entity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+        entity.setUserId(SharedPref.read(Constants.preferenceKey.MY_USER_ID));
         return entity;
     }
 }

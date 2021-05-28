@@ -1,15 +1,14 @@
 package com.w3engineers.unicef.telemesh.data.local.feed;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.support.annotation.NonNull;
-
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDao;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.annotation.NonNull;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
+import com.w3engineers.unicef.util.base.database.BaseDao;
 
 import java.util.List;
 

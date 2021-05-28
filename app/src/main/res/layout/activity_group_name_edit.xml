@@ -8,7 +8,7 @@
         <import type="com.w3engineers.unicef.telemesh.data.helper.constants.Constants.DefaultValue" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.groupnameedit.GroupNameEditActivity">
@@ -76,7 +76,7 @@
             app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_layout"
             style="@style/signup_editext_style"
             android:layout_marginStart="@dimen/margin_15"
@@ -86,12 +86,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
 
-            <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_15"
-                android:background="@color/transparent_color"
                 android:backgroundTint="@color/new_user_button_color"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="@string/group_name_hint"
@@ -99,18 +98,14 @@
                 android:inputType="text"
                 android:maxLength="@{DefaultValue.GROUP_NAME_LIMIT}"
                 android:singleLine="true"
-                android:textSize="@dimen/text_body"
-                app:bet_baseColor="@color/message_text_color"
-                app:bet_primaryColor="@color/new_user_button_color"
-                app:bet_textColor="@color/message_text_color"
-                app:bet_underlineColor="@color/message_text_color">
+                android:textSize="@dimen/text_body">
 
-            </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
+            </com.google.android.material.textfield.TextInputEditText>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_done"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_40"
@@ -119,11 +114,11 @@
             android:focusable="true"
             android:text="@string/done"
             android:textColor="@color/new_user_button_color"
-            app:bb_drawable="@drawable/ractangular_white"
+            android:background="@drawable/ractangular_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_layout"
             app:layout_goneMarginTop="@dimen/margin_20" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

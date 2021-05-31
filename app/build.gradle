@@ -6,7 +6,7 @@ plugins {
 }
 android {
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+
     defaultConfig {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion 21
@@ -74,8 +74,12 @@ android {
 
         disable 'InvalidPackage'
     }
-    dataBinding {
+    /*dataBinding {
         enabled = true
+    }*/
+
+    buildFeatures {
+        dataBinding true
     }
 
     packagingOptions {
@@ -193,7 +197,7 @@ dependencies {
     implementation deps.qrgenerator.qr
     implementation deps.playcore.core
 
-    implementation 'com.zhihu.android:matisse:0.5.2-beta4'
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
     implementation 'com.iceteck.silicompressorr:silicompressor:2.2.3'

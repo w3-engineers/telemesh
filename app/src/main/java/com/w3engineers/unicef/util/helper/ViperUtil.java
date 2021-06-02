@@ -176,7 +176,6 @@ public abstract class ViperUtil {
 
         AppDataObserver.on().startObserver(ApiEvent.PERMISSION_INTERRUPTION, event -> {
 
-            Log.v("MIMO_SAHA::", "Permission<><> 2");
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
                 HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions, MainActivity.getInstance()));
@@ -576,6 +575,7 @@ public abstract class ViperUtil {
         builder.show();
     }
 
+    // Done
     public String sendContentMessage(String peerId, ViperContentData viperContentData) {
         if (viperContentData != null) {
             ContentModel contentModel = viperContentData.contentModel;
@@ -583,17 +583,10 @@ public abstract class ViperUtil {
             ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
                     .setMessageId(contentModel.getMessageId())
                     .setMessageType(contentModel.getMessageType())
-                    .setIsContent(contentModel.isContent())
-                    .setMetaInfo(contentModel.getContentInfo());
-            String contentPath;
+                    .setMetaInfo(contentModel.getContentInfo())
+                    .setThumbData(ContentUtil.getInstance().getThumbFileToByte(contentModel.getThumbPath()));
 
-            if (contentModel.isThumbSend()) {
-                contentPath = contentModel.getContentPath();
-                contentMetaInfo.setContentType(Constants.DataType.CONTENT_MESSAGE);
-            } else {
-                contentPath = contentModel.getThumbPath();
-                contentMetaInfo.setContentType(Constants.DataType.CONTENT_THUMB_MESSAGE);
-            }
+            String contentPath = contentModel.getContentPath();
 
             String contentMessageString = new Gson().toJson(contentMetaInfo);
             try {
@@ -612,7 +605,6 @@ public abstract class ViperUtil {
                             .setReceiverID(peerId).setFilePath(contentPath)
                             .setMsgMetaData(contentMessageString.getBytes()).setAppToken(context.getPackageName());
                     String sendId = viperClient.sendFileMessage(fileData);
-                    Timber.tag("FileMessage").v("SendId: " + sendId);
                     return sendId;
                 }
             } catch (Exception e) {

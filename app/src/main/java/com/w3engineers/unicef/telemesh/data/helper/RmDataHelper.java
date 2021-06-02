@@ -403,9 +403,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.USER_UPDATE_INFO:
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
-            case Constants.DataType.REQ_CONTENT_MESSAGE:
-                ContentDataHelper.getInstance().requestedContentMessageSend(rawData, userId);
-                break;
             case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
                 ContentDataHelper.getInstance().contentMessageSuccessResponse(rawData);
                 break;

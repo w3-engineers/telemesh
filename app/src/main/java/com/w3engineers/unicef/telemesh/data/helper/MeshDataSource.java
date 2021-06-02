@@ -144,14 +144,14 @@ public class MeshDataSource extends ViperUtil {
         return new SendDataTask().setViperBroadcastData(viperBroadcastData).setBaseRmDataSource(this);
     }
 
-    public void ContentDataSend(ContentModel contentModel, boolean notificationEnable) {
+    public void ContentDataSend(ContentModel contentModel) {
         String receiverId = contentModel.getUserId();
 
         if (!TextUtils.isEmpty(receiverId)) {
             ViperContentData viperContentData = new ViperContentData();
             viperContentData.dataType = contentModel.getContentDataType();
             viperContentData.contentModel = contentModel;
-            viperContentData.isNotificationEnable = notificationEnable;
+            viperContentData.isNotificationEnable = true;
 
             broadcastManager.addBroadCastMessage(getMeshContentDataTask(receiverId, viperContentData));
         }

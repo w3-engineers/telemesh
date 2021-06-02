@@ -23,6 +23,7 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -221,7 +222,7 @@ public class ContentUtil {
         try {
 
             FileOutputStream out = new FileOutputStream(file);
-            thumbImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            thumbImage.compress(Bitmap.CompressFormat.JPEG, 60, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -263,7 +264,7 @@ public class ContentUtil {
             }
 
             FileOutputStream out = new FileOutputStream(file);
-            ThumbImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            ThumbImage.compress(Bitmap.CompressFormat.JPEG, 60, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -428,6 +429,32 @@ public class ContentUtil {
             contentFolder.mkdirs();
         }
         return contentFolder;
+    }
+
+    public byte[] getThumbFileToByte(String filePath) {
+        Bitmap bm = BitmapFactory.decodeFile(filePath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
+        return baos.toByteArray();
+    }
+
+    public String getThumbFileFromByte(byte[] fileData) {
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(fileData, 0, fileData.length);
+
+        File file = prepareThumbFile();
+        if (file.exists ()) file.delete ();
+        try {
+
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file.getAbsolutePath();
     }
 
     private File prepareThumbFile() {

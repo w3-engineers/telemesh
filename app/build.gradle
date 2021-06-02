@@ -208,7 +208,7 @@ dependencies {
     api deps.local_server
     debugImplementation deps.inappstoragereader
 
-    implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test12:release@aar'){
+    implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test13:release@aar'){
         transitive=true
     }
 //    implementation deps.viper

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -53,8 +55,13 @@ public class MessageFeedFragment extends BaseFragment {
     private void subscribeForMessageFeed() {
 
         mMessageFeedViewModel.loadFeedList()
-                .observe(this, feedEntities -> getAdapter()
-                        .resetWithList(feedEntities));
+                .observe(this, feedEntities -> {
+                    mMessageFeedBinding.emptyLayout.setVisibility(View.GONE);
+                    if (feedEntities.isEmpty()) {
+                        mMessageFeedBinding.emptyLayout.setVisibility(View.VISIBLE);
+                    }
+                    getAdapter().resetWithList(feedEntities);
+                });
         mMessageFeedViewModel.loadFeedList();
     }
 

@@ -251,7 +251,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             ChatEntity chatEntity = prepareChatEntityForText(threadId, messageEntity,
                     Constants.MessageType.TEXT_MESSAGE);
 
-            messageInsertionProcess(chatEntity);
+            messageInsertionProcess(chatEntity, false);
         }
     }
 
@@ -307,8 +307,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
-            messageInsertionProcess(messageEntity);
-            dataSource.reSendMessage(messageEntity);
+            messageInsertionProcess(messageEntity, true);
         }
     }
 
@@ -330,7 +329,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         ChatEntity chatEntity = prepareChatEntityForText(userId, messageEntity,
                 ContentUtil.getInstance().getContentMessageType(path));
 
-        messageInsertionProcess(chatEntity);
+        messageInsertionProcess(chatEntity, false);
     }
 
     /**
@@ -341,12 +340,15 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
      */
 
     @SuppressLint("CheckResult")
-    private void messageInsertionProcess(ChatEntity chatEntity) {
+    private void messageInsertionProcess(ChatEntity chatEntity, boolean isResend) {
 
         compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
+                    if (isResend) {
+                        dataSource.reSendMessage(chatEntity);
+                    }
                     Log.v("FileMessage", "Insert msg: " + aLong);
                 }, throwable -> {
                     Log.v("FileMessage", "Error: " + throwable.getMessage());

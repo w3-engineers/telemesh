@@ -45,6 +45,7 @@ import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
@@ -65,6 +66,8 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
 import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -579,12 +582,20 @@ public abstract class ViperUtil {
     public String sendContentMessage(String peerId, ViperContentData viperContentData) {
         if (viperContentData != null) {
             ContentModel contentModel = viperContentData.contentModel;
+            ContentMetaInfo contentMetaInfo = null;
+            if (!contentModel.isRequestFromReceiver()){
+                contentMetaInfo = new ContentMetaInfo()
+                        .setMessageId(contentModel.getMessageId())
+                        .setMessageType(contentModel.getMessageType())
+                        .setMetaInfo(contentModel.getContentInfo())
+                        .setThumbData(ContentUtil.getInstance().getThumbFileToByte(contentModel.getThumbPath()));
+            } else {
+                contentMetaInfo = new ContentMetaInfo()
+                        .setMessageId(contentModel.getMessageId())
+                        .setMessageType(contentModel.getMessageType())
+                        .setMetaInfo(contentModel.getContentInfo());
+            }
 
-            ContentMetaInfo contentMetaInfo = new ContentMetaInfo()
-                    .setMessageId(contentModel.getMessageId())
-                    .setMessageType(contentModel.getMessageType())
-                    .setMetaInfo(contentModel.getContentInfo())
-                    .setThumbData(ContentUtil.getInstance().getThumbFileToByte(contentModel.getThumbPath()));
 
             String contentPath = contentModel.getContentPath();
 
@@ -598,7 +609,10 @@ public abstract class ViperUtil {
                     } else {
                         String contentId = contentModel.getContentId();
                         viperClient.sendFileResumeRequest(contentId, contentMessageString.getBytes());
-                        return contentId;
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("success", true);
+                        jsonObject.put("msg", contentId);
+                        return jsonObject.toString();
                     }
                 } else {
                     FileData fileData = new FileData()

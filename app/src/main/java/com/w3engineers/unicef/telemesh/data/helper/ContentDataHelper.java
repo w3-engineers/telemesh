@@ -256,8 +256,7 @@ public class ContentDataHelper extends RmDataHelper {
                     }
 
                 } else {
-
-                    String thumbPath = contentModel.getContentPath(), contentPath = contentModel.getThumbPath();
+                    String thumbPath = contentModel.getThumbPath(), contentPath = contentModel.getContentPath();
                     int contentStatus = contentModel.getReceivingStatus();
 
                     if (!TextUtils.isEmpty(thumbPath)) {
@@ -621,6 +620,11 @@ public class ContentDataHelper extends RmDataHelper {
                 }
 
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+
+                if (progress == 100){
+                    contentReceiveDone(contentId, true);
+                }
+
             }
         }
     }
@@ -780,7 +784,11 @@ public class ContentDataHelper extends RmDataHelper {
 
                 HandlerUtil.postBackground(() -> updateMessageStatus(finalContentMetaInfo.getMessageId()));
 
-                String thumbPath = ContentUtil.getInstance().getThumbFileFromByte(contentMetaInfo.getThumbData());
+                String thumbPath = "";
+                if (contentMetaInfo.getThumbData() != null) {
+                    thumbPath = ContentUtil.getInstance().getThumbFileFromByte(contentMetaInfo.getThumbData());
+                }
+
 
                 ContentModel contentModel = new ContentModel()
                         .setMessageId(contentMetaInfo.getMessageId())
@@ -853,6 +861,10 @@ public class ContentDataHelper extends RmDataHelper {
                 contentSendModel.successStatus = true;
 
                 contentSendModelHashMap.put(contentId, contentSendModel);
+
+                if (progress == 100){
+                    contentReceiveDone(contentId, true);
+                }
             }
         }
     }
@@ -869,6 +881,10 @@ public class ContentDataHelper extends RmDataHelper {
 
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
+
+            if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVED){
+                return;
+            }
             ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
             String contentPath = null, thumbPath = null;

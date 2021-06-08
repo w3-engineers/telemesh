@@ -124,7 +124,7 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     public abstract long updateMessageAsReadFailed(@NonNull String friendsId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
-            + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus" )
     public abstract long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
@@ -153,12 +153,14 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
-            + ColumnNames.COLUMN_MESSAGE_STATUS + " != " + Constants.MessageStatus.STATUS_UNREAD)
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " != " + Constants.MessageStatus.STATUS_UNREAD
+            + " AND " + ColumnNames.COLUMN_CONTENT_PROGRESS + " < 100")
     public abstract long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
             + "=:toStatus WHERE " + ColumnNames.COLUMN_CONTENT_STATUS + "=:fromContentStatus AND "
-            + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD)
+            + ColumnNames.COLUMN_MESSAGE_STATUS + " = " + Constants.MessageStatus.STATUS_UNREAD
+            + " AND " + ColumnNames.COLUMN_CONTENT_PROGRESS + " < 100")
     public abstract long changeUnreadMessageStatusByContentStatus(int fromContentStatus, int toStatus);
 
     @NonNull

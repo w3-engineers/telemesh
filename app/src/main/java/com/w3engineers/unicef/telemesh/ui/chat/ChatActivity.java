@@ -33,6 +33,7 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -56,6 +57,7 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 
 /*
@@ -493,6 +495,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
+                    MeshLog.v("FILE_SPEED_TEST_1 " + Calendar.getInstance().getTime());
                     List<Uri> images = Matisse.obtainResult(data);
                     mChatViewModel.sendContentMessage(threadId, images.get(0));
                 }

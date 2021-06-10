@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -18,6 +19,7 @@ import com.w3engineers.unicef.util.helper.NotifyUtil;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -870,7 +872,7 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     void contentReceiveDone(String contentId, boolean contentStatus) {
-
+        Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
             ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)

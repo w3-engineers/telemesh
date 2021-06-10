@@ -9,11 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -30,6 +32,7 @@ import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageInBinding;
 import com.w3engineers.unicef.telemesh.databinding.ItemVideoMessageOutBinding;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -244,6 +247,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         @Override
         protected void bindView(@NonNull MessageEntity messageEntity) {
+
+            Log.v("FILE_SPEED_TEST_14 ", Calendar.getInstance().getTime()+"");
+
             binding.setTextMessage(messageEntity);
             binding.setAvatarIndex(getAvatarIndex(messageEntity));
 

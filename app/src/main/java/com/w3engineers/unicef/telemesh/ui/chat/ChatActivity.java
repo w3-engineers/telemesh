@@ -60,6 +60,8 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
+import timber.log.Timber;
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -495,7 +497,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    MeshLog.v("FILE_SPEED_TEST_1 " + Calendar.getInstance().getTime());
+                    Log.v("FILE_SPEED_TEST_1 ", Calendar.getInstance().getTime()+"");
                     List<Uri> images = Matisse.obtainResult(data);
                     mChatViewModel.sendContentMessage(threadId, images.get(0));
                 }

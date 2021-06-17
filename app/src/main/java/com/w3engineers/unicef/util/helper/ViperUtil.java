@@ -214,7 +214,7 @@ public abstract class ViperUtil {
             FileTransferEvent fileTransferEvent = (FileTransferEvent) event;
             if (fileTransferEvent != null) {
                 contentReceiveDone(fileTransferEvent.getFileMessageId(),
-                        fileTransferEvent.isSuccess());
+                        fileTransferEvent.isSuccess(), fileTransferEvent.getErrorMessage());
             }
         });
 
@@ -661,7 +661,7 @@ public abstract class ViperUtil {
 
     protected abstract void contentReceiveInProgress(String contentId, int progress);
 
-    protected abstract void contentReceiveDone(String contentId, boolean contentStatus);
+    protected abstract void contentReceiveDone(String contentId, boolean contentStatus, String msg);
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 

@@ -258,8 +258,8 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void contentReceiveDone(String contentId, boolean contentStatus) {
-        ContentDataHelper.getInstance().contentReceiveDone(contentId, contentStatus);
+    protected void contentReceiveDone(String contentId, boolean contentStatus, String msg) {
+        ContentDataHelper.getInstance().contentReceiveDone(contentId, contentStatus, msg);
     }
 
     @Override

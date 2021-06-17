@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import android.app.Application;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +11,7 @@ import com.google.gson.Gson;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ContentMetaInfo;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
@@ -251,7 +254,7 @@ public class ContentDataHelper extends RmDataHelper {
                                 contentReceiveInProgress(contentSequenceModel.getContentId(), contentSequenceModel.getProgress());
                                 sequenceModelIterator.remove();
                             } else if (contentSequenceModel.getReceiveStatus() == CONTENT_RECEIVED) {
-                                contentReceiveDone(contentSequenceModel.getContentId(), contentSequenceModel.isContentStatus());
+                                contentReceiveDone(contentSequenceModel.getContentId(), contentSequenceModel.isContentStatus(), "");
                                 sequenceModelIterator.remove();
                             }
                         }
@@ -624,7 +627,7 @@ public class ContentDataHelper extends RmDataHelper {
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
 
                 if (progress == 100){
-                    contentReceiveDone(contentId, true);
+                    contentReceiveDone(contentId, true, "");
                 }
 
             }
@@ -710,6 +713,7 @@ public class ContentDataHelper extends RmDataHelper {
                 } else {
                     contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);
                     HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+                    HandlerUtil.postForeground(() -> Toast.makeText(TeleMeshApplication.getContext(), msg, Toast.LENGTH_SHORT).show());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -755,7 +759,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Callback action +++++++++++++++++++++++++++++++++++++++++++++++++++++
     void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
-
+        Log.v("FILE_SPEED_TEST_12 ", Calendar.getInstance().getTime()+"");
         try {
             Timber.tag("FileMessage").v(" Start id: %s", contentId);
 
@@ -812,7 +816,7 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     void contentReceiveInProgress(String contentId, int progress) {
-
+        Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
             ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
@@ -865,13 +869,13 @@ public class ContentDataHelper extends RmDataHelper {
                 contentSendModelHashMap.put(contentId, contentSendModel);
 
                 if (progress == 100){
-                    contentReceiveDone(contentId, true);
+                    contentReceiveDone(contentId, true, "");
                 }
             }
         }
     }
 
-    void contentReceiveDone(String contentId, boolean contentStatus) {
+    void contentReceiveDone(String contentId, boolean contentStatus, String msg) {
         Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
@@ -881,6 +885,11 @@ public class ContentDataHelper extends RmDataHelper {
             return;
         }
 
+        if (!contentStatus) {
+            HandlerUtil.postForeground(() -> {
+                Toast.makeText(TeleMeshApplication.getContext(), msg, Toast.LENGTH_SHORT).show();
+            });
+        }
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
 
@@ -928,6 +937,7 @@ public class ContentDataHelper extends RmDataHelper {
                         .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
 
                 HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+
             }
             contentSendModelHashMap.remove(contentId);
         }

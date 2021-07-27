@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,8 +19,11 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
+import androidx.annotation.RequiresApi;
+
 import com.google.android.gms.common.util.IOUtils;
 import com.iceteck.silicompressorr.SiliCompressor;
+import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -67,21 +72,20 @@ public class ContentUtil {
                     projection, null, null, null);
             if (cursor != null) {
                 int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                if(column_index != -1){
+                if (column_index != -1) {
                     cursor.moveToFirst();
                     String path = cursor.getString(column_index);
                     cursor.close();
                     return path;
-                }
-                else{
+                } else {
                     cursor.close();
                     File tempImageFile = prepareFile("");
                     if (tempImageFile == null)
                         return null;
                     tempImageFile.deleteOnExit();
-                    try(OutputStream outputStream = new FileOutputStream(tempImageFile)){
+                    try (OutputStream outputStream = new FileOutputStream(tempImageFile)) {
                         InputStream imageInputStream = context.getContentResolver().openInputStream(contentURI);
-                        if(imageInputStream != null){
+                        if (imageInputStream != null) {
                             IOUtils.copyStream(imageInputStream, outputStream);
                             imageInputStream.close();
                             outputStream.close();
@@ -141,22 +145,21 @@ public class ContentUtil {
             try {
                 cursor = context.getContentResolver()
                         .query(uri, projection, selection, selectionArgs, null);
-                if(cursor != null){
+                if (cursor != null) {
                     int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                    if(column_index != -1){
+                    if (column_index != -1) {
                         if (cursor.moveToFirst()) {
                             String path = cursor.getString(column_index);
                             cursor.close();
                             return path;
                         }
-                    }
-                    else{
+                    } else {
                         cursor.close();
                         File tempImageFile = prepareFile("");
                         tempImageFile.deleteOnExit();
-                        try(OutputStream outputStream = new FileOutputStream(tempImageFile)){
+                        try (OutputStream outputStream = new FileOutputStream(tempImageFile)) {
                             InputStream imageInputStream = context.getContentResolver().openInputStream(uri);
-                            if(imageInputStream != null){
+                            if (imageInputStream != null) {
                                 IOUtils.copyStream(imageInputStream, outputStream);
                                 imageInputStream.close();
                                 outputStream.close();
@@ -190,15 +193,33 @@ public class ContentUtil {
     }
 
     public String compressImage(String filePath) {
+       /* if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            return filePath;
+        }*/
         try {
+            File contentFolder;
             Context context = TeleMeshApplication.getContext();
-            File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                contentFolder = getScopedStorage();
+            }else{
+                contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
+            }
 
             return SiliCompressor.with(context).compress(filePath, contentFolder);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return filePath;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private File getScopedStorage(){
+        ContentResolver resolver = MeshApp.getContext().getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        //contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "CuteKitten001");
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/Telemesh");
+        Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        return new File(uri.getPath());
     }
 
     public String compressVideo(String filePath) {
@@ -218,7 +239,7 @@ public class ContentUtil {
                 MediaStore.Images.Thumbnails.MINI_KIND);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             FileOutputStream out = new FileOutputStream(file);
@@ -237,7 +258,7 @@ public class ContentUtil {
                 BitmapFactory.decodeFile(imagePath), ThumbWidth, ThumbHeight);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             try {
@@ -251,7 +272,7 @@ public class ContentUtil {
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
                     matrix = new Matrix();
                     matrix.postRotate(180);
-                }  else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
                     matrix = new Matrix();
                     matrix.postRotate(90);
                 }
@@ -417,18 +438,25 @@ public class ContentUtil {
 
     private File getFileDirectory(String folderName) {
         Context context = TeleMeshApplication.getContext();
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                context.getString(R.string.app_name));
+        String storagePath = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            storagePath = context.getExternalFilesDir("")
+                    + "/" + context.getString(R.string.app_name) + "/" + folderName;
+        } else {
+            storagePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + "/" + context.getString(R.string.app_name) + "/" + folderName;
+        }
+        File file = new File(storagePath);
         if (!file.exists()) {
             file.mkdirs();
         }
 
-        File contentFolder = new File(file.getAbsolutePath() + "/" +
+        /*File contentFolder = new File(file.getAbsolutePath() + "/" +
                 folderName);
         if (!contentFolder.exists()) {
             contentFolder.mkdirs();
-        }
-        return contentFolder;
+        }*/
+        return file;
     }
 
     public byte[] getThumbFileToByte(String filePath) {
@@ -443,7 +471,7 @@ public class ContentUtil {
         Bitmap bitmap = BitmapFactory.decodeByteArray(fileData, 0, fileData.length);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             FileOutputStream out = new FileOutputStream(file);

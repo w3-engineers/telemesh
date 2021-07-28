@@ -1,12 +1,14 @@
 package com.w3engineers.unicef.telemesh.data.local.meshlog;
 
 import androidx.room.Room;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
+
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 
 import org.junit.After;
@@ -62,11 +64,11 @@ public class MeshLogDataSourceTest {
 
         addDelay(500);
 
-        res = feedDataSource.insertOrUpdateData(null);
+        FeedEntity r = feedDataSource.insertOrUpdateData(null);
 
         addDelay(1000);
 
-        assertEquals(0, res);
+        assertEquals(null, r);
 
         addDelay(500);
 

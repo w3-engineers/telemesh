@@ -1,6 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;

@@ -11,10 +11,6 @@ import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
-import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
-import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -126,11 +122,11 @@ public class RandomEntityGenerator {
                 .setDataType(Constants.DataType.MESSAGE);
     }
 
-    public MeshAcknowledgement createAckRmDataModel(String userId, long transferId) {
+   /* public MeshAcknowledgement createAckRmDataModel(String userId, long transferId) {
         MeshAcknowledgement meshAcknowledgement = new MeshAcknowledgement(String.valueOf(transferId));
         meshAcknowledgement.mMeshPeer = new MeshPeer(userId);
         return meshAcknowledgement;
-    }
+    }*/
 
     public GeoLocation createGeoLocation() {
         GeoLocation geoLocation = new GeoLocation();
@@ -178,7 +174,7 @@ public class RandomEntityGenerator {
         return dataModel;
     }
 
-    public ConfigurationCommand generateConfigFile() {
+  /*  public ConfigurationCommand generateConfigFile() {
         ConfigurationCommand configurationCommand = new ConfigurationCommand(Parcel.obtain());
 
         configurationCommand.setConfigVersionCode(100);
@@ -188,7 +184,7 @@ public class RandomEntityGenerator {
         configurationCommand.setConfigVersionName("2.0.0");
 
         return configurationCommand;
-    }
+    }*/
 
     public TokenGuideRequestModel generateTokenModel() {
         TokenGuideRequestModel model = new TokenGuideRequestModel();
@@ -211,7 +207,7 @@ public class RandomEntityGenerator {
         userInfoEvent.setUserName("John Doe");
         userInfoEvent.setAvatar(2);
         userInfoEvent.setRegTime(System.currentTimeMillis());
-        userInfoEvent.setConfigVersion(1);
+       // userInfoEvent.setConfigVersion(1);
         userInfoEvent.setAddress(meshId);
         return userInfoEvent;
     }

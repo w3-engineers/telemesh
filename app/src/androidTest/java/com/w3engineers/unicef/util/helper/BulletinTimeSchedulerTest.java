@@ -3,8 +3,9 @@ package com.w3engineers.unicef.util.helper;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationResult;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -51,9 +52,9 @@ public class BulletinTimeSchedulerTest {
 
         // now job already scheduled. But in instrumental test we cannot test Job scheduler.
         // so we can call the method which is located in start job section
-        RmDataHelper.getInstance().mLatitude = "";
+       /* RmDataHelper.getInstance().mLatitude = "";
         RmDataHelper.getInstance().mLongitude = "";
-        RmDataHelper.getInstance().requestWsMessage();
+        RmDataHelper.getInstance().requestWsMessage();*/
 
         Location location = new Location("");
         location.setLatitude(22.8456);

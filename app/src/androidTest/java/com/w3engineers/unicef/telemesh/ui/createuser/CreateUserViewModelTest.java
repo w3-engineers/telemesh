@@ -3,9 +3,10 @@ package com.w3engineers.unicef.telemesh.ui.createuser;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
@@ -91,7 +92,7 @@ public class CreateUserViewModelTest {
     public void storeData_true_setValidData() {
         String firstName = "Daniel";
         String password = "mesh_123";
-        assertTrue(SUT.storeData(firstName, password));
+        assertTrue(SUT.storeData(firstName));
     }
 
     /*@Test

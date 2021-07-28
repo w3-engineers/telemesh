@@ -2,12 +2,12 @@ package com.w3engineers.unicef.util;
 
 import android.content.Context;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
+
 import android.text.TextUtils;
 
 import com.w3engineers.unicef.util.helper.WalletPrepareListener;
-import com.w3engineers.walleter.wallet.Web3jWalletHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,19 +19,19 @@ import static org.junit.Assert.*;
 public class WalletUtilTest {
     private Context mContext;
 
-    private WalletUtil walletUtil;
+    //private WalletUtil walletUtil;
 
     @Before
     public void setup() {
         mContext = InstrumentationRegistry.getTargetContext();
-        walletUtil = WalletUtil.getInstance(mContext);
+        //walletUtil = WalletUtil.getInstance(mContext);
     }
 
     @Test
     public void importWalletTest() {
         addDelay(500);
 
-        walletUtil.importWallet(null, "", new WalletPrepareListener() {
+/*        walletUtil.importWallet(null, "", new WalletPrepareListener() {
             @Override
             public void onGetWalletInformation(String address, String publickKey) {
 
@@ -58,7 +58,8 @@ public class WalletUtilTest {
                 System.out.println("ResponseMessage: " + errorMessage);
                 assertFalse(TextUtils.isEmpty(errorMessage));
             }
-        });
+        });*/
+
         addDelay(5 * 1000);
     }
 

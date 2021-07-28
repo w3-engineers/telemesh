@@ -67,21 +67,20 @@ public class ContentUtil {
                     projection, null, null, null);
             if (cursor != null) {
                 int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                if(column_index != -1){
+                if (column_index != -1) {
                     cursor.moveToFirst();
                     String path = cursor.getString(column_index);
                     cursor.close();
                     return path;
-                }
-                else{
+                } else {
                     cursor.close();
                     File tempImageFile = prepareFile("");
                     if (tempImageFile == null)
                         return null;
                     tempImageFile.deleteOnExit();
-                    try(OutputStream outputStream = new FileOutputStream(tempImageFile)){
+                    try (OutputStream outputStream = new FileOutputStream(tempImageFile)) {
                         InputStream imageInputStream = context.getContentResolver().openInputStream(contentURI);
-                        if(imageInputStream != null){
+                        if (imageInputStream != null) {
                             IOUtils.copyStream(imageInputStream, outputStream);
                             imageInputStream.close();
                             outputStream.close();
@@ -141,22 +140,21 @@ public class ContentUtil {
             try {
                 cursor = context.getContentResolver()
                         .query(uri, projection, selection, selectionArgs, null);
-                if(cursor != null){
+                if (cursor != null) {
                     int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                    if(column_index != -1){
+                    if (column_index != -1) {
                         if (cursor.moveToFirst()) {
                             String path = cursor.getString(column_index);
                             cursor.close();
                             return path;
                         }
-                    }
-                    else{
+                    } else {
                         cursor.close();
                         File tempImageFile = prepareFile("");
                         tempImageFile.deleteOnExit();
-                        try(OutputStream outputStream = new FileOutputStream(tempImageFile)){
+                        try (OutputStream outputStream = new FileOutputStream(tempImageFile)) {
                             InputStream imageInputStream = context.getContentResolver().openInputStream(uri);
-                            if(imageInputStream != null){
+                            if (imageInputStream != null) {
                                 IOUtils.copyStream(imageInputStream, outputStream);
                                 imageInputStream.close();
                                 outputStream.close();
@@ -218,7 +216,7 @@ public class ContentUtil {
                 MediaStore.Images.Thumbnails.MINI_KIND);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             FileOutputStream out = new FileOutputStream(file);
@@ -237,7 +235,7 @@ public class ContentUtil {
                 BitmapFactory.decodeFile(imagePath), ThumbWidth, ThumbHeight);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             try {
@@ -251,7 +249,7 @@ public class ContentUtil {
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
                     matrix = new Matrix();
                     matrix.postRotate(180);
-                }  else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
                     matrix = new Matrix();
                     matrix.postRotate(90);
                 }
@@ -417,8 +415,15 @@ public class ContentUtil {
 
     private File getFileDirectory(String folderName) {
         Context context = TeleMeshApplication.getContext();
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                context.getString(R.string.app_name));
+        File file;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            file = new File(context.getExternalFilesDir("").toString() + "/" +
+                    context.getString(R.string.app_name));
+        } else {
+            file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                    context.getString(R.string.app_name));
+        }
+
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -443,7 +448,7 @@ public class ContentUtil {
         Bitmap bitmap = BitmapFactory.decodeByteArray(fileData, 0, fileData.length);
 
         File file = prepareThumbFile();
-        if (file.exists ()) file.delete ();
+        if (file.exists()) file.delete();
         try {
 
             FileOutputStream out = new FileOutputStream(file);

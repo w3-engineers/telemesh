@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.aboutus;
 
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.BuildConfig;
 

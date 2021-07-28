@@ -1,11 +1,15 @@
 package com.w3engineers.appshare.util.helper;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
+
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
 
@@ -114,6 +118,16 @@ public class NetworkConfigureUtil {
         manager = (WifiP2pManager) context.getSystemService(context.WIFI_P2P_SERVICE);
         channel = manager.initialize(context, context.getMainLooper(), null);
 
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         manager.createGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -135,6 +149,7 @@ public class NetworkConfigureUtil {
         retrieveP2pInfo();
     }
 
+    @SuppressLint("MissingPermission")
     private void retrieveP2pInfo() {
 
         manager.requestGroupInfo(channel, group -> {

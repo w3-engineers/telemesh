@@ -28,6 +28,7 @@ import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -265,23 +266,25 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+        baseEditText.perform(scrollTo(), replaceText("Aladeen"), closeSoftKeyboard());
 
         addDelay(1000);
 
-        ViewInteraction baseEditText2 = onView(
+        /*ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        baseEditText2.perform(pressImeActionButton());
+        baseEditText2.perform(pressImeActionButton());*/
 
-        addDelay(1000);
+//        addDelay(2000);
 
 
 
-        ViewInteraction ActionCreateProfileNext = onView(
-                allOf(withId(R.id.button_signup),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+        ViewInteraction ActionCreateProfileNext = onView(withId(R.id.button_signup));
+//        ViewInteraction ActionCreateProfileNext = onView(
+//                allOf(withId(R.id.button_signup),
+//                        childAtPosition(allOf(withId(R.id.image_layout),
+//                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
+
         ActionCreateProfileNext.perform(scrollTo(), click());
 
         addDelay(2000);
@@ -501,17 +504,17 @@ public class TelemeshTest {
         addDelay(500);
     }
 
-   /* @Test
+    @Test
     public void uiTest_03() {
         addDelay(3800);
 
-       *//* SharedPref sharedPref = SharedPref.getSharedPref(context);
-        sharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
-        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
-        sharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+//        SharedPref sharedPref = SharedPref.getSharedPref(context);
+        SharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
+        SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
+        SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
 
         long version = (BuildConfig.VERSION_CODE + 5);
-        SharedPref.getSharedPref(context).write(Constants.preferenceKey.UPDATE_APP_VERSION, version);*//*
+        SharedPref.write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
 
         currentActivity = getActivityInstance();
 
@@ -611,9 +614,9 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        mDevice.pressBack();
-
-        addDelay(500);
+//        mDevice.pressBack();
+//
+//        addDelay(500);
 
         ViewInteraction openDataPlan = onView(
                 allOf(withId(R.id.layout_data_plan),
@@ -623,9 +626,9 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        mDevice.pressBack();
-
-        addDelay(500);
+//        mDevice.pressBack();
+//
+//        addDelay(500);
 
         ViewInteraction openShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
@@ -713,7 +716,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-       *//* try {
+        try {
 
             ViewInteraction optionUpdate = onView(
                     allOf(withId(R.id.layout_app_update),
@@ -725,13 +728,13 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(6000);*//*
+        addDelay(6000);
 
-     *//* mDevice.pressBack();
+      mDevice.pressBack();
 
-        addDelay(500);*//*
+        addDelay(500);
 
-     *//* mDevice.pressBack();
+      mDevice.pressBack();
 
         addDelay(2000);
 
@@ -740,12 +743,12 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
-        }*//*
+        }
 
-     *//*ViewInteraction discoverTab = onView(
+     ViewInteraction discoverTab = onView(
                 allOf(withId(R.id.action_discover),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
-        discoverTab.perform(click());*//*
+        discoverTab.perform(click());
 
         // todo unit test 03
 
@@ -777,7 +780,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-    }*/
+    }
 
 
     public void uiTest_003(UserEntity userEntity) {
@@ -819,10 +822,11 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction messageEditBox = onView(
-                allOf(withId(R.id.edit_text_message),
-                        childAtPosition(allOf(withId(R.id.chat_message_bar),
-                                childAtPosition(withId(R.id.chat_layout), 5)), 0), isDisplayed()));
+//        ViewInteraction messageEditBox = onView(
+//                allOf(withId(R.id.edit_text_message),
+//                        childAtPosition(allOf(withId(R.id.chat_message_bar),
+//                                childAtPosition(withId(R.id.chat_layout), 5)), 0), isDisplayed()));
+        ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
         messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
 
         addDelay(700);
@@ -833,10 +837,11 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction messageSendAction = onView(
-                allOf(withId(R.id.image_view_send),
-                        childAtPosition(allOf(withId(R.id.chat_message_bar),
-                                childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+//        ViewInteraction messageSendAction = onView(
+//                allOf(withId(R.id.image_view_send),
+//                        childAtPosition(allOf(withId(R.id.chat_message_bar),
+//                                childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
         messageSendAction.perform(click());
 
         addDelay(1000);

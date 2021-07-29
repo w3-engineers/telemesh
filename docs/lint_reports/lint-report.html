@@ -174,10 +174,10 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 1549 errors</span>
+      <span class="mdl-layout-title">Lint Report: 1550 errors</span>
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
-Check performed at Wed Jul 28 13:25:25 BDT 2021      </nav>
+Check performed at Thu Jul 29 11:08:49 BDT 2021      </nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -203,7 +203,7 @@ Check performed at Wed Jul 28 13:25:25 BDT 2021      </nav>
       <a class="mdl-navigation__link" href="#LogConditional"><i class="material-icons error-icon">error</i>Unconditional Logging Calls (14)</a>
       <a class="mdl-navigation__link" href="#UnusedResources"><i class="material-icons error-icon">error</i>Unused resources (70)</a>
       <a class="mdl-navigation__link" href="#SyntheticAccessor"><i class="material-icons error-icon">error</i>Synthetic Accessor (118)</a>
-      <a class="mdl-navigation__link" href="#UnusedIds"><i class="material-icons error-icon">error</i>Unused id (3)</a>
+      <a class="mdl-navigation__link" href="#UnusedIds"><i class="material-icons error-icon">error</i>Unused id (4)</a>
       <a class="mdl-navigation__link" href="#DuplicateStrings"><i class="material-icons error-icon">error</i>Duplicate Strings (3)</a>
       <a class="mdl-navigation__link" href="#ConvertToWebp"><i class="material-icons error-icon">error</i>Convert to WebP (1)</a>
       <a class="mdl-navigation__link" href="#IconDuplicates"><i class="material-icons error-icon">error</i>Duplicated icons under different names (10)</a>
@@ -296,7 +296,7 @@ Check performed at Wed Jul 28 13:25:25 BDT 2021      </nav>
 <td class="countColumn">118</td><td class="issueColumn"><i class="material-icons error-icon">error</i>
 <a href="#SyntheticAccessor">SyntheticAccessor</a>: Synthetic Accessor</td></tr>
 <tr>
-<td class="countColumn">3</td><td class="issueColumn"><i class="material-icons error-icon">error</i>
+<td class="countColumn">4</td><td class="issueColumn"><i class="material-icons error-icon">error</i>
 <a href="#UnusedIds">UnusedIds</a>: Unused id</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Performance:Application Size">Performance:Application Size</a>
 </td></tr>
@@ -2216,8 +2216,8 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="file:///Users/mdtariqulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class">/Users/mdtariqulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class</a></span>: <span class="message"><code>checkClientTrusted</code> is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers</span><br />
-<span class="location"><a href="file:///Users/mdtariqulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class">/Users/mdtariqulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class</a></span>: <span class="message"><code>checkServerTrusted</code> is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers</span><br />
+<span class="location"><a href="file:///Users/azizulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class">/Users/azizulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class</a></span>: <span class="message"><code>checkClientTrusted</code> is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers</span><br />
+<span class="location"><a href="file:///Users/azizulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class">/Users/azizulislam/.gradle/daemon/6.7.1/org/jsoup/helper/HttpConnection$Response$2.class</a></span>: <span class="message"><code>checkServerTrusted</code> is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers</span><br />
 </div>
 <div class="metadata"><div class="explanation" id="explanationTrustAllX509TrustManager" style="display: none;">
 This check looks for X509TrustManager implementations whose <code>checkServerTrusted</code> or <code>checkClientTrusted</code> methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers.<br/>To suppress this error, use the issue id "TrustAllX509TrustManager" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
@@ -3683,6 +3683,22 @@ Additional locations: <ul>
 <span class="lineno"> 22 </span>        <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
 <span class="lineno"> 23 </span>        <span class="prefix">android:</span><span class="attribute">layout_margin</span>=<span class="value">"@dimen/margin_10"</span></pre>
 
+<span class="location"><a href="../../app/src/main/res/layout/alert_hardware_permission.xml">../../app/src/main/res/layout/alert_hardware_permission.xml</a>:4</span>: <span class="message">The resource <code>R.id.alert_buy_sell_dialog_layout</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  1 </span><span class="prologue">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="lineno">  2 </span><span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span><span class="attribute"> </span><span class="prefix">xmlns:</span><span class="attribute">android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>
+<span class="lineno">  3 </span>    <span class="prefix">xmlns:</span><span class="attribute">app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span>
+<span class="caretline"><span class="lineno">  4 </span>    <span class="error"><span class="prefix">android:</span><span class="attribute">id</span>=<span class="value">"@+id/alert_buy_sell_dialog_layout"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  5 </span>    <span class="prefix">android:</span><span class="attribute">layout_width</span>=<span class="value">"match_parent"</span>
+<span class="lineno">  6 </span>    <span class="prefix">android:</span><span class="attribute">layout_height</span>=<span class="value">"wrap_content"</span>
+<span class="lineno">  7 </span>    <span class="prefix">android:</span><span class="attribute">padding</span>=<span class="value">"@dimen/padding_10"</span>>
+</pre>
+
+<ul></ul><button id="Location3DivLink" onclick="reveal('Location3Div');" />+ 1 Additional Locations...</button>
+<div id="Location3Div" style="display: none">
+Additional locations: <ul>
+<li> <span class="location"><a href="../../app/src/main/res/layout/alert_language_dialog.xml">../../app/src/main/res/layout/alert_language_dialog.xml</a>:4</span>
+</ul>
+</div><br/><br/>
 <span class="location"><a href="../../app/src/main/res/layout/simple_spinner_dropdown_item.xml">../../app/src/main/res/layout/simple_spinner_dropdown_item.xml</a>:3</span>: <span class="message">The resource <code>R.id.top</code> appears to be unused</span><br /><pre class="errorlines">
 <span class="lineno">  1 </span><span class="prologue">&lt;?xml version="1.0" encoding="utf-8"?></span>
 <span class="lineno">  2 </span><span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span><span class="attribute"> </span><span class="prefix">xmlns:</span><span class="attribute">android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>

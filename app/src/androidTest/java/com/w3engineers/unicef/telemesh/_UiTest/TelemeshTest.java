@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
+import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -69,6 +71,7 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -118,7 +121,7 @@ public class TelemeshTest {
         appDatabase.close();
     }
 
-   /* @Test
+    @Test
     public void uiTest_01() {
 
         addDelay(3200);
@@ -127,11 +130,9 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction buttonImportAccount = onView(
+        /*ViewInteraction buttonImportAccount = onView(
                 allOf(withId(R.id.button_import_account),
-                        childAtPosition(
-                                childAtPosition(withId(android.R.id.content), 0), 3),
-                        isDisplayed()));
+                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
         buttonImportAccount.perform(click());
 
         addDelay(500);
@@ -161,41 +162,21 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 2),
                         isDisplayed()));
 
-        *//*ViewInteraction buttonCreateAccount = onView(
+        ViewInteraction buttonCreateAccount = onView(
                 allOf(withId(R.id.button_create_account),
                         childAtPosition(
-                                childAtPosition(withId(R.id.activity_profile_choice_parent), 0), 2), isDisplayed()));*//*
+                                childAtPosition(withId(R.id.activity_profile_choice_parent), 0), 2), isDisplayed()));
         buttonCreateAccount.perform(click());
 
-        addDelay(500);
+        addDelay(500);*/
 
-        ViewInteraction baseEditText = onView(
-                allOf(withId(R.id.edit_text_name),
-                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        addDelay(500);
-        baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
 
-        addDelay(500);
+        //        ViewInteraction buttonImageChooserFirst = onView(
+//                allOf(withId(R.id.image_profile),
+//                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
+//        buttonImageChooserFirst.perform(scrollTo(), click());
+        onView(withId(R.id.image_profile)).perform(click());
 
-        baseEditText.perform(pressImeActionButton());
-
-        addDelay(1000);
-
-        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
-
-        addDelay(1000);
-
-        *//*ViewInteraction baseEditText2 = onView(
-                allOf(withId(R.id.edit_text_name), withText("Mimo"),
-                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        baseEditText2.perform(pressImeActionButton());
-
-        addDelay(1000);*//*
-
-        ViewInteraction buttonImageChooserFirst = onView(
-                allOf(withId(R.id.image_profile),
-                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        buttonImageChooserFirst.perform(scrollTo(), click());
 
         addDelay(1000);
 
@@ -271,16 +252,51 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+
+        ViewInteraction baseEditText = onView(
+                allOf(withId(R.id.edit_text_name),
+                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
+        addDelay(500);
+        baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
+
+        addDelay(500);
+
+        baseEditText.perform(pressImeActionButton());
+
+        addDelay(1000);
+
+        baseEditText.perform(scrollTo(), replaceText("Mimo"), closeSoftKeyboard());
+
+        addDelay(1000);
+
+        ViewInteraction baseEditText2 = onView(
+                allOf(withId(R.id.edit_text_name), withText("Mimo"),
+                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
+        baseEditText2.perform(pressImeActionButton());
+
+        addDelay(1000);
+
+
+
         ViewInteraction ActionCreateProfileNext = onView(
                 allOf(withId(R.id.button_signup),
                         childAtPosition(allOf(withId(R.id.image_layout),
                                 childAtPosition(withId(R.id.scrollview), 0)), 10)));
         ActionCreateProfileNext.perform(scrollTo(), click());
 
+        addDelay(2000);
+
+
+
+        WalletLoaded walletLoaded = new WalletLoaded();
+        walletLoaded.walletAddress = myAddress;
+        walletLoaded.success = true;
+        AppDataObserver.on().sendObserverData(walletLoaded);
+
         addDelay(1000);
 
 
-        ViewInteraction boxPassword = onView(
+        /*ViewInteraction boxPassword = onView(
                 allOf(withId(R.id.edit_text_box_password),
                         childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
                                 childAtPosition(withId(R.id.activity_security_scroll), 0)), 1)));
@@ -341,20 +357,20 @@ public class TelemeshTest {
 
         addDelay(5000);
 
-        Activity currentActivity = getActivityInstance();
+        Activity currentActivity = getActivityInstance();*/
 
-        *//*if (currentActivity instanceof SecurityActivity) {
+        /*if (currentActivity instanceof SecurityActivity) {
 
             SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
 
             securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
 
             addDelay(1000);
-        }*//*
+        }*/
 
         uiTest_02();
 
-    }*/
+    }
 
     //    @Test
     public void uiTest_02() {

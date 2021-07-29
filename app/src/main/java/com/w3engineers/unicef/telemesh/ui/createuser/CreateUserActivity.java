@@ -146,21 +146,32 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         int id = view.getId();
 
-        switch (id) {
-            case R.id.button_signup:
-                nextAction();
-                break;
-            case R.id.image_profile:
-            case R.id.image_view_camera:
-                Intent intent = new Intent(this, ProfileImageActivity.class);
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
-                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
-                break;
-            case R.id.image_view_back:
-                finish();
-                break;
-
+        if (id == R.id.button_signup) {
+            nextAction();
+        } else if (id == R.id.image_profile || id == R.id.image_view_camera){
+            Intent intent = new Intent(this, ProfileImageActivity.class);
+            intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
+            startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
+        } else if (id == R.id.image_view_back) {
+            finish();
         }
+
+
+//        switch (id) {
+//            case R.id.button_signup:
+//                nextAction();
+//                break;
+//            case R.id.image_profile:
+//            case R.id.image_view_camera:
+//                Intent intent = new Intent(this, ProfileImageActivity.class);
+//                intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
+//                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
+//                break;
+//            case R.id.image_view_back:
+//                finish();
+//                break;
+//
+//        }
     }
 
     private void nextAction() {

@@ -208,11 +208,11 @@ dependencies {
     api deps.local_server
     debugImplementation deps.inappstoragereader
 
-    implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test17:release@aar'){
-        transitive=true
-    }
+//    implementation ('com.w3engineers.mesh:viper:0.0.1-alpha-test17:release@aar'){
+//        transitive=true
+//    }
 //    implementation deps.viper
-  //implementation project(path: ':viper')
+    implementation project(path: ':viper')
 }
 
 coveralls {
@@ -227,3 +227,10 @@ tasks.coveralls {
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+}
+
+
+
+

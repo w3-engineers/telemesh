@@ -371,11 +371,11 @@ public class TelemeshTest {
             addDelay(1000);
         }*/
 
-        uiTest_02();
+//        uiTest_02();
 
     }
 
-    //    @Test
+    @Test
     public void uiTest_02() {
 
         /*addDelay(3800);

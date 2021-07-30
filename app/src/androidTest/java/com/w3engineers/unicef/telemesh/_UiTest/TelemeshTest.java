@@ -372,11 +372,13 @@ public class TelemeshTest {
         }*/
 
 //        uiTest_02();
+        mDevice.pressBack();
 
     }
 
     @Test
     public void uiTest_02() {
+        addDelay(3800);
 
         /*addDelay(3800);
 
@@ -772,9 +774,9 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-//        mDevice.pressBack();
-//
-//        addDelay(700);
+        mDevice.pressBack();
+
+        addDelay(700);
 
         try {
             mDevice.pressBack();
@@ -783,6 +785,7 @@ public class TelemeshTest {
         }
 
     }
+
 
     public void uiTest_003(UserEntity userEntity) {
 

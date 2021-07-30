@@ -529,9 +529,11 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction favoriteTab = onView(
-                allOf(withId(R.id.action_contact),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+//        ViewInteraction favoriteTab = onView(
+//                allOf(withId(R.id.action_contact),
+//                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+
+        ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
         favoriteTab.perform(click());
 
         addDelay(500);
@@ -732,18 +734,18 @@ public class TelemeshTest {
 
       mDevice.pressBack();
 
-        addDelay(500);
-
-      mDevice.pressBack();
+//        addDelay(500);
+//
+//      mDevice.pressBack();
 
         addDelay(2000);
 
-        try {
-            //RmDataHelper.getInstance().stopRmService();
-            mDevice.pressBack();
-        } catch (NoActivityResumedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //RmDataHelper.getInstance().stopRmService();
+//            mDevice.pressBack();
+//        } catch (NoActivityResumedException e) {
+//            e.printStackTrace();
+//        }
 
      ViewInteraction discoverTab = onView(
                 allOf(withId(R.id.action_discover),
@@ -770,9 +772,9 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-        mDevice.pressBack();
-
-        addDelay(700);
+//        mDevice.pressBack();
+//
+//        addDelay(700);
 
         try {
             mDevice.pressBack();
@@ -900,9 +902,10 @@ public class TelemeshTest {
 
         mDevice.pressBack();
 
-        ViewInteraction favoriteTab = onView(
-                allOf(withId(R.id.action_contact),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+//        ViewInteraction favoriteTab = onView(
+//                allOf(withId(R.id.action_contact),
+//                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
+        ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
         favoriteTab.perform(click());
 
         addDelay(1000);

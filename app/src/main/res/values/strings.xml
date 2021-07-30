@@ -205,5 +205,6 @@
     <string name="only_admin_can_change_group_name">Only admin can change group name</string>
 
     <string name="broadcast_notification">You have %d new broadcast message</string>
+    <string name="favourit_button_image">favourit button image</string>
 
 </resources>

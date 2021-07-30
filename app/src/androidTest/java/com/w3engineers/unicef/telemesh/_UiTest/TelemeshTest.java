@@ -784,7 +784,6 @@ public class TelemeshTest {
 
     }
 
-
     public void uiTest_003(UserEntity userEntity) {
 
         // addDelay(5000);
@@ -945,7 +944,7 @@ public class TelemeshTest {
         }*/
     }
 
-    /*@Test
+    @Test
     public void uiTest_04() {
         addDelay(4000);
 
@@ -997,7 +996,7 @@ public class TelemeshTest {
 
         ViewInteraction favoriteUserClick = onView(
                 allOf(withId(R.id.image_view_favourite),
-                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 2), isDisplayed()));
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 1), 2), isDisplayed()));
 
         addDelay(1000);
 
@@ -1063,12 +1062,15 @@ public class TelemeshTest {
         ViewInteraction favContactClick = onView(
                 allOf(withId(R.id.user_container),
                         childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+
+//        ViewInteraction favContactClick = onView(
+//                withId(R.id.user_container));
         favContactClick.perform(click());
 
         addDelay(2000);
 
         mDevice.pressBack();
-    }*/
+    }
 
     private void addDelay(int i) {
         try {
@@ -1167,10 +1169,5 @@ public class TelemeshTest {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    @Test
-    public void uiTes() {
-        assertTrue(true);
     }
 }

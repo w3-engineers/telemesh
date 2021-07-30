@@ -69,6 +69,7 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -118,7 +119,7 @@ public class TelemeshTest {
         appDatabase.close();
     }
 
-   /* @Test
+    @Test
     public void uiTest_01() {
 
         addDelay(3200);
@@ -161,10 +162,10 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 2),
                         isDisplayed()));
 
-        *//*ViewInteraction buttonCreateAccount = onView(
+        ViewInteraction buttonCreateAccount = onView(
                 allOf(withId(R.id.button_create_account),
                         childAtPosition(
-                                childAtPosition(withId(R.id.activity_profile_choice_parent), 0), 2), isDisplayed()));*//*
+                                childAtPosition(withId(R.id.activity_profile_choice_parent), 0), 2), isDisplayed()));
         buttonCreateAccount.perform(click());
 
         addDelay(500);
@@ -185,12 +186,12 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        *//*ViewInteraction baseEditText2 = onView(
+        ViewInteraction baseEditText2 = onView(
                 allOf(withId(R.id.edit_text_name), withText("Mimo"),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         baseEditText2.perform(pressImeActionButton());
 
-        addDelay(1000);*//*
+        addDelay(1000);
 
         ViewInteraction buttonImageChooserFirst = onView(
                 allOf(withId(R.id.image_profile),
@@ -343,18 +344,18 @@ public class TelemeshTest {
 
         Activity currentActivity = getActivityInstance();
 
-        *//*if (currentActivity instanceof SecurityActivity) {
+        if (currentActivity instanceof SecurityActivity) {
 
             SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
 
             securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
 
             addDelay(1000);
-        }*//*
+        }
 
         uiTest_02();
 
-    }*/
+    }
 
     //    @Test
     public void uiTest_02() {

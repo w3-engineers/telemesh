@@ -291,7 +291,7 @@ public class VRmDataHelperTest {
         addDelay(500);
     }
 
-    /*@Test
+    @Test
     public void userNodeStatusFindTest() {
         addDelay(500);
 
@@ -299,7 +299,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.WIFI_ONLINE, wifiOnlineStatus);
         addDelay(200);
 
-        int bleOnlineStatus = RmDataHelper.getInstance().getActiveStatus(2);
+        int bleOnlineStatus = RmDataHelper.getInstance().getActiveStatus(10);
         assertEquals(Constants.UserStatus.BLE_ONLINE, bleOnlineStatus);
         addDelay(200);
 
@@ -307,7 +307,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.WIFI_MESH_ONLINE, wifiMeshOnlineStatus);
         addDelay(200);
 
-        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(4);
+        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(11);
         assertEquals(Constants.UserStatus.BLE_MESH_ONLINE, BtMeshOnline);
         addDelay(200);
 
@@ -316,12 +316,12 @@ public class VRmDataHelperTest {
 
         addDelay(200);
 
-        int hbOnline = RmDataHelper.getInstance().getActiveStatus(8);
+        int hbOnline = RmDataHelper.getInstance().getActiveStatus(6);
         assertEquals(Constants.UserStatus.HB_ONLINE, hbOnline);
 
         addDelay(200);
 
-        int hbMeshOnline = RmDataHelper.getInstance().getActiveStatus(5);
+        int hbMeshOnline = RmDataHelper.getInstance().getActiveStatus(7);
         assertEquals(Constants.UserStatus.HB_MESH_ONLINE, hbMeshOnline);
 
         addDelay(200);
@@ -330,7 +330,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.OFFLINE, offline);
 
         addDelay(500);
-    }*/
+    }
 
     @Test
     public void analyticsDataSendToSellersTest() {

@@ -58,20 +58,7 @@
         <activity android:name=".ui.termofuse.TermsOfUseActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.editprofile.EditProfileActivity" />
-        <!--
-<activity android:name=".ui.importwallet.ImportWalletActivity" />
-        <activity
-            android:name=".ui.security.SecurityActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.importprofile.ImportProfileActivity"
-            android:theme="@style/NoActionBarTheme" />
-        <activity
-            android:name=".ui.profilechoice.ProfileChoiceActivity"
-            android:theme="@style/NoActionBarTheme" />
-        -->
+
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize"

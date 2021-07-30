@@ -17,8 +17,15 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.application.data.model.DataAckEvent;
+import com.w3engineers.mesh.application.data.model.DataEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
+import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
+import com.w3engineers.mesh.application.data.model.ServiceUpdate;
+import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
@@ -107,9 +114,9 @@ public class RightMeshDataSourceTest {
         rmDataHelper.initSource(source);
 
 
-       //SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, myAddress);
-        //SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.IMAGE_INDEX, 2);
-        //SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
+       SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+       SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 2);
+       SharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
 
         SUT = MeshDataSource.getRmDataSource();
 
@@ -197,7 +204,7 @@ public class RightMeshDataSourceTest {
         SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
     }
 
-    /*@Test
+    @Test
     public void nodeAvailableTest() {
         addDelay(500);
 
@@ -210,7 +217,7 @@ public class RightMeshDataSourceTest {
         userDataSource.insertOrUpdateData(userEntity);
         addDelay(1000);
 
-        SUT.isNodeAvailable(userEntity.getMeshId(), Constants.UserStatus.BLE_ONLINE);
+        SUT.isNodeAvailable(userEntity.getMeshId(), Constants.UserStatus.INTERNET_ONLINE);
 
         addDelay(4000);
 
@@ -218,10 +225,10 @@ public class RightMeshDataSourceTest {
 
         addDelay(1000);
 
-        assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.BLE_ONLINE);
+        assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.WIFI_ONLINE);
 
         addDelay(500);
-    }*/
+    }
 
     @Test
     public void testOnData_checkMessageProperties_forValidMessage() {
@@ -278,18 +285,18 @@ public class RightMeshDataSourceTest {
         RmDataHelper.getInstance().rmDataMap.put(chatEntity.getMessageId(), rmDataModel);
 
         // Send status test
-        //DataAckEvent sendAckEvent = randomEntityGenerator.generateDataAckEvent(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
-        ///AppDataObserver.on().sendObserverData(sendAckEvent);
+        DataAckEvent sendAckEvent = randomEntityGenerator.generateDataAckEvent(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
+        AppDataObserver.on().sendObserverData(sendAckEvent);
 
         addDelay(500);
 
         // Delivered status test
-        SUT.onAck(chatEntity.getMessageId(), Constants.MessageStatus.STATUS_DELIVERED);
+        SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.DELIVERED);
 
         addDelay(500);
 
         // Received status test
-        SUT.onAck(chatEntity.getMessageId(),Constants.MessageStatus.STATUS_RECEIVED);
+        SUT.onAck(chatEntity.getMessageId(),Constant.MessageStatus.RECEIVED);
 
         addDelay(500);
 
@@ -335,15 +342,15 @@ public class RightMeshDataSourceTest {
     public void meshInitAndServiceAppUpdateAvailableTest() {
         addDelay(500);
 
-        //TransportInit transportEvent = randomEntityGenerator.generateTransportInit(meshId);
+        TransportInit transportEvent = randomEntityGenerator.generateTransportInit(meshId);
 
-        //AppDataObserver.on().sendObserverData(transportEvent);
+        AppDataObserver.on().sendObserverData(transportEvent);
 
         addDelay(2000);
 
-        //ServiceUpdate serviceAppUpdateEvent = randomEntityGenerator.generateServiceUpdate();
+        ServiceUpdate serviceAppUpdateEvent = randomEntityGenerator.generateServiceUpdate();
 
-        //AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
+        AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
 
         addDelay(500);
     }
@@ -358,11 +365,11 @@ public class RightMeshDataSourceTest {
 
         addDelay(1000);
 
-        //DataEvent dataEvent = randomEntityGenerator.generateDataEvent(meshId);
+        DataEvent dataEvent = randomEntityGenerator.generateDataEvent(meshId);
 
         addDelay(1000);
 
-        //AppDataObserver.on().sendObserverData(dataEvent);
+        AppDataObserver.on().sendObserverData(dataEvent);
 
         addDelay(2000);
 
@@ -380,9 +387,9 @@ public class RightMeshDataSourceTest {
     @UiThreadTest
     public void permissionDialogOpenTest() {
         addDelay(500);
-        //PermissionInterruptionEvent event = randomEntityGenerator.generatePermissionInterruptEvent();
+        PermissionInterruptionEvent event = randomEntityGenerator.generatePermissionInterruptEvent();
 
-        //AppDataObserver.on().sendObserverData(event);
+        AppDataObserver.on().sendObserverData(event);
 
         addDelay(2000);
 
@@ -461,16 +468,16 @@ public class RightMeshDataSourceTest {
 
     }
 
-    @Test
+    /*@Test
     public void configDataSyncTest() {
         addDelay(500);
 
-      /*  ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
+        ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
 
-        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);*/
+        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
 
         addDelay(2000);
-    }
+    }*/
 
     private void addDelay(long time) {
         try {

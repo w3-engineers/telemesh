@@ -874,6 +874,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
 
         // Save current my information in SDK layer
+        prepareRightMeshDataSource();
         rightMeshDataSource.saveUpdateUserInfo();
 
         UserModel userModel = new UserModel();
@@ -886,7 +887,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setRawData(updateInfo.getBytes())
                 .setDataType(Constants.DataType.USER_UPDATE_INFO);
 
-        prepareRightMeshDataSource();
+
 
         compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedActiveUserIds()
                 .subscribeOn(Schedulers.newThread())

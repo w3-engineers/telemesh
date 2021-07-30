@@ -38,11 +38,11 @@ public class WalletAddressHelperTest {
 
        // WalletAddressHelper.writeDefaultAddress(meshID, context);
 
-        addDelay(2000);
+//        addDelay(2000);
 
        // SpannableString content = WalletAddressHelper.getWalletSpannableString(context);
 
-        addDelay(2000);
+//        addDelay(2000);
 
        // assertTrue(content.length() > 0);
     }

@@ -31,7 +31,7 @@ public class AppBlockerUtilTest {
     @Test
     @UiThreadTest
     public void appUpdateAndBlockerTest() {
-        /*addDelay(1000);
+        addDelay(1000);
 
         rule.getActivity().stopAnimation();
 
@@ -44,7 +44,7 @@ public class AppBlockerUtilTest {
         RmDataHelper.getInstance().appUpdateFromOtherServer(1, "");
 
 
-        addDelay(10 * 1000);*/
+        addDelay(10 * 1000);
 
         assertTrue(true);
     }

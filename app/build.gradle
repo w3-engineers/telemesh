@@ -68,7 +68,7 @@ android {
         htmlReport true
         htmlOutput file("../docs/lint_reports/lint-report.html")
 
-        abortOnError true
+        abortOnError false
         warningsAsErrors true
         checkAllWarnings true
 
@@ -201,7 +201,6 @@ dependencies {
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
     implementation 'com.iceteck.silicompressorr:silicompressor:2.2.3'
-
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
     api deps.app_share
@@ -228,3 +227,10 @@ tasks.coveralls {
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+}
+
+
+
+

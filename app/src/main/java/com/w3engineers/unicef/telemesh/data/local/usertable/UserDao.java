@@ -158,10 +158,10 @@ public abstract class UserDao extends BaseDao<UserEntity> {
     @NonNull
     public abstract List<UserEntity> getLivePeers();
 
-    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + ", " + ColumnNames.COLUMN_USER_REGISTRATION_TIME
-            + " FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.USERS + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0
             + " AND " + ColumnNames.COLUMN_USER_MESH_ID + " != :myMeshId")
-    public abstract List<UserEntity.NewMeshUserCount> getUnSyncedUsers(String myMeshId);
+    public abstract List<UserEntity> getUnSyncedUsers(String myMeshId);
 
     @Query("UPDATE " + TableNames.USERS + " SET " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 1
             + " WHERE " + ColumnNames.COLUMN_USER_IS_SYNCED + " = " + 0 + " AND "

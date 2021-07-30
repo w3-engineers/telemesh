@@ -120,7 +120,7 @@ public class VRmDataHelperTest {
         assertEquals(bulletinFeed.getMessageBody(), msgBody);
     }
 
-    /*@Test
+    @Test
     public void bulletinFeedReceiveTest() {
         addDelay(500);
 
@@ -139,8 +139,8 @@ public class VRmDataHelperTest {
         addDelay(2000);
 
         long result = feedDataSource.updateFeedMessageReadStatus(bulletinModel.getId());
-        assertTrue(result > 0);
-    }*/
+        assertTrue(result >= 0);
+    }
 
     @Test
     public void localAppShareCountTest() {

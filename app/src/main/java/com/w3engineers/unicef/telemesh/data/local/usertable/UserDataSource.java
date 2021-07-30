@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -130,7 +131,15 @@ public class UserDataSource {
     }
 
     public List<UserEntity.NewMeshUserCount> getUnSyncedUsers(String myUserId) {
-        return mUserDao.getUnSyncedUsers(myUserId);
+        List<UserEntity.NewMeshUserCount> newMeshUserCountList = new ArrayList<>();
+        List<UserEntity> userEntityList = mUserDao.getUnSyncedUsers(myUserId);
+        for(UserEntity item : userEntityList){
+            UserEntity.NewMeshUserCount countObj = new UserEntity.NewMeshUserCount();
+            countObj.meshId = item.meshId;
+            countObj.registrationTime = item.registrationTime;
+            newMeshUserCountList.add(countObj);
+        }
+        return newMeshUserCountList;
     }
 
     public int updateUserSynced(String myUserId) {

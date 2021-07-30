@@ -1,25 +1,2 @@
 include ':app', ':appshare', ':localserver'/*, ':viper'*/
 
-// Remove RM-Lib
-/*pluginManagement.repositories {
-    jcenter()
-    google()
-    mavenCentral()
-    maven {
-        url 'https://artifactory.rightmesh.io/artifactory/maven'
-        credentials {
-            username = System.getenv('rightmesh_build_username')
-
-            if (username.equals("") || username.equals(null)) {
-                username = rightmesh_build_username
-            }
-
-            password = System.getenv('rightmesh_build_password')
-
-            if (password.equals("") || password.equals(null)) {
-                password = rightmesh_build_password
-            }
-        }
-    }
-}*/
-

@@ -214,7 +214,7 @@ dependencies {
     }*/
 //    implementation deps.viper
   //implementation project(path: ':viper')
-    implementation 'com.github.w3-engineers:Viper-V2:v2.2.0'
+    implementation 'com.github.w3-engineers:Viper-V2:v2.2.1'
 }
 
 coveralls {

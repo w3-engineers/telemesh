@@ -291,7 +291,7 @@ public class VRmDataHelperTest {
         addDelay(500);
     }
 
-    /*@Test
+    @Test
     public void userNodeStatusFindTest() {
         addDelay(500);
 
@@ -316,12 +316,12 @@ public class VRmDataHelperTest {
 
         addDelay(200);
 
-        int hbOnline = RmDataHelper.getInstance().getActiveStatus(8);
+        int hbOnline = RmDataHelper.getInstance().getActiveStatus(6);
         assertEquals(Constants.UserStatus.HB_ONLINE, hbOnline);
 
         addDelay(200);
 
-        int hbMeshOnline = RmDataHelper.getInstance().getActiveStatus(5);
+        int hbMeshOnline = RmDataHelper.getInstance().getActiveStatus(7);
         assertEquals(Constants.UserStatus.HB_MESH_ONLINE, hbMeshOnline);
 
         addDelay(200);
@@ -330,7 +330,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.OFFLINE, offline);
 
         addDelay(500);
-    }*/
+    }
 
     @Test
     public void analyticsDataSendToSellersTest() {

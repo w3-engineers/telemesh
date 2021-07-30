@@ -103,6 +103,8 @@ android {
         }
     }
 
+    testOptions { animationsDisabled = true }
+
 }
 
 dependencies {
@@ -211,8 +213,8 @@ dependencies {
         transitive=true
     }*/
 //    implementation deps.viper
-//  implementation project(path: ':viper')
-    implementation 'com.github.w3-engineers:Viper-V2:v2.1.0'
+  //implementation project(path: ':viper')
+    implementation 'com.github.w3-engineers:Viper-V2:v2.2.0'
 }
 
 coveralls {

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +16,15 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.LocationManager;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -163,17 +167,20 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
         StorageUtil.getFreeMemory();
 
-       // registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        // registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
         IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         filter.addAction(Intent.ACTION_PROVIDER_CHANGED);
-        registerReceiver(mGpsSwitchStateReceiver, filter);
+
+        if (!CommonUtil.isEmulator()) {
+            registerReceiver(mGpsSwitchStateReceiver, filter);
+        }
 
         checkAppBlockerAvailable();
 
     }
 
     protected void requestMultiplePermissions() {
-        DexterPermissionHelper.getInstance().requestForPermission(this,this,
+        DexterPermissionHelper.getInstance().requestForPermission(this, this,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -425,8 +432,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         super.onDestroy();
         RmDataHelper.getInstance().destroy();
         sInstance = null;
-        LocationTracker.getInstance(mContext).stopListener();
-        unregisterReceiver(mGpsSwitchStateReceiver);
+        if(!CommonUtil.isEmulator()) {
+            LocationTracker.getInstance(mContext).stopListener();
+            unregisterReceiver(mGpsSwitchStateReceiver);
+        }
     }
 
     @Override
@@ -592,8 +601,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if ((mCurrentFragment instanceof MessageFeedFragment)) {
 
             Constants.IS_DATA_ON = true;
-         //   RmDataHelper.getInstance().mLatitude = "22.8456";
-          //  RmDataHelper.getInstance().mLongitude = "89.5403";
+            //   RmDataHelper.getInstance().mLatitude = "22.8456";
+            //  RmDataHelper.getInstance().mLongitude = "89.5403";
 
             MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
             messageFeedFragment.swipeRefreshOperation();
@@ -619,24 +628,20 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onPermissionGranted() {
-     //   locationTracker = new LocationTracker(mContext, MainActivity.this);
+        //   locationTracker = new LocationTracker(mContext, MainActivity.this);
 
-        LocationTracker.getInstance(mContext).getLocation();
+        if (!CommonUtil.isEmulator()) {
+            LocationTracker.getInstance(mContext).getLocation();
 
-        // Check if GPS enabled
-        if (LocationTracker.getInstance(mContext).canGetLocation()) {
+            // Check if GPS enabled
+            if (LocationTracker.getInstance(mContext).canGetLocation()) {
 
-            double latitude = LocationTracker.getInstance(mContext).getLatitude();
-            double longitude = LocationTracker.getInstance(mContext).getLongitude();
+                double latitude = LocationTracker.getInstance(mContext).getLatitude();
+                double longitude = LocationTracker.getInstance(mContext).getLongitude();
 
-            // \n is for new line
-//            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-        } else {
-            // Can't get location.
-            // GPS or network is not enabled.
-            // Ask user to enable GPS/network in settings.
-          //  LocationTracker.getInstance().showSettingsAlert();
-            CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
+            } else {
+                CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
+            }
         }
     }
 }

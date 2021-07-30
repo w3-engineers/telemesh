@@ -3,9 +3,12 @@ package com.w3engineers.unicef.telemesh.ui.editprofile;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
@@ -77,17 +80,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 break;
             case R.id.image_profile:
             case R.id.image_view_camera:
-                UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
-                Intent intent = new Intent(this, ProfileImageActivity.class);
-                int currentImageIndex = mViewModel.getImageIndex();
-
-                int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-                if (currentImageIndex < 0) {
-                    currentImageIndex = oldImageIndex;
-                }
-
-                intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
-                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
+                openProfileImageChooser();
                 break;
             case R.id.image_view_back:
                 finish();
@@ -182,5 +175,19 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         mBinding.buttonUpdate.setText(LanguageUtil.getString(R.string.update));
 //        mBinding.editTextName.setHint(LanguageUtil.getString(R.string.enter_first_name));
 //        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
+    }
+
+    public void openProfileImageChooser() {
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+        Intent intent = new Intent(this, ProfileImageActivity.class);
+        int currentImageIndex = mViewModel.getImageIndex();
+
+        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        if (currentImageIndex < 0) {
+            currentImageIndex = oldImageIndex;
+        }
+
+        intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
+        startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
     }
 }

@@ -299,7 +299,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.WIFI_ONLINE, wifiOnlineStatus);
         addDelay(200);
 
-        int bleOnlineStatus = RmDataHelper.getInstance().getActiveStatus(2);
+        int bleOnlineStatus = RmDataHelper.getInstance().getActiveStatus(10);
         assertEquals(Constants.UserStatus.BLE_ONLINE, bleOnlineStatus);
         addDelay(200);
 
@@ -307,7 +307,7 @@ public class VRmDataHelperTest {
         assertEquals(Constants.UserStatus.WIFI_MESH_ONLINE, wifiMeshOnlineStatus);
         addDelay(200);
 
-        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(4);
+        int BtMeshOnline = RmDataHelper.getInstance().getActiveStatus(11);
         assertEquals(Constants.UserStatus.BLE_MESH_ONLINE, BtMeshOnline);
         addDelay(200);
 

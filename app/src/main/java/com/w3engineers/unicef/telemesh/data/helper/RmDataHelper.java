@@ -204,11 +204,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         switch (userActiveStatus) {
             case 1:
                 return Constants.UserStatus.WIFI_ONLINE;
-            case 2:
+            case 10:
                 return Constants.UserStatus.BLE_ONLINE;
             case 3:
                 return Constants.UserStatus.WIFI_MESH_ONLINE;
-            case 4:
+            case 11:
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;

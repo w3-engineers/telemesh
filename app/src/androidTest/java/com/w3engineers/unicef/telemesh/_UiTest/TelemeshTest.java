@@ -538,7 +538,7 @@ public class TelemeshTest {
         addDelay(500);
     }
 
-    //@Test
+    @Test
     public void uiTest_03() {
         addDelay(3800);
 

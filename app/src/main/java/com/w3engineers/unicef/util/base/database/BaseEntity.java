@@ -61,12 +61,12 @@ public abstract class BaseEntity extends BaseObservable implements Parcelable {
      * @param baseEntity
      * @return
      */
-    public BaseEntity copy(BaseEntity baseEntity) {
+    /*public BaseEntity copy(BaseEntity baseEntity) {
         if(baseEntity == null) {
             return null;
         }
 
         baseEntity.mId = mId;
         return baseEntity;
-    }
+    }*/
 }

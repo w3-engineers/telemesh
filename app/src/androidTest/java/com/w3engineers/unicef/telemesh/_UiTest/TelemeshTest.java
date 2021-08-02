@@ -980,7 +980,7 @@ public class TelemeshTest {
         }*/
     }
 
-    @Test
+   /* @Test
     public void uiTest_04() {
         addDelay(4000);
 
@@ -1089,6 +1089,10 @@ public class TelemeshTest {
                             childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
             favSearchClose.perform(click());
 
+        } catch (NoMatchingViewException e) {
+            e.printStackTrace();
+        }
+
             addDelay(1000);
 
             ViewInteraction favContactClick = onView(
@@ -1101,13 +1105,7 @@ public class TelemeshTest {
             addDelay(2000);
 
             mDevice.pressBack();
-
-        } catch (NoMatchingViewException e) {
-            e.printStackTrace();
-        }
-
-
-    }
+    }*/
 
     private void addDelay(int i) {
         try {

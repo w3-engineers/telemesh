@@ -325,7 +325,7 @@ public class LocationTracker extends Service {
      */
     public boolean canGetLocation() {
         if (CommonUtil.isEmulator()){
-            return false;
+            return true;
         }
         return this.canGetLocation;
     }

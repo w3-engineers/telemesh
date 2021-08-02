@@ -70,10 +70,16 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.assertTrue;
@@ -429,7 +435,7 @@ public class TelemeshTest {
             ViewInteraction editInputTextBox = onView(
                     allOf(withId(R.id.edit_text_name),
                             childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+            editInputTextBox.perform(scrollTo(), replaceText("AladeenTest"), closeSoftKeyboard());
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
         }
@@ -511,7 +517,7 @@ public class TelemeshTest {
         addDelay(3800);
 
 //        SharedPref sharedPref = SharedPref.getSharedPref(context);
-        SharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
+        SharedPref.write(Constants.preferenceKey.USER_NAME, "AladeenTest");
         SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
         SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
 
@@ -557,7 +563,7 @@ public class TelemeshTest {
 
         // click feed item.
 
-        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.message_recycler_view)).perform(actionOnItemAtPosition(0, click()));
 
         addDelay(1500);
 
@@ -822,7 +828,7 @@ public class TelemeshTest {
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
         userItemAction.perform(click());*/
 
-        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.contact_recycler_view)).perform(actionOnItemAtPosition(0, click()));
 
         addDelay(1000);
 
@@ -1118,8 +1124,7 @@ public class TelemeshTest {
         addDelay(1000);
     }
 
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
+    private static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
             @Override
@@ -1173,5 +1178,361 @@ public class TelemeshTest {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Test
+    public void uiTest_05() throws InterruptedException {
+
+        addDelay(3000);
+
+        ViewInteraction floatingActionButton = onView(allOf(withId(R.id.fab_chat), childAtPosition(allOf(withId(R.id.mesh_contact_layout), childAtPosition(withId(R.id.fragment_container), 0)), 2), isDisplayed()));
+        floatingActionButton.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+
+        addDelay(1000);
+
+        ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView2.perform(actionOnItemAtPosition(1, click()));
+
+        addDelay(1000);
+
+        ViewInteraction floatingActionButton2 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 4), isDisplayed()));
+        floatingActionButton2.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), withText("AladeenTest, Daniel, Mike"), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatImageView = onView(allOf(withId(R.id.image_view_pen), withContentDescription("Name field icon"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 7), isDisplayed()));
+        appCompatImageView.perform(click());
+
+        addDelay(2000);
+
+        onView(withId(R.id.edit_text_name)).perform(replaceText("MyTestGroup"), closeSoftKeyboard());
+
+        Thread.sleep(1000);
+
+        ViewInteraction appCompatButton = onView(allOf(withId(R.id.button_done), withText("Done"), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 7), isDisplayed()));
+        appCompatButton.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageView2 = onView(allOf(withId(R.id.image_view_remove), withContentDescription("Remove group member"), childAtPosition(childAtPosition(withId(R.id.recycler_view_group_member), 2), 2), isDisplayed()));
+        appCompatImageView2.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatTextView3 = onView(allOf(withId(R.id.text_view_add_member), withText("Add member"),                 childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 13), isDisplayed()));
+        appCompatTextView3.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+
+        Thread.sleep(2000);
+
+        ViewInteraction floatingActionButton3 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
+        floatingActionButton3.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageView6 = onView(allOf(withId(R.id.op_back), withContentDescription("Telemesh"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 1), isDisplayed()));
+        appCompatImageView6.perform(click());
+
+        Thread.sleep(2000);
+
+
+//        ViewInteraction appCompatImageButton = onView(allOf(withContentDescription("Navigate up"), childAtPosition(allOf(withId(R.id.toolbar_chat), childAtPosition(withId(R.id.chat_layout), 1)), 1), isDisplayed()));
+//        appCompatImageButton.perform(click());
+        mDevice.pressBack();
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatSpinner = onView(allOf(withId(R.id.spinner_view), childAtPosition(allOf(withId(R.id.spinner_holder), childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        appCompatSpinner.perform(click());
+
+        Thread.sleep(2000);
+
+        DataInteraction constraintLayout = onData(anything()).inAdapterView(withClassName(is("androidx.appcompat.widget.DropDownListView"))).atPosition(0);
+        constraintLayout.perform(click());
+
+        ViewInteraction recyclerView3 = onView(allOf(withId(R.id.group_recycler_view), childAtPosition(withId(R.id.mesh_contact_layout), 2)));
+        recyclerView3.perform(actionOnItemAtPosition(0, click()));
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatEditText = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText.perform(click());
+
+        Thread.sleep(1000);
+
+        appCompatEditText.perform(replaceText("Hello friends"), closeSoftKeyboard());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageButton2 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        appCompatImageButton2.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+        overflowMenuButton.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatTextView4 = onView(allOf(withId(R.id.title), withText("Clear Chat"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+        appCompatTextView4.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatEditText9 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText9.perform(click());
+
+        ViewInteraction appCompatEditText10 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText10.perform(replaceText("Ok friends"), closeSoftKeyboard());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageButton3 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        appCompatImageButton3.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageButton4 = onView(
+                allOf(withId(R.id.image_view_pick_gallery_image), withContentDescription("Send icon."),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                5)),
+                                0),
+                        isDisplayed()));
+        appCompatImageButton4.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatImageButton6 = onView(allOf(withContentDescription("Navigate up"), childAtPosition(allOf(withId(R.id.toolbar_chat), childAtPosition(withId(R.id.chat_layout), 1)), 1), isDisplayed()));
+        appCompatImageButton6.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction recyclerView5 = onView(allOf(withId(R.id.group_recycler_view), childAtPosition(withId(R.id.mesh_contact_layout), 2)));
+        recyclerView5.perform(actionOnItemAtPosition(0, click()));
+
+        Thread.sleep(2000);
+
+        ViewInteraction overflowMenuButton2 = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+        overflowMenuButton2.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatTextView5 = onView(allOf(withId(R.id.title), withText("Leave Group"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+        appCompatTextView5.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatSpinner2 = onView(allOf(withId(R.id.spinner_view), childAtPosition(allOf(withId(R.id.spinner_holder), childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        appCompatSpinner2.perform(click());
+
+        Thread.sleep(250);
+
+        DataInteraction constraintLayout2 = onData(anything()).inAdapterView(withClassName(is("androidx.appcompat.widget.DropDownListView"))).atPosition(0);
+        constraintLayout2.perform(click());
+
+        Thread.sleep(2000);
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        uiTest_07();
+    }
+
+    /*@Test
+    public void uiTest_06() {
+        addDelay(3000);
+
+        ViewInteraction constraintLayout = onView(
+                allOf(withId(R.id.user_container),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.contact_recycler_view),
+                                        0),
+                                0),
+                        isDisplayed()));
+        constraintLayout.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.image_view_pick_gallery_image), withContentDescription("Send icon."),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                5)),
+                                0),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction checkView = onView(
+                allOf(withId(R.id.check_view),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.recyclerview),
+                                        0),
+                                1),
+                        isDisplayed()));
+        checkView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.button_apply), withText("Apply"),
+                        childAtPosition(
+                                allOf(withId(R.id.bottom_toolbar),
+                                        childAtPosition(
+                                                withId(R.id.root),
+                                                1)),
+                                2),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatImageButton2 = onView(
+                allOf(withContentDescription("Navigate up"),
+                        childAtPosition(
+                                allOf(withId(R.id.toolbar_chat),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                1)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton2.perform(click());
+    }*/
+
+//    @Test
+    public void uiTest_07() {
+// Added a sleep statement to match the app's execution delay.
+        addDelay(3000);
+
+        ViewInteraction floatingActionButton = onView(
+                allOf(withId(R.id.fab_chat),
+                        childAtPosition(
+                                allOf(withId(R.id.mesh_contact_layout),
+                                        childAtPosition(
+                                                withId(R.id.fragment_container),
+                                                0)),
+                                2),
+                        isDisplayed()));
+        floatingActionButton.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.recycler_view_user),
+                        childAtPosition(
+                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                5)));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+
+        addDelay(2000);
+
+        ViewInteraction recyclerView2 = onView(
+                allOf(withId(R.id.recycler_view_user),
+                        childAtPosition(
+                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                5)));
+        recyclerView2.perform(actionOnItemAtPosition(1, click()));
+
+        addDelay(2000);
+
+        ViewInteraction floatingActionButton2 = onView(
+                allOf(withId(R.id.button_go),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                4),
+                        isDisplayed()));
+        floatingActionButton2.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction appCompatEditText = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                5)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatEditText2 = onView(
+                allOf(withId(R.id.edit_text_message),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                5)),
+                                1),
+                        isDisplayed()));
+        appCompatEditText2.perform(replaceText("Hi"), closeSoftKeyboard());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.image_view_send), withContentDescription("Send icon."),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_message_bar),
+                                        childAtPosition(
+                                                withId(R.id.chat_layout),
+                                                5)),
+                                2),
+                        isDisplayed()));
+        appCompatImageButton.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.text_view_last_name), withText("AladeenTest, Daniel, Mike"),
+                        childAtPosition(
+                                allOf(withId(R.id.chat_toolbar_layout),
+                                        childAtPosition(
+                                                withId(R.id.toolbar_chat),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView2 = onView(
+                allOf(withId(R.id.text_view_leave_group), withText("Leave group"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.nested_scroll_view),
+                                        0),
+                                16),
+                        isDisplayed()));
+        appCompatTextView2.perform(click());
+
+        addDelay(2000);
+
     }
 }

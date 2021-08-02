@@ -1,4 +1,4 @@
-package com.w3engineers.unicef.util.helper.model;
+//package com.w3engineers.unicef.util.helper.model;
  
 /*
 ============================================================================
@@ -7,6 +7,7 @@ Unauthorized copying of this file, via any medium is strictly prohibited
 Proprietary and confidential
 ============================================================================
 */
+/*
 
 public class MeshControlConfig {
 
@@ -48,3 +49,4 @@ public class MeshControlConfig {
         return this;
     }
 }
+*/

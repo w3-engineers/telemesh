@@ -376,7 +376,7 @@ public class TelemeshTest {
     @Test
     public void uiTest_02() {
 
-        /*addDelay(3800);
+        addDelay(3800);
 
         currentActivity = getActivityInstance();
 
@@ -389,7 +389,7 @@ public class TelemeshTest {
             });
         }
 
-        addDelay(1000);*/
+        addDelay(1000);
 
         Activity currentActivity;
 
@@ -570,14 +570,14 @@ public class TelemeshTest {
         ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
         favoriteTab.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction broadcastMessageTab = onView(
                 allOf(withId(R.id.action_message_feed),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
         broadcastMessageTab.perform(click());
 
-        addDelay(500);
+        addDelay(1000);
 
         addFeedItem();
 
@@ -610,7 +610,7 @@ public class TelemeshTest {
 
         }
 
-        addDelay(1000);
+        addDelay(2000);
         onView(withId(R.id.action_discover)).perform(click());
 
         uiTest_003(userEntity);
@@ -836,7 +836,7 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);*/
 
-        addDelay(1000);
+        addDelay(2000);
 
         currentActivity = getActivityInstance();
 

@@ -16,7 +16,7 @@ android:
     - addon-google_apis-google-25
     - sys-img-armeabi-v7a-android-22
 
-install: travis_wait 35 mvn install
+install: travis_wait 15 mvn install
 
 licenses:
     - 'android-sdk-license-.+'

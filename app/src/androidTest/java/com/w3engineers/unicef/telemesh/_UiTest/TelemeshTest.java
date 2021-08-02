@@ -600,7 +600,6 @@ public class TelemeshTest {
         Activity activity = getActivityInstance();
 
 
-
         if (activity instanceof MainActivity) {
 
             MainActivity mainActivity = (MainActivity) activity;
@@ -668,7 +667,7 @@ public class TelemeshTest {
 //
 //        addDelay(500);
 
-        ViewInteraction openShareApp = onView(
+        /*ViewInteraction openShareApp = onView(
                 allOf(withId(R.id.layout_share_app),
                         childAtPosition(allOf(withId(R.id.layout_settings),
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
@@ -676,7 +675,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        mDevice.pressBack();
+        mDevice.pressBack();*/
 
         addDelay(500);
 
@@ -788,7 +787,6 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
         discoverTab.perform(click());
 
-        // todo unit test 03
 
         currentActivity = getActivityInstance();
 
@@ -800,7 +798,7 @@ public class TelemeshTest {
                 mainActivity.popupSnackbarForCompleteUpdate();
             });
 
-            addDelay(3000);
+            addDelay(5000);
         }
 
 
@@ -808,9 +806,9 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-//        mDevice.pressBack();
-//
-//        addDelay(700);
+        mDevice.pressBack();
+
+        addDelay(700);
 
         try {
             mDevice.pressBack();

@@ -7,6 +7,7 @@ package com.w3engineers.unicef.util.base.database;
  * Proprietary and confidential
  * ============================================================================
  */
+/*
 
 public class BaseMigration {
 
@@ -27,3 +28,4 @@ public class BaseMigration {
     private String mQueryScript;
 
 }
+*/

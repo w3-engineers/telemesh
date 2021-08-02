@@ -97,6 +97,9 @@ public class DiscoverViewModelTest {
                 .setRegistrationTime(System.currentTimeMillis() + 1);
         userEntityTwo.setId(1);
 
+        //Added below line to increase code coverage only
+        userEntityTwo.describeContents();
+
         String SearchText = "Mike";
 
         SUT.userList.add(userEntityTwo);

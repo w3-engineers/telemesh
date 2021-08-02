@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import android.text.TextUtils;
@@ -20,9 +21,11 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,6 +53,9 @@ public class ModelParcelableTest {
     private String userId = "0x8934394dnjsd3984394";
     private String msgId = "9843094";
     private RandomEntityGenerator randomEntityGenerator;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {

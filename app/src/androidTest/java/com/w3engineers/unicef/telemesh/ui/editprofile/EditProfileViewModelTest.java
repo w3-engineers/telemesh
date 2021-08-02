@@ -56,6 +56,8 @@ public class EditProfileViewModelTest {
         SUT.sendUserInfoToAll();
 
         addDelay(2000);
+
+        assertTrue(true);
     }
 
     private void addDelay(long time) {

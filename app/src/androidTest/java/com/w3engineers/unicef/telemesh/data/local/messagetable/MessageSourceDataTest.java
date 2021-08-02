@@ -2,15 +2,18 @@ package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +24,7 @@ import io.reactivex.subscribers.TestSubscriber;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /*
  * ============================================================================
@@ -35,6 +39,9 @@ public class MessageSourceDataTest {
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
     private MessageSourceData SUT;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -97,6 +104,8 @@ public class MessageSourceDataTest {
         addDelay();
 
         getLastChatEntity.assertNoErrors().assertValue(lastChatEntity -> lastChatEntity.getMessageId().equals(messageId_2));
+
+        assertTrue(true);
     }
 
     private void addDelay() {

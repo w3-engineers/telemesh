@@ -491,6 +491,18 @@ public class TelemeshTest {
 
         addDelay(2500);
 
+        UserEntity userEntityOne = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
+                .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Mike")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        userDataSource.insertOrUpdateData(userEntityOne);
+
+        addDelay(10000);
+
         currentActivity = getActivityInstance();
 
         if (currentActivity instanceof ProfileImageActivity) {

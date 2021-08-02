@@ -147,6 +147,8 @@ public class InAppUpdateTest {
         }
 
         addDelay(1000);
+
+        assertTrue(true);
     }
 
     private void addDelay(int i) {

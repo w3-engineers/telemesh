@@ -47,28 +47,6 @@ public class CreateUserViewModelTest {
     public void tearDown() {
     }
 
-   /* @Test
-    public void storeData_storeNameString_getNameString() {
-        String firstName = "Daniel Alvez";
-        int imageIndex = 1;
-
-        SUT.setImageIndex(imageIndex);
-      //  SUT.storeData(firstName);
-
-        checkValues(firstName, imageIndex);
-    }*/
-
-   /* @Test
-    public void storeData_storeNameEmpty_getNameEmpty() {
-        String firstName = "";
-        String lastName = "";
-        int imageIndex = 5;
-
-        SUT.setImageIndex(imageIndex);
-        //SUT.storeData(firstName);
-
-        checkValues(firstName, imageIndex);
-    }*/
 
     @Test
     public void storeData_storeNameNull_getNameNull() {
@@ -94,30 +72,6 @@ public class CreateUserViewModelTest {
         String password = "mesh_123";
         assertTrue(SUT.storeData(firstName));
     }
-
-    /*@Test
-    public void isNameValid_true_setValidWithSpecialString() {
-        String firstName = "%Daniel%";
-        assertTrue(SUT.isNameValid(firstName));
-    }
-
-    @Test
-    public void isNameValid_false_setOneCharString() {
-        String firstName = "D";
-        assertFalse(SUT.isNameValid(firstName));
-    }
-
-    @Test
-    public void isNameValid_false_setEmptyString() {
-        String firstName = "";
-        assertFalse(SUT.isNameValid(firstName));
-    }
-
-    @Test
-    public void isNameValid_false_setNullString() {
-        String firstName = null;
-        assertFalse(SUT.isNameValid(firstName));
-    }*/
 
     private void checkValues(String firstName, int imageIndex) {
         assertEquals(firstName, sharedPreferences.getString(Constants.preferenceKey.USER_NAME, null));

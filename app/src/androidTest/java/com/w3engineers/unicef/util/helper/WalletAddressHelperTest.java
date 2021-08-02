@@ -4,13 +4,17 @@ import android.content.Context;
 import android.text.SpannableString;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
+
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 /*
  * ============================================================================
@@ -25,6 +29,9 @@ public class WalletAddressHelperTest {
 
     private String meshID;
     private Context context;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {

@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.local.feedback;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -9,11 +11,16 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+
 @RunWith(AndroidJUnit4.class)
 public class FeedbackEntityTest {
     private String userId;
     private String userName;
     private String feedback;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {

@@ -4,6 +4,7 @@ package com.w3engineers.unicef.telemesh.data;
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 import android.util.Log;
@@ -17,8 +18,10 @@ import androidx.work.testing.TestDriver;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +36,9 @@ public class WorkManagerInstrumentTest {
     // on setup method we will initialize WorkManager in test mode
     // so we can test our worker
 
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {

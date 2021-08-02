@@ -5,12 +5,15 @@ import android.location.Location;
 import android.os.Environment;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationResult;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,6 +31,9 @@ import static org.junit.Assert.*;
 public class BulletinTimeSchedulerTest {
     Context context;
     String CURRENT_LOG_FILE_NAME = "testLog.txt";
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {

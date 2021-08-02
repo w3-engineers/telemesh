@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -7,9 +8,11 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +36,9 @@ public class MainActivityViewModelTest {
     private MainActivityViewModel SUT;
     private UserDataSource userDataSource;
     private MessageSourceData messageSourceData;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -80,48 +86,6 @@ public class MainActivityViewModelTest {
         }
     }
 
-    /*@Test
-    public void testMakeSendingMessageAsFailed_getFailedState_whenMessageIsSending() {
-
-        String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
-
-        userDataSource.insertOrUpdateData(userEntity);
-
-        int messageStatus = Constants.MessageStatus.STATUS_SENDING;
-
-        MessageEntity messageEntity = getMessageEntity(userMeshId, messageStatus);
-        messageSourceData.insertOrUpdateData(messageEntity);
-
-        SUT.makeSendingMessageAsFailed();
-
-        // Adding a time sleep for processing offline status
-        addDelay();
-
-        assertEquals(messageSourceData.getMessageEntityById(messageEntity.getMessageId()).getStatus(),
-                Constants.MessageStatus.STATUS_FAILED);
-    }*/
-
-    /*@Test
-    public void testMakeSendingMessageAsFailed_getDeliverState_whenMessageIsDeliver() {
-
-        String userMeshId = UUID.randomUUID().toString();
-        userEntity.setMeshId(userMeshId).setOnlineStatus(true);
-
-        userDataSource.insertOrUpdateData(userEntity);
-
-        int messageStatus = Constants.MessageStatus.STATUS_DELIVERED;
-
-        MessageEntity messageEntity = getMessageEntity(userMeshId, messageStatus);
-        messageSourceData.insertOrUpdateData(messageEntity);
-
-        SUT.makeSendingMessageAsFailed();
-
-        // Adding a time sleep for processing offline status
-        addDelay();
-
-        assertEquals(messageSourceData.getMessageEntityById(messageEntity.getMessageId()).getStatus(), messageStatus);
-    }*/
 
     private MessageEntity getMessageEntity(String userMeshId, int messageStatus) {
         String messageId = UUID.randomUUID().toString();

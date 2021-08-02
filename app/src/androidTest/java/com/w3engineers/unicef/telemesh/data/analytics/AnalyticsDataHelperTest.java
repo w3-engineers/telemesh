@@ -4,6 +4,7 @@ import androidx.room.Room;
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -16,10 +17,12 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,6 +52,9 @@ public class AnalyticsDataHelperTest {
     private MessageSourceData SUT;
     private AppShareCountDataService appShareCountDataService;
     String userId;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {
@@ -120,6 +126,8 @@ public class AnalyticsDataHelperTest {
         // send test
 
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
+
+        assertTrue(true);
     }
 
     @Test

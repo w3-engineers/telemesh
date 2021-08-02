@@ -717,7 +717,7 @@ public class TelemeshTest {
         }*/
     }
 
-    @Test
+/*    @Test
     public void uiTest_04() {
         addDelay(4000);
 
@@ -842,7 +842,7 @@ public class TelemeshTest {
             addDelay(2000);
 
             mDevice.pressBack();
-    }
+    }*/
 
     private void addDelay(int i) {
         try {

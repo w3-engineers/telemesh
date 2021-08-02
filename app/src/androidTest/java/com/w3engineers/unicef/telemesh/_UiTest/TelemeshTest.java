@@ -567,21 +567,32 @@ public class TelemeshTest {
 //                allOf(withId(R.id.action_contact),
 //                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
 
-        ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
-        favoriteTab.perform(click());
+        try {
+            ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
+            favoriteTab.perform(click());
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        addDelay(1000);
 
-        ViewInteraction broadcastMessageTab = onView(
-                allOf(withId(R.id.action_message_feed),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
-        broadcastMessageTab.perform(click());
+        try {
 
-        addDelay(1000);
 
-        addFeedItem();
+            ViewInteraction broadcastMessageTab = onView(
+                    allOf(withId(R.id.action_message_feed),
+                            childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
+            broadcastMessageTab.perform(click());
 
-        addDelay(1500);
+            addDelay(1000);
+
+            addFeedItem();
+
+            addDelay(1500);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         UserEntity userEntity = addSampleUser();
 
@@ -593,7 +604,7 @@ public class TelemeshTest {
             onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
             addDelay(1500);
             mDevice.pressBack();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -611,7 +622,13 @@ public class TelemeshTest {
         }
 
         addDelay(2000);
-        onView(withId(R.id.action_discover)).perform(click());
+
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        //onView(withId(R.id.action_discover)).perform(click());
 
         uiTest_003(userEntity);
 
@@ -634,37 +651,49 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction copyUserId = onView(
-                allOf(withId(R.id.image_view_id_copy),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
-        copyUserId.perform(click());
+        try {
 
-        addDelay(1000);
+
+            ViewInteraction copyUserId = onView(
+                    allOf(withId(R.id.image_view_id_copy),
+                            childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                    childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
+            copyUserId.perform(click());
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mDevice.pressBack();
 
         addDelay(1000);
 
-        ViewInteraction openWallet = onView(
-                allOf(withId(R.id.layout_open_wallet),
-                        childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
-        openWallet.perform(scrollTo(), click());
+        try {
 
-        addDelay(2000);
+
+            ViewInteraction openWallet = onView(
+                    allOf(withId(R.id.layout_open_wallet),
+                            childAtPosition(allOf(withId(R.id.layout_settings),
+                                    childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
+            openWallet.perform(scrollTo(), click());
+
+            addDelay(2000);
 
 //        mDevice.pressBack();
 //
 //        addDelay(500);
 
-        ViewInteraction openDataPlan = onView(
-                allOf(withId(R.id.layout_data_plan),
-                        childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
-        openDataPlan.perform(scrollTo(), click());
+            ViewInteraction openDataPlan = onView(
+                    allOf(withId(R.id.layout_data_plan),
+                            childAtPosition(allOf(withId(R.id.layout_settings),
+                                    childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
+            openDataPlan.perform(scrollTo(), click());
 
-        addDelay(2000);
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 //        mDevice.pressBack();
 //
@@ -680,7 +709,7 @@ public class TelemeshTest {
 
         mDevice.pressBack();*/
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction chooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -688,7 +717,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
         chooseLanguage.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction optionBangla = onView(
                 allOf(withId(R.id.radio_bangla),
@@ -696,7 +725,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 1), isDisplayed()));
         optionBangla.perform(click());
 
-        addDelay(4000);
+        addDelay(5000);
 
         ViewInteraction chooseLanguageForSecond = onView(
                 allOf(withId(R.id.layout_choose_language),
@@ -704,7 +733,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
         chooseLanguageForSecond.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction optionEnglish = onView(
                 allOf(withId(R.id.radio_english),
@@ -712,7 +741,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 0), isDisplayed()));
         optionEnglish.perform(click());
 
-        addDelay(4000);
+        addDelay(5000);
 
         ViewInteraction optionAboutUs = onView(
                 allOf(withId(R.id.layout_about_us),
@@ -720,11 +749,11 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 7)));
         optionAboutUs.perform(scrollTo(), click());
 
-        addDelay(500);
+        addDelay(1000);
 
         mDevice.pressBack();
 
-        addDelay(500);
+        addDelay(1000);
 
         ViewInteraction optionFeedBack = onView(
                 allOf(withId(R.id.layout_feedback),
@@ -746,7 +775,7 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1), isDisplayed()));
         editBoxFeedback.perform(replaceText("good"), closeSoftKeyboard());
 
-        addDelay(300);
+        addDelay(500);
 
         baseButton4.perform(click());
 
@@ -785,7 +814,7 @@ public class TelemeshTest {
             e.printStackTrace();
         }*/
 
-        ViewInteraction discoverTab = onView(
+        discoverTab = onView(
                 allOf(withId(R.id.action_discover),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
         discoverTab.perform(click());
@@ -836,7 +865,7 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntity);*/
 
-        addDelay(2000);
+        addDelay(3000);
 
         currentActivity = getActivityInstance();
 
@@ -856,50 +885,60 @@ public class TelemeshTest {
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
         userItemAction.perform(click());*/
 
-        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        try {
+            onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        addDelay(1000);
+            addDelay(1000);
 
 //        ViewInteraction messageEditBox = onView(
 //                allOf(withId(R.id.edit_text_message),
 //                        childAtPosition(allOf(withId(R.id.chat_message_bar),
 //                                childAtPosition(withId(R.id.chat_layout), 5)), 0), isDisplayed()));
-        ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
-        messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
+            ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
+            messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
 
-        addDelay(700);
+            addDelay(700);
 
-        userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
+            userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
 
-        userDataSource.insertOrUpdateData(userEntity);
+            userDataSource.insertOrUpdateData(userEntity);
 
-        addDelay(1000);
+            addDelay(1000);
 
 //        ViewInteraction messageSendAction = onView(
 //                allOf(withId(R.id.image_view_send),
 //                        childAtPosition(allOf(withId(R.id.chat_message_bar),
 //                                childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
-        ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
-        messageSendAction.perform(click());
+            ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
+            messageSendAction.perform(click());
 
-        addDelay(1000);
+            addDelay(1000);
 
-        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
-        messageSourceData.insertOrUpdateData(chatEntity);
+            ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+            messageSourceData.insertOrUpdateData(chatEntity);
 
-        addDelay(1000);
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        ViewInteraction viewProfileAction = onView(
-                allOf(withId(R.id.text_view_last_name),
-                        childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
-                                childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
-        viewProfileAction.perform(click());
+        try {
 
-        addDelay(1000);
 
-        mDevice.pressBack();
+            ViewInteraction viewProfileAction = onView(
+                    allOf(withId(R.id.text_view_last_name),
+                            childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
+                                    childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+            viewProfileAction.perform(click());
 
-        addDelay(1000);
+            addDelay(1000);
+
+            mDevice.pressBack();
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
        /* mDevice.pressBack();
 
@@ -941,10 +980,18 @@ public class TelemeshTest {
 //        ViewInteraction favoriteTab = onView(
 //                allOf(withId(R.id.action_contact),
 //                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
-        ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
-        favoriteTab.perform(click());
 
         addDelay(1000);
+        try {
+
+
+            ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
+            favoriteTab.perform(click());
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction discoverTab = onView(
                 allOf(withId(R.id.action_discover),

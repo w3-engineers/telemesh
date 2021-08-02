@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
 import android.content.Context;
@@ -70,3 +71,4 @@ public class SplashViewModelTest {
         }
     }
 }
+*/

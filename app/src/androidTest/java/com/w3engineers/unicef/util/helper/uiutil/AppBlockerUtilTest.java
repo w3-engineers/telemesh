@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.util.helper.uiutil;
 
 import androidx.test.annotation.UiThreadTest;
@@ -67,4 +68,4 @@ public class AppBlockerUtilTest {
         }
         return jsonObject.toString();
     }
-}
+}*/

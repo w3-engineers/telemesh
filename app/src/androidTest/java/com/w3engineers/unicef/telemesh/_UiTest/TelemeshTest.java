@@ -492,8 +492,7 @@ public class TelemeshTest {
 
         currentActivity = getActivityInstance();
 
-        if (currentActivity instanceof ProfileImageActivity
-        ) {
+        if (currentActivity instanceof ProfileImageActivity) {
 
             addDelay(3000);
 
@@ -503,10 +502,8 @@ public class TelemeshTest {
 
                 addDelay(2000);
 
-                updateButtonClick();
-            } else {
-                updateButtonClick();
             }
+            updateButtonClick();
         } else {
             updateButtonClick();
         }
@@ -536,14 +533,21 @@ public class TelemeshTest {
         mDevice.pressBack();
 
         addDelay(500);
+
+
+        currentActivity = getActivityInstance();
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+            mainActivity.finish();
+        }
     }
 
 
-    public void uiTest_003(UserEntity userEntity) {
+   /* public void uiTest_003(UserEntity userEntity) {
 
         // addDelay(5000);
 
-       /* UserEntity userEntity = new UserEntity()
+       *//* UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
@@ -552,7 +556,7 @@ public class TelemeshTest {
                 .setRegistrationTime(System.currentTimeMillis());
         //userEntity.setId(0);
 
-        userDataSource.insertOrUpdateData(userEntity);*/
+        userDataSource.insertOrUpdateData(userEntity);*//*
 
         addDelay(3000);
 
@@ -569,10 +573,10 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-      /*  ViewInteraction userItemAction = onView(
+      *//*  ViewInteraction userItemAction = onView(
                 allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
                         childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
-        userItemAction.perform(click());*/
+        userItemAction.perform(click());*//*
 
         try {
             onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -629,14 +633,14 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-       /* mDevice.pressBack();
+       *//* mDevice.pressBack();
 
         addDelay(2000);
 
         // userItemAction.perform(click());
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        addDelay(2000);*/
+        addDelay(2000);*//*
 
         Activity currentActivity = getActivityInstance();
 
@@ -689,7 +693,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        /*currentActivity = getActivityInstance();
+        *//*currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
@@ -700,9 +704,9 @@ public class TelemeshTest {
             });
 
             addDelay(3000);
-        }*/
+        }*//*
 
-        /*mDevice.pressBack();
+        *//*mDevice.pressBack();
 
         addDelay(2500);
 
@@ -714,8 +718,8 @@ public class TelemeshTest {
             mDevice.pressBack();
         } catch (NoActivityResumedException e) {
             e.printStackTrace();
-        }*/
-    }
+        }*//*
+    }*/
 
 /*    @Test
     public void uiTest_04() {

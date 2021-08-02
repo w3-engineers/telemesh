@@ -209,37 +209,6 @@ public class VRmDataHelperTest {
     }
 
     @Test
-    public void configInfoTransferTest() {
-        addDelay(500);
-/*        ConfigurationCommand configModel = randomEntityGenerator.generateConfigFile();
-
-        String configData = new Gson().toJson(configModel);
-
-        DataModel configDataModel = randomEntityGenerator.generateDataModel(configData, Constants.DataType.CONFIG_UPDATE_INFO, meshId);
-
-        RmDataHelper.getInstance().dataReceive(configDataModel, true);
-
-        addDelay(700);
-
-        TokenGuideRequestModel tokenRequestModel = randomEntityGenerator.generateTokenModel();
-        String tokenData = new Gson().toJson(tokenRequestModel);
-        DataModel tokenDataModel = randomEntityGenerator.generateDataModel(tokenData, Constants.DataType.TOKEN_GUIDE_REQUEST, meshId);
-
-        RmDataHelper.getInstance().dataReceive(tokenDataModel, true);
-        addDelay(700);
-
-        DataModel pointConfigDataModel = randomEntityGenerator.generateDataModel(configData, Constants.DataType.TOKEN_GUIDE_INFO, meshId);
-
-        RmDataHelper.getInstance().dataReceive(pointConfigDataModel, true);
-
-        addDelay(700);
-
-        int currentVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
-
-        assertEquals(currentVersion, (int) configModel.getConfigVersionCode());*/
-    }
-
-    @Test
     public void localMessageCountTest() {
         addDelay(500);
         MessageCount messageCount = new MessageCount()

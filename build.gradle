@@ -73,9 +73,7 @@ subprojects {
         }
     }
 }
-tasks.withType( JavaCompile ).configureEach {
-    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
-}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

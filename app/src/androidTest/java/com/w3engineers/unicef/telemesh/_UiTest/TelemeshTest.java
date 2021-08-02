@@ -1003,7 +1003,7 @@ public class TelemeshTest {
                             childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
             contactSearchClick.perform(click());
 
-            addDelay(500);
+            addDelay(1000);
 
             ViewInteraction contactSearchTextAdd = onView(
                     allOf(withId(R.id.edit_text_search),

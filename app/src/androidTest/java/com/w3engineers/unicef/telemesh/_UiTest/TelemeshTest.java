@@ -589,11 +589,14 @@ public class TelemeshTest {
 
         // click feed item.
 
-        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        try {
+            onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            addDelay(1500);
+            mDevice.pressBack();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        addDelay(1500);
-
-        mDevice.pressBack();
 
         addDelay(1000);
 

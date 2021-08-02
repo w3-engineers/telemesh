@@ -23,6 +23,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -95,6 +96,15 @@ public class LocationTracker extends Service {
 
     @SuppressLint("MissingPermission")
     public Location getLocation() {
+
+        if (CommonUtil.isEmulator()){
+            Location fakeLocation = new Location("");
+
+            fakeLocation.setLatitude(0.0d);//your coords of course
+            fakeLocation.setLongitude(0.0d);
+            return fakeLocation;
+        }
+
         try {
 
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -213,6 +223,13 @@ public class LocationTracker extends Service {
 
     @SuppressLint("MissingPermission")
     private Location getLastKnownLocation() {
+        if (CommonUtil.isEmulator()){
+            Location fakeLocation = new Location("");
+
+            fakeLocation.setLatitude(0.0d);//your coords of course
+            fakeLocation.setLongitude(0.0d);
+            return fakeLocation;
+        }
         locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
@@ -274,6 +291,9 @@ public class LocationTracker extends Service {
      * Function to get latitude
      */
     public double getLatitude() {
+        if (CommonUtil.isEmulator()){
+            return 0.0d;
+        }
         if (location != null) {
             latitude = location.getLatitude();
         }
@@ -287,6 +307,9 @@ public class LocationTracker extends Service {
      * Function to get longitude
      */
     public double getLongitude() {
+        if (CommonUtil.isEmulator()){
+            return 0.0d;
+        }
         if (location != null) {
             longitude = location.getLongitude();
         }
@@ -301,6 +324,9 @@ public class LocationTracker extends Service {
      * @return boolean
      */
     public boolean canGetLocation() {
+        if (CommonUtil.isEmulator()){
+            return false;
+        }
         return this.canGetLocation;
     }
 

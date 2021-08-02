@@ -371,12 +371,14 @@ public class TelemeshTest {
             addDelay(1000);
         }*/
 
-        uiTest_02();
+//        uiTest_02();
+        mDevice.pressBack();
 
     }
 
-    //    @Test
+    @Test
     public void uiTest_02() {
+        addDelay(3800);
 
         /*addDelay(3800);
 
@@ -772,9 +774,9 @@ public class TelemeshTest {
 
         addDelay(2500);
 
-//        mDevice.pressBack();
-//
-//        addDelay(700);
+        mDevice.pressBack();
+
+        addDelay(700);
 
         try {
             mDevice.pressBack();
@@ -783,6 +785,7 @@ public class TelemeshTest {
         }
 
     }
+
 
     public void uiTest_003(UserEntity userEntity) {
 
@@ -1053,23 +1056,24 @@ public class TelemeshTest {
                             childAtPosition(childAtPosition(withId(R.id.search_bar), 0), 2), isDisplayed()));
             favSearchClose.perform(click());
 
+            addDelay(1000);
+
+            ViewInteraction favContactClick = onView(
+                    allOf(withId(R.id.user_container),
+                            childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+
+
+            favContactClick.perform(click());
+
+            addDelay(2000);
+
+            mDevice.pressBack();
+
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
         }
 
-        addDelay(1000);
 
-        ViewInteraction favContactClick = onView(
-                allOf(withId(R.id.user_container),
-                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
-
-//        ViewInteraction favContactClick = onView(
-//                withId(R.id.user_container));
-        favContactClick.perform(click());
-
-        addDelay(2000);
-
-        mDevice.pressBack();
     }
 
     private void addDelay(int i) {
@@ -1151,7 +1155,7 @@ public class TelemeshTest {
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel")
-                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
         //userEntity.setId(0);
 

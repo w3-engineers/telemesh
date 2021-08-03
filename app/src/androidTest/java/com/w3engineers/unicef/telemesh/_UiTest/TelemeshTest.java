@@ -458,6 +458,7 @@ public class TelemeshTest {
 
     // For broadcast feed
 
+/*
     @Test
     public void uiTest_03() {
         addDelay(3800);
@@ -519,6 +520,7 @@ public class TelemeshTest {
         }
 
     }
+*/
 
    /* public void uiTest_003(UserEntity userEntity) {
 

@@ -131,45 +131,6 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        /*ViewInteraction buttonImportAccount = onView(
-                allOf(withId(R.id.button_import_account),
-                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
-        buttonImportAccount.perform(click());
-
-        addDelay(500);
-
-        ViewInteraction importAnotherId = onView(
-                allOf(withId(R.id.button_import_profile),
-                        childAtPosition(allOf(withId(R.id.activity_import_profile_scroll_parent),
-                                childAtPosition(withId(R.id.activity_import_profile_scroll), 0)), 5)));
-        importAnotherId.perform(scrollTo(), click());
-
-        addDelay(3000);
-
-        mDevice.pressBack();
-
-        addDelay(1000);
-
-        ViewInteraction activityImportProfileBack = onView(
-                allOf(withId(R.id.image_view_back),
-                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 0), isDisplayed()));
-        activityImportProfileBack.perform(click());
-
-        addDelay(500);
-
-        ViewInteraction buttonCreateAccount = onView(
-                allOf(withId(R.id.button_create_account),
-                        childAtPosition(allOf(withId(R.id.activity_profile_choice_parent),
-                                childAtPosition(withId(android.R.id.content), 0)), 2),
-                        isDisplayed()));
-
-        ViewInteraction buttonCreateAccount = onView(
-                allOf(withId(R.id.button_create_account),
-                        childAtPosition(
-                                childAtPosition(withId(R.id.activity_profile_choice_parent), 0), 2), isDisplayed()));
-        buttonCreateAccount.perform(click());
-
-        addDelay(500);*/
 
 
         //        ViewInteraction buttonImageChooserFirst = onView(
@@ -296,69 +257,6 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-
-        /*ViewInteraction boxPassword = onView(
-                allOf(withId(R.id.edit_text_box_password),
-                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
-                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 1)));
-
-        addDelay(1000);
-
-        ViewInteraction securityButtonNext = onView(
-                allOf(withId(R.id.button_next),
-                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
-                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 4)));
-
-        boxPassword.perform(scrollTo(), replaceText("meshtest"), closeSoftKeyboard());
-        boxPassword.perform(pressImeActionButton());
-
-        addDelay(1500);
-
-        boxPassword.perform(scrollTo(), replaceText("12345678"), closeSoftKeyboard());
-        securityButtonNext.perform(click());
-
-        addDelay(1500);
-
-        boxPassword.perform(scrollTo(), replaceText("mesh1234"), closeSoftKeyboard());
-        securityButtonNext.perform(click());
-
-        addDelay(1500);
-
-
-        boxPassword.perform(scrollTo(), replaceText("mesh_123"), closeSoftKeyboard());
-
-        addDelay(1000);
-
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.text_view_show_password),
-                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
-                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 2)));
-        appCompatTextView.perform(scrollTo(), click());
-
-        addDelay(300);
-
-        ViewInteraction showPassword = onView(
-                allOf(withId(R.id.text_view_show_password),
-                        childAtPosition(
-                                allOf(withId(R.id.activity_security_scroll_parent),
-                                        childAtPosition(
-                                                withId(R.id.activity_security_scroll),
-                                                0)),
-                                2)));
-        showPassword.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction securityButtonSkip = onView(
-                allOf(withId(R.id.button_skip),
-                        childAtPosition(allOf(withId(R.id.activity_security_scroll_parent),
-                                childAtPosition(withId(R.id.activity_security_scroll), 0)), 5)));
-
-        securityButtonSkip.perform(scrollTo(), click());
-
-        addDelay(5000);
-
-        Activity currentActivity = getActivityInstance();*/
 
         /*if (currentActivity instanceof SecurityActivity) {
 
@@ -557,6 +455,73 @@ public class TelemeshTest {
         }
     }
 
+    // For broadcast feed
+
+    @Test
+    public void uiTest_03() {
+        addDelay(3800);
+
+        SharedPref.write(Constants.preferenceKey.USER_NAME, "Mimo");
+        SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
+        SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+
+        long version = (BuildConfig.VERSION_CODE + 5);
+        SharedPref.write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(() -> ((MainActivity) currentActivity).stopAnimation());
+        }
+
+        addDelay(1000);
+
+
+
+        addDelay(500);
+
+        ViewInteraction broadcastMessageTab = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
+        broadcastMessageTab.perform(click());
+
+        addDelay(500);
+
+        addFeedItem();
+
+        addDelay(1500);
+
+        // click feed item.
+
+        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        addDelay(1500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        Activity activity = getActivityInstance();
+
+        if (activity instanceof MainActivity) {
+
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.feedRefresh();
+
+            addDelay(1000);
+
+            try {
+                mDevice.pressBack();
+                addDelay(700);
+                mDevice.pressBack();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
 
    /* public void uiTest_003(UserEntity userEntity) {
 

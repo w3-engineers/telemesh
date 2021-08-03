@@ -446,13 +446,61 @@ public class TelemeshTest {
 
         addDelay(500);
 
+        uiTest_03();
 
-        currentActivity = getActivityInstance();
+
+        /*currentActivity = getActivityInstance();
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
             mainActivity.finish();
 
             addDelay(1000);
+        }*/
+    }
+
+    public void uiTest_03() {
+
+        addDelay(1000);
+
+
+        ViewInteraction broadcastMessageTab = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
+        broadcastMessageTab.perform(click());
+
+        addDelay(1500);
+
+        addFeedItem();
+
+        addDelay(1500);
+
+        // click feed item.
+
+        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        addDelay(1500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        Activity activity = getActivityInstance();
+
+        if (activity instanceof MainActivity) {
+
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.feedRefresh();
+
+            addDelay(1000);
+
+            try {
+                mDevice.pressBack();
+                addDelay(700);
+                mDevice.pressBack();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

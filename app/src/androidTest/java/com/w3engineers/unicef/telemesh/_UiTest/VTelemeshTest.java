@@ -94,8 +94,8 @@ public class VTelemeshTest {
         SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 1);
         SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
 
-        long version = (BuildConfig.VERSION_CODE + 5);
-        SharedPref.write(Constants.preferenceKey.UPDATE_APP_VERSION, version);
+       /* long version = (BuildConfig.VERSION_CODE + 5);
+        SharedPref.write(Constants.preferenceKey.UPDATE_APP_VERSION, version);*/
 
         currentActivity = getActivityInstance();
 

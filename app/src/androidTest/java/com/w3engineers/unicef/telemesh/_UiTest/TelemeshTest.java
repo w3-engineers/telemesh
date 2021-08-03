@@ -132,7 +132,6 @@ public class TelemeshTest {
         addDelay(1000);
 
 
-
         //        ViewInteraction buttonImageChooserFirst = onView(
 //                allOf(withId(R.id.image_profile),
 //                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
@@ -452,6 +451,8 @@ public class TelemeshTest {
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
             mainActivity.finish();
+
+            addDelay(1000);
         }
     }
 
@@ -474,11 +475,8 @@ public class TelemeshTest {
             new Handler(Looper.getMainLooper()).post(() -> ((MainActivity) currentActivity).stopAnimation());
         }
 
-        addDelay(1000);
+        addDelay(6000);
 
-
-
-        addDelay(500);
 
         ViewInteraction broadcastMessageTab = onView(
                 allOf(withId(R.id.action_message_feed),
@@ -514,12 +512,11 @@ public class TelemeshTest {
                 mDevice.pressBack();
                 addDelay(700);
                 mDevice.pressBack();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-
 
     }
 
@@ -686,7 +683,7 @@ public class TelemeshTest {
             addDelay(3000);
         }*//*
 
-        *//*mDevice.pressBack();
+     *//*mDevice.pressBack();
 
         addDelay(2500);
 

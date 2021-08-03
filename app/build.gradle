@@ -4,6 +4,9 @@ plugins {
     id 'com.google.gms.google-services'
 //    id 'io.fabric'
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion 30
     buildToolsVersion '30.0.2'
@@ -215,6 +218,13 @@ dependencies {
 //    implementation deps.viper
   //implementation project(path: ':viper')
     implementation 'com.github.w3-engineers:Viper-V2:v2.2.3'
+
+    def dagger_version = "2.32"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 coveralls {
@@ -229,8 +239,8 @@ tasks.coveralls {
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
-tasks.withType( JavaCompile ).configureEach {
-    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+repositories {
+    mavenCentral()
 }
 
 

@@ -12,9 +12,8 @@ import dagger.Provides;
 @Module
 public class StorageModule {
 
-
     @Provides
-    public AppDatabase provideAppDatabase(){
-        return AppDatabase.createDbWithMigration();
+    public AppDatabase provideAppDatabase() {
+        return AppDatabase.getInstance();
     }
 }

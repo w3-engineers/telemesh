@@ -588,9 +588,9 @@ public class TelemeshTest {
         ViewInteraction appCompatButton = onView(allOf(withId(R.id.button_done), withText("Done"), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 7), isDisplayed()));
         appCompatButton.perform(click());
 
-        addDelay(2000);
+        addDelay(4000);
 
-        ViewInteraction appCompatImageView2 = onView(allOf(withId(R.id.image_view_remove), withContentDescription("Remove group member"), childAtPosition(childAtPosition(withId(R.id.recycler_view_group_member), 2), 2), isDisplayed()));
+        ViewInteraction appCompatImageView2 = onView(allOf(withId(R.id.image_view_remove), withContentDescription("Remove group member"), childAtPosition(childAtPosition(withId(R.id.recycler_view_group_member), 2), 2)));
         appCompatImageView2.perform(click());
 
         addDelay(2000);
@@ -612,7 +612,7 @@ public class TelemeshTest {
 
         mDevice.pressBack();
 
-        addDelay(2000);
+        addDelay(3000);
 
         ViewInteraction appCompatEditText = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
         appCompatEditText.perform(click());
@@ -677,12 +677,12 @@ public class TelemeshTest {
     //    @Test
     public void uiTest_07() {
 
-        addDelay(3000);
+        addDelay(4000);
 
         ViewInteraction floatingActionButton = onView(allOf(withId(R.id.fab_chat), childAtPosition(allOf(withId(R.id.mesh_contact_layout), childAtPosition(withId(R.id.fragment_container), 0)), 2), isDisplayed()));
         floatingActionButton.perform(click());
 
-        addDelay(2000);
+        addDelay(3000);
 
         ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));

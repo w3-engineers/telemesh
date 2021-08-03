@@ -132,7 +132,6 @@ public class TelemeshTest {
         addDelay(1000);
 
 
-
         //        ViewInteraction buttonImageChooserFirst = onView(
 //                allOf(withId(R.id.image_profile),
 //                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
@@ -447,15 +446,63 @@ public class TelemeshTest {
 
         addDelay(500);
 
+        uiTest_03();
 
-        currentActivity = getActivityInstance();
+
+        /*currentActivity = getActivityInstance();
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
             mainActivity.finish();
-        }
+
+            addDelay(1000);
+        }*/
     }
 
-    // For broadcast feed
+    public void uiTest_03() {
+
+        addDelay(1000);
+
+
+        ViewInteraction broadcastMessageTab = onView(
+                allOf(withId(R.id.action_message_feed),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 2), isDisplayed()));
+        broadcastMessageTab.perform(click());
+
+        addDelay(1500);
+
+        addFeedItem();
+
+        addDelay(1500);
+
+        // click feed item.
+
+        onView(withId(R.id.message_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        addDelay(1500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        Activity activity = getActivityInstance();
+
+        if (activity instanceof MainActivity) {
+
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.feedRefresh();
+
+            addDelay(1000);
+
+            try {
+                mDevice.pressBack();
+                addDelay(700);
+                mDevice.pressBack();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 
 
    /* public void uiTest_003(UserEntity userEntity) {
@@ -621,7 +668,7 @@ public class TelemeshTest {
             addDelay(3000);
         }*//*
 
-        *//*mDevice.pressBack();
+     *//*mDevice.pressBack();
 
         addDelay(2500);
 

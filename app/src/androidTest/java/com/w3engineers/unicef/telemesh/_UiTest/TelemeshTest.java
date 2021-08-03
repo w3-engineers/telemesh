@@ -591,12 +591,12 @@ public class TelemeshTest {
         addDelay(4000);
 
         ViewInteraction appCompatImageView2 = onView(allOf(withId(R.id.image_view_remove), withContentDescription("Remove group member"), childAtPosition(childAtPosition(withId(R.id.recycler_view_group_member), 2), 2)));
-        appCompatImageView2.perform(scrollTo(), click());
+        appCompatImageView2.perform(click());
 
         addDelay(2000);
 
         ViewInteraction appCompatTextView3 = onView(allOf(withId(R.id.text_view_add_member), withText("Add member"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 13)));
-        appCompatTextView3.perform(scrollTo(), click());
+        appCompatTextView3.perform(click());
 
         addDelay(2000);
 
@@ -705,7 +705,7 @@ public class TelemeshTest {
         addDelay(2000);
 
         ViewInteraction appCompatTextView2 = onView(allOf(withId(R.id.text_view_leave_group), withText("Leave group"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 16), isDisplayed()));
-        appCompatTextView2.perform(scrollTo(), click());
+        appCompatTextView2.perform(click());
 
         addDelay(3000);
         ViewInteraction discoverTab = onView(allOf(withId(R.id.action_discover), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));

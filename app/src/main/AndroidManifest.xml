@@ -72,7 +72,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.splashscreen.SplashActivity"
+            android:name=".ui.splashscreen.SplashActivityK"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

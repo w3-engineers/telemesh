@@ -18,7 +18,7 @@
         tools:context=".ui.splashscreen.SplashActivity">
 
         <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_container"
+            android:id="@+id/shimmerFrameLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,7 +1,6 @@
 language: android
 sudo: required
 jdk: oraclejdk8
-install: travis_wait 20 ./gradlew assembleDebug coveralls
 android:
   components:
     - tools

@@ -106,7 +106,17 @@ android {
         }
     }
 
-    testOptions { animationsDisabled = true }
+    testOptions {
+        animationsDisabled = true
+        unitTests.all {
+            // All the usual Gradle options.
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+        }
+    }
 
 }
 

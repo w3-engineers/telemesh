@@ -1,6 +1,7 @@
 language: android
 sudo: required
 jdk: oraclejdk8
+install: travis_wait 30 mvn install
 android:
   components:
     - tools

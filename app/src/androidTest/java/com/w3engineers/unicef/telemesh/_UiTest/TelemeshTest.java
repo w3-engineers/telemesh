@@ -1,44 +1,33 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 
-import static android.app.Activity.RESULT_OK;
-
 import android.app.Activity;
 
 import androidx.room.Room;
 
-import android.app.Instrumentation;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.InstrumentationRegistry;
-import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.filters.LargeTest;
-import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
-import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -72,7 +61,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -286,7 +274,7 @@ public class TelemeshTest {
     // Settings page test
     @Test
     public void uiTest_02() {
-        addDelay(5000);
+        addDelay(3800);
 
 
         if (currentActivity instanceof MainActivity) {
@@ -447,11 +435,160 @@ public class TelemeshTest {
             addDelay(3000);
         }
 
+        UserEntity userEntity = addSampleUser();
+        uiTest_03(userEntity);
+
         assertTrue(true);
 
         StatusHelper.out("Test executed");
 
     }
+
+    public void uiTest_03(UserEntity userEntity) {
+
+        // addDelay(5000);
+
+       /* UserEntity userEntity = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
+                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setUserName("Daniel")
+                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());*/
+        //userEntity.setId(0);
+
+        userDataSource.insertOrUpdateData(userEntity);
+
+        addDelay(3000);
+
+        currentActivity = getActivityInstance();
+
+
+        addDelay(1000);
+
+        ViewInteraction userItemAction = onView(
+                allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
+                        childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
+        userItemAction.perform(click());
+
+        try {
+            onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+            addDelay(1000);
+
+            ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
+            messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
+
+            addDelay(700);
+
+            userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
+
+            userDataSource.insertOrUpdateData(userEntity);
+
+            addDelay(1000);
+
+            ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
+            messageSendAction.perform(click());
+
+            addDelay(1000);
+
+            ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+            messageSourceData.insertOrUpdateData(chatEntity);
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            ViewInteraction viewProfileAction = onView(
+                    allOf(withId(R.id.text_view_last_name),
+                            childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
+                                    childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+            viewProfileAction.perform(click());
+
+            addDelay(1000);
+
+            mDevice.pressBack();
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mDevice.pressBack();
+
+        addDelay(2000);
+
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        addDelay(2000);
+
+        Activity currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof ChatActivity) {
+            ChatActivity chatActivity = (ChatActivity) currentActivity;
+            chatActivity.chatFinishAndStartApp();
+        }
+
+        addDelay(4000);
+
+        try {
+
+            ViewInteraction contactSearch = onView(
+                    allOf(withId(R.id.action_search),
+                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
+            contactSearch.perform(click());
+
+            addDelay(1000);
+
+            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
+
+        } catch (NoMatchingViewException | PerformException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(2500);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+        try {
+
+
+            ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
+            favoriteTab.perform(click());
+
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        addDelay(1000);
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+                mainActivity.popupSnackbarForCompleteUpdate();
+            });
+
+            addDelay(3000);
+        }
+
+        assertTrue(true);
+        StatusHelper.out("Test executed");
+    }
+
 
     @Test
     public void uiTest_04() {
@@ -630,7 +767,7 @@ public class TelemeshTest {
 
         addDelay(500);
 
-        uiTest_03();
+        broadcastFeedTest();
 
 
         /*currentActivity = getActivityInstance();
@@ -642,7 +779,7 @@ public class TelemeshTest {
         }*/
     }
 
-    public void uiTest_03() {
+    public void broadcastFeedTest() {
 
         addDelay(1000);
 
@@ -688,185 +825,6 @@ public class TelemeshTest {
         }
     }
 
-
-
-   /* public void uiTest_003(UserEntity userEntity) {
-
-        // addDelay(5000);
-
-       *//* UserEntity userEntity = new UserEntity()
-                .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
-                .setUserName("Daniel")
-                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
-                .setRegistrationTime(System.currentTimeMillis());
-        //userEntity.setId(0);
-
-        userDataSource.insertOrUpdateData(userEntity);*//*
-
-        addDelay(3000);
-
-        currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof MainActivity) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    ((MainActivity) currentActivity).stopAnimation();
-                }
-            });
-        }
-
-        addDelay(1000);
-
-      *//*  ViewInteraction userItemAction = onView(
-                allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
-                        childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
-        userItemAction.perform(click());*//*
-
-        try {
-            onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-            addDelay(1000);
-
-//        ViewInteraction messageEditBox = onView(
-//                allOf(withId(R.id.edit_text_message),
-//                        childAtPosition(allOf(withId(R.id.chat_message_bar),
-//                                childAtPosition(withId(R.id.chat_layout), 5)), 0), isDisplayed()));
-            ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
-            messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
-
-            addDelay(700);
-
-            userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
-
-            userDataSource.insertOrUpdateData(userEntity);
-
-            addDelay(1000);
-
-//        ViewInteraction messageSendAction = onView(
-//                allOf(withId(R.id.image_view_send),
-//                        childAtPosition(allOf(withId(R.id.chat_message_bar),
-//                                childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
-            ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
-            messageSendAction.perform(click());
-
-            addDelay(1000);
-
-            ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
-            messageSourceData.insertOrUpdateData(chatEntity);
-
-            addDelay(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-
-            ViewInteraction viewProfileAction = onView(
-                    allOf(withId(R.id.text_view_last_name),
-                            childAtPosition(allOf(withId(R.id.chat_toolbar_layout),
-                                    childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
-            viewProfileAction.perform(click());
-
-            addDelay(1000);
-
-            mDevice.pressBack();
-
-            addDelay(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-       *//* mDevice.pressBack();
-
-        addDelay(2000);
-
-        // userItemAction.perform(click());
-        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        addDelay(2000);*//*
-
-        Activity currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof ChatActivity) {
-            ChatActivity chatActivity = (ChatActivity) currentActivity;
-            chatActivity.chatFinishAndStartApp();
-        }
-
-        addDelay(4000);
-
-        try {
-
-            ViewInteraction contactSearch = onView(
-                    allOf(withId(R.id.action_search),
-                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-            contactSearch.perform(click());
-
-            addDelay(1000);
-
-            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
-
-        } catch (NoMatchingViewException | PerformException e) {
-            e.printStackTrace();
-        }
-
-        addDelay(2500);
-
-        mDevice.pressBack();
-
-//        ViewInteraction favoriteTab = onView(
-//                allOf(withId(R.id.action_contact),
-//                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 1), isDisplayed()));
-
-        addDelay(1000);
-        try {
-
-
-            ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
-            favoriteTab.perform(click());
-
-            addDelay(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction discoverTab = onView(
-                allOf(withId(R.id.action_discover),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
-        discoverTab.perform(click());
-
-        addDelay(1000);
-
-        *//*currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) currentActivity;
-
-            new Handler(Looper.getMainLooper()).post(() -> {
-                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-                mainActivity.popupSnackbarForCompleteUpdate();
-            });
-
-            addDelay(3000);
-        }*//*
-
-     *//*mDevice.pressBack();
-
-        addDelay(2500);
-
-        mDevice.pressBack();
-
-        addDelay(700);
-
-        try {
-            mDevice.pressBack();
-        } catch (NoActivityResumedException e) {
-            e.printStackTrace();
-        }*//*
-    }*/
 
 /*    @Test
     public void uiTest_04() {

@@ -429,7 +429,7 @@ public class TelemeshTest {
 
             new Handler(Looper.getMainLooper()).post(() -> {
                 mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-                mainActivity.popupSnackbarForCompleteUpdate();
+                //mainActivity.popupSnackbarForCompleteUpdate();
             });
 
             addDelay(3000);
@@ -453,39 +453,31 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction userItemAction = onView(
-                allOf(childAtPosition(allOf(withId(R.id.contact_recycler_view),
-                        childAtPosition(withId(R.id.mesh_contact_layout), 0)), 0), isDisplayed()));
-        userItemAction.perform(click());
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        try {
-            onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        addDelay(1000);
 
-            addDelay(1000);
+        ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
+        messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
 
-            ViewInteraction messageEditBox = onView(withId(R.id.edit_text_message));
-            messageEditBox.perform(replaceText("Hi"), closeSoftKeyboard());
+        addDelay(1000);
 
-            addDelay(700);
+        userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
 
-            userEntity.setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);
+        userDataSource.insertOrUpdateData(userEntity);
 
-            userDataSource.insertOrUpdateData(userEntity);
+        addDelay(1000);
 
-            addDelay(1000);
+        ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
+        messageSendAction.perform(click());
 
-            ViewInteraction messageSendAction = onView(withId(R.id.image_view_send));
-            messageSendAction.perform(click());
+        addDelay(1000);
 
-            addDelay(1000);
+        ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
+        messageSourceData.insertOrUpdateData(chatEntity);
 
-            ChatEntity chatEntity = randomEntityGenerator.createChatEntity(userEntity.getMeshId());
-            messageSourceData.insertOrUpdateData(chatEntity);
+        addDelay(1000);
 
-            addDelay(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
 
@@ -508,18 +500,18 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        /*onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
 
-       /* Activity currentActivity = getActivityInstance();
+        Activity currentActivity = getActivityInstance();
 
         if (currentActivity instanceof ChatActivity) {
             ChatActivity chatActivity = (ChatActivity) currentActivity;
             chatActivity.chatFinishAndStartApp();
         }
 
-        addDelay(5000);*/
+        addDelay(5000);
 
         try {
 
@@ -560,20 +552,7 @@ public class TelemeshTest {
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
         discoverTab.perform(click());
 
-        addDelay(1000);
-
-        currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) currentActivity;
-
-            new Handler(Looper.getMainLooper()).post(() -> {
-                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-                mainActivity.popupSnackbarForCompleteUpdate();
-            });
-
-            addDelay(3000);
-        }
+        addDelay(1000);*/
 
     }
 

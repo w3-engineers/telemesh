@@ -277,14 +277,6 @@ public class TelemeshTest {
 
         //uiTest_02();
 
-        Bundle bundle = new Bundle();
-        bundle.putString(Instrumentation.REPORT_KEY_IDENTIFIER, "The result on the way");
-        Intent intent = new Intent();
-        intent.setData(Uri.EMPTY);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(RESULT_OK, intent);
-        Instrumentation.ActivityMonitor monitor = new Instrumentation.ActivityMonitor("test", result, false);
-        InstrumentationRegistry.getInstrumentation().addMonitor(monitor);
-
         StatusHelper.out("Test uiTest_01 executed");
 
         assertTrue(true);
@@ -515,13 +507,13 @@ public class TelemeshTest {
 
             addDelay(1000);
 
-            try {
+           /* try {
                 mDevice.pressBack();
                 addDelay(700);
                 mDevice.pressBack();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
         }
     }

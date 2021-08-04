@@ -281,8 +281,8 @@ public class TelemeshTest {
         bundle.putString(Instrumentation.REPORT_KEY_IDENTIFIER, "The result on the way");
         Intent intent = new Intent();
         intent.setData(Uri.EMPTY);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(RESULT_OK,intent);
-        Instrumentation.ActivityMonitor monitor = new Instrumentation.ActivityMonitor("test",result,false);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(RESULT_OK, intent);
+        Instrumentation.ActivityMonitor monitor = new Instrumentation.ActivityMonitor("test", result, false);
         InstrumentationRegistry.getInstrumentation().addMonitor(monitor);
 
         StatusHelper.out("Test uiTest_01 executed");
@@ -511,7 +511,7 @@ public class TelemeshTest {
         if (activity instanceof MainActivity) {
 
             MainActivity mainActivity = (MainActivity) activity;
-            mainActivity.feedRefresh();
+            //mainActivity.feedRefresh();
 
             addDelay(1000);
 
@@ -524,6 +524,56 @@ public class TelemeshTest {
             }
 
         }
+    }
+
+    // Settings page test
+    @Test
+    public void uiTest_04() {
+        addDelay(5000);
+
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
+
+        ViewInteraction settingsTab = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
+        settingsTab.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction profileRow = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        profileRow.perform(scrollTo(), click());
+
+        addDelay(1000);
+
+        ViewInteraction copyUserId = onView(
+                allOf(withId(R.id.image_view_id_copy),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
+        copyUserId.perform(click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
+
     }
 
 

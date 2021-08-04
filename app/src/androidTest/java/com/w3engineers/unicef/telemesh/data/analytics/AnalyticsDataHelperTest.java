@@ -18,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import org.junit.After;
@@ -110,6 +111,8 @@ public class AnalyticsDataHelperTest {
         addDelay(3000);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
 
@@ -128,6 +131,8 @@ public class AnalyticsDataHelperTest {
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -162,6 +167,8 @@ public class AnalyticsDataHelperTest {
         AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "Test user", Constants.getDeviceName());
         addDelay(10 * 1000);
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {

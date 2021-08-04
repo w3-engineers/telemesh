@@ -12,6 +12,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 @RunWith(AndroidJUnit4.class)
 public class FeedbackEntityTest {
@@ -38,6 +39,8 @@ public class FeedbackEntityTest {
         FeedbackModel convertedModel = feedbackEntity.toFeedbackModel();
 
         assertEquals(convertedModel.getUserId(), model.getUserId());
+
+        StatusHelper.out("Test executed");
     }
 
     private FeedbackModel getFeedbackModel() {

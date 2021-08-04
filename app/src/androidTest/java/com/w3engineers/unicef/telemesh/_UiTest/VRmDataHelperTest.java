@@ -31,6 +31,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,6 +107,8 @@ public class VRmDataHelperTest {
         command.setClientId(UUID.randomUUID().toString());
         command.setStatus(1);
         assertTrue(!command.getAckMsgId().equals(command.getClientId()));
+
+        StatusHelper.out("Test ackCommandTest executed");
     }
 
     @Test
@@ -124,6 +127,8 @@ public class VRmDataHelperTest {
                 .setMessageId(UUID.randomUUID().toString());
 
         assertEquals(bulletinFeed.getMessageBody(), msgBody);
+
+        StatusHelper.out("Test bulletinFeedTest executed");
     }
 
     @Test
@@ -146,6 +151,8 @@ public class VRmDataHelperTest {
 
         long result = feedDataSource.updateFeedMessageReadStatus(bulletinModel.getId());
         assertTrue(result >= 0);
+
+        StatusHelper.out("Test bulletinFeedReceiveTest executed");
     }
 
     @Test
@@ -188,6 +195,8 @@ public class VRmDataHelperTest {
         addDelay(500);
 
         assertTrue(true);
+
+        StatusHelper.out("Test localAppShareCountTest executed");
     }
 
     @Test
@@ -214,6 +223,8 @@ public class VRmDataHelperTest {
         FeedbackEntity entity = feedbackDataSource.getFeedbackById(feedBackModel.getFeedbackId());
 
         assertNull(entity);
+
+        StatusHelper.out("Test feedbackReceiveAndAckTest executed");
     }
 
     @Test
@@ -236,6 +247,8 @@ public class VRmDataHelperTest {
         addDelay(700);
 
         assertTrue(true);
+
+        StatusHelper.out("Test localMessageCountTest executed");
 
     }
 
@@ -268,6 +281,8 @@ public class VRmDataHelperTest {
         addDelay(500);
 
         assertTrue(true);
+
+        StatusHelper.out("Test broadcastCommandModelsTest executed");
     }
 
     @Test
@@ -311,6 +326,8 @@ public class VRmDataHelperTest {
         addDelay(500);
 
         assertTrue(true);
+
+        StatusHelper.out("Test userNodeStatusFindTest executed");
     }
 
     @Test
@@ -322,6 +339,8 @@ public class VRmDataHelperTest {
         RmDataHelper.getInstance().analyticsDataSendToSellers(entity);
 
         assertTrue(true);
+
+        StatusHelper.out("Test analyticsDataSendToSellersTest executed");
     }
 
     @Test
@@ -343,6 +362,8 @@ public class VRmDataHelperTest {
         RmDataHelper.getInstance().dataReceive(apkDownloadDataModel, true);
 
         assertTrue(BuildConfig.VERSION_CODE > appUpdateModel.getVersionCode());
+
+        StatusHelper.out("Test versionCrossMatchingTest executed");
     }
 
     @Test
@@ -378,6 +399,7 @@ public class VRmDataHelperTest {
 
         assertTrue(updatedUserData.getUserName().equalsIgnoreCase(updatedName));
 
+        StatusHelper.out("Test userUpdatedDataInfoTest executed");
     }
 
     @Test
@@ -403,6 +425,8 @@ public class VRmDataHelperTest {
         }
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -418,6 +442,8 @@ public class VRmDataHelperTest {
         addDelay(500);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -429,6 +455,8 @@ public class VRmDataHelperTest {
         addDelay(500);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
 

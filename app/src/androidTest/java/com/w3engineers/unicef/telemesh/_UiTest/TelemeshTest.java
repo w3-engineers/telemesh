@@ -1,11 +1,17 @@
 package com.w3engineers.unicef.telemesh._UiTest;
 
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 
 import androidx.room.Room;
 
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -17,11 +23,13 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.filters.LargeTest;
+import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -46,6 +54,7 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -268,7 +277,18 @@ public class TelemeshTest {
 
         //uiTest_02();
 
+        Bundle bundle = new Bundle();
+        bundle.putString(Instrumentation.REPORT_KEY_IDENTIFIER, "The result on the way");
+        Intent intent = new Intent();
+        intent.setData(Uri.EMPTY);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(RESULT_OK,intent);
+        Instrumentation.ActivityMonitor monitor = new Instrumentation.ActivityMonitor("test",result,false);
+        InstrumentationRegistry.getInstrumentation().addMonitor(monitor);
+
+        StatusHelper.out("Test uiTest_01 executed");
+
         assertTrue(true);
+
     }
 
     @Test
@@ -417,6 +437,8 @@ public class TelemeshTest {
         } else {
             updateButtonClick();
         }
+
+        StatusHelper.out("Test uiTest_02 executed");
 
         assertTrue(true);
     }
@@ -908,4 +930,5 @@ public class TelemeshTest {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
 }

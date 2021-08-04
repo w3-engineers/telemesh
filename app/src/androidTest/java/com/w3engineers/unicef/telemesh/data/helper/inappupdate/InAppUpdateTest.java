@@ -15,6 +15,7 @@ import androidx.test.uiautomator.UiSelector;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
@@ -61,6 +62,8 @@ public class InAppUpdateTest {
 
         assertTrue(true);
 
+        StatusHelper.out("Test executed");
+
         try {
             mDevice.pressBack();
         } catch (Exception e) {
@@ -92,6 +95,8 @@ public class InAppUpdateTest {
         }
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -108,6 +113,8 @@ public class InAppUpdateTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        StatusHelper.out("Test executed");
 
     }
 
@@ -149,6 +156,8 @@ public class InAppUpdateTest {
         addDelay(1000);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(int i) {

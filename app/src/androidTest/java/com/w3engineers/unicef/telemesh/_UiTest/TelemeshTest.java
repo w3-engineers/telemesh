@@ -446,19 +446,6 @@ public class TelemeshTest {
 
     public void uiTest_03(UserEntity userEntity) {
 
-        // addDelay(5000);
-
-       /* UserEntity userEntity = new UserEntity()
-                .setAvatarIndex(1)
-                .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
-                .setUserName("Daniel")
-                .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
-                .setRegistrationTime(System.currentTimeMillis());*/
-        //userEntity.setId(0);
-
-        userDataSource.insertOrUpdateData(userEntity);
-
         addDelay(3000);
 
         currentActivity = getActivityInstance();
@@ -521,7 +508,7 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+/*        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
 
@@ -583,10 +570,8 @@ public class TelemeshTest {
             });
 
             addDelay(3000);
-        }
+        }*/
 
-        assertTrue(true);
-        StatusHelper.out("Test executed");
     }
 
 

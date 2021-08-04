@@ -512,14 +512,14 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        Activity currentActivity = getActivityInstance();
+       /* Activity currentActivity = getActivityInstance();
 
         if (currentActivity instanceof ChatActivity) {
             ChatActivity chatActivity = (ChatActivity) currentActivity;
             chatActivity.chatFinishAndStartApp();
         }
 
-        addDelay(5000);
+        addDelay(5000);*/
 
         try {
 
@@ -531,6 +531,9 @@ public class TelemeshTest {
             addDelay(1000);
 
             onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
+
+            currentActivity = getActivityInstance();
+            hideKeyboard(currentActivity);
 
         } catch (NoMatchingViewException | PerformException e) {
             e.printStackTrace();
@@ -559,7 +562,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-       /* currentActivity = getActivityInstance();
+        currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;
@@ -570,7 +573,7 @@ public class TelemeshTest {
             });
 
             addDelay(3000);
-        }*/
+        }
 
     }
 

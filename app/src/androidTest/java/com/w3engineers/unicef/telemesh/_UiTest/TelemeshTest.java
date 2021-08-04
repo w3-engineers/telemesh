@@ -284,7 +284,7 @@ public class TelemeshTest {
     }
 
     @Test
-    public void uiTest_02() {
+    public void uiTest_04() {
 
         addDelay(3800);
 
@@ -520,7 +520,7 @@ public class TelemeshTest {
 
     // Settings page test
     @Test
-    public void uiTest_04() {
+    public void uiTest_02() {
         addDelay(5000);
 
 

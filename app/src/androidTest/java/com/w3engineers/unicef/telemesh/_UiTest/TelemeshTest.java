@@ -283,6 +283,176 @@ public class TelemeshTest {
 
     }
 
+    // Settings page test
+    @Test
+    public void uiTest_02() {
+        addDelay(5000);
+
+
+        if (currentActivity instanceof MainActivity) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) currentActivity).stopAnimation();
+                }
+            });
+        }
+
+        addDelay(1000);
+
+        ViewInteraction settingsTab = onView(
+                allOf(withId(R.id.action_setting),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
+        settingsTab.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction profileRow = onView(
+                allOf(withId(R.id.layout_view_profile),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
+        profileRow.perform(scrollTo(), click());
+
+        addDelay(1000);
+
+        ViewInteraction copyUserId = onView(
+                allOf(withId(R.id.image_view_id_copy),
+                        childAtPosition(allOf(withId(R.id.view_profile_layout),
+                                childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
+        copyUserId.perform(click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        ViewInteraction openWallet = onView(
+                allOf(withId(R.id.layout_open_wallet),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 1)));
+        openWallet.perform(scrollTo(), click());
+
+        addDelay(2000);
+
+        ViewInteraction openDataPlan = onView(
+                allOf(withId(R.id.layout_data_plan),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 2)));
+        openDataPlan.perform(scrollTo(), click());
+
+        addDelay(2000);
+
+        ViewInteraction openShareApp = onView(
+                allOf(withId(R.id.layout_share_app),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 3)));
+        openShareApp.perform(scrollTo(), click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction chooseLanguage = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+        chooseLanguage.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction optionBangla = onView(
+                allOf(withId(R.id.radio_bangla),
+                        childAtPosition(allOf(withId(R.id.radio_group_language),
+                                childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 1), isDisplayed()));
+        optionBangla.perform(click());
+
+        addDelay(4000);
+
+        ViewInteraction chooseLanguageForSecond = onView(
+                allOf(withId(R.id.layout_choose_language),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+        chooseLanguageForSecond.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        ViewInteraction optionEnglish = onView(
+                allOf(withId(R.id.radio_english),
+                        childAtPosition(allOf(withId(R.id.radio_group_language),
+                                childAtPosition(withId(R.id.alert_buy_sell_dialog_layout), 1)), 0), isDisplayed()));
+        optionEnglish.perform(click());
+
+        addDelay(4000);
+
+        ViewInteraction optionAboutUs = onView(
+                allOf(withId(R.id.layout_about_us),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 7)));
+        optionAboutUs.perform(scrollTo(), click());
+
+        addDelay(500);
+
+        mDevice.pressBack();
+
+        addDelay(500);
+
+        ViewInteraction optionFeedBack = onView(
+                allOf(withId(R.id.layout_feedback),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 8)));
+        optionFeedBack.perform(scrollTo(), click());
+
+        addDelay(1500);
+
+        ViewInteraction baseButton4 = onView(
+                allOf(withId(R.id.button_feed_back),
+                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 2), isDisplayed()));
+        baseButton4.perform(click());
+
+        addDelay(1000);
+
+        ViewInteraction editBoxFeedback = onView(
+                allOf(withId(R.id.edit_text_feedback),
+                        childAtPosition(childAtPosition(withId(android.R.id.content), 0), 1), isDisplayed()));
+        editBoxFeedback.perform(replaceText("good"), closeSoftKeyboard());
+
+        addDelay(300);
+
+        baseButton4.perform(click());
+
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+        addDelay(1000);
+
+        ViewInteraction discoverTab = onView(
+                allOf(withId(R.id.action_discover),
+                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        currentActivity = getActivityInstance();
+
+        if (currentActivity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) currentActivity;
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mainActivity.createUserBadgeCount(100, Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
+                mainActivity.popupSnackbarForCompleteUpdate();
+            });
+
+            addDelay(3000);
+        }
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
+
+    }
+
     @Test
     public void uiTest_04() {
 
@@ -518,55 +688,6 @@ public class TelemeshTest {
         }
     }
 
-    // Settings page test
-    @Test
-    public void uiTest_02() {
-        addDelay(5000);
-
-
-        if (currentActivity instanceof MainActivity) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    ((MainActivity) currentActivity).stopAnimation();
-                }
-            });
-        }
-
-        addDelay(1000);
-
-        ViewInteraction settingsTab = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
-        settingsTab.perform(click());
-
-        addDelay(1000);
-
-        ViewInteraction profileRow = onView(
-                allOf(withId(R.id.layout_view_profile),
-                        childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
-        profileRow.perform(scrollTo(), click());
-
-        addDelay(1000);
-
-        ViewInteraction copyUserId = onView(
-                allOf(withId(R.id.image_view_id_copy),
-                        childAtPosition(allOf(withId(R.id.view_profile_layout),
-                                childAtPosition(withId(android.R.id.content), 0)), 10), isDisplayed()));
-        copyUserId.perform(click());
-
-        addDelay(1000);
-
-        mDevice.pressBack();
-
-        addDelay(1000);
-
-        assertTrue(true);
-
-        StatusHelper.out("Test executed");
-
-    }
 
 
    /* public void uiTest_003(UserEntity userEntity) {

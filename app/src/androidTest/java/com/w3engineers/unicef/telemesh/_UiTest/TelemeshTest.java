@@ -508,7 +508,7 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-/*        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
 
@@ -519,7 +519,7 @@ public class TelemeshTest {
             chatActivity.chatFinishAndStartApp();
         }
 
-        addDelay(4000);
+        addDelay(5000);
 
         try {
 
@@ -559,7 +559,7 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        currentActivity = getActivityInstance();
+       /* currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) currentActivity;

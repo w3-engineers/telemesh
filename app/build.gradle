@@ -141,6 +141,7 @@ dependencies {
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'androidx.test.ext:junit:1.1.3'
     annotationProcessor deps.lifecycle.compiler
 //    api deps.strom_remote
 

@@ -41,9 +41,7 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void getUserRegistrationStatus() {
 
-        if (!CommonUtil.isEmulator()) {
-            RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
-        }
+        RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> isUserRegistered.postValue(SharedPref

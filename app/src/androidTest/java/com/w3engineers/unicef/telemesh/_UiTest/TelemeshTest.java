@@ -11,12 +11,14 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
@@ -90,7 +92,7 @@ import static org.junit.Assert.assertTrue;
 public class TelemeshTest {
 
     @Rule
-    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
+    public ActivityScenarioRule<SplashActivity> mActivityTestRule = new ActivityScenarioRule<>(SplashActivity.class);
 
 
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -121,7 +123,13 @@ public class TelemeshTest {
 
         context = InstrumentationRegistry.getTargetContext();
 
-        mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        //mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        mActivityTestRule.getScenario().onActivity(new ActivityScenario.ActivityAction<SplashActivity>() {
+            @Override
+            public void perform(SplashActivity activity) {
+                activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+            }
+        });
 
 
         //sharedPref = SharedPref.getSharedPref(context);

@@ -442,7 +442,9 @@ public class TelemeshTest {
         }
 
         UserEntity userEntity = addSampleUser();
-        //uiTest_03(userEntity)
+        uiTest_03(userEntity);
+
+        uiTest_04();
 
 
         assertTrue(true);
@@ -565,7 +567,7 @@ public class TelemeshTest {
     }
 
 
-    @Test
+    //@Test
     public void uiTest_04() {
 
         addDelay(3800);

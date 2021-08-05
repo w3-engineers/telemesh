@@ -93,7 +93,7 @@ import static org.junit.Assert.assertTrue;
 public class TelemeshTest {
 
     @Rule
-    public ActivityScenarioRule<SplashActivity> mActivityTestRule = new ActivityScenarioRule<>(SplashActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityTestRule = new ActivityTestRule<>(SplashActivity.class);
 
 
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -124,16 +124,7 @@ public class TelemeshTest {
 
         context = InstrumentationRegistry.getTargetContext();
 
-        //mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
-
-        mActivityTestRule.getScenario().onActivity(new ActivityScenario.ActivityAction<SplashActivity>() {
-            @Override
-            public void perform(SplashActivity activity) {
-                activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-            }
-        });
-
+        mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
         //sharedPref = SharedPref.getSharedPref(context);
     }
@@ -141,6 +132,7 @@ public class TelemeshTest {
     @After
     public void closeDb() throws IOException {
         appDatabase.close();
+        mActivityTestRule.finishActivity();
     }
 
     @Test
@@ -299,8 +291,6 @@ public class TelemeshTest {
     @Test
     public void uiTest_02() {
 
-        ActivityScenario<SplashActivity> ss = mActivityTestRule.getScenario();
-        ss.recreate();
 
         addDelay(3800);
 
@@ -858,8 +848,6 @@ public class TelemeshTest {
     @Test
     public void uiTest_05() {
 
-        ActivityScenario<SplashActivity> ss = mActivityTestRule.getScenario();
-        ss.recreate();
 
         addDelay(4000);
 

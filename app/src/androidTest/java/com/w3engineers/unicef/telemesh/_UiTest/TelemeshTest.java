@@ -6,6 +6,7 @@ import android.app.Activity;
 import androidx.room.Room;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -111,6 +112,10 @@ public class TelemeshTest {
         randomEntityGenerator = new RandomEntityGenerator();
 
         context = InstrumentationRegistry.getTargetContext();
+
+        mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+
         //sharedPref = SharedPref.getSharedPref(context);
     }
 
@@ -122,7 +127,7 @@ public class TelemeshTest {
     @Test
     public void uiTest_01() {
 
-        addDelay(3200);
+        addDelay(3800);
 
         termsOfUsePageTest();
 

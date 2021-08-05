@@ -1,11 +1,14 @@
 package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
@@ -13,6 +16,7 @@ import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 
 
 /*
@@ -37,7 +41,9 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void getUserRegistrationStatus() {
 
-        RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
+        if (!CommonUtil.isEmulator()) {
+            RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
+        }
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> isUserRegistered.postValue(SharedPref

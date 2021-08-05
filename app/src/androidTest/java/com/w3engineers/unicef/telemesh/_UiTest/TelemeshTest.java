@@ -442,7 +442,7 @@ public class TelemeshTest {
         }
 
         UserEntity userEntity = addSampleUser();
-        uiTest_03(userEntity);
+        //uiTest_03(userEntity);
 
 
         currentActivity = getActivityInstance();

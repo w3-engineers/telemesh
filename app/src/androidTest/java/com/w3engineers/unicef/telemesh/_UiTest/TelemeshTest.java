@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
@@ -443,7 +444,18 @@ public class TelemeshTest {
         UserEntity userEntity = addSampleUser();
         uiTest_03(userEntity);
 
-        assertTrue(true);
+
+        currentActivity = getActivityInstance();
+
+        Espresso.pressBackUnconditionally();
+
+        addDelay(500);
+
+        Espresso.pressBackUnconditionally();
+
+        addDelay(2000);
+
+        assertTrue(currentActivity.isDestroyed());
 
         StatusHelper.out("Test executed");
 

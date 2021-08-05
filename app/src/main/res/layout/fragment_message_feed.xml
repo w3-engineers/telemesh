@@ -32,11 +32,10 @@
                 android:background="@color/white">
 
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/message_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:brv_emptyLayoutId="@id/empty_layout" />
+                    android:layout_height="match_parent" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout

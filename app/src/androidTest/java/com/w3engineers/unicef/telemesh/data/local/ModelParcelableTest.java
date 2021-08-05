@@ -4,7 +4,10 @@ import android.content.Context;
 import android.os.Parcel;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
+
+import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
@@ -17,8 +20,13 @@ import com.w3engineers.unicef.telemesh.data.local.db.Converters;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
+import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /*
  * ============================================================================
@@ -44,10 +53,15 @@ public class ModelParcelableTest {
     Context context;
     private String userId = "0x8934394dnjsd3984394";
     private String msgId = "9843094";
+    private RandomEntityGenerator randomEntityGenerator;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {
         context = InstrumentationRegistry.getTargetContext();
+        randomEntityGenerator = new RandomEntityGenerator();
     }
 
     @Test
@@ -71,6 +85,8 @@ public class ModelParcelableTest {
         assertThat(createdFromParcel.getBulletinOwnerStatus(), is(Constants.Bulletin.OTHERS));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
 
     }
 
@@ -99,6 +115,8 @@ public class ModelParcelableTest {
         assertThat(appShareCountEntity.isSend(), is(true));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -118,6 +136,26 @@ public class ModelParcelableTest {
         assertThat(meshLogEntity.getLogName(), is(logName));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
+    }
+
+    @Test
+    public void updateConfigModelTest() {
+
+        addDelay();
+
+        UpdateConfigModel configModel = randomEntityGenerator.generateUpdateConfigModel();
+        Parcel parcel = Parcel.obtain();
+        configModel.writeToParcel(parcel, configModel.describeContents());
+        parcel.setDataPosition(0);
+
+        UpdateConfigModel updatedConfigModel = UpdateConfigModel.CREATOR.createFromParcel(parcel);
+        assertThat(updatedConfigModel.getVersionName(), is(configModel.getVersionName()));
+
+        addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -125,12 +163,15 @@ public class ModelParcelableTest {
         addDelay();
         String versionName = "1.0.0";
         String updateLink = "192.168.43.1";
+        int updateType = 1;
         InAppUpdateModel model = new InAppUpdateModel();
         model.setVersionName(versionName);
         model.setUpdateLink(updateLink);
+        model.setUpdateType(updateType);
 
         assertEquals(versionName, model.getVersionName());
         assertEquals(updateLink, model.getUpdateLink());
+        assertEquals(updateType, model.getUpdateType());
         addDelay();
 
         String sampleRequest = "request";
@@ -156,6 +197,8 @@ public class ModelParcelableTest {
         assertEquals(msgTime, messageCountModel.getMsgTime());
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -177,6 +220,23 @@ public class ModelParcelableTest {
         assertEquals(convertedTime, convertedTime);
 
         addDelay();
+
+        // Constants item test
+        String res = Constants.capitalize(null);
+
+        assertTrue(TextUtils.isEmpty(res));
+
+        addDelay();
+
+        String test = "Mobile";
+
+        res = Constants.capitalize(test);
+
+        assertEquals(test, res);
+
+        addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -211,8 +271,9 @@ public class ModelParcelableTest {
         payloadData.add("data");
         payload.setConnectedClientEthIds(payloadData);
 
-        assertEquals(payload.getConnectedClientEthIds().get(0),payloadData.get(0));
+        assertEquals(payload.getConnectedClientEthIds().get(0), payloadData.get(0));
 
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay() {

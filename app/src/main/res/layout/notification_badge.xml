@@ -5,6 +5,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout_badge"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -18,7 +19,7 @@
             android:gravity="center"
             android:maxLines="@integer/max_line_1"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_10"
+            android:textSize="@dimen/text_size_10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="246" />

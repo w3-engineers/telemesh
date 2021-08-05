@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/alert_buy_sell_dialog_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_10">
+
+    <TextView
+        android:id="@+id/interruption_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:paddingStart="@dimen/padding_5"
+        android:paddingLeft="@dimen/padding_5"
+        android:paddingTop="@dimen/padding_5"
+        android:paddingEnd="@dimen/padding_5"
+        android:paddingRight="@dimen/padding_5"
+        android:paddingBottom="@dimen/padding_5"
+        android:text="@string/choose_language"
+        android:textColor="@color/link_color"
+        android:textSize="@dimen/text_size_18"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/interruption_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:paddingStart="@dimen/padding_5"
+        android:paddingLeft="@dimen/padding_5"
+        android:paddingTop="@dimen/padding_5"
+        android:paddingEnd="@dimen/padding_5"
+        android:paddingRight="@dimen/padding_5"
+        android:paddingBottom="@dimen/padding_5"
+        android:text="@string/choose_language"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/interruption_title" />
+
+
+    <Button
+        android:id="@+id/okay_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:paddingStart="@dimen/padding_5"
+        android:paddingLeft="@dimen/padding_5"
+        android:paddingTop="@dimen/padding_5"
+        android:paddingEnd="@dimen/padding_5"
+        android:paddingRight="@dimen/padding_5"
+        android:paddingBottom="@dimen/padding_5"
+        android:background="@android:color/transparent"
+        android:text="@string/got_it"
+        android:textColor="@color/link_color"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/interruption_message" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

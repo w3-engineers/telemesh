@@ -2,9 +2,13 @@ package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -30,6 +34,12 @@ public class Source implements DataSource {
     private MessageDao messageDao;
     private UserDao userDao;
     private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
+    private BehaviorSubject<String> liveUserId = BehaviorSubject.create();
+    private BehaviorSubject<Boolean> isMeshInitiated = BehaviorSubject.create();
+    private BehaviorSubject<GroupEntity> groupUserEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupModel> groupRenameEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupMemberChangeModel> groupMemberAddEvent = BehaviorSubject.create();
+    private BehaviorSubject<GroupMemberChangeModel> groupMemberRemoveEvent = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -66,6 +76,9 @@ public class Source implements DataSource {
     @Override
     public void setCurrentUser(@Nullable String currentUser) {
         this.chatCurrentUser = currentUser;
+        if (currentUser != null && !TextUtils.isEmpty(currentUser)) {
+            liveUserId.onNext(currentUser);
+        }
     }
 
     @Override
@@ -79,9 +92,68 @@ public class Source implements DataSource {
     }
 
     @Override
+    public Flowable<String> getLiveUserId() {
+        return liveUserId.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setMeshInitiated(boolean isInitiated) {
+        isMeshInitiated.onNext(true);
+    }
+
+    @Override
+    public Flowable<Boolean> getMeshInitiated() {
+        return isMeshInitiated.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setGroupUserLeaveEvent(GroupEntity groupEntity) {
+        groupUserEvent.onNext(groupEntity);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupEntity> getGroupUserLeaveEvent() {
+        return groupUserEvent.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setGroupInfoChangeEvent(GroupModel groupModel) {
+        groupRenameEvent.onNext(groupModel);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupModel> getGroupInfoChangeEvent() {
+        return groupRenameEvent.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
     @Nullable
     public Flowable<ChatEntity> getReSendMessage() {
         return failedMessage.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setAddNewMemberEvent(GroupMemberChangeModel model) {
+        groupMemberAddEvent.onNext(model);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupMemberChangeModel> getGroupMembersAddEvent() {
+        return groupMemberAddEvent.toFlowable(BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public void setGroupMemberRemoveEvent(GroupMemberChangeModel model) {
+        groupMemberRemoveEvent.onNext(model);
+    }
+
+    @Nullable
+    @Override
+    public Flowable<GroupMemberChangeModel> getGroupMemberRemoveEvent() {
+        return groupMemberRemoveEvent.toFlowable(BackpressureStrategy.LATEST);
     }
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)

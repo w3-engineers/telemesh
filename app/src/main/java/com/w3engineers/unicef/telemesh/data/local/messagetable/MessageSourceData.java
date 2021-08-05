@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.local.messagetable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
 import java.util.ArrayList;
@@ -73,13 +75,36 @@ public class MessageSourceData {
     @NonNull
     public Flowable<List<ChatEntity>> getAllMessages(@NonNull String friendsId) {
 
-        return messageDao.getAllMessages(friendsId).flatMap(messageEntities ->
+        return messageDao.getAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_P2P).flatMap(messageEntities ->
                 Flowable.just(new ArrayList<>(messageEntities)));
+    }
+
+    @NonNull
+    public Flowable<List<ChatEntity>> getAllGroupMessages(@NonNull String friendsId) {
+
+        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP)
+                .flatMap(messageEntities ->
+                Flowable.just(new ArrayList<>(messageEntities)));
+    }
+
+    @NonNull
+    public MessageEntity getCreateGroupInfo(@NonNull String friendsId) {
+        return messageDao.getCreateGroupInfo(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP);
     }
 
     @NonNull
     public ChatEntity getMessageEntityById(@NonNull String messageId) {
         return messageDao.getMessageById(messageId);
+    }
+
+    @Nullable
+    public MessageEntity getMessageEntityFromId(@NonNull String messageId) {
+        return messageDao.getMessageFromId(messageId);
+    }
+
+    @Nullable
+    public MessageEntity getMessageEntityFromContentId(@NonNull String contentId) {
+        return messageDao.getMessageFromContentId(contentId);
     }
 
     // This api is not used in app layer
@@ -90,12 +115,49 @@ public class MessageSourceData {
         return messageDao.updateMessageAsRead(friendsId);
     }
 
+    public long updateUnreadToReadForGroup(@NonNull String friendsId) {
+        return messageDao.updateMessageAsReadForGroup(friendsId);
+    }
+
+    public long updateUnreadToReadFailed(@NonNull String friendsId) {
+        return messageDao.updateMessageAsReadFailed(friendsId);
+    }
+
     public long changeMessageStatusFrom(int fromStatus, int toStatus) {
         return messageDao.changeMessageStatusFrom(fromStatus, toStatus);
     }
 
+    public long changeSendMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeSendMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+
+    public long changeMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+    public long changeUnreadMessageStatusByUserId(int fromContentStatus, int toStatus, String userId) {
+        return messageDao.changeUnreadMessageStatusByUserId(fromContentStatus, toStatus, userId);
+    }
+
+    public long changeMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeMessageStatusByContentStatus(fromContentStatus, toStatus);
+    }
+
+    public long changeUnreadMessageStatusByContentStatus(int fromContentStatus, int toStatus) {
+        return messageDao.changeUnreadMessageStatusByContentStatus(fromContentStatus, toStatus);
+    }
+
     public Flowable<Integer> getBlockMessageInfoForSync() {
         return messageDao.getBlockMessageInfoForSync();
+    }
+
+    public int clearMessage(String threadId, boolean isGroup) {
+        if (isGroup) {
+            return messageDao.clearGroupMessages(threadId, isGroup);
+        } else {
+            return messageDao.clearP2pMessages(threadId, isGroup);
+        }
     }
 
     // This api is not used in app layer

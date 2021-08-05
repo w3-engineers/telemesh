@@ -1,11 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
 import android.content.Context;
+
 import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
-
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
@@ -15,6 +15,8 @@ import androidx.test.uiautomator.UiSelector;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
+import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +62,8 @@ public class InAppUpdateTest {
 
         assertTrue(true);
 
+        StatusHelper.out("Test executed");
+
         try {
             mDevice.pressBack();
         } catch (Exception e) {
@@ -91,13 +95,15 @@ public class InAppUpdateTest {
         }
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
     public void downloadUpdateAppTest() {
         addDelay(500);
 
-        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity());
+        AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(), rule.getActivity(), null);
 
         addDelay(4000);
 
@@ -108,6 +114,50 @@ public class InAppUpdateTest {
             e.printStackTrace();
         }
 
+        StatusHelper.out("Test executed");
+
+    }
+
+    @Test
+    @UiThreadTest
+    public void appBlockerDialogOpenTest() {
+        addDelay(500);
+
+        AppBlockerUtil.openAppBlockerDialog(rule.getActivity(), "1.0.0");
+
+        addDelay(2000);
+
+        UiObject button = mDevice.findObject(new UiSelector().text("I Understand"));
+        try {
+            if (button.exists() && button.isEnabled()) {
+                button.click();
+            }
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Constants.IS_DATA_ON = false;
+
+        addDelay(500);
+
+        AppBlockerUtil.openAppBlockerDialog(rule.getActivity(), "1.0.0");
+
+        addDelay(2000);
+
+        UiObject button1 = mDevice.findObject(new UiSelector().text("Update"));
+        try {
+            if (button1.exists() && button1.isEnabled()) {
+                button1.click();
+            }
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        addDelay(1000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(int i) {

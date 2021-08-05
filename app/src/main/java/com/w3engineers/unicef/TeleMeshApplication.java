@@ -5,11 +5,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.telemesh.BuildConfig;
-import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
 import com.w3engineers.unicef.telemesh.data.di.ApplicationComponent;
@@ -41,14 +39,9 @@ public class TeleMeshApplication extends MeshApp {
     private static Context mContext;
 
     @Override
-    protected void attachBaseContext(@NonNull Context base) {
-        super.attachBaseContext(base);
-        mContext = this;
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         AppDatabase.getInstance();
         // Set app language based on user
 
@@ -57,7 +50,7 @@ public class TeleMeshApplication extends MeshApp {
                 return;
         }
 
-        String language = SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.APP_LANGUAGE);
+        String language = SharedPref.read(Constants.preferenceKey.APP_LANGUAGE);
         if (TextUtils.isEmpty(language)) {
             language = "en";
         }
@@ -67,7 +60,6 @@ public class TeleMeshApplication extends MeshApp {
 
         AnalyticsApi.init(mContext);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionTracker());
-        Toaster.init(R.color.colorPrimary);
 
     }
 

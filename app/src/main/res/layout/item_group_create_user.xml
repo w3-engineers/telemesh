@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/user_avatar_background"
+                android:layout_width="@dimen/width_50"
+                android:layout_height="@dimen/height_50"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:background="@drawable/circle_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="@dimen/width_50"
+                android:layout_height="@dimen/height_50"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:padding="@dimen/padding_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/user_mesh_status"
+                android:layout_width="@dimen/width_25"
+                android:layout_height="@dimen/height_25"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:contentDescription="@string/image"
+                app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
+                app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
+                app:layout_constraintStart_toEndOf="@+id/user_avatar_background"
+                app:layout_constraintTop_toTopOf="@+id/user_avatar_background" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18"
+                app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintStart_toEndOf="@id/user_avatar"
+                app:layout_constraintTop_toTopOf="@id/user_avatar" />
+
+
+            <TextView
+                android:id="@+id/user_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:maxLines="2"
+                android:textColor="@color/light_grey"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+            <TextView
+                android:id="@+id/text_view_date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@id/user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/user_mesh_status"
+                app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/divider_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/user_name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--<CheckBox
+            android:id="@+id/check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:buttonTint="@color/colorPrimary"
+            android:clickable="false"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox
+            android:id="@+id/check_box"
+            android:layout_width="@dimen/height_20"
+            android:layout_height="@dimen/width_20"
+            android:layout_marginEnd="@dimen/margin_15"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingTop="10dp"
+            app:color_checked="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -35,7 +35,6 @@
             android:paddingRight="@dimen/padding_15"
             android:paddingBottom="@dimen/padding_8"
             android:text="@{textMessage.message}"
-            android:gravity="center"
             android:textColor="@color/message_text_color"
             android:textSize="@dimen/text_small_body_14"
             app:layout_constraintEnd_toEndOf="parent"

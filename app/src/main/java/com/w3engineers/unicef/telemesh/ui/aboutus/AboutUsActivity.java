@@ -11,11 +11,11 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityAboutUsBinding;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 

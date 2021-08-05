@@ -2,27 +2,28 @@ package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
-
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsViewModel;
+import com.w3engineers.unicef.telemesh.ui.addnewmember.AddNewMemberViewModel;
+import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinViewModel;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel;
+import com.w3engineers.unicef.telemesh.ui.conversations.ConversationViewModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserViewModel;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileViewModel;
 import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackViewModel;
-import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileViewModel;
-import com.w3engineers.unicef.telemesh.ui.importwallet.ImportWalletViewModel;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateViewModel;
+import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsViewModel;
+import com.w3engineers.unicef.telemesh.ui.groupnameedit.GroupNameEditViewModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
-import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceViewModel;
-import com.w3engineers.unicef.telemesh.ui.security.SecurityViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 
 /*
  * ============================================================================
@@ -101,6 +102,11 @@ public class ServiceLocator extends BaseServiceLocator {
     }
 
     @NonNull
+    public ConversationViewModel getConversationViewModel(@NonNull Application application) {
+        return new ConversationViewModel(application);
+    }
+
+    /*@NonNull
     public ProfileChoiceViewModel getProfileChoiceViewModel(@NonNull Application application) {
         return new ProfileChoiceViewModel(application);
     }
@@ -118,7 +124,7 @@ public class ServiceLocator extends BaseServiceLocator {
     @NonNull
     public ImportWalletViewModel getImportWalletViewModel(@NonNull Application application) {
         return new ImportWalletViewModel(application);
-    }
+    }*/
 
     @NonNull
     public EditProfileViewModel getEditProfileViewModel(@NonNull Application application) {
@@ -128,6 +134,31 @@ public class ServiceLocator extends BaseServiceLocator {
     @NonNull
     public FeedbackViewModel getFeedbackViewModel(@NonNull Application application) {
         return new FeedbackViewModel(application);
+    }
+
+    @NonNull
+    public GroupCreateViewModel getGroupCreateViewModel(@NonNull Application application) {
+        return new GroupCreateViewModel(application);
+    }
+
+    @NonNull
+    public GroupDetailsViewModel getGroupDetailsViewModel(@NonNull Application application) {
+        return new GroupDetailsViewModel(application);
+    }
+
+    @NonNull
+    public GroupNameEditViewModel getGroupNameEditViewModel(@NonNull Application application) {
+        return new GroupNameEditViewModel(application);
+    }
+
+    @NonNull
+    public AddNewMemberViewModel getAddNewMemberViewModel(@NonNull Application application) {
+        return new AddNewMemberViewModel(application);
+    }
+
+    @NonNull
+    public BulletinViewModel getBulletinViewModel() {
+        return new BulletinViewModel(FeedDataSource.getInstance());
     }
 
 

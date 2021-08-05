@@ -3,7 +3,7 @@
 
     <color name="colorPrimary">#083480</color>
     <color name="colorPrimaryDark">#052459</color>
-    <color name="colorAccent">#06AEC6</color>
+    <color name="colorAccent">#008DFF</color>
 
     <color name="colorGradientPrimary">#DBE0E8</color>
     <!--<color name="eth_color">#FFBA00</color>-->
@@ -80,4 +80,12 @@
 
     <color name="orange_color">#ff5f25</color>
 
+    <color name="black_60_opacity">#99000000</color>
+    <color name="black_20_opacity">#33000000</color>
+    <color name="white_70_opacity">#B3FFFFFF</color>
+
+    <color name="selected_item_bg">#F2F2F2</color>
+
+    <color name="spin_bar">#BBDEFB</color>
+    <color name="sunset_orange">#FE4A49</color>
 </resources>

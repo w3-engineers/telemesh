@@ -8,4 +8,29 @@
         <attr name="color_unchecked" format="color"/>
         <attr name="color_unchecked_stroke" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomShapedImageView">
+        <attr name="imageShape" format="enum">
+            <enum name="rectangle" value="0" />
+            <enum name="rounded_rectangle" value="1" />
+            <enum name="circle" value="2" />
+            <enum name="square" value="3" />
+            <enum name="rounded_square" value="4" />
+        </attr>
+        <attr name="shapeColor" format="color" />
+        <attr name="innerDrawable" format="reference" />
+        <attr name="innerDrawablePadding" format="dimension" />
+        <attr name="innerDrawablePaddingStart" format="dimension" />
+        <attr name="innerDrawablePaddingTop" format="dimension" />
+        <attr name="innerDrawablePaddingEnd" format="dimension" />
+        <attr name="innerDrawablePaddingBottom" format="dimension" />
+
+        <!--calcucale fraction according dimens-->
+        <attr name="topLeftRadius" format="float" />
+        <attr name="topRightRadius" format="float" />
+        <attr name="bottomRightRadius" format="float" />
+        <attr name="bottomLeftRadius" format="float" />
+        <attr name="borderColor" format="color" />
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
 </resources>

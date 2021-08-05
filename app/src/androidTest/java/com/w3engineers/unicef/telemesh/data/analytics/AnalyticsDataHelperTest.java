@@ -1,10 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.analytics;
 
 import androidx.room.Room;
-import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
-
 import android.content.Context;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -16,10 +17,13 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,6 +53,9 @@ public class AnalyticsDataHelperTest {
     private MessageSourceData SUT;
     private AppShareCountDataService appShareCountDataService;
     String userId;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {
@@ -104,6 +111,8 @@ public class AnalyticsDataHelperTest {
         addDelay(3000);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
 
@@ -120,6 +129,10 @@ public class AnalyticsDataHelperTest {
         // send test
 
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -154,6 +167,8 @@ public class AnalyticsDataHelperTest {
         AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "Test user", Constants.getDeviceName());
         addDelay(10 * 1000);
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {

@@ -3,7 +3,7 @@
     <string name="activity_view_profile">My Profile</string>
     <string name="enter_first_name">Type your name</string>
     <string name="signup">Next</string>
-<!--    <string name="no_item_found">No item found</string>-->
+    <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
@@ -13,6 +13,7 @@
     <string name="title_personal_fragment">Personal Contacts</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
+    <string name="title_conversation_fragment">Conversation</string>
 
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">Please click BACK again to exit.</string>
@@ -23,13 +24,14 @@
     <string name="app_version">Version:</string>
 
     <string name="no_contact_available">No Nearby User Found Yet</string>
+    <string name="no_conversation">No Conversation Yet</string>
     <string name="no_message_available">No broadcast to show</string>
 
     <string name="search">Search People</string>
     <string name="type_message">Add Text to this Message</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
-<!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
+    <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -43,15 +45,15 @@
     <string name="choose_language">Choose a Language</string>
     <string name="image">Image</string>
 
-<!--    <string name="id">ID</string>-->
+    <!--    <string name="id">ID</string>-->
 
-<!--    <string name="this_may_take_while">This may take a while…</string>-->
+    <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Searching Nearby</string>
     <string name="searching">Searching…</string>
     <string name="data_plan">My Data Plan</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 
-<!--    <string name="profile">Profile</string>-->
+    <!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
     <string name="unicef">UNICEF</string>
 
@@ -103,7 +105,7 @@
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
     <string name="welcome_back">Welcome back</string>
     <string name="import_my_profile">Import Another ID</string>
-<!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
+    <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
     <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
     <string name="pin_instruction">Please remember your password for you will need this in case of  account recovery.</string>
@@ -136,15 +138,15 @@
     <string name="set_new_network_prefix">Set new network prefix</string>
     <string name="your_current_network_prefix">Your current network prefix is <b>%s</b>.</string>
     <string name="set_ssid">Set SSID</string>
-<!--    <string name="def_ssid">captor</string>-->
-    <string name="def_ssid">stage</string>
-<!--    <string name="search_hint">Search</string>-->
-<!--    <string name="clear_button">Clear</string>-->
+    <!--    <string name="def_ssid">captor</string>-->
+    <string name="def_ssid">chocolate</string>
+    <!--    <string name="search_hint">Search</string>-->
+    <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
     <string name="app_updating_please_wait">App Updating please wait..</string>
     <string name="feedback">Feedback</string>
 
-<!--     <string name="spinner_title">Favourite</string>-->
+    <!--     <string name="spinner_title">Favourite</string>-->
 
     <string name="no_favorite">No favorite user found</string>
     <string name="minimu_ssid_character">Minimum character limit is 3</string>
@@ -168,6 +170,41 @@
     <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
     <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
+    <string name="i_understand">I Understand</string>
+    <string name="app_update_information">Telemesh has some important updates on the latest release. This app won\'t work unless you update the latest version of Telemesh.</string>
+    <string name="terms_of_use_details">Terms of Use</string>
 
+    <string name="interruption_title">%s Interruption</string>
+    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+
+    <string name="permission_xiomi">To deliver the best experience TeleService needs a few system permissions.\n\nPlease go to your device settings and search for Permissions.
+                          \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
+                          \nAllow all the permissions from TeleService screen which are not marked as green.
+                          \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
+    <string name="got_it">Got It</string>
+    <string name="create_a_new_group">Create a new group</string>
+    <string name="want_to_join_this_group">Want to join this group?</string>
+    <string name="deny">Deny</string>
+    <string name="accept">Accept</string>
+    <string name="join">Join</string>
+    <string name="new_chat">New Chat</string>
+    <string name="new_group">New Group</string>
+    <string name="group_name_hint">Name</string>
+    <string name="total_participants">Total participants</string>
+    <string name="add_member">Add member</string>
+    <string name="remove_group_member">Remove group member</string>
+    <string name="group_admin">Group Admin</string>
+    <string name="leave_group">Leave group</string>
+    <string name="group_name_updated">Group Name updated</string>
+    <string name="other_profile">%s\'s Profile</string>
+    <string name="only_admin_can_add_member">Only admin can add a member</string>
+    <string name="add_new_member">Add new member</string>
+    <string name="only_admin_can_remove_member">Only admin can remove a member</string>
+    <string name="no_user_available">No User Found Yet</string>
+    <string name="only_admin_can_change_group_name">Only admin can change group name</string>
+
+    <string name="broadcast_notification">You have %d new broadcast message</string>
+    <string name="favourit_button_image">favourit button image</string>
 
 </resources>

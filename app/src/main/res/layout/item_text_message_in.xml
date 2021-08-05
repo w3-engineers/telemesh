@@ -7,6 +7,10 @@
         <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
 
         <variable
+            name="avatarIndex"
+            type="Integer" />
+
+        <variable
             name="textMessage"
             type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
     </data>
@@ -21,10 +25,25 @@
             android:id="@+id/image_profile"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
+            app:imageResource="@{avatarIndex}"
             app:civ_circle_background_color="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/text_view_message"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_view_message" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@+id/image_profile"
+            app:layout_constraintStart_toStartOf="@id/image_profile"
+            app:layout_constraintEnd_toEndOf="@id/image_profile"/>
 
         <TextView
             android:id="@+id/text_view_message"
@@ -35,7 +54,6 @@
             android:layout_marginEnd="@dimen/margin_50"
             android:background="@drawable/bg_message_item_rounded_box"
             android:fontFamily="@font/poppins_regular"
-            android:gravity="center"
             android:maxWidth="@dimen/width_250"
             android:paddingStart="@dimen/padding_15"
             android:paddingTop="@dimen/padding_10"

@@ -183,7 +183,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_id" />
 
-        <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+        <Button
             android:id="@+id/button_export_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:visibility="invisible"
-            app:bb_drawable="@drawable/drawable_button_bg_with_color"
+            android:background="@drawable/drawable_button_bg_with_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_qr" />

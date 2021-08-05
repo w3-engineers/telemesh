@@ -1,14 +1,21 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.importprofile;
 
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Typeface;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -24,13 +31,22 @@ import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.WalletAddressHelper;
 import com.w3engineers.walleter.wallet.WalletService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class ImportProfileActivity extends BaseActivity {
 
@@ -88,11 +104,13 @@ public class ImportProfileActivity extends BaseActivity {
             Constants.WALLET_URI = data.getData();
             filePath = data.getData().getPath();
 
-           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+           */
+/* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 filePath = data.getData().getPath();
             } else {
                 filePath = data.getData().getPath();
-            }*/
+            }*//*
+
 
             Intent intent = new Intent(ImportProfileActivity.this, ImportWalletActivity.class);
             intent.putExtra(Constants.IntentKeys.WALLET_PATH, filePath);
@@ -147,3 +165,4 @@ public class ImportProfileActivity extends BaseActivity {
                 });
     }
 }
+*/

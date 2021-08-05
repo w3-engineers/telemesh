@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <variable
+            name="textMessage"
+            type="com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity" />
+
+        <variable
+            name="chatViewModel"
+            type="com.w3engineers.unicef.telemesh.ui.chat.ChatViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_15">
+
+        <com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
+            android:id="@+id/image_view_message"
+            android:src="@mipmap/gellary"
+            android:layout_width="@dimen/height_200"
+            android:layout_height="@dimen/width_160"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
+            app:bottomLeftRadius="0.058"
+            app:bottomRightRadius="0.058"
+            app:imageShape="rounded_rectangle"
+            app:shapeColor="@color/colorChatGray"
+            app:topLeftRadius="0.058"
+            app:topRightRadius="0.058"/>
+
+        <View
+            android:id="@+id/hover"
+            android:layout_width="@dimen/height_200"
+            android:layout_height="@dimen/width_160"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:id="@+id/hover_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shadow_content_message"
+            app:layout_constraintTop_toTopOf="@+id/hover"
+            app:layout_constraintBottom_toBottomOf="@+id/hover"
+            app:layout_constraintStart_toStartOf="@+id/hover"
+            app:layout_constraintEnd_toEndOf="@+id/hover"/>
+
+        <ImageView
+            android:id="@+id/view_failed"
+            android:layout_width="@dimen/width_50"
+            android:layout_height="@dimen/height_50"
+            android:src="@mipmap/error_failed"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:padding="@dimen/padding_5"
+            app:layout_constraintBottom_toBottomOf="@+id/hover_view"
+            app:layout_constraintEnd_toEndOf="@+id/hover_view" />
+
+        <at.grabner.circleprogress.CircleProgressView
+            android:id="@+id/circleView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:cpv_autoTextSize="true"
+            app:cpv_barColor="@color/badge_color"
+            app:cpv_barWidth="3dp"
+            app:cpv_innerContourSize="0dp"
+            app:cpv_maxValue="100"
+            app:cpv_outerContourSize="0dp"
+            app:cpv_rimColor="@color/spin_bar"
+            app:cpv_rimWidth="3dp"
+            app:cpv_showUnit="true"
+            app:cpv_spinColor="@color/badge_color"
+            app:cpv_textColor="@color/white"
+            app:cpv_textScale="1"
+            app:cpv_spin="true"
+            app:cpv_unit="%"
+            app:cpv_unitColor="@color/white"
+            app:cpv_unitPosition="right_top"
+            app:cpv_unitScale="1"
+            app:layout_constraintBottom_toBottomOf="@+id/hover_view"
+            app:layout_constraintEnd_toEndOf="@+id/hover_view"/>
+
+        <ImageView
+            android:id="@+id/image_view_delivery_status"
+            android:layout_width="@dimen/width_25"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginTop="@dimen/margin_1"
+            android:contentDescription="@string/image"
+            app:imageStatusResource="@{textMessage.status}"
+            app:layout_constraintEnd_toStartOf="@+id/text_view_date_time"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_message" />
+
+        <TextView
+            android:id="@+id/text_view_date_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginTop="@dimen/padding_3"
+            android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
+            android:textColor="@color/chat_sub_item_color"
+            android:textSize="@dimen/text_size_10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

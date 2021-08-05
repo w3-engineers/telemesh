@@ -1,8 +1,10 @@
 package com.w3engineers.unicef.util.helper;
 
-
 import androidx.test.runner.AndroidJUnit4;
 
+import com.google.gson.Gson;
+import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import org.junit.Assert;
@@ -25,10 +27,13 @@ public class ViperDataProcessorTest {
     private ViperDataProcessor SUT;
     private int type = 1;
     private String data = "Dummy data";
+    private RandomEntityGenerator randomEntityGenerator;
+
 
     @Before
     public void setup() {
         SUT = ViperDataProcessor.getInstance();
+        randomEntityGenerator = new RandomEntityGenerator();
     }
 
     @Test
@@ -48,6 +53,20 @@ public class ViperDataProcessorTest {
         assertFalse(viperData.dataType > 0);
 
         addDelay(500);
+    }
+
+    @Test
+    public void appUpdateConfigDataTest() {
+
+        addDelay(500);
+
+        UpdateConfigModel configModel = randomEntityGenerator.generateUpdateConfigModel();
+        String configData = new Gson().toJson(configModel);
+
+        SUT.processUpdateAppConfigJson(configData);
+
+        addDelay(500);
+
     }
 
     private void addDelay(long time) {

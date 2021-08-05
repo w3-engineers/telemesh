@@ -11,27 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.SearchView;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMeshcontactBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.conversations.ConversationAdapter;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 
 /*
@@ -54,6 +53,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
     private boolean isLoaded = false;
     private SearchView mSearchView;
 
+    private PagedList<GroupEntity> groupList;
     private PagedList<UserEntity> favouriteList;
     private PagedList<UserEntity> msgWithFavList;
     private int currentSelection = 0;
@@ -74,7 +74,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         setHasOptionsMenu(true);
         // controlEmptyLayout();
         title = LanguageUtil.getString(R.string.title_personal_fragment);
-        setTitle(title);
+        ((MainActivity) getActivity()).setToolbarTitle(title);
 
         init();
         initSpinner();
@@ -89,53 +89,30 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     private void userDataOperation() {
         if (meshContactViewModel != null) {
-            //   meshContactViewModel.stopAllMessageWithObserver();
-            /*meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
-                if (userEntities != null) {
-                    getAdapter().submitList(userEntities);
-                    userEntityList = userEntities;
-
-                    if (userEntityList != null && userEntityList.size() > 0) {
-                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-                        }
-                    } else {
-                        if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.GONE) {
-                            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-                if (mSearchItem != null)
-                    searchViewControl(userEntities);
-            });
-*/
-
-            meshContactViewModel.startFavouriteObserver();
-            meshContactViewModel.startAllMessagedWithFavouriteObserver();
 
             initDataObserver();
 
+            meshContactViewModel.startGroupObserver();
+            meshContactViewModel.startFavouriteObserver();
+            meshContactViewModel.startAllMessagedWithFavouriteObserver();
+
             meshContactViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
+                ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_personal_fragment));
                 if (userEntities != null && userEntities.size() > 0) {
-                    fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-
+                    controlEmpty(false);
                     getAdapter().submitList(userEntities);
 
                     isLoaded = false;
 
                 } else {
                     if (!isLoaded) {
-                        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-                        enableLoading();
+                        controlEmpty(false);
 
                         isLoaded = true;
                         Runnable runnable = () -> {
                             fragmentMeshcontactBinding.tvMessage.setText("No User Found");
-                            enableEmpty();
-                            //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-
+                            controlEmpty(true);
                         };
                         loaderHandler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME_SHORT);
                     }
@@ -145,22 +122,31 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             meshContactViewModel.backUserEntity.observe(this, userEntities -> {
                 userEntityList = userEntities;
             });
-
         }
     }
 
     private void openUserMessage() {
         if (meshContactViewModel != null) {
             meshContactViewModel.openUserMessage().observe(this, userEntity -> {
-
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
 
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
+                    intent.putExtra(GroupEntity.class.getName(), false);
                     startActivity(intent);
                 }
+            });
 
+            meshContactViewModel.openGroupMessage().observe(this, groupEntity -> {
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).hideSearchBar();
+
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra(UserEntity.class.getName(), groupEntity.getGroupId());
+                    intent.putExtra(GroupEntity.class.getName(), true);
+                    startActivity(intent);
+                }
             });
         }
     }
@@ -173,56 +159,12 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 } else if (userEntity.getIsFavourite() == Constants.FavouriteStatus.FAVOURITE) {
                     meshContactViewModel.updateFavouriteStatus(userEntity.getMeshId(), Constants.FavouriteStatus.UNFAVOURITE);
                 }
-
             });
         }
     }
 
-    /*private void initSearchView(SearchView searchView) {
-
-        getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
-                .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
-                .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged()*//*.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())*//*
-                .subscribeWith(searchContacts()));
-
-    }*/
-
-    /*public DisposableObserver<String> searchContacts() {
-        return new DisposableObserver<String>() {
-
-            boolean isSearchStart = false;
-
-            @Override
-            public void onNext(String string) {
-
-                if (!isSearchStart) {
-                    //searchLoading();
-                    isSearchStart = true;
-                }
-
-                if (meshContactViewModel != null) {
-                    Timber.d("Search query: %s", string);
-                    meshContactViewModel.startSearch(string, meshContactViewModel.getCurrentUserList(currentSelection));
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Timber.e("onError: %s", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                Timber.e("onError: Complete");
-            }
-        };
-    }*/
-
     public void searchContacts(String query) {
         if (meshContactViewModel != null) {
-            Timber.d("Search query: %s", query);
             meshContactViewModel.startSearch(query, meshContactViewModel.getCurrentUserList(currentSelection));
         }
     }
@@ -235,34 +177,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
             getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
             mSearchItem = menu.findItem(R.id.action_search);
-            // Resolve search option visibility problem when contact is appeared from starting point
- /*           searchViewControl(userEntityList);
-
-            mSearchView = mSearchItem.getActionView().findViewById(R.id.search_view);
-
-
-            // mSearchView = (SearchView) mSearchItem.getActionView();
-            mSearchView.setQueryHint(getString(R.string.search));
-
-            mSearchView.setIconified(true);
-
-            ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-            searchClose.setImageResource(R.mipmap.ic_cross_grey);
-
-            // Getting EditText view from search view and change cursor color
-            AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            try {
-                // Fixed value for getting cursor drawable from Edit text or search view
-                Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
-                mCursorDrawableRes.setAccessible(true);
-                mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            searchCollapseListener(mSearchItem, mSearchView);
-
-            initSearchView(mSearchView);*/
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -278,86 +192,49 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                searchView.setBackgroundColor(getResources().getColor(R.color.white));
-                searchView.setMaxWidth(Integer.MAX_VALUE);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                //searchView.setBackgroundColor(-1);
-                return true;
-            }
-        });
-    }*/
-
     private void searchViewControl(List<UserEntity> userEntities) {
         boolean isSearchVisible = userEntities != null && userEntities.size() > 0;
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
+            ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_personal_fragment));
         }
     }
 
-    /*private void controlEmptyLayout() {
-        if (!Constants.IS_LOADING_ENABLE) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            enableLoading();
-            title = LanguageUtil.getString(R.string.title_personal_fragment);
-
-            Runnable runnable = () -> {
-                if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                    try {
-                        enableEmpty();
-                        setTitle(LanguageUtil.getString(R.string.title_personal_fragment));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            Constants.IS_LOADING_ENABLE = true;
-            handler.postDelayed(runnable, Constants.AppConstant.LOADING_TIME);
+    private void controlList(boolean isGroup) {
+        fragmentMeshcontactBinding.contactRecyclerView.setVisibility(View.GONE);
+        fragmentMeshcontactBinding.groupRecyclerView.setVisibility(View.GONE);
+        if (isGroup) {
+            fragmentMeshcontactBinding.groupRecyclerView.setVisibility(View.VISIBLE);
         } else {
-            enableEmpty();
-            title = LanguageUtil.getString(R.string.title_personal_fragment);
+            fragmentMeshcontactBinding.contactRecyclerView.setVisibility(View.VISIBLE);
         }
-    }*/
-
-    private void enableLoading() {
-        //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.this_may_take_while));
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-        // fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-        // fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
-
-        /*if (getActivity() != null) {
-            ((MainActivity) getActivity()).enableLoading();
-        }*/
     }
 
-    private void enableEmpty() {
-        fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-        //  fragmentMeshcontactBinding.loadingView.setVisibility(View.GONE);
-        //   fragmentMeshcontactBinding.rippleBackground.stopRippleAnimation();
-
-        /*if (getActivity() != null) {
-            ((MainActivity) getActivity()).disableLoading();
-        }*/
+    private void controlEmpty(boolean isShow) {
+        if (isShow) {
+            switch (currentSelection) {
+                case Constants.SpinnerItem.GROUP:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.group_empty);
+                    break;
+                case Constants.SpinnerItem.FAVOURITE:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.ic_no_favorite);
+                    break;
+                case Constants.SpinnerItem.ALL:
+                    fragmentMeshcontactBinding.emptyImageView.setBackgroundResource(R.mipmap.ic_no_chat);
+                    break;
+            }
+            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
+        } else {
+            fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
+        }
     }
 
     private void initSpinner() {
-
-        // Spinner click listener
         fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
 
-
-        // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
+        categories.add("Group");
         categories.add("Favourite");
         categories.add("All");
 
@@ -366,38 +243,32 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.spinnerView.setAdapter(spinnerAdapter);
     }
 
-  /*  protected void searchLoading() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-                //   fragmentMeshcontactBinding.loadingView.setVisibility(View.VISIBLE);
-                //   fragmentMeshcontactBinding.rippleBackground.startRippleAnimation();
-
-                // ((MainActivity) getActivity()).enableLoading();
-            });
-        }
-    }*/
-
     // General API's and initialization area
     private void init() {
-        initAllText();
+        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
         meshContactViewModel = getViewModel();
 
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-        //   fragmentMeshcontactBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentMeshcontactBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-   //     ((SimpleItemAnimator)fragmentMeshcontactBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
-    //    fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
-
         MeshContactAdapter meshContactAdapter = new MeshContactAdapter(meshContactViewModel);
         fragmentMeshcontactBinding.contactRecyclerView.setAdapter(meshContactAdapter);
+
+        fragmentMeshcontactBinding.groupRecyclerView.setItemAnimator(null);
+        fragmentMeshcontactBinding.groupRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ConversationAdapter conversationAdapter = new ConversationAdapter(meshContactViewModel);
+        fragmentMeshcontactBinding.groupRecyclerView.setAdapter(conversationAdapter);
+
+        setClickListener(fragmentMeshcontactBinding.fabChat);
     }
 
     private MeshContactAdapter getAdapter() {
         return (MeshContactAdapter) fragmentMeshcontactBinding
                 .contactRecyclerView.getAdapter();
+    }
+
+    private ConversationAdapter getConversationAdapter() {
+        return (ConversationAdapter) fragmentMeshcontactBinding
+                .groupRecyclerView.getAdapter();
     }
 
     private MeshContactViewModel getViewModel() {
@@ -410,16 +281,17 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         }).get(MeshContactViewModel.class);
     }
 
-    private void initAllText() {
-        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currentSelection = position;
-        if (position == Constants.SpinnerItem.FAVOURITE) {
+        if (position == Constants.SpinnerItem.GROUP) {
+            controlList(true);
+            updateGroupAdapterData(groupList);
+        } else if (position == Constants.SpinnerItem.FAVOURITE) {
+            controlList(false);
             updateAdapterByData(favouriteList);
         } else if (position == Constants.SpinnerItem.ALL) {
+            controlList(false);
             updateAdapterByData(msgWithFavList);
         }
     }
@@ -429,8 +301,24 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     }
 
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.fab_chat) {
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        }
+    }
+
     private void initDataObserver() {
         if (meshContactViewModel != null) {
+
+            meshContactViewModel.groupEntityList.observe(this, groupEntities -> {
+                if (groupEntities != null) {
+                    groupList = groupEntities;
+                    updateGroupAdapterData(groupEntities);
+                }
+            });
+
             meshContactViewModel.favoriteEntityList.observe(this, userEntities -> {
                 if (userEntities != null) {
                     isLoaded = false;
@@ -443,8 +331,6 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
             });
-
-            //    meshContactViewModel.startFavouriteObserver();
 
             meshContactViewModel.allMessagedWithEntity.observe(this, userEntities -> {
                 if (userEntities != null) {
@@ -459,8 +345,16 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
                 if (mSearchItem != null)
                     searchViewControl(userEntities);
             });
+        }
+    }
 
-            //  meshContactViewModel.startAllMessagedWithFavouriteObserver();
+    private void updateGroupAdapterData(PagedList<GroupEntity> groupEntities) {
+        getConversationAdapter().submitList(groupEntities);
+
+        if (groupEntities != null && groupEntities.size() > 0) {
+            controlEmpty(false);
+        } else {
+            controlEmpty(true);
         }
     }
 
@@ -469,24 +363,9 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         userEntityList = userEntities;
 
         if (userEntityList != null && userEntityList.size() > 0) {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-            }
+            controlEmpty(false);
         } else {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.GONE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.VISIBLE);
-            }
+            controlEmpty(true);
         }
     }
-
-/*    private void updateAdapterByAllList(PagedList<UserEntity> userEntities) {
-        getAdapter().submitList(userEntities);
-        userEntityList = userEntities;
-
-        if (userEntityList != null && userEntityList.size() > 0) {
-            if (fragmentMeshcontactBinding.emptyLayout.getVisibility() == View.VISIBLE) {
-                fragmentMeshcontactBinding.emptyLayout.setVisibility(View.GONE);
-            }
-        }
-    }*/
 }

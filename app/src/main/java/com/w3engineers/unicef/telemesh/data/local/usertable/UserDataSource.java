@@ -17,18 +17,14 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -37,15 +33,10 @@ import io.reactivex.Single;
  * Using the Room database as a data source.
  */
 
-
 public class UserDataSource {
 
     private static UserDataSource userDataSource;
-    public UserDao mUserDao;
-    // check change
-    @Inject
-    public AppDatabase appDatabase;
-
+    private final UserDao mUserDao;
 
 //    private static ExecutorService executorService;
 
@@ -53,14 +44,12 @@ public class UserDataSource {
 //        mUserDao = AppDatabase.getInstance().userDao();
 //    }
 
-
-    @Inject
-    public UserDataSource(AppDatabase appDatabase) {
-        this.appDatabase = appDatabase;
-        mUserDao = appDatabase.userDao();
-    }
-
-    public UserDataSource(@NonNull UserDao userDao){
+    /**
+     * This constructor is restricted and only used in unit test class
+     *
+     * @param userDao -> provide dao from unit test class
+     */
+    public UserDataSource(@NonNull UserDao userDao) {
         mUserDao = userDao;
     }
 
@@ -74,11 +63,14 @@ public class UserDataSource {
 
     /**
      * This constructor is restricted and only used in unit test class
+     *
+     * @param userDao -> provide dao from unit test class
      */
     @NonNull
     public static UserDataSource getInstance(@NonNull UserDao userDao) {
         if (userDataSource == null) {
             userDataSource = new UserDataSource(userDao);
+//            executorService = Executors.newSingleThreadExecutor();
         }
         return userDataSource;
     }
@@ -97,6 +89,10 @@ public class UserDataSource {
         return mUserDao.getAllOnlineUsers();
     }
 
+    @NonNull
+    public Flowable<List<UserEntity>> getAllUsersForGroup(String myUserId) {
+        return mUserDao.getAllUsersForGroup(myUserId);
+    }
 
     @NonNull
     public Flowable<List<UserEntity>> getAllMessagedWithFavouriteUsers() {
@@ -134,12 +130,20 @@ public class UserDataSource {
         mUserDao.deleteUser(userId);
     }
 
-    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers() {
-        return mUserDao.getUnSyncedUsers();
+    public List<UserEntity.NewMeshUserCount> getUnSyncedUsers(String myUserId) {
+        List<UserEntity.NewMeshUserCount> newMeshUserCountList = new ArrayList<>();
+        List<UserEntity> userEntityList = mUserDao.getUnSyncedUsers(myUserId);
+        for(UserEntity item : userEntityList){
+            UserEntity.NewMeshUserCount countObj = new UserEntity.NewMeshUserCount();
+            countObj.meshId = item.meshId;
+            countObj.registrationTime = item.registrationTime;
+            newMeshUserCountList.add(countObj);
+        }
+        return newMeshUserCountList;
     }
 
-    public int updateUserSynced() {
-        return mUserDao.updateUserToSynced();
+    public int updateUserSynced(String myUserId) {
+        return mUserDao.updateUserToSynced(myUserId);
     }
 
     @SuppressLint("LintError")
@@ -176,8 +180,12 @@ public class UserDataSource {
         return mUserDao.getLocalActiveUsers();
     }
 
-    public Single<List<String>> getAllFabMessagedUserIds() {
-        return mUserDao.getFavMessageUserIds();
+    public Single<List<String>> getAllFabMessagedActiveUserIds() {
+        return mUserDao.getAllFabMessagedActiveUserIds();
+    }
+
+    public List<String> getAllUnDiscoveredUsers(String myMeshId) {
+        return mUserDao.getAllUnDiscoveredUsers(myMeshId);
     }
 
     public List<String> getLocalWithBackConfigUsers(int versionCode) {
@@ -190,5 +198,13 @@ public class UserDataSource {
 
     public int updateBroadcastUserConfigVersion(int versionCode, String userId) {
         return mUserDao.updateBroadcastUserConfigVersion(versionCode, userId);
+    }
+
+    public Flowable<List<UserEntity>> getGroupMembers(List<String> whereCluse) {
+        return mUserDao.getGroupMembers(whereCluse);
+    }
+
+    public List<UserEntity> getLiveGroupMembers(List<String> whereCluse) {
+        return mUserDao.getGroupLiveMembers(whereCluse);
     }
 }

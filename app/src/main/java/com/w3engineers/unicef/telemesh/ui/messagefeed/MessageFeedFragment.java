@@ -4,15 +4,18 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentMessageFeedBinding;
 import com.w3engineers.unicef.telemesh.ui.bulletindetails.BulletinDetails;
+import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class MessageFeedFragment extends BaseFragment {
@@ -34,14 +37,31 @@ public class MessageFeedFragment extends BaseFragment {
         subscribeForMessageFeed();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        BroadcastDataHelper.getInstance().setIsFeedPageEnable(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BroadcastDataHelper.getInstance().setIsFeedPageEnable(false);
+    }
+
     /**
      * Subscribe for message feed update
      */
     private void subscribeForMessageFeed() {
 
         mMessageFeedViewModel.loadFeedList()
-                .observe(this, feedEntities -> getAdapter()
-                        .resetWithList(feedEntities));
+                .observe(this, feedEntities -> {
+                    mMessageFeedBinding.emptyLayout.setVisibility(View.GONE);
+                    if (feedEntities.isEmpty()) {
+                        mMessageFeedBinding.emptyLayout.setVisibility(View.VISIBLE);
+                    }
+                    getAdapter().resetWithList(feedEntities);
+                });
         mMessageFeedViewModel.loadFeedList();
     }
 
@@ -67,9 +87,7 @@ public class MessageFeedFragment extends BaseFragment {
 
         mMessageFeedViewModel.getMessageFeedDetails().observe(this, this::openDetailsPage);
 
-        mMessageFeedBinding.swipeRefresh.setOnRefreshListener(() -> {
-            swipeRefreshOperation();
-        });
+        mMessageFeedBinding.swipeRefresh.setOnRefreshListener(this::swipeRefreshOperation);
     }
 
     public void swipeRefreshOperation() {

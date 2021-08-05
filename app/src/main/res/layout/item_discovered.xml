@@ -103,6 +103,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
             <TextView
+                android:id="@+id/text_view_net_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
                 android:id="@+id/text_view_date_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

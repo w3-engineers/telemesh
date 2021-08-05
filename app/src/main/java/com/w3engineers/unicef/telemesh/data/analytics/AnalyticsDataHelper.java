@@ -11,9 +11,8 @@ Proprietary and confidential
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
@@ -36,6 +35,7 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
+import com.w3engineers.unicef.util.helper.ConnectivityUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,9 +75,9 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                     compositeDisposable
                             .add(Single.fromCallable(() -> FeedbackDataSource.getInstance().deleteFeedbackById(model.getFeedbackId()))
                                     .subscribeOn(Schedulers.newThread())
-                            .subscribe((result) -> {
-                                Timber.tag("FeedbackTest").d("Delete result: %s", result);
-                            }, Throwable::printStackTrace));
+                                    .subscribe((result) -> {
+                                        Timber.tag("FeedbackTest").d("Delete result: %s", result);
+                                    }, Throwable::printStackTrace));
                 } else {
                     FeedbackModel feedbackModel = new FeedbackModel();
                     feedbackModel.setUserId(model.getUserId());
@@ -106,7 +106,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
                             trackMessageCount = messagePlotCount;
 
-                            String userId = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+                            String userId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
                             MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity = new MessageEntity.MessageAnalyticsEntity()
                                     .setTime(System.currentTimeMillis()).setSyncMessageCountToken(messagePlotCount).setUserId(userId);
@@ -124,12 +124,14 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
     public void processMessageForAnalytics(boolean isMine, MessageEntity.MessageAnalyticsEntity messageAnalyticsEntity) {
 
-        if (isMobileDataEnable() || !isMine) {
-            MessageCountModel messageCountModel = messageAnalyticsEntity.toMessageCountModel();
-            sendMessageCount(messageCountModel);
-        } else {
-            RmDataHelper.getInstance().analyticsDataSendToSellers(messageAnalyticsEntity);
-        }
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected || !isMine) {
+                MessageCountModel messageCountModel = messageAnalyticsEntity.toMessageCountModel();
+                sendMessageCount(messageCountModel);
+            } else {
+                RmDataHelper.getInstance().analyticsDataSendToSellers(messageAnalyticsEntity);
+            }
+        });
     }
 
     public void sendMessageCount(MessageCountModel messageCountModel) {
@@ -147,12 +149,11 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         }
 
         if (newNodeModels.size() > 0) {
-            SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
 
-            if (!sharedPref.readBoolean(Constants.preferenceKey.MY_SYNC_IS_DONE)) {
+            if (!SharedPref.readBoolean(Constants.preferenceKey.MY_SYNC_IS_DONE)) {
                 NewNodeModel newNodeModel = new NewNodeModel()
-                        .setUserAddingTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME))
-                        .setUserId(sharedPref.read(Constants.preferenceKey.MY_USER_ID));
+                        .setUserAddingTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME))
+                        .setUserId(SharedPref.read(Constants.preferenceKey.MY_USER_ID));
 
                 newNodeModels.add(newNodeModel);
             }
@@ -195,13 +196,14 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     public void sendFeedback(FeedbackEntity entity) {
-        if (isMobileDataEnable()) {
-            Timber.tag("FeedbackTest").d("Feedback send directly");
-            sendFeedbackToInternet(entity, true);
-        } else {
-//            Timber.tag("FeedbackTest").d("Feedback send via seller");
-            RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
-        }
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected) {
+                Timber.tag("FeedbackTest").d("Feedback send directly");
+                sendFeedbackToInternet(entity, true);
+            } else {
+                RmDataHelper.getInstance().sendFeedbackToInternetUser(entity);
+            }
+        });
     }
 
     public void sendFeedbackToInternet(FeedbackEntity entity, boolean isDirectSend) {
@@ -216,8 +218,8 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public boolean isMobileDataEnable() {
-        return BulletinTimeScheduler.getInstance().isMobileDataEnable();
+    public boolean isInternetDataEnable() {
+        return false;
     }
 
     @Override
@@ -226,7 +228,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
         } else if (analyticsType == Constants.AnalyticsResponseType.NEW_USER_COUNT) {
             if (isSuccess) {
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_SYNC_IS_DONE, true);
+                SharedPref.write(Constants.preferenceKey.MY_SYNC_IS_DONE, true);
                 RmDataHelper.getInstance().updateSyncedUser();
             }
         } else if (analyticsType == Constants.AnalyticsResponseType.APP_SHARE_COUNT) {

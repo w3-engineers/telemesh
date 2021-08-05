@@ -9,33 +9,23 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
-import com.w3engineers.models.ConfigurationCommand;
-import com.w3engineers.models.PointGuideLine;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
-import com.w3engineers.unicef.telemesh.data.broadcast.TokenGuideRequestModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdateModel;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.ShareCountModel;
-import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinDataSource;
-import com.w3engineers.unicef.telemesh.data.local.bulletintrack.BulletinTrackEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
-import com.w3engineers.unicef.telemesh.data.local.feed.AckCommand;
-import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastCommand;
-import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
-import com.w3engineers.unicef.telemesh.data.local.feed.BulletinModel;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
-import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
-import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
-import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
@@ -49,7 +39,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
-import com.w3engineers.unicef.util.helper.LocationUtil;
+import com.w3engineers.unicef.util.helper.ConnectivityUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -65,8 +55,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import timber.log.Timber;
 
 /*
@@ -79,20 +67,18 @@ import timber.log.Timber;
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
-    private MeshDataSource rightMeshDataSource;
+    protected MeshDataSource rightMeshDataSource;
 
-    private DataSource dataSource;
+    protected DataSource dataSource;
 
-    public String mLatitude;
-    public String mLongitude;
 
     @SuppressLint("UseSparseArrays")
     @NonNull
-    public HashMap<String, DataModel> rmDataMap = new HashMap<>();
+    public static HashMap<String, DataModel> rmDataMap = new HashMap<>();
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private RmDataHelper() {
+    public RmDataHelper() {
         dataSource = Source.getDbSource();
         BroadcastManager.getInstance().setBroadcastSendCallback(this);
     }
@@ -111,7 +97,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return rightMeshDataSource;
     }
 
-    private void prepareRightMeshDataSource() {
+    protected void prepareRightMeshDataSource() {
         if (rightMeshDataSource == null) {
             rightMeshDataSource = MeshDataSource.getRmDataSource();
         }
@@ -135,6 +121,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void userAdd(@NonNull UserModel userModel) {
 
         String userId = userModel.getUserId();
+        if (userId == null || !userId.startsWith("0x")) {
+            Log.e("User Add: ", "Error id: " + userId);
+            return;
+        }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
 
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
@@ -158,36 +148,37 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
 
-        syncUserWithBroadcastMessage(userId);
-
-        if (isLocalOnline(userActiveStatus)) {
-            configFileSendToOthers(userModel.getConfigVersion(), userId);
-        }
-
-        HandlerUtil.postForeground(new Runnable() {
-            @Override
-            public void run() {
-                if (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE) {
-                    versionMessageHandshaking(userId);
-                }
-            }
-        }, 10 * 1000);
-
+//        BroadcastDataHelper.getInstance().syncBroadcastMsg(userId);
     }
 
-   /* public void onlyNodeAdd(String nodeId) {
-        if (rightMeshDataSource == null) {
-            rightMeshDataSource = MeshDataSource.getRmDataSource();
+    public void onDemandUserAdd(String userId) {
+        if (userId == null || !userId.startsWith("0x")) {
+            Log.e("Forward User Id: ", "Error id: " + userId);
+            return;
         }
-        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(nodeId);
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+        if (userEntity == null) {
+            userEntity = new UserEntity().setMeshId(userId)
+                    .setOnlineStatus(getActiveStatus(0));
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
+    }
 
-        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+    public void myUserInfoAdd() {
+        String userId = getMyMeshId();
 
-        UserEntity userEntity = new UserEntity().setUserName("").setAvatarIndex(-1).setMeshId(nodeId).setOnlineStatus(userConnectivityStatus);
+        String name = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        long regTime = SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME);
+
+        UserEntity userEntity = new UserEntity().setUserName(name)
+                .setAvatarIndex(avatarIndex)
+                .setMeshId(userId)
+                .setRegistrationTime(regTime)
+                .setOnlineStatus(Constants.UserStatus.OFFLINE);
 
         UserDataSource.getInstance().insertOrUpdateData(userEntity);
-
-    }*/
+    }
 
     public boolean userExistedOperation(String userId, int userActiveStatus) {
 
@@ -197,8 +188,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .updateUserStatus(userId, userConnectivityStatus);
 
         if (updateId > 0 && (userConnectivityStatus == Constants.UserStatus.WIFI_ONLINE
-                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE)) {
-            syncUserWithBroadcastMessage(userId);
+                || userConnectivityStatus == Constants.UserStatus.WIFI_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.BLE_MESH_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_ONLINE
+                || userConnectivityStatus == Constants.UserStatus.HB_MESH_ONLINE)) {
+//            BroadcastDataHelper.getInstance().syncBroadcastMsg(userId);
         }
 
         return updateId > 0;
@@ -209,56 +204,22 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         switch (userActiveStatus) {
             case 1:
                 return Constants.UserStatus.WIFI_ONLINE;
-            case 2:
+            case 10:
                 return Constants.UserStatus.BLE_ONLINE;
             case 3:
                 return Constants.UserStatus.WIFI_MESH_ONLINE;
-            case 4:
+            case 11:
                 return Constants.UserStatus.BLE_MESH_ONLINE;
             case 5:
                 return Constants.UserStatus.INTERNET_ONLINE;
+            case 6:
+                return Constants.UserStatus.HB_ONLINE;
+            case 7:
+                return Constants.UserStatus.HB_MESH_ONLINE;
             default:
                 return Constants.UserStatus.OFFLINE;
         }
     }
-
-    public boolean isLocalOnline(int userActiveStatus) {
-
-        switch (userActiveStatus) {
-            case Constants.UserStatus.WIFI_ONLINE:
-            case Constants.UserStatus.BLE_ONLINE:
-            case Constants.UserStatus.WIFI_MESH_ONLINE:
-            case Constants.UserStatus.BLE_MESH_ONLINE:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * If user mode change then we can get here call back of current mode
-     * Even we get mode if we want to call
-     *
-     * @param mode Integer
-     */
-  /*  public void onGetMyMode(int mode) {
-        // Here we will get callback
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_MODE, mode);
-        dataSource.setMyMode(mode);
-
-        if (MainActivity.getInstance() != null) {
-            // SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, true);
-            MainActivity.getInstance().finish();
-            Intent intent = MainActivity.getInstance().getIntent();
-            intent.putExtra(MainActivity.class.getSimpleName(), false);
-            MainActivity.getInstance().startActivity(intent);
-        }
-
-        rightMeshDataSource.stopAllServices();
-
-
-        //initRM(dataSource);
-    }*/
 
     /**
      * This api is responsible for update user info in database
@@ -269,7 +230,25 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void userLeave(@NonNull String peerId) {
 
-        UserDataSource.getInstance().updateUserStatus(peerId, Constants.UserStatus.OFFLINE);
+        // FAILED MAINTAINED
+
+        MessageSourceData.getInstance().changeSendMessageStatusByUserId(
+                Constants.MessageStatus.STATUS_SENDING_START,
+                Constants.MessageStatus.STATUS_FAILED, peerId);
+
+        MessageSourceData.getInstance().changeMessageStatusByUserId(
+                Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                Constants.MessageStatus.STATUS_FAILED, peerId);
+
+        MessageSourceData.getInstance().changeUnreadMessageStatusByUserId(
+                Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                Constants.MessageStatus.STATUS_UNREAD_FAILED, peerId);
+    }
+
+    public void meshInitiated() {
+        if (dataSource != null) {
+            dataSource.setMeshInitiated(true);
+        }
     }
 
     /**
@@ -284,35 +263,75 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         AnalyticsDataHelper.getInstance().analyticsDataObserver();
 
+        // This observer only for message send
         compositeDisposable.add(dataSource.getLastChatData()
                 .subscribeOn(Schedulers.io())
                 .subscribe(chatEntity -> {
 
-                    if (!chatEntity.isIncoming()
-                            && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
+                    if (!chatEntity.isIncoming() && (chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING)) {
 
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                            if (messageEntity.getMessagePlace()) {
+                                GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
+                                        messageModelString);
+                            } else {
+                                dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
+                                        messageEntity.getFriendsId(), true);
+                            }
+                        } else {
+                            ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
+                        }
 
-                        dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
                     }
                 }, Throwable::printStackTrace));
 
+        // This observer only for re send
         compositeDisposable.add(Objects.requireNonNull(dataSource.getReSendMessage())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(chatEntity -> {
 
-                    if (!chatEntity.isIncoming()
-                            && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
-
+                    if (!chatEntity.isIncoming() && chatEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING) {
                         MessageEntity messageEntity = (MessageEntity) chatEntity;
-                        String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
+                        if (messageEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                            String messageModelString = new Gson().toJson(messageEntity.toMessageModel());
 
-                        dataSend(messageModelString.getBytes(),
-                                Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                            dataSend(messageModelString.getBytes(),
+                                    Constants.DataType.MESSAGE, chatEntity.getFriendsId(), true);
+                        }
+                    } else {
+                        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
                     }
                 }, Throwable::printStackTrace));
+
+        compositeDisposable.add(Objects.requireNonNull(dataSource.getLiveUserId())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(liveUserId -> {
+
+                    if (!TextUtils.isEmpty(liveUserId)) {
+                        prepareRightMeshDataSource();
+                        rightMeshDataSource.checkUserIsConnected(liveUserId);
+                        int userActiveType = rightMeshDataSource.checkUserConnectivityStatus(liveUserId);
+
+                        HandlerUtil.postBackground(() -> {
+                            updateUserActiveStatus(liveUserId, userActiveType);
+                        });
+                    }
+                }, Throwable::printStackTrace));
+
+        GroupDataHelper.getInstance().groupDataObserver();
+    }
+
+    private void updateUserActiveStatus(String userId, int userActiveStatus) {
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        Log.v("MIMO_SAHA", "S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
+        UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
+        if (userEntity != null) {
+            userEntity.setOnlineStatus(userConnectivityStatus);
+            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+        }
     }
 
     /**
@@ -321,7 +340,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * @param data -> raw data
      * @param type -> data type
      */
-    private void dataSend(@NonNull byte[] data, byte type, String userId, boolean isNotificationEnable) {
+    protected void dataSend(@NonNull byte[] data, byte type, String userId, boolean isNotificationEnable) {
 
         DataModel dataModel = new DataModel()
                 .setRawData(data)
@@ -331,6 +350,13 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, isNotificationEnable));
+    }
+
+    protected void broadcastDataSend(String broadcastId, String metaData, String contentPath, double latitude, double longitude,
+                                     double range, String expiryTime) {
+        prepareRightMeshDataSource();
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.broadcastDataSend(broadcastId, metaData, contentPath, latitude, longitude, range, expiryTime));
     }
 
     /**
@@ -353,7 +379,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 break;
 
             case Constants.DataType.MESSAGE_FEED:
-                setBulletinMessage(rawData, userId, isNewMessage, isAckSuccess);
+//                BroadcastDataHelper.getInstance().receiveBroadcastMsgFromLocal(rawData, userId, isNewMessage, isAckSuccess);
                 break;
 
             case Constants.DataType.MESSAGE_COUNT:
@@ -366,7 +392,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 versionCrossMatching(rawData, userId, isAckSuccess);
                 break;
             case Constants.DataType.SERVER_LINK:
-                startAppUpdate(rawData, isAckSuccess);
+                startAppUpdate(rawData, isAckSuccess, userId);
                 break;
             case Constants.DataType.FEEDBACK_TEXT:
                 parseFeedbackText(rawData, isAckSuccess);
@@ -377,21 +403,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.USER_UPDATE_INFO:
                 parseUpdatedInformation(rawData, userId, isNewMessage);
                 break;
-
-            case Constants.DataType.CONFIG_UPDATE_INFO:
-                configFileReceiveFromOthers(rawData, isNewMessage, userId);
+            case Constants.DataType.SUCCESS_CONTENT_MESSAGE:
+                ContentDataHelper.getInstance().contentMessageSuccessResponse(rawData);
                 break;
 
-            case Constants.DataType.TOKEN_GUIDE_REQUEST:
-                sendTokenGuideInfo(userId, isNewMessage);
-                break;
-
-            case Constants.DataType.TOKEN_GUIDE_INFO:
-                tokenGuidelineReceivedFromOther(rawData, isNewMessage);
+            case Constants.DataType.EVENT_GROUP_CREATION:
+            case Constants.DataType.EVENT_GROUP_LEAVE:
+            case Constants.DataType.EVENT_GROUP_RENAME:
+            case Constants.DataType.EVENT_GROUP_MEMBER_ADD:
+            case Constants.DataType.EVENT_GROUP_MEMBER_REMOVE:
+            case Constants.DataType.EVENT_GROUP_DATA_RELAY:
+            case Constants.DataType.EVENT_GROUP_DATA_FORWARD:
+                GroupDataHelper.getInstance().groupDataReceive(dataType, userId, rawData, isNewMessage);
                 break;
         }
     }
-
 
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
@@ -410,10 +436,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 Timber.e("Read :: %s", chatEntity.getMessageId());
                 //prepareDateSeparator(chatEntity);
 
-                if (TextUtils.isEmpty(dataSource.getCurrentUser()) || !userId.equals(dataSource.getCurrentUser())) {
-                    Timber.e("Un Read :: %s", chatEntity.getMessageId());
-                    NotifyUtil.showNotification(chatEntity);
-                    chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                String currentThread = dataSource.getCurrentUser();
+
+                if (messageModel.isGroup()) {
+                    if (TextUtils.isEmpty(currentThread) || TextUtils.isEmpty(messageModel.getGroupId())
+                            || !messageModel.getGroupId().equals(currentThread)) {
+                        NotifyUtil.showNotification(chatEntity);
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    }
+                } else {
+                    if (TextUtils.isEmpty(currentThread) || !userId.equals(currentThread)) {
+                        NotifyUtil.showNotification(chatEntity);
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                    }
                 }
 
                 MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
@@ -431,45 +466,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             }
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void setBulletinMessage(byte[] rawBulletinData, String userId, boolean isNewMessage, boolean isAckSuccess) {
-        try {
-
-            String bulletinString = new String(rawBulletinData);
-            BulletinModel bulletinModel = new Gson().fromJson(bulletinString, BulletinModel.class);
-
-            FeedEntity feedEntity = new FeedEntity()
-                    .toFeedEntity(bulletinModel);
-
-            if (isNewMessage) {
-                feedEntity.setFeedReadStatus(false);
-
-                compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
-                        .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
-                        .subscribe(aLong -> {
-                            if (aLong != -1) {
-                                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
-                                    BulletinDataSource.getInstance().insertOrUpdate(
-                                            getMyTrackEntity(feedEntity.getFeedId())
-                                                    .setBulletinOwnerStatus(Constants.Bulletin.OTHERS)
-                                                    .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND_TO_SERVER));
-                                }
-                            }
-                        }, Throwable::printStackTrace));
-            } else {
-                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
-                    BulletinDataSource.getInstance().insertOrUpdate(
-                            getOthersTrackEntity(feedEntity.getFeedId(), userId)
-                                    .setBulletinAckStatus(isAckSuccess ?
-                                            Constants.Bulletin.BULLETIN_RECEIVED : Constants.Bulletin.DEFAULT));
-                }
-            }
-
-        }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
@@ -485,8 +484,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, messageAnalyticsEntity);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     private void saveAppShareCount(byte[] rawData, boolean isAckSuccess) {
@@ -518,8 +518,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                             }
                         }, Throwable::printStackTrace));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
 
     }
 
@@ -551,6 +552,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 }
 
                 dataReceive(prevRMDataModel, false);
+                return;
             }
         }
     }
@@ -562,15 +564,62 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void updateUserStatus(boolean isServiceStop) {
         compositeDisposable.add(updateUserToOffline()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    if (isServiceStop) {
+                    /*if (isServiceStop) {
                         stopMeshProcess();
-                    }
+                    }*/
+                    Log.v("MIMO_SAHA", "User offline " + integer);
+                    updateMessageStatus();
                 }, Throwable::printStackTrace));
     }
 
     private Single<Integer> updateUserToOffline() {
         return Single.fromCallable(() ->
                 UserDataSource.getInstance().updateUserToOffline());
+    }
+
+    public void destroyMeshService() {
+        compositeDisposable.add(updateUserToOffline()
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    updateMessageStatus();
+                }, Throwable::printStackTrace));
+    }
+
+    private void updateMessageStatus() {
+        compositeDisposable.add(updateMessageStatusFailed()
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    Log.v("MIMO_SAHA", "Msg send failed " + integer);
+                    updateReceiveMessageStatusFailed();
+                }, Throwable::printStackTrace));
+    }
+
+    private Single<Long> updateMessageStatusFailed() {
+        return Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeMessageStatusFrom(
+                        Constants.MessageStatus.STATUS_SENDING_START,
+                        Constants.MessageStatus.STATUS_FAILED));
+    }
+
+    private void updateReceiveMessageStatusFailed() {
+        // FAILED MAINTAINED
+        compositeDisposable.add(Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeMessageStatusByContentStatus(
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                        Constants.MessageStatus.STATUS_FAILED))
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    Log.v("MIMO_SAHA", "Msg receive failed " + integer);
+                    updateReceiveUnreadMessageStatusFailed();
+                }, Throwable::printStackTrace));
+    }
+
+    private void updateReceiveUnreadMessageStatusFailed() {
+        // FAILED MAINTAINED
+        compositeDisposable.add(Single.fromCallable(() ->
+                MessageSourceData.getInstance().changeUnreadMessageStatusByContentStatus(
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
+                        Constants.MessageStatus.STATUS_UNREAD_FAILED))
+                .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
+                    Log.v("MIMO_SAHA", "Msg receive unread failed " + integer);
+                }, Throwable::printStackTrace));
     }
 
     /**
@@ -615,199 +664,8 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.restartMeshService();
     }
 
-    // TODO SSID_Change
-    /*public void destroyMeshService() {
-        rightMeshDataSource.destroyMeshService();
-        rightMeshDataSource.resetViperInstance();
-
-        rightMeshDataSource.resetInstance();
-
-        rightMeshDataSource = MeshDataSource.getRmDataSource();
-
-    }*/
-
-    public void requestWsMessage() {
-        if (TextUtils.isEmpty(mLatitude) || TextUtils.isEmpty(mLongitude)) {
-            LocationUtil.getInstance().init(TeleMeshApplication.getContext()).getLocation().addLocationListener((lat, lang) -> {
-
-                LocationUtil.getInstance().removeListener();
-
-                mLatitude = lat;
-                mLongitude = lang;
-
-                getLocalUserCount();
-            });
-        } else {
-            getLocalUserCount();
-        }
-    }
-
-    private void requestWsMessageWithUserCount(List<String> localActiveUsers) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getBroadcastCommand(mLatitude, mLongitude, localActiveUsers));
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
-    }
-
-    private String getMyMeshId() {
-        return SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-    }
-
-    private void requestAckMessage(String messageId) {
-        requestAckMessage(messageId, getMyMeshId());
-    }
-
-    private void requestAckMessage(String messageId, String userId) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(AppCredentials.getInstance().getBroadCastUrl()).build();
-        BroadcastWebSocket listener = new BroadcastWebSocket();
-        listener.setBroadcastCommand(getAckCommand(messageId, userId));
-        client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
-    }
-
-    void processBroadcastMessage(@NonNull String broadcastText) {
-        try {
-            Timber.tag("MIMO_SAHA:").v("Brd: %s", broadcastText);
-            BulletinFeed bulletinFeed = new Gson().fromJson(broadcastText, BulletinFeed.class);
-
-            requestAckMessage(bulletinFeed.getMessageId());
-
-            FeedEntity feedEntity = new FeedEntity().toFeedEntity(bulletinFeed).setFeedReadStatus(false);
-
-            compositeDisposable.add(Single.fromCallable(() -> FeedDataSource.getInstance()
-                    .insertOrUpdateData(feedEntity)).subscribeOn(Schedulers.newThread())
-                    .subscribe(aLong -> {
-                        if (aLong != -1) {
-                            if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
-                                BulletinDataSource.getInstance().insertOrUpdate(getMyTrackEntity(feedEntity.getFeedId()));
-                            }
-                            broadcastMessage(feedEntity);
-                        }
-                    }, Throwable::printStackTrace));
-
-        }
-        catch (Exception e) { e.printStackTrace(); }
-    }
-
-    public void broadcastMessage(@NonNull FeedEntity feedEntity) {
-
-        List<String> meshDataList = new ArrayList<>();
-
-        for (UserEntity userEntity : UserDataSource.getInstance().getLivePeers()) {
-
-            meshDataList.add(userEntity.meshId);
-
-            if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
-                BulletinDataSource.getInstance().insertOrUpdate(
-                        getOthersTrackEntity(feedEntity.getFeedId(), userEntity.meshId));
-            }
-        }
-
-        String bulletinString = new Gson().toJson(feedEntity.toTelemeshBulletin());
-
-        DataModel rmDataModel = new DataModel()
-                .setRawData(bulletinString.getBytes())
-                .setDataType(Constants.DataType.MESSAGE_FEED);
-
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        prepareRightMeshDataSource();
-        service.execute(() -> rightMeshDataSource.DataSend(rmDataModel, meshDataList, false));
-    }
-
-    private void syncUserWithBroadcastMessage(String userId) {
-        compositeDisposable.add(BulletinDataSource.getInstance()
-                .getUnsentMessage(userId).subscribeOn(Schedulers.newThread())
-                .subscribe(feedEntities -> {
-                    sendSyncBroadcastMessage(feedEntities, userId);
-                }, Throwable::printStackTrace));
-    }
-
-    private void sendSyncBroadcastMessage(List<FeedEntity> feedEntities, String userId) {
-        if (feedEntities != null) {
-            for (FeedEntity feedEntity : feedEntities) {
-
-                if (!TextUtils.isEmpty(feedEntity.getFeedId())) {
-                    BulletinDataSource.getInstance().insertOrUpdate(
-                            getOthersTrackEntity(feedEntity.getFeedId(), userId));
-                }
-                String bulletinString = new Gson().toJson(feedEntity.toTelemeshBulletin());
-                dataSend(bulletinString.getBytes(), Constants.DataType.MESSAGE_FEED, userId, false);
-            }
-        }
-    }
-
-    void processBroadcastAck(@NonNull String ackText) {
-        AckCommand ackCommand = new Gson().fromJson(ackText, AckCommand.class);
-        if (ackCommand.getStatus() == 1) {
-            compositeDisposable.add(BulletinDataSource.getInstance()
-                    .setFullSuccess(ackCommand.getAckMsgId(), ackCommand.getClientId())
-                    .subscribeOn(Schedulers.newThread())
-                    .subscribe(integer -> {
-                    }, Throwable::printStackTrace));
-        }
-    }
-
-    public void sendPendingAck() {
-        compositeDisposable.add(BulletinDataSource.getInstance().getAllSuccessBulletin()
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(this::sendToServer, Throwable::printStackTrace));
-    }
-
-    private void sendToServer(List<BulletinTrackEntity> bulletinTrackEntities) {
-        for (BulletinTrackEntity bulletinTrackEntity : bulletinTrackEntities) {
-            requestAckMessage(bulletinTrackEntity.getBulletinMessageId(), bulletinTrackEntity.getBulletinTrackUserId());
-        }
-    }
-
-    private BroadcastCommand getBroadcastCommand(String lat, String lang, List<String> localActiveUsers) {
-        Payload payload = new Payload();
-
-        GeoLocation geoLocation = new GeoLocation()
-                .setLatitude(lat).setLongitude(lang);
-
-        payload.setGeoLocation(geoLocation);
-
-        if (localActiveUsers != null) {
-            payload.setConnectedClients(String.valueOf(localActiveUsers.size()));
-            payload.setConnectedClientEthIds(localActiveUsers);
-        } else {
-            payload.setConnectedClients("0");
-            payload.setConnectedClientEthIds(new ArrayList<>());
-        }
-
-        return new BroadcastCommand().setEvent("connect")
-                .setToken(AppCredentials.getInstance().getBroadCastToken())
-                .setBaseStationId(getMyMeshId())
-                .setClientId(getMyMeshId())
-                .setPayload(payload);
-    }
-
-    private BroadcastCommand getAckCommand(String messageId, String userId) {
-        Payload payload = new Payload().setMessageId(messageId);
-        return new BroadcastCommand().setEvent("ack_msg_received")
-                .setToken(AppCredentials.getInstance().getBroadCastToken())
-                .setBaseStationId(getMyMeshId())
-                .setClientId(userId)
-                .setPayload(payload);
-    }
-
-    private BulletinTrackEntity getMyTrackEntity(String messageId) {
-        return new BulletinTrackEntity()
-                .setBulletinMessageId(messageId)
-                .setBulletinTrackUserId(getMyMeshId())
-                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_RECEIVED)
-                .setBulletinOwnerStatus(Constants.Bulletin.MINE);
-    }
-
-    private BulletinTrackEntity getOthersTrackEntity(String messageId, String userId) {
-        return new BulletinTrackEntity()
-                .setBulletinMessageId(messageId)
-                .setBulletinTrackUserId(userId)
-                .setBulletinAckStatus(Constants.Bulletin.BULLETIN_SEND)
-                .setBulletinOwnerStatus(Constants.Bulletin.OTHERS);
+    protected String getMyMeshId() {
+        return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -827,12 +685,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public void sendAppShareCount() {
-        if (AnalyticsDataHelper.getInstance().isMobileDataEnable()) {
-            sendAppShareCountAnalytics();
-        } else {
-            compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
-                    .subscribeOn(Schedulers.newThread()).subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
-        }
+
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected) {
+                sendAppShareCountAnalytics();
+            } else {
+                compositeDisposable.add(AppShareCountDataService.getInstance().getTodayAppShareCount(TimeUtil.getDateString(System.currentTimeMillis()))
+                        .subscribeOn(Schedulers.newThread()).subscribe(this::sendAppShareCountToSellers, Throwable::printStackTrace));
+            }
+        });
 
         sendPendingFeedback();
     }
@@ -865,7 +726,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void newUserAnalyticsSend() {
         compositeDisposable.add(Single.fromCallable(() ->
-                UserDataSource.getInstance().getUnSyncedUsers())
+                UserDataSource.getInstance().getUnSyncedUsers(getMyMeshId()))
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(newMeshUserCounts -> {
                     AnalyticsDataHelper.getInstance().processNewNodesForAnalytics(newMeshUserCounts);
@@ -874,7 +735,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void updateSyncedUser() {
         compositeDisposable.add(Single.fromCallable(() ->
-                UserDataSource.getInstance().updateUserSynced())
+                UserDataSource.getInstance().updateUserSynced(getMyMeshId()))
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(syncedUserCounts -> {
                 }, Throwable::printStackTrace));
@@ -912,27 +773,42 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .subscribe(this::uploadLogFile, Throwable::printStackTrace));
     }
 
-    public void appUpdateFromOtherServer() {
+    public void appUpdateFromOtherServer(int type, String normalUpdateJson) {
 
         // check app update for internet;
 
-        HandlerUtil.postForeground(() -> {
-            if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
-                //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
-                if (MainActivity.getInstance() == null) return;
+        if (type == Constants.AppUpdateType.BLOCKER) {
+            if (DataManager.on().isNetworkOnline()) {
+                InAppUpdate.getInstance(MainActivity.getInstance()).setAppUpdateProcess(true);
 
-                SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-                if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-                    long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
-                    long dif = System.currentTimeMillis() - saveTime;
-                    long days = dif / (24 * 60 * 60 * 1000);
-
-                    if (days <= 2) return;
-                }
-
-                InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+                AppInstaller.downloadApkFile(AppCredentials.getInstance().getFileRepoLink(),
+                        MainActivity.getInstance(), DataManager.on().getNetwork());
             }
-        }, TimeUnit.MINUTES.toMillis(1));
+
+        } else {
+            HandlerUtil.postForeground(() -> {
+                if (!InAppUpdate.getInstance(TeleMeshApplication.getContext()).isAppUpdating()) {
+                    //InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(true);
+                    if (MainActivity.getInstance() == null) return;
+
+//                    SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
+                    if (SharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+                        long saveTime = SharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+                        long dif = System.currentTimeMillis() - saveTime;
+                        long days = dif / (24 * 60 * 60 * 1000);
+
+                        if (days <= 2) return;
+                    }
+
+                    // We can show the dialog directly by creating a json file
+
+                    InAppUpdate.getInstance(MainActivity.getInstance()).showAppInstallDialog(normalUpdateJson, MainActivity.getInstance());
+
+                    // InAppUpdate.getInstance(TeleMeshApplication.getContext()).checkForUpdate(MainActivity.getInstance(), InAppUpdate.LIVE_JSON_URL);
+                }
+            }, TimeUnit.SECONDS.toMillis(5));
+        }
+
     }
 
     private void uploadLogFile(List<String> previousList) {
@@ -956,16 +832,15 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private void getLocalUserCount() {
-        compositeDisposable.add(Single.fromCallable(() ->
-                UserDataSource.getInstance().getLocalUserCount())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(this::requestWsMessageWithUserCount, Throwable::printStackTrace));
-    }
-
     @Override
     public void dataSent(@NonNull DataModel rmDataModel, String dataSendId) {
         rmDataMap.put(dataSendId, rmDataModel);
+    }
+
+    @Override
+    public void contentSent(ContentModel contentModel, String dataSendId) {
+
+        ContentDataHelper.getInstance().contentDataSend(dataSendId, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {
@@ -979,9 +854,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         if (userEntity != null) {
 
-            userEntity = userEntity.updateUserEntity(userModel);
+            if (TextUtils.isEmpty(userEntity.getUserName())) {
+                userEntity = userEntity.updateUserEntity(userModel);
+            } else {
+                userEntity = userEntity.updateUserEntity(userModel);
+                prepareRightMeshDataSource();
+                rightMeshDataSource.saveUpdateOtherUserInfo(userEntity.getMeshId(), userEntity.getUserName(), userEntity.getAvatarIndex());
 
-            UserDataSource.getInstance().insertOrUpdateData(userEntity);
+                UserDataSource.getInstance().insertOrUpdateData(userEntity);
+            }
+            GroupDataHelper.getInstance().updateGroupUserInfo(userEntity);
         }
     }
 
@@ -990,6 +872,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
+
+        // Save current my information in SDK layer
+        prepareRightMeshDataSource();
+        rightMeshDataSource.saveUpdateUserInfo();
 
         UserModel userModel = new UserModel();
         userModel.setImage(imageIndex);
@@ -1001,25 +887,36 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .setRawData(updateInfo.getBytes())
                 .setDataType(Constants.DataType.USER_UPDATE_INFO);
 
-        prepareRightMeshDataSource();
 
-        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedUserIds()
+
+        compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedActiveUserIds()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(users -> {
 
+                    GroupDataHelper.getInstance().updateMyUserInfo();
                     ExecutorService service = Executors.newSingleThreadExecutor();
                     service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
 
                 }, Throwable::printStackTrace));
+
+        compositeDisposable.add(GroupDataHelper.getInstance()
+                .syncUserUpdateInfoForUnDiscovered(updateInfo, Constants.DataType.USER_UPDATE_INFO)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe());
     }
 
     // APP update process
 
     public void versionMessageHandshaking(String userId) {
         InAppUpdateModel model = InAppUpdate.getInstance(TeleMeshApplication.getContext()).getAppVersion();
+
+        int versionCode = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        if (BuildConfig.VERSION_CODE == versionCode) {
+            model.setUpdateType(SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE));
+        }
+
         String data = new Gson().toJson(model);
         dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
-
     }
 
 
@@ -1036,32 +933,43 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String myServerLink = instance.getMyLocalServerLink();
         Timber.tag("InAppUpdateTest").d("My version Code: %s", myVersionModel.getVersionCode());
-        if (myVersionModel.getVersionCode() > versionModel.getVersionCode() &&
-                myServerLink != null) {
+        if (myVersionModel.getVersionCode() > versionModel.getVersionCode()) {
 
+            if (myServerLink != null) {
+                // start my server
+                if (!instance.isServerRunning()) {
+                    instance.prepareLocalServer();
+                }
 
-            // start my server
-            if (!instance.isServerRunning()) {
-                instance.prepareLocalServer();
+                InAppUpdateModel model = new InAppUpdateModel();
+                model.setUpdateLink(myServerLink);
+                String data = new Gson().toJson(model);
+                dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
+
+                Timber.tag("InAppUpdateTest").d("My version is Big: ");
             }
-
-            InAppUpdateModel model = new InAppUpdateModel();
-            model.setUpdateLink(myServerLink);
-            String data = new Gson().toJson(model);
-            dataSend(data.getBytes(), Constants.DataType.SERVER_LINK, userId, false);
-
-            Timber.tag("InAppUpdateTest").d("My version is Big: ");
-        } else {
-//            Timber.tag("InAppUpdateTest").d("My version is same: ");
+        } else if (versionModel.getVersionCode() > myVersionModel.getVersionCode()) {
+            if (versionModel.getUpdateType() == Constants.AppUpdateType.BLOCKER) {
+                if (MainActivity.getInstance() != null) {
+                    MainActivity.getInstance().openAppBlocker(versionModel.getVersionName());
+                }
+            }
         }
     }
 
-    private void startAppUpdate(byte[] rawData, boolean isAckSuccess) {
+    private void startAppUpdate(byte[] rawData, boolean isAckSuccess, String userId) {
         if (isAckSuccess) return;
 
-        SharedPref sharedPref = SharedPref.getSharedPref(TeleMeshApplication.getContext());
-        if (sharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
-            long saveTime = sharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
+        int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
+
+        int userConnectivityStatus = getActiveStatus(userActiveStatus);
+
+        if (userConnectivityStatus != Constants.UserStatus.WIFI_ONLINE) {
+            return;
+        }
+
+        if (SharedPref.readBoolean(Constants.preferenceKey.ASK_ME_LATER)) {
+            long saveTime = SharedPref.readLong(Constants.preferenceKey.ASK_ME_LATER_TIME);
             long days = (System.currentTimeMillis() - saveTime) / (24 * 60 * 60 * 1000);
 
             if (days <= 2) return;
@@ -1095,136 +1003,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         FeedbackDataSource.getInstance().deleteFeedbackById(feedbackModel.getFeedbackId());
     }
 
-    /////////////////////Broadcast config file/////////////////////////////
-
-    public void syncConfigFileAndBroadcast(boolean isUpdate, ConfigurationCommand configurationCommand) {
-        if (isUpdate) {
-            String configText = new Gson().toJson(configurationCommand);
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
-
-            rightMeshDataSource.saveUpdateUserInfo();
-
-            Log.v("MIMO_SAHA::", "Config version: " + configurationCommand.getConfigVersionCode());
-
-            DataModel dataModel = new DataModel()
-                    .setRawData(configText.getBytes())
-                    .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
-
-            compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                    .getLocalWithBackConfigUsers(configurationCommand.getConfigVersionCode()))
-                    .subscribeOn(Schedulers.newThread())
-                    .subscribe(users -> {
-
-                        ExecutorService service = Executors.newSingleThreadExecutor();
-                        service.execute(() -> rightMeshDataSource.DataSend(dataModel, users, false));
-
-                        updateBackdatedConfigUsersVersion(configurationCommand.getConfigVersionCode());
-
-                    }, Throwable::printStackTrace));
+    public void destroy() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+//            compositeDisposable.dispose();
         }
-    }
-
-    private void updateBackdatedConfigUsersVersion(int version) {
-        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                .updateBackConfigUsers(version))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(updatedUsersCount -> {
-                    Timber.e("backdated user update %s", updatedUsersCount);
-                }, Throwable::printStackTrace));
-    }
-
-    private void updateBroadcasterConfigVersion(int version, String userId) {
-        compositeDisposable.add(Single.fromCallable(() -> UserDataSource.getInstance()
-                .updateBroadcastUserConfigVersion(version, userId))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(updatedUsersCount -> {
-                    Timber.e("broadcast user update %s", updatedUsersCount);
-                }, Throwable::printStackTrace));
-    }
-
-    public void configFileSendToOthers(int versionCode, String userId) {
-
-        int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
-
-        if (versionCode < myConfigVersion) {
-
-            String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
-
-            if (!TextUtils.isEmpty(configText)) {
-
-                DataModel dataModel = new DataModel()
-                        .setRawData(configText.getBytes())
-                        .setDataType(Constants.DataType.CONFIG_UPDATE_INFO);
-
-                ExecutorService service = Executors.newSingleThreadExecutor();
-                service.execute(() -> rightMeshDataSource.DataSend(dataModel, userId, false));
-            }
-        }
-    }
-
-    private void configFileReceiveFromOthers(byte[] rawData, boolean isNewMessage, String userId) {
-        if (isNewMessage) {
-
-            String configText = new String(rawData);
-            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
-
-            int myConfigVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.CONFIG_VERSION_CODE);
-
-            if (myConfigVersion < configurationCommand.getConfigVersionCode()) {
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_VERSION_CODE, configurationCommand.getConfigVersionCode());
-                SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.CONFIG_STATUS, configText);
-
-                prepareRightMeshDataSource();
-
-                rightMeshDataSource.sendConfigToViper(configurationCommand);
-
-                rightMeshDataSource.saveUpdateUserInfo();
-
-                updateBroadcasterConfigVersion(configurationCommand.getConfigVersionCode(), userId);
-            }
-
-            // check token guide version and request token_guide
-            int myTokenGuideVersion = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE);
-            if (myTokenGuideVersion < configurationCommand.getTokenGuideVersion()) {
-                // request toke guide info
-                requestTokenGuideInfo(userId);
-            }
-        }
-    }
-
-    private void requestTokenGuideInfo(String userId) {
-        TokenGuideRequestModel model = new TokenGuideRequestModel();
-        model.setRequest("Request");
-        String jsonText = new Gson().toJson(model);
-
-        dataSend(jsonText.getBytes(), Constants.DataType.TOKEN_GUIDE_REQUEST, userId, false);
-    }
-
-    private void sendTokenGuideInfo(String userId, boolean isNewMessage) {
-        if (!isNewMessage) return;
-
-        PointGuideLine guideLine = rightMeshDataSource.requestTokenGuideline();
-
-        if (guideLine != null) {
-            String guidelineInfo = new Gson().toJson(guideLine);
-
-            dataSend(guidelineInfo.getBytes(), Constants.DataType.TOKEN_GUIDE_INFO, userId, false);
-        }
-    }
-
-    private void tokenGuidelineReceivedFromOther(byte[] rawData, boolean isNewMessage) {
-        if (!isNewMessage) return;
-
-        String configText = SharedPref.getSharedPref(TeleMeshApplication.getContext()).read(Constants.preferenceKey.CONFIG_STATUS);
-        if (!TextUtils.isEmpty(configText)) {
-            ConfigurationCommand configurationCommand = new Gson().fromJson(configText, ConfigurationCommand.class);
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.TOKEN_GUIDE_VERSION_CODE, configurationCommand.getTokenGuideVersion());
-        }
-
-        String guidelineInfo = new String(rawData);
-        rightMeshDataSource.sendTokenGuidelineInfoToViper(guidelineInfo);
     }
 
 

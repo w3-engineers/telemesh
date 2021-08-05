@@ -4,12 +4,10 @@ package com.w3engineers.unicef.telemesh.ui.messagefeed;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseRxViewModel;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.util.base.ui.BaseRxViewModel;
 
 import java.util.List;
 
@@ -58,13 +56,15 @@ public class MessageFeedViewModel extends BaseRxViewModel {
      * @param feedEntity selected feed entity
      */
     public void postMessageFeedEntity(@NonNull FeedEntity feedEntity) {
-        updateFeedEntity(feedEntity);
+        mSelectedFeedEntityObservable.postValue(feedEntity);
     }
 
     public void requestBroadcastMessage() {
-        if (Constants.IS_DATA_ON) {
-            RmDataHelper.getInstance().requestWsMessage();
-        }
+//        if(NetworkMonitor.isOnline()) {
+//            BroadcastDataHelper.getInstance().demoTextBroadcast();
+          BroadcastDataHelper.getInstance().requestForBroadcast();
+    //    BroadcastDataHelper.getInstance().testLocalBroadcast();
+//        }
     }
 
     private void updateFeedEntity(FeedEntity feedEntity) {
@@ -73,7 +73,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    mSelectedFeedEntityObservable.postValue(feedEntity);
+
                 }, Throwable::printStackTrace));
     }
 

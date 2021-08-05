@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Single;
+
 public class FeedDataSource {
 
     private FeedDao feedDao;
@@ -29,15 +31,31 @@ public class FeedDataSource {
         return feedDataSource;
     }
 
-    public long insertOrUpdateData(@NonNull FeedEntity feedEntity) {
+    public FeedEntity insertOrUpdateData(@NonNull FeedEntity feedEntity) {
 
         Callable<Long> insertCallable = () -> feedDao.insertFeed(feedEntity);
+
+        try {
+            long insertId = mIoExecutor.submit(insertCallable).get();
+            if (insertId != -1) {
+                return feedEntity;
+            } else {
+                return null;
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public FeedEntity getFeedById(@NonNull String feedId) {
+        Callable<FeedEntity> insertCallable = () -> feedDao.getFeedById(feedId);
 
         try {
             return mIoExecutor.submit(insertCallable).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return 0;
+            return null;
         }
     }
 
@@ -49,6 +67,16 @@ public class FeedDataSource {
     @NonNull
     public LiveData<List<FeedEntity>> getAllUnreadFeeds() {
         return feedDao.getAllUnreadFeed();
+    }
+
+    @NonNull
+    public LiveData<FeedEntity> getLiveFeedEntity(String feedId) {
+        return feedDao.getFeedEntityById(feedId);
+    }
+
+    @NonNull
+    public Single<Integer> getRowCount() {
+        return feedDao.getRowCount();
     }
 
     public long updateFeedMessageReadStatus(@NonNull String feedId) {

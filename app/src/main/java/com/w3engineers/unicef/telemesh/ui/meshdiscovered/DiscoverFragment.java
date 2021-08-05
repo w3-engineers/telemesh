@@ -14,20 +14,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseFragment;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.FragmentDiscoverBinding;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 import java.util.List;
-
-import timber.log.Timber;
 
 public class DiscoverFragment extends BaseFragment {
 
@@ -57,7 +55,7 @@ public class DiscoverFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
         controlEmptyLayout();
-        setTitle(title);
+        ((MainActivity) getActivity()).setToolbarTitle(title);
 
         init();
 
@@ -67,6 +65,14 @@ public class DiscoverFragment extends BaseFragment {
 
         changeFavouriteStatus();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (discoverViewModel != null) {
+            discoverViewModel.selectedChattedUser(null);
+        }
     }
 
     private void userDataOperation() {
@@ -86,6 +92,9 @@ public class DiscoverFragment extends BaseFragment {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
+                        fragmentDiscoverBinding.fabChat.show();
+                    }else{
+                        fragmentDiscoverBinding.fabChat.hide();
                     }
                 }
                 if (mSearchItem != null)
@@ -94,15 +103,19 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.getGetFilteredList().observe(this, userEntities -> {
 
-                setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
                 if (userEntities != null && userEntities.size() > 0) {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
+
+                    fragmentDiscoverBinding.fabChat.show();
+
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
+                    fragmentDiscoverBinding.fabChat.hide();
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         //enableLoading();
@@ -133,6 +146,8 @@ public class DiscoverFragment extends BaseFragment {
                 if (getActivity() != null) {
                     ((MainActivity) getActivity()).hideSearchBar();
 
+                    discoverViewModel.selectedChattedUser(userEntity.meshId);
+
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra(UserEntity.class.getName(), userEntity.meshId);
                     startActivity(intent);
@@ -156,51 +171,8 @@ public class DiscoverFragment extends BaseFragment {
         }
     }
 
-/*    private void initSearchView(SearchView searchView) {
-
-        getCompositeDisposable().add(UIHelper.fromSearchView(searchView)
-                .debounce(1, TimeUnit.SECONDS, Schedulers.computation())
-                .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<String>) s -> (s.length() > 1 || s.length() == 0))
-                .distinctUntilChanged()*//*.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())*//*
-                .subscribeWith(searchContacts()));
-
-    }*/
-
-/*    public DisposableObserver<String> searchContacts() {
-        return new DisposableObserver<String>() {
-
-            boolean isSearchStart = false;
-
-            @Override
-            public void onNext(String string) {
-
-                if (!isSearchStart) {
-                    //searchLoading();
-                    isSearchStart = true;
-                }
-
-                if (discoverViewModel != null) {
-                    Timber.d("Search query: %s", string);
-                    discoverViewModel.startSearch(string, discoverViewModel.getCurrentUserList());
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Timber.e("onError: %s", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                Timber.e("onError: Complete");
-            }
-        };
-    }*/
-
     public void searchContacts(String query) {
         if (discoverViewModel != null) {
-            Timber.tag("SearchIssue").d("Discover page Search query: %s", query);
             discoverViewModel.startSearch(query, discoverViewModel.getCurrentUserList());
         }
     }
@@ -213,34 +185,6 @@ public class DiscoverFragment extends BaseFragment {
             getActivity().getMenuInflater().inflate(R.menu.menu_search_contact, menu);
 
             mSearchItem = menu.findItem(R.id.action_search);
-            // Resolve search option visibility problem when contact is appeared from starting point
- /*           searchViewControl(userEntityList);
-
-            mSearchView = mSearchItem.getActionView().findViewById(R.id.search_view);
-
-
-            // mSearchView = (SearchView) mSearchItem.getActionView();
-            mSearchView.setQueryHint(getString(R.string.search));
-
-            mSearchView.setIconified(true);
-
-            ImageView searchClose = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-            searchClose.setImageResource(R.mipmap.ic_cross_grey);
-
-            // Getting EditText view from search view and change cursor color
-            AutoCompleteTextView searchTextView = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            try {
-                // Fixed value for getting cursor drawable from Edit text or search view
-                Field mCursorDrawableRes = TextView.class.getDeclaredField(getString(R.string.cursordrawable));
-                mCursorDrawableRes.setAccessible(true);
-                mCursorDrawableRes.set(searchTextView, R.drawable.search_cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            searchCollapseListener(mSearchItem, mSearchView);
-
-            initSearchView(mSearchView);*/
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -254,6 +198,14 @@ public class DiscoverFragment extends BaseFragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (view.getId() == R.id.fab_chat) {
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        }
     }
 
     /*private void searchCollapseListener(MenuItem searchItem, SearchView searchView) {
@@ -278,7 +230,7 @@ public class DiscoverFragment extends BaseFragment {
         mSearchItem.setVisible(isSearchVisible);
 
         if (isSearchVisible) {
-            setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+            ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
         }
     }
 
@@ -292,8 +244,10 @@ public class DiscoverFragment extends BaseFragment {
                 if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                     try {
                         enableEmpty();
-                        setTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
-                    } catch (Exception e) { e.printStackTrace(); }
+                        ((MainActivity) getActivity()).setToolbarTitle(LanguageUtil.getString(R.string.title_discoverd_fragment));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             };
 
@@ -310,10 +264,6 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
         fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
         fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
-
-        /*if (getActivity() != null) {
-            ((MainActivity) getActivity()).enableLoading();
-        }*/
     }
 
     public void enableEmpty() {
@@ -321,35 +271,28 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.loadingView.setVisibility(View.GONE);
         fragmentDiscoverBinding.rippleBackground.stopRippleAnimation();
 
+
+//        fragmentDiscoverBinding.fabChat.hide();
+
+
         /*if (getActivity() != null) {
             ((MainActivity) getActivity()).disableLoading();
         }*/
     }
 
-    /*protected void searchLoading() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                //fragmentMeshcontactBinding.loadingText.setText(getResources().getString(R.string.searching));
-                fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
-                fragmentDiscoverBinding.loadingView.setVisibility(View.VISIBLE);
-                fragmentDiscoverBinding.rippleBackground.startRippleAnimation();
-
-                // ((MainActivity) getActivity()).enableLoading();
-            });
-        }
-    }*/
-
     // General API's and initialization area
     private void init() {
+
+        setClickListener(fragmentDiscoverBinding.fabChat);
         initAllText();
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-    //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
         meshContactAdapter = new DiscoverAdapter(discoverViewModel);
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);

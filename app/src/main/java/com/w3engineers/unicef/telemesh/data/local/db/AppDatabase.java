@@ -8,11 +8,10 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.w3engineers.ext.strom.App;
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseDatabase;
-import com.w3engineers.ext.strom.util.Text;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDao;
@@ -23,20 +22,22 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDao;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDao;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDao;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.util.base.database.BaseColumnNames;
+import com.w3engineers.unicef.util.base.database.BaseDatabase;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import javax.inject.Inject;
 
 
 /*
@@ -51,16 +52,14 @@ import javax.inject.Inject;
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
-        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class, AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class},
+        UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class,
+        AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class, GroupEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
 //DB version will be aligned with App version,
 // migration will be given by developer only when schema changes occur
 public abstract class AppDatabase extends BaseDatabase {
-
-    @Inject
-    Context context;
 
     private static final int initialVersion = 1;
 
@@ -80,6 +79,8 @@ public abstract class AppDatabase extends BaseDatabase {
 
     public abstract FeedbackDao feedbackDao();
 
+    public abstract GroupDao groupDao();
+
     @NonNull
     public abstract MeshLogDao meshLogDao();
 
@@ -94,6 +95,48 @@ public abstract class AppDatabase extends BaseDatabase {
     private static String USER_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
             + ColumnNames.COLUMN_USER_CONFIG_VERSION + " INTEGER NOT NULL DEFAULT 0";
 
+    private static String MESSAGE_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_ID + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_PATH + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_3 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_THUMB_PATH + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_4 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_INFO + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_5 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_PROGRESS + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String MESSAGE_TABLE_MIGRATION_6 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_CONTENT_STATUS + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String MESSAGE_TABLE_MIGRATION_7 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_GROUP_ID + " TEXT";
+
+    private static String MESSAGE_TABLE_MIGRATION_8 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " INTEGER NOT NULL DEFAULT 0";
+
+    private static String GROUP_TABLE_MIGRATION = "CREATE TABLE IF NOT EXISTS " + TableNames.GROUP +
+            " (" + BaseColumnNames.ID + " INTEGER PRIMARY KEY NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_ID + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_NAME + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_AVATAR + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_OWN_STATUS + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_CREATION_TIME + " INTEGER NOT NULL, "
+            + ColumnNames.COLUMN_GROUP_ADMIN_INFO + " TEXT, "
+            + ColumnNames.COLUMN_GROUP_MEMBERS_INFO + " TEXT, "
+            + "hasUnreadMessage INTEGER NOT NULL, " + "lastMessage TEXT, "
+            + "lastPersonName TEXT, " + "lastPersonId TEXT, " + "lastMessageType INTEGER NOT NULL)";
+
+    private static String FEED_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
+            + ColumnNames.COLUMN_FEED_CONTENT_INFO + " TEXT";
+
+    private static String FEED_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.FEED + " ADD COLUMN "
+            + ColumnNames.COLUMN_FEED_CONTENT_INFO + " INTEGER";
+
     @NonNull
     public static AppDatabase getInstance() {
 
@@ -102,28 +145,12 @@ public abstract class AppDatabase extends BaseDatabase {
                 return (AppDatabase) sInstance;
         }
 
-        /*if (BuildConfig.DEBUG){
-
-        }else {
-            if (!CommonUtil.isEmulator()) {
-                if (sInstance == null) {
-                    synchronized (AppDatabase.class) {
-                        if (sInstance == null) {
-                            Context context = App.getContext();
-
-                            sInstance = createDbWithMigration(context);
-                        }
-                    }
-                }
-            }
-        }*/
-
         if (sInstance == null) {
             synchronized (AppDatabase.class) {
                 if (sInstance == null) {
+                    Context context = TeleMeshApplication.getContext();
 
-
-                    sInstance = createDbWithMigration(); //normally initial version is always 21
+                    sInstance = createDbWithMigration(context); //normally initial version is always 21
                 }
             }
         }
@@ -131,12 +158,18 @@ public abstract class AppDatabase extends BaseDatabase {
         return (AppDatabase) sInstance;
     }
 
-    public static AppDatabase createDbWithMigration() {
+    private static AppDatabase createDbWithMigration(Context context) {
 
-        return createDb(App.getContext(), App.getContext().getString(R.string.app_name), AppDatabase.class,
+        return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
                 initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                new BaseMigration(BuildConfig.VERSION_CODE, ""));
+                new BaseMigration(BuildConfig.VERSION_CODE, MESSAGE_TABLE_MIGRATION_1,
+                        MESSAGE_TABLE_MIGRATION_2, MESSAGE_TABLE_MIGRATION_3,
+                        MESSAGE_TABLE_MIGRATION_4, MESSAGE_TABLE_MIGRATION_5,
+                        MESSAGE_TABLE_MIGRATION_6, MESSAGE_TABLE_MIGRATION_7,
+                        MESSAGE_TABLE_MIGRATION_8, GROUP_TABLE_MIGRATION,
+                        FEED_TABLE_MIGRATION_1, FEED_TABLE_MIGRATION_2));
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,
@@ -224,7 +257,7 @@ public abstract class AppDatabase extends BaseDatabase {
                     public void migrate(@NonNull SupportSQLiteDatabase database) {
                         if (baseMigration.getQueryScript().length > 0) {
                             for (String query : baseMigration.getQueryScript()) {
-                                if (Text.isNotEmpty(query)) {
+                                if (!TextUtils.isEmpty(query)) {
                                     Log.d("DatabaseMigration", "Query: " + query);
                                     database.execSQL(query);
                                 }

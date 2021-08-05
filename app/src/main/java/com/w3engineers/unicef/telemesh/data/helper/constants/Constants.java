@@ -3,7 +3,6 @@ package com.w3engineers.unicef.telemesh.data.helper.constants;
 import android.net.Uri;
 import android.os.Build;
 
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 
 import java.util.Locale;
@@ -14,6 +13,7 @@ public class Constants {
     public static boolean IsMeshInit;
     public static boolean IS_LOG_UPLOADING_START = false;
     public static boolean IS_DATA_ON = false;
+    public static boolean IS_APP_BLOCKER_ON = false;
 
     public static int INTERNET_ONLY = 3;
     public static int SELLER_MODE = 1;
@@ -39,6 +39,7 @@ public class Constants {
         int MINIMUM_PASSWORD_LIMIT = 8;
         int MINIMUM_INFO_LIMIT = 3;
         int MAXIMUM_TEXT_LIMIT = 20;
+        int GROUP_NAME_LIMIT = 50;
         int INTEGER_VALUE_ZERO = 0;
         int MAXIMUM_BADGE_VALUE = 99;
     }
@@ -70,6 +71,11 @@ public class Constants {
         String CONFIG_STATUS = "CONFIG_STATUS";
         String CONFIG_VERSION_CODE = "CONFIG_VERSION_CODE";
         String TOKEN_GUIDE_VERSION_CODE = "TOKEN_GUIDE_VERSION_CODE";
+        String APP_UPDATE_TYPE = "app_update_type";
+        String APP_UPDATE_VERSION_CODE = "app_update_version_code";
+        String APP_UPDATE_VERSION_NAME = "app_update_version_name";
+        String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
+        String APP_UPDATE_CHECK_TIME = "app_update_check_time";
     }
 
     public interface MenuItemPosition {
@@ -99,6 +105,16 @@ public class Constants {
         int STATUS_FAILED = 5;
         int STATUS_SEND = 6;
         int STATUS_RECEIVED = 7;
+        int STATUS_SENDING_START = 8;
+        int STATUS_RESEND_START = 9;
+        int STATUS_UNREAD_FAILED = 10;
+    }
+
+    public interface ContentStatus {
+        int CONTENT_STATUS_SENDING = 1;
+        int CONTENT_STATUS_SEND = 2;
+        int CONTENT_STATUS_RECEIVING = 3;
+        int CONTENT_STATUS_RECEIVED = 4;
     }
 
     public interface DataType {
@@ -116,13 +132,58 @@ public class Constants {
         byte CONFIG_UPDATE_INFO = 0x12;
         byte TOKEN_GUIDE_REQUEST = 0x13;
         byte TOKEN_GUIDE_INFO = 0x14;
+        byte CONTENT_THUMB_MESSAGE = 0x15;
+        byte CONTENT_MESSAGE = 0x16;
+        byte REQ_CONTENT_MESSAGE = 0x17;
+        byte SUCCESS_CONTENT_MESSAGE = 0x18;
+
+        byte EVENT_GROUP_CREATION = 0x19;
+        byte EVENT_GROUP_JOIN = 0x20;
+        byte EVENT_GROUP_LEAVE = 0x21;
+        byte EVENT_GROUP_RENAME = 0x22;
+        byte EVENT_GROUP_MEMBER_ADD = 0x23;
+        byte EVENT_GROUP_MEMBER_REMOVE = 0x24;
+        byte EVENT_GROUP_DATA_RELAY = 0x25;
+        byte EVENT_GROUP_DATA_FORWARD = 0x26;
     }
 
     public interface MessageType {
+        int TYPE_DEFAULT = -1;
         int TEXT_MESSAGE = 100;
         int DATE_MESSAGE = 101;
+        int IMAGE_MESSAGE = 102;
+        int VIDEO_MESSAGE = 103;
+        int AUDIO_MESSAGE = 104;
+        int MISC_MESSAGE = 105;
+        int COMPRESS_MESSAGE = 106;
+        int APK_MESSAGE = 107;
+        int BROADCAST_IMAGE = 200;
+        int GROUP_CREATE = 301;
+        int GROUP_JOIN = 302;
+        int GROUP_LEAVE = 303;
+        int GROUP_RENAMED = 304;
+        int GROUP_MEMBER_ADD = 305;
+        int GROUP_MEMBER_REMOVE = 306;
         int MESSAGE_INCOMING = 1;
         int MESSAGE_OUTGOING = 0;
+    }
+
+    public interface ContentMessageBody {
+        String IMAGE_MESSAGE = "Image";
+        String VIDEO_MESSAGE = "Video";
+        String AUDIO_MESSAGE = "Audio";
+        String MISC_MESSAGE = "File";
+        String COMPRESS_MESSAGE = "File";
+        String APK_MESSAGE = "Apk";
+    }
+
+    public interface GroupEventMessageBody {
+        String CREATED = "Created this Group";
+        String JOINED = "Joined";
+        String LEAVE = "Left";
+        String RENAMED = "Renamed the group to";
+        String MEMBER_ADD = "invited";
+        String MEMBER_REMOVED = "removed";
     }
 
     public interface FavouriteStatus {
@@ -131,12 +192,15 @@ public class Constants {
     }
 
     public interface SpinnerItem {
-        int FAVOURITE = 0;
-        int ALL = 1;
+        int GROUP = 0;
+        int FAVOURITE = 1;
+        int ALL = 2;
     }
 
     public interface UserStatus {
         int OFFLINE = 0;
+        int HB_ONLINE = 7;
+        int HB_MESH_ONLINE = 6;
         int WIFI_ONLINE = 5;
         int WIFI_MESH_ONLINE = 4;
         int BLE_MESH_ONLINE = 3;
@@ -157,6 +221,12 @@ public class Constants {
         String DASHES = "-------------------------------";
     }
 
+    public interface AppUpdateType {
+        int NO_CHANGES = 0;
+        int NORMAL_UPDATE = 1;
+        int BLOCKER = 2;
+    }
+
     public interface Bulletin {
         int DEFAULT = 0;
         int BULLETIN_SEND = 1;
@@ -165,6 +235,15 @@ public class Constants {
 
         int MINE = 1;
         int OTHERS = 0;
+    }
+
+    public interface BroadcastMessageType {
+        int TEXT_BROADCAST = 1;
+        int IMAGE_BROADCAST = 2;
+    }
+
+    public interface BroadcastMessage {
+        String IMAGE_BROADCAST = "Image Broadcast";
     }
 
     public interface AnalyticsResponseType {
@@ -208,7 +287,7 @@ public class Constants {
         }
     }
 
-    private static String capitalize(String s) {
+    public static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }
@@ -221,12 +300,64 @@ public class Constants {
     }
 
     public interface GradleBuildValues {
-        String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
-        String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
         String BROADCAST_TOKEN = AppCredentials.getInstance().getBroadCastToken();
         String BROADCAST_URL = AppCredentials.getInstance().getBroadCastUrl();
-        String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
-        String PARSE_APP_ID = AppCredentials.getInstance().getParseAppId();
-        String PARSE_URL = AppCredentials.getInstance().getParseUrl();
+    }
+
+    public interface RequestCodes {
+        // 101 is restricted which used in base activity
+        int GALLERY_IMAGE_REQUEST = 102;
+        int PROFILE_IMAGE_REQUEST = 103;
+    }
+
+    public interface DirectoryName {
+        String ContentFolder = ".content";
+        String ContentThumbFolder = ".contentThumb";
+    }
+
+    public interface ViewHolderType {
+        int TEXT_INCOMING = 11;
+        int TEXT_OUTGOING = 12;
+
+        int IMG_INCOMING = 21;
+        int IMG_OUTGOING = 22;
+
+        int VID_INCOMING = 31;
+        int VID_OUTGOING = 32;
+
+        int GROUP_INFO = 33;
+    }
+
+    public interface ServiceContentState {
+        int FAILED = 0;
+        int PROGRESS = 1;
+        int SUCCESS = 2;
+    }
+
+    public interface GroupUserOwnState {
+        int GROUP_CREATE = 1;
+        int GROUP_PENDING = 2;
+        int GROUP_JOINED = 3;
+        int GROUP_LEAVE = 4;
+    }
+
+    public interface GroupUserEvent {
+        int EVENT_PENDING = 1;
+        int EVENT_JOINED = 2;
+        int EVENT_LEAVE = 3;
+    }
+
+    public interface GroupEvent {
+        int GROUP_CREATE = 1;
+        int GROUP_JOINED = 2;
+        int GROUP_LEAVE = 3;
+    }
+
+    public interface MessagePlace {
+        boolean MESSAGE_PLACE_GROUP = true;
+        boolean MESSAGE_PLACE_P2P = false;
+
+        int VALUE_MESSAGE_PLACE_GROUP = 1;
+        int VALUE_MESSAGE_PLACE_P2P = 0;
     }
 }

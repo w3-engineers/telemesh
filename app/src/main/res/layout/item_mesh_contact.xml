@@ -138,7 +138,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_view_favourite"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="99" />
+            tools:text="99"
+            tools:ignore="SmallSp" />
 
         <ImageView
             android:id="@+id/image_view_favourite"
@@ -153,7 +154,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="99" />
+            tools:text="99"
+            android:contentDescription="@string/favourit_button_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

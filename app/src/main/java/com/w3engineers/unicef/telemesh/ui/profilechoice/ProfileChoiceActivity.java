@@ -1,3 +1,4 @@
+/*
 package com.w3engineers.unicef.telemesh.ui.profilechoice;
 
 import android.Manifest;
@@ -17,19 +18,20 @@ import com.w3engineers.ext.strom.application.ui.base.BaseActivity;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityProfileChoiceBinding;
-import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.importprofile.ImportProfileActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 
 import java.util.List;
 
+*/
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  * ============================================================================
- */
+ *//*
+
 
 public class ProfileChoiceActivity extends BaseActivity {
 
@@ -90,7 +92,8 @@ public class ProfileChoiceActivity extends BaseActivity {
 
                         if (report.areAllPermissionsGranted()) {
                             if (isCreateProfileCall) {
-                                startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
+                                // TODO remove wallet option
+//                                startActivity(new Intent(ProfileChoiceActivity.this, CreateUserActivity.class));
                             } else {
                                 startActivity(new Intent(ProfileChoiceActivity.this, ImportProfileActivity.class));
                             }
@@ -111,3 +114,4 @@ public class ProfileChoiceActivity extends BaseActivity {
     }
 
 }
+*/

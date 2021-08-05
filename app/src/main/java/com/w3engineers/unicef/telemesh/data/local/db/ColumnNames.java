@@ -8,7 +8,7 @@ package com.w3engineers.unicef.telemesh.data.local.db;
  * ============================================================================
  */
 
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseColumnNames;
+import com.w3engineers.unicef.util.base.database.BaseColumnNames;
 
 public interface ColumnNames extends BaseColumnNames {
     //Users table
@@ -23,6 +23,14 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_USER_REGISTRATION_TIME = "registration_time";
     String COLUMN_USER_CONFIG_VERSION = "config_version";
 
+    //Users table
+    String COLUMN_GROUP_NAME = "group_name";
+    String COLUMN_GROUP_AVATAR = "avatar";
+    String COLUMN_GROUP_ID = "group_id";
+    String COLUMN_GROUP_OWN_STATUS = "group_own_status";
+    String COLUMN_GROUP_CREATION_TIME = "group_creation_time";
+    String COLUMN_GROUP_ADMIN_INFO = "group_admin_info";
+    String COLUMN_GROUP_MEMBERS_INFO = "group_members_info";
 
     /**
      * Message table column
@@ -34,7 +42,14 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_MESSAGE_TYPE = "message_type";
     String COLUMN_MESSAGE_TIME = "time";
     String COLUMN_MESSAGE_STATUS = "message_status";
+    String COLUMN_MESSAGE_PLACE = "message_place";
 
+    String COLUMN_CONTENT_ID = "content_id";
+    String COLUMN_CONTENT_PATH = "content_path";
+    String COLUMN_CONTENT_THUMB_PATH = "content_thumb_path";
+    String COLUMN_CONTENT_PROGRESS = "content_progress";
+    String COLUMN_CONTENT_STATUS = "content_status";
+    String COLUMN_CONTENT_INFO = "content_info";
 
     /**
      * Message Feed table column
@@ -46,6 +61,15 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_FEED_DETAIL = "feed_detail";
     String COLUMN_FEED_TIME = "feed_time";
     String COLUMN_FEED_READ_STATUS = "feed_read_status";
+    String COLUMN_FEED_CONTENT_INFO = "feed_content_info";
+    String COLUMN_FEED_TIME_MILLIS = "feed_title_millis";
+    String COLUMN_FEED_EXPIRE_TIME = "feed_exp_time";
+
+    String COLUMN_FEED_LATITUDE = "latitude";
+    String COLUMN_FEED_LONGITUDE = "longitude";
+
+    String COLUMN_FEED_RANGE = "range";
+    String COLUMN_FEED_BROADCASTADDRESS = "broadcastAddress";
 
     /**
      * Bulletin track table column

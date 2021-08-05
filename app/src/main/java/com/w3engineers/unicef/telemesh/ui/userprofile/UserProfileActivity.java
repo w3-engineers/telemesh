@@ -14,11 +14,9 @@ import androidx.annotation.NonNull;
 
 import android.util.Base64;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -26,6 +24,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityUserProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 
 public class UserProfileActivity extends TelemeshBaseActivity {
@@ -70,9 +70,8 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile, mBinding.textViewEdit);
 
         if (isMyProfile) {
-            SharedPref sharedPref = SharedPref.getSharedPref(this);
-            String companyId = sharedPref.read(Constants.preferenceKey.COMPANY_ID);
-            String companyName = sharedPref.read(Constants.preferenceKey.COMPANY_NAME);
+            String companyId = SharedPref.read(Constants.preferenceKey.COMPANY_ID);
+            String companyName = SharedPref.read(Constants.preferenceKey.COMPANY_NAME);
 
            /* if (!TextUtils.isEmpty(companyId)) {
                 mBinding.userId.setText(getResources().getString(R.string.id) + ": " + companyId);
@@ -87,6 +86,9 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         } else {
             mBinding.buttonExportProfile.setVisibility(View.GONE);
             mBinding.textViewEdit.setVisibility(View.GONE);
+
+            String title = String.format(LanguageUtil.getString(R.string.other_profile), userEntity.userName);
+            mBinding.textViewTitle.setText(title);
         }
 
         Bitmap qrImage = getWalletQr();
@@ -101,10 +103,9 @@ public class UserProfileActivity extends TelemeshBaseActivity {
 
         if (isMyProfile) {
             UserEntity userEntity = new UserEntity();
-            SharedPref sharedPref = SharedPref.getSharedPref(this);
-            userEntity.userName = sharedPref.read(Constants.preferenceKey.USER_NAME);
-            userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-            userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            userEntity.userName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+            userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+            userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
             mBinding.setUserEntity(userEntity);
         }
     }
@@ -147,7 +148,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         ClipData clip = ClipData.newPlainText(LABEL, mBinding.userId.getText().toString());
         clipboard.setPrimaryClip(clip);
 
-        Toaster.showShort(LanguageUtil.getString(R.string.copied));
+        Toast.makeText(this, LanguageUtil.getString(R.string.copied), Toast.LENGTH_SHORT).show();
     }
 
     private UserProfileViewModel getViewModel() {
@@ -161,18 +162,16 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     }
 
     private Bitmap getWalletQr() {
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
-        String bitmapString = sharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE);
+        String bitmapString = SharedPref.read(Constants.preferenceKey.MY_WALLET_IMAGE);
         byte[] encodeByte = Base64.decode(bitmapString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
     }
 
     private void gotoEditPage() {
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(sharedPref.read(Constants.preferenceKey.USER_NAME));
-        userEntity.avatarIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        userEntity.meshId = sharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         Intent intent = new Intent(this, EditProfileActivity.class);
         intent.putExtra(UserEntity.class.getName(), userEntity);
         startActivity(intent);

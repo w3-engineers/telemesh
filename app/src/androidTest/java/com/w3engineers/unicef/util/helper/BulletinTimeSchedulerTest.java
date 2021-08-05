@@ -1,19 +1,22 @@
 package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
-import android.net.ConnectivityManager;
 import android.os.Environment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
+
 import com.google.android.gms.location.LocationResult;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,6 +32,9 @@ public class BulletinTimeSchedulerTest {
     Context context;
     String CURRENT_LOG_FILE_NAME = "testLog.txt";
 
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
+
     @Before
     public void setup() {
         context = InstrumentationRegistry.getTargetContext();
@@ -36,7 +42,6 @@ public class BulletinTimeSchedulerTest {
 
     @Test
     public void messageBroadcastTest() {
-        BulletinTimeScheduler.NetworkCheckReceiver receiver = BulletinTimeScheduler.getInstance().getReceiver();
 
         // create temporary file
         createDummyLogFile("(W) Sample Log 1");
@@ -44,14 +49,8 @@ public class BulletinTimeSchedulerTest {
         createDummyLogFile("(S) Sample Log 2");
 
 
-        // fake calling in Broadcast
-        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter(Intent.ACTION_PACKAGE_REPLACED));
+        BulletinTimeScheduler.getInstance().processesForInternetConnection();
 
-        Intent intent = new Intent(Intent.ACTION_PACKAGE_REPLACED);
-        intent.setAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        intent.putExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         addDelay(10 * 1000);
 
         // SO here we think we got data
@@ -59,12 +58,9 @@ public class BulletinTimeSchedulerTest {
 
         // now job already scheduled. But in instrumental test we cannot test Job scheduler.
         // so we can call the method which is located in start job section
-        RmDataHelper.getInstance().mLatitude = "";
+       /* RmDataHelper.getInstance().mLatitude = "";
         RmDataHelper.getInstance().mLongitude = "";
-        RmDataHelper.getInstance().requestWsMessage();
-       /* if (LocationUtil.getInstance().getLocationListener() != null) {
-            LocationUtil.getInstance().getLocationListener().onGetLocation("22.8456", "89.5403");
-        }*/
+        RmDataHelper.getInstance().requestWsMessage();*/
 
         Location location = new Location("");
         location.setLatitude(22.8456);
@@ -81,7 +77,6 @@ public class BulletinTimeSchedulerTest {
         // so we have to call okHttp on Message section
         addDelay(1000 * 20);
 
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
         assertTrue(true);
     }
 

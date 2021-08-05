@@ -2,9 +2,13 @@ package com.w3engineers.unicef.telemesh.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,22 +16,25 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.LocationManager;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.work.WorkInfo;
 
@@ -38,29 +45,35 @@ import com.google.android.play.core.install.InstallStateUpdatedListener;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.LocationTracker;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedFragment;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsFragment;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
-public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends TelemeshBaseActivity implements NavigationView.OnNavigationItemSelectedListener, DexterPermissionHelper.PermissionCallback {
     private ActivityMainBinding binding;
     private MainActivityViewModel mViewModel;
     private boolean doubleBackToExitPressedOnce = false;
@@ -69,9 +82,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     NotificationBadgeBinding notificationBadgeBinding;
     @SuppressLint("StaticFieldLeak")
     private static MainActivity sInstance;
+
     private BulletinTimeScheduler sheduler;
     private Fragment mCurrentFragment;
 
+    Context mContext;
     private int latestUserCount;
     private int latestMessageCount;
 
@@ -105,9 +120,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void startUI() {
-        super.startUI();
         binding = (ActivityMainBinding) getViewDataBinding();
         sInstance = this;
+        mContext = this;
+
+        super.startUI();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -116,28 +133,19 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         requestMultiplePermissions();
 
         Constants.IS_LOADING_ENABLE = false;
+        Constants.IS_APP_BLOCKER_ON = false;
         mainActivity = this;
 
-//        sheduler = BulletinTimeScheduler.getInstance().connectivityRegister();
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         bottomMenu = binding.bottomNavigation.getMenu();
-        boolean fromSettings = getIntent().getBooleanExtra(MainActivity.class.getSimpleName(), false);
-        initBottomBar(fromSettings);
+        initBottomBar(getIntent());
         initAllText();
         mViewModel = getViewModel();
 
-
-        /*if (isRestart) {
-            View view = binding.bottomNavigation.findViewById(R.id.action_contact);
-            view.performClick();
-        }*/
-
         // set new user count analytics so that the work manager will trigger
-        mViewModel.setUserCountWorkRequest();
-        mViewModel.setServerAppShareCountWorkerRequest();
-        mViewModel.setLocalAppShareCountWorkerRequest();
+        mViewModel.getMeshInitiatedCall();
 
         setClickListener(binding.textViewBackground, binding.searchBar.imageViewBack, binding.searchBar.imageViewCross);
 
@@ -152,84 +160,31 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         });
 
-        /*mViewModel.getMyUserMode().observe(this, integer -> {
-            if (integer == null) return;
-            showHideInternetWarning(integer, Constants.IS_DATA_ON);
-        });*/
-
         subscribeForActiveUser();
         subscribeForNewFeedMessage();
-
-        //when  counting need to add
-        /*
-        mViewModel.getMessageCount().observe(this, messageCount -> {
-            //call createBadgeCount() put necessary params (count, position)
-        });
-        mViewModel.getSurveyCount().observe(this, surveyCount ->{
-            //call createBadgeCount() put necessary params (count, position)
-        });*/
-
-//        mViewModel.makeSendingMessageAsFailed();
-
-
-       /* new Handler().postDelayed(() -> {
-            AppShareCountEntity entity = new AppShareCountEntity();
-            entity.setCount(1);
-            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
-            entity.setUserId(myId);
-            entity.setDate(TimeUtil.getDateString(System.currentTimeMillis()));
-            List<AppShareCountEntity> list = new ArrayList<>();
-            list.add(entity);
-            AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
-        }, 10000);*/
-        /*DiagramUtil.on(this).start();*/
-
         initSearchListener();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
-
         StorageUtil.getFreeMemory();
 
-/*        if (!CommonUtil.isLocationGpsOn(this)){
-            CommonUtil.showGpsOrLocationOffPopup(this);
-        }*/
+        // registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        filter.addAction(Intent.ACTION_PROVIDER_CHANGED);
 
-        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        if (!CommonUtil.isEmulator()) {
+            registerReceiver(mGpsSwitchStateReceiver, filter);
+        }
+
+        checkAppBlockerAvailable();
 
     }
 
     protected void requestMultiplePermissions() {
-
-        DexterPermissionHelper.getInstance().requestForPermission(this, () -> {
-
-                },
+        DexterPermissionHelper.getInstance().requestForPermission(this, this,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION);
-
-        /*Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            CommonUtil.showPermissionPopUp(MainActivity.this);
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(
-                            List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).withErrorListener(error -> requestMultiplePermissions()).onSameThread().check();*/
     }
 
     public static MainActivity getInstance() {
@@ -239,18 +194,23 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     public void onResume() {
         super.onResume();
-//        int myMode = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readInt(Constants.preferenceKey.MY_MODE);
-//        initNoNetworkCallback(myMode);
-//        showHideInternetWarning(myMode, Constants.IS_DATA_ON);
+
+        //Todo we have to optimize the below implementation
+        if (GroupCreateActivity.IS_NEW_GROUP_CREATED) {
+            GroupCreateActivity.IS_NEW_GROUP_CREATED = false;
+
+            if (mCurrentFragment != null
+                    && !(mCurrentFragment instanceof MeshContactsFragment)) {
+
+                binding.bottomNavigation.setSelectedItemId(R.id.action_contact);
+            }
+        }
     }
 
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            /*case R.id.text_view_background:
-                // disableLoading();
-                break;*/
             case R.id.image_view_cross:
                 if (TextUtils.isEmpty(binding.searchBar.editTextSearch.getText())) {
                     hideSearchBar();
@@ -265,17 +225,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_APP_UPDATE) {
-            if (resultCode != RESULT_OK) {
-                Log.e("AppUpdateProcess", "onActivityResult: app download failed");
-            }
-        }
-    }*/
-
     private MainActivityViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -286,13 +235,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }).get(MainActivityViewModel.class);
     }
 
-    public void initBottomBar(boolean fromSettings) {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
-        /*boolean isRestart = SharedPref.getSharedPref(TeleMeshApplication.getContext()).readBoolean(Constants.preferenceKey.IS_RESTART);
-        if (isRestart) {
-            fromSettings = true;
-            SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.IS_RESTART, false);
-        }*/
+        initBottomBar(intent);
+    }
+
+    private void initBottomBar(Intent intent) {
+
+        boolean fromSettings = intent.getBooleanExtra(MainActivity.class.getSimpleName(), false);
+        boolean fromBroadcast = intent.getBooleanExtra(BroadcastDataHelper.class.getSimpleName(), false);
 
         Fragment mFragment = null;
         String title;
@@ -301,6 +254,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             menuItem.setChecked(true);
             mFragment = new SettingsFragment();
             title = LanguageUtil.getString(R.string.title_settings_fragment);
+        } else if (fromBroadcast) {
+            MenuItem menuItem = bottomMenu.findItem(R.id.action_message_feed);
+            menuItem.setChecked(true);
+            mFragment = new MessageFeedFragment();
+            title = LanguageUtil.getString(R.string.title_message_feed_fragment);
+//            hideFeedBadge();
         } else {
             MenuItem menuItem = bottomMenu.findItem(R.id.action_discover);
             menuItem.setChecked(true);
@@ -316,23 +275,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
-        /*binding.bottomNavigation
-                .setIconSize(Constants.MenuItemPosition.MENU_ITEM_WIDTH
-                        , Constants.MenuItemPosition.MENU_ITEM_HEIGHT);
-        binding.bottomNavigation.enableShiftingMode(false);
-        binding.bottomNavigation.enableItemShiftingMode(false);
-        binding.bottomNavigation.enableAnimation(false);*/
-
-/*
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-        addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_SURVEY);
-*/
-
-
-        //its for checking. must be removed later
- /*       createBadgeCount(6, Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-        createBadgeCount(12, Constants.MenuItemPosition.POSITION_FOR_SURVEY);*/
-
+        if (fromBroadcast) {
+            hideFeedBadge();
+        }
     }
 
     // Again this api will be enable when its functionality will be added
@@ -362,17 +307,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             case R.id.action_discover:
                 toolbarTitle = LanguageUtil.getString(R.string.title_discoverd_fragment);
                 mFragment = new DiscoverFragment();
-                //hideUserBadge();
                 break;
             case R.id.action_contact:
                 toolbarTitle = LanguageUtil.getString(R.string.title_personal_fragment);
                 mFragment = new MeshContactsFragment();
-//                hideUserBadge();
                 break;
             case R.id.action_message_feed:
                 toolbarTitle = LanguageUtil.getString(R.string.title_message_feed_fragment);
-              /*  createBadgeCount(Constants.DefaultValue.INTEGER_VALUE_ZERO
-                        , Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);*/
                 mFragment = new MessageFeedFragment();
                 hideFeedBadge();
                 break;
@@ -396,6 +337,12 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+        setToolbarTitle(title);
+    }
+
+    public void setToolbarTitle(String title) {
+        String myName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        title = title + " [" + myName + "]";
         setTitle(title);
     }
 
@@ -406,6 +353,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if (itemView != null) {
 
             ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.constraint_layout_badge);
+            constraintLayoutContainer.setVisibility(View.GONE);
             TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
 
             if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
@@ -424,43 +372,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
-    // Again this api will be enable when its functionality will be added
-    /*public void createBadgeCount(int latestCount, int menuItemPosition) {
-        ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
-        if (constraintLayoutContainer == null) return;
-        // TextView textViewBadgeCount = itemView.findViewById(R.id.text_view_badge_count);
-
-        if (!(mCurrentFragment instanceof DiscoverFragment)) {
-            if (latestCount > latestUserCount) {
-                constraintLayoutContainer.setVisibility(View.VISIBLE);
-            } else {
-                constraintLayoutContainer.setVisibility(View.GONE);
-            }
-        } else {
-            constraintLayoutContainer.setVisibility(View.GONE);
-        }
-
-
-        latestUserCount = latestCount;
-
-       *//* if (latestCount > Constants.DefaultValue.INTEGER_VALUE_ZERO) {
-
-            constraintLayoutContainer.setVisibility(View.VISIBLE);
-
-            if (latestCount <= Constants.DefaultValue.MAXIMUM_BADGE_VALUE) {
-                textViewBadgeCount.setText(String.valueOf(latestCount));
-            } else {
-                textViewBadgeCount.setText(R.string.badge_count_more_than_99);
-            }
-        } else {
-            constraintLayoutContainer.setVisibility(View.GONE);
-        }*//*
-    }*/
-
     private void createFeedBadge(int latestCount, int menuItemPosition) {
 
         ConstraintLayout constraintLayoutContainer = getViewByMenu(menuItemPosition);
         if (constraintLayoutContainer == null) return;
+        constraintLayoutContainer.setVisibility(View.GONE);
         if (!(mCurrentFragment instanceof MessageFeedFragment)) {
             if (latestCount > latestMessageCount) {
                 constraintLayoutContainer.setVisibility(View.VISIBLE);
@@ -485,18 +401,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         return itemView.findViewById(R.id.constraint_layout_badge);
     }
 
-    /*private void hideUserBadge() {
-        BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
-
-        if (itemView == null) {
-            return;
-        }
-        ConstraintLayout userBadgeView = itemView.findViewById(R.id.constraint_layout_badge);
-
-        userBadgeView.setVisibility(View.GONE);
-    }*/
-
     private void hideFeedBadge() {
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
@@ -506,16 +410,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             feedBadge.setVisibility(View.GONE);
         }
     }
-
-    /*public void enableLoading() {
-        binding.searchingView.setVisibility(View.VISIBLE);
-        binding.mainView.setVisibility(View.GONE);
-    }
-
-    public void disableLoading() {
-        binding.searchingView.setVisibility(View.GONE);
-        binding.mainView.setVisibility(View.VISIBLE);
-    }*/
 
     public void showSearchBar() {
         binding.toolbarMain.setVisibility(View.INVISIBLE);
@@ -536,26 +430,31 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mViewModel.userOfflineProcess();
+        RmDataHelper.getInstance().destroy();
         sInstance = null;
-
-        unregisterReceiver(mGpsSwitchStateReceiver);
+        if(!CommonUtil.isEmulator()) {
+            LocationTracker.getInstance(mContext).stopListener();
+            unregisterReceiver(mGpsSwitchStateReceiver);
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
-            binding.searchBar.editTextSearch.setText("");
-            hideSearchBar();
-            return;
-        } else if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
+        if (!Constants.IS_APP_BLOCKER_ON) {
 
-        this.doubleBackToExitPressedOnce = true;
-        Toaster.showShort(LanguageUtil.getString(R.string.double_press_exit));
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
+            if (binding.searchBar.getRoot().getVisibility() == View.VISIBLE) {
+                binding.searchBar.editTextSearch.setText("");
+                hideSearchBar();
+                return;
+            } else if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, LanguageUtil.getString(R.string.double_press_exit), Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, Constants.DefaultValue.DOUBLE_PRESS_INTERVAL);
+        }
     }
 
     private void subscribeForActiveUser() {
@@ -573,24 +472,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             });
         }
     }
-
-    /*private void showHideInternetWarning(int myMode, boolean isMobileDataOn) {
-        if (myMode == Constants.INTERNET_ONLY || myMode == Constants.SELLER_MODE) {
-            if (isMobileDataOn) {
-                binding.textViewNoInternet.setVisibility(View.GONE);
-            } else {
-                binding.textViewNoInternet.setVisibility(View.VISIBLE);
-            }
-        } else {
-            binding.textViewNoInternet.setVisibility(View.GONE);
-        }
-    }*/
-
-    /*private void initNoNetworkCallback(int myMode) {
-        sheduler.initNoInternetCallback(isMobileDataOn -> {
-            showHideInternetWarning(myMode, isMobileDataOn);
-        });
-    }*/
 
     private void initSearchListener() {
 
@@ -618,11 +499,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         });
     }
 
-    /*@Override
-    public void sendToUi(String message) {
-        Toast.makeText(this, "Message received:" + message, Toast.LENGTH_SHORT).show();
-    }*/
-
     private void initAllText() {
         binding.searchBar.editTextSearch.setHint(LanguageUtil.getString(R.string.search));
     }
@@ -634,18 +510,25 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
-//                LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                boolean statusOfGPS = ((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER);
-                if (statusOfGPS) {
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+                if (isGpsEnabled || isNetworkEnabled) {
+                    //location is enabled
+                    Log.e("gps_staus", "gps has been on");
+                    LocationTracker.getInstance(mContext).getLocation();
                     CommonUtil.dismissDialog();
                 } else {
+                    //location is disabled
+                    Log.e("gps_staus", "gps has been off");
                     CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
                 }
             }
         }
     };
 
-    public void checkPlayStoreAppUpdate() {
+    public void checkPlayStoreAppUpdate(int type, String normalUpdateJson) {
         mAppUpdateManager = AppUpdateManagerFactory.create(this);
 
         mAppUpdateManager.registerListener(installStateUpdatedListener);
@@ -663,7 +546,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate();
             } else {
-                RmDataHelper.getInstance().appUpdateFromOtherServer();
+                RmDataHelper.getInstance().appUpdateFromOtherServer(type, normalUpdateJson);
             }
         });
     }
@@ -679,14 +562,24 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                             mAppUpdateManager.unregisterListener(installStateUpdatedListener);
                         }
 
-                    } /*else {
-                        Log.i("AppUpdateProcess", "InstallStateUpdatedListener: state: " + state.installStatus());
-                    }*/
+                    }
                 }
             };
 
-    public void popupSnackbarForCompleteUpdate() {
+    private void checkAppBlockerAvailable() {
 
+        int currentUpdateType = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+        int currentVersionCode = SharedPref.readInt(Constants.preferenceKey.APP_UPDATE_VERSION_CODE);
+        String currentVersionName = SharedPref.read(Constants.preferenceKey.APP_UPDATE_VERSION_NAME);
+
+        if (BuildConfig.VERSION_CODE < currentVersionCode
+                && currentUpdateType == Constants.AppUpdateType.BLOCKER) {
+
+            openAppBlocker(currentVersionName);
+        }
+    }
+
+    public void popupSnackbarForCompleteUpdate() {
         Snackbar snackbar =
                 Snackbar.make(
                         findViewById(R.id.main_view),
@@ -708,8 +601,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         if ((mCurrentFragment instanceof MessageFeedFragment)) {
 
             Constants.IS_DATA_ON = true;
-            RmDataHelper.getInstance().mLatitude = "22.8456";
-            RmDataHelper.getInstance().mLongitude = "89.5403";
+            //   RmDataHelper.getInstance().mLatitude = "22.8456";
+            //  RmDataHelper.getInstance().mLongitude = "89.5403";
 
             MessageFeedFragment messageFeedFragment = (MessageFeedFragment) mCurrentFragment;
             messageFeedFragment.swipeRefreshOperation();
@@ -719,6 +612,36 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     public void stopAnimation() {
         if (mCurrentFragment instanceof DiscoverFragment) {
             ((DiscoverFragment) mCurrentFragment).enableEmpty();
+        }
+    }
+
+    public void openAppBlocker(String versionName) {
+        Constants.IS_APP_BLOCKER_ON = true;
+        // App blocker ui open test
+        HandlerUtil.postForeground(new Runnable() {
+            @Override
+            public void run() {
+                AppBlockerUtil.openAppBlockerDialog(MainActivity.this, versionName);
+            }
+        }, 10 * 1000);
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        //   locationTracker = new LocationTracker(mContext, MainActivity.this);
+
+        if (!CommonUtil.isEmulator()) {
+            LocationTracker.getInstance(mContext).getLocation();
+
+            // Check if GPS enabled
+            if (LocationTracker.getInstance(mContext).canGetLocation()) {
+
+                double latitude = LocationTracker.getInstance(mContext).getLatitude();
+                double longitude = LocationTracker.getInstance(mContext).getLongitude();
+
+            } else {
+                CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
+            }
         }
     }
 }

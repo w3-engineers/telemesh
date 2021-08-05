@@ -8,10 +8,11 @@ import android.text.TextUtils;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,10 +40,7 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
 
     boolean storeData(@Nullable String userName) {
 
-        // Store name and image on PrefManager
-        SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
-
-        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        int currentImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         if (imageIndex < 0) {
             if (currentImageIndex == Constants.DEFAULT_AVATAR) {
@@ -52,17 +50,18 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
             }
         }
 
-        sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
-        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
-        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
+        userName = Util.convertToTitleCaseIteratingChars(userName);
+
+        SharedPref.write(Constants.preferenceKey.USER_NAME, userName);
+        SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+        SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;
     }
 
     void sendUserInfoToAll() {
-        SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
-        int currentImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        String name = sharedPref.read(Constants.preferenceKey.USER_NAME);
+        int currentImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String name = SharedPref.read(Constants.preferenceKey.USER_NAME);
         RmDataHelper.getInstance().broadcastUpdateProfileInfo(name, currentImageIndex);
     }
 

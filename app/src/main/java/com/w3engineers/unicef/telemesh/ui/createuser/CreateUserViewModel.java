@@ -8,9 +8,10 @@ import android.text.TextUtils;
 import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.unicef.telemesh.data.broadcast.Util;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,20 +45,19 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String userName, String password) {
-
-        // Store name and image on PrefManager
-        SharedPref sharedPref = SharedPref.getSharedPref(getApplication().getApplicationContext());
+    boolean storeData(@Nullable String userName/*, String password*/) {
 
         if (imageIndex < 0) {
             imageIndex = Constants.DEFAULT_AVATAR;
         }
 
-        sharedPref.write(Constants.preferenceKey.USER_NAME, userName);
-        sharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
-        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
-        sharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
-        sharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
+        userName = Util.convertToTitleCaseIteratingChars(userName);
+
+        SharedPref.write(Constants.preferenceKey.USER_NAME, userName);
+        SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
+//        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
+        SharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
+        SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
         return true;
     }

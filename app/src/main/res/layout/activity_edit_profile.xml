@@ -139,34 +139,29 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/name_layout"
                     style="@style/signup_editext_style"
-                    android:textColorHint="@color/hint_text_color"
+                    android:hint="@string/enter_first_name"
                     app:hintTextAppearance="@style/hint_style"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/image_view_pen"
                     app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
 
-                    <com.w3engineers.ext.strom.application.ui.widget.BaseEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_15"
-                        android:background="@color/transparent_color"
-                        android:backgroundTint="@color/new_user_button_color"
                         android:digits="@string/myDigits"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="@string/enter_first_name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="0dp"
                         android:singleLine="true"
                         android:text="@{user.getFullName()}"
+                        android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_body"
-                        app:bet_baseColor="@color/message_text_color"
-                        app:bet_primaryColor="@color/new_user_button_color"
-                        app:bet_textColor="@color/message_text_color"
-                        app:bet_underlineColor="@color/message_text_color">
-
-                    </com.w3engineers.ext.strom.application.ui.widget.BaseEditText>
+                        app:backgroundTint="@color/new_user_button_color" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -182,25 +177,24 @@
                     app:layout_constraintTop_toTopOf="@+id/name_layout" />
 
 
-<!--                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-                    android:id="@+id/button_update"
-                    style="@style/CustomButton"
-                    android:text="@string/update"
-                    android:textColor="@color/white"
-                    app:bb_drawable="@drawable/ractangular_gradient"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />-->
+                <!--                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                                    android:id="@+id/button_update"
+                                    style="@style/CustomButton"
+                                    android:text="@string/update"
+                                    android:textColor="@color/white"
+                                    app:bb_drawable="@drawable/ractangular_gradient"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />-->
 
-                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
+                <Button
                     android:id="@+id/button_update"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/height_40"
                     android:layout_marginTop="@dimen/margin_16"
                     android:layout_marginEnd="25dp"
-                    android:clickable="true"
+                    android:background="@drawable/ractangular_white"
                     android:text="@string/update"
                     android:textColor="@color/new_user_button_color"
-                    app:bb_drawable="@drawable/ractangular_white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name_layout" />
 

@@ -4,21 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
-import com.w3engineers.models.ConfigurationCommand;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
-import com.w3engineers.unicef.util.helper.ViperUtil;
-import com.w3engineers.unicef.util.helper.model.ViperData;
+import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
+import com.w3engineers.unicef.util.helper.ViperUtil;
+import com.w3engineers.unicef.util.helper.model.ViperBroadcastData;
+import com.w3engineers.unicef.util.helper.model.ViperContentData;
+import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -35,6 +37,9 @@ public class MeshDataSource extends ViperUtil {
     public static boolean isPrepared = false;
     private BroadcastManager broadcastManager;
 
+    private HashMap<String, ContentReceiveModel> contentReceiveModelHashMap = new HashMap<>();
+    private HashMap<String, ContentSendModel> contentSendModelHashMap = new HashMap<>();
+
     private MeshDataSource(@NonNull UserModel userModel) {
         super(userModel);
         broadcastManager = BroadcastManager.getInstance();
@@ -46,21 +51,24 @@ public class MeshDataSource extends ViperUtil {
         if (rightMeshDataSource == null) {
             Context context = TeleMeshApplication.getContext();
 
-            SharedPref sharedPref = SharedPref.getSharedPref(context);
-
             UserModel userModel = new UserModel()
-                    .setName(sharedPref.read(Constants.preferenceKey.USER_NAME))
-                    .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
-                    .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
+                    .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                    .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                    .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
             rightMeshDataSource = new MeshDataSource(userModel);
         }
         return rightMeshDataSource;
     }
 
+    public static MeshDataSource getInstance() {
+        return rightMeshDataSource;
+    }
+
     @Override
     protected void onMesh(String myMeshId) {
         meshInited(myMeshId);
+        RmDataHelper.getInstance().meshInitiated();
     }
 
     @Override
@@ -68,24 +76,27 @@ public class MeshDataSource extends ViperUtil {
         meshInited(myWalletAddress);
     }
 
+    @Override
+    protected void offMesh() {
+        RmDataHelper.getInstance().destroyMeshService();
+    }
+
     private void meshInited(String meshId) {
         //when RM will be on then prepare this observer to listen the outgoing messages
 
-        Log.d("WalletAddress", "My wallet address: " + meshId);
-        SharedPref.getSharedPref(TeleMeshApplication.getContext()).write(Constants.preferenceKey.MY_USER_ID, meshId);
+        SharedPref.write(Constants.preferenceKey.MY_USER_ID, meshId);
 
         if (!isPrepared) {
-            RmDataHelper.getInstance().prepareDataObserver();
-            TextToImageHelper.writeWalletAddressToImage(meshId);
             isPrepared = true;
+            RmDataHelper.getInstance().prepareDataObserver();
+            HandlerUtil.postBackground(() -> RmDataHelper.getInstance().myUserInfoAdd());
+            TextToImageHelper.writeWalletAddressToImage(meshId);
         }
 
         Constants.IsMeshInit = true;
-    }
 
-    /*public void stopAllServices() {
-        // TODO stop service during mode change from data plan mode
-    }*/
+        BulletinTimeScheduler.getInstance().checkAppUpdate();
+    }
 
     /**
      * During send data to peer
@@ -107,6 +118,18 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
+    public void broadcastDataSend(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime) {
+        ViperBroadcastData viperBroadcastData = new ViperBroadcastData();
+        viperBroadcastData.broadcastId = broadcastId;
+        viperBroadcastData.metaData = metaData;
+        viperBroadcastData.contentPath = contentPath;
+        viperBroadcastData.latitude = latitude;
+        viperBroadcastData.longitude = longitude;
+        viperBroadcastData.range = range;
+        viperBroadcastData.expiryTime = expiryTime;
+        broadcastManager.addBroadCastMessage(getBroadcastDataTask(viperBroadcastData));
+    }
+
     public void DataSend(@NonNull DataModel dataModel, @NonNull List<String> receiverIds, boolean isNotificationEnable) {
         for (String receiverId : receiverIds) {
             DataSend(dataModel, receiverId, isNotificationEnable);
@@ -115,6 +138,28 @@ public class MeshDataSource extends ViperUtil {
 
     private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
+    }
+
+    private SendDataTask getBroadcastDataTask(ViperBroadcastData viperBroadcastData) {
+        return new SendDataTask().setViperBroadcastData(viperBroadcastData).setBaseRmDataSource(this);
+    }
+
+    public void ContentDataSend(ContentModel contentModel) {
+        String receiverId = contentModel.getUserId();
+
+        if (!TextUtils.isEmpty(receiverId)) {
+            ViperContentData viperContentData = new ViperContentData();
+            viperContentData.dataType = contentModel.getContentDataType();
+            viperContentData.contentModel = contentModel;
+            viperContentData.isNotificationEnable = true;
+
+            broadcastManager.addBroadCastMessage(getMeshContentDataTask(receiverId, viperContentData));
+        }
+    }
+
+    private SendDataTask getMeshContentDataTask(String receiverId, ViperContentData viperContentData) {
+        return new SendDataTask().setPeerId(receiverId).setViperContentData(viperContentData)
+                .setBaseRmDataSource(this);
     }
 
     /**
@@ -203,28 +248,51 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void configSync(boolean isUpdate, ConfigurationCommand configurationCommand) {
-        RmDataHelper.getInstance().syncConfigFileAndBroadcast(isUpdate, configurationCommand);
+    protected void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
+        ContentDataHelper.getInstance().contentReceiveStart(contentId, contentPath, userId, metaData);
     }
 
-    // TODO SSID_Change
-    /*public void resetInstance() {
-        rightMeshDataSource = null;
-    }*/
+    @Override
+    protected void contentReceiveInProgress(String contentId, int progress) {
+        ContentDataHelper.getInstance().contentReceiveInProgress(contentId, progress);
+    }
+
+    @Override
+    protected void contentReceiveDone(String contentId, boolean contentStatus, String msg) {
+        ContentDataHelper.getInstance().contentReceiveDone(contentId, contentStatus, msg);
+    }
+
+    @Override
+    protected void pendingContents(ContentPendingModel contentPendingModel) {
+        ContentDataHelper.getInstance().pendingContents(contentPendingModel);
+    }
+
+    @Override
+    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime) {
+        BroadcastDataHelper.getInstance().receiveLocalBroadcast(broadcastId, metaData, contentPath, latitude, longitude, range, expiryTime);
+    }
 
     public void saveUpdateUserInfo() {
 
         Context context = TeleMeshApplication.getContext();
 
-        SharedPref sharedPref = SharedPref.getSharedPref(context);
-
         UserModel userModel = new UserModel()
-                .setName(sharedPref.read(Constants.preferenceKey.USER_NAME))
-                .setImage(sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
-                .setTime(sharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
+                .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
+                .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
         saveUserInfo(userModel);
 
     }
 
+    public void saveUpdateOtherUserInfo(String userAddress, String userName, int imageIndex) {
+        UserModel userModel = new UserModel().setUserId(userAddress)
+                .setName(userName).setImage(imageIndex);
+
+        saveOtherUserInfo(userModel);
+    }
+
+    public void checkUserIsConnected(String userId) {
+        checkUserConnectionStatus(userId);
+    }
 }

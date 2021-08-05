@@ -13,8 +13,8 @@
     </style>
 
 
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/colorPrimary</item>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+<!--        <item name="colorControlNormal">@color/colorPrimary</item>-->
     </style>
 
 <!--    <style name="myCustomMenuTextAppearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">-->
@@ -52,6 +52,9 @@
         <item name="android:layout_marginLeft">@dimen/margin_10</item>
         <item name="android:layout_marginTop">@dimen/margin_30</item>
         <item name="android:colorAccent">@color/new_user_button_color</item>
+        <item name="colorControlNormal">@color/light_grey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
     <style name="hint_style">
@@ -105,6 +108,16 @@
 
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem" >
         <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="userSelectionStyle">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_input_style">
+        <item name="colorControlNormal">@color/light_grey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
 <!--    <style name="spinnerStyle"  parent="@android:style/Widget.DropDownItem">-->

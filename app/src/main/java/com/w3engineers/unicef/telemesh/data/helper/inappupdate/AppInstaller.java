@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,8 +13,8 @@ import android.os.Environment;
 import androidx.core.content.FileProvider;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
@@ -53,7 +54,7 @@ public class AppInstaller {
     private static DialogAppInstallProgressBinding binding;
     private static AlertDialog dialog;
 
-    public static void downloadApkFile(String baseUrl, Context context) {
+    public static void downloadApkFile(String baseUrl, Context context, Network network) {
 
         if (isAppUpdating) return;
 
@@ -64,7 +65,7 @@ public class AppInstaller {
             baseUrl = "https://" + url[1];
         }
 
-        RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl);
+        RetrofitInterface downloadService = RetrofitService.createService(RetrofitInterface.class, baseUrl, network);
         Call<ResponseBody> call = downloadService.downloadFileByUrl("updatedApk.apk");
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -117,7 +118,7 @@ public class AppInstaller {
         protected void onProgressUpdate(Pair<Integer, Long>... progress) {
 
             if (progress[0].first == 100) {
-                Toaster.showShort("Internet connection not available");
+                Toast.makeText(context, "Internet connection not available", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -131,7 +132,7 @@ public class AppInstaller {
             }
 
             if (progress[0].first == -1) {
-                Toaster.showShort("Download failed");
+                Toast.makeText(context, "Download failed", Toast.LENGTH_SHORT).show();
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }

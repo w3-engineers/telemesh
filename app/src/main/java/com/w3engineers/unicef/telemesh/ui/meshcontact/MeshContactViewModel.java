@@ -8,13 +8,14 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
-
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,17 @@ import io.reactivex.schedulers.Schedulers;
 public class MeshContactViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
+    private GroupDataSource groupDataSource;
+
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
+    private MutableLiveData<GroupEntity> openGroupMessage = new MutableLiveData<>();
+
     private MutableLiveData<UserEntity> changeFavouriteStatus = new MutableLiveData<>();
+    MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
+
     MutableLiveData<PagedList<UserEntity>> allMessagedWithEntity = new MutableLiveData<>();
     MutableLiveData<PagedList<UserEntity>> favoriteEntityList = new MutableLiveData<>();
-    MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
+    MutableLiveData<PagedList<GroupEntity>> groupEntityList = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
 
     private static final int INITIAL_LOAD_KEY = 0;
@@ -59,16 +66,16 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
     public MeshContactViewModel(@NonNull Application application) {
         super(application);
         userDataSource = UserDataSource.getInstance();
+        groupDataSource = GroupDataSource.getInstance();
     }
-
 
     public void openMessage(@NonNull UserEntity userEntity) {
         openUserMessage.postValue(userEntity);
     }
 
-    /*public void setSearchText(String searchText) {
-        this.searchableText = searchText;
-    }*/
+    public void openGroupMessage(@NonNull GroupEntity groupEntity) {
+        openGroupMessage.postValue(groupEntity);
+    }
 
     public int getUserAvatarByIndex(int imageIndex) {
         return TeleMeshDataHelper.getInstance().getAvatarImage(imageIndex);
@@ -86,13 +93,41 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         return openUserMessage;
     }
 
+    MutableLiveData<GroupEntity> openGroupMessage() {
+        return openGroupMessage;
+    }
+
     public void updateFavouriteStatus(String userId, int favouriteStatus) {
         AsyncTask.execute(() -> {
-            int updateId = userDataSource
-                    .updateFavouriteStatus(userId, favouriteStatus);
+            userDataSource.updateFavouriteStatus(userId, favouriteStatus);
         });
+    }
 
-        //  return updateId > 0;
+    public void startGroupObserver() {
+        getCompositeDisposable().add(groupDataSource.getGroupList()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setGroupData, Throwable::printStackTrace));
+    }
+
+    private void setGroupData(List<GroupEntity> userEntities) {
+        GroupPositionalDataSource groupPositionalDataSource =
+                new GroupPositionalDataSource(userEntities);
+
+        PagedList.Config myConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(PREFETCH_DISTANCE)
+                .setPageSize(PAGE_SIZE)
+                .build();
+
+
+        PagedList<GroupEntity> pagedStrings = new PagedList.Builder<>(groupPositionalDataSource, myConfig)
+                .setInitialKey(INITIAL_LOAD_KEY)
+                .setNotifyExecutor(new MainThreadExecutor()) //The executor defining where page loading updates are dispatched.asset
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .build();
+
+        groupEntityList.postValue(pagedStrings);
     }
 
     public void startAllMessagedWithFavouriteObserver() {
@@ -109,16 +144,13 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                             startSearch(searchableText, userEntities);
                         }
                     } else {
-
                         setUserMessageWithFavouriteData(userEntities);
                     }
 
                 }, Throwable::printStackTrace));
-
-        //  allMessagedWithEntity = userDataSource.getAllMessagedWithFavouriteUsers();
     }
 
-    public void setUserMessageWithFavouriteData(List<UserEntity> userEntities) {
+    private void setUserMessageWithFavouriteData(List<UserEntity> userEntities) {
         UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);
 
         PagedList.Config myConfig = new PagedList.Config.Builder()
@@ -137,7 +169,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
         allMessagedWithEntity.postValue(pagedStrings);
     }
 
-    public void startFavouriteObserver() {
+    void startFavouriteObserver() {
 
         getCompositeDisposable().add(userDataSource.getFavouriteUsers()
                 .subscribeOn(Schedulers.newThread())
@@ -156,11 +188,7 @@ public class MeshContactViewModel extends BaseRxAndroidViewModel {
                     }
 
                 }, Throwable::printStackTrace));
-
-        //  favoriteEntityList = userDataSource.getFavouriteUsers();
     }
-
-
 
     public void setUserFavouriteData(List<UserEntity> userEntities) {
         UserPositionalDataSource userSearchDataSource = new UserPositionalDataSource(userEntities);

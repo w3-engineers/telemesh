@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -40,8 +40,8 @@ public class SplashViewModel extends AndroidViewModel {
         RmDataHelper.getInstance().resetUserToOfflineBasedOnService();
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> isUserRegistered.postValue(SharedPref.getSharedPref(getApplication()
-                .getApplicationContext()).readBoolean(Constants.preferenceKey.IS_USER_REGISTERED)),
+        handler.postDelayed(() -> isUserRegistered.postValue(SharedPref
+                        .readBoolean(Constants.preferenceKey.IS_USER_REGISTERED)),
                 Constants.DefaultValue.DELAY_INTERVAL);
     }
 

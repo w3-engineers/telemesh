@@ -11,7 +11,7 @@ Proprietary and confidential
 public class UserModel {
 
     private String n, userId;
-    private int i, cv;
+    private int i;
     private long t;
 
     public String getName() {
@@ -47,15 +47,6 @@ public class UserModel {
 
     public UserModel setTime(long time) {
         this.t = time;
-        return this;
-    }
-
-    public int getConfigVersion() {
-        return cv;
-    }
-
-    public UserModel setConfigVersion(int cv) {
-        this.cv = cv;
         return this;
     }
 }

@@ -5,7 +5,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.w3engineers.ext.strom.application.data.helper.local.base.BaseEntity;
+import com.w3engineers.unicef.util.base.database.BaseEntity;
 
 
 /*

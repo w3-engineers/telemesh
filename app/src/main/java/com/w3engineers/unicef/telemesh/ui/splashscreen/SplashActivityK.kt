@@ -13,9 +13,8 @@ import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity
-import com.w3engineers.unicef.telemesh.ui.profilechoice.ProfileChoiceActivity
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity
 import com.w3engineers.unicef.util.helper.CommonUtil
-import com.w3engineers.walleter.wallet.WalletService
 import timber.log.Timber
 import kotlinx.android.synthetic.main.activity_splash.*
 
@@ -36,11 +35,11 @@ class SplashActivityK: AppCompatActivity() {
 
         //val shimmerFrameLayout = findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout)
         // no findViewById required now
-        shimmerFrameLayout.startShimmer()
+        shimmer_container.startShimmer()
 
 
         if (CommonUtil.isEmulator()) {
-            WalletService.getInstance(this).deleteExistsWallet()
+            //WalletService.getInstance(this).deleteExistsWallet()
         }
 
 
@@ -52,7 +51,7 @@ class SplashActivityK: AppCompatActivity() {
                 Intent(this, MainActivity::class.java)
             } else {
                 Timber.e("User not created. Go User create page")
-                Intent(this, ProfileChoiceActivity::class.java)
+                Intent(this, TermsOfUseActivity::class.java)
             }
             startActivity(intent)
             finish()

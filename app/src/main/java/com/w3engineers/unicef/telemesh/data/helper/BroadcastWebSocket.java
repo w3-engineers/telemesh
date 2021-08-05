@@ -45,9 +45,9 @@ public class BroadcastWebSocket extends WebSocketListener {
         try {
             JSONObject jsonObject = new JSONObject(text);
             if (jsonObject.has("status")) {
-                RmDataHelper.getInstance().processBroadcastAck(text);
+                BroadcastDataHelper.getInstance().responseBroadcastAck(text);
             } else {
-                RmDataHelper.getInstance().processBroadcastMessage(text);
+                BroadcastDataHelper.getInstance().responseBroadcastMsg(text);
             }
         } catch (JSONException e) { e.printStackTrace(); }
 

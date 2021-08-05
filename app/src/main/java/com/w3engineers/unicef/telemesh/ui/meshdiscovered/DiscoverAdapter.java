@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
-import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
@@ -103,6 +102,7 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
             itemDiscoveredBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
             itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
+            itemDiscoveredBinding.textViewNetType.setText(getMeshType(item.getOnlineStatus()));
 
             if (item.hasUnreadMessage > 0) {
                 itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.VISIBLE);
@@ -132,11 +132,33 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
 
             if (userActiveStatus == Constants.UserStatus.WIFI_ONLINE || userActiveStatus == Constants.UserStatus.WIFI_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_MESH_ONLINE || userActiveStatus == Constants.UserStatus.BLE_ONLINE) {
                 return R.mipmap.ic_mesh_online;
+            } else if (userActiveStatus == Constants.UserStatus.HB_ONLINE || userActiveStatus == Constants.UserStatus.HB_MESH_ONLINE) {
+                return R.mipmap.ic_hb_online;
             } else if (userActiveStatus == Constants.UserStatus.INTERNET_ONLINE) {
                 return R.mipmap.ic_internet;
             } else {
                 return R.mipmap.ic_offline;
             }
+        }
+
+        private String getMeshType(int userActiveStatus) {
+            switch (userActiveStatus) {
+                case Constants.UserStatus.WIFI_ONLINE:
+                    return "W";
+                case Constants.UserStatus.WIFI_MESH_ONLINE:
+                    return "WM";
+                case Constants.UserStatus.BLE_ONLINE:
+                    return "B";
+                case Constants.UserStatus.BLE_MESH_ONLINE:
+                    return "BM";
+                case Constants.UserStatus.INTERNET_ONLINE:
+                    return "I";
+                case Constants.UserStatus.HB_ONLINE:
+                    return "H";
+                case Constants.UserStatus.HB_MESH_ONLINE:
+                    return "HM";
+            }
+            return "";
         }
 
     }

@@ -6,15 +6,25 @@ buildscript {
     repositories {
         apply from: 'versions.gradle'
 //        apply from: 'viper/propertygen.gradle'
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
+
+        /*maven {
+            url 'https://maven.fabric.io/public'
+        }*/
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+        classpath 'com.google.gms:google-services:4.3.8'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath 'com.google.gms:google-services:4.2.0'
+        // Add the Crashlytics Gradle plugin.
+//        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
+        // Add the Fabric Crashlytics plugin.
+        //classpath 'io.fabric.tools:gradle:1.31.2'
+     //   classpath 'com.google.gms:google-services:4.2.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,9 +32,33 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
+        jcenter()
         maven { url "https://jitpack.io" }
+        maven {
+
+            def mavenUrl, access, secret;
+
+            Properties properties = new Properties()
+            if (project.rootProject.file('local.properties').exists()) {
+                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+                mavenUrl = properties.getProperty('MAVEN_AWS_URL')
+                access = properties.getProperty('ACCESS_KEY')
+                secret = properties.getProperty('SECRET_KEY')
+            } else {
+                mavenUrl = System.getenv('MAVEN_AWS_URL')
+                access = System.getenv('ACCESS_KEY')
+                secret = System.getenv('SECRET_KEY')
+            }
+
+            url mavenUrl
+            credentials(AwsCredentials) {
+                accessKey access
+                secretKey secret
+            }
+        }
     }
 }
 

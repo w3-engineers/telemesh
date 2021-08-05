@@ -3,16 +3,17 @@ package com.w3engineers.unicef.telemesh.ui.editprofile;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
-import com.w3engineers.ext.strom.util.helper.Toaster;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
-import com.w3engineers.mesh.application.data.BaseServiceLocator;
-import com.w3engineers.mesh.application.ui.base.TelemeshBaseActivity;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -20,6 +21,8 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -28,7 +31,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 
     private ActivityEditProfileBinding mBinding;
     private EditProfileViewModel mViewModel;
-    private int PROFILE_IMAGE_REQUEST = 1;
 
     public static int INITIAL_IMAGE_INDEX = -1;
 
@@ -87,26 +89,11 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         }
     }
 
-    public void openProfileImageChooser() {
-        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
-        Intent intent = new Intent(this, ProfileImageActivity.class);
-        int currentImageIndex = mViewModel.getImageIndex();
-
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
-        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        if (currentImageIndex < 0) {
-            currentImageIndex = oldImageIndex;
-        }
-
-        intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
-        startActivityForResult(intent, PROFILE_IMAGE_REQUEST);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null && requestCode == PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(CreateUserActivity.IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
@@ -135,7 +122,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
             if (isNeedToUpdate()) {
                 if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
-                    Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
+                    Toast.makeText(this, LanguageUtil.getString(R.string.profile_updated_successfully), Toast.LENGTH_SHORT).show();
                     mViewModel.sendUserInfoToAll();
                     finish();
                 }
@@ -156,9 +143,8 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     private boolean isNeedToUpdate() {
-        SharedPref sharedPref = SharedPref.getSharedPref(this);
-        String oldName = sharedPref.read(Constants.preferenceKey.USER_NAME);
-        int oldImageIndex = sharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String oldName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         int currentImageIndex = mViewModel.getImageIndex();
 
@@ -187,7 +173,21 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     private void initAllText() {
         mBinding.textViewCreateProfile.setText(LanguageUtil.getString(R.string.update_profile));
         mBinding.buttonUpdate.setText(LanguageUtil.getString(R.string.update));
-        mBinding.editTextName.setHint(LanguageUtil.getString(R.string.enter_first_name));
-        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
+//        mBinding.editTextName.setHint(LanguageUtil.getString(R.string.enter_first_name));
+//        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
+    }
+
+    public void openProfileImageChooser() {
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+        Intent intent = new Intent(this, ProfileImageActivity.class);
+        int currentImageIndex = mViewModel.getImageIndex();
+
+        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        if (currentImageIndex < 0) {
+            currentImageIndex = oldImageIndex;
+        }
+
+        intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
+        startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
     }
 }

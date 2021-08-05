@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.w3engineers.unicef.util.helper.StatusHelper;
+
 /*
  * ============================================================================
  * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
@@ -44,6 +46,8 @@ public class EditProfileViewModelTest {
         SUT.setImageIndex(imageIndex);
 
         assertTrue(SUT.storeData(firstName));
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -56,6 +60,10 @@ public class EditProfileViewModelTest {
         SUT.sendUserInfoToAll();
 
         addDelay(2000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {

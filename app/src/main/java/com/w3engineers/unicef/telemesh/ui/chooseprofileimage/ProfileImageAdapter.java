@@ -7,10 +7,11 @@ import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseAdapter;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.databinding.ItemProfileImageBinding;
+import com.w3engineers.unicef.util.base.ui.BaseAdapter;
+import com.w3engineers.unicef.util.base.ui.BaseViewHolder;
 import com.w3engineers.unicef.util.lib.circle_checkbox.SmoothCheckBox;
 
 
@@ -47,23 +48,22 @@ class ProfileImageAdapter extends BaseAdapter<Integer> {
 
     @NonNull
     @Override
-    public BaseAdapterViewHolder<Integer> newViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder<Integer> newViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ProfileImageHolder(inflate(parent, R.layout.item_profile_image));
     }
 
 
-    private class ProfileImageHolder extends BaseAdapterViewHolder<Integer> {
+    private class ProfileImageHolder extends BaseViewHolder<Integer> {
 
         private ItemProfileImageBinding mProfileImageBinding;
 
-        ProfileImageHolder(ViewDataBinding viewDataBinding) {
+        public ProfileImageHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding);
             mProfileImageBinding = (ItemProfileImageBinding) viewDataBinding;
         }
 
         @Override
-        public void bind(Integer item) {
-
+        public void bind(Integer item, ViewDataBinding viewDataBinding) {
             mProfileImageBinding.setItemIndex(item);
 
             int id = mContext.getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + item, Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, mContext.getPackageName());
@@ -73,23 +73,25 @@ class ProfileImageAdapter extends BaseAdapter<Integer> {
                 previousSelectedItem = mProfileImageBinding.checkbox;
                 previousSelectedItem.setChecked(true, false);
             }
-        }
 
+            mProfileImageBinding.getRoot().setOnClickListener(v -> {
+                if (previousSelectedItem != null)
+                    previousSelectedItem.setChecked(false);
+
+                mProfileImageBinding.checkbox.setChecked(true, true);
+
+                previousSelectedItem = mProfileImageBinding.checkbox;
+                selectedPosition = getItem(getAdapterPosition());
+
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(v, getItem(getAdapterPosition()));
+                }
+            });
+        }
 
         @Override
         public void onClick(View view) {
 
-            if (previousSelectedItem != null)
-                previousSelectedItem.setChecked(false);
-
-            mProfileImageBinding.checkbox.setChecked(true, true);
-
-            previousSelectedItem = mProfileImageBinding.checkbox;
-            selectedPosition = getItem(getAdapterPosition());
-
-            if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(view, getItem(getAdapterPosition()));
-            }
         }
     }
 

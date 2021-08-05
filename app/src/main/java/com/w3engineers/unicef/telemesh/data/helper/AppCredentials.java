@@ -36,9 +36,11 @@ public class AppCredentials {
 
     public native String getConfiguration();
 
+    public native String getBroadcastApiKey();
+
 
     static {
-        System.loadLibrary("staging-native-lib");
+        System.loadLibrary("native-lib");
     }
 
 }

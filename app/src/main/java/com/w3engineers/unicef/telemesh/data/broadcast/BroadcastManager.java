@@ -3,7 +3,10 @@ package com.w3engineers.unicef.telemesh.data.broadcast;
 import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.w3engineers.unicef.telemesh.data.helper.ContentModel;
 import com.w3engineers.unicef.telemesh.data.helper.DataModel;
+import com.w3engineers.unicef.util.helper.model.ViperContentData;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
 import java.util.ArrayList;
@@ -53,6 +56,7 @@ public class BroadcastManager {
 
     public interface BroadcastSendCallback {
         void dataSent(@NonNull DataModel rmDataModel, String dataSendId);
+        void contentSent(ContentModel contentModel, String dataSendId);
     }
 
     public void setBroadcastSendCallback(@Nullable BroadcastSendCallback broadcastSendCallback) {
@@ -123,9 +127,11 @@ public class BroadcastManager {
         mRunningTaskList.add(future);
 
         try {
+
             String result = (String) future.get();
             if (broadcastSendCallback != null) {
                 ViperData viperData = sendDataTask.getViperData();
+                ViperContentData viperContentData = sendDataTask.getViperContentData();
 
                 if (viperData != null) {
                     DataModel rmDataModel = new DataModel()
@@ -134,26 +140,14 @@ public class BroadcastManager {
                             .setDataType(viperData.dataType);
                     broadcastSendCallback.dataSent(rmDataModel, result);
                 }
+
+                if (viperContentData != null) {
+                    broadcastSendCallback.contentSent(viperContentData.contentModel, result);
+                }
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-    /* Remove all tasks in the queue and stop all running threads
-     * Notify UI thread about the cancellation
-     */
-    /*public void cancelAllTasks() {
-        synchronized (this) {
-            mTaskQueue.clear();
-            for (Future task : mRunningTaskList) {
-                if (!task.isDone()) {
-                    task.cancel(true);
-                }
-            }
-            mRunningTaskList.clear();
-        }
-        sendMessageToUiThread(Util.createMessage(Util.MESSAGE_ID, "All tasks in the thread pool are cancelled"));
-    }*/
 
 }

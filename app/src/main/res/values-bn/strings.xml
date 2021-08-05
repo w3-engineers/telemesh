@@ -3,7 +3,7 @@
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <string name="enter_first_name">আপনার নাম লিখুন</string>
     <string name="signup">Next</string>
-<!--    <string name="no_item_found">No item found</string>-->
+    <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
     <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
     <string name="create_user">Create User</string>
@@ -14,6 +14,7 @@
     <string name="title_personal_fragment">ব্যক্তিগত যোগাযোগ</string>
     <string name="title_message_feed_fragment">বার্তা ফিড</string>
     <string name="title_settings_fragment">সেটিংস</string>
+    <string name="title_conversation_fragment">কথোপকথন</string>
 
     <string name="logo_image">logo image</string>
     <string name="double_press_exit">বেরিয়ে যাওয়ার জন্য ব্যাক বাটন আবার চাপুন</string>
@@ -26,10 +27,11 @@
     <string name="app_version">সংস্করণ:</string>
 
     <string name="no_contact_available">কাছাকাছি কাউকে পাওয়া যায়নি</string>
+    <string name="no_conversation">কোনো কথোপকথন হয়নি</string>
     <string name="no_message_available">কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
-<!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
+    <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     // Settings title
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
@@ -43,14 +45,14 @@
     <string name="settings_open_wallet">ওয়ালেট</string>
     <string name="image">Image</string>
 
-<!--    <string name="id">ID</string>-->
-<!--    <string name="this_may_take_while">This may take a while…</string>-->
+    <!--    <string name="id">ID</string>-->
+    <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Discovering Users</string>
     <string name="searching">আরো খোজা হচ্ছে…</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 
-<!--    <string name="profile">Profile</string>-->
+    <!--    <string name="profile">Profile</string>-->
     <string name="company_org">Company/Organization: %s</string>
 
     <string name="unicef">UNICEF</string>
@@ -125,7 +127,7 @@
     <string name="w3_engineers_website"><a href="https://w3engineers.com/">W3 Engineers Website</a></string>
     <string name="welcome_back">Welcome back</string>
     <string name="import_my_profile">import another id</string>
-<!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
+    <!--    <string name="scan_my_profile_qr">scan my profile qr</string>-->
     <string name="search_background">search background</string>
     <string name="please_set_up_an_8_digit_pin_for_your_account_security">Please set up an 8 digit password for your account security. Password must contain at least 1 letter, number, and special character.</string>
     <string name="pin_instruction">Please remember your password for you will need this in case of  account recovery.</string>
@@ -145,10 +147,10 @@
     <string name="wallet_lost_warning">If you import another ID you will loss previous id. Do you want to continue?</string>
     <string name="ok">OK</string>
 
-<!--    <string name="search_hint">Search</string>-->
-<!--    <string name="clear_button">Clear</string>-->
+    <!--    <string name="search_hint">Search</string>-->
+    <!--    <string name="clear_button">Clear</string>-->
     <string name="please_wait">Please Wait…</string>
-<!--    <string name="spinner_title">Favourite</string>-->
+    <!--    <string name="spinner_title">Favourite</string>-->
 
     <string name="favourite">Favourite</string>
     <string name="show_password">Show password</string>
@@ -166,5 +168,38 @@
     <string name="service_app_alert_title_text"><![CDATA[<font color=\'#ff5f25\'>Update!!</font>]]></string>
     <string name="service_app_update_message">To smoothly use all features of Teleemsh app please update Telemesh Service app.</string>
     <string name="button_later"><![CDATA[<font color=\'#083480\'>Later</font>]]></string>
+    <string name="i_understand">বুঝেছি</string>
+    <string name="app_update_information">সর্বশেষ প্রকাশের বিষয়ে টেলিমেশের কিছু গুরুত্বপূর্ণ আপডেট রয়েছে। আপনি টেলিমেশের সর্বশেষতম সংস্করণ আপডেট না করলে এই অ্যাপ্লিকেশনটি কাজ করবে না।.</string>
+    <string name="terms_of_use_details">Terms of Use</string>
 
+    <string name="interruption_title">%s Interruption</string>
+    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
+    <string name="permission_xiomi">To deliver the best experience TeleService needs a few system permissions.\n\nPlease go to your device settings and search for Permissions.
+                          \nFrom Permissions screen tap “Other Permissions” then tap TeleService.
+                          \nAllow all the permissions from TeleService screen which are not marked as green.
+                          \n\nAlternatively, you can also go “Other Permissions” screen by Manage apps > TeleService > Other permissions. </string>
+    <string name="got_it">Got It</string>
+    <string name="want_to_join_this_group">Want to join this group?</string>
+    <string name="deny">Deny</string>
+    <string name="accept">Accept</string>
+    <string name="join">Join</string>
+
+    <string name="new_chat">নতুন চ্যাট</string>
+    <string name="new_group">নতুন গ্রুপ</string>
+    <string name="group_name_hint">নাম</string>
+    <string name="total_participants">মোট অংশগ্রহণকারীরা</string>
+    <string name="add_member">সদস্য যোগ করুন</string>
+    <string name="remove_group_member">Remove group member</string>
+    <string name="group_admin">গ্রুপ অ্যাডমিন</string>
+    <string name="leave_group">Leave group</string>
+    <string name="group_name_updated">গ্রুপের নাম আপডেট করা হয়েছে</string>
+    <string name="other_profile">%s এর প্রোফাইল দেখুন</string>
+    <string name="only_admin_can_add_member">কেবল অ্যাডমিন একজন সদস্য যুক্ত করতে পারবেন</string>
+    <string name="add_new_member">নতুন সদস্য যুক্ত করুন</string>
+    <string name="only_admin_can_remove_member">শুধুমাত্র অ্যাডমিন কোনও সদস্যকে সরাতে পারবেন</string>
+    <string name="no_user_available">এখনও কাউকে পাওয়া যায় নি</string>
+    <string name="only_admin_can_change_group_name">কেবল অ্যাডমিনই গ্রুপের নাম পরিবর্তন করতে পারবেন</string>
+
+    <string name="broadcast_notification">আপনার কাছে %d টি নতুন সম্প্রচার বার্তা রয়েছে</string>
 </resources>

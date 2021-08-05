@@ -49,23 +49,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:name">
+        <activity android:name=".ui.addnewmember.AddNewMemberActivity"></activity>
+        <activity android:name=".ui.groupnameedit.GroupNameEditActivity" />
+        <activity android:name=".ui.groupdetails.GroupDetailsActivity" />
+        <activity android:name=".ui.groupcreate.GroupCreateActivity" />
+        <activity android:name=".ui.termofuse.TermsOfUseActivity" />
         <activity android:name=".ui.feedback.FeedbackActivity" />
         <activity android:name=".ui.editprofile.EditProfileActivity" />
-        <activity android:name=".ui.importwallet.ImportWalletActivity" />
-        <activity android:name=".ui.security.SecurityActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".ui.importprofile.ImportProfileActivity"
-            android:theme="@style/NoActionBarTheme" />
-        <activity
-            android:name=".ui.profilechoice.ProfileChoiceActivity"
-            android:theme="@style/NoActionBarTheme" />
+
         <activity
             android:name=".ui.main.MainActivity"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -75,7 +72,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.splashscreen.SplashActivityK"
+            android:name=".ui.splashscreen.SplashActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -91,11 +88,6 @@
         <activity
             android:name=".ui.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
-        <service
-            android:name="com.w3engineers.unicef.util.helper.BulletinJobService"
-            android:label="Word service"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

@@ -3,8 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.annotation.NonNull;
-
-import com.w3engineers.ext.strom.App;
+import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 /*
@@ -21,7 +20,7 @@ public class TeleMeshDataHelper {
     private Context context;
 
     private TeleMeshDataHelper() {
-        context = App.getContext();
+        context = TeleMeshApplication.getContext();
     }
 
     @NonNull

@@ -9,14 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +29,6 @@ import java.util.concurrent.Executors;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
@@ -36,6 +38,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     MutableLiveData<PagedList<UserEntity>> nearbyUsers = new MutableLiveData<>();
     MutableLiveData<List<UserEntity>> backUserEntity = new MutableLiveData<>();
     private MutableLiveData<PagedList<UserEntity>> filterUserList = new MutableLiveData<>();
+    private String selectChattedUser = null;
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 50;
@@ -45,6 +48,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private List<UserEntity> tempNearByList;
     public List<UserEntity> userList;
+    private String myMeshId = null;
 
     public DiscoverViewModel(@NonNull Application application) {
         super(application);
@@ -59,6 +63,17 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     public void changeFavouriteStatus(@NonNull UserEntity userEntity) {
         changeFavouriteStatus.postValue(userEntity);
+    }
+
+    public void selectedChattedUser(String selectChattedUser) {
+        this.selectChattedUser = selectChattedUser;
+    }
+
+    private String getMyMeshId() {
+        if (TextUtils.isEmpty(myMeshId)) {
+            myMeshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        }
+        return myMeshId;
     }
 
     /*public void setSearchText(String searchText) {
@@ -87,49 +102,72 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
     }
 
     public void startUserObserver() {
+
         getCompositeDisposable().add(userDataSource.getAllOnlineUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntities -> {
 
-                    Set<String> set = new HashSet<String>();
-                    for (UserEntity o2 : userEntities) {
-                        set.add(o2.getMeshId());
-                    }
-                    Iterator<UserEntity> i = userList.iterator();
-                    while (i.hasNext()) {
-                        if (set.contains(i.next().getMeshId())) {
-                            i.remove();
+                    if (userEntities != null) {
+
+                        if (!TextUtils.isEmpty(getMyMeshId())) {
+
+                            Iterator<UserEntity> userEntityIterator = userEntities.iterator();
+
+                            while (userEntityIterator.hasNext()) {
+                                if (getMyMeshId().equals(userEntityIterator.next().getMeshId())) {
+                                    userEntityIterator.remove();
+                                }
+                            }
+                        }
+
+                        Set<String> set = new HashSet<String>();
+                        for (UserEntity o2 : userEntities) {
+                            set.add(o2.getMeshId());
+                        }
+                        Iterator<UserEntity> i = userList.iterator();
+                        while (i.hasNext()) {
+                            if (set.contains(i.next().getMeshId())) {
+                                i.remove();
+                            }
+                        }
+
+                        List<UserEntity> userEntityList = new ArrayList<>();
+                        for (UserEntity diffElement : userList) {
+                            UserEntity userEntity = new UserEntity();
+                            userEntity.setMeshId(diffElement.getMeshId());
+                            userEntity.setUserName(diffElement.getUserName());
+                            userEntity.setAvatarIndex(diffElement.getAvatarIndex());
+                            userEntity.setIsFavourite(diffElement.getIsFavourite());
+                            userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                            userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
+
+                            userEntityList.add(userEntity);
+                        }
+
+                        userList.clear();
+                        userList.addAll(userEntities);
+
+                        if(!userEntityList.isEmpty()) {
+                            Collections.sort(userEntityList, (o1, o2) -> {
+                                if (o1.getUserName() != null && o2.getUserName() != null) {
+                                    return o1.getUserName().compareTo(o2.getUserName());
+                                }
+                                return 0;
+                            });
+                        }
+
+                        userList.addAll(userEntityList);
+
+                        if (!TextUtils.isEmpty(searchableText)) {
+                            backUserEntity.postValue(userList);
+                            startSearch(searchableText, userList);
+                        } else {
+                            setUserData(userList);
                         }
                     }
 
-                    List<UserEntity> userEntityList = new ArrayList<>();
-                    for (UserEntity diffElement : userList) {
-                        UserEntity userEntity = new UserEntity();
-                        userEntity.setMeshId(diffElement.getMeshId());
-                        userEntity.setUserName(diffElement.getUserName());
-                        userEntity.setAvatarIndex(diffElement.getAvatarIndex());
-                        userEntity.setIsFavourite(diffElement.getIsFavourite());
-                        userEntity.setOnlineStatus(0);
-                        userEntity.hasUnreadMessage = diffElement.hasUnreadMessage;
-
-                        userEntityList.add(userEntity);
-                    }
-
-                    userList.clear();
-                    userList.addAll(userEntityList);
-                    userList.addAll(userEntities);
-
-                    if (!TextUtils.isEmpty(searchableText)) {
-                        backUserEntity.postValue(userList);
-                        startSearch(searchableText, userList);
-                    } else {
-                        setUserData(userList);
-                    }
-
-                }, throwable -> {
-                    throwable.printStackTrace();
-                }));
+                }, Throwable::printStackTrace));
     }
 
     public void setUserData(List<UserEntity> userEntities) {
@@ -204,7 +242,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
             filterUserList.postValue(pagedStrings);
 
         } else {
-            Timber.tag("SearchIssue").d("user list null");
+//            Timber.tag("SearchIssue").d("user list null");
         }
     }
 

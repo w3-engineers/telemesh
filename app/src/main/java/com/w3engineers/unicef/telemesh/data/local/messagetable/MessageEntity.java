@@ -33,6 +33,37 @@ public class MessageEntity extends ChatEntity {
     public String message;
 
     @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_ID)
+    public String contentId;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_PATH)
+    public String contentPath;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_THUMB_PATH)
+    public String contentThumbPath;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_PROGRESS)
+    public int contentProgress;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_STATUS)
+    public int contentStatus;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_INFO)
+    public String contentInfo;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_GROUP_ID)
+    public String groupId;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_MESSAGE_PLACE)
+    public boolean messagePlaceGroup;
+
+    @Nullable
     public String getMessage() {
         return message;
     }
@@ -40,6 +71,83 @@ public class MessageEntity extends ChatEntity {
     @NonNull
     public MessageEntity setMessage(@NonNull String message) {
         this.message = message;
+        return this;
+    }
+
+    @Nullable
+    public String getContentId() {
+        return contentId;
+    }
+
+    public MessageEntity setContentId(@Nullable String contentId) {
+        this.contentId = contentId;
+        return this;
+    }
+
+    @Nullable
+    public String getContentPath() {
+        return contentPath;
+    }
+
+    public MessageEntity setContentPath(@Nullable String contentPath) {
+        this.contentPath = contentPath;
+        return this;
+    }
+
+    @Nullable
+    public String getContentThumbPath() {
+        return contentThumbPath;
+    }
+
+    public MessageEntity setContentThumbPath(@Nullable String contentThumbPath) {
+        this.contentThumbPath = contentThumbPath;
+        return this;
+    }
+
+    public int getContentProgress() {
+        return contentProgress;
+    }
+
+    public MessageEntity setContentProgress(int contentProgress) {
+        this.contentProgress = contentProgress;
+        return this;
+    }
+
+    @Nullable
+    public String getContentInfo() {
+        return contentInfo;
+    }
+
+    public MessageEntity setContentInfo(@Nullable String contentInfo) {
+        this.contentInfo = contentInfo;
+        return this;
+    }
+
+    public int getContentStatus() {
+        return contentStatus;
+    }
+
+    public MessageEntity setContentStatus(int contentStatus) {
+        this.contentStatus = contentStatus;
+        return this;
+    }
+
+    @Nullable
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public MessageEntity setGroupId(@Nullable String groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    public boolean getMessagePlace() {
+        return messagePlaceGroup;
+    }
+
+    public MessageEntity setMessagePlace(boolean messagePlaceGroup) {
+        this.messagePlaceGroup = messagePlaceGroup;
         return this;
     }
 
@@ -66,30 +174,18 @@ public class MessageEntity extends ChatEntity {
         return new MessageModel()
                 .setId(getMessageId())
                 .setMessage(getMessage())
+                .setIsGroup(getMessagePlace())
+                .setGroupId(getGroupId())
                 .setType(getMessageType());
     }
-
-    /*@NonNull
-    @Override
-    public ChatEntity toChatEntity(@NonNull TeleMeshChat teleMeshChat) {
-
-        MessageEntity messageEntity = setMessage(teleMeshChat.getTeleMeshMessage()
-                .getMessageText());
-
-        messageEntity.setFriendsId(teleMeshChat.getFriendId())
-                .setMessageId(teleMeshChat.getMessageId())
-                .setMessageType(teleMeshChat.getMessageType())
-                .setStatus(teleMeshChat.getMessageStatus())
-                .setTime(teleMeshChat.getMessageTime());
-
-        return messageEntity;
-    }*/
 
     @NonNull
     @Override
     public ChatEntity toChatEntity(@NonNull MessageModel messageModel) {
 
-        MessageEntity messageEntity = setMessage(messageModel.getMessage());
+        MessageEntity messageEntity = setMessage(messageModel.getMessage())
+                .setMessagePlace(messageModel.isGroup())
+                .setGroupId(messageModel.getGroupId());
 
         messageEntity.setMessageId(messageModel.getId())
                 .setMessageType(messageModel.getType());

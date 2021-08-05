@@ -6,9 +6,7 @@ import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.w3engineers.appshare.application.ui.InAppShareControl;
-import com.w3engineers.ext.strom.App;
-import com.w3engineers.ext.strom.application.ui.base.BaseRxAndroidViewModel;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
@@ -17,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
 import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
@@ -44,26 +43,24 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
 
 
     public boolean getCheckedStatus() {
-        return SharedPref.getSharedPref(getApplication().getApplicationContext())
-                .readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED);
+        return SharedPref.readBoolean(Constants.preferenceKey.IS_NOTIFICATION_ENABLED);
     }
 
     public void onCheckedChanged(boolean checked) {
-        SharedPref.getSharedPref(getApplication().getApplicationContext())
-                .write(Constants.preferenceKey.IS_NOTIFICATION_ENABLED, checked);
+        SharedPref.write(Constants.preferenceKey.IS_NOTIFICATION_ENABLED, checked);
     }
 
     @NonNull
     public String getAppLanguage() {
 
-        String language = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.APP_LANGUAGE_DISPLAY);
-        return !language.equals("") ? language : App.getContext().getString(R.string.demo_language);
+        String language = SharedPref.read(Constants.preferenceKey.APP_LANGUAGE_DISPLAY);
+        return !language.equals("") ? language : TeleMeshApplication.getContext().getString(R.string.demo_language);
     }
 
     public void setLocale(@NonNull String lang, @Nullable String landDisplay) {
 
-        SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE, lang);
-        SharedPref.getSharedPref(getApplication().getApplicationContext()).write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
+        SharedPref.write(Constants.preferenceKey.APP_LANGUAGE, lang);
+        SharedPref.write(Constants.preferenceKey.APP_LANGUAGE_DISPLAY, landDisplay);
 
         LanguageUtil.setAppLanguage(TeleMeshApplication.getContext(), lang);
     }
@@ -84,7 +81,7 @@ public class SettingsViewModel extends BaseRxAndroidViewModel implements /*Netwo
     public void successShared() {
         HandlerUtil.postBackground(() -> {
             String date = TimeUtil.getDateString(System.currentTimeMillis());
-            String myId = SharedPref.getSharedPref(App.getContext()).read(Constants.preferenceKey.MY_USER_ID);
+            String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
             Log.d("WalletAddress", "My address: " + myId);
             boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
             if (isExist) {

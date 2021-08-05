@@ -51,6 +51,30 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     @Nullable
     public boolean feedReadStatus;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_CONTENT_INFO)
+    @Nullable
+    public String feedContentInfo;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_TIME_MILLIS)
+    @Nullable
+    public long feedTimeMillis;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_EXPIRE_TIME)
+    @Nullable
+    public String feedExpireTime;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_LATITUDE)
+    public double latitude;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_LONGITUDE)
+    public double longitude;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_RANGE)
+    public double range;
+
+    @ColumnInfo(name = ColumnNames.COLUMN_FEED_BROADCASTADDRESS)
+    public String broadcastAddress;
+
     // Empty constructor for Room database
     public FeedEntity() {
 
@@ -98,6 +122,21 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return this;
     }
 
+    public FeedEntity setFeedContentInfo(@Nullable String feedContentInfo) {
+        this.feedContentInfo = feedContentInfo;
+        return this;
+    }
+
+    public FeedEntity setFeedTimeMillis(long feedTimeMillis) {
+        this.feedTimeMillis = feedTimeMillis;
+        return this;
+    }
+
+    public FeedEntity setFeedExpireTime(String feedExpireTime) {
+        this.feedExpireTime = feedExpireTime;
+        return this;
+    }
+
     @Nullable
     public String getFeedId() {
         return feedId;
@@ -132,6 +171,60 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         return feedReadStatus;
     }
 
+    @Nullable
+    public String getFeedContentInfo() {
+        return feedContentInfo;
+    }
+
+    public long getFeedTimeMillis() {
+        return feedTimeMillis;
+    }
+
+    @Nullable
+    public String getFeedExpireTime() {
+        return feedExpireTime;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    @NonNull
+    public FeedEntity setLatitude(double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    @Nullable
+    public FeedEntity setLongitude(double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
+
+    public double getRange() {
+        return range;
+    }
+
+    @Nullable
+    public FeedEntity setRange(double range) {
+        this.range = range;
+        return this;
+    }
+
+    public String getBroadcastAddress() {
+        return broadcastAddress;
+    }
+
+    @Nullable
+    public FeedEntity setBroadcastAddress(String broadcastAddress) {
+        this.broadcastAddress = broadcastAddress;
+        return this;
+    }
+
     protected FeedEntity(@NonNull Parcel in) {
         mId = in.readLong();
         feedId = in.readString();
@@ -141,6 +234,13 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         feedDetail = in.readString();
         feedTime = in.readString();
         feedReadStatus = in.readByte() != 0;
+        feedContentInfo = in.readString();
+        feedTimeMillis = in.readLong();
+        feedExpireTime = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        range = in.readDouble();
+        broadcastAddress = in.readString();
     }
 
     @Override
@@ -153,6 +253,13 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
         dest.writeString(feedDetail);
         dest.writeString(feedTime);
         dest.writeByte((byte) (feedReadStatus ? 1 : 0));
+        dest.writeString(feedContentInfo);
+        dest.writeLong(feedTimeMillis);
+        dest.writeString(feedExpireTime);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeDouble(range);
+        dest.writeString(broadcastAddress);
     }
 
     @Override
@@ -188,17 +295,37 @@ public class FeedEntity extends DbBaseEntity implements Parcelable {
     }
 
     @NonNull
-    public BulletinModel toTelemeshBulletin() {
-        return new BulletinModel()
-                .setId(getFeedId())
-                .setMessage(getFeedDetail())
-                .setTime(getFeedTime());
+    public FeedEntity prepareFeedEntity(@NonNull BulletinFeed bulletinFeed) {
+        return new FeedEntity()
+                .setFeedId(bulletinFeed.getMessageId())
+                .setFeedProviderName(bulletinFeed.getUploaderInfo())
+                .setFeedTitle(bulletinFeed.getMessageTitle())
+                .setFeedDetail(bulletinFeed.getMessageBody())
+                .setFeedTime(bulletinFeed.getCreatedAt())
+                .setFeedExpireTime(bulletinFeed.getExpiredAt())
+                .setLatitude(bulletinFeed.getLatitude())
+                .setLongitude(bulletinFeed.getLongitude())
+                .setRange(bulletinFeed.getRange())
+                .setBroadcastAddress(bulletinFeed.getBroadcastAddress());
     }
 
     @NonNull
-    public FeedEntity toFeedEntity(@NonNull BulletinModel bulletinModel) {
-        return new FeedEntity().setFeedDetail(bulletinModel.getMessage())
-                .setFeedId(bulletinModel.getId())
-                .setFeedTime(bulletinModel.getTime());
+    public BroadcastMeta toBroadcastMeta() {
+        return new BroadcastMeta()
+                .setUploaderName(getFeedProviderName())
+                .setMessageTitle(getFeedTitle())
+                .setMessageBody(getFeedDetail())
+                .setCreationTime(getFeedTime())
+                .setBroadcastAddress(getBroadcastAddress());
+    }
+
+    @NonNull
+    public FeedEntity toFeedEntity(@NonNull BroadcastMeta broadcastMeta) {
+
+        return setFeedProviderName(broadcastMeta.getUploaderName())
+                .setFeedTitle(broadcastMeta.getMessageTitle())
+                .setFeedDetail(broadcastMeta.getMessageBody())
+                .setFeedTime(broadcastMeta.getCreationTime())
+                .setBroadcastAddress(broadcastMeta.getBroadcastAddress());
     }
 }

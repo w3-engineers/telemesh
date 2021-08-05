@@ -105,11 +105,17 @@ public class AnalyticsDataHelperTest {
         addDelay(3 * 1000);
 
         MessageEntity.MessageAnalyticsEntity entity = new MessageEntity.MessageAnalyticsEntity();
+//        entity.setTime(System.currentTimeMillis());
+//        entity.setUserId(userId);
+//        entity.syncMessageCountToken = 1;
+//
+//        AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, entity);
+        Random random = new Random();
         entity.setTime(System.currentTimeMillis());
-        entity.setUserId(userId);
-        entity.syncMessageCountToken = 1;
+        entity.setUserId(getRandomUserId(random));
+        entity.syncMessageCountToken = getRandomCount(random);
 
-        AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, entity);
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(),entity);
 
         addDelay(3000);
 
@@ -205,6 +211,17 @@ public class AnalyticsDataHelperTest {
 
         AnalyticsDataHelper.getInstance().sendAppShareCountAnalytics(list);
     }*/
+
+    /*private void callMessageCount(){
+        Random random = new Random();
+        MessageEntity.MessageAnalyticsEntity entity = new MessageEntity.MessageAnalyticsEntity();
+        entity.setTime(System.currentTimeMillis());
+        entity.setUserId(getRandomUserId(random));
+        entity.syncMessageCountToken = getRandomCount(random);
+
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(),entity);
+    }*/
+
     private AppShareCountEntity getAppShareCountEntity() {
         Random random = new Random();
         AppShareCountEntity entity = new AppShareCountEntity();
@@ -233,8 +250,4 @@ public class AnalyticsDataHelperTest {
         s = s + hexValue;
         return s;
     }
-
-
-
-
 }

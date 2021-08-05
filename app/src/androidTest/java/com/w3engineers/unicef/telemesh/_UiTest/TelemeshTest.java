@@ -500,6 +500,7 @@ public class TelemeshTest {
 
         addDelay(2000);
 
+
         /*onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(2000);

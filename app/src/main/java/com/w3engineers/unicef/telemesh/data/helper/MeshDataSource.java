@@ -65,6 +65,10 @@ public class MeshDataSource extends ViperUtil {
         return rightMeshDataSource;
     }
 
+    public void destroyDataSource(){
+        rightMeshDataSource = null;
+    }
+
     @Override
     protected void onMesh(String myMeshId) {
         meshInited(myMeshId);

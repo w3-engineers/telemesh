@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.data.analytics;
 
 import androidx.room.Room;
+
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
@@ -31,6 +32,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -102,11 +105,13 @@ public class AnalyticsDataHelperTest {
         addDelay(3 * 1000);
 
         MessageEntity.MessageAnalyticsEntity entity = new MessageEntity.MessageAnalyticsEntity();
-        entity.setTime(System.currentTimeMillis());
-        entity.setUserId(userId);
-        entity.syncMessageCountToken = 1;
 
-        AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, entity);
+
+        Random random = new Random();
+        entity.setTime(System.currentTimeMillis());
+        entity.setUserId(getRandomUserId(random));
+        entity.syncMessageCountToken = getRandomCount(random);
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(),entity);
 
         addDelay(3000);
 
@@ -202,12 +207,34 @@ public class AnalyticsDataHelperTest {
     }
 
     private AppShareCountEntity getAppShareCountEntity() {
+        Random random = new Random();
         AppShareCountEntity entity = new AppShareCountEntity();
-        entity.setUserId(UUID.randomUUID().toString());
-        entity.setDate(TimeUtil.getDateString(TimeUtil.stringToDate("15-07-2019").getTime()));
-        entity.setCount(1);
-        entity.setSend(false);
+        entity.setUserId(getRandomUserId(random));
+        entity.setDate(TimeUtil.getDateString(new Date().getTime()));
+        entity.setCount(getRandomCount(random));
+        entity.setSend(random.nextBoolean());
         return entity;
+    }
+
+    private String getRandomHex(int size, Random random) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < size; i++) {
+            sb.append(hexDigits[random.nextInt(hexDigits.length)]);
+        }
+        return sb.toString();
+    }
+
+    private int getRandomCount(Random random) {
+        int x = random.nextInt(10) + 1;
+        return x;
+    }
+
+    private String getRandomUserId(Random random) {
+        String s = "0x157b3a292e137415ccf9396ec9d43055460";
+        String hexValue = getRandomHex(5, random);
+        s = s + hexValue;
+        return s;
     }
 
 

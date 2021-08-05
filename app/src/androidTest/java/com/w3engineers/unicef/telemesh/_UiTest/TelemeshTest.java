@@ -124,12 +124,14 @@ public class TelemeshTest {
         context = InstrumentationRegistry.getTargetContext();
 
         //mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-        mActivityTestRule.getScenario().onActivity(new ActivityScenario.ActivityAction<SplashActivity>() {
-            @Override
-            public void perform(SplashActivity activity) {
-                activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-            }
-        });
+
+        if (mActivityTestRule.getScenario() != null) {
+            mActivityTestRule.getScenario().onActivity(activity -> {
+                if (activity != null) {
+                    activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+                }
+            });
+        }
 
 
         //sharedPref = SharedPref.getSharedPref(context);

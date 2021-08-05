@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 import android.app.Activity;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.room.Room;
 
 import android.content.Context;
@@ -125,13 +126,13 @@ public class TelemeshTest {
 
         //mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-        if (mActivityTestRule.getScenario() != null) {
-            mActivityTestRule.getScenario().onActivity(activity -> {
-                if (activity != null) {
-                    activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-                }
-            });
-        }
+
+        mActivityTestRule.getScenario().onActivity(new ActivityScenario.ActivityAction<SplashActivity>() {
+            @Override
+            public void perform(SplashActivity activity) {
+                activity.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+            }
+        });
 
 
         //sharedPref = SharedPref.getSharedPref(context);
@@ -297,6 +298,10 @@ public class TelemeshTest {
     // Settings page test
     @Test
     public void uiTest_02() {
+
+        ActivityScenario<SplashActivity> ss = mActivityTestRule.getScenario();
+        ss.recreate();
+
         addDelay(3800);
 
 
@@ -852,6 +857,9 @@ public class TelemeshTest {
 
     @Test
     public void uiTest_05() {
+
+        ActivityScenario<SplashActivity> ss = mActivityTestRule.getScenario();
+        ss.recreate();
 
         addDelay(4000);
 

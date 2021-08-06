@@ -35,7 +35,7 @@ class SplashActivityK: AppCompatActivity() {
 
         //val shimmerFrameLayout = findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout)
         // no findViewById required now
-        shimmer_container.startShimmer()
+        //shimmer_container.startShimmer()
 
 
         if (CommonUtil.isEmulator()) {

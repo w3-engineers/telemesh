@@ -41,8 +41,8 @@ public class SplashActivity extends BaseActivity {
 
         splashViewModel.getUserRegistrationStatus();
 
-        ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
-        shimmerFrameLayout.startShimmer();
+       /* ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
+        shimmerFrameLayout.startShimmer();*/
 
         splashViewModel.getIsUserRegistered().observe(this, aBoolean -> {
             Intent intent;

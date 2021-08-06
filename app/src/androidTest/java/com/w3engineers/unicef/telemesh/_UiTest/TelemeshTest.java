@@ -132,7 +132,6 @@ public class TelemeshTest {
     @After
     public void closeDb() throws IOException {
         appDatabase.close();
-        mActivityTestRule.finishActivity();
     }
 
     @Test

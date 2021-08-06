@@ -458,10 +458,17 @@ public class TelemeshTest {
 
         uiTest_04();
 
+        MeshDataSource.getInstance().destroyDataSource();
+
+        Espresso.pressBackUnconditionally();
+        addDelay(500);
+        Espresso.pressBackUnconditionally();
 
         assertTrue(true);
 
         StatusHelper.out("Test executed");
+
+        addDelay(4000);
 
     }
 
@@ -725,8 +732,6 @@ public class TelemeshTest {
         } else {
             updateButtonClick();
         }
-
-        MeshDataSource.getInstance().destroyDataSource();
 
         StatusHelper.out("Test uiTest_02 executed");
 

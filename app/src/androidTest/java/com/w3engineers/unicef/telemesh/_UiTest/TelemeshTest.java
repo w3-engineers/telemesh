@@ -291,8 +291,9 @@ public class TelemeshTest {
     public void uiTest_02() {
 
 
-        addDelay(3800);
+        addDelay(4000);
 
+        currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -1297,18 +1298,6 @@ public class TelemeshTest {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private void dumpThreads() {
-        int activeCount = Thread.activeCount();
-        Thread[] threads = new Thread[activeCount];
-        Thread.enumerate(threads);
-        for (Thread thread : threads) {
-            System.err.println(thread.getName() + ": " + thread.getState());
-            for (StackTraceElement stackTraceElement : thread.getStackTrace()) {
-                System.err.println("\t" + stackTraceElement);
-            }
-        }
     }
 
 }

@@ -957,15 +957,21 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
-        overflowMenuButton.perform(click());
+        try {
 
-        addDelay(2000);
 
-        ViewInteraction appCompatTextView4 = onView(allOf(withId(R.id.title), withText("Clear Chat"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
-        appCompatTextView4.perform(click());
+            ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+            overflowMenuButton.perform(click());
 
-        addDelay(2000);
+            addDelay(2000);
+
+            ViewInteraction appCompatTextView4 = onView(allOf(withId(R.id.title), withText("Clear Chat"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+            appCompatTextView4.perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction appCompatEditText9 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
         appCompatEditText9.perform(click());
@@ -983,15 +989,28 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        ViewInteraction overflowMenuButton2 = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
-        overflowMenuButton2.perform(click());
+        try {
 
-        addDelay(2000);
+            ViewInteraction overflowMenuButton2 = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+            overflowMenuButton2.perform(click());
 
-        ViewInteraction appCompatTextView5 = onView(allOf(withId(R.id.title), withText("Leave Group"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
-        appCompatTextView5.perform(click());
+            addDelay(2000);
 
-        addDelay(2000);
+            ViewInteraction appCompatTextView5 = onView(allOf(withId(R.id.title), withText("Leave Group"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+            appCompatTextView5.perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mDevice.pressBack();
+
+            addDelay(1000);
+            currentActivity = getActivityInstance();
+            if (!(currentActivity instanceof MainActivity)) {
+                mDevice.pressBack();
+            }
+        }
+
 
         addDelay(3000);
         ViewInteraction discoverTab = onView(allOf(withId(R.id.action_discover), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));

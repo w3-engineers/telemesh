@@ -39,6 +39,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -51,6 +52,7 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.hamcrest.Description;
@@ -799,6 +801,12 @@ public class TelemeshTest {
 
         addDelay(1500);
 
+        // click content image. It has animation for 300 ms
+
+        onView(withId(R.id.image_view_message)).perform(click());
+
+        addDelay(2000);
+
         mDevice.pressBack();
 
         addDelay(1000);
@@ -1271,7 +1279,21 @@ public class TelemeshTest {
         entity.setFeedTime("2019-08-02T06:05:30.000Z");
         entity.setFeedReadStatus(false);
 
+        String contentInfo = GsonBuilder.getInstance().getFeedContentModelJson(prepareBroadcastContentModel());
+
+        entity.setFeedContentInfo(contentInfo);
+
         feedDataSource.insertOrUpdateData(entity);
+    }
+
+    private FeedContentModel prepareBroadcastContentModel() {
+        FeedContentModel contentModel = new FeedContentModel();
+        contentModel.setContentInfo("Sample content info");
+        contentModel.setContentPath("file:///android_asset/sample_image.jpg");
+        contentModel.setContentThumb("file:///android_asset/sample_image.jpg");
+        contentModel.setContentUrl("file:///android_asset/sample_image.jpg");
+
+        return contentModel;
     }
 
     private UserEntity addSampleUser() {

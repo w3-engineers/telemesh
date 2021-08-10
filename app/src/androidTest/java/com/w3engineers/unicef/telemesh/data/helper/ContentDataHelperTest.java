@@ -7,6 +7,8 @@ import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.google.gson.Gson;
+import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -15,12 +17,17 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.model.ContentInfo;
 
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.UUID;
 
 @RunWith(AndroidJUnit4.class)
 public class ContentDataHelperTest {
@@ -28,6 +35,9 @@ public class ContentDataHelperTest {
     private RandomEntityGenerator randomEntityGenerator;
     private UserDataSource userDataSource;
     private AppDatabase appDatabase;
+
+    private ContentDataHelper contentDataHelper;
+    private String userId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
 
     @Rule
     public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
@@ -38,6 +48,8 @@ public class ContentDataHelperTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
         userDataSource = UserDataSource.getInstance();
+
+        contentDataHelper = ContentDataHelper.getInstance();
     }
 
     @After
@@ -53,24 +65,102 @@ public class ContentDataHelperTest {
 
         ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(entity.getMeshId());
 
-        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, true);
+        contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, true);
 
         addDelay(2000);
 
         chatEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
 
         chatEntity.setIncoming(true);
-        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
+        contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, false);
 
         addDelay(2000);
 
         chatEntity.setIncoming(false);
-        ContentDataHelper.getInstance().prepareContentObserver((MessageEntity) chatEntity, false);
+        contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, false);
 
         addDelay(2000);
 
+        chatEntity.setIncoming(false);
+
+        ((MessageEntity) chatEntity).setContentId(UUID.randomUUID().toString());
+
+        ContentInfo contentInfo = new ContentInfo();
+        contentInfo.setDuration(10);
+
+        String contentJson = GsonBuilder.getInstance().getContentInfoJson(contentInfo);
+
+        ((MessageEntity) chatEntity).setContentInfo(contentJson);
+
+        contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, false);
+
+        addDelay(2000);
+
+        contentDataHelper.contentMessageSuccessResponse(chatEntity.getMessageId().getBytes());
+
+        addDelay(1000);
+
+        contentDataHelper.contentMessageSuccessResponse(((MessageEntity) chatEntity).getContentId().getBytes());
+
+
         assertTrue(true);
 
+    }
+
+    @Test
+    public void test_prepare_content_and_send() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+
+            jsonObject.put("success", true);
+            jsonObject.put("msg", "abc");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ContentModel contentModel = new ContentModel();
+        contentModel.setMessageId(UUID.randomUUID().toString());
+        contentModel.setUserId(userId);
+
+        contentDataHelper.contentDataSend(jsonObject.toString(), contentModel);
+
+        addDelay(1000);
+
+
+        JSONObject jsonObject1 = new JSONObject();
+        try {
+
+            jsonObject1.put("success", false);
+            jsonObject1.put("msg", "abc");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        contentDataHelper.contentDataSend(jsonObject1.toString(), contentModel);
+
+        addDelay(1000);
+
+        contentDataHelper.contentDataSend("", contentModel);
+
+        addDelay(1000);
+
+
+        String contentId = UUID.randomUUID().toString();
+
+        ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
+        contentMetaInfo.setMessageId(contentId);
+        contentMetaInfo.setMetaInfo("test meta");
+        contentMetaInfo.setMessageType(1);
+        contentMetaInfo.setThumbData(randomEntityGenerator.sampleByteImage().getBytes());
+
+        String value = new Gson().toJson(contentMetaInfo);
+
+        contentDataHelper.contentReceiveStart(contentId, randomEntityGenerator.getDummyImageLink(), userId, value.getBytes());
+
+        addDelay(1000);
+
+        assertTrue(true);
     }
 
     private void addDelay(long time) {
@@ -85,7 +175,7 @@ public class ContentDataHelperTest {
         UserEntity userEntity = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
-                .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
+                .setMeshId(userId)
                 .setUserName("Daniel")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());

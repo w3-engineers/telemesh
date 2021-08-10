@@ -111,6 +111,18 @@ public class RandomEntityGenerator {
                 .setStatus(Constants.MessageStatus.STATUS_FAILED);
     }
 
+    public ChatEntity createOutgoingContent(String userId) {
+
+        return new MessageEntity().setContentPath(getDummyImageLink())
+                .setContentProgress(20)
+                .setFriendsId(userId)
+                .setMessageId(UUID.randomUUID().toString())
+                .setIncoming(true)
+                .setMessageType(Constants.MessageType.IMAGE_MESSAGE)
+                .setTime(System.currentTimeMillis())
+                .setStatus(Constants.MessageStatus.STATUS_FAILED);
+    }
+
     public ChatEntity createReceiverChatEntity(String userId) {
 
         return new MessageEntity().setMessage("Hi")

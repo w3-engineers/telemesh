@@ -160,6 +160,41 @@ public class ContentDataHelperTest {
 
         addDelay(1000);
 
+        contentDataHelper.contentReceiveStart(contentId, randomEntityGenerator.getDummyImageLink(), userId, value.getBytes());
+
+        addDelay(1000);
+
+
+        ContentPendingModel contentPendingModel = new ContentPendingModel();
+        contentPendingModel.setSenderId(userId);
+        contentPendingModel.setContentId(UUID.randomUUID().toString());
+        contentPendingModel.setContentPath(randomEntityGenerator.getDummyImageLink());
+        contentPendingModel.setProgress(101);
+        contentPendingModel.setState(1);
+        contentPendingModel.setContentMetaInfo(contentMetaInfo);
+
+        contentDataHelper.pendingContents(contentPendingModel);
+        addDelay(1000);
+
+        contentPendingModel.setContentMetaInfo(null);
+        contentDataHelper.pendingContents(contentPendingModel);
+        addDelay(1000);
+
+        contentPendingModel.setContentPath("");
+        contentDataHelper.pendingContents(contentPendingModel);
+        addDelay(1000);
+
+        contentPendingModel.setIncoming(true);
+        contentDataHelper.pendingContents(contentPendingModel);
+        addDelay(1000);
+
+
+        contentDataHelper.contentReceiveInProgress(contentId, 50);
+        addDelay(1000);
+
+        contentDataHelper.contentReceiveDone(contentId, true, "success");
+        addDelay(1000);
+
         assertTrue(true);
     }
 

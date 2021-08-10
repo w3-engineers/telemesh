@@ -8,6 +8,9 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -43,6 +46,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -66,7 +70,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -480,11 +489,6 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        currentActivity = getActivityInstance();
-
-
-        addDelay(1000);
-
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(1000);
@@ -510,6 +514,51 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+        // Send and Receive content message
+
+        currentActivity = getActivityInstance();
+
+        File file = new File(Environment.getExternalStorageDirectory(), "dummy.jpg");
+        try {
+
+            AssetFileDescriptor assetFileDescriptor = currentActivity.getAssets().openFd("sample_image.jpg");
+
+            FileInputStream inputStream = assetFileDescriptor.createInputStream();
+
+            OutputStream outputStream = new FileOutputStream(file);
+            copyStream(inputStream, outputStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        addDelay(2000);
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).sendContentMessage(Uri.fromFile(file));
+        }
+
+        addDelay(1000);
+
+        MessageEntity lastIncomingContent = messageSourceData.getLastIncomingContent(userEntity.getMeshId());
+
+        lastIncomingContent.setContentProgress(100);
+        messageSourceData.insertOrUpdateData(lastIncomingContent);
+
+        addDelay(1000);
+
+        ChatEntity incomingContent = randomEntityGenerator.createIncomingContent(userEntity.getMeshId(), file);
+        messageSourceData.insertOrUpdateData(incomingContent);
+
+        addDelay(1000);
+
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).clearChat();
+        }
+
+
+        addDelay(1000);
 
         try {
 
@@ -1289,9 +1338,10 @@ public class TelemeshTest {
     private FeedContentModel prepareBroadcastContentModel() {
         FeedContentModel contentModel = new FeedContentModel();
         contentModel.setContentInfo("Sample content info");
-        contentModel.setContentPath("file:///android_asset/sample_image.jpg");
-        contentModel.setContentThumb("file:///android_asset/sample_image.jpg");
-        contentModel.setContentUrl("file:///android_asset/sample_image.jpg");
+        String imagePath = randomEntityGenerator.getDummyImageLink();
+        contentModel.setContentPath(imagePath);
+        contentModel.setContentThumb(imagePath);
+        contentModel.setContentUrl(imagePath);
 
         return contentModel;
     }
@@ -1322,4 +1372,11 @@ public class TelemeshTest {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+    }
 }

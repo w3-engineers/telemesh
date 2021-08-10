@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 import com.w3engineers.unicef.util.base.database.BaseDao;
 
 import java.util.List;
+
 import io.reactivex.Flowable;
 
 /*
@@ -43,18 +44,18 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :threadId AND "
-            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " + ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
     public abstract Flowable<List<MessageEntity>> getAllMessages(@NonNull String threadId, boolean place);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
-            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place" + " ORDER BY " + ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
     public abstract Flowable<List<MessageEntity>> getGroupAllMessages(@NonNull String threadId, boolean place);
 
     @NonNull
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
             + ColumnNames.COLUMN_MESSAGE_PLACE + " = :place AND " + ColumnNames.COLUMN_MESSAGE_TYPE + " = "
-            + Constants.MessageType.GROUP_CREATE + " ORDER BY " +ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
+            + Constants.MessageType.GROUP_CREATE + " ORDER BY " + ColumnNames.COLUMN_MESSAGE_TIME + " ASC")
     public abstract MessageEntity getCreateGroupInfo(@NonNull String threadId, boolean place);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -102,10 +103,11 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_CONTENT_ID + " LIKE :contentId LIMIT 1")
     public abstract MessageEntity getMessageFromContentId(String contentId);
+
     /**
      * Mark all message as read
      *
-     * @param friendsId    : friends id
+     * @param friendsId : friends id
      * @return : long
      */
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS +
@@ -124,7 +126,7 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     public abstract long updateMessageAsReadFailed(@NonNull String friendsId);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
-            + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus" )
+            + "=:toStatus WHERE " + ColumnNames.COLUMN_MESSAGE_STATUS + "=:fromStatus")
     public abstract long changeMessageStatusFrom(int fromStatus, int toStatus);
 
     @Query("UPDATE " + TableNames.MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS
@@ -183,4 +185,9 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
     @Query("DELETE FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
             + ColumnNames.COLUMN_MESSAGE_PLACE + " = :messagePlace")
     public abstract int clearGroupMessages(String threadId, boolean messagePlace);
+
+    @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :threadId AND "
+            + ColumnNames.COLUMN_IS_INCOMING + " = " + Constants.MessageType.MESSAGE_OUTGOING + " AND "
+            + ColumnNames.COLUMN_MESSAGE_TYPE + " = " + Constants.MessageType.IMAGE_MESSAGE)
+    public abstract MessageEntity getLastIncomingContent(String threadId);
 }

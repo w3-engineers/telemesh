@@ -30,6 +30,7 @@ import com.w3engineers.unicef.util.helper.model.ViperData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.UUID;
 
 /*
@@ -83,6 +84,10 @@ public class RandomEntityGenerator {
                 .setDataType(1).build();*/
     }
 
+    public String getDummyImageLink(){
+        return "file:///android_asset/sample_image.jpg";
+    }
+
     public ChatEntity createChatEntity(String userId) {
 
         return new MessageEntity().setMessage("Hi")
@@ -92,6 +97,18 @@ public class RandomEntityGenerator {
                 .setMessageType(Constants.MessageType.TEXT_MESSAGE)
                 .setTime(System.currentTimeMillis())
                 .setStatus(Constants.MessageStatus.STATUS_SENDING);
+    }
+
+    public ChatEntity createIncomingContent(String userId, File file) {
+
+        return new MessageEntity().setContentPath(file.getPath())
+                .setContentProgress(20)
+                .setFriendsId(userId)
+                .setMessageId(UUID.randomUUID().toString())
+                .setIncoming(true)
+                .setMessageType(Constants.MessageType.IMAGE_MESSAGE)
+                .setTime(System.currentTimeMillis())
+                .setStatus(Constants.MessageStatus.STATUS_FAILED);
     }
 
     public ChatEntity createReceiverChatEntity(String userId) {

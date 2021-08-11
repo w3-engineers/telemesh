@@ -12,8 +12,10 @@ import com.parse.SaveCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.GroupCountSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 
@@ -21,6 +23,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import timber.log.Timber;
@@ -79,6 +83,7 @@ public class ParseManager {
      *
      * @param model {@link MessageCountModel}
      */
+
     public void saveMessageCount(MessageCountModel model) {
         ParseObject parseObject = new ParseMapper().MessageCountToParse(model);
 
@@ -156,7 +161,6 @@ public class ParseManager {
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.Feedback.TABLE);
 
         parseQuery.whereEqualTo(ParseConstant.Feedback.FEEDBACK_ID, model.getFeedbackId());
-
         parseQuery.findInBackground((objects, e) -> {
             if (e == null) {
                 if (objects == null || objects.isEmpty()) {
@@ -178,6 +182,64 @@ public class ParseManager {
         });
 
     }
+
+    private ArrayList<ParseObject> removeExistingGroups(ArrayList<ParseObject> parseModels, ArrayList<String> existingGroupIds){
+        for (int i = parseModels.size() - 1; i > -1; i--) {
+            ParseObject obj = parseModels.get(i);
+            if (Arrays.toString(existingGroupIds.toArray()).contains(obj.getString(ParseConstant.GroupCount.GROUP_ID))) {
+                parseModels.remove(obj);
+            }
+        }
+        return parseModels;
+    }
+
+    public void sendGroupCount(ArrayList<GroupCountParseModel> modelList, GroupCountSendCallback callback) {
+
+        ArrayList<ParseObject> parseModels = new ArrayList<>();
+        ArrayList<String> groupIds = new ArrayList<>();
+        for (GroupCountParseModel model : modelList) {
+            ParseObject parseObject = new ParseMapper().GroupCountToParse(model);
+            parseModels.add(parseObject);
+            groupIds.add(model.getGroupId());
+        }
+
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery(ParseConstant.GroupCount.TABLE);
+
+        parseQuery.whereContainedIn(ParseConstant.GroupCount.GROUP_ID, groupIds);
+
+        parseQuery.findInBackground((objects, e) -> {
+            if (e == null) {
+                ArrayList<String> existingGroupIds = new ArrayList<>();
+                for (ParseObject object: objects) {
+                    String groupId = object.getString(ParseConstant.GroupCount.GROUP_ID);
+                    existingGroupIds.add(groupId);
+                }
+                if (!existingGroupIds.isEmpty()) {
+                    removeExistingGroups(parseModels, existingGroupIds);
+                }
+
+                if (parseModels.isEmpty()) {
+                    if (callback != null) {
+                        callback.onGetGroupCountSendResponse(true, modelList);
+                    }
+                    Timber.tag("GroupCount").e("GroupCount is empty");
+                } else {
+                    ParseObject.saveAllInBackground(parseModels, e1 -> {
+                        if (e1 == null) {
+                            if (callback != null) {
+                                callback.onGetGroupCountSendResponse(true, modelList);
+                            }
+                        } else {
+                            Timber.tag("GroupCount").e("GroupCount send Failed: %s", e1.getMessage());
+                        }
+                    });
+                }
+            } else {
+                Timber.tag("GroupCount").e("GroupCount query Error: %s", e.getMessage());
+            }
+        });
+    }
+
 
     private void sendResponse(boolean isSuccess) {
         if (analyticsResponseCallback != null) {

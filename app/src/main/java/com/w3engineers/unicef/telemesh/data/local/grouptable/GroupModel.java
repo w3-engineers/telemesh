@@ -5,6 +5,16 @@ public class GroupModel {
     String n, i, ai, mi, ii;
     int a;
     long c;
+    boolean is;
+
+    public boolean isSynced() {
+        return is;
+    }
+
+    public GroupModel setSynced(boolean is) {
+        this.is = is;
+        return this;
+    }
 
     public String getGroupName() {
         return n;

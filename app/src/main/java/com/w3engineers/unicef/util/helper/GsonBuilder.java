@@ -6,6 +6,7 @@ import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupCountModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
@@ -39,6 +40,15 @@ public class GsonBuilder {
     public ArrayList<GroupMembersInfo> getGroupMemberInfoObj(String memberInfoText) {
         Type founderListType = new TypeToken<ArrayList<GroupMembersInfo>>(){}.getType();
         return gson.fromJson(memberInfoText, founderListType);
+    }
+
+    public String getGroupCountJson(ArrayList<GroupCountModel> groupCountModels) {
+        return gson.toJson(groupCountModels);
+    }
+
+    public ArrayList<GroupCountModel> getGroupCountModels(String groupCountText) {
+        Type founderListType = new TypeToken<ArrayList<GroupCountModel>>(){}.getType();
+        return gson.fromJson(groupCountText, founderListType);
     }
 
     public String getRelayGroupModelJson(RelayGroupModel relayGroupModel) {

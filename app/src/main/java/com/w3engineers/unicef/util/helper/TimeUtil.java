@@ -83,6 +83,15 @@ public class TimeUtil {
     }
 
     @Nullable
+    public static String getDateStringFromMillisecond(long timeMillis) {
+        String dateFormat1 = "yyyy-MM-dd HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(dateFormat1, Locale.getDefault());
+        df.setTimeZone(TimeZone.getDefault());
+        Date date = new Date(timeMillis);
+        return df.format(date);
+    }
+
+    @Nullable
     public synchronized Date getDateFromMillisecond(long timeMillis) {
 
         String dateFormat1 = "yyyy-MM-dd HH:mm:ss";

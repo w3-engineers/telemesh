@@ -1039,10 +1039,37 @@ public class TelemeshTest {
 
         addDelay(2000);
 
+        // perform search operation
+        onView(withId(R.id.action_search)).perform(click());
+        addDelay(1000);
+
+        onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
+        addDelay(1000);
+
+        onView(withId(R.id.image_view_back)).perform(click());
+        addDelay(1000);
+
         ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView4.perform(actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
+
+        // deselect
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //again select
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
 
         ViewInteraction floatingActionButton3 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
         floatingActionButton3.perform(click());

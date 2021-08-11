@@ -13,6 +13,7 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
@@ -35,6 +36,7 @@ public class ContentDataHelperTest {
     private RandomEntityGenerator randomEntityGenerator;
     private UserDataSource userDataSource;
     private AppDatabase appDatabase;
+    private MessageSourceData messageSourceData;
 
     private ContentDataHelper contentDataHelper;
     private String userId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
@@ -48,7 +50,7 @@ public class ContentDataHelperTest {
         appDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 AppDatabase.class).allowMainThreadQueries().build();
         userDataSource = UserDataSource.getInstance();
-
+        messageSourceData = MessageSourceData.getInstance();
         contentDataHelper = ContentDataHelper.getInstance();
     }
 
@@ -165,12 +167,23 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
 
+        String pendingContentId = UUID.randomUUID().toString();
+
+        // Insert a content information in table
+
+        ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(userId);
+        ((MessageEntity) chatEntity).setContentId(pendingContentId);
+
+        messageSourceData.insertOrUpdateData(chatEntity);
+        addDelay(1000);
+
+
         ContentPendingModel contentPendingModel = new ContentPendingModel();
         contentPendingModel.setSenderId(userId);
-        contentPendingModel.setContentId(UUID.randomUUID().toString());
+        contentPendingModel.setContentId(pendingContentId);
         contentPendingModel.setContentPath(randomEntityGenerator.getDummyImageLink());
         contentPendingModel.setProgress(101);
-        contentPendingModel.setState(1);
+        contentPendingModel.setState(Constants.ServiceContentState.PROGRESS);
         contentPendingModel.setContentMetaInfo(contentMetaInfo);
 
         contentDataHelper.pendingContents(contentPendingModel);
@@ -185,6 +198,7 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
         contentPendingModel.setIncoming(true);
+        contentPendingModel.setContentMetaInfo(contentMetaInfo);
         contentDataHelper.pendingContents(contentPendingModel);
         addDelay(1000);
 

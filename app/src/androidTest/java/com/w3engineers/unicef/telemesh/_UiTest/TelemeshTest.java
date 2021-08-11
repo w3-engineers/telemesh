@@ -20,6 +20,8 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -514,6 +516,14 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+
+        // Click for open gallery
+        onView(withId(R.id.image_view_pick_gallery_image)).perform(click());
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+
         // Send and Receive content message
 
         currentActivity = getActivityInstance();
@@ -546,6 +556,17 @@ public class TelemeshTest {
         messageSourceData.insertOrUpdateData(lastIncomingContent);
 
         addDelay(1000);
+
+        onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+        addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ChatEntity incomingContent = randomEntityGenerator.createIncomingContent(userEntity.getMeshId(), file);
         messageSourceData.insertOrUpdateData(incomingContent);
@@ -854,7 +875,17 @@ public class TelemeshTest {
 
         onView(withId(R.id.image_view_message)).perform(click());
 
+
         addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         mDevice.pressBack();
 
@@ -868,15 +899,6 @@ public class TelemeshTest {
             //mainActivity.feedRefresh();
 
             addDelay(1000);
-
-           /* try {
-                mDevice.pressBack();
-                addDelay(700);
-                mDevice.pressBack();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
-
         }
     }
 
@@ -927,6 +949,39 @@ public class TelemeshTest {
         ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));
 
+        addDelay(1000);
+
+        // click go button to open one to one chat
+        onView(withId(R.id.button_go)).perform(click());
+        addDelay(500);
+        mDevice.pressBack();
+
+        onView(withId(R.id.text_view_create_group)).perform(click());
+        addDelay(500);
+
+        // select item
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        // di select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
         addDelay(1000);
 
         ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
@@ -1378,5 +1433,29 @@ public class TelemeshTest {
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
+    }
+
+    public class ChildViewAction {
+
+        public ViewAction clickChildViewWithId(final int id) {
+            return new ViewAction() {
+                @Override
+                public Matcher<View> getConstraints() {
+                    return null;
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Click on a child view with specified id.";
+                }
+
+                @Override
+                public void perform(UiController uiController, View view) {
+                    View v = view.findViewById(id);
+                    v.performClick();
+                }
+            };
+        }
+
     }
 }

@@ -316,14 +316,25 @@ public class Constants {
     }
 
     public interface ViewHolderType {
+        //one to one
         int TEXT_INCOMING = 11;
         int TEXT_OUTGOING = 12;
+        //Group
+        int GROUP_TEXT_INCOMING = 13;
+        int GROUP_TEXT_OUTGOING = 13;
 
+        //One to one
         int IMG_INCOMING = 21;
         int IMG_OUTGOING = 22;
-
+        //Group
+        int GROUP_IMG_INCOMING = 23;
+        int GROUP_IMG_OUTGOING = 24;
+        //One to one
         int VID_INCOMING = 31;
         int VID_OUTGOING = 32;
+        //Group
+        int GROUP_VID_INCOMING = 33;
+        int GROUP_VID_OUTGOING = 34;
 
         int GROUP_INFO = 33;
     }

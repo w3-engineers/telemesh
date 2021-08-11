@@ -1,13 +1,18 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
 import androidx.paging.PagedListAdapter;
+
 import android.content.Context;
+
 import androidx.databinding.ViewDataBinding;
+
 import android.graphics.drawable.GradientDrawable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +25,7 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupInfoBinding;
@@ -71,6 +77,15 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     @Override
     public int getItemViewType(int position) {
         ChatEntity chatEntity = getItem(position);
+        if (chatEntity instanceof GroupMessageEntity) {
+            if (chatEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                return chatEntity.isIncoming ? Constants.ViewHolderType.GROUP_TEXT_INCOMING : Constants.ViewHolderType.GROUP_TEXT_OUTGOING;
+            } else if (chatEntity.getMessageType() == Constants.MessageType.IMAGE_MESSAGE) {
+                return chatEntity.isIncoming ? Constants.ViewHolderType.GROUP_IMG_INCOMING : Constants.ViewHolderType.GROUP_IMG_OUTGOING;
+            } else {
+                return chatEntity.isIncoming ? Constants.ViewHolderType.GROUP_VID_INCOMING : Constants.ViewHolderType.GROUP_VID_OUTGOING;
+            }
+        }
 
         if (chatEntity != null) {
 
@@ -136,7 +151,21 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         } else if (viewType == Constants.ViewHolderType.GROUP_INFO) {
             ItemGroupInfoBinding itemGroupInfoBinding = ItemGroupInfoBinding.inflate(inflater, viewGroup, false);
             return new GroupInfoViewHolder(itemGroupInfoBinding);
-        } else {
+        } else if(viewType == Constants.ViewHolderType.GROUP_TEXT_INCOMING){
+
+        }else if(viewType == Constants.ViewHolderType.GROUP_TEXT_OUTGOING){
+
+        }else if(viewType == Constants.ViewHolderType.GROUP_IMG_INCOMING){
+
+        }else if(viewType == Constants.ViewHolderType.GROUP_IMG_OUTGOING){
+
+        }else if(viewType == Constants.ViewHolderType.GROUP_VID_INCOMING){
+
+        }else if(viewType == Constants.ViewHolderType.GROUP_VID_OUTGOING){
+
+        }
+
+        else {
             ItemMessageSeparatorBinding itemMessageSeparatorBinding = ItemMessageSeparatorBinding.inflate(inflater, viewGroup, false);
             return new SeparatorViewHolder(itemMessageSeparatorBinding);
         }
@@ -175,7 +204,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private String getUserName(MessageEntity messageEntity) {
-        UserEntity userEntity =  userMap.get(messageEntity.friendsId);
+        UserEntity userEntity = userMap.get(messageEntity.friendsId);
         if (userEntity != null) {
             return userEntity.getUserName();
         }
@@ -248,7 +277,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull MessageEntity messageEntity) {
 
-            Log.v("FILE_SPEED_TEST_14 ", Calendar.getInstance().getTime()+"");
+            Log.v("FILE_SPEED_TEST_14 ", Calendar.getInstance().getTime() + "");
 
             binding.setTextMessage(messageEntity);
             binding.setAvatarIndex(getAvatarIndex(messageEntity));

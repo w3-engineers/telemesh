@@ -2,6 +2,8 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.text.SpannableString;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;

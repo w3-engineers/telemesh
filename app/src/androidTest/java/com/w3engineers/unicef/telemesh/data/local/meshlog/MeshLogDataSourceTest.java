@@ -10,6 +10,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -79,6 +80,8 @@ public class MeshLogDataSourceTest {
         assertEquals(0, res);
 
         addDelay(500);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {

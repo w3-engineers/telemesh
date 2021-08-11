@@ -23,6 +23,7 @@ import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -85,6 +86,8 @@ public class ModelParcelableTest {
 
         addDelay();
 
+        StatusHelper.out("Test executed");
+
     }
 
     @Test
@@ -112,6 +115,8 @@ public class ModelParcelableTest {
         assertThat(appShareCountEntity.isSend(), is(true));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -131,6 +136,8 @@ public class ModelParcelableTest {
         assertThat(meshLogEntity.getLogName(), is(logName));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -147,6 +154,8 @@ public class ModelParcelableTest {
         assertThat(updatedConfigModel.getVersionName(), is(configModel.getVersionName()));
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -188,6 +197,8 @@ public class ModelParcelableTest {
         assertEquals(msgTime, messageCountModel.getMsgTime());
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -224,6 +235,8 @@ public class ModelParcelableTest {
         assertEquals(test, res);
 
         addDelay();
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -260,6 +273,7 @@ public class ModelParcelableTest {
 
         assertEquals(payload.getConnectedClientEthIds().get(0), payloadData.get(0));
 
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay() {

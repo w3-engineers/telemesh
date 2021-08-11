@@ -10,6 +10,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -106,6 +107,8 @@ public class MessageSourceDataTest {
         getLastChatEntity.assertNoErrors().assertValue(lastChatEntity -> lastChatEntity.getMessageId().equals(messageId_2));
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay() {

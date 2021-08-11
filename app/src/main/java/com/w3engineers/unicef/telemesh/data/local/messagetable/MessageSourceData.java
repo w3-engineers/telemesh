@@ -67,6 +67,15 @@ public class MessageSourceData {
         return messageDao.writeMessage((MessageEntity) baseEntity);
     }
 
+    /**
+     * This method only for test cases
+     * @param threadId
+     * @return
+     */
+    public MessageEntity getLastIncomingContent(String threadId) {
+        return messageDao.getLastIncomingContent(threadId);
+    }
+
     // This api is not used in app layer
     /*public void deleteAllData() {
         messageDao.deleteAllUsers();

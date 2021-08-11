@@ -8,6 +8,7 @@ import androidx.test.runner.AndroidJUnit4;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -114,6 +115,8 @@ public class UserDataSourceTest {
         userEntity = SUT.getSingleUserById(meshId1);
 
         assertNull(userEntity);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay() {

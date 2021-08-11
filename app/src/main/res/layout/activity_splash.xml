@@ -17,7 +17,17 @@
         android:background="@color/toolbar_color"
         tools:context=".ui.splashscreen.SplashActivity">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
+        <ImageView
+            android:layout_width="@dimen/width_250"
+            android:layout_height="@dimen/height_200"
+            android:contentDescription="@string/logo_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@mipmap/splash_logo" />
+
+       <!-- <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +43,7 @@
                 android:layout_height="@dimen/height_200"
                 android:contentDescription="@string/logo_image"
                 android:src="@mipmap/splash_logo" />
-        </com.facebook.shimmer.ShimmerFrameLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>-->
 
         <TextView
             android:layout_width="wrap_content"

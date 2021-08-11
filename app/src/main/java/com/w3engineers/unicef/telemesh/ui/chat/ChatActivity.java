@@ -359,7 +359,7 @@ public class ChatActivity extends TelemeshBaseActivity {
                 if (mViewBinging != null) {
                     String value = mViewBinging.editTextMessage.getText().toString().trim();
                     if (!TextUtils.isEmpty(value)) {
-                        mChatViewModel.sendMessage(threadId, value, true);
+                        mChatViewModel.sendMessage(threadId, value);
                         mViewBinging.editTextMessage.setText("");
                     }
                 }
@@ -378,9 +378,10 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.image_view_pick_gallery_image:
-                if (mUserEntity != null /*&& mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE*/) {
+                /*if (mUserEntity != null *//*&& mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE*//*) {
                     requestToOpenGallery();
-                }
+                }*/
+                requestToOpenGallery();
                 break;
 
             case R.id.image_view_message:

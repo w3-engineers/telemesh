@@ -18,4 +18,6 @@ public interface TableNames {
     String MESH_LOG = "MeshLog";
     String FEEDBACK = "Feedback";
     String GROUP = "group_table";
+    String GROUP_MESSAGE = "GroupMessage";
+    String GROUP_CONTENT = "GroupContent";
 }

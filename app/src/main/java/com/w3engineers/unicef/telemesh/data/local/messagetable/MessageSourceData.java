@@ -22,6 +22,7 @@ public class MessageSourceData {
 
     private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
+    private GroupMessageDao groupMessageDao;
 
 //    public MessageSourceData() {
 //        messageDao = AppDatabase.getInstance().messageDao();
@@ -34,6 +35,7 @@ public class MessageSourceData {
      */
     public MessageSourceData(@NonNull MessageDao messageDao) {
         this.messageDao = messageDao;
+        this.groupMessageDao = AppDatabase.getInstance().getGroupMessageDao();
     }
 
     @NonNull
@@ -64,7 +66,11 @@ public class MessageSourceData {
     }
 
     public long insertOrUpdateData(@NonNull ChatEntity baseEntity) {
-        return messageDao.writeMessage((MessageEntity) baseEntity);
+        if (baseEntity instanceof MessageEntity) {
+            return messageDao.writeMessage((MessageEntity) baseEntity);
+        } else {
+            return groupMessageDao.writeMessage((GroupMessageEntity) baseEntity);
+        }
     }
 
     /**
@@ -91,9 +97,9 @@ public class MessageSourceData {
     @NonNull
     public Flowable<List<ChatEntity>> getAllGroupMessages(@NonNull String friendsId) {
 
-        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP)
+        return groupMessageDao.getGroupAllMessages(friendsId)
                 .flatMap(messageEntities ->
-                Flowable.just(new ArrayList<>(messageEntities)));
+                        Flowable.just(new ArrayList<>(messageEntities)));
     }
 
     @NonNull

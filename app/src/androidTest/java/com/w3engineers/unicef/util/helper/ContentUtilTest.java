@@ -1,8 +1,11 @@
 package com.w3engineers.unicef.util.helper;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.test.runner.AndroidJUnit4;
+
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import junit.framework.TestCase;
 
@@ -24,6 +27,7 @@ public class ContentUtilTest extends TestCase {
 
     private ContentUtil contentUtil;
     private String sampleContentPath = "file://test.abc";
+    private String videoFilePath = "file:///android_asset/sample_vide.mp4";
 
     @Before
     public void setUp() throws Exception {
@@ -43,14 +47,22 @@ public class ContentUtilTest extends TestCase {
 
         addDelay(300);
 
+        int mediaType = contentUtil.getContentMessageType(sampleContentPath);
+
+        assertEquals(mediaType, Constants.MessageType.TYPE_DEFAULT);
+        addDelay(300);
+
         String resultTime = contentUtil.getMediaTime(4680000);
         assertEquals("1:18:00", resultTime);
 
         addDelay(300);
 
-        String fileName = ContentUtil.getFileNameFromURL("file:///android_asset/sample_vide.mp4");
+        String fileName = ContentUtil.getFileNameFromURL(videoFilePath);
         assertEquals("sample_vide.mp4", fileName);
         addDelay(300);
+
+        long duration = contentUtil.getMediaDuration(videoFilePath);
+        assertEquals(0, duration);
 
         StatusHelper.out("test case executed");
     }

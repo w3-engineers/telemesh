@@ -16,6 +16,7 @@ import android.os.Looper;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
@@ -39,6 +40,7 @@ import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
@@ -47,6 +49,10 @@ import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -58,6 +64,7 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 
@@ -78,10 +85,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -121,6 +130,7 @@ public class TelemeshTest {
     private FeedDataSource feedDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
+    private GroupDataSource groupDataSource;
     //private SharedPref sharedPref;
     private Context context;
 
@@ -134,6 +144,7 @@ public class TelemeshTest {
         feedDataSource = FeedDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
         randomEntityGenerator = new RandomEntityGenerator();
+        groupDataSource = GroupDataSource.getInstance();
 
         context = InstrumentationRegistry.getTargetContext();
 
@@ -1213,8 +1224,13 @@ public class TelemeshTest {
     }
 
 
-/*    @Test
-    public void uiTest_04() {
+    /**
+     * Mesh contact fragment test
+     * User contact and group list included
+     */
+
+    @Test
+    public void uiTest_08() {
         addDelay(4000);
 
         UserEntity userEntityOne = new UserEntity()
@@ -1227,7 +1243,23 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
-        addDelay(3000);
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12cb4")
+                .setUserName("Sam")
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        userDataSource.insertOrUpdateData(userEntityTwo);
+
+        addDelay(2000);
+
+        // Create group
+        String groupId = createAGroup(userEntityOne);
+
+        addDelay(1000);
+
 
         try {
 
@@ -1280,6 +1312,13 @@ public class TelemeshTest {
 
         addDelay(3000);
 
+
+        // Create a group message
+        ChatEntity groupChatEntity = randomEntityGenerator.createGroupChatEntity(userEntityOne.getMeshId(), groupId);
+        messageSourceData.insertOrUpdateData(groupChatEntity);
+
+        addDelay(1000);
+
         ViewInteraction favoriteSpinner = onView(
                 allOf(withId(R.id.spinner_view),
                         childAtPosition(allOf(withId(R.id.spinner_holder),
@@ -1326,19 +1365,23 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-            addDelay(1000);
+        addDelay(1000);
 
-            ViewInteraction favContactClick = onView(
-                    allOf(withId(R.id.user_container),
-                            childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+        ViewInteraction favContactClick = onView(
+                allOf(withId(R.id.user_container),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
 
 
-            favContactClick.perform(click());
+        favContactClick.perform(click());
 
-            addDelay(2000);
+        addDelay(2000);
 
-            mDevice.pressBack();
-    }*/
+        mDevice.pressBack();
+
+        assertTrue(true);
+
+        StatusHelper.out("uiTest_08 test executed");
+    }
 
     private void addDelay(int i) {
         try {
@@ -1460,6 +1503,50 @@ public class TelemeshTest {
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
         }
+    }
+
+    private String createAGroup(UserEntity userEntity) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
+
+        String myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+
+        String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
+        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
+                .setMemberId(myUserId)
+                .setUserName(myUserName)
+                .setMemberStatus(Constants.GroupEvent.GROUP_JOINED)
+                .setAvatarPicture(avatarIndex)
+                .setIsAdmin(true);
+        groupMembersInfos.add(myGroupMembersInfo);
+
+        GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                .setMemberId(userEntity.getMeshId())
+                .setUserName(userEntity.getUserName())
+                .setAvatarPicture(userEntity.getAvatarIndex())
+                .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
+
+        groupMembersInfos.add(groupMembersInfo);
+
+        String groupId = UUID.randomUUID().toString();
+
+        GroupNameModel groupNameModel = new GroupNameModel()
+                .setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+
+        GroupEntity groupEntity = new GroupEntity()
+                .setGroupId(groupId)
+                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
+                .setOwnStatus(Constants.GroupEvent.GROUP_CREATE)
+                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos))
+                .setAdminInfo(myUserId)
+                .setGroupCreationTime(System.currentTimeMillis());
+
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+
+        return groupId;
     }
 
     public class ChildViewAction {

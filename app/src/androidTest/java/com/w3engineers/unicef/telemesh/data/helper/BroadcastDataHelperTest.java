@@ -69,7 +69,8 @@ public class BroadcastDataHelperTest {
                 .setMessageBody("test message")
                 .setMessageTitle("Test title")
                 .setFileName("myfile_1624623314123-467515276.jpeg")
-                .setMessageId(broadcastId).setUploaderInfo("Unicef");
+                .setMessageId(broadcastId).setUploaderInfo("Unicef")
+                .setCreatedAt("2021-05-20T18:00:56Z");
         return feed;
     }
 

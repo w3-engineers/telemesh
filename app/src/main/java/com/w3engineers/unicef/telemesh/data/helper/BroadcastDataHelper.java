@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import androidx.annotation.NonNull;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -166,6 +167,8 @@ public class BroadcastDataHelper extends RmDataHelper {
                 return;
 
             String broadcastContentPath;
+
+            Log.d("testTag",""+bulletinFeed.getMessageType());
 
             if (bulletinFeed.getMessageType() <= Constants.BroadcastMessageType.TEXT_BROADCAST) {
                 broadcastContentPath = "";

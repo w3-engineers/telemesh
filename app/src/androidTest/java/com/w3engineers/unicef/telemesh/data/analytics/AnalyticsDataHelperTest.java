@@ -210,9 +210,9 @@ public class AnalyticsDataHelperTest {
         Random random = new Random();
         AppShareCountEntity entity = new AppShareCountEntity();
         entity.setUserId(getRandomUserId(random));
-        entity.setDate(TimeUtil.getDateString(new Date().getTime()));
+        entity.setDate(TimeUtil.getDateString(getMeYesterday().getTime()));
         entity.setCount(getRandomCount(random));
-        entity.setSend(random.nextBoolean());
+        entity.setSend(false);
         return entity;
     }
 
@@ -237,5 +237,8 @@ public class AnalyticsDataHelperTest {
         return s;
     }
 
+    private Date getMeYesterday() {
+        return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+    }
 
 }

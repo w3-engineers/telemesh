@@ -198,6 +198,7 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
         contentPendingModel.setIncoming(true);
+        contentPendingModel.setContentPath(randomEntityGenerator.getDummyImageLink());
         contentPendingModel.setContentMetaInfo(contentMetaInfo);
         contentDataHelper.pendingContents(contentPendingModel);
         addDelay(1000);

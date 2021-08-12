@@ -298,7 +298,7 @@ public class TelemeshTest {
         walletLoaded.success = true;
         AppDataObserver.on().sendObserverData(walletLoaded);
 
-        addDelay(1000);
+        addDelay(3000);
 
 
         /*if (currentActivity instanceof SecurityActivity) {
@@ -336,7 +336,7 @@ public class TelemeshTest {
             });
         }
 
-        addDelay(1000);
+        addDelay(2000);
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
@@ -1256,6 +1256,7 @@ public class TelemeshTest {
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12cb4")
                 .setUserName("Sam")
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
         userDataSource.insertOrUpdateData(userEntityTwo);

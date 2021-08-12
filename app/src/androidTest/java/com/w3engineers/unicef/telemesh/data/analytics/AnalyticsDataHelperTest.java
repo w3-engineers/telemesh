@@ -111,7 +111,7 @@ public class AnalyticsDataHelperTest {
         entity.setTime(System.currentTimeMillis());
         entity.setUserId(getRandomUserId(random));
         entity.syncMessageCountToken = getRandomCount(random);
-        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(),entity);
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(), entity);
 
         addDelay(3000);
 
@@ -210,9 +210,9 @@ public class AnalyticsDataHelperTest {
         Random random = new Random();
         AppShareCountEntity entity = new AppShareCountEntity();
         entity.setUserId(getRandomUserId(random));
-        entity.setDate(TimeUtil.getDateString(new Date().getTime()));
+        entity.setDate(TimeUtil.getDateString(getMeYesterday().getTime()));
         entity.setCount(getRandomCount(random));
-        entity.setSend(random.nextBoolean());
+        entity.setSend(false);
         return entity;
     }
 
@@ -235,6 +235,10 @@ public class AnalyticsDataHelperTest {
         String hexValue = getRandomHex(5, random);
         s = s + hexValue;
         return s;
+    }
+
+    private Date getMeYesterday() {
+        return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
     }
 
 

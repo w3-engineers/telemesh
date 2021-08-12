@@ -30,6 +30,14 @@ import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+
 @RunWith(AndroidJUnit4.class)
 public class ContentDataHelperTest {
 
@@ -198,6 +206,7 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
         contentPendingModel.setIncoming(true);
+        contentPendingModel.setContentPath(randomEntityGenerator.getDummyImageLink());
         contentPendingModel.setContentMetaInfo(contentMetaInfo);
         contentDataHelper.pendingContents(contentPendingModel);
         addDelay(1000);

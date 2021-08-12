@@ -5,6 +5,14 @@ import android.os.Bundle;
 
 import androidx.test.InstrumentationRegistry;
 
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+
 public class StatusHelper {
     public static void out(String str) {
         Bundle b = new Bundle();

@@ -27,6 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
+
 @RunWith(AndroidJUnit4.class)
 public class GroupDataHelperTest {
 
@@ -77,7 +85,7 @@ public class GroupDataHelperTest {
 
         rmDataHelper.dataReceive(groupCreationModel, true);
 
-        addDelay(1500);
+        addDelay(2000);
 
         // Group rename
         groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_RENAME, dainelId, groupCreationJson.getBytes(), true);
@@ -181,6 +189,8 @@ public class GroupDataHelperTest {
 
         String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
+        groupModel.setAdminInfo(myUserId);
 
         GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
                 .setMemberId(myUserId)

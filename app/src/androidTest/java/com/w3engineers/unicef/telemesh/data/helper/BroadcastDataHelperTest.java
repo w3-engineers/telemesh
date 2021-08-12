@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.feed.BulletinFeed;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
@@ -16,6 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.UUID;
+
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
+ */
 
 @RunWith(AndroidJUnit4.class)
 public class BroadcastDataHelperTest {
@@ -64,10 +73,12 @@ public class BroadcastDataHelperTest {
         feed.setBroadcastAddress("abcd")
                 .setLatitude(22.8456)
                 .setLongitude(89.5403)
+                .setMessageType(Constants.BroadcastMessageType.IMAGE_BROADCAST)
                 .setMessageBody("test message")
                 .setMessageTitle("Test title")
                 .setFileName("myfile_1624623314123-467515276.jpeg")
-                .setMessageId(broadcastId).setUploaderInfo("Unicef");
+                .setMessageId(broadcastId)
+                .setUploaderInfo("Unicef");
         return feed;
     }
 

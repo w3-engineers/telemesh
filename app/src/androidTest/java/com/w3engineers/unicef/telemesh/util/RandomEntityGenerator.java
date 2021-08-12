@@ -99,6 +99,20 @@ public class RandomEntityGenerator {
                 .setStatus(Constants.MessageStatus.STATUS_SENDING);
     }
 
+    public ChatEntity createGroupChatEntity(String userId,String groupId) {
+
+        return new MessageEntity()
+                .setMessage("Hi")
+                .setMessagePlace(true)
+                .setGroupId(groupId)
+                .setFriendsId(userId)
+                .setMessageId(UUID.randomUUID().toString())
+                .setIncoming(true)
+                .setMessageType(Constants.MessageType.TEXT_MESSAGE)
+                .setTime(System.currentTimeMillis())
+                .setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+    }
+
     public ChatEntity createIncomingContent(String userId, File file) {
 
         return new MessageEntity().setContentPath(file.getPath())

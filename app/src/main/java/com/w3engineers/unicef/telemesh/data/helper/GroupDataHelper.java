@@ -14,6 +14,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -108,6 +109,13 @@ public class GroupDataHelper extends RmDataHelper {
 
         sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE,
                 groupEntity.getAdminInfo(), groupMembersInfos);
+    }
+
+
+    public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
+        GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
+
+        //TODO check direct user send content
     }
 
     ///////////////////////////////////////////////////////////////

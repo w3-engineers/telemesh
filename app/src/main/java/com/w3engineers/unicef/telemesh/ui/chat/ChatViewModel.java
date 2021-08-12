@@ -249,6 +249,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         if (isGroup) {
             groupMessageEntity = new GroupMessageEntity()
                     .setMessage(message)
+                    .setOriginalSender(getMyUserId())
                     .setGroupId(threadId);
         } else {
             messageEntity = new MessageEntity()
@@ -332,6 +333,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         if (isGroup) {
             groupMessageEntity = new GroupMessageEntity()
                     .setGroupId(userId)
+                    .setOriginalSender(getMyUserId())
                     .setMessage(ContentUtil.getInstance().getContentMessageBody(path))
                     .setContentPath(path)
                     .setContentThumb(thumbPath);

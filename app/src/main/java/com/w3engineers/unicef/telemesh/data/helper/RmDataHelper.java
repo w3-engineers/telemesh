@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -31,6 +33,7 @@ import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageModel;
@@ -262,6 +265,19 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void prepareDataObserver() {
 
         AnalyticsDataHelper.getInstance().analyticsDataObserver();
+        // Group text message send
+        compositeDisposable.add(dataSource.getLastGroupMessage()
+                .subscribeOn(Schedulers.io())
+                .subscribe(groupMsgEntity -> {
+                    if (groupMsgEntity.getMessageType() == Constants.MessageType.TEXT_MESSAGE) {
+                        String messageModelString = new Gson().toJson(groupMsgEntity.toMessageModel());
+                        GroupDataHelper.getInstance().sendTextMessageToGroup(groupMsgEntity.getGroupId(),
+                                messageModelString);
+                    }else{
+                        GroupDataHelper.getInstance().prepareAndSendGroupContent(groupMsgEntity, true);
+                    }
+        }, Throwable::printStackTrace));
+
 
         // This observer only for message send
         compositeDisposable.add(dataSource.getLastChatData()
@@ -419,18 +435,33 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
+
     private void setChatMessage(byte[] rawChatData, String userId, boolean isNewMessage, boolean isAckSuccess, int ackStatus) {
         try {
 
             String messageModelText = new String(rawChatData);
             MessageModel messageModel = new Gson().fromJson(messageModelText, MessageModel.class);
+            ChatEntity chatEntity = null;
+            if(messageModel.isGroup()){
+                chatEntity = new GroupMessageEntity()
+                        .toChatEntity(messageModel)
+                        .setFriendsId(userId)
+                        .setTime(System.currentTimeMillis())
+                        .setIncoming(true);;
+            }else{
+                chatEntity = new MessageEntity()
+                        .toChatEntity(messageModel)
+                        .setFriendsId(userId)
+                        .setTime(System.currentTimeMillis())
+                        .setIncoming(true);
+            }
 
-            ChatEntity chatEntity = new MessageEntity()
+            /*ChatEntity chatEntity = new MessageEntity()
                     .toChatEntity(messageModel)
                     .setFriendsId(userId)
                     .setTime(System.currentTimeMillis())
                     .setIncoming(true);
-
+*/
             if (isNewMessage) {
                 chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
                 Timber.e("Read :: %s", chatEntity.getMessageId());
@@ -843,6 +874,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         ContentDataHelper.getInstance().contentDataSend(dataSendId, contentModel);
     }
 
+    @Override
+    public void onGroupContentSend(ContentModel contentModel, String result) {
+
+    }
+
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {
         if (!isNewMessage) return;
 
@@ -886,7 +922,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         DataModel dataModel = new DataModel()
                 .setRawData(updateInfo.getBytes())
                 .setDataType(Constants.DataType.USER_UPDATE_INFO);
-
 
 
         compositeDisposable.add(UserDataSource.getInstance().getAllFabMessagedActiveUserIds()

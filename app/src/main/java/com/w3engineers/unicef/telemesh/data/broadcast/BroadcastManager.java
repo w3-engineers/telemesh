@@ -57,6 +57,7 @@ public class BroadcastManager {
     public interface BroadcastSendCallback {
         void dataSent(@NonNull DataModel rmDataModel, String dataSendId);
         void contentSent(ContentModel contentModel, String dataSendId);
+        void onGroupContentSend(ContentModel contentModel, String result);
     }
 
     public void setBroadcastSendCallback(@Nullable BroadcastSendCallback broadcastSendCallback) {
@@ -142,7 +143,11 @@ public class BroadcastManager {
                 }
 
                 if (viperContentData != null) {
-                    broadcastSendCallback.contentSent(viperContentData.contentModel, result);
+                    if(viperContentData.contentModel.isGroupContent()){
+                        broadcastSendCallback.onGroupContentSend(viperContentData.contentModel, result);
+                    }else {
+                        broadcastSendCallback.contentSent(viperContentData.contentModel, result);
+                    }
                 }
             }
         } catch (ExecutionException | InterruptedException e) {

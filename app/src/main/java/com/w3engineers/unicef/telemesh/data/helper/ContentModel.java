@@ -6,6 +6,7 @@ public class ContentModel {
     private int messageType, ackStatus, progress, receivingStatus; // Only applicable for message
     private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver, isContent;
     private byte contentDataType;
+    private boolean isGroupContent;
 
     public String getThumbPath() {
         return thumbPath;
@@ -149,5 +150,13 @@ public class ContentModel {
 
     public int getReceivingStatus() {
         return receivingStatus;
+    }
+
+    public boolean isGroupContent() {
+        return isGroupContent;
+    }
+
+    public void setGroupContent(boolean groupContent) {
+        isGroupContent = groupContent;
     }
 }

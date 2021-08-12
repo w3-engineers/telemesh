@@ -14,9 +14,14 @@ import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
 
 import java.util.ArrayList;
 
-/**
- * Created by Azizul Islam on 8/10/21.
+/*
+ * ============================================================================
+ * Copyright (C) 2019 W3 Engineers Ltd - All Rights Reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * ============================================================================
  */
+
 @SuppressLint("ParcelCreator")
 @Entity(tableName = TableNames.GROUP_MESSAGE,
         indices = {@Index(value = {ColumnNames.COLUMN_MESSAGE_ID}, unique = true)})
@@ -98,5 +103,63 @@ public class GroupMessageEntity extends ChatEntity {
     public GroupMessageEntity setContentInfo(@Nullable String contentInfo) {
         this.contentInfo = contentInfo;
         return this;
+    }
+
+    @NonNull
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getOriginalSender() {
+        return originalSender;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Nullable
+    public String getContentPath() {
+        return contentPath;
+    }
+
+    @Nullable
+    public String getContentThumb() {
+        return contentThumb;
+    }
+
+    @Nullable
+    public String getContentInfo() {
+        return contentInfo;
+    }
+
+    @Nullable
+    public ArrayList<String> getReceivedUsers() {
+        return receivedUsers;
+    }
+
+    @NonNull
+    @Override
+    public MessageModel toMessageModel() {
+        return new MessageModel()
+                .setId(getMessageId())
+                .setMessage(getMessage())
+                .setIsGroup(true)
+                .setGroupId(getGroupId())
+                .setType(getMessageType())
+                .setOriginalSender(originalSender);
+    }
+
+    @NonNull
+    @Override
+    public GroupMessageEntity toChatEntity(@NonNull MessageModel messageModel) {
+
+        GroupMessageEntity messageEntity = setMessage(messageModel.getMessage())
+                .setGroupId(messageModel.getGroupId())
+                .setMessageId(messageModel.getId())
+                .setOriginalSender(messageModel.getOriginalSender())
+                .setMessageType(messageModel.getType());
+
+        return messageEntity;
     }
 }

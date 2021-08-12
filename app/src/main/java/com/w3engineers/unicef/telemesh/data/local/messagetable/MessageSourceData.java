@@ -65,6 +65,10 @@ public class MessageSourceData {
                 Flowable.just((ChatEntity) messageEntity));
     }
 
+    public Flowable<GroupMessageEntity> getLastGroupMessage() {
+        return groupMessageDao.getLastInsertedMessage().flatMap(groupMessage -> Flowable.just(groupMessage));
+    }
+
     public long insertOrUpdateData(@NonNull ChatEntity baseEntity) {
         if (baseEntity instanceof MessageEntity) {
             return messageDao.writeMessage((MessageEntity) baseEntity);

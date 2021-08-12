@@ -10,6 +10,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
@@ -66,6 +67,13 @@ public class Source implements DataSource {
     public Flowable<ChatEntity> getLastChatData() {
         return MessageSourceData.getInstance().getLastData();
     }
+
+    @NonNull
+    @Override
+    public Flowable<GroupMessageEntity> getLastGroupMessage() {
+        return MessageSourceData.getInstance().getLastGroupMessage();
+    }
+
 
     @Nullable
     @Override

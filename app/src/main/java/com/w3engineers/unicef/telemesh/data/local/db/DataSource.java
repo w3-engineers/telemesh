@@ -7,6 +7,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 
 import io.reactivex.Flowable;
 
@@ -26,6 +27,8 @@ public interface DataSource {
     @NonNull
     Flowable<ChatEntity> getLastChatData();
 
+    @NonNull
+    Flowable<GroupMessageEntity> getLastGroupMessage();
     @Nullable
     String getCurrentUser();
 

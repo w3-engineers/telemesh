@@ -112,11 +112,12 @@ public class ContentDataHelperTest {
     @Test
     public void test_prepare_content_and_send() {
 
+        String contentId1 = UUID.randomUUID().toString();
         JSONObject jsonObject = new JSONObject();
         try {
 
             jsonObject.put("success", true);
-            jsonObject.put("msg", "abc");
+            jsonObject.put("msg", contentId1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,12 +130,13 @@ public class ContentDataHelperTest {
 
         addDelay(1000);
 
+        String contentId2 = UUID.randomUUID().toString();
 
         JSONObject jsonObject1 = new JSONObject();
         try {
 
             jsonObject1.put("success", false);
-            jsonObject1.put("msg", "abc");
+            jsonObject1.put("msg", contentId2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,6 +207,9 @@ public class ContentDataHelperTest {
 
 
         contentDataHelper.contentReceiveInProgress(contentId, 50);
+        addDelay(1000);
+
+        contentDataHelper.contentReceiveInProgress(contentId1, 101);
         addDelay(1000);
 
         contentDataHelper.contentReceiveDone(contentId, true, "success");

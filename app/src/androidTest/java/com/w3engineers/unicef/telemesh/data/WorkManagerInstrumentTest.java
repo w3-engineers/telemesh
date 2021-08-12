@@ -15,6 +15,7 @@ import androidx.work.testing.TestDriver;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class WorkManagerInstrumentTest {
 
 
     @Test
-    public void testPeriodicWorkNewUserCount() throws Exception{
+    public void testPeriodicWorkNewUserCount() throws Exception {
 
         // Create request
         PeriodicWorkRequest request =
@@ -78,10 +79,19 @@ public class WorkManagerInstrumentTest {
         WorkInfo workInfo = workManager.getWorkInfoById(request.getId()).get();
 
 
-
         // Assert
         assertThat(workInfo.getState(), is(WorkInfo.State.ENQUEUED)); // Since it's a periodic task so initially it get enqueued.
 
+        addDelay(3000);
 
+        StatusHelper.out("test case executed");
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

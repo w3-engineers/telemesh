@@ -1060,10 +1060,10 @@ public class TelemeshTest {
 
         // perform search operation
         onView(withId(R.id.action_search)).perform(click());
-        addDelay(1000);
+        addDelay(2000);
 
         onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
-        addDelay(1000);
+        addDelay(2000);
 
         onView(withId(R.id.image_view_back)).perform(click());
         addDelay(1000);

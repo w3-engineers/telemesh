@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -115,6 +116,10 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                 .subscribe(aLong -> {
                     if(aLong>0){
                         groupUserList.postValue(groupEntity);
+
+                        ArrayList<GroupEntity> groupEntities = new ArrayList<>();
+                        groupEntities.add(groupEntity);
+                        AnalyticsDataHelper.getInstance().sendGroupCount(groupEntities);
                     }
                 }));
     }

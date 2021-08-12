@@ -135,6 +135,7 @@ public abstract class ViperUtil {
             DataEvent dataEvent = (DataEvent) event;
 
             dataReceive(dataEvent.peerId, dataEvent.data);
+
         });
 
         AppDataObserver.on().startObserver(ApiEvent.DATA_ACKNOWLEDGEMENT, event -> {

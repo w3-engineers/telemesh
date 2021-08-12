@@ -301,7 +301,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
 
-    public void testLocalBroadcast() {
+/*    public void testLocalBroadcast() {
 //        String path = "/storage/emulated/0/broad.jpg";
         String path = null;
 
@@ -333,7 +333,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                     sendLocalBroadcast(feedEntity, path);
 
                 }));
-    }
+    }*/
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentPath) {
 

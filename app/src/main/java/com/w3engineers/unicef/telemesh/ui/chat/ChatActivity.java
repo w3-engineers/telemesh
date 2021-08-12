@@ -5,21 +5,25 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
+
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -228,6 +232,10 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void clearChat(){
+        mChatViewModel.clearMessage(threadId, isGroup);
     }
 
     /**
@@ -498,12 +506,16 @@ public class ChatActivity extends TelemeshBaseActivity {
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.v("FILE_SPEED_TEST_1 ", Calendar.getInstance().getTime()+"");
+                    Log.v("FILE_SPEED_TEST_1 ", Calendar.getInstance().getTime() + "");
                     List<Uri> images = Matisse.obtainResult(data);
                     mChatViewModel.sendContentMessage(threadId, images.get(0));
                 }
                 break;
         }
+    }
+
+    public void sendContentMessage(Uri path) {
+        mChatViewModel.sendContentMessage(threadId, path);
     }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {

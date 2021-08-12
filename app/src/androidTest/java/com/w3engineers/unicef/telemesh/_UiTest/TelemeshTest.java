@@ -8,6 +8,9 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -17,6 +20,8 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -39,9 +44,11 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -51,6 +58,7 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.hamcrest.Description;
@@ -64,7 +72,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -478,11 +491,6 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        currentActivity = getActivityInstance();
-
-
-        addDelay(1000);
-
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         addDelay(1000);
@@ -508,6 +516,70 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+
+        // Click for open gallery
+        onView(withId(R.id.image_view_pick_gallery_image)).perform(click());
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+
+        // Send and Receive content message
+
+        currentActivity = getActivityInstance();
+
+        File file = new File(Environment.getExternalStorageDirectory(), "dummy.jpg");
+        try {
+
+            AssetFileDescriptor assetFileDescriptor = currentActivity.getAssets().openFd("sample_image.jpg");
+
+            FileInputStream inputStream = assetFileDescriptor.createInputStream();
+
+            OutputStream outputStream = new FileOutputStream(file);
+            copyStream(inputStream, outputStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        addDelay(2000);
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).sendContentMessage(Uri.fromFile(file));
+        }
+
+        addDelay(1000);
+
+        MessageEntity lastIncomingContent = messageSourceData.getLastIncomingContent(userEntity.getMeshId());
+
+        lastIncomingContent.setContentProgress(100);
+        messageSourceData.insertOrUpdateData(lastIncomingContent);
+
+        addDelay(1000);
+
+        onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+        addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ChatEntity incomingContent = randomEntityGenerator.createIncomingContent(userEntity.getMeshId(), file);
+        messageSourceData.insertOrUpdateData(incomingContent);
+
+        addDelay(1000);
+
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).clearChat();
+        }
+
+
+        addDelay(1000);
 
         try {
 
@@ -799,6 +871,22 @@ public class TelemeshTest {
 
         addDelay(1500);
 
+        // click content image. It has animation for 300 ms
+
+        onView(withId(R.id.image_view_message)).perform(click());
+
+
+        addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         mDevice.pressBack();
 
         addDelay(1000);
@@ -811,15 +899,6 @@ public class TelemeshTest {
             //mainActivity.feedRefresh();
 
             addDelay(1000);
-
-           /* try {
-                mDevice.pressBack();
-                addDelay(700);
-                mDevice.pressBack();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
-
         }
     }
 
@@ -870,6 +949,39 @@ public class TelemeshTest {
         ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));
 
+        addDelay(1000);
+
+        // click go button to open one to one chat
+        onView(withId(R.id.button_go)).perform(click());
+        addDelay(500);
+        mDevice.pressBack();
+
+        onView(withId(R.id.text_view_create_group)).perform(click());
+        addDelay(500);
+
+        // select item
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        // di select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
         addDelay(1000);
 
         ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
@@ -927,10 +1039,37 @@ public class TelemeshTest {
 
         addDelay(2000);
 
+        // perform search operation
+        onView(withId(R.id.action_search)).perform(click());
+        addDelay(1000);
+
+        onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
+        addDelay(1000);
+
+        onView(withId(R.id.image_view_back)).perform(click());
+        addDelay(1000);
+
         ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView4.perform(actionOnItemAtPosition(0, click()));
 
         addDelay(2000);
+
+        // deselect
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //again select
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
 
         ViewInteraction floatingActionButton3 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
         floatingActionButton3.perform(click());
@@ -1271,7 +1410,22 @@ public class TelemeshTest {
         entity.setFeedTime("2019-08-02T06:05:30.000Z");
         entity.setFeedReadStatus(false);
 
+        String contentInfo = GsonBuilder.getInstance().getFeedContentModelJson(prepareBroadcastContentModel());
+
+        entity.setFeedContentInfo(contentInfo);
+
         feedDataSource.insertOrUpdateData(entity);
+    }
+
+    private FeedContentModel prepareBroadcastContentModel() {
+        FeedContentModel contentModel = new FeedContentModel();
+        contentModel.setContentInfo("Sample content info");
+        String imagePath = randomEntityGenerator.getDummyImageLink();
+        contentModel.setContentPath(imagePath);
+        contentModel.setContentThumb(imagePath);
+        contentModel.setContentUrl(imagePath);
+
+        return contentModel;
     }
 
     private UserEntity addSampleUser() {
@@ -1300,4 +1454,35 @@ public class TelemeshTest {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+    }
+
+    public class ChildViewAction {
+
+        public ViewAction clickChildViewWithId(final int id) {
+            return new ViewAction() {
+                @Override
+                public Matcher<View> getConstraints() {
+                    return null;
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Click on a child view with specified id.";
+                }
+
+                @Override
+                public void perform(UiController uiController, View view) {
+                    View v = view.findViewById(id);
+                    v.performClick();
+                }
+            };
+        }
+
+    }
 }

@@ -11,6 +11,10 @@ import androidx.annotation.Nullable;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
 import com.w3engineers.unicef.telemesh.data.local.db.DbBaseEntity;
 import com.w3engineers.unicef.telemesh.data.local.db.TableNames;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.TimeUtil;
+
+import java.util.ArrayList;
 
 
 @Entity(tableName = TableNames.GROUP,
@@ -41,6 +45,10 @@ public class GroupEntity extends DbBaseEntity {
     @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_GROUP_MEMBERS_INFO)
     public String membersInfo;
+
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_GROUP_IS_SYNCED)
+    public boolean isSynced;
 
     public int hasUnreadMessage;
 
@@ -74,6 +82,7 @@ public class GroupEntity extends DbBaseEntity {
         dest.writeString(this.lastPersonName);
         dest.writeString(this.lastPersonId);
         dest.writeInt(this.lastMessageType);
+        dest.writeByte((byte)(this.isSynced? 1: 0));
     }
 
     protected GroupEntity(@NonNull Parcel in) {
@@ -91,6 +100,7 @@ public class GroupEntity extends DbBaseEntity {
         this.lastPersonName = in.readString();
         this.lastPersonId = in.readString();
         this.lastMessageType = in.readInt();
+        this.isSynced = in.readByte() != 0;
     }
 
     public static final Creator<GroupEntity> CREATOR = new Creator<GroupEntity>() {
@@ -190,6 +200,15 @@ public class GroupEntity extends DbBaseEntity {
         return this;
     }
 
+    public GroupEntity setSynced(boolean synced) {
+        this.isSynced = synced;
+        return this;
+    }
+
+    public boolean isSynced() {
+        return this.isSynced;
+    }
+
     public String getLastMessage() {
         return lastMessage;
     }
@@ -205,7 +224,9 @@ public class GroupEntity extends DbBaseEntity {
                 .setAvatar(getAvatarIndex())
                 .setCreatedTime(getGroupCreationTime())
                 .setAdminInfo(getAdminInfo())
-                .setMemberInfo(getMembersInfo());
+                .setMemberInfo(getMembersInfo())
+                .setSynced(isSynced());
+
     }
 
     public GroupEntity toGroupEntity(GroupModel groupModel) {
@@ -214,6 +235,23 @@ public class GroupEntity extends DbBaseEntity {
                 .setAvatarIndex(groupModel.getAvatar())
                 .setMembersInfo(groupModel.getMemberInfo())
                 .setAdminInfo(groupModel.getAdminInfo())
-                .setGroupCreationTime(groupModel.getCreatedTime());
+                .setGroupCreationTime(groupModel.getCreatedTime())
+                .setSynced(groupModel.isSynced());
+    }
+
+    public GroupCountModel toGroupCountModel() {
+        return new GroupCountModel().setGroupId(getGroupId())
+                .setGroupOwnerId(getAdminInfo())
+                .setMemberCount(getMemberCount())
+                .setCreatedTime(TimeUtil.getDateStringFromMillisecond(getGroupCreationTime()));
+    }
+
+    public ArrayList<GroupMembersInfo> getMembersArray(){
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+        return gsonBuilder.getGroupMemberInfoObj(getMembersInfo());
+    }
+
+    public int getMemberCount(){
+        return getMembersArray().size();
     }
 }

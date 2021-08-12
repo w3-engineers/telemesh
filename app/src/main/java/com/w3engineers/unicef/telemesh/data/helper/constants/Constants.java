@@ -145,6 +145,9 @@ public class Constants {
         byte EVENT_GROUP_MEMBER_REMOVE = 0x24;
         byte EVENT_GROUP_DATA_RELAY = 0x25;
         byte EVENT_GROUP_DATA_FORWARD = 0x26;
+        byte EVENT_GROUP_COUNT_SYNC_REQUEST = 0x27;
+        byte EVENT_GROUP_COUNT_SYNC_ACK = 0x28;
+        byte EVENT_GROUP_COUNT_SYNCED = 0x29;
     }
 
     public interface MessageType {

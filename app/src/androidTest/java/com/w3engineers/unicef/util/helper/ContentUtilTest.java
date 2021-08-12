@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.util.helper;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -63,6 +64,18 @@ public class ContentUtilTest extends TestCase {
 
         long duration = contentUtil.getMediaDuration(videoFilePath);
         assertEquals(0, duration);
+        addDelay(300);
+
+        String filePath = contentUtil.getContentFromUrl("https://dashboard.telemesh.net/message/download?filename=myfile_1624623314123-467515276.jpeg");
+
+        assertFalse(TextUtils.isEmpty(filePath));
+
+        addDelay(3000);
+
+        contentUtil.getFilePathFromUri(Uri.parse("content://media/external/test/file.mp4"));
+
+        addDelay(1000);
+
 
         StatusHelper.out("test case executed");
     }

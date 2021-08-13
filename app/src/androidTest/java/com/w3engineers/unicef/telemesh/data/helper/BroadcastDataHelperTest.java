@@ -70,7 +70,7 @@ public class BroadcastDataHelperTest {
                 .setMessageTitle("Test title")
                 .setFileName("myfile_1624623314123-467515276.jpeg")
                 .setMessageId(broadcastId).setUploaderInfo("Unicef")
-                .setCreatedAt("2021-05-20T18:00:56Z");
+                .setCreatedAt("2021-08-02T06:05:30.000Z");
         return feed;
     }
 
@@ -80,7 +80,7 @@ public class BroadcastDataHelperTest {
         meta.setMessageBody("Test broadcast");
         meta.setMessageTitle("Unicef");
         meta.setUploaderName("Unicef");
-        meta.setCreationTime("2021-05-20T18:00:56Z");
+        meta.setCreationTime("2021-08-02T06:05:30.000Z");
         return meta;
     }
 

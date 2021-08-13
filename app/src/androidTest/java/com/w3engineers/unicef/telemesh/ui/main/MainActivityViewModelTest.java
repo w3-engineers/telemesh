@@ -78,6 +78,13 @@ public class MainActivityViewModelTest {
 
         assertFalse(isOnline);
 
+        SUT.setUserCountWorkRequest();
+        SUT.setLocalAppShareCountWorkerRequest();
+        SUT.setServerAppShareCountWorkerRequest();
+        SUT.setRefreshWorkerRequest();
+
+        addDelay();
+
         StatusHelper.out("Test executed");
     }
 

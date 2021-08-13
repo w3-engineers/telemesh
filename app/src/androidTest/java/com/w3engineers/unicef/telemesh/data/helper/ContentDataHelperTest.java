@@ -2,6 +2,8 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import static org.junit.Assert.assertTrue;
 
+import android.widget.TextView;
+
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -22,6 +24,7 @@ import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import org.json.JSONObject;
 import org.junit.After;
@@ -95,6 +98,11 @@ public class ContentDataHelperTest {
         contentInfo.setDuration(10);
 
         String contentJson = GsonBuilder.getInstance().getContentInfoJson(contentInfo);
+
+        TextView textView = new TextView(rule.getActivity());
+        UIHelper.setDuration(textView, contentJson);
+
+        addDelay(1000);
 
         ((MessageEntity) chatEntity).setContentInfo(contentJson);
 
@@ -231,9 +239,16 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
         // test content progress set
-        contentDataHelper.setContentProgress(contentId, 90, contentId);
+        contentDataHelper.setContentProgress(contentId, 105, contentId);
         addDelay(1000);
 
+        contentDataHelper.setContentProgressByContentIdForSender(contentId, 100);
+        addDelay(1000);
+
+        // Test new received content info where message not exists
+        contentModel.setMessageId(UUID.randomUUID().toString());
+        contentModel.setContentPath(randomEntityGenerator.getDummyImageLink());
+        contentModel.setAckStatus(Constants.ServiceContentState.FAILED);
         contentDataHelper.setContentProgressByContentIdForSender(contentId, 100);
         addDelay(1000);
 

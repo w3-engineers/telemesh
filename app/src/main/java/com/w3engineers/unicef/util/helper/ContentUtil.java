@@ -57,7 +57,7 @@ public class ContentUtil {
     }
 
 
-    public String getRealPathFromURI(Uri contentURI) {
+/*    public String getRealPathFromURI(Uri contentURI) {
 
         if (contentURI == null) {
             return null;
@@ -104,7 +104,7 @@ public class ContentUtil {
                 cursor.close();
             }
         }
-    }
+    }*/
 
     public String getFilePathFromUri(Uri uri) {
         String selection = null;
@@ -222,7 +222,7 @@ public class ContentUtil {
         return new File(uri.getPath());
     }
 
-    public String compressVideo(String filePath) {
+/*    public String compressVideo(String filePath) {
         try {
             Context context = TeleMeshApplication.getContext();
             File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
@@ -232,7 +232,7 @@ public class ContentUtil {
             e.printStackTrace();
         }
         return filePath;
-    }
+    }*/
 
     public String getThumbnailFromVideoPath(String videoPath) {
         Bitmap thumbImage = ThumbnailUtils.createVideoThumbnail(videoPath,

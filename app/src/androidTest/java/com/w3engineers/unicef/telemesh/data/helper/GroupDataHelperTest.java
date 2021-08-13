@@ -1,6 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import android.text.TextUtils;
 
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
@@ -16,6 +19,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 
 import org.junit.After;
@@ -35,6 +39,7 @@ public class GroupDataHelperTest {
     private GroupDataSource groupDataSource;
     private AppDatabase appDatabase;
     private GsonBuilder gsonBuilder;
+    private String myUserId;
 
     private final String dainelId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
     private final String simonId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f13ca4";
@@ -143,7 +148,10 @@ public class GroupDataHelperTest {
         groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_DATA_FORWARD, mikeId, forwardJson.getBytes(), true);
         addDelay(1500);
 
-        assertTrue(true);
+        // Get specific group member from group
+        GroupMembersInfo gInfo = CommonUtil.getGroupMemberInfo(groupModel.getMemberInfo(), dainelId);
+
+        assertNotNull(gInfo);
     }
 
 
@@ -177,7 +185,7 @@ public class GroupDataHelperTest {
         groupModel.setGroupName(groupNameJson);
         groupModel.setGroupId(UUID.randomUUID().toString());
 
-        String myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
         String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);

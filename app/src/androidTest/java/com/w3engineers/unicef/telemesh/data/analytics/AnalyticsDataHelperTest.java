@@ -111,7 +111,7 @@ public class AnalyticsDataHelperTest {
         entity.setTime(System.currentTimeMillis());
         entity.setUserId(getRandomUserId(random));
         entity.syncMessageCountToken = getRandomCount(random);
-        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(),entity);
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(), entity);
 
         addDelay(3000);
 
@@ -134,6 +134,12 @@ public class AnalyticsDataHelperTest {
         // send test
 
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
+
+        addDelay(1000);
+
+        RmDataHelper.getInstance().newUserAnalyticsSend();
+
+        addDelay(1000);
 
         assertTrue(true);
 

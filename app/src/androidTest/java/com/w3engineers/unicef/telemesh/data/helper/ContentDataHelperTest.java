@@ -2,12 +2,15 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import static org.junit.Assert.assertTrue;
 
+import android.widget.TextView;
+
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.google.gson.Gson;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -19,7 +22,9 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.model.ContentInfo;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import org.json.JSONObject;
 import org.junit.After;
@@ -73,11 +78,13 @@ public class ContentDataHelperTest {
 
         chatEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
 
+
         chatEntity.setIncoming(true);
         contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, false);
 
         addDelay(2000);
 
+        chatEntity.setFriendsId(SharedPref.read(Constants.preferenceKey.MY_USER_ID));
         chatEntity.setIncoming(false);
         contentDataHelper.prepareContentObserver((MessageEntity) chatEntity, false);
 
@@ -91,6 +98,11 @@ public class ContentDataHelperTest {
         contentInfo.setDuration(10);
 
         String contentJson = GsonBuilder.getInstance().getContentInfoJson(contentInfo);
+
+        TextView textView = new TextView(rule.getActivity());
+        UIHelper.setDuration(textView, contentJson);
+
+        addDelay(1000);
 
         ((MessageEntity) chatEntity).setContentInfo(contentJson);
 
@@ -111,6 +123,9 @@ public class ContentDataHelperTest {
 
     @Test
     public void test_prepare_content_and_send() {
+
+        UserEntity entity = addSampleUser();
+        addDelay(1000);
 
         String contentId1 = UUID.randomUUID().toString();
         JSONObject jsonObject = new JSONObject();
@@ -195,6 +210,14 @@ public class ContentDataHelperTest {
         contentDataHelper.pendingContents(contentPendingModel);
         addDelay(1000);
 
+        contentPendingModel.setContentMetaInfo(null);
+        contentPendingModel.setContentId(contentId);
+        contentDataHelper.pendingContents(contentPendingModel);
+        addDelay(1000);
+
+
+        contentPendingModel.setContentId(pendingContentId);
+
         contentPendingModel.setContentPath("");
         contentDataHelper.pendingContents(contentPendingModel);
         addDelay(1000);
@@ -215,7 +238,23 @@ public class ContentDataHelperTest {
         contentDataHelper.contentReceiveDone(contentId, true, "success");
         addDelay(1000);
 
+        // test content progress set
+        contentDataHelper.setContentProgress(contentId, 105, contentId);
+        addDelay(1000);
+
+        contentDataHelper.setContentProgressByContentIdForSender(contentId, 100);
+        addDelay(1000);
+
+        // Test new received content info where message not exists
+        contentModel.setMessageId(UUID.randomUUID().toString());
+        contentModel.setContentPath(randomEntityGenerator.getDummyImageLink());
+        contentModel.setAckStatus(Constants.ServiceContentState.FAILED);
+        contentDataHelper.setContentProgressByContentIdForSender(contentId, 100);
+        addDelay(1000);
+
+
         assertTrue(true);
+        StatusHelper.out("Content test executed");
     }
 
     private void addDelay(long time) {

@@ -43,9 +43,9 @@ public class BroadcastDataHelperTest {
 
         broadcastDataHelper.receiveLocalBroadcast(broadcastId, broadcastMetaJson, randomEntityGenerator.getDummyImageLink(), 0, 0, 0, "");
 
-        addDelay(1000);
+        addDelay(2000);
 
-        BulletinFeed bulletinFeed = prepareBulletinFeed(broadcastId);
+        BulletinFeed bulletinFeed = prepareBulletinFeed(UUID.randomUUID().toString());
 
         String bulletinJson = new Gson().toJson(bulletinFeed);
 
@@ -69,7 +69,8 @@ public class BroadcastDataHelperTest {
                 .setMessageBody("test message")
                 .setMessageTitle("Test title")
                 .setFileName("myfile_1624623314123-467515276.jpeg")
-                .setMessageId(broadcastId).setUploaderInfo("Unicef")
+                .setMessageId(broadcastId)
+                .setUploaderInfo("Unicef")
                 .setCreatedAt("2021-08-02T06:05:30.000Z");
         return feed;
     }

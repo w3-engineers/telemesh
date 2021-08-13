@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import androidx.annotation.NonNull;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -167,6 +168,8 @@ public class BroadcastDataHelper extends RmDataHelper {
 
             String broadcastContentPath;
 
+            Log.d("testTag",""+bulletinFeed.getMessageType());
+
             if (bulletinFeed.getMessageType() <= Constants.BroadcastMessageType.TEXT_BROADCAST) {
                 broadcastContentPath = "";
             } else {
@@ -301,7 +304,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
 
-    public void testLocalBroadcast() {
+/*    public void testLocalBroadcast() {
 //        String path = "/storage/emulated/0/broad.jpg";
         String path = null;
 
@@ -333,7 +336,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                     sendLocalBroadcast(feedEntity, path);
 
                 }));
-    }
+    }*/
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentPath) {
 

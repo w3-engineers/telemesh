@@ -3,25 +3,36 @@ package com.w3engineers.unicef.telemesh._UiTest;
 
 import android.app.Activity;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiScrollable;
+import androidx.test.uiautomator.UiSelector;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +40,21 @@ import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -45,6 +64,8 @@ import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.hamcrest.Description;
@@ -58,21 +79,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.assertTrue;
@@ -98,6 +130,7 @@ public class TelemeshTest {
     private FeedDataSource feedDataSource;
     private MessageSourceData messageSourceData;
     private RandomEntityGenerator randomEntityGenerator;
+    private GroupDataSource groupDataSource;
     //private SharedPref sharedPref;
     private Context context;
 
@@ -111,11 +144,11 @@ public class TelemeshTest {
         feedDataSource = FeedDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
         randomEntityGenerator = new RandomEntityGenerator();
+        groupDataSource = GroupDataSource.getInstance();
 
         context = InstrumentationRegistry.getTargetContext();
 
         mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
 
         //sharedPref = SharedPref.getSharedPref(context);
     }
@@ -280,8 +313,11 @@ public class TelemeshTest {
     // Settings page test
     @Test
     public void uiTest_02() {
-        addDelay(3800);
 
+
+        addDelay(4000);
+
+        currentActivity = getActivityInstance();
 
         if (currentActivity instanceof MainActivity) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -446,21 +482,25 @@ public class TelemeshTest {
 
         uiTest_04();
 
+        MeshDataSource.getInstance().destroyDataSource();
+
+        Espresso.pressBackUnconditionally();
+        addDelay(500);
+        Espresso.pressBackUnconditionally();
+
+        //dumpThreads();
 
         assertTrue(true);
 
         StatusHelper.out("Test executed");
+
+        addDelay(4000);
 
     }
 
     public void uiTest_03(UserEntity userEntity) {
 
         addDelay(3000);
-
-        currentActivity = getActivityInstance();
-
-
-        addDelay(1000);
 
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
@@ -487,6 +527,70 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+
+        // Click for open gallery
+        onView(withId(R.id.image_view_pick_gallery_image)).perform(click());
+        addDelay(1000);
+
+        mDevice.pressBack();
+
+
+        // Send and Receive content message
+
+        currentActivity = getActivityInstance();
+
+        File file = new File(Environment.getExternalStorageDirectory(), "dummy.jpg");
+        try {
+
+            AssetFileDescriptor assetFileDescriptor = currentActivity.getAssets().openFd("sample_image.jpg");
+
+            FileInputStream inputStream = assetFileDescriptor.createInputStream();
+
+            OutputStream outputStream = new FileOutputStream(file);
+            copyStream(inputStream, outputStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        addDelay(2000);
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).sendContentMessage(Uri.fromFile(file));
+        }
+
+        addDelay(1000);
+
+        MessageEntity lastIncomingContent = messageSourceData.getLastIncomingContent(userEntity.getMeshId());
+
+        lastIncomingContent.setContentProgress(100);
+        messageSourceData.insertOrUpdateData(lastIncomingContent);
+
+        addDelay(1000);
+
+        onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+        addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ChatEntity incomingContent = randomEntityGenerator.createIncomingContent(userEntity.getMeshId(), file);
+        messageSourceData.insertOrUpdateData(incomingContent);
+
+        addDelay(1000);
+
+
+        if (currentActivity instanceof ChatActivity) {
+            ((ChatActivity) currentActivity).clearChat();
+        }
+
+
+        addDelay(1000);
 
         try {
 
@@ -778,6 +882,22 @@ public class TelemeshTest {
 
         addDelay(1500);
 
+        // click content image. It has animation for 300 ms
+
+        onView(withId(R.id.image_view_message)).perform(click());
+
+
+        addDelay(2000);
+
+        try {
+            onView(withId(R.id.expanded_image)).perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         mDevice.pressBack();
 
         addDelay(1000);
@@ -790,22 +910,323 @@ public class TelemeshTest {
             //mainActivity.feedRefresh();
 
             addDelay(1000);
-
-           /* try {
-                mDevice.pressBack();
-                addDelay(700);
-                mDevice.pressBack();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
-
         }
     }
 
 
-/*    @Test
-    public void uiTest_04() {
+    // Group messaging test
+
+    public void setUpGroupUser() {
+        userDataSource = UserDataSource.getInstance();
+
+        UserEntity userEntityOne = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xf57d787f3ca95e2fd9cc782c85f6bcd3d6d779d9")
+                .setUserName("Aladeen G1")
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
+                .setMeshId("0xc1a5185c807038a32a4c6ca020826fee85d88fde")
+                .setUserName("Aladeen G2")
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        userDataSource.insertOrUpdateData(userEntityOne);
+        userDataSource.insertOrUpdateData(userEntityTwo);
+
+
+    }
+
+
+    @Test
+    public void uiTest_05() {
+
+
         addDelay(4000);
+
+        setUpGroupUser();
+
+        addDelay(2000);
+
+        ViewInteraction floatingActionButton = onView(allOf(withId(R.id.fab_chat), childAtPosition(allOf(withId(R.id.mesh_contact_layout), childAtPosition(withId(R.id.fragment_container), 0)), 2), isDisplayed()));
+        floatingActionButton.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+
+        addDelay(1000);
+
+        // click go button to open one to one chat
+        onView(withId(R.id.button_go)).perform(click());
+        addDelay(500);
+        mDevice.pressBack();
+
+        onView(withId(R.id.text_view_create_group)).perform(click());
+        addDelay(500);
+
+        // select item
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        // di select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //select again
+
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView2.perform(actionOnItemAtPosition(1, click()));
+
+        addDelay(1000);
+
+        ViewInteraction floatingActionButton2 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 4), isDisplayed()));
+        floatingActionButton2.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatImageView = onView(allOf(withId(R.id.image_view_pen), withContentDescription("Name field icon"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 7), isDisplayed()));
+        appCompatImageView.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction groupNametext = onView(withId(R.id.edit_text_name));
+        groupNametext.perform(replaceText("MyTestGroup"));
+
+        addDelay(1000);
+        groupNametext.perform(closeSoftKeyboard());
+
+        addDelay(1000);
+
+        ViewInteraction appCompatButton = onView(allOf(withId(R.id.button_done), withText("Done"), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 7), isDisplayed()));
+        appCompatButton.perform(click());
+
+        addDelay(4000);
+
+        try {
+            UiScrollable appViews = new UiScrollable(
+                    new UiSelector().scrollable(true));
+
+            appViews.scrollForward();
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatImageView2 = onView(allOf(withId(R.id.image_view_remove),
+                withContentDescription("Remove group member"),
+                childAtPosition(childAtPosition(withId(R.id.recycler_view_group_member), 2), 2)));
+        appCompatImageView2.perform(click());
+
+        addDelay(2000);
+
+        ViewInteraction appCompatTextView3 = onView(allOf(withId(R.id.text_view_add_member), withText("Add member"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 13)));
+        appCompatTextView3.perform(click());
+
+        addDelay(2000);
+
+        // perform search operation
+        onView(withId(R.id.action_search)).perform(click());
+        addDelay(1000);
+
+        onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
+        addDelay(1000);
+
+        onView(withId(R.id.image_view_back)).perform(click());
+        addDelay(1000);
+
+        ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+
+        addDelay(2000);
+
+        // deselect
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        //select again
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        onView(withId(R.id.recycler_view_selected_user)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, new ChildViewAction().clickChildViewWithId(R.id.button_remove)));
+
+        addDelay(1000);
+
+        //again select
+        recyclerView4.perform(actionOnItemAtPosition(0, click()));
+        addDelay(1000);
+
+        ViewInteraction floatingActionButton3 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 3), isDisplayed()));
+        floatingActionButton3.perform(click());
+
+        addDelay(2000);
+
+        mDevice.pressBack();
+
+        addDelay(3000);
+
+        ViewInteraction appCompatEditText = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText.perform(click());
+
+        addDelay(2000);
+
+        appCompatEditText.perform(replaceText("Hello friends"));
+
+        addDelay(1000);
+        appCompatEditText.perform(closeSoftKeyboard());
+
+        addDelay(1000);
+
+        ViewInteraction appCompatImageButton2 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        appCompatImageButton2.perform(click());
+
+        addDelay(2000);
+
+        try {
+
+
+            ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+            overflowMenuButton.perform(click());
+
+            addDelay(2000);
+
+            ViewInteraction appCompatTextView4 = onView(allOf(withId(R.id.title), withText("Clear Chat"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+            appCompatTextView4.perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatEditText9 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText9.perform(click());
+
+        ViewInteraction appCompatEditText10 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        appCompatEditText10.perform(replaceText("Ok friends"));
+
+        addDelay(1000);
+        appCompatEditText10.perform(closeSoftKeyboard());
+
+        addDelay(1000);
+
+        ViewInteraction appCompatImageButton3 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        appCompatImageButton3.perform(click());
+
+        addDelay(2000);
+
+        try {
+
+            ViewInteraction overflowMenuButton2 = onView(allOf(withContentDescription("More options"), childAtPosition(childAtPosition(withId(R.id.toolbar_chat), 2), 0), isDisplayed()));
+            overflowMenuButton2.perform(click());
+
+            addDelay(2000);
+
+            ViewInteraction appCompatTextView5 = onView(allOf(withId(R.id.title), withText("Leave Group"), childAtPosition(childAtPosition(withId(R.id.content), 0), 0), isDisplayed()));
+            appCompatTextView5.perform(click());
+
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mDevice.pressBack();
+
+            addDelay(1000);
+            currentActivity = getActivityInstance();
+            if (!(currentActivity instanceof MainActivity)) {
+                mDevice.pressBack();
+            }
+        }
+
+
+        addDelay(3000);
+        ViewInteraction discoverTab = onView(allOf(withId(R.id.action_discover), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        uiTest_07();
+    }
+
+    //    @Test
+    public void uiTest_07() {
+
+        addDelay(4000);
+
+        ViewInteraction floatingActionButton = onView(allOf(withId(R.id.fab_chat), childAtPosition(allOf(withId(R.id.mesh_contact_layout), childAtPosition(withId(R.id.fragment_container), 0)), 2), isDisplayed()));
+        floatingActionButton.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction recyclerView = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
+
+        addDelay(2000);
+
+        ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
+        recyclerView2.perform(actionOnItemAtPosition(1, click()));
+
+        addDelay(2000);
+
+        ViewInteraction floatingActionButton2 = onView(allOf(withId(R.id.button_go), childAtPosition(childAtPosition(withId(android.R.id.content), 0), 4), isDisplayed()));
+        floatingActionButton2.perform(click());
+
+        addDelay(3000);
+
+        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        appCompatTextView.perform(click());
+
+        addDelay(2000);
+
+        try {
+            UiScrollable appViews = new UiScrollable(
+                    new UiSelector().scrollable(true));
+
+            appViews.scrollForward();
+            addDelay(2000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatTextView2 = onView(allOf(withId(R.id.text_view_leave_group), withText("Leave group"), childAtPosition(childAtPosition(withId(R.id.nested_scroll_view), 0), 16), isDisplayed()));
+        appCompatTextView2.perform(click());
+
+        addDelay(3000);
+        ViewInteraction discoverTab = onView(allOf(withId(R.id.action_discover), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
+        discoverTab.perform(click());
+
+        addDelay(2000);
+
+        assertTrue(true);
+        StatusHelper.out("Group messaging test executed");
+
+        uiTest_08();
+    }
+
+    public void uiTest_08() {
+        //addDelay(4000);
 
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
@@ -817,7 +1238,23 @@ public class TelemeshTest {
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
-        addDelay(3000);
+        UserEntity userEntityTwo = new UserEntity()
+                .setAvatarIndex(1)
+                .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
+                .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12cb4")
+                .setUserName("Sam")
+                .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
+                .setRegistrationTime(System.currentTimeMillis());
+
+        userDataSource.insertOrUpdateData(userEntityTwo);
+
+        addDelay(2000);
+
+        // Create group
+        String groupId = createAGroup(userEntityOne);
+
+        addDelay(1000);
+
 
         try {
 
@@ -870,6 +1307,13 @@ public class TelemeshTest {
 
         addDelay(3000);
 
+
+        // Create a group message
+        ChatEntity groupChatEntity = randomEntityGenerator.createGroupChatEntity(userEntityOne.getMeshId(), groupId);
+        messageSourceData.insertOrUpdateData(groupChatEntity);
+
+        addDelay(1000);
+
         ViewInteraction favoriteSpinner = onView(
                 allOf(withId(R.id.spinner_view),
                         childAtPosition(allOf(withId(R.id.spinner_holder),
@@ -916,19 +1360,69 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-            addDelay(1000);
+        addDelay(1000);
 
-            ViewInteraction favContactClick = onView(
-                    allOf(withId(R.id.user_container),
-                            childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
+        ViewInteraction favContactClick = onView(
+                allOf(withId(R.id.user_container),
+                        childAtPosition(childAtPosition(withId(R.id.contact_recycler_view), 0), 0), isDisplayed()));
 
 
-            favContactClick.perform(click());
+        favContactClick.perform(click());
 
-            addDelay(2000);
+        addDelay(2000);
 
-            mDevice.pressBack();
-    }*/
+        mDevice.pressBack();
+
+        assertTrue(true);
+
+        StatusHelper.out("uiTest_08 test executed");
+    }
+
+
+    private String createAGroup(UserEntity userEntity) {
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+
+        ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
+
+        String myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+
+        String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+
+        GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
+                .setMemberId(myUserId)
+                .setUserName(myUserName)
+                .setMemberStatus(Constants.GroupEvent.GROUP_JOINED)
+                .setAvatarPicture(avatarIndex)
+                .setIsAdmin(true);
+        groupMembersInfos.add(myGroupMembersInfo);
+
+        GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                .setMemberId(userEntity.getMeshId())
+                .setUserName(userEntity.getUserName())
+                .setAvatarPicture(userEntity.getAvatarIndex())
+                .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
+
+        groupMembersInfos.add(groupMembersInfo);
+
+        String groupId = UUID.randomUUID().toString();
+
+        GroupNameModel groupNameModel = new GroupNameModel()
+                .setGroupName(CommonUtil.getGroupNameByUser(groupMembersInfos));
+
+        GroupEntity groupEntity = new GroupEntity()
+                .setGroupId(groupId)
+                .setGroupName(gsonBuilder.getGroupNameModelJson(groupNameModel))
+                .setOwnStatus(Constants.GroupEvent.GROUP_CREATE)
+                .setMembersInfo(gsonBuilder.getGroupMemberInfoJson(groupMembersInfos))
+                .setAdminInfo(myUserId)
+                .setGroupCreationTime(System.currentTimeMillis());
+
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+
+        return groupId;
+    }
+
 
     private void addDelay(int i) {
         try {
@@ -1000,7 +1494,22 @@ public class TelemeshTest {
         entity.setFeedTime("2019-08-02T06:05:30.000Z");
         entity.setFeedReadStatus(false);
 
+        String contentInfo = GsonBuilder.getInstance().getFeedContentModelJson(prepareBroadcastContentModel());
+
+        entity.setFeedContentInfo(contentInfo);
+
         feedDataSource.insertOrUpdateData(entity);
+    }
+
+    private FeedContentModel prepareBroadcastContentModel() {
+        FeedContentModel contentModel = new FeedContentModel();
+        contentModel.setContentInfo("Sample content info");
+        String imagePath = randomEntityGenerator.getDummyImageLink();
+        contentModel.setContentPath(imagePath);
+        contentModel.setContentThumb(imagePath);
+        contentModel.setContentUrl(imagePath);
+
+        return contentModel;
     }
 
     private UserEntity addSampleUser() {
@@ -1029,4 +1538,36 @@ public class TelemeshTest {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+    }
+
+
+    public class ChildViewAction {
+
+        public ViewAction clickChildViewWithId(final int id) {
+            return new ViewAction() {
+                @Override
+                public Matcher<View> getConstraints() {
+                    return null;
+                }
+
+                @Override
+                public String getDescription() {
+                    return "Click on a child view with specified id.";
+                }
+
+                @Override
+                public void perform(UiController uiController, View view) {
+                    View v = view.findViewById(id);
+                    v.performClick();
+                }
+            };
+        }
+
+    }
 }

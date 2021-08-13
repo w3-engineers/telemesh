@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 
 public class SplashActivity extends BaseActivity {
 
@@ -39,8 +40,9 @@ public class SplashActivity extends BaseActivity {
         }
 
         splashViewModel.getUserRegistrationStatus();
-        ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
-        shimmerFrameLayout.startShimmer();
+
+       /* ShimmerFrameLayout shimmerFrameLayout = findViewById(R.id.shimmer_container);
+        shimmerFrameLayout.startShimmer();*/
 
         splashViewModel.getIsUserRegistered().observe(this, aBoolean -> {
             Intent intent;

@@ -29,12 +29,15 @@ import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.UUID;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class ContentDataHelperTest {
 
@@ -65,7 +68,7 @@ public class ContentDataHelperTest {
     }
 
     @Test
-    public void test_prepare_content_and_observer() {
+    public void test_1_prepare_content_and_observer() {
 
         UserEntity entity = addSampleUser();
         addDelay(1000);
@@ -122,7 +125,7 @@ public class ContentDataHelperTest {
     }
 
     @Test
-    public void test_prepare_content_and_send() {
+    public void test_2_prepare_content_and_send() {
 
         UserEntity entity = addSampleUser();
         addDelay(1000);
@@ -258,6 +261,45 @@ public class ContentDataHelperTest {
 
         assertTrue(true);
         StatusHelper.out("Content test executed");
+    }
+
+    @Test
+    public void test_3_receive_incoming_content_info() {
+        // Prepare a message entity and not save
+
+        String messageId = UUID.randomUUID().toString();
+        String contentId = UUID.randomUUID().toString();
+
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setMessageId(messageId);
+
+        // Prepare content for first time receive
+        ContentModel contentModel = new ContentModel();
+        contentModel.setMessageId(messageId);
+        contentModel.setUserId(userId);
+        contentModel.setProgress(30);
+        contentModel.setMessageType(Constants.MessageType.IMAGE_MESSAGE);
+        contentModel.setContentPath(randomEntityGenerator.getDummyImageLink());
+        contentModel.setContentId(contentId);
+        contentModel.setThumbPath("");// Keep it empty
+        contentModel.setAckStatus(Constants.ServiceContentState.SUCCESS);
+
+
+        //test for first message
+        contentDataHelper.receiveIncomingContentInfo(contentModel);
+
+        addDelay(1500);
+
+        // so first part save the entity.
+        contentModel.setProgress(70);
+        contentDataHelper.receiveIncomingContentInfo(contentModel);
+        addDelay(1000);
+
+        // test when message ID empty but content id exists
+        contentModel.setMessageId("");
+        contentModel.setProgress(70);
+        contentDataHelper.receiveIncomingContentInfo(contentModel);
+        addDelay(1000);
     }
 
     private void addDelay(long time) {

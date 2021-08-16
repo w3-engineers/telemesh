@@ -229,6 +229,9 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
 
+        // Todo Insert message entity with content ID and test progress
+        // Todo set data in hash map for sender and receiver
+
         contentDataHelper.contentReceiveInProgress(contentId, 50);
         addDelay(1000);
 

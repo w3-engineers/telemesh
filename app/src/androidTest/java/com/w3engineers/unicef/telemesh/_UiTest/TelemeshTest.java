@@ -172,7 +172,8 @@ public class TelemeshTest {
 //                allOf(withId(R.id.image_profile),
 //                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
 //        buttonImageChooserFirst.perform(scrollTo(), click());
-        onView(withId(R.id.image_profile)).perform(click());
+
+        onView(withId(R.id.image_profile)).perform(scrollTo(), click());
 
 
         addDelay(1000);
@@ -330,10 +331,12 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction settingsTab = onView(
+       /* ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
-        settingsTab.perform(click());
+        settingsTab.perform(click());*/
+
+        onView(withId(R.id.action_setting)).perform(click());
 
         addDelay(1000);
 

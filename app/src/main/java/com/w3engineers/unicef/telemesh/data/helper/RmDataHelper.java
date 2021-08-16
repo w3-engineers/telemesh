@@ -507,7 +507,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
                 chatEntity.setStatus(ackStatus).setIncoming(false);
                 Timber.e("Delivered :: %s", chatEntity.getMessageId());
-                dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
+
+                if (messageModel.isGroup()) {
+                    dataSource.updateGroupMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
+                } else {
+                    dataSource.updateMessageStatus(chatEntity.getMessageId(), chatEntity.getStatus());
+                }
             }
 
 

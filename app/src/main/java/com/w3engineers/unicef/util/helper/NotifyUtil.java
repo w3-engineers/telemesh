@@ -25,6 +25,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -57,14 +58,21 @@ public class NotifyUtil {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         UserEntity userEntity = userDataSource.getSingleUserById(chatEntity.getFriendsId());
+        String chatUserId = "";
+        boolean isGroup = false;
+        if (chatEntity instanceof MessageEntity) {
+            chatUserId = ((MessageEntity)chatEntity).getFriendsId();
+        } else {
+            chatUserId = ((GroupMessageEntity) chatEntity).getGroupId();
+            isGroup = true;
+        }
 
-        MessageEntity messageEntity = ((MessageEntity)chatEntity);
-        boolean isGroup = messageEntity.messagePlaceGroup;
+
         if (userEntity != null) {
             if (isGroup) {
-                intent.putExtra(UserEntity.class.getName(), messageEntity.getGroupId());
+                intent.putExtra(UserEntity.class.getName(), chatUserId);
             } else {
-                intent.putExtra(UserEntity.class.getName(), messageEntity.getFriendsId());
+                intent.putExtra(UserEntity.class.getName(), chatUserId);
             }
             intent.putExtra(GroupEntity.class.getName(), isGroup);
 
@@ -73,20 +81,20 @@ public class NotifyUtil {
             NotificationCompat.Builder builder = getNotificationBuilder(context);
             builder.setContentIntent(pendingIntent);
             boolean isSuccess = false;
-            String id = null;
+//            String id = null;
             if (isGroup) {
-                GroupEntity groupEntity = groupDataSource.getGroupById(messageEntity.getGroupId());
+                GroupEntity groupEntity = groupDataSource.getGroupById(chatUserId);
                 if (groupEntity != null) {
-                    id = groupEntity.getGroupId();
+//                    id = groupEntity.getGroupId();
                     isSuccess = prepareNotification(builder, chatEntity, userEntity, groupEntity);
                 }
             } else {
-                id = chatEntity.getFriendsId();
+//                id = chatEntity.getFriendsId();
                 isSuccess = prepareNotification(builder, chatEntity, userEntity);
             }
 
             if (isSuccess) {
-                showNotification(context, builder, id);
+                showNotification(context, builder, chatUserId);
             }
         }
     }

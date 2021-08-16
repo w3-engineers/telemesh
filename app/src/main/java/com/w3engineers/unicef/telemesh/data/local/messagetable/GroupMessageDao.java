@@ -38,4 +38,16 @@ public abstract class GroupMessageDao extends BaseDao<GroupMessageEntity> {
             " ORDER BY " + ColumnNames.ID + " DESC LIMIT 1")
     public abstract Flowable<GroupMessageEntity> getLastInsertedMessage();
 
+    /**
+     * <h1>Update message status</h1>
+     * <p>Message status seen , delivery, read, unread  will update </p>
+     *
+     * @param messageId:String  (required) must not null or empty
+     * @param messageStatus:int (required) must not null or empty
+     * @return : Long
+     */
+    @Query("UPDATE " + TableNames.GROUP_MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS + " = :messageStatus WHERE "
+            + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId")
+    public abstract long updateMessageStatus(@NonNull String messageId, int messageStatus);
+
 }

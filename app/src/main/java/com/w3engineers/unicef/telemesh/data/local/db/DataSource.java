@@ -36,6 +36,8 @@ public interface DataSource {
 
     void updateMessageStatus(@NonNull String messageId, int messageStatus);
 
+    void updateGroupMessageStatus(@NonNull String messageId, int messageStatus);
+
     void reSendMessage(@NonNull ChatEntity chatEntity);
 
     @Nullable

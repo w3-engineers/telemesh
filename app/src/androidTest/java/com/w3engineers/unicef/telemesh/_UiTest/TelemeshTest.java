@@ -1397,6 +1397,7 @@ public class TelemeshTest {
                 .setIsAdmin(true);
         groupMembersInfos.add(myGroupMembersInfo);
 
+
         GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
                 .setMemberId(userEntity.getMeshId())
                 .setUserName(userEntity.getUserName())

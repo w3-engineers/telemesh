@@ -207,6 +207,8 @@ public class GroupDataHelperTest {
                 .setMemberId(mikeId)
                 .setAvatarPicture(4);
 
+        groupModel.setAdminInfo(myUserId);
+
         ArrayList<GroupMembersInfo> memberList = new ArrayList<>();
         memberList.add(myGroupMembersInfo);
         memberList.add(member1);

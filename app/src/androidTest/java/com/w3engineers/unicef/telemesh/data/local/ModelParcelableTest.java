@@ -19,6 +19,7 @@ import com.w3engineers.unicef.telemesh.data.local.db.BaseMigration;
 import com.w3engineers.unicef.telemesh.data.local.db.Converters;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.updateapp.UpdateConfigModel;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
@@ -33,6 +34,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -274,6 +276,41 @@ public class ModelParcelableTest {
         assertEquals(payload.getConnectedClientEthIds().get(0), payloadData.get(0));
 
         StatusHelper.out("Test executed");
+    }
+
+    @Test
+    public void groupDataParcelableTest() {
+        addDelay();
+
+
+        GroupEntity entity = prepareGroupEntity();
+
+        Parcel parcel = Parcel.obtain();
+        entity.writeToParcel(parcel, entity.describeContents());
+        parcel.setDataPosition(0);
+
+        GroupEntity createdFromParcel = GroupEntity.CREATOR.createFromParcel(parcel);
+
+        assertThat(createdFromParcel.getLastMessage(), is("test message"));
+        assertThat(createdFromParcel.getHasUnreadMessage(), is(1));
+        assertThat(createdFromParcel.getOwnStatus(), is(1));
+    }
+
+    private GroupEntity prepareGroupEntity() {
+        GroupEntity entity = new GroupEntity();
+        String dummyUserId = UUID.randomUUID().toString();
+        entity.setAdminInfo(dummyUserId);
+        entity.setGroupId(UUID.randomUUID().toString());
+        entity.setGroupCreationTime(System.currentTimeMillis());
+        entity.setGroupName("Test Group");
+        entity.setMembersInfo("Test memberInfo");
+
+        entity.setOwnStatus(1);
+        entity.setHasUnreadMessage(1)
+                .setLastMessage("test message")
+                .setGroupInfoId(UUID.randomUUID().toString());
+
+        return entity;
     }
 
     private void addDelay() {

@@ -136,7 +136,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String userId = userModel.getUserId();
         if (userId == null || !userId.startsWith("0x")) {
-            Timber.tag("User Add: ").e("Error id: %s" , userId);
+            Timber.tag("User Add: ").e("Error id: %s", userId);
             return;
         }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
@@ -167,7 +167,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void onDemandUserAdd(String userId) {
         if (userId == null || !userId.startsWith("0x")) {
-            Timber.tag("Forward User Id: ").e("Error id: %s" , userId);
+            Timber.tag("Forward User Id: ").e("Error id: %s", userId);
             return;
         }
         UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
@@ -284,10 +284,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         String messageModelString = new Gson().toJson(groupMsgEntity.toMessageModel());
                         GroupDataHelper.getInstance().sendTextMessageToGroup(groupMsgEntity.getGroupId(),
                                 messageModelString);
-                    }else{
+                    } else {
                         GroupDataHelper.getInstance().prepareAndSendGroupContent(groupMsgEntity, true);
                     }
-        }, Throwable::printStackTrace));
+                }, Throwable::printStackTrace));
 
 
         // This observer only for message send
@@ -456,13 +456,20 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             String messageModelText = new String(rawChatData);
             MessageModel messageModel = new Gson().fromJson(messageModelText, MessageModel.class);
             ChatEntity chatEntity = null;
-            if(messageModel.isGroup()){
+            if (messageModel.isGroup()) {
+                if (messageModel.getType() != Constants.MessageType.TEXT_MESSAGE) {
+                    if (!isAckSuccess) {
+                        saveDummyContent(messageModel, userId);
+                    }
+
+                    return;
+                }
                 chatEntity = new GroupMessageEntity()
                         .toChatEntity(messageModel)
                         .setFriendsId(userId)
                         .setTime(System.currentTimeMillis())
                         .setIncoming(true);
-            }else{
+            } else {
                 chatEntity = new MessageEntity()
                         .toChatEntity(messageModel)
                         .setFriendsId(userId)
@@ -519,6 +526,27 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void saveDummyContent(MessageModel messageModel, String senderId) {
+        ChatEntity chatEntity = new GroupMessageEntity()
+                .toChatEntity(messageModel)
+                .setFriendsId(senderId)
+                .setTime(System.currentTimeMillis())
+                .setIncoming(true);
+
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_READ).setIncoming(true);
+
+        String currentThread = dataSource.getCurrentUser();
+
+
+        if (TextUtils.isEmpty(currentThread) || TextUtils.isEmpty(messageModel.getGroupId())
+                || !messageModel.getGroupId().equals(currentThread)) {
+            NotifyUtil.showNotification(chatEntity);
+            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+        }
+        MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+
     }
 
     private void setAnalyticsMessageCount(byte[] rawMessageCountAnalyticsData, boolean isAck) {
@@ -617,7 +645,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     /*if (isServiceStop) {
                         stopMeshProcess();
                     }*/
-                    Timber.tag("MIMO_SAHA").v("User offline %s" , integer);
+                    Timber.tag("MIMO_SAHA").v("User offline %s", integer);
                     updateMessageStatus();
                 }, Throwable::printStackTrace));
     }
@@ -637,7 +665,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateMessageStatus() {
         compositeDisposable.add(updateMessageStatusFailed()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Timber.tag("MIMO_SAHA").v("Msg send failed %s" , integer);
+                    Timber.tag("MIMO_SAHA").v("Msg send failed %s", integer);
                     updateReceiveMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -656,7 +684,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Timber.tag("MIMO_SAHA").v("Msg receive failed %s" , integer);
+                    Timber.tag("MIMO_SAHA").v("Msg receive failed %s", integer);
                     updateReceiveUnreadMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -668,7 +696,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_UNREAD_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Timber.tag("MIMO_SAHA").v("Msg receive unread failed %s" , integer);
+                    Timber.tag("MIMO_SAHA").v("Msg receive unread failed %s", integer);
                 }, Throwable::printStackTrace));
     }
 
@@ -820,9 +848,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         ArrayList<GroupCountModel> groupCountModels = new ArrayList<>();
-        for (GroupEntity groupEntity: groupEntities) {
+        for (GroupEntity groupEntity : groupEntities) {
             GroupCountModel groupCountModel = groupEntity.toGroupCountModel()
-            .setSubmittedBy(myId)
+                    .setSubmittedBy(myId)
                     .setDirectSend(false);
             groupCountModels.add(groupCountModel);
         }
@@ -836,7 +864,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void sendGroupCountSyncAck(ArrayList<GroupCountParseModel> modelList) {
         ArrayList<GroupCountModel> groupCountModels = new ArrayList<>();
-        for (GroupCountParseModel groupCountParseModel: modelList) {
+        for (GroupCountParseModel groupCountParseModel : modelList) {
             GroupCountModel groupCountModel = new GroupCountModel().setGroupId(groupCountParseModel.getGroupId());
             groupCountModels.add(groupCountModel);
         }
@@ -849,7 +877,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                 .add(Single.fromCallable(() -> GroupDataSource.getInstance().getUnsyncedGroups())
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(groupEntities -> {
-                            if (!groupEntities.isEmpty()){
+                            if (!groupEntities.isEmpty()) {
                                 AnalyticsDataHelper.getInstance().sendGroupCount(groupEntities);
                             }
                         }, Throwable::printStackTrace));

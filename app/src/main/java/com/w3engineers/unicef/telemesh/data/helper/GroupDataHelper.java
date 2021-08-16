@@ -160,8 +160,7 @@ public class GroupDataHelper extends RmDataHelper {
     public void sendTextMessageToGroup(String groupId, String messageTextData) {
         GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
-        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
-                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+        ArrayList<GroupMembersInfo> groupMembersInfos = groupEntity.getMembersArray();
 
         sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE,
                 groupEntity.getAdminInfo(), groupMembersInfos);
@@ -169,11 +168,14 @@ public class GroupDataHelper extends RmDataHelper {
 
 
     public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
-        GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
-        ArrayList<GroupMembersInfo> groupMembersInfo = groupEntity.getMembersArray();
+        //GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
+        //ArrayList<GroupMembersInfo> groupMembersInfo = groupEntity.getMembersArray();
 
-        MessageModel messageModel = entity.toMessageModel();
-
+        String messageModelString = new Gson().toJson(entity.toMessageModel());
+        sendTextMessageToGroup(entity.groupId, messageModelString);
+        entity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+        entity.setContentProgress(100);
+        MessageSourceData.getInstance().insertOrUpdateData(entity);
         /*ContentModel contentModel = new ContentModel()
                 .setMessageId(entity.getMessageId())
                 .setMessageType(entity.getMessageType())

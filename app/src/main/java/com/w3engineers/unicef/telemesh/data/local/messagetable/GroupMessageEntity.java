@@ -48,6 +48,8 @@ public class GroupMessageEntity extends ChatEntity {
     @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_INFO)
     public String contentInfo;
 
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_PROGRESS)
+    public int contentProgress;
 
     @Nullable
     @ColumnInfo(name = ColumnNames.COLUMN_RECEIVED_USERS)
@@ -136,6 +138,15 @@ public class GroupMessageEntity extends ChatEntity {
     @Nullable
     public ArrayList<String> getReceivedUsers() {
         return receivedUsers;
+    }
+
+    public int getContentProgress() {
+        return contentProgress;
+    }
+
+    public GroupMessageEntity setContentProgress(int contentProgress) {
+        this.contentProgress = contentProgress;
+        return this;
     }
 
     @NonNull

@@ -10,6 +10,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -33,6 +34,7 @@ public class Source implements DataSource {
     private String chatCurrentUser = null;
     final PublishSubject<Integer> myMode = PublishSubject.create();
     private MessageDao messageDao;
+    private GroupMessageDao groupMessageDao;
     private UserDao userDao;
     private BehaviorSubject<ChatEntity> failedMessage = BehaviorSubject.create();
     private BehaviorSubject<String> liveUserId = BehaviorSubject.create();
@@ -44,6 +46,7 @@ public class Source implements DataSource {
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
+        groupMessageDao = AppDatabase.getInstance().getGroupMessageDao();
         userDao = AppDatabase.getInstance().userDao();
     }
 
@@ -92,6 +95,11 @@ public class Source implements DataSource {
     @Override
     public void updateMessageStatus(@NonNull String messageId, int messageStatus) {
         messageDao.updateMessageStatus(messageId, messageStatus);
+    }
+
+    @Override
+    public void updateGroupMessageStatus(@NonNull String messageId, int messageStatus) {
+        groupMessageDao.updateMessageStatus(messageId, messageStatus);
     }
 
     @Override

@@ -324,7 +324,7 @@ public class Constants {
         int TEXT_OUTGOING = 12;
         //Group
         int GROUP_TEXT_INCOMING = 13;
-        int GROUP_TEXT_OUTGOING = 13;
+        int GROUP_TEXT_OUTGOING = 14;
 
         //One to one
         int IMG_INCOMING = 21;
@@ -339,7 +339,7 @@ public class Constants {
         int GROUP_VID_INCOMING = 33;
         int GROUP_VID_OUTGOING = 34;
 
-        int GROUP_INFO = 33;
+        int GROUP_INFO = 35;
     }
 
     public interface ServiceContentState {

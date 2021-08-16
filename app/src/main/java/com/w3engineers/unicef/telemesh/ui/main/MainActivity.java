@@ -207,6 +207,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -300,6 +301,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void setFragmentsOnPosition(@NonNull MenuItem item) {
         Fragment mFragment = null;
         String toolbarTitle = "";

@@ -26,6 +26,7 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.io.ByteArrayOutputStream;

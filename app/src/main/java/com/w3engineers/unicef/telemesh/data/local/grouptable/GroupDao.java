@@ -50,10 +50,16 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
     @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_MEMBERS_INFO + " LIKE :userId")
     abstract List<GroupEntity> getGroupByUserId(String userId);
 
+    @Query("SELECT * FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_IS_SYNCED + " = :synced")
+    abstract List<GroupEntity> getUnsyncedGroups(boolean synced);
+
     @Query("SELECT " + ColumnNames.COLUMN_GROUP_ADMIN_INFO + " FROM " + TableNames.GROUP + " WHERE "
             + ColumnNames.COLUMN_GROUP_MEMBERS_INFO + " LIKE :userId LIMIT 1")
     abstract String getGroupAdminByUserId(String userId);
 
     @Query("DELETE FROM " + TableNames.GROUP + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
     abstract int deleteGroupById(String groupId);
+
+    @Query("UPDATE " + TableNames.GROUP + " SET " +ColumnNames.COLUMN_GROUP_IS_SYNCED +" = :synced WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :groupId")
+    abstract int updateGroupAsSynced(String groupId, boolean synced);
 }

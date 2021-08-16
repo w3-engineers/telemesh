@@ -16,6 +16,8 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
+import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
+import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseConstant;
 import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.AppInstaller;
@@ -29,6 +31,10 @@ import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupCountModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageCount;
@@ -40,8 +46,13 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.TimeUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -414,6 +425,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
             case Constants.DataType.EVENT_GROUP_MEMBER_REMOVE:
             case Constants.DataType.EVENT_GROUP_DATA_RELAY:
             case Constants.DataType.EVENT_GROUP_DATA_FORWARD:
+            case Constants.DataType.EVENT_GROUP_COUNT_SYNC_REQUEST:
+            case Constants.DataType.EVENT_GROUP_COUNT_SYNC_ACK:
+            case Constants.DataType.EVENT_GROUP_COUNT_SYNCED:
                 GroupDataHelper.getInstance().groupDataReceive(dataType, userId, rawData, isNewMessage);
                 break;
         }
@@ -618,7 +632,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_UNREAD_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Log.v("MIMO_SAHA", "Msg receive unread failed " + integer);
+                    Timber.tag("MIMO_SAHA").v("Msg receive unread failed %s" , integer);
                 }, Throwable::printStackTrace));
     }
 
@@ -761,6 +775,64 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .subscribeOn(Schedulers.newThread())
                         .subscribe(feedback -> {
                             AnalyticsDataHelper.getInstance().sendFeedback(feedback);
+                        }, Throwable::printStackTrace));
+
+        sendPendingGroupCount();
+    }
+
+    public void sendGroupCountToInternetUser(List<GroupEntity> groupEntities) {
+
+        String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        ArrayList<GroupCountModel> groupCountModels = new ArrayList<>();
+        for (GroupEntity groupEntity: groupEntities) {
+            GroupCountModel groupCountModel = groupEntity.toGroupCountModel()
+            .setSubmittedBy(myId)
+                    .setDirectSend(false);
+            groupCountModels.add(groupCountModel);
+        }
+        String groupCountJson = GsonBuilder.getInstance().getGroupCountJson(groupCountModels);
+
+        prepareRightMeshDataSource();
+        for (String sellersId : rightMeshDataSource.getAllSellers()) {
+            dataSend(groupCountJson.getBytes(), Constants.DataType.EVENT_GROUP_COUNT_SYNC_REQUEST, sellersId, false);
+        }
+    }
+
+    public void sendGroupCountSyncAck(ArrayList<GroupCountParseModel> modelList) {
+        ArrayList<GroupCountModel> groupCountModels = new ArrayList<>();
+        for (GroupCountParseModel groupCountParseModel: modelList) {
+            GroupCountModel groupCountModel = new GroupCountModel().setGroupId(groupCountParseModel.getGroupId());
+            groupCountModels.add(groupCountModel);
+        }
+        String groupCountJson = GsonBuilder.getInstance().getGroupCountJson(groupCountModels);
+        dataSend(groupCountJson.getBytes(), Constants.DataType.EVENT_GROUP_COUNT_SYNC_ACK, modelList.get(0).getSubmittedBy(), false);
+    }
+
+    public void sendPendingGroupCount() {
+        compositeDisposable
+                .add(Single.fromCallable(() -> GroupDataSource.getInstance().getUnsyncedGroups())
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(groupEntities -> {
+                            if (!groupEntities.isEmpty()){
+                                AnalyticsDataHelper.getInstance().sendGroupCount(groupEntities);
+                            }
+                        }, Throwable::printStackTrace));
+    }
+
+    public void notifyGroupMembersAsSyncedGroup(String groupId) {
+
+        compositeDisposable
+                .add(Single.fromCallable(() -> GroupDataSource.getInstance().getGroupById(groupId))
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(groupEntity -> {
+
+                            GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+                            ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder.getGroupMemberInfoObj(groupEntity.getMembersInfo());
+
+                            for (int i = 0; i < groupMembersInfos.size(); i++) {
+                                GroupMembersInfo groupMembersInfo = groupMembersInfos.get(i);
+                                dataSend(groupEntity.getGroupId().getBytes(), Constants.DataType.EVENT_GROUP_COUNT_SYNCED, groupMembersInfo.getMemberId(), false);
+                            }
                         }, Throwable::printStackTrace));
     }
 
@@ -918,7 +990,6 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         String data = new Gson().toJson(model);
         dataSend(data.getBytes(), Constants.DataType.VERSION_HANDSHAKING, userId, false);
     }
-
 
     private void versionCrossMatching(byte[] rawData, String userId, boolean isAckSuccess) {
         if (isAckSuccess) return;

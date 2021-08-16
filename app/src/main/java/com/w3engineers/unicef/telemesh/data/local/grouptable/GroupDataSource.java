@@ -61,8 +61,16 @@ public class GroupDataSource {
         return mGroupDao.getGroupByUserId(userId);
     }
 
+    public List<GroupEntity> getUnsyncedGroups() {
+        return mGroupDao.getUnsyncedGroups(false);
+    }
+
     public String getGroupAdminByUserId(String userId) {
         return mGroupDao.getGroupAdminByUserId(userId);
+    }
+
+    public int updateGroupAsSynced(String groupId) {
+        return mGroupDao.updateGroupAsSynced(groupId, true);
     }
 
     public int deleteGroupById(String groupId) {

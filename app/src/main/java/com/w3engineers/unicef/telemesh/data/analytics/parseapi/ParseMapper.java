@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.parse.ParseObject;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -31,6 +32,18 @@ public class ParseMapper {
         parseObject.put(ParseConstant.MessageCount.USER_ID, model.getUserId());
         parseObject.put(ParseConstant.MessageCount.MESSAGE_COUNT, model.getMsgCount());
         //parseObject.put(ParseConstant.MessageCount.MSG_TIME, model.getMsgTime());
+
+        return parseObject;
+    }
+
+    ParseObject GroupCountToParse(GroupCountParseModel model) {
+
+        ParseObject parseObject = new ParseObject(ParseConstant.GroupCount.TABLE);
+        parseObject.put(ParseConstant.GroupCount.GROUP_ID, model.getGroupId());
+        parseObject.put(ParseConstant.GroupCount.GROUP_OWNER, model.getGroupOwner());
+        parseObject.put(ParseConstant.GroupCount.MEMBER_COUNT, model.getMemberCount());
+        parseObject.put(ParseConstant.GroupCount.CREATION_DATE, model.getCreationDate());
+        parseObject.put(ParseConstant.GroupCount.SUBMITTED_BY, model.getSubmittedBy());
 
         return parseObject;
     }

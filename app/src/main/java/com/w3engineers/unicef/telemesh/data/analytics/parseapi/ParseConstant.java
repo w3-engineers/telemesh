@@ -20,6 +20,15 @@ public interface ParseConstant {
         String MSG_TIME = "msg_time";
     }
 
+    interface GroupCount {
+        String TABLE = "GroupCount";
+        String GROUP_ID = "group_id";
+        String SUBMITTED_BY = "submitted_by";
+        String CREATION_DATE = "creation_date";
+        String GROUP_OWNER = "group_owner";
+        String  MEMBER_COUNT = "member_count";
+    }
+
     interface NewNodeUser {
         String TABLE = "NewNodeUser";
         String USER_ID = "user_id";

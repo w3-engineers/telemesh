@@ -35,8 +35,14 @@ public class ConnectivityUtil {
                     consumer.accept("", urlc.getResponseCode() == 200);
                 } catch (Exception e) {
                     Log.e("InternetCheck", "Error checking internet connection " + e.getMessage());
+                    try {
+                        consumer.accept("", false);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                 }
             } else {
+                Log.e("InternetCheck", "No internet available ");
                 try {
                     consumer.accept("", false);
                 } catch (Exception e) {

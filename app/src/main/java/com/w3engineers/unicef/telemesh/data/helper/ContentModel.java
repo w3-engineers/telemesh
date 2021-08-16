@@ -7,6 +7,8 @@ public class ContentModel {
     private boolean isThumbSend, receiveSuccessStatus, isResend, isRequestFromReceiver, isContent;
     private byte contentDataType;
     private boolean isGroupContent;
+    private String groupId;
+    private String originalSender;
 
     public String getThumbPath() {
         return thumbPath;
@@ -158,5 +160,23 @@ public class ContentModel {
 
     public void setGroupContent(boolean groupContent) {
         isGroupContent = groupContent;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public ContentModel setGroupId(String groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    public String getOriginalSender() {
+        return originalSender;
+    }
+
+    public ContentModel setOriginalSender(String originalSender) {
+        this.originalSender = originalSender;
+        return this;
     }
 }

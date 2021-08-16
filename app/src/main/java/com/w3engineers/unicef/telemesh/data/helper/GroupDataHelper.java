@@ -25,6 +25,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -169,9 +170,19 @@ public class GroupDataHelper extends RmDataHelper {
 
     public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
         GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
-        ArrayList<GroupMembersInfo> groupMembersInfos = groupEntity.getMembersArray();
-        //Arif
-        //TODO check direct user send content
+        ArrayList<GroupMembersInfo> groupMembersInfo = groupEntity.getMembersArray();
+
+        MessageModel messageModel = entity.toMessageModel();
+
+        /*ContentModel contentModel = new ContentModel()
+                .setMessageId(entity.getMessageId())
+                .setMessageType(entity.getMessageType())
+                .setGroupId(entity.getGroupId())
+                .setOriginalSender(entity.getOriginalSender())
+                //.setContentPath(entity.getContentPath())
+                //.setThumbPath(entity.getContentThumbPath())
+                .setUserId(entity.getFriendsId())
+                .setContentInfo(entity.getContentInfo());*/
     }
 
     ///////////////////////////////////////////////////////////////

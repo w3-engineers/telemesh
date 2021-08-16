@@ -575,44 +575,48 @@ public class ContentUtil {
 
     public boolean isTypeImage(String path) {
         path = path.toLowerCase();
-        return path.toLowerCase().endsWith(".jpg") || path.toLowerCase().endsWith(".jpeg") || path.toLowerCase().endsWith(".png")
-                || path.toLowerCase().endsWith(".pjpeg") || path.toLowerCase().endsWith(".rgb") || path.toLowerCase().endsWith(".webp")
-                || path.toLowerCase().endsWith(".gif") || path.toLowerCase().endsWith(".bmp") || path.toLowerCase().endsWith(".ico");
+        return path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")
+                || path.endsWith(".pjpeg") || path.endsWith(".rgb") || path.endsWith(".webp")
+                || path.endsWith(".gif") || path.endsWith(".bmp") || path.endsWith(".ico");
     }
 
     public boolean isTypeVideo(String path) {
-        return path.toLowerCase().endsWith(".3gp") || path.toLowerCase().endsWith(".mpg") || path.toLowerCase().endsWith(".mpeg")
-                || path.toLowerCase().endsWith(".mpe") || path.toLowerCase().endsWith(".mp4") || path.toLowerCase().endsWith(".avi")
-                || path.toLowerCase().endsWith(".wmv") || path.toLowerCase().endsWith(".ogv") || path.toLowerCase().endsWith(".flv")
-                || path.toLowerCase().endsWith(".3g2") || path.toLowerCase().endsWith(".uvh") || path.toLowerCase().endsWith(".uvm")
-                || path.toLowerCase().endsWith(".uvu") || path.toLowerCase().endsWith(".uvp") || path.toLowerCase().endsWith(".uvs")
-                || path.toLowerCase().endsWith(".uvv") || path.toLowerCase().endsWith(".fvt") || path.toLowerCase().endsWith(".f4v")
-                || path.toLowerCase().endsWith(".fli") || path.toLowerCase().endsWith(".h261") || path.toLowerCase().endsWith(".h263")
-                || path.toLowerCase().endsWith(".h264") || path.toLowerCase().endsWith(".jpm") || path.toLowerCase().endsWith(".jpgv")
-                || path.toLowerCase().endsWith(".m4v") || path.toLowerCase().endsWith(".asf") || path.toLowerCase().endsWith(".pyv")
-                || path.toLowerCase().endsWith(".wm") || path.toLowerCase().endsWith(".wmx") || path.toLowerCase().endsWith(".wvx")
-                || path.toLowerCase().endsWith(".mj2") || path.toLowerCase().endsWith(".mxu") || path.toLowerCase().endsWith(".movie")
-                || path.toLowerCase().endsWith(".mov") || path.toLowerCase().endsWith(".mkv") || path.toLowerCase().endsWith(".webm")
-                || path.toLowerCase().endsWith(".qt") || path.toLowerCase().endsWith(".viv");
+        path = path.toLowerCase();
+        return path.endsWith(".3gp") || path.endsWith(".mpg") || path.endsWith(".mpeg")
+                || path.endsWith(".mpe") || path.endsWith(".mp4") || path.endsWith(".avi")
+                || path.endsWith(".wmv") || path.endsWith(".ogv") || path.endsWith(".flv")
+                || path.endsWith(".3g2") || path.endsWith(".uvh") || path.endsWith(".uvm")
+                || path.endsWith(".uvu") || path.endsWith(".uvp") || path.endsWith(".uvs")
+                || path.endsWith(".uvv") || path.endsWith(".fvt") || path.endsWith(".f4v")
+                || path.endsWith(".fli") || path.endsWith(".h261") || path.endsWith(".h263")
+                || path.endsWith(".h264") || path.endsWith(".jpm") || path.endsWith(".jpgv")
+                || path.endsWith(".m4v") || path.endsWith(".asf") || path.endsWith(".pyv")
+                || path.endsWith(".wm") || path.endsWith(".wmx") || path.endsWith(".wvx")
+                || path.endsWith(".mj2") || path.endsWith(".mxu") || path.endsWith(".movie")
+                || path.endsWith(".mov") || path.endsWith(".mkv") || path.endsWith(".webm")
+                || path.endsWith(".qt") || path.endsWith(".viv");
     }
 
     public boolean isTypeAudio(String path) {
-        return path.toLowerCase().endsWith(".m4p") || path.toLowerCase().endsWith(".3gpp") || path.toLowerCase().endsWith(".mp3")
-                || path.toLowerCase().endsWith(".wma") || path.toLowerCase().endsWith(".wav") || path.toLowerCase().endsWith(".ogg")
-                || path.toLowerCase().endsWith(".m4a") || path.toLowerCase().endsWith(".aac") || path.toLowerCase().endsWith(".ota")
-                || path.toLowerCase().endsWith(".imy") || path.toLowerCase().endsWith(".rtx") || path.toLowerCase().endsWith(".rtttl")
-                || path.toLowerCase().endsWith(".xmf") || path.toLowerCase().endsWith(".mid") || path.toLowerCase().endsWith(".mxmf")
-                || path.toLowerCase().endsWith(".amr") || path.toLowerCase().endsWith(".flac");
+        path = path.toLowerCase();
+        return path.endsWith(".m4p") || path.endsWith(".3gpp") || path.endsWith(".mp3")
+                || path.endsWith(".wma") || path.endsWith(".wav") || path.endsWith(".ogg")
+                || path.endsWith(".m4a") || path.endsWith(".aac") || path.endsWith(".ota")
+                || path.endsWith(".imy") || path.endsWith(".rtx") || path.endsWith(".rtttl")
+                || path.endsWith(".xmf") || path.endsWith(".mid") || path.endsWith(".mxmf")
+                || path.endsWith(".amr") || path.endsWith(".flac");
     }
 
     public boolean isTypeMisc(String path) {
-        return path.toLowerCase().endsWith(".doc") || path.toLowerCase().endsWith(".docx") || path.toLowerCase().endsWith(".rtf")
-                || path.toLowerCase().endsWith(".pdf") || path.toLowerCase().endsWith(".ppt") || path.toLowerCase().endsWith(".pptx")
-                || path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") || path.toLowerCase().endsWith(".txt");
+        path = path.toLowerCase();
+        return path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".rtf")
+                || path.endsWith(".pdf") || path.endsWith(".ppt") || path.endsWith(".pptx")
+                || path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".txt");
     }
 
     public boolean isTypeCompress(String path) {
-        return path.toLowerCase().endsWith(".zip") || path.toLowerCase().endsWith(".rar");
+        path = path.toLowerCase();
+        return path.endsWith(".zip") || path.endsWith(".rar");
     }
 
     public boolean isTypeApp(String url) {

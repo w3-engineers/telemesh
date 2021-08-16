@@ -461,7 +461,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         .toChatEntity(messageModel)
                         .setFriendsId(userId)
                         .setTime(System.currentTimeMillis())
-                        .setIncoming(true);;
+                        .setIncoming(true);
             }else{
                 chatEntity = new MessageEntity()
                         .toChatEntity(messageModel)

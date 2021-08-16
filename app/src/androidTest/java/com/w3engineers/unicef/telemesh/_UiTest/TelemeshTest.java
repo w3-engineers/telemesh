@@ -503,7 +503,7 @@ public class TelemeshTest {
 
     public void uiTest_03(UserEntity userEntity) {
 
-        addDelay(3000);
+        addDelay(2000);
 
         onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
@@ -612,9 +612,16 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        mDevice.pressBack();
 
-        addDelay(2000);
+        currentActivity = getActivityInstance();
+
+        if (!(currentActivity instanceof MainActivity)) {
+            mDevice.pressBack();
+
+            addDelay(2000);
+        }
+
+
 
 
         /*onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -677,7 +684,7 @@ public class TelemeshTest {
     //@Test
     public void uiTest_04() {
 
-        addDelay(3800);
+        addDelay(2000);
 
         currentActivity = getActivityInstance();
 
@@ -688,20 +695,22 @@ public class TelemeshTest {
                     ((MainActivity) currentActivity).stopAnimation();
                 }
             });
+        } else {
+            mDevice.pressBack();
         }
 
         addDelay(1000);
 
         Activity currentActivity;
 
-        addDelay(5000);
+        addDelay(2000);
 
         ViewInteraction settingsTab = onView(
                 allOf(withId(R.id.action_setting),
                         childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
         settingsTab.perform(click());
 
-        addDelay(3000);
+        addDelay(2000);
 
         ViewInteraction profileRow = onView(
                 allOf(withId(R.id.layout_view_profile),
@@ -709,7 +718,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(R.id.layout_scroll), 0)), 0)));
         profileRow.perform(scrollTo(), click());
 
-        addDelay(3000);
+        addDelay(2000);
 
         ViewInteraction editButton = onView(
                 allOf(withId(R.id.text_view_edit),
@@ -717,7 +726,7 @@ public class TelemeshTest {
                                 childAtPosition(withId(android.R.id.content), 0)), 3), isDisplayed()));
         editButton.perform(click());
 
-        addDelay(4000);
+        addDelay(3000);
 
         try {
 

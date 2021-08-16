@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
@@ -215,6 +216,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -351,6 +353,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(@NonNull View view) {
         super.onClick(view);
@@ -506,7 +509,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.v("FILE_SPEED_TEST_1 ", Calendar.getInstance().getTime() + "");
+                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s",Calendar.getInstance().getTime());
                     List<Uri> images = Matisse.obtainResult(data);
                     mChatViewModel.sendContentMessage(threadId, images.get(0));
                 }
@@ -522,13 +525,13 @@ public class ChatActivity extends TelemeshBaseActivity {
 
         @Override
         public void onChanged() {
-            Log.e("ChatActivity", "onChanged");
+            Timber.tag("ChatActivity").e("onChanged");
         }
 
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            Log.e("ChatActivity", "onItemRangeInserted");
+            Timber.tag("ChatActivity").e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
             if (mLinearLayoutManager != null && mViewBinging != null && mChatPagedAdapter != null) {
                 mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,

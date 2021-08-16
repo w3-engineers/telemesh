@@ -206,5 +206,6 @@
 
     <string name="broadcast_notification">You have %d new broadcast message</string>
     <string name="favourit_button_image">favourit button image</string>
+    <string name="expanded_image_holder">Expanded image holder</string>
 
 </resources>

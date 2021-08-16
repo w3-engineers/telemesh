@@ -169,7 +169,8 @@ public class GroupDataHelper extends RmDataHelper {
 
     public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
         GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
-
+        ArrayList<GroupMembersInfo> groupMembersInfos = groupEntity.getMembersArray();
+        //Arif
         //TODO check direct user send content
     }
 

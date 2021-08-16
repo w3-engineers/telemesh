@@ -136,7 +136,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
         String userId = userModel.getUserId();
         if (userId == null || !userId.startsWith("0x")) {
-            Log.e("User Add: ", "Error id: " + userId);
+            Timber.tag("User Add: ").e("Error id: %s" , userId);
             return;
         }
         int userActiveStatus = rightMeshDataSource.getUserActiveStatus(userId);
@@ -167,7 +167,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void onDemandUserAdd(String userId) {
         if (userId == null || !userId.startsWith("0x")) {
-            Log.e("Forward User Id: ", "Error id: " + userId);
+            Timber.tag("Forward User Id: ").e("Error id: %s" , userId);
             return;
         }
         UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
@@ -353,7 +353,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateUserActiveStatus(String userId, int userActiveStatus) {
         int userConnectivityStatus = getActiveStatus(userActiveStatus);
 
-        Log.v("MIMO_SAHA", "S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
+        Timber.tag("MIMO_SAHA").v("S_State: " + userActiveStatus + " T_State: " + userConnectivityStatus);
         UserEntity userEntity = UserDataSource.getInstance().getSingleUserById(userId);
         if (userEntity != null) {
             userEntity.setOnlineStatus(userConnectivityStatus);
@@ -612,7 +612,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                     /*if (isServiceStop) {
                         stopMeshProcess();
                     }*/
-                    Log.v("MIMO_SAHA", "User offline " + integer);
+                    Timber.tag("MIMO_SAHA").v("User offline %s" , integer);
                     updateMessageStatus();
                 }, Throwable::printStackTrace));
     }
@@ -632,7 +632,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     private void updateMessageStatus() {
         compositeDisposable.add(updateMessageStatusFailed()
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Log.v("MIMO_SAHA", "Msg send failed " + integer);
+                    Timber.tag("MIMO_SAHA").v("Msg send failed %s" , integer);
                     updateReceiveMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -651,7 +651,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                         Constants.ContentStatus.CONTENT_STATUS_RECEIVING,
                         Constants.MessageStatus.STATUS_FAILED))
                 .subscribeOn(Schedulers.newThread()).subscribe(integer -> {
-                    Log.v("MIMO_SAHA", "Msg receive failed " + integer);
+                    Timber.tag("MIMO_SAHA").v("Msg receive failed %s" , integer);
                     updateReceiveUnreadMessageStatusFailed();
                 }, Throwable::printStackTrace));
     }
@@ -948,7 +948,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     @Override
     public void onGroupContentSend(ContentModel contentModel, String result) {
-
+        //TODO group content
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

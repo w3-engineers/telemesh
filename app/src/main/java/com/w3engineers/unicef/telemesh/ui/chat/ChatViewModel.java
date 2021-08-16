@@ -251,10 +251,11 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                     .setMessage(message)
                     .setOriginalSender(getMyUserId())
                     .setGroupId(threadId);
+            threadId = getMyUserId();
         } else {
             messageEntity = new MessageEntity()
                     .setMessage(message).setMessagePlace(false);
-            threadId = getMyUserId();
+
         }
 
         /*MessageEntity messageEntity = new MessageEntity()

@@ -14,11 +14,13 @@ import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -681,6 +683,26 @@ public class ContentDataHelper extends RmDataHelper {
     /////////??????????????????????????????????????????????????????/////////
     /////////??????????????????????????????????????????????????????/////////
 
+
+    void onGroupContentDataSend(String contentSendInfo, ContentModel contentModel){
+        try {
+            JSONObject jsonObject = new JSONObject(contentSendInfo);
+            boolean success = jsonObject.getBoolean("success");
+            String msg = jsonObject.getString("msg");
+            if(success){
+                GroupContentEntity contentEntity = new GroupContentEntity()
+                        .setContentId(msg)
+                        .setReceiverId(contentModel.getUserId())
+                        .setContentMessageId(contentModel.getMessageId());
+                MessageSourceData.getInstance().addOrUpdate(contentEntity);
+            }else {
+                //TODO failed state handle
+            }
+        }catch (JSONException e){
+
+        }
+    }
+
     void contentDataSend(String contentInfo, ContentModel contentModel) {
 
         if (contentModel.isRequestFromReceiver()) {
@@ -759,7 +781,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Callback action +++++++++++++++++++++++++++++++++++++++++++++++++++++
     void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
-        Log.v("FILE_SPEED_TEST_12 ", Calendar.getInstance().getTime()+"");
+        //Log.v("FILE_SPEED_TEST_12 ", Calendar.getInstance().getTime()+"");
         try {
             Timber.tag("FileMessage").v(" Start id: %s", contentId);
 
@@ -772,6 +794,7 @@ public class ContentDataHelper extends RmDataHelper {
                 contentMetaInfo = new Gson().fromJson(contentMessageText,
                         ContentMetaInfo.class);
             }
+
 
             if (contentReceiveModel == null) {
                 contentReceiveModel = new ContentReceiveModel();
@@ -816,7 +839,7 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     void contentReceiveInProgress(String contentId, int progress) {
-        Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
+       // Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
             ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
@@ -876,7 +899,7 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     void contentReceiveDone(String contentId, boolean contentStatus, String msg) {
-        Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
+        //Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
             ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)

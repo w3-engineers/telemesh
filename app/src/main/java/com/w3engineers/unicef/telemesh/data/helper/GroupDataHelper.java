@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -168,24 +170,38 @@ public class GroupDataHelper extends RmDataHelper {
 
 
     public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
-        //GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
-        //ArrayList<GroupMembersInfo> groupMembersInfo = groupEntity.getMembersArray();
+        GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
+        ArrayList<GroupMembersInfo> groupMembersInfoList = groupEntity.getMembersArray();
 
         String messageModelString = new Gson().toJson(entity.toMessageModel());
         sendTextMessageToGroup(entity.groupId, messageModelString);
         entity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
         entity.setContentProgress(100);
         MessageSourceData.getInstance().insertOrUpdateData(entity);
-        /*ContentModel contentModel = new ContentModel()
+
+
+        ContentModel contentModel = new ContentModel()
                 .setMessageId(entity.getMessageId())
                 .setMessageType(entity.getMessageType())
                 .setGroupId(entity.getGroupId())
                 .setOriginalSender(entity.getOriginalSender())
-                //.setContentPath(entity.getContentPath())
-                //.setThumbPath(entity.getContentThumbPath())
+                .setGroupContent(true)
+                .setContentPath(entity.getContentPath())
+                .setThumbPath(entity.getContentThumb())
                 .setUserId(entity.getFriendsId())
-                .setContentInfo(entity.getContentInfo());*/
+                .setContentInfo(entity.getContentInfo());
+        for(GroupMembersInfo item : groupMembersInfoList){
+            contentModel.setUserId(item.getMemberId());
+            contentMessageSend(contentModel);
+        }
     }
+    private void contentMessageSend(ContentModel contentModel) {
+        prepareRightMeshDataSource();
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.ContentDataSend(contentModel));
+    }
+
 
     ///////////////////////////////////////////////////////////////
 

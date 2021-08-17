@@ -158,8 +158,9 @@ public class ContentModel {
         return isGroupContent;
     }
 
-    public void setGroupContent(boolean groupContent) {
+    public ContentModel setGroupContent(boolean groupContent) {
         isGroupContent = groupContent;
+        return this;
     }
 
     public String getGroupId() {

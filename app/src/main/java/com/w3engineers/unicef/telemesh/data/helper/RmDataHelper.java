@@ -981,7 +981,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     @Override
     public void onGroupContentSend(ContentModel contentModel, String result) {
-        //TODO group content
+        ContentDataHelper.getInstance().onGroupContentDataSend(result, contentModel);
     }
 
     private void parseUpdatedInformation(byte[] rawData, String userId, boolean isNewMessage) {

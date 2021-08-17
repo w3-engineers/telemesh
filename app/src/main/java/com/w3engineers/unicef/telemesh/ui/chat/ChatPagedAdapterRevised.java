@@ -512,6 +512,38 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
     }
 
+    private void incomingLoadingEffectForGroup(CircleProgressView circleProgressView, GroupMessageEntity messageEntity) {
+        circleProgressView.setVisibility(View.GONE);
+
+        if (messageEntity.getStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+            circleProgressView.setVisibility(View.VISIBLE);
+        }
+
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
+            circleProgressView.setVisibility(View.GONE);
+        }
+
+        // During content is receiving then -> content status
+        // Constants.MessageStatus.STATUS_CONTENT_RECEIVING
+        // Constants.MessageStatus.STATUS_CONTENT_RECEIVED
+
+        // During content is receiving then -> message status
+        // Constants.MessageStatus.STATUS_READ
+        // Constants.MessageStatus.STATUS_UNREAD
+        // Constants.MessageStatus.STATUS_FAILED
+
+        int progress = messageEntity.getContentProgress();
+
+        if (progress == 0) {
+            circleProgressView.spin();
+        } else {
+            if (progress > 0) {
+                circleProgressView.setValue(progress);
+            }
+        }
+    }
+
     private void outgoingLoadingEffect(CircleProgressView circleProgressView, MessageEntity messageEntity) {
         circleProgressView.setVisibility(View.GONE);
 
@@ -536,6 +568,32 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             }
         }
     }
+    private void outgoingLoadingEffectForGroup(CircleProgressView circleProgressView, GroupMessageEntity messageEntity) {
+        circleProgressView.setVisibility(View.GONE);
+
+        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING_START
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_RESEND_START) {
+            circleProgressView.setVisibility(View.VISIBLE);
+        }
+
+        // During content send message status ->
+        // Constants.MessageStatus.STATUS_SENDING_START
+        // Constants.MessageStatus.STATUS_RESEND_START
+        // Constants.MessageStatus.STATUS_RECEIVED
+        // Constants.MessageStatus.STATUS_FAILED
+
+        int progress = messageEntity.getContentProgress();
+
+        if (progress == 0) {
+            circleProgressView.spin();
+        } else {
+            if (progress > 0) {
+                circleProgressView.setValue(progress);
+            }
+        }
+    }
+
+
 
     private class SeparatorViewHolder extends GenericViewHolder {
         private ItemMessageSeparatorBinding binding;
@@ -681,7 +739,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             //binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
             //incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
-            //incomingLoadingEffect(binding.circleView, messageEntity);
+            //incomingLoadingEffectForGroup(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
             if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
@@ -729,7 +787,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             //binding.setTextMessage(messageEntity);
             binding.setChatViewModel(chatViewModel);
 
-            //outgoingLoadingEffect(binding.circleView, messageEntity);
+            outgoingLoadingEffectForGroup(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
             if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
@@ -772,12 +830,12 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         @Override
         protected void bindView(@NonNull ChatEntity chatEntity) {
-            MessageEntity messageEntity = (MessageEntity) chatEntity;
-            binding.setTextMessage(messageEntity);
-            binding.setAvatarIndex(getAvatarIndex(messageEntity));
+            GroupMessageEntity messageEntity = (GroupMessageEntity) chatEntity;
+            //binding.setTextMessage(messageEntity);
+            //binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
-            incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
-            incomingLoadingEffect(binding.circleView, messageEntity);
+            //incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
+            incomingLoadingEffectForGroup(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
             if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
@@ -798,8 +856,9 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
             binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
             binding.viewFailed.setOnClickListener(clickListener);
-
-            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+            if(!TextUtils.isEmpty(messageEntity.contentThumb)) {
+                UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumb);
+            }
         }
 
         @Override

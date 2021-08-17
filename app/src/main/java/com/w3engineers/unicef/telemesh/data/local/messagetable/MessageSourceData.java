@@ -23,6 +23,7 @@ public class MessageSourceData {
     private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
     private GroupMessageDao groupMessageDao;
+    private GroupContentDao groupContentDao;
 
 //    public MessageSourceData() {
 //        messageDao = AppDatabase.getInstance().messageDao();
@@ -36,6 +37,7 @@ public class MessageSourceData {
     public MessageSourceData(@NonNull MessageDao messageDao) {
         this.messageDao = messageDao;
         this.groupMessageDao = AppDatabase.getInstance().getGroupMessageDao();
+        this.groupContentDao = AppDatabase.getInstance().getGroupContentDao();
     }
 
     @NonNull
@@ -75,6 +77,10 @@ public class MessageSourceData {
         } else {
             return groupMessageDao.writeMessage((GroupMessageEntity) baseEntity);
         }
+    }
+
+    public long addOrUpdate(GroupContentEntity entity){
+        return groupContentDao.insertOrUpdate(entity);
     }
 
     /**

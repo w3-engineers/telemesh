@@ -29,6 +29,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDao;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
@@ -77,6 +78,8 @@ public abstract class AppDatabase extends BaseDatabase {
     public abstract MessageDao messageDao();
 
     public abstract GroupMessageDao getGroupMessageDao();
+
+    public abstract GroupContentDao getGroupContentDao();
 
     @NonNull
     public abstract FeedDao feedDao();

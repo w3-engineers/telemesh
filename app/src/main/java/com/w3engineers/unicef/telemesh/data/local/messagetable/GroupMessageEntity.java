@@ -55,6 +55,31 @@ public class GroupMessageEntity extends ChatEntity {
     @ColumnInfo(name = ColumnNames.COLUMN_RECEIVED_USERS)
     public ArrayList<String> receivedUsers;
 
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_STATUS)
+    public int contentStatus;
+
+//    @Nullable
+//    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_ID)
+//    public String contentId;
+
+//    @Nullable
+//    public String getContentId() {
+//        return contentId;
+//    }
+//
+//    public void setContentId(@Nullable String contentId) {
+//        this.contentId = contentId;
+//    }
+
+    public int getContentStatus() {
+        return contentStatus;
+    }
+
+    public GroupMessageEntity setContentStatus(int contentStatus) {
+        this.contentStatus = contentStatus;
+        return this;
+    }
 
     public GroupMessageEntity setMessageId(@NonNull String messageId) {
         this.messageId = messageId;

@@ -320,7 +320,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         }
     }
 
-    public void resendContentMessage(MessageEntity messageEntity) {
+    public void resendContentMessage(ChatEntity messageEntity) {
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);

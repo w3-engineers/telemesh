@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.ColumnNames;
@@ -49,5 +50,22 @@ public abstract class GroupMessageDao extends BaseDao<GroupMessageEntity> {
     @Query("UPDATE " + TableNames.GROUP_MESSAGE + " SET " + ColumnNames.COLUMN_MESSAGE_STATUS + " = :messageStatus WHERE "
             + ColumnNames.COLUMN_MESSAGE_ID + " LIKE :messageId")
     public abstract long updateMessageStatus(@NonNull String messageId, int messageStatus);
+
+    @NonNull
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + TableNames.GROUP_MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID + " = :messageId LIMIT 1")
+    public abstract GroupMessageEntity getMessageFromId(@NonNull String messageId);
+
+
+    @NonNull
+    @Query("SELECT * FROM " + TableNames.GROUP_MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_ID
+            + " = (SELECT " + ColumnNames.COLUMN_CONTENT_MESSAGE_ID + " FROM " + TableNames.GROUP_CONTENT
+            + " WHERE " + ColumnNames.COLUMN_CONTENT_ID + " = :contentId LIMIT 1) LIMIT 1")
+    public abstract GroupMessageEntity getMessageByContentId(@NonNull String contentId);
+
+
+
+
+
 
 }

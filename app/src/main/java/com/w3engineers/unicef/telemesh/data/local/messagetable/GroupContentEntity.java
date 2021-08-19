@@ -24,7 +24,7 @@ public class GroupContentEntity {
     @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_MESSAGE_ID)
     public String contentMessageId;
 
-    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT__ID)
+    @ColumnInfo(name = ColumnNames.COLUMN_CONTENT_ID)
     public String contentId;
 
     @ColumnInfo(name = ColumnNames.COLUMN_SENDER_ID)

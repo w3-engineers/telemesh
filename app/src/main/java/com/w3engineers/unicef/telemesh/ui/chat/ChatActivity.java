@@ -43,6 +43,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
@@ -392,14 +393,17 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.hover:
             case R.id.hover_view:
 //            case R.id.shimmerUploadingImage:
-                MessageEntity messageEntity = (MessageEntity) view.getTag(R.id.image_view_message);
+
+
+
+                ChatEntity  messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (messageEntity != null) {
                     viewContent(view, messageEntity);
                 }
                 break;
 
             case R.id.view_failed:
-                MessageEntity failedMessage = (MessageEntity) view.getTag(R.id.image_view_message);
+                ChatEntity failedMessage = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (failedMessage != null &&
                         (failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED
                                 || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
@@ -415,7 +419,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         sInstance = null;
     }
 
-    private void resendFailedMessage(MessageEntity failedMessage) {
+    private void resendFailedMessage(ChatEntity failedMessage) {
         if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
             Toast.makeText(this, mUserEntity.getUserName() + " is in offline.", Toast.LENGTH_SHORT).show();
             return;
@@ -552,21 +556,33 @@ public class ChatActivity extends TelemeshBaseActivity {
     private long shortAnimationDuration = 300;
     private boolean isExpandCancel = false;
 
-    private void viewContent(View messageImage, MessageEntity messageEntity) {
+    private void viewContent(View messageImage, ChatEntity messageEntity) {
+        int contentStatus = -1;
+        String contentPath = "";
+
+        if (messageEntity instanceof GroupMessageEntity) {
+            contentStatus = ((GroupMessageEntity) messageEntity).getContentStatus();
+            contentPath = ((GroupMessageEntity) messageEntity).getContentPath();
+        } else {
+            contentStatus = ((MessageEntity) messageEntity).getContentStatus();
+            contentPath = ((MessageEntity) messageEntity).getContentPath();
+        }
+
+
         if (messageEntity.isIncoming()) {
-            if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
+            if (contentStatus != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
                     && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
                 Toast.makeText(this, "Message was failed", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+            if (contentStatus == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
                 Toast.makeText(this, "Message is receiving", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        String contentPath = messageEntity.getContentPath();
+      //  String contentPath = messageEntity.getContentPath();
         if (TextUtils.isEmpty(contentPath)) {
             Toast.makeText(this, "Error message", Toast.LENGTH_SHORT).show();
             return;

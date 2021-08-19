@@ -79,8 +79,12 @@ public class MessageSourceData {
         }
     }
 
-    public long addOrUpdate(GroupContentEntity entity){
+    public long addOrUpdateContent(GroupContentEntity entity){
         return groupContentDao.insertOrUpdate(entity);
+    }
+
+    public GroupContentEntity getContentById(String contentId){
+        return groupContentDao.getContentById(contentId);
     }
 
     /**
@@ -128,8 +132,18 @@ public class MessageSourceData {
     }
 
     @Nullable
+    public GroupMessageEntity getGroupMessageEntityFromId(@NonNull String messageId) {
+        return groupMessageDao.getMessageFromId(messageId);
+    }
+
+    @Nullable
     public MessageEntity getMessageEntityFromContentId(@NonNull String contentId) {
         return messageDao.getMessageFromContentId(contentId);
+    }
+
+    @Nullable
+    public GroupMessageEntity getGroupMessageEntityByContentId(@NonNull String contentId) {
+        return groupMessageDao.getMessageByContentId(contentId);
     }
 
     // This api is not used in app layer

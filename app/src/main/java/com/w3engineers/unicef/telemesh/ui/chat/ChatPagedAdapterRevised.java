@@ -205,8 +205,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         notifyDataSetChanged();
     }
 
-    private int getAvatarIndex(MessageEntity messageEntity) {
-        UserEntity userEntity = userMap.get(messageEntity.friendsId);
+    private int getAvatarIndex(ChatEntity messageEntity) {
+        UserEntity userEntity = null;
+        if (messageEntity instanceof  GroupMessageEntity){
+             userEntity = userMap.get(((GroupMessageEntity) messageEntity).getOriginalSender());
+        } else {
+            userEntity = userMap.get(((MessageEntity) messageEntity).getFriendsId());
+        }
+
         if (userEntity != null) {
             return userEntity.getAvatarIndex();
         }
@@ -460,11 +466,19 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
     }
 
-    private void incomingShimmerEffect(ShimmerLayout shimmerLayout, MessageEntity messageEntity) {
+    private void incomingShimmerEffect(ShimmerLayout shimmerLayout, ChatEntity messageEntity) {
         shimmerLayout.setVisibility(View.VISIBLE);
         shimmerLayout.startShimmerAnimation();
 
-        if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+        int contentStatus = -1;
+
+        if (messageEntity instanceof GroupMessageEntity){
+            contentStatus = ((GroupMessageEntity) messageEntity).getContentStatus();
+        } else {
+            contentStatus = ((MessageEntity) messageEntity).getContentStatus();
+        }
+
+        if (contentStatus == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
             shimmerLayout.setVisibility(View.VISIBLE);
             shimmerLayout.startShimmerAnimation();
         } else {
@@ -544,7 +558,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         }
     }
 
-    private void outgoingLoadingEffect(CircleProgressView circleProgressView, MessageEntity messageEntity) {
+    private void outgoingLoadingEffect(CircleProgressView circleProgressView, ChatEntity messageEntity) {
         circleProgressView.setVisibility(View.GONE);
 
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_SENDING_START
@@ -558,7 +572,13 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         // Constants.MessageStatus.STATUS_RECEIVED
         // Constants.MessageStatus.STATUS_FAILED
 
-        int progress = messageEntity.getContentProgress();
+        int progress = -1;
+        if (messageEntity instanceof GroupMessageEntity){
+            progress = ((GroupMessageEntity) messageEntity).getContentProgress();
+        } else {
+            progress = ((MessageEntity) messageEntity).getContentProgress();
+        }
+
 
         if (progress == 0) {
             circleProgressView.spin();
@@ -736,10 +756,10 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             //Log.v("FILE_SPEED_TEST_14 ", Calendar.getInstance().getTime() + "");
 
             binding.setTextMessage(messageEntity);
-            //binding.setAvatarIndex(getAvatarIndex(messageEntity));
+            binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
-            //incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
-            //incomingLoadingEffectForGroup(binding.circleView, messageEntity);
+            incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
+            incomingLoadingEffectForGroup(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
             if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
@@ -784,7 +804,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull ChatEntity chatEntity) {
             GroupMessageEntity messageEntity = (GroupMessageEntity) chatEntity;
-            //binding.setTextMessage(messageEntity);
+            binding.setTextMessage(messageEntity);
             binding.setChatViewModel(chatViewModel);
 
             outgoingLoadingEffectForGroup(binding.circleView, messageEntity);
@@ -821,20 +841,20 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private class GroupVideoInHolder extends GenericViewHolder {
-        private ItemVideoMessageInBinding binding;
+        private ItemGroupVideoInBinding binding;
 
         public GroupVideoInHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
-            binding = (ItemVideoMessageInBinding) viewDataBinding;
+            binding = (ItemGroupVideoInBinding) viewDataBinding;
         }
 
         @Override
         protected void bindView(@NonNull ChatEntity chatEntity) {
             GroupMessageEntity messageEntity = (GroupMessageEntity) chatEntity;
-            //binding.setTextMessage(messageEntity);
-            //binding.setAvatarIndex(getAvatarIndex(messageEntity));
+            binding.setTextMessage(messageEntity);
+            binding.setAvatarIndex(getAvatarIndex(messageEntity));
 
-            //incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
+            incomingShimmerEffect(binding.shimmerIncomingLoading, messageEntity);
             incomingLoadingEffectForGroup(binding.circleView, messageEntity);
 
             binding.viewFailed.setVisibility(View.GONE);
@@ -868,16 +888,16 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private class GroupVideoOutHolder extends GenericViewHolder {
-        private ItemVideoMessageOutBinding binding;
+        private ItemGroupVideoOutBinding binding;
 
         public GroupVideoOutHolder(ViewDataBinding viewDataBinding) {
             super(viewDataBinding.getRoot());
-            binding = (ItemVideoMessageOutBinding) viewDataBinding;
+            binding = (ItemGroupVideoOutBinding) viewDataBinding;
         }
 
         @Override
         protected void bindView(@NonNull ChatEntity chatEntity) {
-            MessageEntity messageEntity = (MessageEntity) chatEntity;
+            GroupMessageEntity messageEntity = (GroupMessageEntity) chatEntity;
             binding.setTextMessage(messageEntity);
             binding.setChatViewModel(chatViewModel);
 
@@ -902,7 +922,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
             binding.viewFailed.setOnClickListener(clickListener);
 
-            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+            UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.getContentThumb());
         }
 
         @Override

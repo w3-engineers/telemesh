@@ -131,6 +131,8 @@ public class BroadcastManager {
 
             String result = (String) future.get();
             if (broadcastSendCallback != null) {
+                Timber.v("Group Message Test", "content sent from library %s", result);
+
                 ViperData viperData = sendDataTask.getViperData();
                 ViperContentData viperContentData = sendDataTask.getViperContentData();
 

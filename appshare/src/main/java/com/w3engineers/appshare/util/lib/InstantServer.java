@@ -142,8 +142,10 @@ public class InstantServer {
      */
     public void stopServer() {
         try {
-            serverSocket.close();
-            thread.join();
+            if(serverSocket != null) {
+                serverSocket.close();
+                thread.join();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

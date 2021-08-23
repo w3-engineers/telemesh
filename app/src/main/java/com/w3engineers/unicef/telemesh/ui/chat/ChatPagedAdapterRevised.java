@@ -527,16 +527,18 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
     }
 
     private void incomingLoadingEffectForGroup(CircleProgressView circleProgressView, GroupMessageEntity messageEntity) {
-        circleProgressView.setVisibility(View.GONE);
 
-        if (messageEntity.getStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+
+        if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
             circleProgressView.setVisibility(View.VISIBLE);
-        }
-
-        if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
-                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
+        }else{
             circleProgressView.setVisibility(View.GONE);
         }
+
+       /* if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
+                || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
+            circleProgressView.setVisibility(View.GONE);
+        }*/
 
         // During content is receiving then -> content status
         // Constants.MessageStatus.STATUS_CONTENT_RECEIVING

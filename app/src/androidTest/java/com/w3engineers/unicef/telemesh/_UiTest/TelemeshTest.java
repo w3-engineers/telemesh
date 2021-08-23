@@ -1240,6 +1240,10 @@ public class TelemeshTest {
     public void uiTest_08() {
         //addDelay(4000);
 
+        userDataSource.updateUserToOffline();
+
+        addDelay(2000);
+
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)

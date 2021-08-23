@@ -420,7 +420,7 @@ public class ChatActivity extends TelemeshBaseActivity {
     }
 
     private void resendFailedMessage(ChatEntity failedMessage) {
-        if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
+        if (mUserEntity != null && mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
             Toast.makeText(this, mUserEntity.getUserName() + " is in offline.", Toast.LENGTH_SHORT).show();
             return;
         } /*else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {

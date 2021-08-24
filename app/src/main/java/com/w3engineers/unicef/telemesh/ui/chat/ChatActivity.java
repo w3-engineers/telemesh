@@ -22,6 +22,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
@@ -38,6 +39,7 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -50,9 +52,11 @@ import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScrolle
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsActivity;
+import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsAdapter;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.ItemClickListener;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
@@ -63,6 +67,7 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -76,7 +81,7 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends TelemeshBaseActivity {
+public class ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntity> {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -92,6 +97,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
+    private GroupMembersAdapterForChat mGroupMembersAdapterForChat;
     private PagedList<ChatEntity> chatEntities;
     @Nullable
     public ActivityChatRevisedBinding mViewBinging;
@@ -127,6 +133,8 @@ public class ChatActivity extends TelemeshBaseActivity {
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
+
+
         if (TextUtils.isEmpty(threadId)) {
             finish();
             return;
@@ -135,8 +143,16 @@ public class ChatActivity extends TelemeshBaseActivity {
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 
+
         mChatViewModel = getViewModel();
         mChatViewModel.setChatPageInfo(isGroup);
+
+        if (!isGroup) {
+            mViewBinging.membersRv.setVisibility(View.GONE);
+        } else {
+            initMembersListView();
+        }
+
         initComponent();
 
         processGroupAllUsers();
@@ -229,7 +245,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
             case R.id.menu_group_leave:
                 mChatViewModel.groupLeaveAction(mGroupEntity);
-                break;
             case R.id.menu_message_clear:
                 mChatViewModel.clearMessage(threadId, isGroup);
                 break;
@@ -239,6 +254,39 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     public void clearChat(){
         mChatViewModel.clearMessage(threadId, isGroup);
+    }
+
+    private void initMembersListView() {
+        mGroupMembersAdapterForChat = new GroupMembersAdapterForChat();
+        mGroupMembersAdapterForChat.setItemClickListener(this);
+        //mViewBinging.membersRv.setHasFixedSize(true);
+        mViewBinging.membersRv.setAdapter(mGroupMembersAdapterForChat);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mViewBinging.membersRv.setLayoutManager(layoutManager);
+
+//        mBinding.nestedScrollView.setNestedScrollingEnabled(true);
+        initGroupMembersInfoObserver();
+    }
+
+    private void initGroupMembersInfoObserver() {
+
+        mChatViewModel.groupMembersWithoutMe.observe(this, userEntities -> {
+            if (userEntities != null) {
+
+                mGroupMembersAdapterForChat.clear();
+                mGroupMembersAdapterForChat.addItem(userEntities);
+            }
+        });
+
+        /*List<UserEntity> userEntities = new ArrayList<>();
+        for (int i = 0; i <15; i++) {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+            userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+            userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            userEntities.add(userEntity);
+        }
+        mGroupMembersAdapterForChat.addItem(userEntities);*/
     }
 
     /**
@@ -321,6 +369,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
                         setUiComponent();
                         mChatViewModel.processGroupUser(mGroupEntity.membersInfo);
+                        mChatViewModel.startMemberObserver(mGroupEntity.getMembersArray());
                     } else {
                         finish();
                     }
@@ -523,6 +572,11 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     public void sendContentMessage(Uri path) {
         mChatViewModel.sendContentMessage(threadId, path);
+    }
+
+    @Override
+    public void onItemClick(View view, UserEntity item) {
+
     }
 
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {

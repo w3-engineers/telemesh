@@ -50,6 +50,7 @@ import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /*
@@ -69,6 +70,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private UserDataSource userDataSource;
     private GroupDataSource groupDataSource;
     private DataSource dataSource;
+    private Disposable groupUsersDisposable;
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 70;
@@ -82,6 +84,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private MutableLiveData<List<UserEntity>> groupAllMembers = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> groupLiveMembers = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> groupLiveMembersWithOutMe = new MutableLiveData<>();
+    public MutableLiveData<List<UserEntity>> groupMembersWithoutMe = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
@@ -175,6 +178,33 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         groupAllMembers.postValue(allMembers);
         groupLiveMembers.postValue(liveMembers);
         groupLiveMembersWithOutMe.postValue(liveMembersWithOutMe);
+    }
+
+    public void startMemberObserver(List<GroupMembersInfo> members) {
+
+        List<String> userList = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : members) {
+            if (!groupMembersInfo.getMemberId().equals(getMyUserId()) && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        if (groupUsersDisposable != null){
+            groupUsersDisposable.dispose();
+            getCompositeDisposable().remove(groupUsersDisposable);
+        }
+
+        groupUsersDisposable = userDataSource.getGroupMembers(userList)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntities -> {
+                    groupMembersWithoutMe.postValue(userEntities);
+                }, throwable -> {
+                    throwable.printStackTrace();
+                });
+        getCompositeDisposable().add(groupUsersDisposable);
+
+
     }
 
     public String getMyUserId() {

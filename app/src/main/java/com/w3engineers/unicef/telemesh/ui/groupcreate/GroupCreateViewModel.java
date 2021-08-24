@@ -5,8 +5,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -65,9 +68,44 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
-    void createGroup(List<UserEntity> userEntities) {
+    public boolean isDifferentLists(List<String> listOne, List<String> listTwo) {
+        List<String> listOneCopy = new ArrayList<>(listOne);
+        List<String> listTwoCopy = new ArrayList<>(listTwo);
+        listOneCopy.removeAll(listTwoCopy);
+
+        return CollectionUtils.isEmpty(listOneCopy);
+    }
+
+    boolean checkGroupExists(List<UserEntity> userEntities, ArrayList<GroupMembersInfo> groupMembersInfos){
+        List<String> previousUserIds = new ArrayList<>();
+        String myUserId  = getMyUserId();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (!groupMembersInfo.getMemberId().equals(myUserId) && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                previousUserIds.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        List<String> newUserIds = new ArrayList<>();
+        for (UserEntity userEntity : userEntities) {
+            newUserIds.add(userEntity.getMeshId());
+        }
+        return isDifferentLists(previousUserIds, newUserIds);
+    }
+
+    GroupEntity createGroup(List<UserEntity> userEntities ) {
+
+        List<GroupEntity> allGroups = groupDataSource.getAllGroup();
+        for (GroupEntity entity : allGroups) {
+            ArrayList<GroupMembersInfo> groupMembersInfos = entity.getMembersArray();
+            if (groupMembersInfos.size() == userEntities.size() + 1) {
+                if (checkGroupExists(userEntities, groupMembersInfos)) {
+                    return entity;
+                }
+            }
+        }
+
         if (userEntities == null || userEntities.isEmpty())
-            return;
+            return null;
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
@@ -122,6 +160,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                         AnalyticsDataHelper.getInstance().sendGroupCount(groupEntities);
                     }
                 }));
+        return null;
     }
 
 

@@ -1,11 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
+
+import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -14,6 +15,7 @@ import androidx.test.uiautomator.UiSelector;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
@@ -25,8 +27,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -60,6 +62,8 @@ public class InAppUpdateTest {
 
         assertTrue(true);
 
+        StatusHelper.out("Test executed");
+
         try {
             mDevice.pressBack();
         } catch (Exception e) {
@@ -91,6 +95,8 @@ public class InAppUpdateTest {
         }
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -107,6 +113,8 @@ public class InAppUpdateTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        StatusHelper.out("Test executed");
 
     }
 
@@ -146,6 +154,10 @@ public class InAppUpdateTest {
         }
 
         addDelay(1000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(int i) {

@@ -1,14 +1,18 @@
 package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import androidx.room.Room;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,6 +37,9 @@ public class UserDataSourceTest {
 
     private AppDatabase appDatabase;
     private UserDataSource SUT;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setUp() {
@@ -108,6 +115,8 @@ public class UserDataSourceTest {
         userEntity = SUT.getSingleUserById(meshId1);
 
         assertNull(userEntity);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay() {

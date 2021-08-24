@@ -17,6 +17,7 @@ import android.content.Intent;
 
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -91,7 +92,6 @@ public abstract class ViperUtil {
             String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
 
             initObservers();
-
             viperClient = ViperClient.on(context, userModel.getName(), userModel.getImage());
 
         } catch (Exception e) {
@@ -135,6 +135,7 @@ public abstract class ViperUtil {
             DataEvent dataEvent = (DataEvent) event;
 
             dataReceive(dataEvent.peerId, dataEvent.data);
+
         });
 
         AppDataObserver.on().startObserver(ApiEvent.DATA_ACKNOWLEDGEMENT, event -> {
@@ -557,7 +558,9 @@ public abstract class ViperUtil {
             if (deviceName.equalsIgnoreCase(manufacturer)) {
                 isPermissionNeeded = !SharedPref.readBoolean(Constants.preferenceKey.IS_SETTINGS_PERMISSION_DONE);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return isPermissionNeeded;
     }
@@ -583,7 +586,7 @@ public abstract class ViperUtil {
         if (viperContentData != null) {
             ContentModel contentModel = viperContentData.contentModel;
             ContentMetaInfo contentMetaInfo = null;
-            if (!contentModel.isRequestFromReceiver()){
+            if (!contentModel.isRequestFromReceiver()) {
                 contentMetaInfo = new ContentMetaInfo()
                         .setMessageId(contentModel.getMessageId())
                         .setMessageType(contentModel.getMessageType())
@@ -665,5 +668,5 @@ public abstract class ViperUtil {
 
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
-    protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime);
+    protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime);
 }

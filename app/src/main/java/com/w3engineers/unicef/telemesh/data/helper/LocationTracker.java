@@ -68,7 +68,7 @@ public class LocationTracker extends Service {
     public static LocationTracker getInstance(Context context) {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                if(locationTracker == null){
+                if (locationTracker == null) {
                     locationTracker = new LocationTracker(context);
                 }
             }
@@ -79,7 +79,7 @@ public class LocationTracker extends Service {
     public static LocationTracker getInstance() {
         if (locationTracker == null) {
             synchronized (LocationTracker.class) {
-                if (locationTracker ==null){
+                if (locationTracker == null) {
                     locationTracker = new LocationTracker();
                 }
             }
@@ -187,12 +187,10 @@ public class LocationTracker extends Service {
                             });
                 }
 
-                if (latitude == 0.0 || longitude == 0.0){
+                if (latitude == 0.0 || longitude == 0.0) {
                     getLastKnownLocation();
                 }
             }
-
-
 
 
             //Age of location returned from LocationServices
@@ -236,7 +234,7 @@ public class LocationTracker extends Service {
         }
         if (bestLocation == null) {
             return null;
-        }else {
+        } else {
             latitude = bestLocation.getLatitude();
             latitude = bestLocation.getLongitude();
         }

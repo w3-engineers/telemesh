@@ -1,0 +1,14 @@
+{
+  "types": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "chore", "hidden": true},
+    {"type": "docs", "section": "Documentation Changes","hidden": true},
+    {"type": "style", "section": "Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)","hidden": true},
+    {"type": "refactor", "section":"A code change that neither fixes a bug nor adds a feature","hidden": true},
+    {"type": "perf", "section": "Improve Performance", "hidden": true},
+    {"type": "test", "section": "Adding missing tests or correcting existing tests","hidden": true}
+  ],
+  "commitUrlFormat": "https://github.com/mokkapps/changelog-generator-demo/commits/{{hash}}",
+  "compareUrlFormat": "https://github.com/mokkapps/changelog-generator-demo/compare/{{previousTag}}...{{currentTag}}"
+}

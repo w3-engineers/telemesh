@@ -1,9 +1,10 @@
 package com.w3engineers.unicef.telemesh.ui.aboutus;
 
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.BuildConfig;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,23 +45,9 @@ public class AboutUsViewModelTest {
         String buildVersion = "Version:" + BuildConfig.VERSION_NAME;
         assertEquals(SUT.getAppVersion(), buildVersion);
         addDelay(1000);
-    }
 
-    /*@Test
-    public void getAppVersion_notMatched_useEmptyBuildVersion() {
-        addDelay(500);
-        String buildVersion = "Version:" + "";
-        assertNotEquals(SUT.getAppVersion(), buildVersion);
-        addDelay(1000);
+        StatusHelper.out("Test executed");
     }
-
-    @Test
-    public void getAppVersion_success_useNullBuildVersion() {
-        addDelay(500);
-        String buildVersion = "Version:" + null;
-        assertNotEquals(SUT.getAppVersion(), buildVersion);
-        addDelay(1000);
-    }*/
 
     private void addDelay(int i) {
         try {

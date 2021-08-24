@@ -26,6 +26,7 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 
 import java.io.ByteArrayOutputStream;
@@ -57,7 +58,7 @@ public class ContentUtil {
     }
 
 
-    public String getRealPathFromURI(Uri contentURI) {
+/*    public String getRealPathFromURI(Uri contentURI) {
 
         if (contentURI == null) {
             return null;
@@ -104,7 +105,7 @@ public class ContentUtil {
                 cursor.close();
             }
         }
-    }
+    }*/
 
     public String getFilePathFromUri(Uri uri) {
         String selection = null;
@@ -222,7 +223,7 @@ public class ContentUtil {
         return new File(uri.getPath());
     }
 
-    public String compressVideo(String filePath) {
+/*    public String compressVideo(String filePath) {
         try {
             Context context = TeleMeshApplication.getContext();
             File contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
@@ -232,7 +233,7 @@ public class ContentUtil {
             e.printStackTrace();
         }
         return filePath;
-    }
+    }*/
 
     public String getThumbnailFromVideoPath(String videoPath) {
         Bitmap thumbImage = ThumbnailUtils.createVideoThumbnail(videoPath,

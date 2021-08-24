@@ -1,7 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.editprofile;
 
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 /*
  * ============================================================================
@@ -44,6 +46,8 @@ public class EditProfileViewModelTest {
         SUT.setImageIndex(imageIndex);
 
         assertTrue(SUT.storeData(firstName));
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -56,6 +60,10 @@ public class EditProfileViewModelTest {
         SUT.sendUserInfoToAll();
 
         addDelay(2000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {

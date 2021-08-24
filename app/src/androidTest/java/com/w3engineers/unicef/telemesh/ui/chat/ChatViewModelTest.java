@@ -4,7 +4,6 @@ import androidx.paging.PagedList;
 import androidx.room.Room;
 import androidx.test.rule.ActivityTestRule;
 
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;

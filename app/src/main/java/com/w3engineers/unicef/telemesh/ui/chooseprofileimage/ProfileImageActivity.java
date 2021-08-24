@@ -1,8 +1,10 @@
 package com.w3engineers.unicef.telemesh.ui.chooseprofileimage;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,14 +70,7 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
 
         switch (id) {
             case R.id.menu_done:
-                if (selectedItem == -1) {
-                    Toast.makeText(this, getResources().getString(R.string.select_avatar), Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = getIntent();
-                    intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+                actionDone();
 
         }
         return super.onOptionsItemSelected(item);
@@ -84,5 +79,16 @@ public class ProfileImageActivity extends BaseActivity implements ItemClickListe
     @Override
     public void onItemClick(@NonNull View view, @NonNull Integer item) {
         selectedItem = item;
+    }
+
+    public void actionDone() {
+        if (selectedItem == -1) {
+            Toast.makeText(this, getResources().getString(R.string.select_avatar), Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = getIntent();
+            intent.putExtra(CreateUserActivity.IMAGE_POSITION, selectedItem);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 }

@@ -7,15 +7,15 @@
 # Telemesh
 
 [![Build Status](https://travis-ci.com/w3-engineers/telemesh.svg?branch=master)](https://travis-ci.com/w3-engineers/telemesh)
-[![docs](https://readthedocs.org/projects/pip/badge/?version=latest&style=flat)](https://readthedocs.org/projects/telemesh/)
-[![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
+[![docs](https://readthedocs.org/projects/telemesh/badge/?version=latest)](https://readthedocs.org/projects/telemesh/)
+[![Coverage Status](https://coveralls.io/repos/github/w3-engineers/telemesh/badge.svg?branch=master&service=github)](https://coveralls.io/github/w3-engineers/telemesh?branch=master)
 [![Lint tool: TeleMesh](https://img.shields.io/badge/Lint_tool-telemesh-2e99e9.svg?style=flat)](https://w3-engineers.github.io/telemesh/lint_reports/lint-report.html)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE-OF-CONDUCT.md)
 
 A mesh network based off-grid messaging application powered by blockchain technology.
 
 ## Mission Statement
-The freedom of connectivity to the edge of the world
+The freedom of connectivity to the edge of the world.
 
 
 ## Telemesh Documentation

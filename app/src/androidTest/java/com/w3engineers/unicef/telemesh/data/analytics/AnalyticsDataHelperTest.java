@@ -1,9 +1,12 @@
 package com.w3engineers.unicef.telemesh.data.analytics;
 
 import androidx.room.Room;
+
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -15,10 +18,13 @@ import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,6 +32,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -48,6 +56,9 @@ public class AnalyticsDataHelperTest {
     private MessageSourceData SUT;
     private AppShareCountDataService appShareCountDataService;
     String userId;
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     @Before
     public void setup() {
@@ -94,15 +105,19 @@ public class AnalyticsDataHelperTest {
         addDelay(3 * 1000);
 
         MessageEntity.MessageAnalyticsEntity entity = new MessageEntity.MessageAnalyticsEntity();
-        entity.setTime(System.currentTimeMillis());
-        entity.setUserId(userId);
-        entity.syncMessageCountToken = 1;
 
-        AnalyticsDataHelper.getInstance().processMessageForAnalytics(false, entity);
+
+        Random random = new Random();
+        entity.setTime(System.currentTimeMillis());
+        entity.setUserId(getRandomUserId(random));
+        entity.syncMessageCountToken = getRandomCount(random);
+        AnalyticsDataHelper.getInstance().processMessageForAnalytics(random.nextBoolean(), entity);
 
         addDelay(3000);
 
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
 
@@ -119,6 +134,16 @@ public class AnalyticsDataHelperTest {
         // send test
 
         RmDataHelper.getInstance().sendAppShareCountAnalytics();
+
+        addDelay(1000);
+
+        RmDataHelper.getInstance().newUserAnalyticsSend();
+
+        addDelay(1000);
+
+        assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     @Test
@@ -153,6 +178,8 @@ public class AnalyticsDataHelperTest {
         AnalyticsDataHelper.getInstance().sendLogFileInServer(file, "Test user", Constants.getDeviceName());
         addDelay(10 * 1000);
         assertTrue(true);
+
+        StatusHelper.out("Test executed");
     }
 
     private void addDelay(long time) {
@@ -186,13 +213,38 @@ public class AnalyticsDataHelperTest {
     }
 
     private AppShareCountEntity getAppShareCountEntity() {
+        Random random = new Random();
         AppShareCountEntity entity = new AppShareCountEntity();
-        entity.setUserId(UUID.randomUUID().toString());
-        entity.setDate(TimeUtil.getDateString(TimeUtil.stringToDate("15-07-2019").getTime()));
-        entity.setCount(1);
+        entity.setUserId(getRandomUserId(random));
+        entity.setDate(TimeUtil.getDateString(getMeYesterday().getTime()));
+        entity.setCount(getRandomCount(random));
         entity.setSend(false);
         return entity;
     }
 
+    private String getRandomHex(int size, Random random) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < size; i++) {
+            sb.append(hexDigits[random.nextInt(hexDigits.length)]);
+        }
+        return sb.toString();
+    }
+
+    private int getRandomCount(Random random) {
+        int x = random.nextInt(10) + 1;
+        return x;
+    }
+
+    private String getRandomUserId(Random random) {
+        String s = "0x157b3a292e137415ccf9396ec9d43055460";
+        String hexValue = getRandomHex(5, random);
+        s = s + hexValue;
+        return s;
+    }
+
+    private Date getMeYesterday() {
+        return new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+    }
 
 }

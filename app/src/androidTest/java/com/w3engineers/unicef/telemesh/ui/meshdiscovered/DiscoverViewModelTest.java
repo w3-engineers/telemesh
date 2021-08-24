@@ -6,20 +6,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
 import androidx.room.Room;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.LiveDataTestUtil;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,6 +41,9 @@ public class DiscoverViewModelTest {
 
  /*   @Rule
     public TestRule instantTaskExecutorRule = new InstantTaskExecutorRule();*/
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
 
     private DiscoverViewModel SUT;
 
@@ -123,6 +130,8 @@ public class DiscoverViewModelTest {
                         } else {
                             assertTrue(result.isEmpty());
                         }
+
+                        StatusHelper.out("Test executed");
                     }
 
                 } catch (InterruptedException e) {

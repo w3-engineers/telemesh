@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -16,6 +18,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedEntity;
 import com.w3engineers.unicef.telemesh.data.local.feed.GeoLocation;
 import com.w3engineers.unicef.telemesh.data.local.feed.Payload;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
@@ -80,9 +83,14 @@ public class BroadcastDataHelper extends RmDataHelper {
                 getLocalUserCount();
             });*/
 
+            if (!CommonUtil.isEmulator()) {
 
-            mLatitude = LocationTracker.getInstance().getLatitude();
-            mLongitude = LocationTracker.getInstance().getLongitude();
+                mLatitude = LocationTracker.getInstance().getLatitude();
+                mLongitude = LocationTracker.getInstance().getLongitude();
+            } else {
+                mLatitude = 22.8456;
+                mLongitude = 89.5403;
+            }
 
             getLocalUserCount();
         } else {
@@ -294,7 +302,7 @@ public class BroadcastDataHelper extends RmDataHelper {
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
 
-    public void testLocalBroadcast() {
+/*    public void testLocalBroadcast() {
 //        String path = "/storage/emulated/0/broad.jpg";
         String path = null;
 
@@ -326,7 +334,7 @@ public class BroadcastDataHelper extends RmDataHelper {
                     sendLocalBroadcast(feedEntity, path);
 
                 }));
-    }
+    }*/
 
     private void sendLocalBroadcast(FeedEntity feedEntity, String contentPath) {
 

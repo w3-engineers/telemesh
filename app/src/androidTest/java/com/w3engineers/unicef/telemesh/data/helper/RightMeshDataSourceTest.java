@@ -1,38 +1,46 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.Manifest;
+
 import androidx.room.Room;
+
 import android.content.Context;
 
-import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
+
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.w3engineers.ext.strom.util.helper.data.local.SharedPref;
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.DataPlanConstants;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.application.data.model.BroadcastEvent;
 import com.w3engineers.mesh.application.data.model.DataAckEvent;
 import com.w3engineers.mesh.application.data.model.DataEvent;
+import com.w3engineers.mesh.application.data.model.FilePendingEvent;
+import com.w3engineers.mesh.application.data.model.FileProgressEvent;
+import com.w3engineers.mesh.application.data.model.FileReceivedEvent;
+import com.w3engineers.mesh.application.data.model.FileTransferEvent;
 import com.w3engineers.mesh.application.data.model.PeerRemoved;
 import com.w3engineers.mesh.application.data.model.PermissionInterruptionEvent;
+import com.w3engineers.mesh.application.data.model.ServiceDestroyed;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
-import com.w3engineers.mesh.application.data.remote.model.BaseMeshData;
-import com.w3engineers.mesh.application.data.remote.model.MeshAcknowledgement;
-import com.w3engineers.mesh.application.data.remote.model.MeshPeer;
+import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.models.ConfigurationCommand;
+import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
+import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
@@ -41,6 +49,8 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.StatusHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,7 +62,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -93,6 +103,7 @@ public class RightMeshDataSourceTest {
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
     public String meshId = "0x550de922bec427fc1b279944e47451a89a4f7cah";
+    private final String dainelId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
     @Rule
@@ -118,9 +129,9 @@ public class RightMeshDataSourceTest {
         rmDataHelper.initSource(source);
 
 
-        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, myAddress);
-        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.IMAGE_INDEX, 2);
-        SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
+        SharedPref.write(Constants.preferenceKey.MY_USER_ID, myAddress);
+        SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, 2);
+        SharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
 
         SUT = MeshDataSource.getRmDataSource();
 
@@ -206,6 +217,8 @@ public class RightMeshDataSourceTest {
 
         DataModel rmDataModel = randomEntityGenerator.createRMDataModel();
         SUT.DataSend(rmDataModel, UUID.randomUUID().toString(), false);
+
+        assertTrue(true);
     }
 
     @Test
@@ -221,7 +234,7 @@ public class RightMeshDataSourceTest {
         userDataSource.insertOrUpdateData(userEntity);
         addDelay(1000);
 
-        SUT.isNodeAvailable(userEntity.getMeshId(), Constants.UserStatus.BLE_ONLINE);
+        SUT.isNodeAvailable(userEntity.getMeshId(), Constants.UserStatus.INTERNET_ONLINE);
 
         addDelay(4000);
 
@@ -229,9 +242,11 @@ public class RightMeshDataSourceTest {
 
         addDelay(1000);
 
-        assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.BLE_ONLINE);
+        assertEquals(updatedUserEntity.getOnlineStatus(), Constants.UserStatus.WIFI_ONLINE);
 
         addDelay(500);
+
+        assertTrue(true);
     }
 
     @Test
@@ -268,6 +283,8 @@ public class RightMeshDataSourceTest {
         if (!TextUtils.isEmpty(newMessageId) && !TextUtils.isEmpty(prevMessageId)) {
             assertThat(prevMessageId, is(newMessageId));
         }
+
+        assertTrue(true);
     }
 
     @Test
@@ -290,7 +307,6 @@ public class RightMeshDataSourceTest {
 
         // Send status test
         DataAckEvent sendAckEvent = randomEntityGenerator.generateDataAckEvent(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
-        //SUT.onAck(chatEntity.getMessageId(), Constant.MessageStatus.SEND);
         AppDataObserver.on().sendObserverData(sendAckEvent);
 
         addDelay(500);
@@ -348,6 +364,7 @@ public class RightMeshDataSourceTest {
         addDelay(500);
 
         TransportInit transportEvent = randomEntityGenerator.generateTransportInit(meshId);
+
         AppDataObserver.on().sendObserverData(transportEvent);
 
         addDelay(2000);
@@ -357,6 +374,8 @@ public class RightMeshDataSourceTest {
         AppDataObserver.on().sendObserverData(serviceAppUpdateEvent);
 
         addDelay(500);
+
+        assertTrue(true);
     }
 
     @Test
@@ -385,6 +404,7 @@ public class RightMeshDataSourceTest {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
+        assertTrue(true);
     }
 
     @Test
@@ -442,6 +462,7 @@ public class RightMeshDataSourceTest {
 
         addDelay(5000);
 
+        assertTrue(true);
     }
 
     @Test
@@ -469,18 +490,105 @@ public class RightMeshDataSourceTest {
 
         addDelay(1000);
 
-
+        assertTrue(true);
     }
 
     @Test
-    public void configDataSyncTest() {
+    public void test_wallet_and_file_observer() {
         addDelay(500);
 
-        ConfigurationCommand configFile = randomEntityGenerator.generateConfigFile();
+        WalletCreationEvent walletCreationEvent = new WalletCreationEvent();
+        AppDataObserver.on().sendObserverData(walletCreationEvent);
 
-        RmDataHelper.getInstance().syncConfigFileAndBroadcast(true, configFile);
+        addDelay(1000);
 
+        String fileMessageId = UUID.randomUUID().toString();
+
+        // File receive event
+        FileReceivedEvent fileReceivedEvent = new FileReceivedEvent();
+        fileReceivedEvent.setFileMessageId(fileMessageId);
+        fileReceivedEvent.setFilePath(randomEntityGenerator.getDummyImageLink());
+        fileReceivedEvent.setSourceAddress(dainelId);
+        fileReceivedEvent.setMetaData(null);
+
+        AppDataObserver.on().sendObserverData(fileReceivedEvent);
+        addDelay(1000);
+
+        //File progress event
+        FileProgressEvent fileProgressEvent = new FileProgressEvent();
+        fileProgressEvent.setFileMessageId(fileMessageId);
+        fileProgressEvent.setPercentage(80);
+
+        AppDataObserver.on().sendObserverData(fileProgressEvent);
+        addDelay(1000);
+
+        // File transfer event
+        FileTransferEvent fileTransferEvent = new FileTransferEvent();
+        fileTransferEvent.setFileMessageId(fileMessageId);
+        fileTransferEvent.setSuccess(true);
+        fileTransferEvent.setErrorMessage("");
+
+        AppDataObserver.on().sendObserverData(fileTransferEvent);
+        addDelay(1000);
+
+        // File Pending event
+        FilePendingEvent filePendingEvent = new FilePendingEvent();
+        filePendingEvent.setIncoming(true);
+        filePendingEvent.setContentId(fileMessageId);
+
+        ContentMetaInfo metaInfo = new ContentMetaInfo();
+        metaInfo.setMessageId(fileMessageId);
+        metaInfo.setMessageType(1);
+        metaInfo.setMetaInfo("Test meta");
+        filePendingEvent.setContentMetaInfo(metaInfo);
+        filePendingEvent.setProgress(90);
+        filePendingEvent.setState(Constants.ServiceContentState.SUCCESS);
+
+        AppDataObserver.on().sendObserverData(filePendingEvent);
+        addDelay(1000);
+
+        ServiceDestroyed serviceDestroyed = new ServiceDestroyed();
+        AppDataObserver.on().sendObserverData(serviceDestroyed);
+
+        // Broadcast event test
+
+        BroadcastMeta broadcastMeta = prepareBroadcastMetaData();
+
+        String broadcastMetaJson = GsonBuilder.getInstance().getBroadcastMetaJson(broadcastMeta);
+        BroadcastEvent broadcastEvent = new BroadcastEvent();
+        broadcastEvent.setBroadcastId(UUID.randomUUID().toString());
+        broadcastEvent.setMetaData(broadcastMetaJson);
+        broadcastEvent.setContentPath(randomEntityGenerator.getDummyImageLink());
+
+
+        AppDataObserver.on().sendObserverData(broadcastEvent);
         addDelay(2000);
+
+        assertTrue(true);
+        StatusHelper.out("File event test executed");
+    }
+
+    @Test
+    public void userConnectivityStatusTest() {
+        addDelay(500);
+
+        SUT.checkUserConnectivityStatus(UUID.randomUUID().toString());
+
+        addDelay(500);
+
+        int status = SUT.checkUserConnectivityStatus(dainelId);
+
+        assertEquals(0, status);
+    }
+
+    private BroadcastMeta prepareBroadcastMetaData() {
+        BroadcastMeta meta = new BroadcastMeta();
+        meta.setBroadcastAddress("address");
+        meta.setMessageBody("Test broadcast");
+        meta.setMessageTitle("Unicef");
+        meta.setUploaderName("Unicef");
+        meta.setCreationTime("2021-08-02T06:05:30.000Z");
+        return meta;
     }
 
     private void addDelay(long time) {

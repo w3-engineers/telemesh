@@ -1,6 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import android.text.TextUtils;
 
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
@@ -10,23 +13,29 @@ import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.ForwardGroupModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupCountModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
 public class GroupDataHelperTest {
 
@@ -35,6 +44,7 @@ public class GroupDataHelperTest {
     private GroupDataSource groupDataSource;
     private AppDatabase appDatabase;
     private GsonBuilder gsonBuilder;
+    private String myUserId;
 
     private final String dainelId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
     private final String simonId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f13ca4";
@@ -48,6 +58,8 @@ public class GroupDataHelperTest {
                 AppDatabase.class).allowMainThreadQueries().build();
         groupDataSource = GroupDataSource.getInstance();
         gsonBuilder = GsonBuilder.getInstance();
+
+        myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
     @After
@@ -143,9 +155,67 @@ public class GroupDataHelperTest {
         groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_DATA_FORWARD, mikeId, forwardJson.getBytes(), true);
         addDelay(1500);
 
-        assertTrue(true);
+        // Get specific group member from group
+        GroupMembersInfo gInfo = CommonUtil.getGroupMemberInfo(groupModel.getMemberInfo(), dainelId);
+
+        assertNotNull(gInfo);
     }
 
+    @Test
+    public void test_group_analytics_test() {
+
+        // Receive and send group analytics to server
+
+        String groupId = UUID.randomUUID().toString();
+
+        GroupCountModel groupCountModel = new GroupCountModel();
+        groupCountModel.setGroupId(groupId);
+        groupCountModel.setGroupOwnerId(myUserId);
+        groupCountModel.setMemberCount(3);
+        groupCountModel.setCreatedTime(TimeUtil.getDateStringFromMillisecond(System.currentTimeMillis()));
+        groupCountModel.setDirectSend(false);
+        groupCountModel.setSubmittedBy(dainelId);
+
+        ArrayList<GroupCountModel> countModelArrayList = new ArrayList<>();
+        countModelArrayList.add(groupCountModel);
+
+        String groupCountSyncRequest = gsonBuilder.getGroupCountJson(countModelArrayList);
+
+        groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_COUNT_SYNC_REQUEST,
+                dainelId, groupCountSyncRequest.getBytes(), true);
+
+        addDelay(2000);
+
+
+        // receive group count sync ack
+
+        GroupModel model = prepareGroupModel();
+        GroupEntity groupEntity = new GroupEntity().toGroupEntity(model);
+        groupEntity.setSynced(false);
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+
+        groupCountModel.setGroupId(model.getGroupId());
+
+        countModelArrayList = new ArrayList<>();
+        countModelArrayList.add(groupCountModel);
+
+        groupCountSyncRequest = gsonBuilder.getGroupCountJson(countModelArrayList);
+
+        groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_COUNT_SYNC_ACK,
+                dainelId, groupCountSyncRequest.getBytes(), true);
+
+
+        addDelay(2000);
+
+        //Receive group id for sync
+
+        groupDataHelper.groupDataReceive(Constants.DataType.EVENT_GROUP_COUNT_SYNCED,
+                dainelId, model.getGroupId().getBytes(), true);
+
+        addDelay(1000);
+
+        assertTrue(true);
+    }
 
     private ForwardGroupModel prepareForwardGroupModel() {
 
@@ -177,7 +247,7 @@ public class GroupDataHelperTest {
         groupModel.setGroupName(groupNameJson);
         groupModel.setGroupId(UUID.randomUUID().toString());
 
-        String myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+        myUserId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
         String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
@@ -198,6 +268,8 @@ public class GroupDataHelperTest {
                 .setUserName("Mike")
                 .setMemberId(mikeId)
                 .setAvatarPicture(4);
+
+        groupModel.setAdminInfo(myUserId);
 
         ArrayList<GroupMembersInfo> memberList = new ArrayList<>();
         memberList.add(myGroupMembersInfo);

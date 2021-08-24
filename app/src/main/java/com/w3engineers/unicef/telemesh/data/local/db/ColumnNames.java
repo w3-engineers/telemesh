@@ -31,6 +31,7 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_GROUP_CREATION_TIME = "group_creation_time";
     String COLUMN_GROUP_ADMIN_INFO = "group_admin_info";
     String COLUMN_GROUP_MEMBERS_INFO = "group_members_info";
+    String COLUMN_GROUP_IS_SYNCED = "is_synced";
 
     /**
      * Message table column

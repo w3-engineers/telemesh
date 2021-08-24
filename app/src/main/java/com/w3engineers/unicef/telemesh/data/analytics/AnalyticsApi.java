@@ -6,13 +6,16 @@ import android.os.AsyncTask;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.GroupCountSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 /*
 ============================================================================
@@ -75,5 +78,9 @@ public class AnalyticsApi {
 
     public void sendFeedback(FeedbackParseModel model, FeedbackSendCallback callback) {
         AsyncTask.execute(() -> ParseManager.on().sendFeedback(model, callback));
+    }
+
+    public void sendGroupCount(ArrayList<GroupCountParseModel> modelList, GroupCountSendCallback callback) {
+        AsyncTask.execute(() -> ParseManager.on().sendGroupCount(modelList, callback));
     }
 }

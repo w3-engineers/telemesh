@@ -18,8 +18,10 @@ import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.AnalyticsResponseCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FeedbackSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.callback.FileUploadResponseCallback;
+import com.w3engineers.unicef.telemesh.data.analytics.callback.GroupCountSendCallback;
 import com.w3engineers.unicef.telemesh.data.analytics.model.AppShareCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.FeedbackParseModel;
+import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.MessageCountModel;
 import com.w3engineers.unicef.telemesh.data.analytics.model.NewNodeModel;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
@@ -29,13 +31,16 @@ import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEnt
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupCountModel;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDataSource;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
-import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.ConnectivityUtil;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,6 +59,7 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
     private List<AppShareCountEntity> countSentList;
     private static FileUploadResponseCallback fileUploadResponseCallback;
     private static FeedbackSendCallback feedbackSendCallback;
+    private static GroupCountSendCallback groupCountSendCallback;
 
     static {
         analyticsDataHelper = new AnalyticsDataHelper();
@@ -85,6 +91,28 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
                     feedbackModel.setFeedback(model.getFeedback());
                     feedbackModel.setFeedbackId(model.getFeedbackId());
                     RmDataHelper.getInstance().sendFeedbackAck(feedbackModel);
+                }
+            }
+        };
+
+        groupCountSendCallback = (isSuccess, modelList) -> {
+            if (isSuccess) {
+                boolean isDirectSend = modelList.get(0).isDirectSend();
+                if (isDirectSend) {
+                    for (GroupCountParseModel groupCountParseModel : modelList) {
+
+                            compositeDisposable
+                                    .add(Single.fromCallable(() -> GroupDataSource.getInstance().updateGroupAsSynced(groupCountParseModel.getGroupId()))
+                                            .subscribeOn(Schedulers.newThread())
+                                            .subscribe((result) -> {
+                                                Timber.tag("GroupCount").d("update result: %s", result);
+
+                                                RmDataHelper.getInstance().notifyGroupMembersAsSyncedGroup(groupCountParseModel.getGroupId());
+                                            }, Throwable::printStackTrace));
+
+                    }
+                } else {
+                    RmDataHelper.getInstance().sendGroupCountSyncAck(modelList);
                 }
             }
         };
@@ -206,6 +234,21 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
         });
     }
 
+    public void sendGroupCount(List<GroupEntity> groupEntities) {
+        ConnectivityUtil.isInternetAvailable(TeleMeshApplication.getContext(), (s, isConnected) -> {
+            if (isConnected) {
+                Timber.tag("GroupCountTest").d("GroupCount send directly");
+                sendGroupCountToInternet(groupEntities, true);
+            } else {
+                Timber.tag("GroupCountTest").d("No internet available");
+                RmDataHelper.getInstance().sendGroupCountToInternetUser(groupEntities);
+            }
+        });
+    }
+
+
+
+
     public void sendFeedbackToInternet(FeedbackEntity entity, boolean isDirectSend) {
         FeedbackParseModel model = new FeedbackParseModel();
         model.setUserId(entity.getUserId());
@@ -216,6 +259,44 @@ public class AnalyticsDataHelper implements AnalyticsResponseCallback {
 
         AnalyticsApi.on().sendFeedback(model, feedbackSendCallback);
     }
+
+    public void sendGroupCountToInternet(List<GroupEntity> groupList, boolean isDirectSend) {
+        String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+
+        ArrayList<GroupCountParseModel> groupCountParseModels = new ArrayList<>();
+        for (GroupEntity groupEntity: groupList) {
+            GroupCountParseModel groupCountParseModel = new GroupCountParseModel();
+
+            groupCountParseModel.setGroupId(groupEntity.getGroupId());
+            groupCountParseModel.setGroupOwner(groupEntity.getAdminInfo());
+            groupCountParseModel.setMemberCount(groupEntity.getMemberCount());
+            groupCountParseModel.setCreationDate(TimeUtil.getDateStringFromMillisecond(groupEntity.groupCreationTime));
+            groupCountParseModel.setSubmittedBy(myId);
+            groupCountParseModel.setDirectSend(isDirectSend);
+            groupCountParseModels.add(groupCountParseModel);
+        }
+        AnalyticsApi.on().sendGroupCount(groupCountParseModels, groupCountSendCallback);
+    }
+
+    public void sendGroupCountToInternet(List<GroupCountModel> groupList) {
+        ArrayList<GroupCountParseModel> groupCountParseModels = new ArrayList<>();
+
+        for (GroupCountModel groupCountModel: groupList) {
+            GroupCountParseModel groupCountParseModel = new GroupCountParseModel();
+
+            groupCountParseModel.setGroupId(groupCountModel.getGroupId());
+            groupCountParseModel.setGroupOwner(groupCountModel.getGroupOwnerId());
+            groupCountParseModel.setMemberCount(groupCountModel.getMemberCount());
+            groupCountParseModel.setCreationDate(groupCountModel.getCreatedTime());
+            groupCountParseModel.setSubmittedBy(groupCountModel.getSubmittedBy());
+            groupCountParseModel.setDirectSend(groupCountModel.getDirectSend());
+            groupCountParseModels.add(groupCountParseModel);
+        }
+        AnalyticsApi.on().sendGroupCount(groupCountParseModels, groupCountSendCallback);
+    }
+
+
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public boolean isInternetDataEnable() {

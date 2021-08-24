@@ -168,8 +168,6 @@ public class BroadcastDataHelper extends RmDataHelper {
 
             String broadcastContentPath;
 
-            Log.d("testTag",""+bulletinFeed.getMessageType());
-
             if (bulletinFeed.getMessageType() <= Constants.BroadcastMessageType.TEXT_BROADCAST) {
                 broadcastContentPath = "";
             } else {

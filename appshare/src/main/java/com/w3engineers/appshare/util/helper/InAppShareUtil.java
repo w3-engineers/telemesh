@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Environment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -155,7 +156,7 @@ public class InAppShareUtil {
     public String getServiceApkPath() {
         Context context = InAppShareControl.getInstance().getAppShareContext();
 
-        String myServiceAppPackageName = "com.w3engineers.meshservice";
+        String myServiceAppPackageName = "com.intermeshnetworks.service";
         String myServiceAppName = "TeleService";
 
         return backupApkAndGetPath(context, myServiceAppName, myServiceAppPackageName);
@@ -188,8 +189,13 @@ public class InAppShareUtil {
                 if (file_name.equalsIgnoreCase(appName) &&
                         appFile.toString().contains(packageName)) {
 
-                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
-                            context.getString(R.string.app_name));
+                    File file = null;
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                        file = new File(context.getExternalFilesDir("")+"/"+context.getString(R.string.app_name));
+                    }else {
+                        file = new File(Environment.getExternalStorageDirectory().toString() + "/" +
+                                context.getString(R.string.app_name));
+                    }
                     file.mkdirs();
                     // Preparing a backup apk folder and it is hidden
                     File backUpFolder = new File(file.getAbsolutePath() + "/" + backupFolder);

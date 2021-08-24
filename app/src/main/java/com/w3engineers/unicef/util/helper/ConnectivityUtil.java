@@ -33,10 +33,13 @@ public class ConnectivityUtil {
                     urlc.setConnectTimeout(1500);
                     urlc.connect();
                     consumer.accept("", urlc.getResponseCode() == 200);
-                } catch (IOException e) {
-                    Log.e("InternetCheck", "Error checking internet connection " + e.getMessage());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("InternetCheck", "Error checking internet connection " + e.getMessage());
+                    try {
+                        consumer.accept("", false);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                 }
             } else {
                 Log.e("InternetCheck", "No internet available ");

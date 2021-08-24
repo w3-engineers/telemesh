@@ -782,8 +782,9 @@ public class ContentDataHelper extends RmDataHelper {
     public void setGroupContentProgress(String messageId, int progress, String contentId) {
         if (progress == 0 || TextUtils.isEmpty(messageId))
             return;
+        Log.e("Group_content","Group content progress: "+progress);
 
-        GroupMessageEntity messageEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(messageId);
+        GroupMessageEntity messageEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(contentId);
         if (messageEntity != null) {
             int existingProgress = messageEntity.getContentProgress();
             if (progress > existingProgress) {

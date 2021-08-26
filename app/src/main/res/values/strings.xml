@@ -41,6 +41,7 @@
     <string name="settings_choose_language">Language</string>
     <string name="settings_share_app">Share App</string>
     <string name="settings_open_wallet">My Wallet</string>
+    <string name="settings_open_routes">Routes</string>
 
     <string name="choose_language">Choose a Language</string>
     <string name="image">Image</string>

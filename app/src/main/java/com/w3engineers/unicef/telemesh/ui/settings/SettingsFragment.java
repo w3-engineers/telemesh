@@ -116,6 +116,10 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
 
+            case R.id.layout_open_routes:
+                routesAction();
+                break;
+
             /*case R.id.layout_ssid:
                 showAlertForSSID();
                 break;*/
@@ -141,6 +145,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void walletAction() {
         if (isMeshInit()) {
             DataManager.on().openWalletActivity(getImageByteArray());
+        }
+    }
+
+    private void routesAction() {
+        if (isMeshInit()) {
+            DataManager.on().openRoutesActivity();
         }
     }
 
@@ -279,6 +289,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutAppUpdate.setOnClickListener(this);
         mBinding.layoutFeedback.setOnClickListener(this);
         mBinding.layoutSsid.setOnClickListener(this);
+        mBinding.layoutOpenRoutes.setOnClickListener(this);
 
         mBinding.titleViewProfile.setText(LanguageUtil.getString(R.string.activity_view_profile));
         mBinding.titleViewWallet.setText(LanguageUtil.getString(R.string.settings_open_wallet));
@@ -290,6 +301,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewFeedback.setText(LanguageUtil.getString(R.string.send_feedback));
         mBinding.titleViewAppUpdate.setText(LanguageUtil.getString(R.string.update_app));
         mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
+
     }
 
     // TODO SSID_Change

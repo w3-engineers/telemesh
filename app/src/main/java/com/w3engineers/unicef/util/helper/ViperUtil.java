@@ -56,7 +56,6 @@ import com.w3engineers.models.BroadcastData;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.models.FileData;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.ContentModel;
@@ -587,13 +586,16 @@ public abstract class ViperUtil {
             ContentModel contentModel = viperContentData.contentModel;
             ContentMetaInfo contentMetaInfo = null;
             if (!contentModel.isRequestFromReceiver()) {
+               // iugu
                 contentMetaInfo = new ContentMetaInfo()
+                        .setGroupContent(contentModel.isGroupContent())
                         .setMessageId(contentModel.getMessageId())
                         .setMessageType(contentModel.getMessageType())
                         .setMetaInfo(contentModel.getContentInfo())
                         .setThumbData(ContentUtil.getInstance().getThumbFileToByte(contentModel.getThumbPath()));
             } else {
                 contentMetaInfo = new ContentMetaInfo()
+                        .setGroupContent(contentModel.isGroupContent())
                         .setMessageId(contentModel.getMessageId())
                         .setMessageType(contentModel.getMessageType())
                         .setMetaInfo(contentModel.getContentInfo());

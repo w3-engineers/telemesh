@@ -10,7 +10,7 @@ Proprietary and confidential
 
 public class MessageModel {
 
-    private String m, i, gi;
+    private String m, i, gi, os;
     private boolean g;
     private int t;
 
@@ -57,5 +57,15 @@ public class MessageModel {
     public MessageModel setIsGroup(boolean group) {
         this.g = group;
         return this;
+    }
+
+    public MessageModel setOriginalSender(String originalSender) {
+        this.os = originalSender;
+        return this;
+    }
+
+    public String getOriginalSender(){
+        return os;
+
     }
 }

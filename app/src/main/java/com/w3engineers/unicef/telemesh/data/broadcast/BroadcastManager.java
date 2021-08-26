@@ -57,6 +57,7 @@ public class BroadcastManager {
     public interface BroadcastSendCallback {
         void dataSent(@NonNull DataModel rmDataModel, String dataSendId);
         void contentSent(ContentModel contentModel, String dataSendId);
+        void onGroupContentSend(ContentModel contentModel, String result);
     }
 
     public void setBroadcastSendCallback(@Nullable BroadcastSendCallback broadcastSendCallback) {
@@ -130,6 +131,8 @@ public class BroadcastManager {
 
             String result = (String) future.get();
             if (broadcastSendCallback != null) {
+                Timber.v("Group Message Test", "content sent from library %s", result);
+
                 ViperData viperData = sendDataTask.getViperData();
                 ViperContentData viperContentData = sendDataTask.getViperContentData();
 
@@ -142,7 +145,11 @@ public class BroadcastManager {
                 }
 
                 if (viperContentData != null) {
-                    broadcastSendCallback.contentSent(viperContentData.contentModel, result);
+                    if(viperContentData.contentModel.isGroupContent()){
+                        broadcastSendCallback.onGroupContentSend(viperContentData.contentModel, result);
+                    }else {
+                        broadcastSendCallback.contentSent(viperContentData.contentModel, result);
+                    }
                 }
             }
         } catch (ExecutionException | InterruptedException e) {

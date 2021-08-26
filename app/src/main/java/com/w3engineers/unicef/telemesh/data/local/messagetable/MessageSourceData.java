@@ -22,6 +22,8 @@ public class MessageSourceData {
 
     private static MessageSourceData messageSourceData/* = new MessageSourceData()*/;
     private MessageDao messageDao;
+    private GroupMessageDao groupMessageDao;
+    private GroupContentDao groupContentDao;
 
 //    public MessageSourceData() {
 //        messageDao = AppDatabase.getInstance().messageDao();
@@ -34,6 +36,8 @@ public class MessageSourceData {
      */
     public MessageSourceData(@NonNull MessageDao messageDao) {
         this.messageDao = messageDao;
+        this.groupMessageDao = AppDatabase.getInstance().getGroupMessageDao();
+        this.groupContentDao = AppDatabase.getInstance().getGroupContentDao();
     }
 
     @NonNull
@@ -63,8 +67,24 @@ public class MessageSourceData {
                 Flowable.just((ChatEntity) messageEntity));
     }
 
+    public Flowable<GroupMessageEntity> getLastGroupMessage() {
+        return groupMessageDao.getLastInsertedMessage().flatMap(groupMessage -> Flowable.just(groupMessage));
+    }
+
     public long insertOrUpdateData(@NonNull ChatEntity baseEntity) {
-        return messageDao.writeMessage((MessageEntity) baseEntity);
+        if (baseEntity instanceof MessageEntity) {
+            return messageDao.writeMessage((MessageEntity) baseEntity);
+        } else {
+            return groupMessageDao.writeMessage((GroupMessageEntity) baseEntity);
+        }
+    }
+
+    public long addOrUpdateContent(GroupContentEntity entity){
+        return groupContentDao.insertOrUpdate(entity);
+    }
+
+    public GroupContentEntity getContentById(String contentId){
+        return groupContentDao.getContentById(contentId);
     }
 
     /**
@@ -91,9 +111,9 @@ public class MessageSourceData {
     @NonNull
     public Flowable<List<ChatEntity>> getAllGroupMessages(@NonNull String friendsId) {
 
-        return messageDao.getGroupAllMessages(friendsId, Constants.MessagePlace.MESSAGE_PLACE_GROUP)
+        return groupMessageDao.getGroupAllMessages(friendsId)
                 .flatMap(messageEntities ->
-                Flowable.just(new ArrayList<>(messageEntities)));
+                        Flowable.just(new ArrayList<>(messageEntities)));
     }
 
     @NonNull
@@ -112,8 +132,18 @@ public class MessageSourceData {
     }
 
     @Nullable
+    public GroupMessageEntity getGroupMessageEntityFromId(@NonNull String messageId) {
+        return groupMessageDao.getMessageFromId(messageId);
+    }
+
+    @Nullable
     public MessageEntity getMessageEntityFromContentId(@NonNull String contentId) {
         return messageDao.getMessageFromContentId(contentId);
+    }
+
+    @Nullable
+    public GroupMessageEntity getGroupMessageEntityByContentId(@NonNull String contentId) {
+        return groupMessageDao.getMessageByContentId(contentId);
     }
 
     // This api is not used in app layer

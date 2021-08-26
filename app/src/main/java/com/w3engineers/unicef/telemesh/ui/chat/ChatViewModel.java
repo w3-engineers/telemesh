@@ -2,13 +2,17 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
+
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
@@ -19,6 +23,8 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageDao;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
@@ -44,6 +50,7 @@ import java.util.concurrent.Executors;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /*
@@ -63,6 +70,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private UserDataSource userDataSource;
     private GroupDataSource groupDataSource;
     private DataSource dataSource;
+    private Disposable groupUsersDisposable;
 
     private static final int INITIAL_LOAD_KEY = 0;
     private static final int PAGE_SIZE = 70;
@@ -76,18 +84,17 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     private MutableLiveData<List<UserEntity>> groupAllMembers = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> groupLiveMembers = new MutableLiveData<>();
     private MutableLiveData<List<UserEntity>> groupLiveMembersWithOutMe = new MutableLiveData<>();
+    public MutableLiveData<List<UserEntity>> groupMembersWithoutMe = new MutableLiveData<>();
 
     /**
      * <h1>View model constructor</h1>
-     *
-     *
      */
     public ChatViewModel(@NonNull Application application) {
         super(application);
-        this.messageSourceData =  MessageSourceData.getInstance();
+        this.messageSourceData = MessageSourceData.getInstance();
 
         compositeDisposable = new CompositeDisposable();
-        userDataSource  = UserDataSource.getInstance();
+        userDataSource = UserDataSource.getInstance();
         groupDataSource = GroupDataSource.getInstance();
         dataSource = Source.getDbSource();
     }
@@ -130,16 +137,17 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     /**
      * This API concerned for tracking offline and online the chat current chat user
+     *
      * @param threadId -
      * @return -
      */
     @NonNull
-    public LiveData<UserEntity> getUserById(@NonNull String threadId){
+    public LiveData<UserEntity> getUserById(@NonNull String threadId) {
         return LiveDataReactiveStreams.fromPublisher(userDataSource.getUserById(threadId));
     }
 
     @NonNull
-    public LiveData<GroupEntity> getLiveGroupById(@NonNull String threadId){
+    public LiveData<GroupEntity> getLiveGroupById(@NonNull String threadId) {
         return groupDataSource.getLiveGroupById(threadId);
     }
 
@@ -170,6 +178,33 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         groupAllMembers.postValue(allMembers);
         groupLiveMembers.postValue(liveMembers);
         groupLiveMembersWithOutMe.postValue(liveMembersWithOutMe);
+    }
+
+    public void startMemberObserver(List<GroupMembersInfo> members) {
+
+        List<String> userList = new ArrayList<>();
+        for (GroupMembersInfo groupMembersInfo : members) {
+            if (!groupMembersInfo.getMemberId().equals(getMyUserId()) && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                userList.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        if (groupUsersDisposable != null){
+            groupUsersDisposable.dispose();
+            getCompositeDisposable().remove(groupUsersDisposable);
+        }
+
+        groupUsersDisposable = userDataSource.getGroupMembers(userList)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntities -> {
+                    groupMembersWithoutMe.postValue(userEntities);
+                }, throwable -> {
+                    throwable.printStackTrace();
+                });
+        getCompositeDisposable().add(groupUsersDisposable);
+
+
     }
 
     public String getMyUserId() {
@@ -232,34 +267,46 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     /**
      * <h1>Send message on IO thread</h1>
      *
-     * @param threadId        : Friends user id
-     * @param message       : Message need to send
-     * @param isTextMessage : is text or file
+     * @param threadId : Friends user id
+     * @param message  : Message need to send
      */
-    public void sendMessage(@NonNull String threadId, @NonNull String message, boolean isTextMessage) {
+    public void sendMessage(@NonNull String threadId, @NonNull String message) {
 
-        if (isTextMessage) {
+        //if (isTextMessage) {
+        MessageEntity messageEntity = null;
+        GroupMessageEntity groupMessageEntity = null;
 
-            MessageEntity messageEntity = new MessageEntity()
-                    .setMessage(message).setMessagePlace(isGroup);
+        if (isGroup) {
+            groupMessageEntity = new GroupMessageEntity()
+                    .setMessage(message)
+                    .setOriginalSender(getMyUserId())
+                    .setGroupId(threadId);
+            threadId = getMyUserId();
+        } else {
+            messageEntity = new MessageEntity()
+                    .setMessage(message).setMessagePlace(false);
 
-            if (isGroup) {
-                messageEntity.setGroupId(threadId);
-                threadId = getMyUserId();
-            }
-
-            ChatEntity chatEntity = prepareChatEntityForText(threadId, messageEntity,
-                    Constants.MessageType.TEXT_MESSAGE);
-
-            messageInsertionProcess(chatEntity, false);
         }
+
+        /*MessageEntity messageEntity = new MessageEntity()
+                .setMessage(message).setMessagePlace(false);
+        if (isGroup) {
+            messageEntity.setGroupId(threadId);
+            threadId = getMyUserId();
+        }*/
+
+        ChatEntity chatEntity = prepareChatEntityForText(threadId, isGroup ? groupMessageEntity : messageEntity,
+                Constants.MessageType.TEXT_MESSAGE);
+
+        messageInsertionProcess(chatEntity, false);
+        //}
     }
 
     public void sendContentMessage(String userId, Uri uri) {
         getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
                 .getFilePathFromUri(uri))
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(contentPath ->{
+                .subscribe(contentPath -> {
                     startContentMessageProcess(userId, contentPath);
                 }, Throwable::printStackTrace));
     }
@@ -279,13 +326,13 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
                 .compressImage(contentPath))
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(compressedImagePath ->{
+                .subscribe(compressedImagePath -> {
                     sendContentMessage(userId, compressedImagePath);
                 }, Throwable::printStackTrace));
     }
 
     private void sendContentMessage(String userId, String path) {
-        Log.v("CONTENT_BROADCAST:","IMAGE_PATH: " + path);
+        //Log.v("CONTENT_BROADCAST:","IMAGE_PATH: " + path);
         getCompositeDisposable().add(getThumbnailPath(path)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(thumbPath -> {
@@ -303,7 +350,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         }
     }
 
-    public void resendContentMessage(MessageEntity messageEntity) {
+    public void resendContentMessage(ChatEntity messageEntity) {
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_RESEND_START);
@@ -312,10 +359,22 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     private void prepareContentMessage(String userId, String path, String thumbPath) {
-        MessageEntity messageEntity = new MessageEntity()
-                .setMessage(ContentUtil.getInstance().getContentMessageBody(path))
-                .setContentPath(path)
-                .setContentThumbPath(thumbPath);
+        MessageEntity messageEntity = null;
+        GroupMessageEntity groupMessageEntity = null;
+        if (isGroup) {
+            groupMessageEntity = new GroupMessageEntity()
+                    .setGroupId(userId)
+                    .setOriginalSender(getMyUserId())
+                    .setMessage(ContentUtil.getInstance().getContentMessageBody(path))
+                    .setContentPath(path)
+                    .setContentThumb(thumbPath);
+        } else {
+            messageEntity = new MessageEntity()
+                    .setMessage(ContentUtil.getInstance().getContentMessageBody(path))
+                    .setContentPath(path)
+                    .setContentThumbPath(thumbPath);
+        }
+
 
         if (ContentUtil.getInstance().isTypeVideo(path)) {
             long videoDuration = ContentUtil.getInstance().getMediaDuration(path);
@@ -323,10 +382,15 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             contentInfo.setDuration(videoDuration);
 
             String contentInfoText = GsonBuilder.getInstance().getContentInfoJson(contentInfo);
-            messageEntity.setContentInfo(contentInfoText);
+            if (isGroup) {
+                groupMessageEntity.setContentInfo(contentInfoText);
+            } else {
+                messageEntity.setContentInfo(contentInfoText);
+            }
+
         }
 
-        ChatEntity chatEntity = prepareChatEntityForText(userId, messageEntity,
+        ChatEntity chatEntity = prepareChatEntityForText(userId, isGroup ? groupMessageEntity : messageEntity,
                 ContentUtil.getInstance().getContentMessageType(path));
 
         messageInsertionProcess(chatEntity, false);
@@ -336,37 +400,39 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
      * This method will take steps to insert chat entity to local db.
      * we didn't call to ui for update a message because
      * we use live data for continuous integrating chat messages
+     *
      * @param chatEntity : prepared chat data
      */
 
     @SuppressLint("CheckResult")
     private void messageInsertionProcess(ChatEntity chatEntity, boolean isResend) {
 
-        compositeDisposable.add(insertMessageData((MessageEntity) chatEntity)
+        compositeDisposable.add(insertMessageData(chatEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     if (isResend) {
                         dataSource.reSendMessage(chatEntity);
                     }
-                    Log.v("FileMessage", "Insert msg: " + aLong);
+                    //Log.v("FileMessage", "Insert msg: " + aLong);
                 }, throwable -> {
-                    Log.v("FileMessage", "Error: " + throwable.getMessage());
+                    //Log.v("FileMessage", "Error: " + throwable.getMessage());
                 }));
 
     }
 
-    private Single<Long> insertMessageData(MessageEntity messageEntity) {
+    private Single<Long> insertMessageData(ChatEntity messageEntity) {
         return Single.fromCallable(() ->
                 messageSourceData.insertOrUpdateData(messageEntity));
     }
 
     /**
      * Prepare a chat entity from text message.
-     * @param meshId -
+     *
+     * @param meshId        -
      * @param messageEntity -
      */
-    private ChatEntity prepareChatEntityForText(String meshId, MessageEntity messageEntity,
+    private ChatEntity prepareChatEntityForText(String meshId, ChatEntity messageEntity,
                                                 int messageType) {
 
         ChatEntity chatEntity;
@@ -470,7 +536,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     /**
      * group chat entities according to date.
-     *  Set is used to ensure the list contain unique contents.
+     * Set is used to ensure the list contain unique contents.
+     *
      * @param chatEntities -
      * @return -
      */
@@ -481,7 +548,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
         for (ChatEntity chatEntity : chatEntities) {
 
-            if(chatEntity!= null){
+            if (chatEntity != null) {
 
                 long hashMapKey = chatEntity.getTime();
 
@@ -519,7 +586,6 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         date1 = TimeUtil.getInstance().getDateFromMillisecond(TimeUtil.DEFAULT_MILLISEC);
 
 
-
         List<ChatEntity> consolidatedList = new ArrayList<>();
 
         for (long millisecond : groupedHashMap.keySet()) {
@@ -527,7 +593,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
             date2 = TimeUtil.getInstance().getDateFromMillisecond(millisecond);
 
-            if(date1 != null && date2 != null && !TimeUtil.getInstance().isSameDay(date1, date2)){
+            if (date1 != null && date2 != null && !TimeUtil.getInstance().isSameDay(date1, date2)) {
 
                 date1 = date2;
 

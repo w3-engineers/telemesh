@@ -1,2 +1,2 @@
-include ':app', ':appshare', ':localserver'/*, ':viper'*/
+include ':app', ':appshare', ':localserver', ':viper'
 

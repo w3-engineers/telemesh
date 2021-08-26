@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import androidx.annotation.NonNull;
 
+import android.annotation.SuppressLint;
 import android.net.Network;
 import android.text.TextUtils;
 
@@ -10,6 +11,7 @@ import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.analytics.model.GroupCountParseModel;
+import com.w3engineers.unicef.telemesh.data.analytics.parseapi.ParseConstant;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackEntity;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackModel;
@@ -23,7 +25,9 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -37,6 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -158,12 +164,75 @@ public class GroupDataHelper extends RmDataHelper {
     public void sendTextMessageToGroup(String groupId, String messageTextData) {
         GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
-        ArrayList<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
-                .getGroupMemberInfoObj(groupEntity.getMembersInfo());
+        ArrayList<GroupMembersInfo> groupMembersInfos = groupEntity.getMembersArray();
 
         sendDataToAllMembers(messageTextData, Constants.DataType.MESSAGE,
                 groupEntity.getAdminInfo(), groupMembersInfos);
     }
+
+
+
+    public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
+
+        //Send a text message for dummy content
+        String messageModelString = new Gson().toJson(entity.toMessageModel());
+        sendTextMessageToGroup(entity.groupId, messageModelString);
+
+        //Update message status to prevent recursive call
+        entity.setStatus(Constants.MessageStatus.STATUS_RECEIVED);
+        entity.setContentProgress(100);
+        MessageSourceData.getInstance().insertOrUpdateData(entity);
+
+        //Send original content now
+        GroupEntity groupEntity = groupDataSource.getGroupById(entity.groupId);
+        ArrayList<GroupMembersInfo> groupMembersInfoList = groupEntity.getMembersArray();
+
+        if (groupMembersInfoList != null) {
+            List<String> liveMembersId = CommonUtil.getGroupLiveMembersId(groupMembersInfoList);
+            liveMembersId.remove(getMyMeshId());
+
+            List<UserEntity> availableUsers = UserDataSource.getInstance().getLiveGroupMembers(liveMembersId);
+
+            for(UserEntity item : availableUsers){
+
+                ContentModel contentModel = new ContentModel()
+                        .setMessageId(entity.getMessageId())
+                        .setMessageType(entity.getMessageType())
+                        .setGroupId(entity.getGroupId())
+                        .setOriginalSender(entity.getOriginalSender())
+                        .setGroupContent(true)
+                        .setContentPath(entity.getContentPath())
+                        .setThumbPath(entity.getContentThumb())
+                        .setUserId(entity.getFriendsId())
+                        .setContentInfo(entity.getContentInfo());
+
+
+
+                Timber.v("Group Message Test", "content start %s", item.getMeshId());
+                contentModel.setUserId(item.getMeshId());
+                contentMessageSend(contentModel);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    private void contentMessageSend(ContentModel contentModel) {
+        prepareRightMeshDataSource();
+
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(() -> rightMeshDataSource.ContentDataSend(contentModel));
+    }
+
 
     ///////////////////////////////////////////////////////////////
 

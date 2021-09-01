@@ -6,8 +6,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
+
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,6 +29,10 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDao;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogDao;
 import com.w3engineers.unicef.telemesh.data.local.meshlog.MeshLogEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentDao;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageDao;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageDao;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDao;
@@ -53,7 +60,8 @@ import java.util.List;
 // migration will be given by developer only when schema changes occur
 @Database(entities = {
         UserEntity.class, MessageEntity.class, FeedEntity.class, BulletinTrackEntity.class,
-        AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class, GroupEntity.class},
+        AppShareCountEntity.class, MeshLogEntity.class, FeedbackEntity.class, GroupEntity.class,
+        GroupMessageEntity.class, GroupContentEntity.class},
         version = BuildConfig.VERSION_CODE,
         exportSchema = false)
 @TypeConverters(Converters.class)
@@ -68,6 +76,10 @@ public abstract class AppDatabase extends BaseDatabase {
 
     @NonNull
     public abstract MessageDao messageDao();
+
+    public abstract GroupMessageDao getGroupMessageDao();
+
+    public abstract GroupContentDao getGroupContentDao();
 
     @NonNull
     public abstract FeedDao feedDao();

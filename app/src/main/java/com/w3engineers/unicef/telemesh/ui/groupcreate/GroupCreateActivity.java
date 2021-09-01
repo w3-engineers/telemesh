@@ -8,6 +8,8 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
+
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -100,12 +102,23 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                 List<UserEntity> userEntities = mGroupCreateAdapter.getSelectedUserList();
                 if (userEntities.size() == 1) {
                     openUserMessage(mGroupCreateAdapter.getSelectedUserList().get(0));
+                    showOrHideGroupCreateView(false);
                 } else {
-                    mViewModel.createGroup(userEntities);
+                    HandlerUtil.postBackground(()->{
+                        GroupEntity groupEntity= mViewModel.createGroup(userEntities);
+                        HandlerUtil.postForeground(()->{
+                            showOrHideGroupCreateView(false);
+                            if (groupEntity != null) {
+                                Intent intent = new Intent(GroupCreateActivity.this, ChatActivity.class);
+                                intent.putExtra(UserEntity.class.getName(), groupEntity.getGroupId());
+                                intent.putExtra(GroupEntity.class.getName(), true);
+                                startActivity(intent);
+                                IS_NEW_GROUP_CREATED = true;
+                                finish();
+                            }
+                        });
+                    });
                 }
-
-                showOrHideGroupCreateView(false);
-
                 break;
         }
     }

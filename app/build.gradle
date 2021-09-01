@@ -71,9 +71,9 @@ android {
         htmlReport true
         htmlOutput file("../docs/lint_reports/lint-report.html")
 
-        abortOnError true
-        warningsAsErrors true
-        checkAllWarnings true
+        abortOnError false
+        warningsAsErrors false
+        checkAllWarnings false
 
         disable 'InvalidPackage'
     }
@@ -112,7 +112,7 @@ android {
             // All the usual Gradle options.
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
-                outputs.upToDateWhen { false }
+                outputs.upToDateWhen {false}
                 showStandardStreams = true
             }
         }

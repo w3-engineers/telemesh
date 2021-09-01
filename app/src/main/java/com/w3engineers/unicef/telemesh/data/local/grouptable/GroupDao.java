@@ -28,9 +28,8 @@ public abstract class GroupDao extends BaseDao<GroupEntity> {
             + " AS lastMessage, (SELECT " + ColumnNames.COLUMN_USER_NAME + " from " + TableNames.USERS + " WHERE "
             + ColumnNames.COLUMN_USER_MESH_ID + " = " + ColumnNames.COLUMN_FRIENDS_ID + ") AS lastPersonName, "
             + ColumnNames.COLUMN_MESSAGE_TYPE + " AS lastMessageType, " + ColumnNames.COLUMN_FRIENDS_ID
-            + " AS lastPersonId FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_MESSAGE_PLACE
-            + " == " + Constants.MessagePlace.VALUE_MESSAGE_PLACE_GROUP + " GROUP BY " + ColumnNames.COLUMN_GROUP_ID
-            + ") AS M INNER JOIN " + TableNames.MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_GROUP_ID
+            + " AS lastPersonId FROM " + TableNames.GROUP_MESSAGE + " GROUP BY " + ColumnNames.COLUMN_GROUP_ID
+            + ") AS M INNER JOIN " + TableNames.GROUP_MESSAGE + " AS MSG ON MSG." + ColumnNames.COLUMN_GROUP_ID
             + " = M." + "group_id" + " WHERE MSG." + ColumnNames.ID + " = M.MAXID) AS MESS ON "
             + TableNames.GROUP + "." + "group_id" + " = MESS." + ColumnNames.COLUMN_GROUP_ID
             + " WHERE " + ColumnNames.COLUMN_GROUP_NAME + " IS NOT NULL ORDER BY " + ColumnNames.COLUMN_GROUP_CREATION_TIME + " DESC")

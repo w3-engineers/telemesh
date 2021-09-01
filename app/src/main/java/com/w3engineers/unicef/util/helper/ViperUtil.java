@@ -357,9 +357,9 @@ public abstract class ViperUtil {
     public void openAlertForWalletCreation() {
         Context context = MainActivity.getInstance();
         DialogUtil.showConfirmationDialog(context, "Wallet Create",
-                "Do you want to create wallet?",
-                "No",
-                "Yes",
+                "You have to create a wallet to continue",
+                null,
+                "Got it",
                 new DialogUtil.DialogButtonListener() {
                     @Override
                     public void onClickPositive() {

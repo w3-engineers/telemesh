@@ -112,7 +112,7 @@ android {
             // All the usual Gradle options.
             testLogging {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
-                outputs.upToDateWhen {false}
+                outputs.upToDateWhen { false }
                 showStandardStreams = true
             }
         }
@@ -149,7 +149,7 @@ dependencies {
     implementation deps.livedata_reactive
 
     //Crashlytics
-  //  implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    //  implementation 'com.google.firebase:firebase-analytics:17.2.2'
 //    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     //room with Rx
@@ -227,8 +227,8 @@ dependencies {
         transitive=true
     }*/
 //    implementation deps.viper
-  //implementation project(path: ':viper')
-    implementation 'com.github.w3-engineers:Viper-V2:v2.2.3'
+    implementation project(path: ':viper')
+    //implementation 'com.github.w3-engineers:Viper-V2:v2.2.3'
 
     def dagger_version = "2.32"
     implementation "com.google.dagger:dagger:$dagger_version"

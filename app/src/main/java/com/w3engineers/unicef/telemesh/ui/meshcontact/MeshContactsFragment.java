@@ -371,7 +371,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (userEntityList != null && userEntityList.size() > 0) {
             controlEmpty(false);
         } else {
-            fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_groups));
+            fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
             controlEmpty(true);
         }
     }

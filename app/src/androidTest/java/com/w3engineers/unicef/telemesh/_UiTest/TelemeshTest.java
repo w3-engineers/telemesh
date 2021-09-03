@@ -1179,6 +1179,8 @@ public class TelemeshTest {
         ViewInteraction discoverTab = onView(allOf(withId(R.id.action_discover), childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
         discoverTab.perform(click());
 
+        StatusHelper.out("uiTest_05 test executed");
+
         uiTest_07();
     }
 

@@ -86,6 +86,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private BulletinTimeScheduler sheduler;
     private Fragment mCurrentFragment;
 
+    private String myMeshId;
+
     Context mContext;
     private int latestUserCount;
     private int latestMessageCount;
@@ -342,10 +344,28 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         setToolbarTitle(title);
     }
 
-    public void setToolbarTitle(String title) {
+   /* public void setToolbarTitle(String title) {
         String myName = SharedPref.read(Constants.preferenceKey.USER_NAME);
         title = title + " [" + myName + "]";
         setTitle(title);
+    }*/
+
+    public void setToolbarTitle(String title) {
+        String myName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        title = title + " [" + myName + "] [" + getMyMeshId() + "]";
+        setTitle(title);
+    }
+
+    private String getMyMeshId() {
+        if (TextUtils.isEmpty(myMeshId)) {
+            myMeshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            if (TextUtils.isEmpty(myMeshId)) {
+                myMeshId = "no id";
+            } else {
+                myMeshId = myMeshId.substring(myMeshId.length()-3);
+            }
+        }
+        return myMeshId;
     }
 
     public void createUserBadgeCount(int latestCount, int menuItemPosition) {

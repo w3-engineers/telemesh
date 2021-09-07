@@ -311,6 +311,10 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
                 }, Throwable::printStackTrace));
     }
 
+    public void sendContentMessage2(String userId, String path) {
+        startContentMessageProcess(userId, path);
+    }
+
     private void startContentMessageProcess(String userId, String contentPath) {
         if (ContentUtil.getInstance().isTypeImage(contentPath)) {
             // Without compress

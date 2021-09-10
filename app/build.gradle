@@ -162,7 +162,8 @@ dependencies {
     implementation deps.rxjava2
 
     //Paging
-    implementation deps.paging.runtime
+    //implementation deps.paging.runtime
+    implementation 'androidx.paging:paging-runtime:3.0.1'
     //
 
     //Circular Image

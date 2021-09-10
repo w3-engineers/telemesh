@@ -7,6 +7,8 @@ import androidx.databinding.ViewDataBinding;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +34,9 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
-                    return oldItem.getMeshId().equalsIgnoreCase(newItem.getMeshId()) ;
+                    return oldItem.getMeshId().equalsIgnoreCase(newItem.getMeshId());
                 }
+
                 @Override
                 public boolean areContentsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {

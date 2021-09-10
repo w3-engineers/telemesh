@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.RequiresApi;
@@ -200,9 +201,9 @@ public class ContentUtil {
         try {
             File contentFolder;
             Context context = TeleMeshApplication.getContext();
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 contentFolder = getScopedStorage();
-            }else{
+            } else {
                 contentFolder = getFileDirectory(Constants.DirectoryName.ContentFolder);
             }
 
@@ -212,8 +213,9 @@ public class ContentUtil {
         }
         return filePath;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private File getScopedStorage(){
+    private File getScopedStorage() {
         ContentResolver resolver = MeshApp.getContext().getContentResolver();
         ContentValues contentValues = new ContentValues();
         //contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "CuteKitten001");
@@ -266,16 +268,32 @@ public class ContentUtil {
                 ExifInterface exif = new ExifInterface(imagePath);
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
+                Log.d("ImagePicker","orientation: "+orientation);
                 Matrix matrix = null;
                 if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
                     matrix = new Matrix();
-                    matrix.postRotate(270);
+                    matrix.postRotate(90);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
                     matrix = new Matrix();
                     matrix.postRotate(180);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
                     matrix = new Matrix();
-                    matrix.postRotate(90);
+                    matrix.postRotate(-90);
+                } else if (orientation == ExifInterface.ORIENTATION_TRANSVERSE) {
+                    matrix = new Matrix();
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                } else if (orientation == ExifInterface.ORIENTATION_TRANSPOSE) {
+                    matrix = new Matrix();
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                } else if (orientation == ExifInterface.ORIENTATION_FLIP_VERTICAL) {
+                    matrix = new Matrix();
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                } else if (orientation == ExifInterface.ORIENTATION_FLIP_HORIZONTAL) {
+                    matrix = new Matrix();
+                    matrix.setScale(-1, 1);
                 }
 
                 if (matrix != null) {

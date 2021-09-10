@@ -91,8 +91,10 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.nearbyUsers.observe(this, userEntities -> {
                 if (userEntities != null) {
+
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
+
 
                     isLoaded = false;
 
@@ -317,6 +319,7 @@ public class DiscoverFragment extends BaseFragment {
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        //fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);

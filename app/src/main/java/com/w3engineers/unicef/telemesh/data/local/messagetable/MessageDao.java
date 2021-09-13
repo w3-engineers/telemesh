@@ -182,9 +182,8 @@ public abstract class MessageDao extends BaseDao<MessageEntity> {
             + ColumnNames.COLUMN_MESSAGE_PLACE + " = :messagePlace")
     public abstract int clearP2pMessages(String threadId, boolean messagePlace);
 
-    @Query("DELETE FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId AND "
-            + ColumnNames.COLUMN_MESSAGE_PLACE + " = :messagePlace")
-    public abstract int clearGroupMessages(String threadId, boolean messagePlace);
+    @Query("DELETE FROM " + TableNames.GROUP_MESSAGE + " WHERE " + ColumnNames.COLUMN_GROUP_ID + " = :threadId")
+    public abstract int clearGroupMessages(String threadId);
 
     @Query("SELECT * FROM " + TableNames.MESSAGE + " WHERE " + ColumnNames.COLUMN_FRIENDS_ID + " = :threadId AND "
             + ColumnNames.COLUMN_IS_INCOMING + " = " + Constants.MessageType.MESSAGE_OUTGOING + " AND "

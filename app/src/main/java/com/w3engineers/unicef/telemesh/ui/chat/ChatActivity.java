@@ -138,7 +138,6 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
 
-
         if (TextUtils.isEmpty(threadId)) {
             finish();
             return;
@@ -147,6 +146,10 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 
+
+        if (isGroup) {
+            mViewBinging.imageViewPickGalleryImage.setVisibility(View.GONE);
+        }
 
         mChatViewModel = getViewModel();
         mChatViewModel.setChatPageInfo(isGroup);
@@ -256,7 +259,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    public void clearChat(){
+    public void clearChat() {
         mChatViewModel.clearMessage(threadId, isGroup);
     }
 
@@ -448,8 +451,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 //            case R.id.shimmerUploadingImage:
 
 
-
-                ChatEntity  messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
+                ChatEntity messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (messageEntity != null) {
                     viewContent(view, messageEntity);
                 }
@@ -508,7 +510,11 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (mViewBinging.expandedImage.getVisibility() == View.VISIBLE) {
+            mViewBinging.expandedImage.performClick();
+        } else {
+            finish();
+        }
     }
 
     private ChatViewModel getViewModel() {
@@ -574,10 +580,10 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s",Calendar.getInstance().getTime());
+                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s", Calendar.getInstance().getTime());
                     //List<Uri> images = Matisse.obtainResult(data);
                     List<LocalMedia> result = PictureSelector.obtainMultipleResult(data);
-                    Log.d("ImagePath",""+result.get(0).toString());
+                    Log.d("ImagePath", "" + result.get(0).toString());
                     mChatViewModel.sendContentMessage2(threadId, result.get(0).getRealPath());
                 }
                 break;
@@ -650,7 +656,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
             }
         }
 
-      //  String contentPath = messageEntity.getContentPath();
+        //  String contentPath = messageEntity.getContentPath();
         if (TextUtils.isEmpty(contentPath)) {
             Toast.makeText(this, "Error message", Toast.LENGTH_SHORT).show();
             return;

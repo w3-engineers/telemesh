@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
@@ -141,6 +142,7 @@ public class MeshDataSource extends ViperUtil {
     }
 
     private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
+        Log.d("MessageSendTest","message send "+receiverId);
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
     }
 

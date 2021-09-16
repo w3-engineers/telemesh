@@ -304,9 +304,17 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
                                 GroupDataHelper.getInstance().sendTextMessageToGroup(messageEntity.getGroupId(),
                                         messageModelString);
                             } else {
+                                Log.d("MessageSendTest", "messageId " + chatEntity.messageId);
                                 dataSend(messageModelString.getBytes(), Constants.DataType.MESSAGE,
                                         messageEntity.getFriendsId(), true);
                             }
+
+                            //Update message status sending to SEND. because we handover this message
+                            //to library and it is library responsible to send message when user available
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_SEND);
+
+                            MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+
                         } else {
                             ContentDataHelper.getInstance().prepareContentObserver(messageEntity, true);
                         }

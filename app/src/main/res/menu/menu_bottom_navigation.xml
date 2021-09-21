@@ -19,6 +19,7 @@
         android:id="@+id/action_message_feed"
         android:icon="@drawable/message_selector"
         android:title=""
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <!--<item
         android:id="@+id/action_survey"

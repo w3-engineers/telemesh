@@ -5,16 +5,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout_badge"
-        android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_view_badge_count"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_15"
             android:layout_marginTop="@dimen/margin_7"
-            android:layout_marginEnd="@dimen/margin_14"
+            android:layout_marginEnd="@dimen/margin_28"
             android:background="@drawable/circular_badge"
             android:gravity="center"
             android:maxLines="@integer/max_line_1"

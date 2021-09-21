@@ -102,7 +102,7 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
         @Override
         protected void bindView(@NonNull UserEntity item) {
             itemDiscoveredBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
-            itemDiscoveredBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
+            itemDiscoveredBinding.userName.setText(item.userName);
 
             itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
             itemDiscoveredBinding.textViewNetType.setText(getMeshType(item.getOnlineStatus()));

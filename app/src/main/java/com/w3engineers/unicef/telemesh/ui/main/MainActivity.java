@@ -434,7 +434,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         super.onDestroy();
         RmDataHelper.getInstance().destroy();
         sInstance = null;
-        if(!CommonUtil.isEmulator()) {
+        if (!CommonUtil.isEmulator()) {
             LocationTracker.getInstance(mContext).stopListener();
             unregisterReceiver(mGpsSwitchStateReceiver);
         }

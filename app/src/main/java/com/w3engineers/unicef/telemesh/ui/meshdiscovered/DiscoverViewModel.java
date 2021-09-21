@@ -127,7 +127,8 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppSh
                             Iterator<UserEntity> userEntityIterator = userEntities.iterator();
 
                             while (userEntityIterator.hasNext()) {
-                                if (getMyMeshId().equals(userEntityIterator.next().getMeshId())) {
+                                UserEntity ue = userEntityIterator.next();
+                                if (getMyMeshId().equals(ue.getMeshId()) || TextUtils.isEmpty(ue.userName)) {
                                     userEntityIterator.remove();
                                 }
                             }

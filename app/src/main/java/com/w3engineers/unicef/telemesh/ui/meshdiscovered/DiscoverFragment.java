@@ -326,7 +326,7 @@ public class DiscoverFragment extends BaseFragment {
 
         //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
-        meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel,getActivity());
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 

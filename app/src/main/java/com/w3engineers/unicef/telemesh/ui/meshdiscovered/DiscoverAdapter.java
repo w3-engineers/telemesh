@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
+import androidx.core.content.ContextCompat;
 import androidx.paging.PagedListAdapter;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +25,12 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
 
     @NonNull
     public DiscoverViewModel discoverViewModel;
+    private Context mContext;
 
-    DiscoverAdapter(@NonNull DiscoverViewModel discoverViewModel) {
+    DiscoverAdapter(@NonNull DiscoverViewModel discoverViewModel, Context context) {
         super(DIFF_CALLBACK);
         this.discoverViewModel = discoverViewModel;
+        this.mContext = context;
     }
 
     public static final DiffUtil.ItemCallback<UserEntity> DIFF_CALLBACK =
@@ -105,7 +109,15 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
             itemDiscoveredBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
 
             itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
-            itemDiscoveredBinding.textViewNetType.setText(getMeshType(item.getOnlineStatus()));
+
+            String type = getMeshType(item.getOnlineStatus());
+            itemDiscoveredBinding.textViewNetType.setText(type);
+
+            if (type.equalsIgnoreCase("W")) {
+                itemDiscoveredBinding.textViewNetType.setTextColor(ContextCompat.getColor(mContext, R.color.colorRed));
+            } else {
+                itemDiscoveredBinding.textViewNetType.setTextColor(ContextCompat.getColor(mContext, R.color.default_text_color));
+            }
 
             if (item.hasUnreadMessage > 0) {
                 itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.VISIBLE);

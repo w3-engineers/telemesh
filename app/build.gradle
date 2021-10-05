@@ -5,7 +5,7 @@ plugins {
 //    id 'io.fabric'
 }
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30

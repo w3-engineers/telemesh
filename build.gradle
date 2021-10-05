@@ -36,7 +36,7 @@ allprojects {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
-        maven {
+/*        maven {
 
             def mavenUrl, access, secret;
 
@@ -58,7 +58,7 @@ allprojects {
                 accessKey access
                 secretKey secret
             }
-        }
+        }*/
     }
 }
 

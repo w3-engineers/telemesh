@@ -3,17 +3,22 @@ package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -24,6 +29,7 @@ import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.StorageUtil;
 
 import java.util.List;
 
@@ -40,6 +46,8 @@ public class DiscoverFragment extends BaseFragment {
     private boolean isLoaded = false;
     private SearchView mSearchView;
     private DiscoverAdapter meshContactAdapter;
+
+    private boolean hasUser;
 
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
@@ -83,8 +91,10 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.nearbyUsers.observe(this, userEntities -> {
                 if (userEntities != null) {
+
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
+
 
                     isLoaded = false;
 
@@ -92,9 +102,19 @@ public class DiscoverFragment extends BaseFragment {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
-                        fragmentDiscoverBinding.fabChat.show();
-                    }else{
+
+                        hasUser = true;
+                        fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_baseline_chat);
                         fragmentDiscoverBinding.fabChat.hide();
+                        fragmentDiscoverBinding.fabChat.show();
+
+                    } else {
+
+                        hasUser = false;
+                        fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_share_white);
+                        fragmentDiscoverBinding.fabChat.hide();
+                        fragmentDiscoverBinding.fabChat.show();
+
                     }
                 }
                 if (mSearchItem != null)
@@ -108,14 +128,21 @@ public class DiscoverFragment extends BaseFragment {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
 
+                    hasUser = true;
+
+                    fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_baseline_chat);
+                    fragmentDiscoverBinding.fabChat.hide();
                     fragmentDiscoverBinding.fabChat.show();
+
 
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
+                    hasUser = true;
                     fragmentDiscoverBinding.fabChat.hide();
+
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         //enableLoading();
@@ -204,7 +231,11 @@ public class DiscoverFragment extends BaseFragment {
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.fab_chat) {
-            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+            if (hasUser) {
+                startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+            } else {
+                shareAppOperation();
+            }
         }
     }
 
@@ -288,13 +319,14 @@ public class DiscoverFragment extends BaseFragment {
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        //fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
-        meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel,getActivity());
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 
@@ -316,5 +348,21 @@ public class DiscoverFragment extends BaseFragment {
     private void initAllText() {
         fragmentDiscoverBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
         fragmentDiscoverBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
+    }
+
+    private void shareAppOperation() {
+        if (hasEnoughStorage() && discoverViewModel != null) {
+            discoverViewModel.startInAppShareProcess();
+        }
+    }
+
+    private boolean hasEnoughStorage() {
+        boolean hasEnoughStorage = false;
+        if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
+            hasEnoughStorage = true;
+        } else {
+            Toast.makeText(getActivity(), LanguageUtil.getString(R.string.phone_storage_not_enough), Toast.LENGTH_SHORT).show();
+        }
+        return hasEnoughStorage;
     }
 }

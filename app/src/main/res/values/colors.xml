@@ -88,4 +88,5 @@
 
     <color name="spin_bar">#BBDEFB</color>
     <color name="sunset_orange">#FE4A49</color>
+    <color name="default_text_color">#808080</color>
 </resources>

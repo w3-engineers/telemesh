@@ -5,7 +5,7 @@
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
-    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
+    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890 </string>
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
 
@@ -28,14 +28,14 @@
 
     <string name="no_contact_available">কাছাকাছি কাউকে পাওয়া যায়নি</string>
     <string name="no_conversation">কোনো কথোপকথন হয়নি</string>
-    <string name="no_message_available">কোনো বার্তা নেই</string>
+    <string name="no_message_available">আপনার জন্য কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
     <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     // Settings title
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
-    <string name="settings_share_app">শেয়ার অ্যাপ্লিকেশন</string>
+    <string name="settings_share_app">পরিচিতদের সাথে এপ্লিকেশনটি শেয়ার করুন</string>
 
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -98,6 +98,7 @@
     <string name="a_new_version">একটি নতুন ভার্সন </string>
     <string name="is_available_for_telemesh">Telemesh এর জন্য পাওয়া গেছে</string>
     <string name="no_favorite">কোনও প্রিয় ব্যবহারকারী পাওয়া যায় নি</string>
+    <string name="no_groups">কোনো গ্রুপ পাওয়া যায় নাই</string>
     <string name="phone_storage_not_enough">আপনার মোবাইলে পর্যাপ্ত পরিমান জায়গা নেই</string>
 
     <!--  No need those are in bangla because those are used in before registration  -->

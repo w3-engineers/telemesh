@@ -4,18 +4,22 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
+
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -234,7 +238,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         fragmentMeshcontactBinding.spinnerView.setOnItemSelectedListener(this);
 
         List<String> categories = new ArrayList<String>();
-        categories.add("Group");
+        categories.add("Groups");
         categories.add("Favourite");
         categories.add("All");
 
@@ -245,7 +249,8 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
 
     // General API's and initialization area
     private void init() {
-        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
+        //fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
+        fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_groups));
         meshContactViewModel = getViewModel();
 
         fragmentMeshcontactBinding.contactRecyclerView.setItemAnimator(null);
@@ -354,6 +359,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (groupEntities != null && groupEntities.size() > 0) {
             controlEmpty(false);
         } else {
+            fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_groups));
             controlEmpty(true);
         }
     }
@@ -365,6 +371,7 @@ public class MeshContactsFragment extends BaseFragment implements AdapterView.On
         if (userEntityList != null && userEntityList.size() > 0) {
             controlEmpty(false);
         } else {
+            fragmentMeshcontactBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_favorite));
             controlEmpty(true);
         }
     }

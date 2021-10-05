@@ -227,6 +227,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         return "";
     }
 
+    private String getUserName(GroupMessageEntity messageEntity) {
+        UserEntity userEntity = userMap.get(messageEntity.friendsId);
+        if (userEntity != null) {
+            return userEntity.getUserName();
+        }
+        return "";
+    }
+
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
         public GenericViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -709,8 +717,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.setAvatarIndex(21);
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.white));
-            //String name = getUserName(item);
-            //binding.userName.setText("" + name);
+            String name = getUserName(item);
+            binding.userName.setText("" + name);
         }
 
         @Override

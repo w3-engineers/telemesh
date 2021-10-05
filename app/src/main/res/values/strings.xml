@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Telemesh</string>
-    <string name="activity_view_profile">My Profile</string>
+    <string name="activity_view_profile">My profile</string>
     <string name="enter_first_name">Type your name</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
-    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
+    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890 </string>
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
     <string name="select_photo">Select Avatar</string>
-    <string name="title_discoverd_fragment">Nearby Users</string>
+    <string name="title_discoverd_fragment">Nearby users</string>
     <string name="title_personal_fragment">Personal Contacts</string>
     <string name="title_message_feed_fragment">Broadcast</string>
     <string name="title_settings_fragment">My Telemesh</string>
@@ -25,10 +25,10 @@
 
     <string name="no_contact_available">No Nearby User Found Yet</string>
     <string name="no_conversation">No Conversation Yet</string>
-    <string name="no_message_available">No broadcast to show</string>
+    <string name="no_message_available">No broadcast message for you</string>
 
     <string name="search">Search People</string>
-    <string name="type_message">Add Text to this Message</string>
+    <string name="type_message">Type a message</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
     <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
@@ -39,8 +39,8 @@
     // Settings title
 
     <string name="settings_choose_language">Language</string>
-    <string name="settings_share_app">Share App</string>
-    <string name="settings_open_wallet">My Wallet</string>
+    <string name="settings_share_app">Share this app with friends</string>
+    <string name="settings_open_wallet">My wallet</string>
 
     <string name="choose_language">Choose a Language</string>
     <string name="image">Image</string>
@@ -50,7 +50,7 @@
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Searching Nearby</string>
     <string name="searching">Searching…</string>
-    <string name="data_plan">My Data Plan</string>
+    <string name="data_plan">My data plan</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 
     <!--    <string name="profile">Profile</string>-->
@@ -118,7 +118,7 @@
     <string name="continue_button">Continue</string>
     <string name="enter_eight_digit_password">Please Enter at least 8 digit password</string>
     <string name="enter_password_here">Enter password here:</string>
-    <string name="create_profile">Create Profile</string>
+    <string name="create_profile">Create profile</string>
     <string name="update_profile">Update Profile</string>
     <string name="file_exit">A user account already exists, would you like to continue with that? Your address is %s</string>
     <string name="or">or</string>
@@ -149,6 +149,7 @@
     <!--     <string name="spinner_title">Favourite</string>-->
 
     <string name="no_favorite">No favorite user found</string>
+    <string name="no_groups">No group found</string>
     <string name="minimu_ssid_character">Minimum character limit is 3</string>
     <string name="change">Change</string>
     <string name="a_new_version">A new version </string>

@@ -1,22 +1,34 @@
 package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
+
 import android.os.AsyncTask;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.w3engineers.appshare.application.ui.InAppShareControl;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountDataService;
+import com.w3engineers.unicef.telemesh.data.local.appsharecount.AppShareCountEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.MainThreadExecutor;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.UserPositionalDataSource;
 import com.w3engineers.unicef.util.base.ui.BaseRxAndroidViewModel;
+import com.w3engineers.unicef.util.helper.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +42,7 @@ import java.util.concurrent.Executors;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DiscoverViewModel extends BaseRxAndroidViewModel {
+public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppShareControl.AppShareCallback {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
@@ -115,7 +127,8 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                             Iterator<UserEntity> userEntityIterator = userEntities.iterator();
 
                             while (userEntityIterator.hasNext()) {
-                                if (getMyMeshId().equals(userEntityIterator.next().getMeshId())) {
+                                UserEntity ue = userEntityIterator.next();
+                                if (getMyMeshId().equals(ue.getMeshId()) || TextUtils.isEmpty(ue.userName)) {
                                     userEntityIterator.remove();
                                 }
                             }
@@ -148,7 +161,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
                         userList.clear();
                         userList.addAll(userEntities);
 
-                        if(!userEntityList.isEmpty()) {
+                        if (!userEntityList.isEmpty()) {
                             Collections.sort(userEntityList, (o1, o2) -> {
                                 if (o1.getUserName() != null && o2.getUserName() != null) {
                                     return o1.getUserName().compareTo(o2.getUserName());
@@ -246,4 +259,40 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel {
         }
     }
 
+    public void startInAppShareProcess() {
+        InAppShareControl.getInstance().startInAppShareProcess(getApplication().getApplicationContext(), this);
+    }
+
+    @Override
+    public void closeRmService() {
+        RmDataHelper.getInstance().stopRmService();
+    }
+
+    @Override
+    public void successShared() {
+        HandlerUtil.postBackground(() -> {
+            String date = TimeUtil.getDateString(System.currentTimeMillis());
+            String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            Log.d("WalletAddress", "My address: " + myId);
+            boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
+            if (isExist) {
+                AppShareCountDataService.getInstance().updateCount(myId, date);
+            } else {
+                AppShareCountEntity entity = new AppShareCountEntity();
+                entity.setDate(date);
+                entity.setCount(1);
+                entity.setUserId(myId);
+                AppShareCountDataService.getInstance().insertAppShareCount(entity);
+            }
+        });
+    }
+
+    @Override
+    public void closeInAppShare() {
+        HandlerUtil.postBackground(this::restartMesh, 5000);
+    }
+
+    private void restartMesh() {
+        ServiceLocator.getInstance().resetMesh();
+    }
 }

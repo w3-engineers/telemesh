@@ -354,7 +354,7 @@ public abstract class ViperUtil {
     }
 
     public void openAlertForWalletCreation() {
-        Context context = MainActivity.getInstance();
+       /* Context context = MainActivity.getInstance();
         DialogUtil.showConfirmationDialog(context, "Wallet Create",
                 "You have to create a wallet to continue",
                 null,
@@ -374,7 +374,9 @@ public abstract class ViperUtil {
                     public void onClickNegative() {
                         DialogUtil.dismissDialog();
                     }
-                });
+                });*/
+
+        viperClient.openWalletCreationUI();
     }
 
     private void dataReceive(String senderId, byte[] frameData) {

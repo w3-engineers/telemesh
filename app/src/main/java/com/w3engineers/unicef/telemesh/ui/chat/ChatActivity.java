@@ -39,6 +39,9 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
@@ -60,6 +63,7 @@ import com.w3engineers.unicef.util.base.ui.ItemClickListener;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
+import com.w3engineers.unicef.util.helper.GlideEngine;
 import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -134,7 +138,6 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
 
-
         if (TextUtils.isEmpty(threadId)) {
             finish();
             return;
@@ -143,6 +146,10 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 
+
+        if (isGroup) {
+            mViewBinging.imageViewPickGalleryImage.setVisibility(View.GONE);
+        }
 
         mChatViewModel = getViewModel();
         mChatViewModel.setChatPageInfo(isGroup);
@@ -252,7 +259,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    public void clearChat(){
+    public void clearChat() {
         mChatViewModel.clearMessage(threadId, isGroup);
     }
 
@@ -444,8 +451,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 //            case R.id.shimmerUploadingImage:
 
 
-
-                ChatEntity  messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
+                ChatEntity messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (messageEntity != null) {
                     viewContent(view, messageEntity);
                 }
@@ -504,7 +510,11 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (mViewBinging.expandedImage.getVisibility() == View.VISIBLE) {
+            mViewBinging.expandedImage.performClick();
+        } else {
+            finish();
+        }
     }
 
     private ChatViewModel getViewModel() {
@@ -544,7 +554,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 
     private void openGallery() {
         int selectImageCount = 1;
-        Matisse.from(this)
+       /* Matisse.from(this)
                 .choose(MimeType.ofAll(), false)
                 .theme(R.style.Matisse_Dracula)
                 .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.height_120))
@@ -552,6 +562,14 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
                 .thumbnailScale(0.85f)
                 .maxSelectable(selectImageCount)
                 .imageEngine(new MyGlideEngineUtil())
+                .forResult(Constants.RequestCodes.GALLERY_IMAGE_REQUEST);*/
+
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofAll())
+                .isCamera(false)
+                .maxSelectNum(1)
+                .theme(R.style.Matisse_Dracula)
+                .imageEngine(GlideEngine.createGlideEngine()) // Please refer to the Demo GlideEngine.java
                 .forResult(Constants.RequestCodes.GALLERY_IMAGE_REQUEST);
     }
 
@@ -562,9 +580,11 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s",Calendar.getInstance().getTime());
-                    List<Uri> images = Matisse.obtainResult(data);
-                    mChatViewModel.sendContentMessage(threadId, images.get(0));
+                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s", Calendar.getInstance().getTime());
+                    //List<Uri> images = Matisse.obtainResult(data);
+                    List<LocalMedia> result = PictureSelector.obtainMultipleResult(data);
+                    Log.d("ImagePath", "" + result.get(0).toString());
+                    mChatViewModel.sendContentMessage2(threadId, result.get(0).getRealPath());
                 }
                 break;
         }
@@ -636,7 +656,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
             }
         }
 
-      //  String contentPath = messageEntity.getContentPath();
+        //  String contentPath = messageEntity.getContentPath();
         if (TextUtils.isEmpty(contentPath)) {
             Toast.makeText(this, "Error message", Toast.LENGTH_SHORT).show();
             return;

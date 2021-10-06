@@ -193,7 +193,7 @@ public class MessageSourceData {
 
     public int clearMessage(String threadId, boolean isGroup) {
         if (isGroup) {
-            return messageDao.clearGroupMessages(threadId, isGroup);
+            return messageDao.clearGroupMessages(threadId);
         } else {
             return messageDao.clearP2pMessages(threadId, isGroup);
         }

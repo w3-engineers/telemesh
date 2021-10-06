@@ -55,7 +55,7 @@ public class NotifyUtil {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setAction(Long.toString(TimeUtil.toCurrentTime()));
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         UserEntity userEntity = userDataSource.getSingleUserById(chatEntity.getFriendsId());
         String chatUserId = "";

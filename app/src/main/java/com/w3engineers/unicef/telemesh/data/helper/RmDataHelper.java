@@ -743,6 +743,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return false;
     }
 
+
+    public void startTelemeshService() {
+        rightMeshDataSource.startTelemeshService();
+    }
+
     /**
      * For ReInitiating RM service need to reset rightmesh data source instance
      */

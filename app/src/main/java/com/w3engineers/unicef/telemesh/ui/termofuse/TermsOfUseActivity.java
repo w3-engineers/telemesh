@@ -3,11 +3,14 @@ package com.w3engineers.unicef.telemesh.ui.termofuse;
 import android.content.Intent;
 import android.view.View;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
+import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 
-public class TermsOfUseActivity extends BaseActivity {
+public class TermsOfUseActivity extends TelemeshBaseActivity {
 
     private ActivityTermsOfUseBinding mBinding;
 
@@ -28,11 +31,18 @@ public class TermsOfUseActivity extends BaseActivity {
 
 
     @Override
-    protected void startUI() {
+    public BaseServiceLocator a() {
+        return ServiceLocator.getInstance();
+    }
+
+    @Override
+    public void startUI() {
+        super.startUI();
         mBinding = (ActivityTermsOfUseBinding) getViewDataBinding();
         setTitle(getResources().getString(R.string.terms_of_use_details));
         initView();
     }
+
 
     @Override
     public void onClick(View view) {
@@ -63,7 +73,9 @@ public class TermsOfUseActivity extends BaseActivity {
     }
 
     private void gotoProfileChoicePage() {
-        startActivity(new Intent(TermsOfUseActivity.this, CreateUserActivity.class));
-        finish();
+        //startActivity(new Intent(TermsOfUseActivity.this, CreateUserActivity.class));
+        //finish();
+
+        ServiceLocator.getInstance().startTelemeshService();
     }
 }

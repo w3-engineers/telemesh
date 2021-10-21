@@ -86,9 +86,9 @@ public abstract class ViperUtil {
         try {
             context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
 
-            String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
+            /*String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
             String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
-            String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
+            String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();*/
 
             initObservers();
             viperClient = ViperClient.on(context, userModel.getName(), userModel.getImage());
@@ -96,6 +96,10 @@ public abstract class ViperUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void startTelemeshService(){
+        viperClient.startTelemeshService();
     }
 
     private void initObservers() {

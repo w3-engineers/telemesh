@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
+
 import androidx.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -170,6 +172,10 @@ public class ServiceLocator extends BaseServiceLocator {
     @Override
     public void initViper() {
         RmDataHelper.getInstance().initRM(Source.getDbSource());
+    }
+
+    public void startTelemeshService() {
+        RmDataHelper.getInstance().startTelemeshService();
     }
 
     public void resetMesh() {

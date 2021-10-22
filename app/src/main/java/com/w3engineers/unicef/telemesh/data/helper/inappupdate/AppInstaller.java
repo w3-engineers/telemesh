@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+
 import androidx.core.content.FileProvider;
+
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.widget.Toast;
@@ -53,13 +57,14 @@ public class AppInstaller {
     @SuppressLint("StaticFieldLeak")
     private static DialogAppInstallProgressBinding binding;
     private static AlertDialog dialog;
+    private static Context mContext;
 
     public static void downloadApkFile(String baseUrl, Context context, Network network) {
 
         if (isAppUpdating) return;
 
         isAppUpdating = true;
-
+        mContext = context;
         if (baseUrl.contains("@")) {
             String url[] = baseUrl.split("@");
             baseUrl = "https://" + url[1];
@@ -147,7 +152,13 @@ public class AppInstaller {
         @Override
         protected void onPostExecute(String result) {
 
-            File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "updatedApk.apk");
+            File destinationFile = null;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                destinationFile = new File(context.getExternalFilesDir(""), "updatedApk.apk");
+            } else {
+                destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "updatedApk.apk");
+            }
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -176,7 +187,14 @@ public class AppInstaller {
     private static void saveToDisk(ResponseBody body, String filename) {
         try {
 
-            File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+            File destinationFile = null;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                destinationFile = new File(mContext.getExternalFilesDir(""), filename);
+            } else {
+                destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            }
 
             InputStream inputStream = null;
             OutputStream outputStream = null;

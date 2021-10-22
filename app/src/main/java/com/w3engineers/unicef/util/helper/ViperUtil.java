@@ -191,10 +191,11 @@ public abstract class ViperUtil {
 
 
         AppDataObserver.on().startObserver(ApiEvent.WALLET_CREATION_EVENT, event -> {
-            WalletCreationEvent walletCreationEvent = (WalletCreationEvent) event;
+            openSelectAccountActivity();
+            /*WalletCreationEvent walletCreationEvent = (WalletCreationEvent) event;
             if (walletCreationEvent != null) {
                 HandlerUtil.postForeground(this::openAlertForWalletCreation);
-            }
+            }*/
         });
 
         AppDataObserver.on().startObserver(ApiEvent.FILE_RECEIVED_EVENT, event -> {
@@ -677,4 +678,6 @@ public abstract class ViperUtil {
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
     protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime);
+
+    protected abstract void openSelectAccountActivity();
 }

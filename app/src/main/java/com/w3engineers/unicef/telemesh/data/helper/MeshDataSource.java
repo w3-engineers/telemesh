@@ -2,7 +2,10 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
@@ -66,7 +70,7 @@ public class MeshDataSource extends ViperUtil {
         return rightMeshDataSource;
     }
 
-    public void destroyDataSource(){
+    public void destroyDataSource() {
         rightMeshDataSource = null;
     }
 
@@ -142,7 +146,7 @@ public class MeshDataSource extends ViperUtil {
     }
 
     private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
-        Log.d("MessageSendTest","message send "+receiverId);
+        Log.d("MessageSendTest", "message send " + receiverId);
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
     }
 
@@ -274,8 +278,18 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime) {
+    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime) {
         BroadcastDataHelper.getInstance().receiveLocalBroadcast(broadcastId, metaData, contentPath, latitude, longitude, range, expiryTime);
+    }
+
+
+    @Override
+    protected void openSelectAccountActivity() {
+        Context context = TeleMeshApplication.getContext();
+        Intent intent = new Intent(context, SelectAccountActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     public void saveUpdateUserInfo() {

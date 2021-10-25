@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.telemesh.ui.selectaccount;
 
+import android.content.Intent;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -7,6 +10,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
+import com.w3engineers.unicef.telemesh.databinding.ActivitySelectAccountBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
@@ -16,6 +21,8 @@ import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
  */
 public class SelectAccountActivity extends TelemeshBaseActivity {
     private SelectAccountViewModel selectAccountViewModel;
+    private ActivitySelectAccountBinding viewBinder;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_select_account;
@@ -29,7 +36,18 @@ public class SelectAccountActivity extends TelemeshBaseActivity {
     @Override
     public void startUI() {
         super.startUI();
+        viewBinder = (ActivitySelectAccountBinding) getViewDataBinding();
         selectAccountViewModel = getViewModel();
+        setClickListener(viewBinder.buttonCreateAccount, viewBinder.buttonImportAccount);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.button_create_account) {
+            startActivity(new Intent(this, CreateUserActivity.class));
+        } else if (view.getId() == R.id.button_import_account) {
+            selectAccountViewModel.launchImportWalletActivity();
+        }
     }
 
     @Override

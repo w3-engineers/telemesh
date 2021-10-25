@@ -182,10 +182,12 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         String userId = getMyMeshId();
 
         String name = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        String lastName = SharedPref.read(Constants.preferenceKey.LAST_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         long regTime = SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME);
 
         UserEntity userEntity = new UserEntity().setUserName(name)
+                .setUserLastName(lastName)
                 .setAvatarIndex(avatarIndex)
                 .setMeshId(userId)
                 .setRegistrationTime(regTime)
@@ -1020,15 +1022,16 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // LogProcessUtil.getInstance().writeLog(log);
     }*/
 
-    public void broadcastUpdateProfileInfo(@NonNull String userName, int imageIndex) {
+    public void broadcastUpdateProfileInfo(@NonNull String userName, String lastName) {
 
         // Save current my information in SDK layer
         prepareRightMeshDataSource();
         rightMeshDataSource.saveUpdateUserInfo();
 
         UserModel userModel = new UserModel();
-        userModel.setImage(imageIndex);
+        userModel.setImage(0);
         userModel.setName(userName);
+        userModel.setLastName(lastName);
 
         String updateInfo = new Gson().toJson(userModel);
 

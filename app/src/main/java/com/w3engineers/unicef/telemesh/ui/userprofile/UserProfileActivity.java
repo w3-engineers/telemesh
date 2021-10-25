@@ -1,17 +1,21 @@
 package com.w3engineers.unicef.telemesh.ui.userprofile;
 
 import android.annotation.SuppressLint;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
@@ -66,20 +70,11 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
+        updateImageNameField(userEntity.getUserName(), userEntity.getUserLastName());
 
         setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile, mBinding.textViewEdit);
 
         if (isMyProfile) {
-            String companyId = SharedPref.read(Constants.preferenceKey.COMPANY_ID);
-            String companyName = SharedPref.read(Constants.preferenceKey.COMPANY_NAME);
-
-           /* if (!TextUtils.isEmpty(companyId)) {
-                mBinding.userId.setText(getResources().getString(R.string.id) + ": " + companyId);
-                mBinding.userCompany.setText(getCompanyName(companyName));
-                mBinding.icValid.setVisibility(View.VISIBLE);
-            } else {
-                mBinding.icValid.setVisibility(View.GONE);
-            }*/
 
             mBinding.buttonExportProfile.setVisibility(View.INVISIBLE);
             mBinding.textViewEdit.setVisibility(View.VISIBLE);
@@ -104,6 +99,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         if (isMyProfile) {
             UserEntity userEntity = new UserEntity();
             userEntity.userName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+            userEntity.setUserLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME));
             userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
             userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
             mBinding.setUserEntity(userEntity);
@@ -170,6 +166,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     private void gotoEditPage() {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.setUserLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME));
         userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         Intent intent = new Intent(this, EditProfileActivity.class);
@@ -180,6 +177,23 @@ public class UserProfileActivity extends TelemeshBaseActivity {
     private void initAllText() {
         mBinding.textViewEdit.setText(LanguageUtil.getString(R.string.edit));
         mBinding.textViewTitle.setText(LanguageUtil.getString(R.string.activity_view_profile));
+    }
+
+    private void updateImageNameField(String firstName, String lastName) {
+
+        String finalText = "";
+
+
+        if (!TextUtils.isEmpty(firstName)) {
+
+            finalText = String.valueOf(firstName.charAt(0));
+        }
+        if (!TextUtils.isEmpty(lastName)) {
+
+            finalText += String.valueOf(lastName.charAt(0));
+        }
+
+        mBinding.textViewImageName.setText(finalText);
     }
 
     /*@Override

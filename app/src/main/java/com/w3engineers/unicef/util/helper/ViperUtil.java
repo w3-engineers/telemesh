@@ -149,7 +149,9 @@ public abstract class ViperUtil {
 
             UserInfoEvent userInfoEvent = (UserInfoEvent) event;
 
-            UserModel userModel = new UserModel().setName(userInfoEvent.getUserName())
+            UserModel userModel = new UserModel()
+                    .setName(userInfoEvent.getUserName())
+                    .setLastName(userInfoEvent.getLastName())
                     .setImage(userInfoEvent.getAvatar())
                     .setTime(userInfoEvent.getRegTime());
 
@@ -480,7 +482,7 @@ public abstract class ViperUtil {
 
             String address = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
-            viperClient.updateMyInfo(userModel.getName(), userModel.getImage());
+            viperClient.updateMyInfo(userModel.getName(), userModel.getLastName(), userModel.getImage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -588,7 +590,7 @@ public abstract class ViperUtil {
             ContentModel contentModel = viperContentData.contentModel;
             ContentMetaInfo contentMetaInfo = null;
             if (!contentModel.isRequestFromReceiver()) {
-               // iugu
+                // iugu
                 contentMetaInfo = new ContentMetaInfo()
                         .setGroupContent(contentModel.isGroupContent())
                         .setMessageId(contentModel.getMessageId())

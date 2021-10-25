@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.net.Network;
 import android.net.Uri;
@@ -61,7 +63,7 @@ public class AppInstaller {
         isAppUpdating = true;
 
         if (baseUrl.contains("@")) {
-            String url[] = baseUrl.split("@");
+            String[] url = baseUrl.split("@");
             baseUrl = "https://" + url[1];
         }
 
@@ -70,7 +72,7 @@ public class AppInstaller {
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, final Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull final Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
 
                     //Toast.makeText(TeleMeshApplication.getContext(), "Downloading...", Toast.LENGTH_SHORT).show();
@@ -84,7 +86,7 @@ public class AppInstaller {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 t.printStackTrace();
                 isAppUpdating = false;
                 InAppUpdate.getInstance(TeleMeshApplication.getContext()).setAppUpdateProcess(false);
@@ -95,7 +97,7 @@ public class AppInstaller {
 
     private static class DownloadZipFileTask extends AsyncTask<ResponseBody, Pair<Integer, Long>, String> {
         @SuppressLint("StaticFieldLeak")
-        private Context context;
+        private final Context context;
 
         public DownloadZipFileTask(Context context) {
             this.context = context;
@@ -111,13 +113,13 @@ public class AppInstaller {
         @Override
         protected String doInBackground(ResponseBody... urls) {
             //Copy you logic to calculate progress and call
-            saveToDisk(urls[0], "updatedApk.apk");
+            saveToDisk(urls[0]);
             return null;
         }
 
         protected void onProgressUpdate(Pair<Integer, Long>... progress) {
 
-            if (progress[0].first == 100) {
+            if (progress[0].first >= 100) {
                 Toast.makeText(context, "Internet connection not available", Toast.LENGTH_SHORT).show();
             }
 
@@ -155,6 +157,7 @@ public class AppInstaller {
 
             Intent intent;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
                 Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destinationFile);
                 intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                 intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
@@ -173,10 +176,10 @@ public class AppInstaller {
         }
     }
 
-    private static void saveToDisk(ResponseBody body, String filename) {
+    private static void saveToDisk(ResponseBody body) {
         try {
 
-            File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            File destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "updatedApk.apk");
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -185,7 +188,7 @@ public class AppInstaller {
 
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(destinationFile);
-                byte data[] = new byte[4096];
+                byte[] data = new byte[4096];
                 int count;
                 int progress = 0;
                 long fileSize = body.contentLength();
@@ -200,19 +203,16 @@ public class AppInstaller {
 
                 Pair<Integer, Long> pairs = new Pair<>(100, 100L);
                 downloadZipFileTask.doProgress(pairs);
-                return;
             } catch (IOException e) {
                 e.printStackTrace();
-                Pair<Integer, Long> pairs = new Pair<>(-1, Long.valueOf(-1));
+                Pair<Integer, Long> pairs = new Pair<>(-1, (long) -1);
                 downloadZipFileTask.doProgress(pairs);
-                return;
             } finally {
                 if (inputStream != null) inputStream.close();
                 if (outputStream != null) outputStream.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
     }
 

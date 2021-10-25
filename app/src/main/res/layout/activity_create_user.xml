@@ -117,22 +117,30 @@
                     android:contentDescription="@string/profile_selection_image"
                     android:padding="@dimen/margin_20"
                     android:src="@mipmap/ic_avatar_grey"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@+id/divider"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/divider" />
 
-                <ImageView
-                    android:id="@+id/image_view_camera"
-                    android:layout_width="@dimen/width_40"
-                    android:layout_height="@dimen/height_40"
-                    android:contentDescription="@string/logo_image"
-                    android:padding="@dimen/padding_10"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_profile_edit"
-                    app:layout_constraintBottom_toBottomOf="@+id/image_profile"
-                    app:layout_constraintEnd_toEndOf="@+id/image_profile" />
 
+                <TextView
+                    android:id="@+id/text_view_image_name"
+                    android:layout_width="@dimen/width_120"
+                    android:layout_height="@dimen/height_120"
+                    android:background="@drawable/circular_white"
+                    android:gravity="center"
+                    android:maxLength="2"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/divider"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/divider"
+                    tools:text="RJ" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/name_layout"
@@ -144,7 +152,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/image_profile_background">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_text_name"
+                        android:id="@+id/edit_text_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_15"
@@ -173,17 +181,45 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/name_layout" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/last_name_layout"
+                    style="@style/signup_editext_style"
+                    android:textColorHint="@color/hint_text_color"
+                    app:hintTextAppearance="@style/hint_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_view_pen2"
+                    app:layout_constraintTop_toBottomOf="@+id/name_layout">
 
-<!--                <com.w3engineers.ext.strom.application.ui.widget.BaseButton
-                    android:id="@+id/button_signup"
-                    style="@style/CustomButton"
-                    android:clickable="true"
-                    android:text="@string/signup"
-                    android:textAllCaps="false"
-                    android:textColor="@color/new_user_button_color"
-                    app:bb_drawable="@drawable/ractangular_white"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />-->
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_text_last_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_15"
+                        android:backgroundTint="@color/new_user_button_color"
+                        android:digits="@string/myDigits"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="@string/enter_last_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="@{DefaultValue.MAXIMUM_TEXT_LIMIT}"
+                        android:singleLine="true"
+                        android:textSize="@dimen/text_body">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/image_view_pen2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_15"
+                    android:contentDescription="@string/name_field_icon"
+                    android:src="@mipmap/ic_pen"
+                    app:layout_constraintBottom_toBottomOf="@+id/last_name_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/last_name_layout" />
+
 
                 <Button
                     android:id="@+id/button_signup"
@@ -191,11 +227,11 @@
                     android:layout_height="@dimen/height_40"
                     android:layout_marginTop="@dimen/margin_16"
                     android:layout_marginEnd="25dp"
-                    android:text="@string/signup"
                     android:background="@drawable/ractangular_white"
+                    android:text="@string/signup"
                     android:textColor="@color/new_user_button_color"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/name_layout" />
+                    app:layout_constraintTop_toBottomOf="@+id/last_name_layout" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

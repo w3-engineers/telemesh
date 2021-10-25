@@ -63,7 +63,11 @@ public class DiscoverFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
         controlEmptyLayout();
-        ((MainActivity) getActivity()).setToolbarTitle(title);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).setToolbarTitle(title);
+        }
+
 
         init();
 
@@ -326,7 +330,7 @@ public class DiscoverFragment extends BaseFragment {
 
         //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
-        meshContactAdapter = new DiscoverAdapter(discoverViewModel,getActivity());
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel, getActivity());
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 

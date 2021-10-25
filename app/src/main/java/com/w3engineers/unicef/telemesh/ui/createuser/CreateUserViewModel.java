@@ -1,9 +1,11 @@
 package com.w3engineers.unicef.telemesh.ui.createuser;
 
 import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.widget.EditText;
 
@@ -35,7 +37,10 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
     }
 
     @NonNull
-    public MutableLiveData<String> textChangeLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> firstNameChangeLiveData = new MutableLiveData<>();
+
+    @NonNull
+    public MutableLiveData<String> lastNameChangeLiveData = new MutableLiveData<>();
 
     int getImageIndex() {
         return imageIndex;
@@ -45,15 +50,17 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String userName/*, String password*/) {
+    boolean storeData(@Nullable String firstName, String lastName) {
 
         if (imageIndex < 0) {
             imageIndex = Constants.DEFAULT_AVATAR;
         }
 
-        userName = Util.convertToTitleCaseIteratingChars(userName);
+        //firstName = Util.convertToTitleCaseIteratingChars(firstName);
 
-        SharedPref.write(Constants.preferenceKey.USER_NAME, userName);
+
+        SharedPref.write(Constants.preferenceKey.USER_NAME, firstName);
+        SharedPref.write(Constants.preferenceKey.LAST_NAME, lastName);
         SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
 //        sharedPref.write(Constants.preferenceKey.MY_PASSWORD, password);
         SharedPref.write(Constants.preferenceKey.MY_REGISTRATION_TIME, System.currentTimeMillis());
@@ -68,12 +75,21 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
     }
 
-    public void textEditControl(@NonNull EditText editText) {
+    public void firstNameEditControl(@NonNull EditText editText) {
         getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
                 .map(input -> input.editable() + "")
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
-                .subscribe(text -> textChangeLiveData.postValue(text), Throwable::printStackTrace));
+                .subscribe(text -> firstNameChangeLiveData.postValue(text), Throwable::printStackTrace));
+    }
+
+    public void lastNameEditControl(@NonNull EditText editText) {
+        getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
+                .map(input -> input.editable() + "")
+                .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(text -> lastNameChangeLiveData.postValue(text), Throwable::printStackTrace));
     }
 }

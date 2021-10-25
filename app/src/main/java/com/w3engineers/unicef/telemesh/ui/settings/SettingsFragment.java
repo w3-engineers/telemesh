@@ -2,14 +2,18 @@ package com.w3engineers.unicef.telemesh.ui.settings;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
@@ -76,6 +80,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 // Showing user profile
                 UserEntity userEntity = new UserEntity();
                 userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+                userEntity.setUserLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME));
                 userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
                 userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);
@@ -259,11 +264,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
 //        if (NetworkMonitor.isOnline()) {
-            long version = SharedPref.readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
-            if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
-                mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
-                mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
-            }
+        long version = SharedPref.readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
+        if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
+            mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
+            mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
+        }
 //        }
     }
 

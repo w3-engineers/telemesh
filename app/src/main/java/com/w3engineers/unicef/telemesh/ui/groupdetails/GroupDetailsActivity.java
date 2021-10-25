@@ -251,6 +251,7 @@ public class GroupDetailsActivity extends TelemeshBaseActivity implements ItemCl
     private UserEntity getMyInfo() {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+        userEntity.setUserLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME));
         userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
         return userEntity;

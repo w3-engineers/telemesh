@@ -150,6 +150,7 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppSh
                             UserEntity userEntity = new UserEntity();
                             userEntity.setMeshId(diffElement.getMeshId());
                             userEntity.setUserName(diffElement.getUserName());
+                            userEntity.setUserLastName(diffElement.getUserLastName());
                             userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                             userEntity.setIsFavourite(diffElement.getIsFavourite());
                             userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);

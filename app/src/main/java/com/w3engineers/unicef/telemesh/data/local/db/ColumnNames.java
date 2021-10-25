@@ -13,6 +13,7 @@ import com.w3engineers.unicef.util.base.database.BaseColumnNames;
 public interface ColumnNames extends BaseColumnNames {
     //Users table
     String COLUMN_USER_NAME = "user_name";
+    String COLUMN_USER_LAST_NAME = "last_name";
     String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";

@@ -183,6 +183,10 @@ public class ServiceLocator extends BaseServiceLocator {
         RmDataHelper.getInstance().startTelemeshService();
     }
 
+    public void launchActivity(int activityType){
+        RmDataHelper.getInstance().launchActivity(activityType);
+    }
+
     public void resetMesh() {
         RmDataHelper.getInstance().restartMesh();
     }

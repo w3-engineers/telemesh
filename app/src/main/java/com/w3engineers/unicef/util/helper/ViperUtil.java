@@ -77,6 +77,9 @@ import timber.log.Timber;
 
 public abstract class ViperUtil {
 
+    public static final int WALLET_SECURITY_ACTIVITY = 1;
+    public static final int WALLET_IMPORT_ACTIVITY = 2;
+
     private ViperClient viperClient;
     private String myUserId;
     private Context context;
@@ -100,6 +103,10 @@ public abstract class ViperUtil {
 
     public void startTelemeshService(){
         viperClient.startTelemeshService();
+    }
+
+    public void launchActivity(int activityType){
+        viperClient.launchActivity(activityType);
     }
 
     private void initObservers() {

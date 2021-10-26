@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -21,57 +22,65 @@
         android:layout_marginStart="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_15">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
+
+        <TextView
+            android:id="@+id/text_view_image_name"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
-            app:imageResource="@{avatarIndex}"
-            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="RJ" />
 
         <com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
             android:id="@+id/image_view_message"
-            android:background="@color/black"
-            android:src="@mipmap/gellary"
             android:layout_width="@dimen/height_200"
             android:layout_height="@dimen/width_160"
             android:layout_marginStart="@dimen/margin_10"
+            android:background="@color/black"
             android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            android:src="@mipmap/gellary"
             app:bottomLeftRadius="0.058"
             app:bottomRightRadius="0.058"
             app:imageShape="rounded_rectangle"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintTop_toTopOf="parent"
             app:shapeColor="@color/colorChatGray"
             app:topLeftRadius="0.058"
-            app:topRightRadius="0.058"/>
+            app:topRightRadius="0.058" />
 
         <View
             android:id="@+id/hover"
-            android:layout_marginStart="@dimen/margin_10"
             android:layout_width="@dimen/height_200"
             android:layout_height="@dimen/width_160"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile" />
+            android:layout_marginStart="@dimen/margin_10"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <io.supercharge.shimmerlayout.ShimmerLayout
             android:id="@+id/shimmer_incoming_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:shimmer_angle="0"
             android:layout_marginStart="@dimen/margin_10"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shimmer_angle="0"
             app:shimmer_animation_duration="1000"
             app:shimmer_color="@color/white_70_opacity"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile"
             app:shimmer_mask_width="1">
 
             <View
                 android:id="@+id/shimmer_hover"
-                android:background="@drawable/shape_loading"
                 android:layout_width="@dimen/height_200"
-                android:layout_height="@dimen/width_160" />
+                android:layout_height="@dimen/width_160"
+                android:background="@drawable/shape_loading" />
 
         </io.supercharge.shimmerlayout.ShimmerLayout>
 
@@ -80,20 +89,20 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shadow_content_message"
-            app:layout_constraintTop_toTopOf="@+id/hover"
             app:layout_constraintBottom_toBottomOf="@+id/hover"
+            app:layout_constraintEnd_toEndOf="@+id/hover"
             app:layout_constraintStart_toStartOf="@+id/hover"
-            app:layout_constraintEnd_toEndOf="@+id/hover"/>
+            app:layout_constraintTop_toTopOf="@+id/hover" />
 
         <ImageView
             android:id="@+id/view_failed"
             android:layout_width="@dimen/width_50"
             android:layout_height="@dimen/height_50"
-            android:src="@mipmap/error_failed"
-            android:visibility="gone"
-            android:padding="@dimen/padding_5"
             android:layout_marginStart="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
+            android:padding="@dimen/padding_5"
+            android:src="@mipmap/error_failed"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/hover_view"
             app:layout_constraintStart_toStartOf="@+id/hover_view" />
 
@@ -112,16 +121,16 @@
             app:cpv_rimColor="@color/spin_bar"
             app:cpv_rimWidth="3dp"
             app:cpv_showUnit="true"
+            app:cpv_spin="true"
             app:cpv_spinColor="@color/badge_color"
             app:cpv_textColor="@color/white"
             app:cpv_textScale="1"
-            app:cpv_spin="true"
             app:cpv_unit="%"
             app:cpv_unitColor="@color/white"
             app:cpv_unitPosition="right_top"
             app:cpv_unitScale="1"
             app:layout_constraintBottom_toBottomOf="@+id/hover_view"
-            app:layout_constraintStart_toStartOf="@+id/hover_view"/>
+            app:layout_constraintStart_toStartOf="@+id/hover_view" />
 
         <TextView
             android:id="@+id/text_view_date_time"

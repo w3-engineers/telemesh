@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -47,8 +48,6 @@ public class DiscoverFragment extends BaseFragment {
     private SearchView mSearchView;
     private DiscoverAdapter meshContactAdapter;
 
-    private boolean hasUser;
-
     Handler loaderHandler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -63,7 +62,11 @@ public class DiscoverFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
         controlEmptyLayout();
-        ((MainActivity) getActivity()).setToolbarTitle(title);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).setToolbarTitle(title);
+        }
+
 
         init();
 
@@ -102,19 +105,13 @@ public class DiscoverFragment extends BaseFragment {
                         if (fragmentDiscoverBinding.emptyLayout.getVisibility() == View.VISIBLE) {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
-
-                        hasUser = true;
-                        fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_baseline_chat);
-                        fragmentDiscoverBinding.fabChat.hide();
                         fragmentDiscoverBinding.fabChat.show();
 
+                        fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.GONE);
                     } else {
-
-                        hasUser = false;
-                        fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_share_white);
                         fragmentDiscoverBinding.fabChat.hide();
-                        fragmentDiscoverBinding.fabChat.show();
 
+                        fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.VISIBLE);
                     }
                 }
                 if (mSearchItem != null)
@@ -128,20 +125,18 @@ public class DiscoverFragment extends BaseFragment {
                     fragmentDiscoverBinding.notFoundView.setVisibility(View.GONE);
                     fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
 
-                    hasUser = true;
-
-                    fragmentDiscoverBinding.fabChat.setImageResource(R.mipmap.ic_baseline_chat);
-                    fragmentDiscoverBinding.fabChat.hide();
                     fragmentDiscoverBinding.fabChat.show();
 
+                    fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.GONE);
 
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
-                    hasUser = true;
                     fragmentDiscoverBinding.fabChat.hide();
+
+                    fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.VISIBLE);
 
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
@@ -231,11 +226,9 @@ public class DiscoverFragment extends BaseFragment {
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.fab_chat) {
-            if (hasUser) {
-                startActivity(new Intent(getActivity(), GroupCreateActivity.class));
-            } else {
-                shareAppOperation();
-            }
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        } else if (view.getId() == R.id.button_change_data_plan) {
+            dataPlanAction();
         }
     }
 
@@ -314,7 +307,7 @@ public class DiscoverFragment extends BaseFragment {
     // General API's and initialization area
     private void init() {
 
-        setClickListener(fragmentDiscoverBinding.fabChat);
+        setClickListener(fragmentDiscoverBinding.fabChat, fragmentDiscoverBinding.buttonChangeDataPlan);
         initAllText();
         discoverViewModel = getViewModel();
 
@@ -326,7 +319,7 @@ public class DiscoverFragment extends BaseFragment {
 
         //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
-        meshContactAdapter = new DiscoverAdapter(discoverViewModel,getActivity());
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel, getActivity());
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 
@@ -350,19 +343,19 @@ public class DiscoverFragment extends BaseFragment {
         fragmentDiscoverBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
     }
 
-    private void shareAppOperation() {
-        if (hasEnoughStorage() && discoverViewModel != null) {
-            discoverViewModel.startInAppShareProcess();
+    private void dataPlanAction() {
+        if (isMeshInit()) {
+            DataManager.on().openDataPlan();
         }
     }
 
-    private boolean hasEnoughStorage() {
-        boolean hasEnoughStorage = false;
-        if (StorageUtil.getFreeMemory() > Constants.MINIMUM_SPACE) {
-            hasEnoughStorage = true;
+    private boolean isMeshInit() {
+        boolean isMeshInit = false;
+        if (Constants.IsMeshInit) {
+            isMeshInit = true;
         } else {
-            Toast.makeText(getActivity(), LanguageUtil.getString(R.string.phone_storage_not_enough), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), LanguageUtil.getString(R.string.mesh_not_initiated), Toast.LENGTH_SHORT).show();
         }
-        return hasEnoughStorage;
+        return isMeshInit;
     }
 }

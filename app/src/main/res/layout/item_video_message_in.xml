@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -21,14 +22,21 @@
         android:layout_marginStart="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_15">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
+        <TextView
+            android:id="@+id/text_view_image_name"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
-            app:imageResource="@{avatarIndex}"
-            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="RJ" />
 
         <com.w3engineers.unicef.util.lib.customimageview.CustomShapedImageView
             android:id="@+id/image_view_message"
@@ -39,7 +47,7 @@
             android:layout_marginStart="@dimen/margin_10"
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
             app:bottomLeftRadius="0.058"
             app:bottomRightRadius="0.058"
             app:imageShape="rounded_rectangle"
@@ -53,7 +61,7 @@
             android:layout_width="@dimen/height_200"
             android:layout_height="@dimen/width_160"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile" />
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name" />
 
         <io.supercharge.shimmerlayout.ShimmerLayout
             android:id="@+id/shimmer_incoming_loading"
@@ -64,7 +72,7 @@
             app:shimmer_animation_duration="1000"
             app:shimmer_color="@color/white_70_opacity"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_profile"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
             app:shimmer_mask_width="1">
 
             <View

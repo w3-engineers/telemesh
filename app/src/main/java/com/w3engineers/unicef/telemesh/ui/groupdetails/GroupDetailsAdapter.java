@@ -2,9 +2,13 @@ package com.w3engineers.unicef.telemesh.ui.groupdetails;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -13,6 +17,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupMemberBinding;
 import com.w3engineers.unicef.util.base.ui.BaseAdapter;
 import com.w3engineers.unicef.util.base.ui.BaseViewHolder;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +71,12 @@ public class GroupDetailsAdapter extends BaseAdapter<UserEntity> {
             } else {
                 binding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             }
-            binding.userName.setText(item.userName);
 
-            binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
-                    .getAvatarImage(item.avatarIndex));
+            String name = item.userName + " " + item.getUserLastName();
+            binding.userName.setText(name);
+
+            UIHelper.updateImageNameField(binding.textViewImageName, item.getUserName(), item.getUserLastName());
+
 
             if (item.getMeshId().equals(myId)) {
                 binding.imageViewRemove.setVisibility(View.INVISIBLE);

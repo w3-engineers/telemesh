@@ -39,13 +39,14 @@ public class CommonUtil {
                 new DialogUtil.DialogButtonListener() {
                     @Override
                     public void onClickPositive() {
-                       mContext.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+                        mContext.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
                     }
 
                     @Override
                     public void onCancel() {
 
                     }
+
                     @Override
                     public void onClickNegative() {
 
@@ -76,6 +77,7 @@ public class CommonUtil {
                     public void onCancel() {
 
                     }
+
                     @Override
                     public void onClickNegative() {
 
@@ -83,18 +85,30 @@ public class CommonUtil {
                 });
     }
 
-    public static boolean isValidName(String name, Context context) {
+    public static boolean isValidName(String name, Context context, boolean isFirstName) {
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(context, context.getResources().getString(R.string.please_enter_your_name), Toast.LENGTH_SHORT).show();
+            String text = "";
+            if (isFirstName) {
+                text = context.getResources().getString(R.string.please_enter_your_first_name);
+            } else {
+                text = context.getResources().getString(R.string.please_enter_your_last_name);
+            }
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
         } else if (name.length() < 2) {
-            Toast.makeText(context, context.getResources().getString(R.string.enter_valid_name), Toast.LENGTH_SHORT).show();
+            String text = "";
+            if (isFirstName) {
+                text = context.getResources().getString(R.string.enter_valid_first_name);
+            } else {
+                text = context.getResources().getString(R.string.enter_valid_last_name);
+            }
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    public static void dismissDialog(){
+    public static void dismissDialog() {
         DialogUtil.dismissDialog();
     }
 
@@ -143,7 +157,7 @@ public class CommonUtil {
     }
 
     public static ArrayList<GroupMembersInfo> mergeGroupMembersInfo(ArrayList<GroupMembersInfo> existingMembers,
-                                             List<GroupMembersInfo> newMembers) {
+                                                                    List<GroupMembersInfo> newMembers) {
         HashMap<String, GroupMembersInfo> groupMembersMap = new HashMap<>();
         for (GroupMembersInfo groupMembersInfo : newMembers) {
             groupMembersMap.put(groupMembersInfo.getMemberId(), groupMembersInfo);
@@ -157,6 +171,7 @@ public class CommonUtil {
 
             if (newMemberInfo != null) {
                 groupMembersInfo.setUserName(newMemberInfo.getUserName())
+                        .setLastName(newMemberInfo.getLsatName())
                         .setMemberStatus(newMemberInfo.getMemberStatus());
                 existingMembers.set(i, groupMembersInfo);
                 groupMembersMap.remove(userId);

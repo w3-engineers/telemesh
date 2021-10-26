@@ -57,6 +57,7 @@ import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.databinding.WalletBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
@@ -80,6 +81,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Menu bottomMenu;
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
+    WalletBadgeBinding walletBadgeBinding;
     @SuppressLint("StaticFieldLeak")
     private static MainActivity sInstance;
 
@@ -87,7 +89,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Fragment mCurrentFragment;
 
     Context mContext;
-    private int latestUserCount;
     private int latestMessageCount;
 
     private int RC_APP_UPDATE = 620;
@@ -276,6 +277,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
+        addBadgeToSettings();
+
         if (fromBroadcast) {
             hideFeedBadge();
         }
@@ -288,6 +291,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
         if (itemView != null) {
             itemView.addView(notificationBadgeBinding.getRoot());
+        }
+    }
+
+    private void addBadgeToSettings() {
+        walletBadgeBinding = WalletBadgeBinding.inflate(getLayoutInflater());
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
+        if (itemView != null) {
+            itemView.addView(walletBadgeBinding.getRoot());
         }
     }
 
@@ -391,6 +403,22 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
 
         latestMessageCount = latestCount;
+    }
+
+    private void createSettingBadge(int menuItemPosition) {
+
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
+
+        if (itemView == null) {
+            return;
+        }
+
+        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+        if (constraintLayoutContainer == null) return;
+        constraintLayoutContainer.setVisibility(View.VISIBLE);
+
+        //Todo need to hide when wallet backup done
     }
 
     private ConstraintLayout getViewByMenu(int menuItem) {

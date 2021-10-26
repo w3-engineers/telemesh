@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.w3engineers.mesh.util.MeshLog;
@@ -207,8 +208,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
     private int getAvatarIndex(ChatEntity messageEntity) {
         UserEntity userEntity = null;
-        if (messageEntity instanceof  GroupMessageEntity){
-             userEntity = userMap.get(((GroupMessageEntity) messageEntity).getOriginalSender());
+        if (messageEntity instanceof GroupMessageEntity) {
+            userEntity = userMap.get(((GroupMessageEntity) messageEntity).getOriginalSender());
         } else {
             userEntity = userMap.get(((MessageEntity) messageEntity).getFriendsId());
         }
@@ -219,20 +220,20 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         return Constants.DEFAULT_AVATAR;
     }
 
-    private String getUserName(MessageEntity messageEntity) {
+    private UserEntity getUserName(MessageEntity messageEntity) {
         UserEntity userEntity = userMap.get(messageEntity.friendsId);
         if (userEntity != null) {
-            return userEntity.getUserName();
+            return userEntity;
         }
-        return "";
+        return null;
     }
 
-    private String getUserName(GroupMessageEntity messageEntity) {
+    private UserEntity getUserName(GroupMessageEntity messageEntity) {
         UserEntity userEntity = userMap.get(messageEntity.friendsId);
         if (userEntity != null) {
-            return userEntity.getUserName();
+            return userEntity;
         }
-        return "";
+        return null;
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -244,7 +245,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         protected abstract void clearView();
     }
-
 
     private class TextMessageInHolder extends GenericViewHolder {
         private ItemTextMessageInBinding binding;
@@ -261,8 +261,16 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.setAvatarIndex(getAvatarIndex(item));
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.white));
-            String name = getUserName(item);
+            UserEntity entity = getUserName(item);
+            String name = entity == null ? "" : entity.userName;
             binding.userName.setText("" + name);
+
+            if (entity == null) {
+                UIHelper.updateImageNameField(binding.textViewImageName, "", "");
+            } else {
+                UIHelper.updateImageNameField(binding.textViewImageName, entity.userName, entity.getUserLastName());
+            }
+
         }
 
         @Override
@@ -332,6 +340,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.viewFailed.setOnClickListener(clickListener);
 
             UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+
+            UserEntity entity = getUserName(messageEntity);
+            if (entity == null) {
+                UIHelper.updateImageNameField(binding.textViewImageName, "", "");
+            } else {
+                UIHelper.updateImageNameField(binding.textViewImageName, entity.getUserName(), entity.getUserLastName());
+            }
+
         }
 
         @Override
@@ -422,6 +438,14 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.viewFailed.setOnClickListener(clickListener);
 
             UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumbPath);
+
+            UserEntity entity = getUserName(messageEntity);
+
+            if (entity == null) {
+                UIHelper.updateImageNameField(binding.textViewImageName, "", "");
+            } else {
+                UIHelper.updateImageNameField(binding.textViewImageName, entity.getUserName(), entity.getUserLastName());
+            }
         }
 
         @Override
@@ -480,7 +504,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         int contentStatus = -1;
 
-        if (messageEntity instanceof GroupMessageEntity){
+        if (messageEntity instanceof GroupMessageEntity) {
             contentStatus = ((GroupMessageEntity) messageEntity).getContentStatus();
         } else {
             contentStatus = ((MessageEntity) messageEntity).getContentStatus();
@@ -539,7 +563,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
         if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
             circleProgressView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             circleProgressView.setVisibility(View.GONE);
         }
 
@@ -583,7 +607,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         // Constants.MessageStatus.STATUS_FAILED
 
         int progress = -1;
-        if (messageEntity instanceof GroupMessageEntity){
+        if (messageEntity instanceof GroupMessageEntity) {
             progress = ((GroupMessageEntity) messageEntity).getContentProgress();
         } else {
             progress = ((MessageEntity) messageEntity).getContentProgress();
@@ -598,6 +622,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             }
         }
     }
+
     private void outgoingLoadingEffectForGroup(CircleProgressView circleProgressView, GroupMessageEntity messageEntity) {
         circleProgressView.setVisibility(View.GONE);
 
@@ -622,7 +647,6 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             }
         }
     }
-
 
 
     private class SeparatorViewHolder extends GenericViewHolder {
@@ -656,7 +680,8 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
         @Override
         protected void bindView(@NonNull ChatEntity chatEntity) {
             MessageEntity item = (MessageEntity) chatEntity;
-            String name = getUserName(item);
+            UserEntity entity = getUserName(item);
+            String name = entity == null ? "" : entity.getUserName();
             binding.groupInfoBlock.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(name)) {
                 binding.groupInfoBlock.setVisibility(View.VISIBLE);
@@ -717,8 +742,19 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
             binding.setAvatarIndex(21);
             ((GradientDrawable) binding.textViewMessage.getBackground()).setColor(
                     ContextCompat.getColor(mContext, R.color.white));
-            String name = getUserName(item);
-            binding.userName.setText("" + name);
+
+            UserEntity entity = getUserName(item);
+
+            if (entity == null) {
+                binding.userName.setText("");
+                UIHelper.updateImageNameField(binding.textViewImageName, "", "");
+            } else {
+                String name = entity.getUserName();
+                binding.userName.setText("" + name);
+                UIHelper.updateImageNameField(binding.textViewImageName, entity.getUserName(), entity.getUserLastName());
+            }
+
+
         }
 
         @Override
@@ -886,7 +922,7 @@ public class ChatPagedAdapterRevised extends PagedListAdapter<ChatEntity, ChatPa
 
             binding.viewFailed.setTag(R.id.image_view_message, messageEntity);
             binding.viewFailed.setOnClickListener(clickListener);
-            if(!TextUtils.isEmpty(messageEntity.contentThumb)) {
+            if (!TextUtils.isEmpty(messageEntity.contentThumb)) {
                 UIHelper.setImageInGlide(binding.imageViewMessage, messageEntity.contentThumb);
             }
         }

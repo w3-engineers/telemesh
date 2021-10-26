@@ -9,7 +9,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    //buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion 21

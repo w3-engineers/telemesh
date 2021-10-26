@@ -165,7 +165,8 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             UserEntity userEntity = new UserEntity()
                     .setMeshId(groupMembersInfo.getMemberId())
                     .setAvatarIndex(groupMembersInfo.getAvatarPicture())
-                    .setUserName(groupMembersInfo.getUserName());
+                    .setUserName(groupMembersInfo.getUserName())
+                    .setUserLastName(groupMembersInfo.getLsatName());
 
             allMembers.add(userEntity);
             if (groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
@@ -189,7 +190,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
             }
         }
 
-        if (groupUsersDisposable != null){
+        if (groupUsersDisposable != null) {
             groupUsersDisposable.dispose();
             getCompositeDisposable().remove(groupUsersDisposable);
         }
@@ -213,7 +214,9 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
 
     public UserEntity getMyUserEntity() {
         int myAvatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        return new UserEntity().setUserName("You").setMeshId(getMyUserId())
+        return new UserEntity().setUserName("You")
+                .setUserLastName("")
+                .setMeshId(getMyUserId())
                 .setAvatarIndex(myAvatarIndex);
     }
 

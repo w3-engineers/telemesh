@@ -3,7 +3,7 @@ package com.w3engineers.unicef.telemesh.data.local.grouptable;
 import android.renderscript.BaseObj;
 
 public class GroupMembersInfo {
-    String i, n;
+    String i, n, ln;
     int s, p;
     boolean a;
 
@@ -50,5 +50,14 @@ public class GroupMembersInfo {
     public GroupMembersInfo setAvatarPicture(int picture) {
         this.p = picture;
         return this;
+    }
+
+    public GroupMembersInfo setLastName(String lastName) {
+        this.ln = lastName;
+        return this;
+    }
+
+    public String getLsatName() {
+        return ln;
     }
 }

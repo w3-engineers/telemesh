@@ -135,7 +135,7 @@ public class GroupDataHelper extends RmDataHelper {
         });
     }
 
-    private void groupCountSyncedReceived(byte[] rawData){
+    private void groupCountSyncedReceived(byte[] rawData) {
         String groupId = new String(rawData);
         compositeDisposable
                 .add(Single.fromCallable(() -> GroupDataSource.getInstance().updateGroupAsSynced(groupId))
@@ -145,7 +145,7 @@ public class GroupDataHelper extends RmDataHelper {
                         }, Throwable::printStackTrace));
     }
 
-    private void groupCountSyncAckReceived (byte[] rawData){
+    private void groupCountSyncAckReceived(byte[] rawData) {
         String groupCountRawData = new String(rawData);
         ArrayList<GroupCountModel> groupCountModels = GsonBuilder.getInstance().getGroupCountModels(groupCountRawData);
         for (GroupCountModel groupCountModel : groupCountModels) {
@@ -171,8 +171,7 @@ public class GroupDataHelper extends RmDataHelper {
     }
 
 
-
-    public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend){
+    public void prepareAndSendGroupContent(GroupMessageEntity entity, boolean isSend) {
 
         //Send a text message for dummy content
         String messageModelString = new Gson().toJson(entity.toMessageModel());
@@ -193,7 +192,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             List<UserEntity> availableUsers = UserDataSource.getInstance().getLiveGroupMembers(liveMembersId);
 
-            for(UserEntity item : availableUsers){
+            for (UserEntity item : availableUsers) {
 
                 ContentModel contentModel = new ContentModel()
                         .setMessageId(entity.getMessageId())
@@ -207,7 +206,6 @@ public class GroupDataHelper extends RmDataHelper {
                         .setContentInfo(entity.getContentInfo());
 
 
-
                 Timber.v("Group Message Test", "content start %s", item.getMeshId());
                 contentModel.setUserId(item.getMeshId());
                 contentMessageSend(contentModel);
@@ -215,17 +213,8 @@ public class GroupDataHelper extends RmDataHelper {
         }
 
 
-
-
-
-
-
-
-
-
-
-
     }
+
     private void contentMessageSend(ContentModel contentModel) {
         prepareRightMeshDataSource();
 
@@ -501,7 +490,7 @@ public class GroupDataHelper extends RmDataHelper {
         List<GroupEntity> groupEntities = groupDataSource.getGroupByUserId(updatedUserId);
 
         for (GroupEntity groupEntity : groupEntities) {
-            setGroupInfoUpdate(groupEntity, userEntity.getUserName(),
+            setGroupInfoUpdate(groupEntity, userEntity.getUserName(), userEntity.getUserLastName(),
                     userEntity.getMeshId(), userEntity.getAvatarIndex());
         }
     }
@@ -509,15 +498,16 @@ public class GroupDataHelper extends RmDataHelper {
     public void updateMyUserInfo() {
         List<GroupEntity> groupEntities = groupDataSource.getAllGroup();
         String myNewName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        String myLastName = SharedPref.read(Constants.preferenceKey.LAST_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         String myMeshId = getMyMeshId();
 
         for (GroupEntity groupEntity : groupEntities) {
-            setGroupInfoUpdate(groupEntity, myNewName, myMeshId, avatarIndex);
+            setGroupInfoUpdate(groupEntity, myNewName, myLastName, myMeshId, avatarIndex);
         }
     }
 
-    private void setGroupInfoUpdate(GroupEntity groupEntity, String updatedName, String userId, int avatarIndex) {
+    private void setGroupInfoUpdate(GroupEntity groupEntity, String updatedName, String lastName, String userId, int avatarIndex) {
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
         ArrayList<GroupMembersInfo> groupMembersInfos = gsonBuilder
@@ -528,6 +518,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             if (groupMembersInfo.getMemberId().equals(userId)) {
                 groupMembersInfo.setUserName(updatedName);
+                groupMembersInfo.setLastName(lastName);
                 groupMembersInfo.setAvatarPicture(avatarIndex);
                 groupMembersInfos.set(i, groupMembersInfo);
             }
@@ -954,7 +945,7 @@ public class GroupDataHelper extends RmDataHelper {
 
             if (liveMembersId.size() == availableUsers.size()) {
 
-                for(String userId : liveMembersId) {
+                for (String userId : liveMembersId) {
                     dataSend(data.getBytes(), type, userId, (type == Constants.DataType.MESSAGE));
                 }
 

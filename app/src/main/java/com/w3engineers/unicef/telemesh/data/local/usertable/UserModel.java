@@ -10,7 +10,7 @@ Proprietary and confidential
 
 public class UserModel {
 
-    private String n, userId;
+    private String n, ln, userId;
     private int i;
     private long t;
 
@@ -48,5 +48,14 @@ public class UserModel {
     public UserModel setTime(long time) {
         this.t = time;
         return this;
+    }
+
+    public UserModel setLastName(String lastName) {
+        this.ln = lastName;
+        return this;
+    }
+
+    public String getLastName() {
+        return ln;
     }
 }

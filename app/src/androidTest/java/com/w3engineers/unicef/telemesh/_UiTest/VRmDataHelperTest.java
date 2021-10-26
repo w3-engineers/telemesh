@@ -385,7 +385,7 @@ public class VRmDataHelperTest {
 
         addDelay(500);
 
-        RmDataHelper.getInstance().broadcastUpdateProfileInfo(updatedName, 4);
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(updatedName, "");
 
         addDelay(2000);
 
@@ -433,7 +433,7 @@ public class VRmDataHelperTest {
     public void hanShakingVersionTest() {
         addDelay(500);
 
-       // RmDataHelper.getInstance().configFileSendToOthers(-2, meshId);
+        // RmDataHelper.getInstance().configFileSendToOthers(-2, meshId);
 
         addDelay(500);
 
@@ -458,7 +458,6 @@ public class VRmDataHelperTest {
 
         StatusHelper.out("Test executed");
     }
-
 
 
     @After

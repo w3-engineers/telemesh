@@ -58,15 +58,19 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 
         initAllText();
 
-        setClickListener(mBinding.imageViewBack, mBinding.buttonUpdate, mBinding.imageProfile, mBinding.imageViewCamera);
+        setClickListener(mBinding.imageViewBack, mBinding.buttonUpdate);
 
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         mBinding.setUser(userEntity);
 
-        mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
-        mViewModel.textEditControl(mBinding.editTextName);
+        mViewModel.firstNameChangeLiveData.observe(this, this::nextButtonControl);
+        mViewModel.firstNameEditControl(mBinding.editTextFirstName);
 
-        mBinding.editTextName.setSelection(mBinding.editTextName.getText().toString().length());
+        mViewModel.lastNameChangeLiveData.observe(this, this::nextButtonControl);
+        mViewModel.lastNameEditControl(mBinding.editTextLastName);
+
+        mBinding.editTextFirstName.setSelection(mBinding.editTextFirstName.getText().toString().length());
+        mBinding.editTextLastName.setSelection(mBinding.editTextLastName.getText().toString().length());
     }
 
     @Override
@@ -79,7 +83,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 goNext();
                 break;
             case R.id.image_profile:
-            case R.id.image_view_camera:
                 openProfileImageChooser();
                 break;
             case R.id.image_view_back:
@@ -99,13 +102,22 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
 
-            nextButtonControl(mBinding.editTextName.getText().toString());
+            nextButtonControl(mBinding.editTextFirstName.getText().toString());
         }
     }
 
     private void nextButtonControl(String nameText) {
-        if (!TextUtils.isEmpty(nameText) &&
-                nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
+
+        updateImageNameField();
+
+
+        String firstName = mBinding.editTextFirstName.getText().toString();
+        String lastName = mBinding.editTextLastName.getText().toString();
+
+        if (!TextUtils.isEmpty(firstName)
+                && !TextUtils.isEmpty(lastName)
+                && firstName.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
+                && lastName.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
             mBinding.buttonUpdate.setBackgroundResource(R.drawable.ractangular_gradient);
             mBinding.buttonUpdate.setTextColor(getResources().getColor(R.color.white));
@@ -116,12 +128,46 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         }
     }
 
-    public void goNext() {
-        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+    private void updateImageNameField() {
+        String firstName = mBinding.editTextFirstName.getText().toString();
+        String lastName = mBinding.editTextLastName.getText().toString();
 
-        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+        String finalText = "";
+
+
+        if (!TextUtils.isEmpty(firstName)) {
+
+            finalText = String.valueOf(firstName.charAt(0));
+        }
+        if (!TextUtils.isEmpty(lastName)) {
+
+            finalText += String.valueOf(lastName.charAt(0));
+        }
+
+        if (TextUtils.isEmpty(finalText)) {
+            mBinding.textViewImageName.setVisibility(View.GONE);
+
+            mBinding.imageProfileBackground.setVisibility(View.VISIBLE);
+            mBinding.imageProfile.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.textViewImageName.setVisibility(View.VISIBLE);
+
+            mBinding.imageProfileBackground.setVisibility(View.INVISIBLE);
+            mBinding.imageProfile.setVisibility(View.GONE);
+        }
+
+        mBinding.textViewImageName.setText(finalText);
+    }
+
+    public void goNext() {
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextFirstName);
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextLastName);
+
+        if (CommonUtil.isValidName(mBinding.editTextFirstName.getText().toString(), this, true)
+                && CommonUtil.isValidName(mBinding.editTextLastName.getText().toString(), this, true)) {
             if (isNeedToUpdate()) {
-                if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+                if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
+                        mBinding.editTextLastName.getText() + "")) {
                     Toast.makeText(this, LanguageUtil.getString(R.string.profile_updated_successfully), Toast.LENGTH_SHORT).show();
                     mViewModel.sendUserInfoToAll();
                     finish();
@@ -131,28 +177,21 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             }
         }
 
-        /*if (TextUtils.isEmpty(mBinding.editTextName.getText())) {
-            Toaster.showShort(LanguageUtil.getString(R.string.please_enter_your_name));
-        } else if (mBinding.editTextName.getText().toString().length() < 2) {
-            Toaster.showShort(LanguageUtil.getString(R.string.enter_valid_name));
-        } else if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
-            Toaster.showShort(LanguageUtil.getString(R.string.profile_updated_successfully));
-            mViewModel.sendUserInfoToAll();
-            finish();
-        }*/
     }
 
     private boolean isNeedToUpdate() {
-        String oldName = SharedPref.read(Constants.preferenceKey.USER_NAME);
-        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+        String oldFirstName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        String oldLastName = SharedPref.read(Constants.preferenceKey.LAST_NAME);
+      /*  int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         int currentImageIndex = mViewModel.getImageIndex();
 
         if (currentImageIndex < 0) {
             currentImageIndex = oldImageIndex;
-        }
+        }*/
 
-        if (!oldName.equals(mBinding.editTextName.getText().toString().trim()) || (currentImageIndex != oldImageIndex)) {
+        if (!oldFirstName.equals(mBinding.editTextFirstName.getText().toString().trim())
+                || !oldLastName.equals(mBinding.editTextLastName.getText().toString().trim())) {
             return true;
         }
 
@@ -178,7 +217,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
     }
 
     public void openProfileImageChooser() {
-        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextFirstName);
         Intent intent = new Intent(this, ProfileImageActivity.class);
         int currentImageIndex = mViewModel.getImageIndex();
 

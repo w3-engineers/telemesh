@@ -206,4 +206,5 @@
     <string name="only_admin_can_change_group_name">কেবল অ্যাডমিনই গ্রুপের নাম পরিবর্তন করতে পারবেন</string>
 
     <string name="broadcast_notification">আপনার কাছে %d টি নতুন সম্প্রচার বার্তা রয়েছে</string>
+    <string name="change_data_plan">Change Data plan</string>
 </resources>

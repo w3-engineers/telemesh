@@ -83,7 +83,7 @@ public class Constants {
         int POSITION_FOR_DISCOVER = 0;
         int POSITION_FOR_FAVORITE = 1;
         int POSITION_FOR_MESSAGE_FEED = 2;
-        int POSITION_FOR_MESSAGE_SETTINGS = 2;
+        int POSITION_FOR_MESSAGE_SETTINGS = 3;
     }
 
     public interface drawables {

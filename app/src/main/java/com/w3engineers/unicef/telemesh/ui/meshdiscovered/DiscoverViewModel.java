@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppShareControl.AppShareCallback {
+public class DiscoverViewModel extends BaseRxAndroidViewModel {
 
     private UserDataSource userDataSource;
     private MutableLiveData<UserEntity> openUserMessage = new MutableLiveData<>();
@@ -147,16 +147,18 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppSh
 
                         List<UserEntity> userEntityList = new ArrayList<>();
                         for (UserEntity diffElement : userList) {
-                            UserEntity userEntity = new UserEntity();
-                            userEntity.setMeshId(diffElement.getMeshId());
-                            userEntity.setUserName(diffElement.getUserName());
-                            userEntity.setUserLastName(diffElement.getUserLastName());
-                            userEntity.setAvatarIndex(diffElement.getAvatarIndex());
-                            userEntity.setIsFavourite(diffElement.getIsFavourite());
-                            userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
-                            userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
+                            if (diffElement != null) {
+                                UserEntity userEntity = new UserEntity();
+                                userEntity.setMeshId(diffElement.getMeshId());
+                                userEntity.setUserName(diffElement.getUserName());
+                                userEntity.setUserLastName(diffElement.getUserLastName());
+                                userEntity.setAvatarIndex(diffElement.getAvatarIndex());
+                                userEntity.setIsFavourite(diffElement.getIsFavourite());
+                                userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                                userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
 
-                            userEntityList.add(userEntity);
+                                userEntityList.add(userEntity);
+                            }
                         }
 
                         userList.clear();
@@ -258,42 +260,5 @@ public class DiscoverViewModel extends BaseRxAndroidViewModel implements InAppSh
         } else {
 //            Timber.tag("SearchIssue").d("user list null");
         }
-    }
-
-    public void startInAppShareProcess() {
-        InAppShareControl.getInstance().startInAppShareProcess(getApplication().getApplicationContext(), this);
-    }
-
-    @Override
-    public void closeRmService() {
-        RmDataHelper.getInstance().stopRmService();
-    }
-
-    @Override
-    public void successShared() {
-        HandlerUtil.postBackground(() -> {
-            String date = TimeUtil.getDateString(System.currentTimeMillis());
-            String myId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
-            Log.d("WalletAddress", "My address: " + myId);
-            boolean isExist = AppShareCountDataService.getInstance().isCountExist(myId, date);
-            if (isExist) {
-                AppShareCountDataService.getInstance().updateCount(myId, date);
-            } else {
-                AppShareCountEntity entity = new AppShareCountEntity();
-                entity.setDate(date);
-                entity.setCount(1);
-                entity.setUserId(myId);
-                AppShareCountDataService.getInstance().insertAppShareCount(entity);
-            }
-        });
-    }
-
-    @Override
-    public void closeInAppShare() {
-        HandlerUtil.postBackground(this::restartMesh, 5000);
-    }
-
-    private void restartMesh() {
-        ServiceLocator.getInstance().resetMesh();
     }
 }

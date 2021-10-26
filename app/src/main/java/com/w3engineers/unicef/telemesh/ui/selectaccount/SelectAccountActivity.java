@@ -44,9 +44,14 @@ public class SelectAccountActivity extends TelemeshBaseActivity {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button_create_account) {
-            startActivity(new Intent(this, CreateUserActivity.class));
+            Intent intent = new Intent(this, CreateUserActivity.class);
+            intent.putExtra("import_wallet", false);
+            startActivity(intent);
         } else if (view.getId() == R.id.button_import_account) {
-            selectAccountViewModel.launchImportWalletActivity();
+            Intent intent = new Intent(this, CreateUserActivity.class);
+            intent.putExtra("import_wallet", true);
+            startActivity(intent);
+            //selectAccountViewModel.launchImportWalletActivity();
         }
     }
 

@@ -44,6 +44,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private CreateUserViewModel mViewModel;
 
     public static CreateUserActivity sInstance;
+    private boolean isNeedToImportWallet;
 
     @NonNull
     public static String IMAGE_POSITION = "image_position";
@@ -64,6 +65,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     protected void startUI() {
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
+        isNeedToImportWallet = getIntent().getBooleanExtra("import_wallet", false);
+
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
 

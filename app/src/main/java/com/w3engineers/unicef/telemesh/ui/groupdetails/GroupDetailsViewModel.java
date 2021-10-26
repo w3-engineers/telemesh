@@ -1,9 +1,11 @@
 package com.w3engineers.unicef.telemesh.ui.groupdetails;
 
 import android.app.Application;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
@@ -100,6 +102,7 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
                 if (groupMembersInfo != null) {
 
                     userEntity.setUserName(groupMembersInfo.getUserName())
+                            .setUserLastName(groupMembersInfo.getLsatName())
                             .setAvatarIndex(groupMembersInfo.getAvatarPicture());
                     userEntities.set(i, userEntity);
                 }
@@ -108,7 +111,6 @@ public class GroupDetailsViewModel extends BaseRxAndroidViewModel {
 
         userListsData.postValue(userEntities);
     }
-
 
 
     void groupLeaveAction(GroupEntity groupEntity) {

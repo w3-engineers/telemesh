@@ -225,6 +225,7 @@ public class GroupCreateActivity extends TelemeshBaseActivity implements
                 UserEntity updatedUser = getSelectedUser(userEntity.getMeshId());
                 if (updatedUser != null) {
                     userEntity.setUserName(updatedUser.getUserName());
+                    userEntity.setUserLastName(updatedUser.getUserLastName());
                     userEntity.setAvatarIndex(updatedUser.getAvatarIndex());
                 }
             }

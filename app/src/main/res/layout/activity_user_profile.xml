@@ -90,22 +90,30 @@
             android:background="@drawable/circular_white"
             android:contentDescription="@string/logo_image"
             android:padding="@dimen/margin_15"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/divider" />
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
+        <TextView
+            android:id="@+id/text_view_image_name"
             android:layout_width="@dimen/width_120"
             android:layout_height="@dimen/height_120"
-            android:padding="@dimen/margin_15"
-            app:imageResource="@{userEntity.avatarIndex}"
+            android:background="@drawable/circular_white"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/divider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/divider" />
+            app:layout_constraintTop_toTopOf="@+id/divider"
+            tools:text="RJ" />
 
         <ImageView
             android:id="@+id/ic_valid"
@@ -116,8 +124,8 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_verified"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/image_profile"
-            app:layout_constraintEnd_toEndOf="@+id/image_profile" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_image_name"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_image_name" />
 
         <TextView
             android:id="@+id/user_name"
@@ -125,12 +133,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_20"
             android:gravity="center"
-            android:text="@{userEntity.getFullName()}"
+            android:text="@{userEntity.getFullName()+' '+userEntity.getUserLastName()}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_25"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_profile" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_image_name" />
 
         <TextView
             android:id="@+id/user_id"
@@ -190,11 +198,11 @@
             android:layout_marginStart="@dimen/margin_30"
             android:layout_marginTop="@dimen/margin_16"
             android:layout_marginEnd="@dimen/margin_30"
+            android:background="@drawable/drawable_button_bg_with_color"
             android:text="@string/export_my_profile"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:visibility="invisible"
-            android:background="@drawable/drawable_button_bg_with_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_qr" />

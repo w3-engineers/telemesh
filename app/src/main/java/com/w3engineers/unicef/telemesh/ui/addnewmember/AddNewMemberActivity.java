@@ -254,6 +254,7 @@ public class AddNewMemberActivity extends TelemeshBaseActivity implements
                 UserEntity updatedUser = getSelectedUser(userEntity.getMeshId(), totalUserList);
                 if (updatedUser != null) {
                     userEntity.setUserName(updatedUser.getUserName());
+                    userEntity.setUserLastName(updatedUser.getUserLastName());
                     userEntity.setAvatarIndex(updatedUser.getAvatarIndex());
                 }
             }

@@ -58,6 +58,7 @@ public class MeshDataSource extends ViperUtil {
 
             UserModel userModel = new UserModel()
                     .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                    .setLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME))
                     .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                     .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
@@ -298,6 +299,7 @@ public class MeshDataSource extends ViperUtil {
 
         UserModel userModel = new UserModel()
                 .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                .setLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME))
                 .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 

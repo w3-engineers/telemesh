@@ -96,6 +96,8 @@ public abstract class AppDatabase extends BaseDatabase {
     @NonNull
     public abstract MeshLogDao meshLogDao();
 
+    // Todo we have to add a migration for user last name
+
     private static String FEEDBACK_MIGRATION = "CREATE TABLE IF NOT EXISTS " + TableNames.FEEDBACK +
             " (" + ColumnNames.COLUMN_FEEDBACK_ID + " TEXT PRIMARY KEY NOT NULL, " + ColumnNames.COLUMN_FEEDBACK +
             " TEXT, " + ColumnNames.COLUMN_USER_ID + " TEXT, " + ColumnNames.COLUMN_USER_NAME +
@@ -174,6 +176,7 @@ public abstract class AppDatabase extends BaseDatabase {
 
         return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
                 initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE, MESSAGE_TABLE_MIGRATION_1,

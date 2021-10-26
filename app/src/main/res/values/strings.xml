@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">My profile</string>
-    <string name="enter_first_name">Type your name</string>
+    <string name="enter_first_name">Type your first name</string>
+    <string name="enter_last_name">Type your last name</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
@@ -127,8 +128,10 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
 
-    <string name="please_enter_your_name">Please enter your name</string>
-    <string name="enter_valid_name">Enter valid name</string>
+    <string name="please_enter_your_first_name">Please enter your first name</string>
+    <string name="please_enter_your_last_name">Please enter your last name</string>
+    <string name="enter_valid_first_name">Enter valid first name</string>
+    <string name="enter_valid_last_name">Enter valid last name</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>
     <string name="edit">EDIT</string>
     <string name="send_feedback">Feedback</string>
@@ -209,4 +212,6 @@
     <string name="favourit_button_image">favourit button image</string>
     <string name="expanded_image_holder">Expanded image holder</string>
     <string name="create_new_wallet">Create New Wallet</string>
+    <string name="change_data_plan">Change Data plan</string>
+
 </resources>

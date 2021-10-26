@@ -13,7 +13,6 @@ import androidx.paging.PagedList;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -42,8 +41,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.w3engineers.mesh.application.data.local.db.SharedPref;
-import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
@@ -55,7 +52,6 @@ import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScrolle
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityChatRevisedBinding;
 import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsActivity;
-import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsAdapter;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
@@ -64,14 +60,10 @@ import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.GlideEngine;
-import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -184,15 +176,25 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 
         if (isGroup) {
             if (mGroupEntity != null) {
+
+                mViewBinging.textViewImageName.setVisibility(View.INVISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.VISIBLE);
+
                 mViewBinging.imageProfile.setBackgroundResource(R.mipmap.group_white_circle);
                 UIHelper.setGroupName(mViewBinging.textViewLastName, mGroupEntity.groupName);
                 mViewBinging.imageView.setVisibility(View.GONE);
             }
         } else {
             if (mUserEntity != null) {
+                mViewBinging.textViewImageName.setVisibility(View.VISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.INVISIBLE);
 
-                UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
-                mViewBinging.textViewLastName.setText(mUserEntity.userName);
+                //UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
+
+                UIHelper.updateImageNameField(mViewBinging.textViewImageName, mUserEntity.getUserName(), mUserEntity.getUserLastName());
+
+                String name = mUserEntity.userName + " " + mUserEntity.getUserLastName();
+                mViewBinging.textViewLastName.setText(name);
                 String subTitle = mUserEntity.isOnline > 0 ? getString(R.string.active_online) : getString(R.string.active_offline);
                 mViewBinging.textViewActiveNow.setText(subTitle);
                 mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
@@ -321,7 +323,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
             setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage,
-                    mViewBinging.imageProfile, mViewBinging.textViewLastName);
+                    mViewBinging.imageProfile, mViewBinging.textViewLastName, mViewBinging.textViewImageName);
         }
 
         NotifyUtil.clearNotification(threadId);
@@ -426,6 +428,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
                 break;
             case R.id.image_profile:
             case R.id.text_view_last_name:
+            case R.id.text_view_image_name:
                 if (isGroup) {
                     Intent intent = new Intent(this, GroupDetailsActivity.class);
                     intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
@@ -841,4 +844,5 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
             }
         });
     }
+
 }

@@ -10,16 +10,19 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemDiscoveredBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapter.GenericViewHolder> {
 
@@ -106,7 +109,10 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
         @Override
         protected void bindView(@NonNull UserEntity item) {
             itemDiscoveredBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
-            itemDiscoveredBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
+
+
+            String userName = item.userName + " " + item.getUserLastName() + " " + getHopIndicator(item.getOnlineStatus());
+            itemDiscoveredBinding.userName.setText(userName);
 
             itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
 
@@ -127,7 +133,11 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
 
             itemDiscoveredBinding.setUser(item);
             itemDiscoveredBinding.setDiscoverViewModel(discoverViewModel);
+
+            UIHelper.updateImageNameField(itemDiscoveredBinding.textViewImageName, item.userName, item.userLastName);
+
         }
+
 
         @Override
         protected void clearView() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -21,15 +22,23 @@
         android:layout_marginStart="@dimen/margin_15"
         android:layout_marginEnd="@dimen/margin_15">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_profile"
+
+        <TextView
+            android:id="@+id/text_view_image_name"
             android:layout_width="@dimen/width_40"
             android:layout_height="@dimen/height_40"
-            app:imageResource="@{avatarIndex}"
-            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/text_view_message"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_view_message" />
+            app:layout_constraintTop_toTopOf="@+id/text_view_message"
+            tools:text="RJ" />
 
         <TextView
             android:id="@+id/user_name"
@@ -41,9 +50,9 @@
             android:layout_marginTop="@dimen/margin_1"
             android:ellipsize="end"
             android:singleLine="true"
-            app:layout_constraintTop_toBottomOf="@+id/image_profile"
-            app:layout_constraintStart_toStartOf="@id/image_profile"
-            app:layout_constraintEnd_toEndOf="@id/image_profile"/>
+            app:layout_constraintTop_toBottomOf="@+id/text_view_image_name"
+            app:layout_constraintStart_toStartOf="@id/text_view_image_name"
+            app:layout_constraintEnd_toEndOf="@id/text_view_image_name"/>
 
         <TextView
             android:id="@+id/text_view_message"

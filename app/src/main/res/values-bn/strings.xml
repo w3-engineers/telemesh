@@ -2,6 +2,7 @@
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <string name="enter_first_name">আপনার নাম লিখুন</string>
+    <string name="enter_last_name">আপনার শেষ নাম লিখুন</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
@@ -86,8 +87,10 @@
     <string name="copied">কপি করা হয়েছে</string>
 
     <string name="update_app">আপডেট আপ</string>
-    <string name="please_enter_your_name">আপনার নাম লিখুন</string>
-    <string name="enter_valid_name">সঠিক নাম লিখুন</string>
+    <string name="please_enter_your_first_name">নামের প্রথম অংশ দিন</string>
+    <string name="please_enter_your_last_name">শেষ নাম লিখুন</string>
+    <string name="enter_valid_first_name">সঠিক প্রথম নাম লিখুন</string>
+    <string name="enter_valid_last_name">সঠিক শেষ নাম লিখুন</string>
     <string name="feedback">মতামত</string>
     <string name="change">পরিবর্তন</string>
     <string name="cancel">বাতিল</string>
@@ -203,4 +206,5 @@
     <string name="only_admin_can_change_group_name">কেবল অ্যাডমিনই গ্রুপের নাম পরিবর্তন করতে পারবেন</string>
 
     <string name="broadcast_notification">আপনার কাছে %d টি নতুন সম্প্রচার বার্তা রয়েছে</string>
+    <string name="change_data_plan">Change Data plan</string>
 </resources>

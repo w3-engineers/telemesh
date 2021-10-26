@@ -46,6 +46,7 @@ public class Constants {
 
     public interface preferenceKey {
         String USER_NAME = "first_name";
+        String LAST_NAME = "last_name";
         String IMAGE_INDEX = "image_index";
         String MY_USER_ID = "my_user_id";//Constant.KEY_USER_ID; // We will change later hot fix by Azim vai.
         String IS_USER_REGISTERED = "user_registered";
@@ -82,7 +83,7 @@ public class Constants {
         int POSITION_FOR_DISCOVER = 0;
         int POSITION_FOR_FAVORITE = 1;
         int POSITION_FOR_MESSAGE_FEED = 2;
-        int POSITION_FOR_MESSAGE_SETTINGS = 2;
+        int POSITION_FOR_MESSAGE_SETTINGS = 3;
     }
 
     public interface drawables {

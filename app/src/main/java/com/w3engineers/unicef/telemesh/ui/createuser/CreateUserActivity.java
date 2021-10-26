@@ -2,12 +2,16 @@ package com.w3engineers.unicef.telemesh.ui.createuser;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -67,16 +71,21 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
 
-        setClickListener(mBinding.imageViewBack, mBinding.imageViewCamera, mBinding.buttonSignup, mBinding.imageProfile);
+        setClickListener(mBinding.imageViewBack, mBinding.buttonSignup);
 
-        UIHelper.hideKeyboardFrom(this, mBinding.editTextName);
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextFirstName);
+        UIHelper.hideKeyboardFrom(this, mBinding.editTextLastName);
 
-        mViewModel.textChangeLiveData.observe(this, this::nextButtonControl);
-        mViewModel.textEditControl(mBinding.editTextName);
+        mViewModel.firstNameChangeLiveData.observe(this, this::nextButtonControl);
+        mViewModel.lastNameChangeLiveData.observe(this, this::nextButtonControl);
+
+
+        mViewModel.firstNameEditControl(mBinding.editTextFirstName);
+        mViewModel.lastNameEditControl(mBinding.editTextLastName);
 
         sInstance = this;
 
-        mBinding.editTextName.setOnEditorActionListener((v, actionId, event) -> {
+        mBinding.editTextFirstName.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 nextAction();
                 return true;
@@ -86,8 +95,17 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void nextButtonControl(String nameText) {
-        if (!TextUtils.isEmpty(nameText) &&
-                nameText.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
+
+        updateImageNameField();
+
+
+        String firstName = mBinding.editTextFirstName.getText().toString();
+        String lastName = mBinding.editTextLastName.getText().toString();
+
+        if (!TextUtils.isEmpty(firstName)
+                && !TextUtils.isEmpty(lastName)
+                && firstName.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT
+                && lastName.length() >= Constants.DefaultValue.MINIMUM_TEXT_LIMIT) {
 
             mBinding.buttonSignup.setBackgroundResource(R.drawable.ractangular_gradient);
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.white));
@@ -98,6 +116,37 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             mBinding.buttonSignup.setTextColor(getResources().getColor(R.color.new_user_button_color));
             //mBinding.buttonSignup.setClickable(false);
         }
+    }
+
+    private void updateImageNameField() {
+        String firstName = mBinding.editTextFirstName.getText().toString();
+        String lastName = mBinding.editTextLastName.getText().toString();
+
+        String finalText = "";
+
+
+        if (!TextUtils.isEmpty(firstName)) {
+
+            finalText = String.valueOf(firstName.charAt(0));
+        }
+        if (!TextUtils.isEmpty(lastName)) {
+
+            finalText += String.valueOf(lastName.charAt(0));
+        }
+
+        if (TextUtils.isEmpty(finalText)) {
+            mBinding.textViewImageName.setVisibility(View.GONE);
+
+            mBinding.imageProfileBackground.setVisibility(View.VISIBLE);
+            mBinding.imageProfile.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.textViewImageName.setVisibility(View.VISIBLE);
+
+            mBinding.imageProfileBackground.setVisibility(View.INVISIBLE);
+            mBinding.imageProfile.setVisibility(View.GONE);
+        }
+
+        mBinding.textViewImageName.setText(finalText);
     }
 
     private CreateUserViewModel getViewModel() {
@@ -128,7 +177,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                           CommonUtil.showPermissionPopUp(CreateUserActivity.this);
+                            CommonUtil.showPermissionPopUp(CreateUserActivity.this);
                         }
                     }
 
@@ -148,7 +197,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         if (id == R.id.button_signup) {
             nextAction();
-        } else if (id == R.id.image_profile || id == R.id.image_view_camera){
+        } else if (id == R.id.image_profile) {
             Intent intent = new Intent(this, ProfileImageActivity.class);
             intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
             startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
@@ -156,22 +205,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             finish();
         }
 
-
-//        switch (id) {
-//            case R.id.button_signup:
-//                nextAction();
-//                break;
-//            case R.id.image_profile:
-//            case R.id.image_view_camera:
-//                Intent intent = new Intent(this, ProfileImageActivity.class);
-//                intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
-//                startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
-//                break;
-//            case R.id.image_view_back:
-//                finish();
-//                break;
-//
-//        }
     }
 
     private void nextAction() {
@@ -189,7 +222,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
             mBinding.imageProfile.setImageResource(id);
 
-            nextButtonControl(mBinding.editTextName.getText().toString());
+            nextButtonControl(mBinding.editTextFirstName.getText().toString());
         }
     }
 
@@ -200,13 +233,16 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void saveData() {
-        if (CommonUtil.isValidName(mBinding.editTextName.getText().toString(), this)) {
+
+        if (CommonUtil.isValidName(mBinding.editTextFirstName.getText().toString(), this, true)
+                && CommonUtil.isValidName(mBinding.editTextLastName.getText().toString(), this, false)) {
             requestMultiplePermissions();
         }
     }
 
     protected void goNext() {
-        if (mViewModel.storeData(mBinding.editTextName.getText() + "")) {
+        if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
+                mBinding.editTextLastName.getText() + "")) {
 
             Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

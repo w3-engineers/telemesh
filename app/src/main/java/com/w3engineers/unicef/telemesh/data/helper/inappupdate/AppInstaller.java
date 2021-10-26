@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import android.net.Network;
@@ -116,7 +117,7 @@ public class AppInstaller {
         @Override
         protected String doInBackground(ResponseBody... urls) {
             //Copy you logic to calculate progress and call
-            saveToDisk(urls[0]);
+            saveToDisk(urls[0], "updatedApk.apk");
             return null;
         }
 
@@ -185,7 +186,7 @@ public class AppInstaller {
         }
     }
 
-    private static void saveToDisk(ResponseBody body) {
+    private static void saveToDisk(ResponseBody body,String filename) {
         try {
 
 

@@ -2,10 +2,14 @@ package com.w3engineers.unicef.util.helper.uiutil;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.databinding.BindingAdapter;
+
 import android.graphics.Typeface;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +46,7 @@ public class UIHelper {
         Context context = TeleMeshApplication.getContext();
         String avatarName = Constants.drawables.AVATAR_IMAGE + resourceId;
         Glide.with(context).load(context.getResources().getIdentifier(avatarName,
-                        Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName()))
+                Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName()))
                 .into(imageView);
     }
 
@@ -174,6 +178,23 @@ public class UIHelper {
     public static void hideKeyboardFrom(@NonNull Context context, @NonNull View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void updateImageNameField(TextView textView, String firstName, String lastName) {
+
+        String finalText = "";
+
+
+        if (!TextUtils.isEmpty(firstName)) {
+
+            finalText = String.valueOf(firstName.charAt(0));
+        }
+        if (!TextUtils.isEmpty(lastName)) {
+
+            finalText += String.valueOf(lastName.charAt(0));
+        }
+
+        textView.setText(finalText);
     }
 
     /*public static void setMargins (View v, int l, int t, int r, int b) {

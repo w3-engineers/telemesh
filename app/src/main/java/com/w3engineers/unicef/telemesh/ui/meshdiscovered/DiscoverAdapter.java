@@ -22,6 +22,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemDiscoveredBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapter.GenericViewHolder> {
 
@@ -133,26 +134,10 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
             itemDiscoveredBinding.setUser(item);
             itemDiscoveredBinding.setDiscoverViewModel(discoverViewModel);
 
-            updateImageNameField(itemDiscoveredBinding.textViewImageName, item.userName, item.userLastName);
+            UIHelper.updateImageNameField(itemDiscoveredBinding.textViewImageName, item.userName, item.userLastName);
 
         }
 
-        private void updateImageNameField(TextView textView, String firstName, String lastName) {
-
-            String finalText = "";
-
-
-            if (!TextUtils.isEmpty(firstName)) {
-
-                finalText = String.valueOf(firstName.charAt(0));
-            }
-            if (!TextUtils.isEmpty(lastName)) {
-
-                finalText += String.valueOf(lastName.charAt(0));
-            }
-
-            textView.setText(finalText);
-        }
 
         @Override
         protected void clearView() {

@@ -91,7 +91,7 @@ public abstract class ViperUtil {
             String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
 
             initObservers();
-            viperClient = ViperClient.on(context, userModel.getName(), userModel.getImage());
+            viperClient = ViperClient.on(context, userModel.getName(), userModel.getLastName(), userModel.getImage());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -491,7 +491,7 @@ public abstract class ViperUtil {
     public void saveOtherUserInfo(UserModel userModel) {
 
         if (viperClient != null) {
-            viperClient.updateUserInfo(userModel.getUserId(), userModel.getName(), userModel.getImage());
+            viperClient.updateUserInfo(userModel.getUserId(), userModel.getName(), userModel.getLastName());
         }
     }
 

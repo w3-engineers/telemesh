@@ -1,7 +1,9 @@
 package com.w3engineers.unicef.telemesh.ui.addnewmember;
 
 import androidx.paging.PagedListAdapter;
+
 import android.content.Context;
+
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -9,16 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.TeleMeshDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupCreateUserBinding;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,10 +128,11 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
         @Override
         protected void bindView(@NonNull UserEntity item, int position) {
             itemGroupCreateUserBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
-            itemGroupCreateUserBinding.userName.setText(item.userName);
 
-            itemGroupCreateUserBinding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance()
-                    .getAvatarImage(item.avatarIndex));
+            String name = item.userName + " " + item.getUserLastName();
+            itemGroupCreateUserBinding.userName.setText(name);
+
+            UIHelper.updateImageNameField(itemGroupCreateUserBinding.textViewImageName, item.getUserName(), item.getUserLastName());
 
             itemGroupCreateUserBinding.checkBox.setVisibility(View.VISIBLE);
 
@@ -156,6 +163,7 @@ public class AddNewMemberAdapter extends PagedListAdapter<UserEntity, AddNewMemb
             });
 
         }
+
 
         @Override
         protected void clearView() {

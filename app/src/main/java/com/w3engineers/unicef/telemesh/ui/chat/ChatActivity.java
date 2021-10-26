@@ -176,14 +176,23 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
 
         if (isGroup) {
             if (mGroupEntity != null) {
+
+                mViewBinging.textViewImageName.setVisibility(View.INVISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.VISIBLE);
+
                 mViewBinging.imageProfile.setBackgroundResource(R.mipmap.group_white_circle);
                 UIHelper.setGroupName(mViewBinging.textViewLastName, mGroupEntity.groupName);
                 mViewBinging.imageView.setVisibility(View.GONE);
             }
         } else {
             if (mUserEntity != null) {
+                mViewBinging.textViewImageName.setVisibility(View.VISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.INVISIBLE);
 
-                UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
+                //UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
+
+                UIHelper.updateImageNameField(mViewBinging.textViewImageName, mUserEntity.getUserName(), mUserEntity.getUserLastName());
+
                 String name = mUserEntity.userName + " " + mUserEntity.getUserLastName();
                 mViewBinging.textViewLastName.setText(name);
                 String subTitle = mUserEntity.isOnline > 0 ? getString(R.string.active_online) : getString(R.string.active_offline);
@@ -314,7 +323,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
             setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage,
-                    mViewBinging.imageProfile, mViewBinging.textViewLastName);
+                    mViewBinging.imageProfile, mViewBinging.textViewLastName, mViewBinging.textViewImageName);
         }
 
         NotifyUtil.clearNotification(threadId);
@@ -419,6 +428,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
                 break;
             case R.id.image_profile:
             case R.id.text_view_last_name:
+            case R.id.text_view_image_name:
                 if (isGroup) {
                     Intent intent = new Intent(this, GroupDetailsActivity.class);
                     intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());

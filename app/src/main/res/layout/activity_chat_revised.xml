@@ -70,6 +70,23 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/text_view_image_name"
+                        android:layout_width="@dimen/width_40"
+                        android:layout_height="@dimen/height_40"
+                        android:background="@drawable/circle_background"
+                        android:gravity="center"
+                        android:maxLength="2"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="RJ" />
+
+                    <TextView
                         android:id="@+id/text_view_last_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

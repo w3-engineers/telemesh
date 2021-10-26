@@ -167,7 +167,7 @@ public class EditProfileActivity extends TelemeshBaseActivity {
                 && CommonUtil.isValidName(mBinding.editTextLastName.getText().toString(), this, true)) {
             if (isNeedToUpdate()) {
                 if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
-                        mBinding.editTextFirstName.getText() + "")) {
+                        mBinding.editTextLastName.getText() + "")) {
                     Toast.makeText(this, LanguageUtil.getString(R.string.profile_updated_successfully), Toast.LENGTH_SHORT).show();
                     mViewModel.sendUserInfoToAll();
                     finish();

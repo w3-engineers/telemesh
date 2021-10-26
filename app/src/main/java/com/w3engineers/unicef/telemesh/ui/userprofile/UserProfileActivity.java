@@ -70,6 +70,7 @@ public class UserProfileActivity extends TelemeshBaseActivity {
         UserEntity userEntity = getIntent().getParcelableExtra(UserEntity.class.getName());
         isMyProfile = getIntent().getBooleanExtra(SettingsFragment.class.getName(), false);
         mBinding.setUserEntity(userEntity);
+
         updateImageNameField(userEntity.getUserName(), userEntity.getUserLastName());
 
         setClickListener(mBinding.opBack, mBinding.imageViewIdCopy, mBinding.buttonExportProfile, mBinding.textViewEdit);
@@ -103,6 +104,8 @@ public class UserProfileActivity extends TelemeshBaseActivity {
             userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
             userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
             mBinding.setUserEntity(userEntity);
+
+            updateImageNameField(userEntity.getUserName(), userEntity.getUserLastName());
         }
     }
 

@@ -277,7 +277,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
 
-        addBadgeToSettings();
+        boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
+
+        if (!isWalletBackUpDone) {
+            addBadgeToSettings();
+        }
 
         if (fromBroadcast) {
             hideFeedBadge();

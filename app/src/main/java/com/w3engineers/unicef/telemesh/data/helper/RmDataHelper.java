@@ -1031,6 +1031,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         // LogProcessUtil.getInstance().writeLog(log);
     }*/
 
+    public void saveMyInfo() {
+        rightMeshDataSource.saveUpdateUserInfo();
+    }
+
     public void broadcastUpdateProfileInfo(@NonNull String userName, String lastName) {
 
         // Save current my information in SDK layer

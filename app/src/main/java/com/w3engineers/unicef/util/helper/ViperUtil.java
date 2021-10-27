@@ -46,6 +46,7 @@ import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
+import com.w3engineers.mesh.application.data.model.WalletPrepared;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.MeshLog;
@@ -79,6 +80,7 @@ public abstract class ViperUtil {
 
     public static final int WALLET_SECURITY_ACTIVITY = 1;
     public static final int WALLET_IMPORT_ACTIVITY = 2;
+    public static final int WALLET_BACKUP_ACTIVITY = 3;
 
     private ViperClient viperClient;
     private String myUserId;
@@ -101,11 +103,11 @@ public abstract class ViperUtil {
         }
     }
 
-    public void startTelemeshService(){
+    public void startTelemeshService() {
         viperClient.startTelemeshService();
     }
 
-    public void launchActivity(int activityType){
+    public void launchActivity(int activityType) {
         viperClient.launchActivity(activityType);
     }
 
@@ -127,6 +129,13 @@ public abstract class ViperUtil {
             if (walletLoaded.success) {
                 myUserId = walletLoaded.walletAddress;
                 onMeshPrepared(walletLoaded.walletAddress);
+            }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_PREPARED, event -> {
+            WalletPrepared walletPrepared = (WalletPrepared) event;
+            if (walletPrepared.success) {
+                onWalletPrepared();
             }
         });
 
@@ -689,4 +698,6 @@ public abstract class ViperUtil {
     protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime);
 
     protected abstract void openSelectAccountActivity();
+
+    protected abstract void onWalletPrepared();
 }

@@ -195,6 +195,7 @@
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:background="@drawable/circular_badge_red"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/image_view_backup"
                     app:layout_constraintEnd_toEndOf="@+id/image_view_backup"
                     app:layout_constraintTop_toTopOf="@+id/image_view_backup" />

@@ -51,7 +51,6 @@ public class SelectAccountActivity extends TelemeshBaseActivity {
             Intent intent = new Intent(this, CreateUserActivity.class);
             intent.putExtra("import_wallet", true);
             startActivity(intent);
-            //selectAccountViewModel.launchImportWalletActivity();
         }
     }
 

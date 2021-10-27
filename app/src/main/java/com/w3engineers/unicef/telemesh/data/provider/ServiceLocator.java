@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
+import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -185,6 +187,15 @@ public class ServiceLocator extends BaseServiceLocator {
 
     public void launchActivity(int activityType){
         RmDataHelper.getInstance().launchActivity(activityType);
+    }
+
+    public void getLocation(){
+        Location location = RmDataHelper.getInstance().getLocationFromServiceApp();
+        if(location == null){
+            Log.e("Location", "user location is null");
+        }else{
+            Log.e("Location", "user location is : "+location.getLatitude()+" "+location.getLongitude());
+        }
     }
 
     public void resetMesh() {

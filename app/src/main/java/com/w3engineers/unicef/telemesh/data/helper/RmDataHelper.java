@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.location.Location;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
@@ -752,6 +753,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     public void launchActivity(int activityType) {
         rightMeshDataSource.launchActivity(activityType);
+    }
+
+    public Location getLocationFromServiceApp(){
+        return rightMeshDataSource.getLocationFromService();
     }
 
     /**

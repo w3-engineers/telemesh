@@ -26,7 +26,6 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
-import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -247,10 +246,14 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
                 mBinding.editTextLastName.getText() + "")) {
 
-            Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
+
+
+            mViewModel.launchWalletPage(isNeedToImportWallet);
+
+            /*Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+            finish();*/
         }
     }
 }

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">My profile</string>
-    <string name="enter_first_name">Type your first name</string>
-    <string name="enter_last_name">Type your last name</string>
+    <string name="enter_first_name">Type first name</string>
+    <string name="enter_last_name">Type last name</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>

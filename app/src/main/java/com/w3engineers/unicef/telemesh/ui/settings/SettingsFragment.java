@@ -65,6 +65,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mBinding.setSettingsVM(settingsViewModel);
 
+        boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
+
+        if (!isWalletBackUpDone) {
+            mBinding.imageViewDot.setVisibility(View.VISIBLE);
+        }
+
         initView();
 
         showInAppUpdateButton();

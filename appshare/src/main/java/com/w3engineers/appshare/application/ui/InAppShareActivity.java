@@ -69,7 +69,6 @@ public class InAppShareActivity extends AppCompatActivity {
         disableState();
 
         inAppShareViewModel = getViewModel();
-
         appShareStart();
 
         /*boolean permission = false;

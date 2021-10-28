@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 
@@ -15,6 +16,7 @@ import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,13 +39,14 @@ import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
 import com.w3engineers.unicef.util.helper.ViperUtil;
 
 import java.io.ByteArrayOutputStream;
 
-public class SettingsFragment extends BaseFragment implements View.OnClickListener {
+public class SettingsFragment extends BaseFragment implements View.OnClickListener, DexterPermissionHelper.PermissionCallback {
 
     private Context mActivity;
     private SettingsViewModel settingsViewModel;
@@ -102,7 +105,14 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
-                shareAppOperation();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    DexterPermissionHelper.getInstance().requestForPermission(getActivity(), this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION);
+                } else {
+                    shareAppOperation();
+                }
+
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -318,4 +328,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
     }
 
+    @Override
+    public void onPermissionGranted() {
+        shareAppOperation();
+    }
 }

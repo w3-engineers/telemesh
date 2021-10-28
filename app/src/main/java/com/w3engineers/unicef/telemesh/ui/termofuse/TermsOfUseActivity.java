@@ -1,14 +1,16 @@
 package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 
+import android.Manifest;
 import android.view.View;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 
-public class TermsOfUseActivity extends BaseActivity {
+public class TermsOfUseActivity extends BaseActivity implements DexterPermissionHelper.PermissionCallback {
 
     private ActivityTermsOfUseBinding mBinding;
 
@@ -40,7 +42,9 @@ public class TermsOfUseActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.button_next) {
-            gotoProfileChoicePage();
+            DexterPermissionHelper.getInstance().requestForPermission(this,
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -66,5 +70,10 @@ public class TermsOfUseActivity extends BaseActivity {
 
     private void gotoProfileChoicePage() {
         ServiceLocator.getInstance().initViper();
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        gotoProfileChoicePage();
     }
 }

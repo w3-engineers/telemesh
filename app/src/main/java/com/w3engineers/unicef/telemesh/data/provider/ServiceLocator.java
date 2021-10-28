@@ -181,9 +181,9 @@ public class ServiceLocator extends BaseServiceLocator {
         RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
-    public void startTelemeshService() {
+  /*    public void startTelemeshService() {
         RmDataHelper.getInstance().startTelemeshService();
-    }
+    }*/
 
     public void launchActivity(int activityType){
         RmDataHelper.getInstance().launchActivity(activityType);

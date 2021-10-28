@@ -747,9 +747,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
 
-    public void startTelemeshService() {
+  /*  public void startTelemeshService() {
         rightMeshDataSource.startTelemeshService();
-    }
+    }*/
 
     public void launchActivity(int activityType) {
         rightMeshDataSource.launchActivity(activityType);

@@ -13,13 +13,14 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySelectAccountBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
+import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 
 /**
  * Created by Azizul Islam on 10/22/21.
  */
-public class SelectAccountActivity extends TelemeshBaseActivity {
+public class SelectAccountActivity extends BaseActivity {
     private SelectAccountViewModel selectAccountViewModel;
     private ActivitySelectAccountBinding viewBinder;
 
@@ -28,14 +29,10 @@ public class SelectAccountActivity extends TelemeshBaseActivity {
         return R.layout.activity_select_account;
     }
 
-    @Override
-    public BaseServiceLocator a() {
-        return ServiceLocator.getInstance();
-    }
+
 
     @Override
     public void startUI() {
-        super.startUI();
         viewBinder = (ActivitySelectAccountBinding) getViewDataBinding();
         selectAccountViewModel = getViewModel();
         setClickListener(viewBinder.buttonCreateAccount, viewBinder.buttonImportAccount);

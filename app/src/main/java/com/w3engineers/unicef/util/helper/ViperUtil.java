@@ -104,9 +104,9 @@ public abstract class ViperUtil {
         }
     }
 
-    public void startTelemeshService() {
+  /*  public void startTelemeshService() {
         viperClient.startTelemeshService();
-    }
+    }*/
 
     public void launchActivity(int activityType) {
         viperClient.launchActivity(activityType);

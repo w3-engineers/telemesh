@@ -24,18 +24,26 @@ public class SelectAccountActivity extends BaseActivity {
     private SelectAccountViewModel selectAccountViewModel;
     private ActivitySelectAccountBinding viewBinder;
 
+    public static SelectAccountActivity instance;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_select_account;
     }
 
 
-
     @Override
     public void startUI() {
+        instance = this;
         viewBinder = (ActivitySelectAccountBinding) getViewDataBinding();
         selectAccountViewModel = getViewModel();
         setClickListener(viewBinder.buttonCreateAccount, viewBinder.buttonImportAccount);
+    }
+
+    @Override
+    protected void onDestroy() {
+        instance = null;
+        super.onDestroy();
     }
 
     @Override

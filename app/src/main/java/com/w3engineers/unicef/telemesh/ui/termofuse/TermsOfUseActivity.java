@@ -1,18 +1,28 @@
 package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 
+import android.content.Intent;
 import android.Manifest;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 
 public class TermsOfUseActivity extends BaseActivity implements DexterPermissionHelper.PermissionCallback {
 
     private ActivityTermsOfUseBinding mBinding;
+    private TermsOfUseViewModel mViewModel;
+    public static TermsOfUseActivity instance;
 
     @Override
     protected int getToolbarId() {
@@ -34,9 +44,31 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
     public void startUI() {
         mBinding = (ActivityTermsOfUseBinding) getViewDataBinding();
         setTitle(getResources().getString(R.string.terms_of_use_details));
+        instance = this;
+        mViewModel = getViewModel();
+
         initView();
+
+        mViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isOldAccount) {
+                if (isOldAccount) {
+                    Intent intent = new Intent(TermsOfUseActivity.this, CreateUserActivity.class);
+                    intent.putExtra("wallet_exists", true);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        mViewModel.initWalletPreparationCallback();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        instance = null;
+        super.onDestroy();
+    }
 
     @Override
     public void onClick(View view) {
@@ -70,6 +102,16 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
 
     private void gotoProfileChoicePage() {
         ServiceLocator.getInstance().initViper();
+    }
+
+    private TermsOfUseViewModel getViewModel() {
+        return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) ServiceLocator.getInstance().getTermsOfViewModel();
+            }
+        }).get(TermsOfUseViewModel.class);
     }
 
     @Override

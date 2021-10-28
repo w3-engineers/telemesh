@@ -718,6 +718,11 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.stopMeshService();
     }
 
+    public void startMesh() {
+        rightMeshDataSource.startMesh();
+    }
+
+
     /**
      * This api called when all of app layer dependencies are removed,
      * i.e. update user status to offline successfully then called this method
@@ -1183,5 +1188,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         if (MainActivity.getInstance() != null) {
             MainActivity.getInstance().onWalletBackupDone();
         }
+    }
+
+    public void onWalletPrepared(boolean isOldAccount) {
+        dataSource.setWalletPrepared(isOldAccount);
     }
 }

@@ -142,7 +142,7 @@ public abstract class ViperUtil {
         AppDataObserver.on().startObserver(ApiEvent.WALLET_PREPARED, event -> {
             WalletPrepared walletPrepared = (WalletPrepared) event;
             if (walletPrepared.success) {
-                onWalletPrepared();
+                onWalletPrepared(walletPrepared.isOldAccount);
             }
         });
 
@@ -501,6 +501,14 @@ public abstract class ViperUtil {
         }
     }
 
+    public void startMesh() {
+        try {
+            viperClient.startMesh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void restartMeshService() {
         try {
             viperClient.restartMesh();
@@ -711,7 +719,7 @@ public abstract class ViperUtil {
 
     protected abstract void openSelectAccountActivity();
 
-    protected abstract void onWalletPrepared();
+    protected abstract void onWalletPrepared(boolean isOldAccount);
 
     protected abstract void onWalletBackUp(boolean isSuccess);
 }

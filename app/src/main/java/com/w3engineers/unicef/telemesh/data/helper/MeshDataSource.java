@@ -307,10 +307,13 @@ public class MeshDataSource extends ViperUtil {
                 RmDataHelper.getInstance().onWalletPrepared(isOldAccount);
             }
         } else {
+
             Context context = TeleMeshApplication.getContext();
             Intent intent = new Intent(context, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+
+
             if (CreateUserActivity.sInstance != null) {
                 CreateUserActivity.sInstance.finish();
             }
@@ -322,6 +325,7 @@ public class MeshDataSource extends ViperUtil {
             if (TermsOfUseActivity.instance != null) {
                 TermsOfUseActivity.instance.finish();
             }
+
         }
     }
 

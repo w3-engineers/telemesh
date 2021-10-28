@@ -2,13 +2,14 @@ package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 
 import android.view.View;
+
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 
-public class TermsOfUseActivity extends TelemeshBaseActivity {
+public class TermsOfUseActivity extends BaseActivity {
 
     private ActivityTermsOfUseBinding mBinding;
 
@@ -29,13 +30,7 @@ public class TermsOfUseActivity extends TelemeshBaseActivity {
 
 
     @Override
-    public BaseServiceLocator a() {
-        return ServiceLocator.getInstance();
-    }
-
-    @Override
     public void startUI() {
-        super.startUI();
         mBinding = (ActivityTermsOfUseBinding) getViewDataBinding();
         setTitle(getResources().getString(R.string.terms_of_use_details));
         initView();

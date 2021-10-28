@@ -52,7 +52,6 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.LocationTracker;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
@@ -133,7 +132,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
 
-        requestMultiplePermissions();
+        //requestMultiplePermissions();
 
         Constants.IS_LOADING_ENABLE = false;
         Constants.IS_APP_BLOCKER_ON = false;
@@ -480,7 +479,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         RmDataHelper.getInstance().destroy();
         sInstance = null;
         if (!CommonUtil.isEmulator()) {
-            LocationTracker.getInstance(mContext).stopListener();
+            //LocationTracker.getInstance(mContext).stopListener();
             unregisterReceiver(mGpsSwitchStateReceiver);
         }
     }
@@ -566,7 +565,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 if (isGpsEnabled || isNetworkEnabled) {
                     //location is enabled
                     Log.e("gps_staus", "gps has been on");
-                    LocationTracker.getInstance(mContext).getLocation();
+                    //LocationTracker.getInstance(mContext).getLocation();
                     CommonUtil.dismissDialog();
                 } else {
                     //location is disabled
@@ -677,7 +676,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onPermissionGranted() {
-        //   locationTracker = new LocationTracker(mContext, MainActivity.this);
+       /* //   locationTracker = new LocationTracker(mContext, MainActivity.this);
 
         if (!CommonUtil.isEmulator()) {
             LocationTracker.getInstance(mContext).getLocation();
@@ -691,7 +690,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else {
                 CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
             }
-        }
+        }*/
     }
 
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

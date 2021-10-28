@@ -70,7 +70,9 @@ public class InAppShareActivity extends AppCompatActivity {
 
         inAppShareViewModel = getViewModel();
 
-        boolean permission = false;
+        appShareStart();
+
+        /*boolean permission = false;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permission = Settings.System.canWrite(this);
@@ -89,7 +91,7 @@ public class InAppShareActivity extends AppCompatActivity {
             }
         } else {
             appShareStart();
-        }
+        }*/
     }
 
     private void setStatusBarColor() {

@@ -18,6 +18,7 @@ import android.content.Intent;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 
+import android.location.Location;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -104,12 +105,17 @@ public abstract class ViperUtil {
         }
     }
 
-    public void startTelemeshService() {
+  /*  public void startTelemeshService() {
         viperClient.startTelemeshService();
-    }
+    }*/
 
     public void launchActivity(int activityType) {
         viperClient.launchActivity(activityType);
+    }
+
+
+    public Location getLocationFromService() {
+        return viperClient.getLocationFromService();
     }
 
     private void initObservers() {

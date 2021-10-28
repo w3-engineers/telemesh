@@ -9,11 +9,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
@@ -37,6 +39,7 @@ import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.ViperUtil;
 
 import java.io.ByteArrayOutputStream;
 
@@ -127,9 +130,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
 
-            /*case R.id.layout_ssid:
-                showAlertForSSID();
-                break;*/
+            case R.id.layout_backup_wallet:
+                walletBackUpAction();
+                break;
 
             default:
                 break;
@@ -138,6 +141,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         super.onClick(view);
 
+    }
+
+
+    public void removeBadgeIcon() {
+        mBinding.imageViewDot.setVisibility(View.GONE);
     }
 
     private void appUpdateAction() {
@@ -170,6 +178,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void shareAppOperation() {
         if (hasEnoughStorage()) {
             settingsViewModel.startInAppShareProcess();
+        }
+    }
+
+    private void walletBackUpAction() {
+        if (isMeshInit()) {
+            DataManager.on().launchActivity(ViperUtil.WALLET_BACKUP_ACTIVITY);
         }
     }
 
@@ -290,6 +304,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutAppUpdate.setOnClickListener(this);
         mBinding.layoutFeedback.setOnClickListener(this);
         mBinding.layoutSsid.setOnClickListener(this);
+        mBinding.layoutBackupWallet.setOnClickListener(this);
 
         mBinding.titleViewProfile.setText(LanguageUtil.getString(R.string.activity_view_profile));
         mBinding.titleViewWallet.setText(LanguageUtil.getString(R.string.settings_open_wallet));
@@ -303,48 +318,4 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
     }
 
-    // TODO SSID_Change
-    /*public void showAlertForSSID() {
-        // create an alert builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final View customLayout = getLayoutInflater().inflate(R.layout.alert_change_ssid, null);
-        builder.setView(customLayout);
-
-        String networkSSID = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.NETWORK_PREFIX);
-
-        if (TextUtils.isEmpty(networkSSID)) {
-            networkSSID = getResources().getString(R.string.def_ssid);
-        }
-
-        TextView infoText = customLayout.findViewById(R.id.info);
-        EditText ssidName = customLayout.findViewById(R.id.network_name);
-
-        ssidName.setHint(LanguageUtil.getString(R.string.set_new_network_prefix));
-
-        infoText.setText(String.format(LanguageUtil.getString(R.string.your_current_network_prefix), networkSSID));
-
-        // add a button
-        builder.setPositiveButton(LanguageUtil.getString(R.string.change), (dialog, which) -> {
-
-            String ssid = ssidName.getText().toString();
-
-            if (TextUtils.isEmpty(ssid) || ssid.length() < 3) {
-                Toaster.showShort(LanguageUtil.getString(R.string.minimu_ssid_character));
-            } else {
-                SharedPref.getSharedPref(mActivity).write(Constants.preferenceKey.NETWORK_PREFIX, ssid);
-
-                settingsViewModel.destroyMeshService();
-            }
-
-        });
-
-        builder.setNegativeButton(LanguageUtil.getString(R.string.cancel), (dialog, which) -> {
-            dialog.dismiss();
-        });
-
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.show();
-    }*/
 }

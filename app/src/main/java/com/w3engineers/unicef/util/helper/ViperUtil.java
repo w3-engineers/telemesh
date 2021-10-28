@@ -44,6 +44,7 @@ import com.w3engineers.mesh.application.data.model.ServiceDestroyed;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
+import com.w3engineers.mesh.application.data.model.WalletBackupEvent;
 import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.application.data.model.WalletPrepared;
@@ -137,6 +138,11 @@ public abstract class ViperUtil {
             if (walletPrepared.success) {
                 onWalletPrepared();
             }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_BACKUP, event -> {
+            WalletBackupEvent walletBackupEvent = (WalletBackupEvent) event;
+            onWalletBackUp(walletBackupEvent.success);
         });
 
        /* AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
@@ -700,4 +706,6 @@ public abstract class ViperUtil {
     protected abstract void openSelectAccountActivity();
 
     protected abstract void onWalletPrepared();
+
+    protected abstract void onWalletBackUp(boolean isSuccess);
 }

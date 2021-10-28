@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Handler;
 
@@ -25,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -206,6 +208,17 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 binding.bottomNavigation.setSelectedItemId(R.id.action_contact);
             }
         }
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -680,4 +693,27 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             }
         }
     }
+
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            if (key.equals(Constants.preferenceKey.IS_WALLET_BACKUP_DONE)) {
+                boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
+                if (isWalletBackUpDone) {
+
+                    if (mCurrentFragment != null
+                            && (mCurrentFragment instanceof SettingsFragment)) {
+                        ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
+                    }
+
+                    BottomNavigationItemView itemView =
+                            (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
+
+                    if (itemView != null) {
+                        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+                        constraintLayoutContainer.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+    };
 }

@@ -22,10 +22,13 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -48,6 +51,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
     public static CreateUserActivity sInstance;
     private boolean isNeedToImportWallet;
+    private boolean isWalletExists;
 
     @NonNull
     public static String IMAGE_POSITION = "image_position";
@@ -68,7 +72,10 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     protected void startUI() {
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
+
         isNeedToImportWallet = getIntent().getBooleanExtra("import_wallet", false);
+
+        isWalletExists = getIntent().getBooleanExtra("wallet_exists", false);
 
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
@@ -246,9 +253,22 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
                 mBinding.editTextLastName.getText() + "")) {
 
+            if (isWalletExists) {
 
+                // Start mesh, and goto home page
 
-            mViewModel.launchWalletPage(isNeedToImportWallet);
+                RmDataHelper.getInstance().startMesh();
+
+                startActivity(new Intent(this, MainActivity.class));
+
+                finish();
+                if (TermsOfUseActivity.instance != null) {
+                    TermsOfUseActivity.instance.finish();
+                }
+
+            } else {
+                mViewModel.launchWalletPage(isNeedToImportWallet);
+            }
 
             /*Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

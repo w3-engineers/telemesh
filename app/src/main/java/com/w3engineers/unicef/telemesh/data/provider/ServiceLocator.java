@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 
@@ -105,7 +106,12 @@ public class ServiceLocator extends BaseServiceLocator {
         return new ChatViewModel(application);
     }
 
-    public SelectAccountViewModel getSelectAccountViewModel(){
+    @NonNull
+    public TermsOfUseViewModel getTermsOfViewModel() {
+        return new TermsOfUseViewModel();
+    }
+
+    public SelectAccountViewModel getSelectAccountViewModel() {
         return new SelectAccountViewModel();
     }
 
@@ -185,16 +191,16 @@ public class ServiceLocator extends BaseServiceLocator {
         RmDataHelper.getInstance().startTelemeshService();
     }*/
 
-    public void launchActivity(int activityType){
+    public void launchActivity(int activityType) {
         RmDataHelper.getInstance().launchActivity(activityType);
     }
 
-    public void getLocation(){
+    public void getLocation() {
         Location location = RmDataHelper.getInstance().getLocationFromServiceApp();
-        if(location == null){
+        if (location == null) {
             Log.e("Location", "user location is null");
-        }else{
-            Log.e("Location", "user location is : "+location.getLatitude()+" "+location.getLongitude());
+        } else {
+            Log.e("Location", "user location is : " + location.getLatitude() + " " + location.getLongitude());
         }
     }
 

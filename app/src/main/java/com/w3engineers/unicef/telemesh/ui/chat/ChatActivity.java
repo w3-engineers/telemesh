@@ -394,6 +394,8 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
                         if (mChatPagedAdapter != null) {
                             mChatPagedAdapter.addAvatarIndex(userEntity);
                         }
+                    } else {
+                        finish();
                     }
                 });
             }

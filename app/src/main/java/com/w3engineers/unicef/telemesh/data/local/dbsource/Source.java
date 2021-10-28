@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.local.dbsource;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -43,6 +44,7 @@ public class Source implements DataSource {
     private BehaviorSubject<GroupModel> groupRenameEvent = BehaviorSubject.create();
     private BehaviorSubject<GroupMemberChangeModel> groupMemberAddEvent = BehaviorSubject.create();
     private BehaviorSubject<GroupMemberChangeModel> groupMemberRemoveEvent = BehaviorSubject.create();
+    private BehaviorSubject<Boolean> walletPrepared = BehaviorSubject.create();
 
     private Source() {
         messageDao = AppDatabase.getInstance().messageDao();
@@ -171,6 +173,17 @@ public class Source implements DataSource {
     public Flowable<GroupMemberChangeModel> getGroupMemberRemoveEvent() {
         return groupMemberRemoveEvent.toFlowable(BackpressureStrategy.LATEST);
     }
+
+    @Override
+    public void setWalletPrepared(boolean isOldAccount) {
+        walletPrepared.onNext(isOldAccount);
+    }
+
+    @Override
+    public Flowable<Boolean> getWalletPrepared() {
+        return walletPrepared.toFlowable(BackpressureStrategy.LATEST);
+    }
+
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     /*@Override

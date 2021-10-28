@@ -296,14 +296,23 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void onWalletPrepared() {
+    protected void onWalletPrepared(boolean isOldAccount) {
         // Start Home activity and finish current activity
-        Context context = TeleMeshApplication.getContext();
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        if (CreateUserActivity.sInstance != null) {
-            CreateUserActivity.sInstance.finish();
+        if (isOldAccount) {
+            boolean isUserRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
+            if (isUserRegistered) {
+                startMesh();
+            } else {
+                RmDataHelper.getInstance().onWalletPrepared(isOldAccount);
+            }
+        } else {
+            Context context = TeleMeshApplication.getContext();
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            if (CreateUserActivity.sInstance != null) {
+                CreateUserActivity.sInstance.finish();
+            }
         }
     }
 

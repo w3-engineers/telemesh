@@ -127,6 +127,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mContext = this;
 
         super.startUI();
+
+        //RmDataHelper.getInstance().startMesh();
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -684,22 +687,29 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }*/
     }
 
-    public void onWalletBackupDone(){
+    public void onWalletBackupDone() {
         boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
         if (isWalletBackUpDone) {
 
-            if (mCurrentFragment != null
-                    && (mCurrentFragment instanceof SettingsFragment)) {
-                ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mCurrentFragment != null
+                            && (mCurrentFragment instanceof SettingsFragment)) {
+                        ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
+                    }
 
-            BottomNavigationItemView itemView =
-                    (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
+                    BottomNavigationItemView itemView =
+                            (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
 
-            if (itemView != null) {
-                ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
-                constraintLayoutContainer.setVisibility(View.GONE);
-            }
+                    if (itemView != null) {
+                        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+                        constraintLayoutContainer.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+
         }
     }
 }

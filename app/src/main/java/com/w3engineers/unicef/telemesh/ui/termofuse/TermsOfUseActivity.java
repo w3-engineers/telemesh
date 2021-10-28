@@ -6,8 +6,7 @@ import android.view.View;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
-import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
-import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
+import com.w3engineers.unicef.util.base.ui.BaseActivity;
 
 public class TermsOfUseActivity extends BaseActivity {
 
@@ -66,6 +65,6 @@ public class TermsOfUseActivity extends BaseActivity {
     }
 
     private void gotoProfileChoicePage() {
-        ServiceLocator.getInstance().startTelemeshService();
+        ServiceLocator.getInstance().initViper();
     }
 }

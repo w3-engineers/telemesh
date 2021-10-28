@@ -755,7 +755,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         rightMeshDataSource.launchActivity(activityType);
     }
 
-    public Location getLocationFromServiceApp(){
+    public Location getLocationFromServiceApp() {
         return rightMeshDataSource.getLocationFromService();
     }
 
@@ -1179,4 +1179,9 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
 
+    public void onWalletBackupDone() {
+        if (MainActivity.getInstance() != null) {
+            MainActivity.getInstance().onWalletBackupDone();
+        }
+    }
 }

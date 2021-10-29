@@ -77,6 +77,7 @@ public class Constants {
         String APP_UPDATE_VERSION_NAME = "app_update_version_name";
         String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
         String APP_UPDATE_CHECK_TIME = "app_update_check_time";
+        String APP_POLICY_CHECKED = "app_policy_checked";
     }
 
     public interface MenuItemPosition {

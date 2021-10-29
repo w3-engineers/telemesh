@@ -3,17 +3,22 @@ package com.w3engineers.unicef.telemesh.ui.splashscreen;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
+import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 
@@ -50,8 +55,15 @@ public class SplashActivity extends BaseActivity {
                 // Go to contact page
                 intent = new Intent(SplashActivity.this, MainActivity.class);
             } else {
-                //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
-                intent = new Intent(SplashActivity.this, TermsOfUseActivity.class);
+
+                boolean isTermsAccepted = SharedPref.readBoolean(Constants.preferenceKey.APP_POLICY_CHECKED, false);
+                if (isTermsAccepted) {
+                    //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
+                    intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                } else {
+                    //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
+                    intent = new Intent(SplashActivity.this, TermsOfUseActivity.class);
+                }
             }
             startActivity(intent);
             finish();

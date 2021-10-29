@@ -1,15 +1,7 @@
-package com.w3engineers.unicef.telemesh.ui.termofuse;
-
-
-import android.content.Intent;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
-import android.view.View;
+package com.w3engineers.unicef.telemesh.ui.welcome;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -17,62 +9,57 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.view.View;
+
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
-import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
+import com.w3engineers.unicef.telemesh.databinding.ActivityWelcomeBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
-import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
-import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 
-public class TermsOfUseActivity extends BaseActivity {
+public class WelcomeActivity extends BaseActivity {
 
-    private ActivityTermsOfUseBinding mBinding;
-    private TermsOfUseViewModel mViewModel;
-    public static TermsOfUseActivity instance;
+    private ActivityWelcomeBinding mBinding;
+    private WelcomeViewModel mViewModel;
+    public static WelcomeActivity instance;
     private static final int REQUEST_WRITE_PERMISSION = 786;
 
     @Override
-    protected int getToolbarId() {
-        return R.id.toolbar;
-    }
-
-    @Override
-    protected int statusBarColor() {
-        return R.color.colorPrimaryDark;
-    }
-
-    @Override
     protected int getLayoutId() {
-        return R.layout.activity_terms_of_use;
+        return R.layout.activity_welcome;
     }
 
-
     @Override
-    public void startUI() {
-        mBinding = (ActivityTermsOfUseBinding) getViewDataBinding();
-        setTitle(getResources().getString(R.string.terms_of_use_details));
+    protected void startUI() {
         instance = this;
+        mBinding = (ActivityWelcomeBinding) getViewDataBinding();
         mViewModel = getViewModel();
 
-        initView();
 
-      /*  mViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
+        setClickListener(mBinding.buttonContinue);
+
+        mViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isOldAccount) {
                 if (isOldAccount) {
-                    Intent intent = new Intent(TermsOfUseActivity.this, CreateUserActivity.class);
+                    Intent intent = new Intent(WelcomeActivity.this, CreateUserActivity.class);
                     intent.putExtra("wallet_exists", true);
                     startActivity(intent);
                 }
             }
         });
 
-        mViewModel.initWalletPreparationCallback();*/
+        mViewModel.initWalletPreparationCallback();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -83,14 +70,10 @@ public class TermsOfUseActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.button_next) {
-            //checkPermissionAndGoToNext();
-            SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
-            startActivity(new Intent(this, WelcomeActivity.class));
-            finish();
+        if (view.getId() == R.id.button_continue) {
+            checkPermissionAndGoToNext();
         }
     }
-
 
     private void checkPermissionAndGoToNext() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -122,38 +105,17 @@ public class TermsOfUseActivity extends BaseActivity {
         }
     }
 
-
-    private void initView() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        mBinding.webViewTerms.loadUrl("file:///android_asset/terms_of_use.html");
-        mBinding.buttonNext.setOnClickListener(this);
-
-        mBinding.checkBoxTermsOfUse.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                mBinding.buttonNext.setEnabled(true);
-                mBinding.buttonNext.setBackgroundResource(R.drawable.ractangular_gradient);
-                mBinding.buttonNext.setTextColor(getResources().getColor(R.color.white));
-            } else {
-                mBinding.buttonNext.setEnabled(false);
-                mBinding.buttonNext.setBackgroundResource(R.drawable.ractangular_white);
-                mBinding.buttonNext.setTextColor(getResources().getColor(R.color.new_user_button_color));
-            }
-        });
-    }
-
     private void triggerServiceConnectionAction() {
         ServiceLocator.getInstance().startTelemeshService();
     }
 
-    private TermsOfUseViewModel getViewModel() {
+    private WelcomeViewModel getViewModel() {
         return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) ServiceLocator.getInstance().getTermsOfViewModel();
+                return (T) ServiceLocator.getInstance().getWelcomeViewModel();
             }
-        }).get(TermsOfUseViewModel.class);
+        }).get(WelcomeViewModel.class);
     }
 }

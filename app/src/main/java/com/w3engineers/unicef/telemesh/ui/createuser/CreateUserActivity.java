@@ -29,6 +29,7 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
+import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -262,8 +263,8 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 startActivity(new Intent(this, MainActivity.class));
 
                 finish();
-                if (TermsOfUseActivity.instance != null) {
-                    TermsOfUseActivity.instance.finish();
+                if (WelcomeActivity.instance != null) {
+                    WelcomeActivity.instance.finish();
                 }
 
             } else {

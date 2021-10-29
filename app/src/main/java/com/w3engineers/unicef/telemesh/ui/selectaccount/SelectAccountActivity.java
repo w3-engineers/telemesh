@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.w3engineers.mesh.application.data.local.db.SharedPref;
 import com.w3engineers.unicef.telemesh.R;
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySelectAccountBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
@@ -16,6 +18,7 @@ import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
+import com.w3engineers.unicef.util.helper.ViperUtil;
 
 /**
  * Created by Azizul Islam on 10/22/21.
@@ -49,13 +52,34 @@ public class SelectAccountActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button_create_account) {
-            Intent intent = new Intent(this, CreateUserActivity.class);
-            intent.putExtra("import_wallet", false);
-            startActivity(intent);
+            gotoCreateAccountPage(false);
         } else if (view.getId() == R.id.button_import_account) {
+            gotoCreateAccountPage(true);
+        }
+    }
+
+    private void gotoCreateAccountPage(boolean isImportWallet) {
+
+        boolean isUserAlreadyRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
+
+        if (isUserAlreadyRegistered) {
+
+            launchWalletPage(isImportWallet);
+
+        } else {
             Intent intent = new Intent(this, CreateUserActivity.class);
-            intent.putExtra("import_wallet", true);
+            intent.putExtra("import_wallet", isImportWallet);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean isUserAlreadyRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
+        if (!isUserAlreadyRegistered) {
+            super.onBackPressed();
+        } else {
+            //Todo we can show a message
         }
     }
 
@@ -72,5 +96,13 @@ public class SelectAccountActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getSelectAccountViewModel();
             }
         }).get(SelectAccountViewModel.class);
+    }
+
+    public void launchWalletPage(boolean isNeedToImportWallet) {
+        if (isNeedToImportWallet) {
+            ServiceLocator.getInstance().launchActivity(ViperUtil.WALLET_IMPORT_ACTIVITY);
+        } else {
+            ServiceLocator.getInstance().launchActivity(ViperUtil.WALLET_SECURITY_ACTIVITY);
+        }
     }
 }

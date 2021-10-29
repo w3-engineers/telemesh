@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/toolbar_color"
+        tools:context=".ui.welcome.WelcomeActivity">
+
+        <ImageView
+            android:id="@+id/image_view_onboard"
+            android:layout_width="@dimen/width_250"
+            android:layout_height="@dimen/height_205"
+            android:layout_marginTop="32dp"
+            android:src="@mipmap/profile_choice_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_welcome_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Telemesh. We are so glad you have accepted the terms of use and decided to try out the application.\n\nIf you already have an account, then import the account or create a new account to experience the freedom of connectivity to the edge of the world."
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/button_continue"
+            app:layout_constraintEnd_toEndOf="@+id/button_continue"
+            app:layout_constraintStart_toStartOf="@+id/button_continue"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_onboard" />
+
+        <Button
+            android:id="@+id/button_continue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_30"
+            android:layout_marginEnd="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:background="@color/colorBlue"
+            android:text="Continue"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

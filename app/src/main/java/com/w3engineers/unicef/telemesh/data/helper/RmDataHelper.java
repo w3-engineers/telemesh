@@ -118,6 +118,21 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
+
+    // This method is developed only called from policy page
+    // and should not call it from any other place in project
+    @Deprecated
+    public MeshDataSource startServiceFromPolicyPage(DataSource dataSource) {
+        if (rightMeshDataSource == null) {
+            this.dataSource = dataSource;
+            rightMeshDataSource = MeshDataSource.getRmDataSource();
+        } else {
+            rightMeshDataSource.startTelemeshService();
+        }
+        return rightMeshDataSource;
+    }
+
+
     /**
      * This constructor is restricted and only used in unit test class
      *

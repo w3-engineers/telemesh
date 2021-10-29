@@ -105,9 +105,9 @@ public abstract class ViperUtil {
         }
     }
 
-  /*  public void startTelemeshService() {
+    public void startTelemeshService() {
         viperClient.startTelemeshService();
-    }*/
+    }
 
     public void launchActivity(int activityType) {
         viperClient.launchActivity(activityType);
@@ -219,7 +219,8 @@ public abstract class ViperUtil {
 
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
-                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions, MainActivity.getInstance()));
+                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState,
+                        permissionInterruptionEvent.permissions, MainActivity.getInstance()));
             }
         });
 

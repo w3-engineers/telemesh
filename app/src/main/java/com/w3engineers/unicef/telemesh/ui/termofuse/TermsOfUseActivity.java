@@ -3,9 +3,15 @@ package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 import android.content.Intent;
 import android.Manifest;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,6 +29,7 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
     private ActivityTermsOfUseBinding mBinding;
     private TermsOfUseViewModel mViewModel;
     public static TermsOfUseActivity instance;
+    private static final int REQUEST_WRITE_PERMISSION = 786;
 
     @Override
     protected int getToolbarId() {
@@ -74,11 +81,41 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.button_next) {
-            DexterPermissionHelper.getInstance().requestForPermission(this,
-                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE);
+            checkPermissionAndGoToNext();
         }
     }
+
+
+    private void checkPermissionAndGoToNext() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                triggerServiceConnectionAction();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+            }
+        } else {
+            triggerServiceConnectionAction();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_WRITE_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            triggerServiceConnectionAction();
+        }else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                checkPermissionAndGoToNext();
+            }else{
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        }
+    }
+
 
     private void initView() {
         if (getSupportActionBar() != null) {
@@ -100,7 +137,7 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
         });
     }
 
-    private void gotoProfileChoicePage() {
+    private void triggerServiceConnectionAction() {
         ServiceLocator.getInstance().initViper();
     }
 
@@ -116,6 +153,6 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
 
     @Override
     public void onPermissionGranted() {
-        gotoProfileChoicePage();
+        triggerServiceConnectionAction();
     }
 }

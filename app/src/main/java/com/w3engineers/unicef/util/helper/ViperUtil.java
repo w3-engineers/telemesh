@@ -118,6 +118,10 @@ public abstract class ViperUtil {
         return viperClient.getLocationFromService();
     }
 
+    public boolean isWalletBackupDone() {
+        return viperClient.isWalletBackupDone();
+    }
+
     private void initObservers() {
 
         AppDataObserver.on().startObserver(ApiEvent.TRANSPORT_INIT, event -> {

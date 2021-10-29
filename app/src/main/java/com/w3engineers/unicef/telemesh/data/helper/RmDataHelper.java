@@ -764,6 +764,10 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         return rightMeshDataSource.getLocationFromService();
     }
 
+    public boolean isWalletBackupDone() {
+        return rightMeshDataSource.isWalletBackupDone();
+    }
+
     /**
      * For ReInitiating RM service need to reset rightmesh data source instance
      */

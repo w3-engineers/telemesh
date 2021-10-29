@@ -19,6 +19,7 @@ import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountL
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.AppShareCountSendServerWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.NewUserCountWorker;
 import com.w3engineers.unicef.telemesh.data.analytics.workmanager.RefreshJobWorker;
+import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.db.DataSource;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -57,6 +58,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
     private DataSource dataSource;
     private MutableLiveData<Integer> myModeLiveData;
     private LiveData<List<FeedEntity>> mFeedEntitiesObservable;
+    private MutableLiveData<Boolean> walletBackupLiveData;
 
     public MainActivityViewModel() {
         userDataSource = UserDataSource.getInstance();
@@ -66,6 +68,7 @@ public class MainActivityViewModel extends BaseRxViewModel {
         mNewUserCountWorkInfo = mWorkManager.getWorkInfosByTagLiveData(NEW_USER_COUNT);
         dataSource = Source.getDbSource();
         myModeLiveData = new MutableLiveData<>();
+        walletBackupLiveData = new MutableLiveData<>();
     }
 
     public void userOfflineProcess() {
@@ -102,8 +105,20 @@ public class MainActivityViewModel extends BaseRxViewModel {
                         setServerAppShareCountWorkerRequest();
                         setLocalAppShareCountWorkerRequest();
                         setRefreshWorkerRequest();
+
+                        isWalletBackupDone();
                     }
                 }, Throwable::printStackTrace));
+    }
+
+    private void isWalletBackupDone() {
+        boolean isWalletBackupDone = RmDataHelper.getInstance().isWalletBackupDone();
+
+        walletBackupLiveData.postValue(isWalletBackupDone);
+    }
+
+    public MutableLiveData<Boolean> getWalletBackupLiveData() {
+        return walletBackupLiveData;
     }
 
     public void setUserCountWorkRequest() {

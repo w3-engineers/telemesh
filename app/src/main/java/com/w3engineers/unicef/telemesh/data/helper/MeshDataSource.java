@@ -332,7 +332,6 @@ public class MeshDataSource extends ViperUtil {
     @Override
     protected void onWalletBackUp(boolean isSuccess) {
         if (isSuccess) {
-            SharedPref.write(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, true);
             RmDataHelper.getInstance().onWalletBackupDone();
         }
     }

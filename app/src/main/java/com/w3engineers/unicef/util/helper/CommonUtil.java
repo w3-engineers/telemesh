@@ -19,6 +19,8 @@ import java.util.List;
 
 public class CommonUtil {
 
+    public static boolean isWalletBackupDone = true;
+
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -168,6 +169,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         subscribeForActiveUser();
         subscribeForNewFeedMessage();
         initSearchListener();
+        subscribeForWalletBackupLiveData();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
         StorageUtil.getFreeMemory();
@@ -281,12 +283,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_DISCOVER);
         addBadgeToBottomBar(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED);
-
-        boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
-
-        if (!isWalletBackUpDone) {
-            addBadgeToSettings();
-        }
 
         if (fromBroadcast) {
             hideFeedBadge();
@@ -515,6 +511,18 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
     }
 
+    private void subscribeForWalletBackupLiveData() {
+        mViewModel.getWalletBackupLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                CommonUtil.isWalletBackupDone = aBoolean;
+                if (!aBoolean) {
+                    addBadgeToSettings();
+                }
+            }
+        });
+    }
+
     private void initSearchListener() {
 
         binding.searchBar.editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -688,28 +696,24 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     }
 
     public void onWalletBackupDone() {
-        boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
-        if (isWalletBackUpDone) {
+        CommonUtil.isWalletBackupDone = true;
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mCurrentFragment != null
-                            && (mCurrentFragment instanceof SettingsFragment)) {
-                        ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
-                    }
-
-                    BottomNavigationItemView itemView =
-                            (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
-
-                    if (itemView != null) {
-                        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
-                        constraintLayoutContainer.setVisibility(View.GONE);
-                    }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mCurrentFragment != null
+                        && (mCurrentFragment instanceof SettingsFragment)) {
+                    ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
                 }
-            });
 
+                BottomNavigationItemView itemView =
+                        (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
 
-        }
+                if (itemView != null) {
+                    ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+                    constraintLayoutContainer.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

@@ -101,8 +101,6 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
     }
 
     public void launchWalletPage(boolean isNeedToImportWallet) {
-        SharedPref.write(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, isNeedToImportWallet);
-
         if (isNeedToImportWallet) {
             ServiceLocator.getInstance().launchActivity(ViperUtil.WALLET_IMPORT_ACTIVITY);
         } else {

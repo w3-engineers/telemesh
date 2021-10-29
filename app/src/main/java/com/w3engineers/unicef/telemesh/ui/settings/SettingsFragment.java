@@ -39,6 +39,7 @@ import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
+import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
@@ -71,9 +72,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mBinding.setSettingsVM(settingsViewModel);
 
-        boolean isWalletBackUpDone = SharedPref.readBoolean(Constants.preferenceKey.IS_WALLET_BACKUP_DONE, false);
 
-        if (!isWalletBackUpDone) {
+        if (!CommonUtil.isWalletBackupDone) {
             mBinding.imageViewDot.setVisibility(View.VISIBLE);
         }
 

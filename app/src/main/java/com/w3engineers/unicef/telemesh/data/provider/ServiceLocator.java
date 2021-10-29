@@ -187,9 +187,12 @@ public class ServiceLocator extends BaseServiceLocator {
         RmDataHelper.getInstance().initRM(Source.getDbSource());
     }
 
-  /*    public void startTelemeshService() {
-        RmDataHelper.getInstance().startTelemeshService();
-    }*/
+    //Call it only from policy page and should not call it
+    // from any other place in the project.
+    @Deprecated
+    public void startTelemeshService() {
+        RmDataHelper.getInstance().startServiceFromPolicyPage(Source.getDbSource());
+    }
 
     public void launchActivity(int activityType) {
         RmDataHelper.getInstance().launchActivity(activityType);

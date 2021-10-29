@@ -138,7 +138,7 @@ public class TermsOfUseActivity extends BaseActivity implements DexterPermission
     }
 
     private void triggerServiceConnectionAction() {
-        ServiceLocator.getInstance().initViper();
+        ServiceLocator.getInstance().startTelemeshService();
     }
 
     private TermsOfUseViewModel getViewModel() {

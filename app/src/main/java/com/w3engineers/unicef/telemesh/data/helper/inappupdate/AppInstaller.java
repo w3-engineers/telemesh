@@ -99,7 +99,7 @@ public class AppInstaller {
     }
 
 
-    private static class DownloadZipFileTask extends AsyncTask<ResponseBody, Pair<Integer, Long>, String> {
+    private static class DownloadZipFileTask extends AsyncTask<ResponseBody, Pair<Integer, Long>, Boolean> {
         @SuppressLint("StaticFieldLeak")
         private final Context context;
 
@@ -115,10 +115,10 @@ public class AppInstaller {
         }
 
         @Override
-        protected String doInBackground(ResponseBody... urls) {
+        protected Boolean doInBackground(ResponseBody... urls) {
             //Copy you logic to calculate progress and call
-            saveToDisk(urls[0], "updatedApk.apk");
-            return null;
+            boolean isDownloadSuccess = saveToDisk(urls[0]);
+            return isDownloadSuccess;
         }
 
         protected void onProgressUpdate(Pair<Integer, Long>... progress) {
@@ -151,15 +151,19 @@ public class AppInstaller {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Boolean isDownloadSuccess) {
 
-            File destinationFile = null;
+            if(!isDownloadSuccess){
+                return;
+            }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            File destinationFile = getDownloadFileUrl(mContext);
+
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 destinationFile = new File(context.getExternalFilesDir(""), "updatedApk.apk");
             } else {
                 destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "updatedApk.apk");
-            }
+            }*/
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -186,17 +190,17 @@ public class AppInstaller {
         }
     }
 
-    private static void saveToDisk(ResponseBody body, String filename) {
+    private static boolean saveToDisk(ResponseBody body) {
         try {
 
 
-            File destinationFile = null;
+            File destinationFile = getDownloadFileUrl(mContext);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 destinationFile = new File(mContext.getExternalFilesDir(""), filename);
             } else {
                 destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
-            }
+            }*/
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -220,6 +224,7 @@ public class AppInstaller {
 
                 Pair<Integer, Long> pairs = new Pair<>(100, 100L);
                 downloadZipFileTask.doProgress(pairs);
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
                 Pair<Integer, Long> pairs = new Pair<>(-1, (long) -1);
@@ -231,6 +236,19 @@ public class AppInstaller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+
+    private static File getDownloadFileUrl(Context context){
+        File destinationFile = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            destinationFile = new File(context.getExternalFilesDir(""), "updatedApk.apk");
+        } else {
+            destinationFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "updatedApk.apk");
+        }
+        return destinationFile;
     }
 
     private static void showDialog(Context context) {

@@ -311,7 +311,8 @@ public class MeshDataSource extends ViperUtil {
 
             Context context = TeleMeshApplication.getContext();
             Intent intent = new Intent(context, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(MainActivity.class.getName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
 
@@ -326,6 +327,8 @@ public class MeshDataSource extends ViperUtil {
             if (WelcomeActivity.instance != null) {
                 WelcomeActivity.instance.finish();
             }
+
+            startMesh();
 
         }
     }

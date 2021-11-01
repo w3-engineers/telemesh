@@ -50,7 +50,7 @@
 
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Searching Nearby</string>
-    <string name="searching">Searching…</string>
+    <string name="searching">Searching</string>
     <string name="data_plan">My data plan</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 

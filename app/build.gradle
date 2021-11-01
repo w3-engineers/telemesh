@@ -247,6 +247,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
+
+    // loading adot animation
+    implementation 'com.eyalbira.loadingdots:loading-dots:1.0.2'
 }
 
 coveralls {

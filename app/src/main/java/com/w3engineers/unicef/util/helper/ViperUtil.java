@@ -51,6 +51,7 @@ import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.application.data.model.WalletPrepared;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.mesh.util.DialogUtil;
+import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -220,7 +221,7 @@ public abstract class ViperUtil {
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
                 HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState,
-                        permissionInterruptionEvent.permissions, MainActivity.getInstance()));
+                        permissionInterruptionEvent.permissions, MeshApp.getCurrentActivity()));
             }
         });
 

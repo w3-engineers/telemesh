@@ -49,7 +49,7 @@
     <!--    <string name="id">ID</string>-->
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
     <string name="discovering_users">Discovering Users</string>
-    <string name="searching">আরো খোজা হচ্ছে…</string>
+    <string name="searching">আরো খোজা হচ্ছে</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 

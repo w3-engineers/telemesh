@@ -23,6 +23,7 @@ import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 
 public class SplashActivity extends BaseActivity {
+    public static SplashActivity instance;
 
     @Override
     protected int getLayoutId() {
@@ -32,7 +33,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void startUI() {
-
+        instance = this;
         SplashViewModel splashViewModel = getViewModel();
         ActivitySplashBinding activitySplashBinding = (ActivitySplashBinding) getViewDataBinding();
 
@@ -54,19 +55,24 @@ public class SplashActivity extends BaseActivity {
             if (aBoolean != null && aBoolean) {
                 // Go to contact page
                 intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             } else {
 
                 boolean isTermsAccepted = SharedPref.readBoolean(Constants.preferenceKey.APP_POLICY_CHECKED, false);
                 if (isTermsAccepted) {
                     //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
-                    intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                    //intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                    ServiceLocator.getInstance().startTelemeshService();
                 } else {
                     //intent = new Intent(SplashActivity.this, ProfileChoiceActivity.class);
                     intent = new Intent(SplashActivity.this, TermsOfUseActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
-            startActivity(intent);
-            finish();
+
+
         });
 
     }
@@ -79,5 +85,11 @@ public class SplashActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getSplashViewModel(getApplication());
             }
         }).get(SplashViewModel.class);
+    }
+
+    @Override
+    protected void stopUI() {
+        super.stopUI();
+        instance = null;
     }
 }

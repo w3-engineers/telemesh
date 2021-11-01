@@ -20,6 +20,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
+import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
@@ -315,6 +316,9 @@ public class MeshDataSource extends ViperUtil {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
+            if (SplashActivity.instance != null) {
+                SplashActivity.instance.finish();
+            }
 
             if (CreateUserActivity.sInstance != null) {
                 CreateUserActivity.sInstance.finish();

@@ -28,7 +28,6 @@ import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
-import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 
 /*
@@ -112,10 +111,6 @@ public class ServiceLocator extends BaseServiceLocator {
         return new TermsOfUseViewModel();
     }
 
-    @NonNull
-    public WelcomeViewModel getWelcomeViewModel() {
-        return new WelcomeViewModel();
-    }
 
     public SelectAccountViewModel getSelectAccountViewModel() {
         return new SelectAccountViewModel();

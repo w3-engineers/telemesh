@@ -18,9 +18,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
-import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
-import com.w3engineers.unicef.util.helper.CommonUtil;
 
 public class SplashActivity extends BaseActivity {
     public static SplashActivity instance;

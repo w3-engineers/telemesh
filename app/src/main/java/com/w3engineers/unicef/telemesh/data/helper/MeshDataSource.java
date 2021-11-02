@@ -22,7 +22,6 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
-import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
@@ -330,10 +329,6 @@ public class MeshDataSource extends ViperUtil {
 
                 if (SelectAccountActivity.instance != null) {
                     SelectAccountActivity.instance.finish();
-                }
-
-                if (WelcomeActivity.instance != null) {
-                    WelcomeActivity.instance.finish();
                 }
 
                 startMesh();

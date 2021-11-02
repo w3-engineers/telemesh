@@ -29,8 +29,6 @@ import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
-import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
-import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
@@ -283,7 +281,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(MainActivity.class.getName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
 

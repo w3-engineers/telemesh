@@ -93,17 +93,18 @@ public class TermsOfUseActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.button_next) {
-            checkPermissionAndGoToNext();
-            /*SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
-            startActivity(new Intent(this, WelcomeActivity.class));
-            finish();*/
+            if (isPermissionNeeded()) {
+                showPermissionGifForXiaomi();
+            } else {
+                checkPermissionAndGoToNext();
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_XIAOMI_PERMISSION) {
+        if (requestCode == REQUEST_XIAOMI_PERMISSION) {
             checkPermissionAndGoToNext();
         }
     }
@@ -189,7 +190,6 @@ public class TermsOfUseActivity extends BaseActivity {
 
         buttonOk.setOnClickListener(v -> {
             SharedPref.write(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE, true);
-            //startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 100);
 
             Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
             intent.setClassName("com.miui.securitycenter",
@@ -197,7 +197,6 @@ public class TermsOfUseActivity extends BaseActivity {
             intent.putExtra("extra_pkgname", getPackageName());
 
             try {
-                DialogUtil.dismissDialog();
                 d.dismiss();
                 startActivityForResult(intent, REQUEST_XIAOMI_PERMISSION);
             } catch (Exception e) {
@@ -215,11 +214,7 @@ public class TermsOfUseActivity extends BaseActivity {
         try {
 
             if ("xiaomi".equalsIgnoreCase(manufacturer)) {
-                if (!SharedPref.readBoolean(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return !SharedPref.readBoolean(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE);
             } else {
                 return false;
             }

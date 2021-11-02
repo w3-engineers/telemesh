@@ -277,9 +277,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     }
 
     private void gotoHomePage() {
-        RmDataHelper.getInstance().startMesh();
 
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("is_mesh_start",true);
         intent.setAction(MainActivity.class.getName());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -288,5 +288,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         if (SelectAccountActivity.instance != null) {
             SelectAccountActivity.instance.finish();
         }
+
+        //RmDataHelper.getInstance().startMesh();
     }
 }

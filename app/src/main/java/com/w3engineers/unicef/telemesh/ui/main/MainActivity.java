@@ -184,6 +184,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         checkAppBlockerAvailable();
 
+        // check that mesh need to start or not
+        Intent intent = getIntent();
+        if (intent.hasExtra("is_mesh_start")) {
+            RmDataHelper.getInstance().startMesh();
+        }
+
+
     }
 
     protected void requestMultiplePermissions() {

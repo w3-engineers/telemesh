@@ -84,10 +84,11 @@ public class TermsOfUseActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.button_next) {
-            //checkPermissionAndGoToNext();
+            checkPermissionAndGoToNext();
             SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
+            /*SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
             startActivity(new Intent(this, WelcomeActivity.class));
-            finish();
+            finish();*/
         }
     }
 

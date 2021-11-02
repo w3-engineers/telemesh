@@ -259,26 +259,12 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
                 // Start mesh, and goto home page
 
-                RmDataHelper.getInstance().startMesh();
-
-                startActivity(new Intent(this, MainActivity.class));
-
-                finish();
-                if (WelcomeActivity.instance != null) {
-                    WelcomeActivity.instance.finish();
-                }
+                gotoHomePage();
 
             } else {
                 if (isNeedToImportWallet) {
 
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-
-                    if (SelectAccountActivity.instance != null) {
-                        SelectAccountActivity.instance.finish();
-                    }
-                    // Todo finish splash activity
-
+                    gotoHomePage();
 
                 } else {
                     mViewModel.launchWalletPage(isNeedToImportWallet);
@@ -289,6 +275,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();*/
+        }
+    }
+
+    private void gotoHomePage() {
+        RmDataHelper.getInstance().startMesh();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction(MainActivity.class.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+
+        if (SelectAccountActivity.instance != null) {
+            SelectAccountActivity.instance.finish();
         }
     }
 }

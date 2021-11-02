@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySelectAccountBinding;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
+import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
@@ -49,6 +50,7 @@ public class SelectAccountActivity extends BaseActivity {
         super.onDestroy();
     }
 
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button_create_account) {
@@ -82,6 +84,10 @@ public class SelectAccountActivity extends BaseActivity {
         boolean isUserAlreadyRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
         if (!isUserAlreadyRegistered) {
             super.onBackPressed();
+
+            if (SplashActivity.instance != null) {
+                SplashActivity.instance.finish();
+            }
         } else {
             //Todo we can show a message
         }

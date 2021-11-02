@@ -7,9 +7,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -17,7 +22,10 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.Constant;
+import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
@@ -33,6 +41,7 @@ public class TermsOfUseActivity extends BaseActivity {
     private TermsOfUseViewModel mViewModel;
     public static TermsOfUseActivity instance;
     private static final int REQUEST_WRITE_PERMISSION = 786;
+    public static final int REQUEST_XIAOMI_PERMISSION = 109;
 
     @Override
     protected int getToolbarId() {
@@ -92,6 +101,13 @@ public class TermsOfUseActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_XIAOMI_PERMISSION) {
+            checkPermissionAndGoToNext();
+        }
+    }
 
     private void checkPermissionAndGoToNext() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -156,5 +172,61 @@ public class TermsOfUseActivity extends BaseActivity {
                 return (T) ServiceLocator.getInstance().getTermsOfViewModel();
             }
         }).get(TermsOfUseViewModel.class);
+    }
+
+    private void showPermissionGifForXiaomi() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_xiaomi_permission, null, false);
+
+        ImageView imageView = view.findViewById(R.id.gif_image_view);
+        Button buttonOk = view.findViewById(R.id.button_ok);
+
+        Glide.with(this).asGif().load("file:///android_asset/xiaomi_permission.gif").into(imageView);
+        builder.setView(view);
+
+        AlertDialog d = builder.create();
+
+        buttonOk.setOnClickListener(v -> {
+            SharedPref.write(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE, true);
+            //startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 100);
+
+            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            intent.setClassName("com.miui.securitycenter",
+                    "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            intent.putExtra("extra_pkgname", getPackageName());
+
+            try {
+                DialogUtil.dismissDialog();
+                d.dismiss();
+                startActivityForResult(intent, REQUEST_XIAOMI_PERMISSION);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        d.show();
+    }
+
+
+    public boolean isPermissionNeeded() {
+        String manufacturer = android.os.Build.MANUFACTURER;
+        try {
+
+            if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                if (!SharedPref.readBoolean(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

@@ -85,7 +85,6 @@ public class TermsOfUseActivity extends BaseActivity {
         super.onClick(view);
         if (view.getId() == R.id.button_next) {
             checkPermissionAndGoToNext();
-            SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
             /*SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
             startActivity(new Intent(this, WelcomeActivity.class));
             finish();*/
@@ -145,6 +144,7 @@ public class TermsOfUseActivity extends BaseActivity {
     }
 
     private void triggerServiceConnectionAction() {
+        SharedPref.write(Constants.preferenceKey.APP_POLICY_CHECKED, true);
         ServiceLocator.getInstance().startTelemeshService();
     }
 

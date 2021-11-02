@@ -67,9 +67,13 @@ public class SelectAccountActivity extends BaseActivity {
             launchWalletPage(isImportWallet);
 
         } else {
-            Intent intent = new Intent(this, CreateUserActivity.class);
-            intent.putExtra("import_wallet", isImportWallet);
-            startActivity(intent);
+            if (isImportWallet) {
+                launchWalletPage(true);
+            } else {
+                Intent intent = new Intent(this, CreateUserActivity.class);
+                intent.putExtra("import_wallet", false);
+                startActivity(intent);
+            }
         }
     }
 

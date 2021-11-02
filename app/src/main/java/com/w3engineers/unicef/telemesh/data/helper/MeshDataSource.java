@@ -20,7 +20,6 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
-import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
@@ -298,10 +297,10 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void onWalletPrepared(boolean isOldAccount) {
+    protected void onWalletPrepared(boolean isOldAccount, boolean isImportWallet) {
+        boolean isUserRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
         // Start Home activity and finish current activity
         if (isOldAccount) {
-            boolean isUserRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
             if (isUserRegistered) {
                 startMesh();
             } else {
@@ -309,27 +308,39 @@ public class MeshDataSource extends ViperUtil {
             }
         } else {
 
-            Context context = TeleMeshApplication.getContext();
-            Intent intent = new Intent(context, MainActivity.class);
-            intent.setAction(MainActivity.class.getName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            // Todo we have to check user has any information or not.
+            //  If User has any information we have to open user create page. Otherwise home page
+
+            if (isUserRegistered) {
+                Context context = TeleMeshApplication.getContext();
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setAction(MainActivity.class.getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
 
 
-            if (CreateUserActivity.sInstance != null) {
-                CreateUserActivity.sInstance.finish();
+                if (CreateUserActivity.sInstance != null) {
+                    CreateUserActivity.sInstance.finish();
+                }
+
+                if (SelectAccountActivity.instance != null) {
+                    SelectAccountActivity.instance.finish();
+                }
+
+                if (WelcomeActivity.instance != null) {
+                    WelcomeActivity.instance.finish();
+                }
+
+                // Todo finish splash activity
+
+                startMesh();
+            } else {
+                Context context = TeleMeshApplication.getContext();
+                Intent intent = new Intent(context, CreateUserActivity.class);
+                intent.setAction(CreateUserActivity.class.getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
-
-            if (SelectAccountActivity.instance != null) {
-                SelectAccountActivity.instance.finish();
-            }
-
-            if (WelcomeActivity.instance != null) {
-                WelcomeActivity.instance.finish();
-            }
-
-            startMesh();
-
         }
     }
 

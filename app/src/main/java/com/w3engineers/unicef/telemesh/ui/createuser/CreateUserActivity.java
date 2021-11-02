@@ -28,6 +28,7 @@ import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.telemesh.ui.welcome.WelcomeActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
@@ -268,7 +269,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
                 }
 
             } else {
-                mViewModel.launchWalletPage(isNeedToImportWallet);
+                if (isNeedToImportWallet) {
+
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+
+                    if (SelectAccountActivity.instance != null) {
+                        SelectAccountActivity.instance.finish();
+                    }
+                    // Todo finish splash activity
+
+
+                } else {
+                    mViewModel.launchWalletPage(isNeedToImportWallet);
+                }
             }
 
             /*Intent intent = new Intent(CreateUserActivity.this, MainActivity.class);

@@ -15,13 +15,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 
 import android.location.Location;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -46,11 +44,8 @@ import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
 import com.w3engineers.mesh.application.data.model.WalletBackupEvent;
-import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.mesh.application.data.model.WalletPrepared;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.DialogUtil;
 import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
@@ -61,7 +56,6 @@ import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.models.FileData;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.ContentModel;
 import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -76,8 +70,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import timber.log.Timber;
 
 public abstract class ViperUtil {
 
@@ -147,7 +139,7 @@ public abstract class ViperUtil {
         AppDataObserver.on().startObserver(ApiEvent.WALLET_PREPARED, event -> {
             WalletPrepared walletPrepared = (WalletPrepared) event;
             if (walletPrepared.success) {
-                onWalletPrepared(walletPrepared.isOldAccount);
+                onWalletPrepared(walletPrepared.isOldAccount,walletPrepared.isImportWallet);
             }
         });
 
@@ -725,7 +717,7 @@ public abstract class ViperUtil {
 
     protected abstract void openSelectAccountActivity();
 
-    protected abstract void onWalletPrepared(boolean isOldAccount);
+    protected abstract void onWalletPrepared(boolean isOldAccount, boolean isImportWallet);
 
     protected abstract void onWalletBackUp(boolean isSuccess);
 }

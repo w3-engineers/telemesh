@@ -166,7 +166,7 @@ public class TelemeshTest {
 
         termsOfUsePageTest();
 
-        addDelay(1000);
+        addDelay(3000);
 
         // click create account and existing account
         onView(withId(R.id.button_create_account)).perform(click());

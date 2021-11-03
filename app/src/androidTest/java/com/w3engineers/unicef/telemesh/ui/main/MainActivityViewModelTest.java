@@ -57,6 +57,7 @@ public class MainActivityViewModelTest {
 
         userEntity = new UserEntity()
                 .setUserName(FIRST_NAME)
+                .setUserLastName(LAST_NAME)
                 .setAvatarIndex(AVATAR_INDEX);
     }
 

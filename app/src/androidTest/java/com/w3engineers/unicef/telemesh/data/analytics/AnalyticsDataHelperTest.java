@@ -198,6 +198,7 @@ public class AnalyticsDataHelperTest {
                 .setMeshId(meshId)
                 .setCustomId(meshId)
                 .setUserName(firstName)
+                .setUserLastName("Craig")
                 .setAvatarIndex(3)
                 .setLastOnlineTime(System.currentTimeMillis())
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE);

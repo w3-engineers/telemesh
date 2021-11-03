@@ -24,11 +24,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.CommonUtil;
 import com.w3engineers.mesh.util.Constant;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
+import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 
 public class TermsOfUseActivity extends BaseActivity {
@@ -114,7 +116,14 @@ public class TermsOfUseActivity extends BaseActivity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
             }
         } else {
-            triggerServiceConnectionAction();
+            // This is for test class. Because we not giving support to run service app in emulator
+            if (CommonUtil.isEmulator()) {
+                triggerServiceConnectionAction();
+                startActivity(new Intent(this, SelectAccountActivity.class));
+                finish();
+            } else {
+                triggerServiceConnectionAction();
+            }
         }
     }
 

@@ -82,9 +82,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             case R.id.button_update:
                 goNext();
                 break;
-            case R.id.image_profile:
-                openProfileImageChooser();
-                break;
             case R.id.image_view_back:
                 finish();
                 break;
@@ -99,8 +96,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             mViewModel.setImageIndex(data.getIntExtra(CreateUserActivity.IMAGE_POSITION, INITIAL_IMAGE_INDEX));
 
-            int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
-            mBinding.imageProfile.setImageResource(id);
 
             nextButtonControl(mBinding.editTextFirstName.getText().toString());
         }
@@ -148,12 +143,10 @@ public class EditProfileActivity extends TelemeshBaseActivity {
             mBinding.textViewImageName.setVisibility(View.GONE);
 
             mBinding.imageProfileBackground.setVisibility(View.VISIBLE);
-            mBinding.imageProfile.setVisibility(View.VISIBLE);
         } else {
             mBinding.textViewImageName.setVisibility(View.VISIBLE);
 
             mBinding.imageProfileBackground.setVisibility(View.INVISIBLE);
-            mBinding.imageProfile.setVisibility(View.GONE);
         }
 
         mBinding.textViewImageName.setText(finalText);

@@ -60,6 +60,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.editprofile.EditProfileActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
@@ -167,92 +168,35 @@ public class TelemeshTest {
 
         addDelay(1000);
 
+        // click create account and existing account
+        onView(withId(R.id.button_create_account)).perform(click());
+        addDelay(3000);
 
-        //        ViewInteraction buttonImageChooserFirst = onView(
-//                allOf(withId(R.id.image_profile),
-//                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
-//        buttonImageChooserFirst.perform(scrollTo(), click());
-
-        onView(withId(R.id.image_profile)).perform(scrollTo(), click());
-
-
+        hideKeyboard(currentActivity = getActivityInstance());
         addDelay(1000);
 
-        ViewInteraction selectDoneMenuForNoSelect = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        selectDoneMenuForNoSelect.perform(click());
 
+        mDevice.pressBack();
         addDelay(1000);
 
-        ViewInteraction selectImageForTheFirst = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 0), isDisplayed()));
-        selectImageForTheFirst.perform(click());
-
+        onView(withId(R.id.button_import_account)).perform(click());
         addDelay(1000);
 
-        ViewInteraction selectDoneMenuForTheFirst = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        selectDoneMenuForTheFirst.perform(click());
+        // Now goto profile creation page gain where we will set import = true
+
+        currentActivity = getActivityInstance();
+        Intent intent = new Intent(currentActivity, CreateUserActivity.class);
+        intent.putExtra("import_wallet", true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+
+        currentActivity.finish();
 
         addDelay(1000);
-
-        ViewInteraction buttonImageChooserSecond = onView(
-                allOf(withId(R.id.image_profile),
-                        childAtPosition(allOf(withId(R.id.image_layout), childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        buttonImageChooserSecond.perform(scrollTo(), click());
-
-        addDelay(1000);
-
-        ViewInteraction selectImageForTheSecond = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.recycler_view),
-                                childAtPosition(withId(R.id.profile_image_layout), 1)), 4), isDisplayed()));
-        selectImageForTheSecond.perform(click());
-
-        addDelay(300);
-
-        ViewInteraction selectImageForTheThird = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 1), isDisplayed()));
-        selectImageForTheThird.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction selectDoneMenuForTheSecond = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        selectDoneMenuForTheSecond.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction buttonImageChooserThird = onView(
-                allOf(withId(R.id.image_profile),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 6)));
-        buttonImageChooserThird.perform(scrollTo(), click());
-
-        addDelay(700);
-
-        ViewInteraction selectImageForTheFourth = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 4), isDisplayed()));
-        selectImageForTheFourth.perform(click());
-
-        addDelay(700);
-
-        ViewInteraction selectDoneMenuForTheThird = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        selectDoneMenuForTheThird.perform(click());
-
-        addDelay(1000);
-
 
         ViewInteraction baseEditText = onView(
-                allOf(withId(R.id.edit_text_name),
+                allOf(withId(R.id.edit_text_first_name),
                         childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
         addDelay(500);
         baseEditText.perform(scrollTo(), replaceText("M"), closeSoftKeyboard());
@@ -267,19 +211,13 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        /*ViewInteraction baseEditText2 = onView(
-                allOf(withId(R.id.edit_text_name), withText("Mimo"),
-                        childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-        baseEditText2.perform(pressImeActionButton());*/
+        ViewInteraction baseEditText2 = onView(withId(R.id.edit_text_last_name));
 
-//        addDelay(2000);
+        baseEditText2.perform(scrollTo(), replaceText("Haffaz"), closeSoftKeyboard());
+        addDelay(1000);
 
 
         ViewInteraction ActionCreateProfileNext = onView(withId(R.id.button_signup));
-//        ViewInteraction ActionCreateProfileNext = onView(
-//                allOf(withId(R.id.button_signup),
-//                        childAtPosition(allOf(withId(R.id.image_layout),
-//                                childAtPosition(withId(R.id.scrollview), 0)), 10)));
 
         ActionCreateProfileNext.perform(scrollTo(), click());
 
@@ -292,18 +230,6 @@ public class TelemeshTest {
         AppDataObserver.on().sendObserverData(walletLoaded);
 
         addDelay(1000);
-
-
-        /*if (currentActivity instanceof SecurityActivity) {
-
-            SecurityActivity securityActivity = (SecurityActivity) getActivityInstance();
-
-            securityActivity.processCompleted(myAddress, publicKey, defaultPassword);
-
-            addDelay(1000);
-        }*/
-
-        //uiTest_02();
 
         StatusHelper.out("Test uiTest_01 executed");
 
@@ -388,10 +314,18 @@ public class TelemeshTest {
 
         addDelay(500);
 
+        ViewInteraction backupWallet = onView(
+                allOf(withId(R.id.layout_backup_wallet),
+                        childAtPosition(allOf(withId(R.id.layout_settings),
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+        backupWallet.perform(scrollTo(), click());
+
+        addDelay(500);
+
         ViewInteraction chooseLanguage = onView(
                 allOf(withId(R.id.layout_choose_language),
                         childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 5)));
         chooseLanguage.perform(scrollTo(), click());
 
         addDelay(500);
@@ -407,7 +341,7 @@ public class TelemeshTest {
         ViewInteraction chooseLanguageForSecond = onView(
                 allOf(withId(R.id.layout_choose_language),
                         childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 4)));
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 5)));
         chooseLanguageForSecond.perform(scrollTo(), click());
 
         addDelay(500);
@@ -423,7 +357,7 @@ public class TelemeshTest {
         ViewInteraction optionAboutUs = onView(
                 allOf(withId(R.id.layout_about_us),
                         childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 7)));
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 8)));
         optionAboutUs.perform(scrollTo(), click());
 
         addDelay(500);
@@ -435,7 +369,7 @@ public class TelemeshTest {
         ViewInteraction optionFeedBack = onView(
                 allOf(withId(R.id.layout_feedback),
                         childAtPosition(allOf(withId(R.id.layout_settings),
-                                childAtPosition(withId(R.id.layout_scroll), 0)), 8)));
+                                childAtPosition(withId(R.id.layout_scroll), 0)), 9)));
         optionFeedBack.perform(scrollTo(), click());
 
         addDelay(1500);
@@ -489,7 +423,7 @@ public class TelemeshTest {
 
         Espresso.pressBackUnconditionally();
         addDelay(500);
-        Espresso.pressBackUnconditionally();
+        //Espresso.pressBackUnconditionally();
 
         //dumpThreads();
 
@@ -621,63 +555,6 @@ public class TelemeshTest {
             addDelay(2000);
         }
 
-
-
-
-        /*onView(withId(R.id.contact_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        addDelay(2000);
-
-        Activity currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof ChatActivity) {
-            ChatActivity chatActivity = (ChatActivity) currentActivity;
-            chatActivity.chatFinishAndStartApp();
-        }
-
-        addDelay(5000);
-
-        try {
-
-            ViewInteraction contactSearch = onView(
-                    allOf(withId(R.id.action_search),
-                            childAtPosition(childAtPosition(withId(R.id.toolbar), 1), 0), isDisplayed()));
-            contactSearch.perform(click());
-
-            addDelay(1000);
-
-            onView(withId(R.id.edit_text_search)).perform(replaceText("dane"), closeSoftKeyboard());
-
-            currentActivity = getActivityInstance();
-            hideKeyboard(currentActivity);
-
-        } catch (NoMatchingViewException | PerformException e) {
-            e.printStackTrace();
-        }
-
-        addDelay(2500);
-
-        mDevice.pressBack();
-
-        addDelay(1000);
-        try {
-
-
-            ViewInteraction favoriteTab = onView(withId(R.id.action_contact));
-            favoriteTab.perform(click());
-
-            addDelay(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction discoverTab = onView(
-                allOf(withId(R.id.action_discover),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 0), isDisplayed()));
-        discoverTab.perform(click());
-
-        addDelay(1000);*/
-
     }
 
 
@@ -699,9 +576,6 @@ public class TelemeshTest {
             mDevice.pressBack();
         }
 
-        addDelay(1000);
-
-        Activity currentActivity;
 
         addDelay(2000);
 
@@ -730,105 +604,33 @@ public class TelemeshTest {
 
         try {
 
-            /*ViewInteraction editInputTextBox = onView(allOf(allOf(withId(R.id.edit_text_name),
-                    childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)),
-                    childAtPosition(allOf(withId(R.id.image_layout),
-                            childAtPosition(withId(R.id.scrollview), 0)),
-                            8)));
-*/
-            ViewInteraction editInputTextBox = onView(
-                    allOf(withId(R.id.edit_text_name),
-                            childAtPosition(childAtPosition(withId(R.id.name_layout), 0), 0)));
-            editInputTextBox.perform(scrollTo(), replaceText("Mimo Saha"), closeSoftKeyboard());
+            onView(withId(R.id.edit_text_first_name)).perform(replaceText("Mimo"), closeSoftKeyboard());
+            addDelay(1000);
+
+            onView(withId(R.id.edit_text_last_name)).perform(replaceText("Sha"), closeSoftKeyboard());
+
         } catch (NoMatchingViewException e) {
             e.printStackTrace();
         }
 
-        addDelay(500);
-
-        ViewInteraction updateProfileImageSelection = onView(
-                allOf(withId(R.id.image_profile),
-                        childAtPosition(allOf(withId(R.id.image_layout),
-                                childAtPosition(withId(R.id.scrollview), 0)), 6)));
-
-        try {
-            updateProfileImageSelection.perform(scrollTo(), click());
-        } catch (Exception e) {
-            e.printStackTrace();
-            ViewInteraction updateProfileImageViaCameraSelection = onView(
-                    allOf(withId(R.id.image_view_camera),
-                            childAtPosition(allOf(withId(R.id.image_layout),
-                                    childAtPosition(withId(R.id.scrollview), 0)), 7)));
-
-            try {
-                updateProfileImageViaCameraSelection.perform(scrollTo(), click());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-
-                currentActivity = getActivityInstance();
-
-                if (currentActivity instanceof EditProfileActivity) {
-                    ((EditProfileActivity) currentActivity).openProfileImageChooser();
-                }
-            }
-        }
-
 
         addDelay(1000);
 
-        ViewInteraction profileImageSelect = onView(
-                allOf(childAtPosition(allOf(withId(R.id.recycler_view),
-                        childAtPosition(withId(R.id.profile_image_layout), 1)), 3), isDisplayed()));
-        profileImageSelect.perform(click());
-
-        addDelay(1000);
-
-        ViewInteraction profileUpdateDone = onView(
-                allOf(withId(R.id.menu_done),
-                        childAtPosition(
-                                childAtPosition(withId(R.id.toolbar), 2), 0), isDisplayed()));
-        try {
-            profileUpdateDone.perform(click());
-        } catch (Exception e) {
-            e.printStackTrace();
-            currentActivity = getActivityInstance();
-
-            if (currentActivity instanceof ProfileImageActivity) {
-                ((ProfileImageActivity) currentActivity).actionDone();
-            }
-        }
-
-        addDelay(2500);
 
         UserEntity userEntityOne = new UserEntity()
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Mike")
+                .setUserLastName("Tyson")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
         userDataSource.insertOrUpdateData(userEntityOne);
 
-        addDelay(10000);
+        addDelay(2000);
 
-        currentActivity = getActivityInstance();
-
-        if (currentActivity instanceof ProfileImageActivity) {
-
-            addDelay(3000);
-
-            currentActivity = getActivityInstance();
-            if (currentActivity instanceof ProfileImageActivity) {
-                mDevice.pressBack();
-
-                addDelay(2000);
-
-            }
-            updateButtonClick();
-        } else {
-            updateButtonClick();
-        }
+        updateButtonClick();
 
         StatusHelper.out("Test uiTest_02 executed");
 
@@ -935,7 +737,8 @@ public class TelemeshTest {
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xf57d787f3ca95e2fd9cc782c85f6bcd3d6d779d9")
-                .setUserName("Aladeen G1")
+                .setUserName("Aladeen")
+                .setUserLastName("G1")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
@@ -943,7 +746,8 @@ public class TelemeshTest {
                 .setAvatarIndex(1)
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xc1a5185c807038a32a4c6ca020826fee85d88fde")
-                .setUserName("Aladeen G2")
+                .setUserName("Aladeen")
+                .setUserLastName("G2")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
@@ -1017,7 +821,8 @@ public class TelemeshTest {
 
         addDelay(2000);
 
-        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        //ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        ViewInteraction appCompatTextView = onView(withId(R.id.text_view_last_name));
         appCompatTextView.perform(click());
 
         addDelay(2000);
@@ -1103,7 +908,8 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        ViewInteraction appCompatEditText = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        //ViewInteraction appCompatEditText = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        ViewInteraction appCompatEditText = onView(withId(R.id.edit_text_message));
         appCompatEditText.perform(click());
 
         addDelay(2000);
@@ -1115,7 +921,8 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction appCompatImageButton2 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        //ViewInteraction appCompatImageButton2 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        ViewInteraction appCompatImageButton2 = onView(withId(R.id.image_view_send));
         appCompatImageButton2.perform(click());
 
         addDelay(2000);
@@ -1136,10 +943,12 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatEditText9 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        //ViewInteraction appCompatEditText9 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        ViewInteraction appCompatEditText9 = onView(withId(R.id.edit_text_message));
         appCompatEditText9.perform(click());
 
-        ViewInteraction appCompatEditText10 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        //ViewInteraction appCompatEditText10 = onView(allOf(withId(R.id.edit_text_message), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 1), isDisplayed()));
+        ViewInteraction appCompatEditText10 = onView(withId(R.id.edit_text_message));
         appCompatEditText10.perform(replaceText("Ok friends"));
 
         addDelay(1000);
@@ -1147,7 +956,8 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-        ViewInteraction appCompatImageButton3 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        //ViewInteraction appCompatImageButton3 = onView(allOf(withId(R.id.image_view_send), withContentDescription("Send icon."), childAtPosition(allOf(withId(R.id.chat_message_bar), childAtPosition(withId(R.id.chat_layout), 5)), 2), isDisplayed()));
+        ViewInteraction appCompatImageButton3 = onView(withId(R.id.image_view_send));
         appCompatImageButton3.perform(click());
 
         addDelay(2000);
@@ -1209,7 +1019,8 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        //ViewInteraction appCompatTextView = onView(allOf(withId(R.id.text_view_last_name), childAtPosition(allOf(withId(R.id.chat_toolbar_layout), childAtPosition(withId(R.id.toolbar_chat), 0)), 1), isDisplayed()));
+        ViewInteraction appCompatTextView = onView(withId(R.id.text_view_last_name));
         appCompatTextView.perform(click());
 
         addDelay(2000);
@@ -1251,6 +1062,7 @@ public class TelemeshTest {
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE)
                 .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Mike")
+                .setUserLastName("Tyson")
                 .setIsFavourite(Constants.FavouriteStatus.FAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
@@ -1261,6 +1073,7 @@ public class TelemeshTest {
                 .setOnlineStatus(Constants.UserStatus.WIFI_ONLINE)
                 .setMeshId("0xaa2dd785fc60epb8151f65b3ded59ce3c2f12cb4")
                 .setUserName("Sam")
+                .setUserLastName("Smith")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
 
@@ -1537,6 +1350,7 @@ public class TelemeshTest {
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId("0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4")
                 .setUserName("Daniel")
+                .setUserLastName("Craig")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
         //userEntity.setId(0);

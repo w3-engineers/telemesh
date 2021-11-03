@@ -377,15 +377,16 @@ public class VRmDataHelperTest {
 
         addDelay(1000);
 
-        String updatedName = "John Doe";
+        String updatedName = "John";
         userEntity.setUserName(updatedName);
+        userEntity.setUserLastName("Doe");
 
         UserModel userModel = randomEntityGenerator.createUserModel(userEntity);
         String userUpdatedData = new Gson().toJson(userModel);
 
         addDelay(500);
 
-        RmDataHelper.getInstance().broadcastUpdateProfileInfo(updatedName, "");
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(updatedName, "doe");
 
         addDelay(2000);
 

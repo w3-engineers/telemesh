@@ -81,9 +81,11 @@ public class MeshContactViewModelTest {
 
         // Region constant
         String FIRST_NAME = "Danial";
+        String LAST_NAME = "Alvez";
         int AVATAR_INDEX = 2;
         userEntity = new UserEntity()
                 .setUserName(FIRST_NAME)
+                .setUserLastName(LAST_NAME)
                 .setAvatarIndex(AVATAR_INDEX);
 
         RandomEntityGenerator randomEntityGenerator = new RandomEntityGenerator();

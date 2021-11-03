@@ -316,6 +316,7 @@ public class ContentDataHelperTest {
                 .setOnlineStatus(Constants.UserStatus.WIFI_MESH_ONLINE)
                 .setMeshId(userId)
                 .setUserName("Daniel")
+                .setUserLastName("Craig")
                 .setIsFavourite(Constants.FavouriteStatus.UNFAVOURITE)
                 .setRegistrationTime(System.currentTimeMillis());
         //userEntity.setId(0);

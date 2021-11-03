@@ -168,19 +168,25 @@ public class TelemeshTest {
 
         addDelay(3000);
 
-        // click create account and existing account
-        onView(withId(R.id.button_create_account)).perform(click());
-        addDelay(3000);
+        try {
+            // click create account and existing account
+            onView(withId(R.id.button_create_account)).perform(click());
+            addDelay(3000);
+            hideKeyboard(currentActivity = getActivityInstance());
+            addDelay(1000);
+            mDevice.pressBack();
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        hideKeyboard(currentActivity = getActivityInstance());
-        addDelay(1000);
+        try {
+            onView(withId(R.id.button_import_account)).perform(click());
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
-        mDevice.pressBack();
-        addDelay(1000);
-
-        onView(withId(R.id.button_import_account)).perform(click());
-        addDelay(1000);
 
         // Now goto profile creation page gain where we will set import = true
 

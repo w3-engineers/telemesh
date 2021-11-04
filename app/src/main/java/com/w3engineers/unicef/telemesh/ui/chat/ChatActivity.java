@@ -94,7 +94,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
     private GroupMembersAdapterForChat mGroupMembersAdapterForChat;
-    private PagedList<ChatEntity> chatEntities;
+
     @Nullable
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable

@@ -19,7 +19,6 @@ import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityEditProfileBinding;
-import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
@@ -209,17 +208,4 @@ public class EditProfileActivity extends TelemeshBaseActivity {
 //        mBinding.nameLayout.setHint(LanguageUtil.getString(R.string.enter_first_name));
     }
 
-    public void openProfileImageChooser() {
-        UIHelper.hideKeyboardFrom(this, mBinding.editTextFirstName);
-        Intent intent = new Intent(this, ProfileImageActivity.class);
-        int currentImageIndex = mViewModel.getImageIndex();
-
-        int oldImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
-        if (currentImageIndex < 0) {
-            currentImageIndex = oldImageIndex;
-        }
-
-        intent.putExtra(CreateUserActivity.IMAGE_POSITION, currentImageIndex);
-        startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
-    }
 }

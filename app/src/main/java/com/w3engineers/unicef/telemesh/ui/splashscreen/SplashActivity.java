@@ -80,7 +80,7 @@ public class SplashActivity extends BaseActivity {
             public void onChanged(Boolean isOldAccount) {
                 if (isOldAccount) {
                     Intent intent = new Intent(SplashActivity.this, CreateUserActivity.class);
-                    intent.putExtra("wallet_exists", true);
+                    intent.putExtra(Constants.IntentKeys.WALLET_EXISTS, true);
                     startActivity(intent);
                     finish();
                 }

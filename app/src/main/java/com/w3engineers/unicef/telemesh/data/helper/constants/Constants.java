@@ -97,6 +97,9 @@ public class Constants {
         String AVATAR_INDEX = "avatar_index";
         String PASSWORD = "password";
         String WALLET_PATH = "wallet_path";
+        String WALLET_EXISTS = "wallet_exists";
+        String IMPORT_WALLET = "import_wallet";
+        String IS_MESH_START = "is_mesh_start";
     }
 
     public interface MessageStatus {

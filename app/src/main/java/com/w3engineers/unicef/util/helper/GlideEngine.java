@@ -88,7 +88,7 @@ public class GlideEngine implements ImageEngine {
                             longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
                             imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
                             if (eqLongImage) {
-                                // 加载长图
+                                // Load long image
                                 longImageView.setQuickScaleEnabled(true);
                                 longImageView.setZoomEnabled(true);
                                 longImageView.setDoubleTapZoomDuration(100);
@@ -97,7 +97,7 @@ public class GlideEngine implements ImageEngine {
                                 longImageView.setImage(ImageSource.cachedBitmap(resource),
                                         new ImageViewState(0, new PointF(0, 0), 0));
                             } else {
-                                // 普通图片
+                                // Normal picture
                                 imageView.setImageBitmap(resource);
                             }
                         }

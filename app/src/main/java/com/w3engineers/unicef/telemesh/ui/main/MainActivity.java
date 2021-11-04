@@ -186,7 +186,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         // check that mesh need to start or not
         Intent intent = getIntent();
-        if (intent.hasExtra("is_mesh_start")) {
+        if (intent.hasExtra(Constants.IntentKeys.IS_MESH_START)) {
             RmDataHelper.getInstance().startMesh();
         }
 

@@ -121,9 +121,7 @@ public class TelemeshTest {
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
-    public String friendAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
-    public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
-    public String defaultPassword = "mesh_123";
+
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
@@ -150,7 +148,6 @@ public class TelemeshTest {
 
         mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-        //sharedPref = SharedPref.getSharedPref(context);
     }
 
     @After
@@ -191,7 +188,7 @@ public class TelemeshTest {
 
         currentActivity = getActivityInstance();
         Intent intent = new Intent(currentActivity, CreateUserActivity.class);
-        intent.putExtra("import_wallet", true);
+        intent.putExtra(Constants.IntentKeys.IMPORT_WALLET, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
@@ -262,10 +259,6 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-       /* ViewInteraction settingsTab = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
-        settingsTab.perform(click());*/
 
         onView(withId(R.id.action_setting)).perform(click());
 

@@ -71,9 +71,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
 
-        isNeedToImportWallet = getIntent().getBooleanExtra("import_wallet", false);
+        isNeedToImportWallet = getIntent().getBooleanExtra(Constants.IntentKeys.IMPORT_WALLET, false);
 
-        isWalletExists = getIntent().getBooleanExtra("wallet_exists", false);
+        isWalletExists = getIntent().getBooleanExtra(Constants.IntentKeys.WALLET_EXISTS, false);
 
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
@@ -273,7 +273,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private void gotoHomePage() {
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("is_mesh_start",true);
+        intent.putExtra(Constants.IntentKeys.IS_MESH_START,true);
         intent.setAction(MainActivity.class.getName());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

@@ -2,14 +2,16 @@ plugins {
     id 'com.android.application'
     id 'com.github.kt3k.coveralls'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+
 //    id 'io.fabric'
 }
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    //buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "com.w3engineers.unicef.telemesh"
         minSdkVersion 21
@@ -71,9 +73,9 @@ android {
         htmlReport true
         htmlOutput file("../docs/lint_reports/lint-report.html")
 
-        abortOnError true
-        warningsAsErrors true
-        checkAllWarnings true
+        abortOnError false
+        warningsAsErrors false
+        checkAllWarnings false
 
         disable 'InvalidPackage'
     }
@@ -125,7 +127,7 @@ dependencies {
 
     //Support
 
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     /*implementation deps.support.app_compat
@@ -142,6 +144,8 @@ dependencies {
     implementation deps.lifecycle.extensions
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'androidx.test.ext:junit:1.1.3'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     annotationProcessor deps.lifecycle.compiler
 //    api deps.strom_remote
 
@@ -149,7 +153,7 @@ dependencies {
     implementation deps.livedata_reactive
 
     //Crashlytics
-  //  implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    //  implementation 'com.google.firebase:firebase-analytics:17.2.2'
 //    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     //room with Rx
@@ -162,7 +166,8 @@ dependencies {
     implementation deps.rxjava2
 
     //Paging
-    implementation deps.paging.runtime
+    //implementation deps.paging.runtime
+    implementation 'androidx.paging:paging-runtime:3.0.1'
     //
 
     //Circular Image
@@ -214,6 +219,7 @@ dependencies {
     implementation deps.playcore.core
 
     implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
     implementation 'com.iceteck.silicompressorr:silicompressor:2.2.3'
@@ -227,15 +233,21 @@ dependencies {
         transitive=true
     }*/
 //    implementation deps.viper
-  //implementation project(path: ':viper')
-    implementation 'com.github.w3-engineers:Viper-V2:v2.2.3'
+    //implementation project(path: ':viper')
+    implementation 'com.github.w3-engineers:Viper-V2:v2.2.6'
 
     def dagger_version = "2.32"
     implementation "com.google.dagger:dagger:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.6.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // crashlytics
+    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
 }
 
 coveralls {

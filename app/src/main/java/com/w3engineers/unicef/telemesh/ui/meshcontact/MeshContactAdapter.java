@@ -7,15 +7,18 @@ import androidx.databinding.ViewDataBinding;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemMeshContactBinding;
-
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 
 /*
@@ -40,8 +43,9 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
-                    return oldItem.getMeshId().equalsIgnoreCase(newItem.getMeshId()) ;
+                    return oldItem.getMeshId().equalsIgnoreCase(newItem.getMeshId());
                 }
+
                 @Override
                 public boolean areContentsTheSame(
                         @NonNull UserEntity oldItem, @NonNull UserEntity newItem) {
@@ -107,7 +111,10 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
         @Override
         protected void bindView(@NonNull UserEntity item) {
             itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
-            itemMeshContactBinding.userName.setText(item.userName + getHopIndicator(item.getOnlineStatus()));
+
+            String name = item.userName + " " + item.getUserLastName() + getHopIndicator(item.getOnlineStatus());
+
+            itemMeshContactBinding.userName.setText(name);
 
             itemMeshContactBinding.textViewUnreadMessageCount.setVisibility(View.GONE);
 
@@ -119,10 +126,15 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
 
             itemMeshContactBinding.setUser(item);
             itemMeshContactBinding.setContactViewModel(meshContactViewModel);
+
+            UIHelper.updateImageNameField(itemMeshContactBinding.textViewImageName, item.userName, item.getUserLastName());
         }
 
         @Override
-        protected void clearView() { itemMeshContactBinding.invalidateAll(); }
+        protected void clearView() {
+            itemMeshContactBinding.invalidateAll();
+        }
+
 
 
         private String getHopIndicator(int userActiveStatus) {

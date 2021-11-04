@@ -13,12 +13,16 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupContentEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
 import com.w3engineers.unicef.util.helper.ContentUtil;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -86,7 +90,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Content send action +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    private void contentMessageSend(MessageEntity messageEntity) {
+    private void contentMessageSend(@NonNull MessageEntity messageEntity) {
         ContentModel contentModel = new ContentModel()
                 .setMessageId(messageEntity.getMessageId())
                 .setMessageType(messageEntity.getMessageType())
@@ -109,7 +113,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Resend action ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    private void contentMessageResendSend(MessageEntity messageEntity) {
+    private void contentMessageResendSend(@NonNull MessageEntity messageEntity) {
 
         String contentId = messageEntity.getContentId();
 
@@ -129,7 +133,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void contentMessageResendRequest(MessageEntity messageEntity, String userId) {
+    private void contentMessageResendRequest(@NonNull MessageEntity messageEntity, String userId) {
         String contentId = messageEntity.getContentId();
 
         ContentModel contentModel = new ContentModel()
@@ -160,7 +164,8 @@ public class ContentDataHelper extends RmDataHelper {
         if (messageEntity != null) {
             ContentModel contentModel = new ContentModel()
                     .setMessageId(messageId)
-                    .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                    //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                    .setAckStatus(Constants.MessageStatus.STATUS_UNREAD); // we set it unread if it is received
 
             setContentMessage(contentModel, false);
 
@@ -191,7 +196,146 @@ public class ContentDataHelper extends RmDataHelper {
 
     // -------------------------------------------------------------------------
 
-    private void setContentMessage(ContentModel contentModel, boolean isNewMessage) {
+    private void setGroupContentMessage(@NonNull ContentModel contentModel, boolean isNewMessage) {
+        String messageId = contentModel.getMessageId();
+        int ackStatus = contentModel.getAckStatus();
+
+        try {
+            if (isNewMessage) {
+
+                GroupMessageEntity groupMessageEntity = MessageSourceData.getInstance().getGroupMessageEntityFromId(messageId);
+
+
+                if (groupMessageEntity == null) {
+
+                    int contentStatus = contentModel.getReceivingStatus();
+                    String userId = contentModel.getUserId();
+
+                    GroupMessageEntity newMessageEntity = new GroupMessageEntity()
+                            .setMessage("Image")
+                            .setContentPath(contentModel.getContentPath())
+                            .setContentThumb(contentModel.getThumbPath())
+                            .setContentInfo(contentModel.getContentInfo());
+
+                    //TODO senderId should be nearby real sender.
+                    GroupContentEntity groupContentEntity = new GroupContentEntity()
+                            .setContentId(contentModel.getContentId())
+                            .setContentMessageId(contentModel.getMessageId())
+                            .setSenderId(contentModel.getOriginalSender())
+                            .setReceiverId(getMyMeshId());
+                    MessageSourceData.getInstance().addOrUpdateContent(groupContentEntity);
+
+
+                    if (contentModel.getReceiveSuccessStatus()) {
+                        if (contentStatus != -1) {
+                            newMessageEntity.setContentStatus(contentStatus);
+                        }
+                    }
+
+                    ChatEntity chatEntity = newMessageEntity
+                            .setMessageId(messageId)
+                            .setFriendsId(contentModel.getUserId())
+                            .setIncoming(true)
+                            .setMessageType(contentModel.getMessageType())
+                            .setTime(System.currentTimeMillis())
+                            .setStatus(Constants.MessageStatus.STATUS_READ);
+
+                    if (TextUtils.isEmpty(dataSource.getCurrentUser()) || TextUtils.isEmpty(userId)
+                            || !userId.equals(dataSource.getCurrentUser())) {
+                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+                        NotifyUtil.showNotification(chatEntity);
+                    }
+
+                    if (!contentModel.getReceiveSuccessStatus()) {
+                        // FAILED MAINTAINED
+
+                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+                        } else {
+                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+                        }
+                    }
+
+                    MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
+
+                    Iterator<ContentSequenceModel> sequenceModelIterator = contentSequenceModels.iterator();
+                    while (sequenceModelIterator.hasNext()) {
+                        ContentSequenceModel contentSequenceModel = sequenceModelIterator.next();
+
+                        if (contentSequenceModel.getContentId().equals(contentModel.getContentId())) {
+                            if (contentSequenceModel.getReceiveStatus() == CONTENT_PROGRESS) {
+                                contentReceiveInProgress(contentSequenceModel.getContentId(), contentSequenceModel.getProgress());
+                                sequenceModelIterator.remove();
+                            } else if (contentSequenceModel.getReceiveStatus() == CONTENT_RECEIVED) {
+                                contentReceiveDone(contentSequenceModel.getContentId(), contentSequenceModel.isContentStatus(), "");
+                                sequenceModelIterator.remove();
+                            }
+                        }
+                    }
+
+                } else {
+                    String thumbPath = contentModel.getThumbPath(), contentPath = contentModel.getContentPath();
+                    int contentStatus = contentModel.getReceivingStatus();
+
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        groupMessageEntity.setContentThumb(thumbPath);
+                    }
+
+                    if (!TextUtils.isEmpty(contentPath)) {
+                        groupMessageEntity.setContentPath(contentPath);
+                    }
+
+
+                    GroupContentEntity groupContentEntity = MessageSourceData.getInstance().getContentById(contentModel.getContentId());
+                    if (groupContentEntity == null) {
+                        groupContentEntity = new GroupContentEntity()
+                                .setContentId(contentModel.getContentId())
+                                .setContentMessageId(contentModel.getMessageId())
+                                .setSenderId(contentModel.getOriginalSender())
+                                .setReceiverId(getMyMeshId());
+                        MessageSourceData.getInstance().addOrUpdateContent(groupContentEntity);
+                    }
+
+                    if (groupMessageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
+                            && !contentModel.getReceiveSuccessStatus()) {
+                        // FAILED MAINTAINED
+
+                        inComingGeneralToFailed(groupMessageEntity);
+                    } else {
+                        if (contentStatus != -1) {
+                            groupMessageEntity.setContentStatus(contentStatus);
+
+                            inComingFailedToGeneral(groupMessageEntity);
+
+                        }
+                    }
+                    MessageSourceData.getInstance().insertOrUpdateData(groupMessageEntity);
+                }
+
+                if (contentModel.getReceiveSuccessStatus() && contentModel.getReceivingStatus() ==
+                        Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
+                    successForMainContent(contentModel.getUserId(), messageId);
+                }
+
+            } else {
+                GroupMessageEntity groupContentEntity = MessageSourceData.getInstance().getGroupMessageEntityFromId(messageId);
+
+                if (groupContentEntity != null) {
+                    if (!groupContentEntity.isIncoming()) {
+                        if (groupContentEntity.getStatus() == Constants.MessageStatus.STATUS_RECEIVED) {
+                            ackStatus = groupContentEntity.getStatus();
+                        }
+                    }
+                }
+                dataSource.updateGroupMessageStatus(messageId, ackStatus);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setContentMessage(@NonNull ContentModel contentModel, boolean isNewMessage) {
         String messageId = contentModel.getMessageId();
         int ackStatus = contentModel.getAckStatus();
 
@@ -211,6 +355,7 @@ public class ContentDataHelper extends RmDataHelper {
                             .setContentPath(contentModel.getContentPath())
                             .setContentThumbPath(contentModel.getThumbPath())
                             .setContentInfo(contentModel.getContentInfo());
+
 
                     if (contentModel.getReceiveSuccessStatus()) {
                         if (contentStatus != -1) {
@@ -314,7 +459,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void inComingFailedToGeneral(MessageEntity messageEntity) {
+    private void inComingFailedToGeneral(ChatEntity messageEntity) {
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
@@ -323,7 +468,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void inComingGeneralToFailed(MessageEntity messageEntity) {
+    private void inComingGeneralToFailed(ChatEntity messageEntity) {
         if (messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
                 || messageEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
             messageEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
@@ -604,6 +749,7 @@ public class ContentDataHelper extends RmDataHelper {
     public void setContentProgress(String messageId, int progress, String contentId) {
         if (progress == 0 || TextUtils.isEmpty(messageId))
             return;
+
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
         if (messageEntity != null) {
             int existingProgress = messageEntity.getContentProgress();
@@ -626,7 +772,41 @@ public class ContentDataHelper extends RmDataHelper {
 
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
 
-                if (progress == 100){
+                if (progress == 100) {
+                    contentReceiveDone(contentId, true, "");
+                }
+
+            }
+        }
+    }
+
+    public void setGroupContentProgress(String messageId, int progress, String contentId) {
+        if (progress == 0 || TextUtils.isEmpty(messageId))
+            return;
+        Log.e("Group_content", "Group content progress: " + progress);
+
+        GroupMessageEntity messageEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(contentId);
+        if (messageEntity != null) {
+            int existingProgress = messageEntity.getContentProgress();
+            if (progress > existingProgress) {
+                messageEntity.setContentProgress(progress);
+
+                if (messageEntity.isIncoming() &&
+                        messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED) {
+                    messageEntity.setContentStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING);
+                }
+
+                if (messageEntity.isIncoming()) {
+                    inComingFailedToGeneral(messageEntity);
+                } else {
+                    if (messageEntity.getStatus() != Constants.MessageStatus.STATUS_RECEIVED) {
+                        messageEntity.setStatus(Constants.MessageStatus.STATUS_SENDING_START);
+                    }
+                }
+
+                MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
+
+                if (progress == 100) {
                     contentReceiveDone(contentId, true, "");
                 }
 
@@ -655,14 +835,25 @@ public class ContentDataHelper extends RmDataHelper {
         return null;
     }
 
-    private ContentMetaInfo getContentMetaInfoByContentId(String contentId) {
+    private ContentMetaInfo getContentMetaInfoByContentId(String contentId, boolean isGroup) {
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         try {
-            MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
-            if (messageEntity != null) {
-                contentMetaInfo.setMessageId(messageEntity.getMessageId())
-                        .setMessageType(messageEntity.getMessageType())
-                        .setMetaInfo(messageEntity.getContentInfo());
+            ChatEntity chatEntity = null;
+            String contentInfo = null;
+            if (isGroup) {
+                chatEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(contentId);
+                contentInfo = ((GroupMessageEntity) chatEntity).getContentInfo();
+
+            } else {
+                chatEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
+                contentInfo = ((MessageEntity) chatEntity).getContentInfo();
+            }
+
+
+            if (chatEntity != null) {
+                contentMetaInfo.setMessageId(chatEntity.getMessageId())
+                        .setMessageType(chatEntity.getMessageType())
+                        .setMetaInfo(contentInfo);
                 return contentMetaInfo;
             }
         } catch (Exception e) {
@@ -680,6 +871,26 @@ public class ContentDataHelper extends RmDataHelper {
     /////////?????????                                   ??????????/////////
     /////////??????????????????????????????????????????????????????/////////
     /////////??????????????????????????????????????????????????????/////////
+
+
+    void onGroupContentDataSend(String contentSendInfo, ContentModel contentModel) {
+        try {
+            JSONObject jsonObject = new JSONObject(contentSendInfo);
+            boolean success = jsonObject.getBoolean("success");
+            String msg = jsonObject.getString("msg");
+            if (success) {
+                GroupContentEntity contentEntity = new GroupContentEntity()
+                        .setContentId(msg)
+                        .setReceiverId(contentModel.getUserId())
+                        .setContentMessageId(contentModel.getMessageId());
+                MessageSourceData.getInstance().addOrUpdateContent(contentEntity);
+            } else {
+                //TODO failed state handle
+            }
+        } catch (JSONException e) {
+
+        }
+    }
 
     void contentDataSend(String contentInfo, ContentModel contentModel) {
 
@@ -759,7 +970,7 @@ public class ContentDataHelper extends RmDataHelper {
 
     // Callback action +++++++++++++++++++++++++++++++++++++++++++++++++++++
     void contentReceiveStart(String contentId, String contentPath, String userId, byte[] metaData) {
-        Log.v("FILE_SPEED_TEST_12 ", Calendar.getInstance().getTime()+"");
+        //Log.v("FILE_SPEED_TEST_12 ", Calendar.getInstance().getTime()+"");
         try {
             Timber.tag("FileMessage").v(" Start id: %s", contentId);
 
@@ -772,6 +983,7 @@ public class ContentDataHelper extends RmDataHelper {
                 contentMetaInfo = new Gson().fromJson(contentMessageText,
                         ContentMetaInfo.class);
             }
+
 
             if (contentReceiveModel == null) {
                 contentReceiveModel = new ContentReceiveModel();
@@ -787,8 +999,11 @@ public class ContentDataHelper extends RmDataHelper {
             if (contentMetaInfo != null) {
 
                 ContentMetaInfo finalContentMetaInfo = contentMetaInfo;
-
-                HandlerUtil.postBackground(() -> updateMessageStatus(finalContentMetaInfo.getMessageId()));
+                if (finalContentMetaInfo.isGroupContent()) {
+                    //TODO
+                } else {
+                    HandlerUtil.postBackground(() -> updateMessageStatus(finalContentMetaInfo.getMessageId()));
+                }
 
                 String thumbPath = "";
                 if (contentMetaInfo.getThumbData() != null) {
@@ -805,9 +1020,14 @@ public class ContentDataHelper extends RmDataHelper {
                         .setUserId(contentReceiveModel.getUserId())
                         .setReceiveSuccessStatus(true)
                         .setContentInfo(contentMetaInfo.getMetaInfo())
-                        .setReceivingStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING);
+                        .setReceivingStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING)
+                        .setGroupContent(contentMetaInfo.isGroupContent());
 
-                HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
+                if (contentModel.isGroupContent()) {
+                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
+                } else {
+                    HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
+                }
             }
             contentReceiveModelHashMap.put(contentId, contentReceiveModel);
         } catch (Exception e) {
@@ -816,13 +1036,19 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     void contentReceiveInProgress(String contentId, int progress) {
-        Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
+        // Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
+        boolean isGroup = false;
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
-            ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
-                    .setProgress(progress).setReceiveStatus(CONTENT_PROGRESS);
-            contentSequenceModels.add(contentSequenceModel);
-            return;
+            GroupMessageEntity groupMessageEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(contentId);
+            if (groupMessageEntity == null) {
+                ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
+                        .setProgress(progress).setReceiveStatus(CONTENT_PROGRESS);
+                contentSequenceModels.add(contentSequenceModel);
+                return;
+            } else {
+                isGroup = true;
+            }
         }
 
         if (progress > 100)
@@ -837,52 +1063,67 @@ public class ContentDataHelper extends RmDataHelper {
             ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
             if (contentMetaInfo == null) {
-                contentMetaInfo = getContentMetaInfoByContentId(contentId);
+                contentMetaInfo = getContentMetaInfoByContentId(contentId, isGroup);
                 contentReceiveModel.setContentMetaInfo(contentMetaInfo);
+
                 contentReceiveModelHashMap.put(contentId, contentReceiveModel);
             }
 
             String messageId = contentMetaInfo.getMessageId();
-            setContentProgress(messageId, progress, contentId);
-
+            if (isGroup) {
+                setGroupContentProgress(messageId, progress, contentId);
+            } else {
+                setContentProgress(messageId, progress, contentId);
+            }
             return;
         }
 
-        ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
-        if (contentSendModel != null) {
-            setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
-            contentSendModel.contentReceiveProgress = progress;
+        if (!isGroup) {
+            ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+            if (contentSendModel != null) {
 
-            contentSendModelHashMap.put(contentId, contentSendModel);
-        } else {
-
-            ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
-
-            if (contentModel != null) {
-                contentSendModel = new ContentSendModel();
-
-                contentSendModel.contentId = contentId;
-                contentSendModel.messageId = contentModel.getMessageId();
-                contentSendModel.userId = contentModel.getUserId();
-                contentSendModel.successStatus = true;
-
+                setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
+                contentSendModel.contentReceiveProgress = progress;
                 contentSendModelHashMap.put(contentId, contentSendModel);
 
-                if (progress == 100){
-                    contentReceiveDone(contentId, true, "");
+            } else {
+
+                ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
+
+                if (contentModel != null) {
+                    contentSendModel = new ContentSendModel();
+
+                    contentSendModel.contentId = contentId;
+                    contentSendModel.messageId = contentModel.getMessageId();
+                    contentSendModel.userId = contentModel.getUserId();
+                    contentSendModel.successStatus = true;
+
+                    contentSendModelHashMap.put(contentId, contentSendModel);
+
+                    if (progress == 100) {
+                        contentReceiveDone(contentId, true, "");
+                    }
                 }
             }
         }
     }
 
     void contentReceiveDone(String contentId, boolean contentStatus, String msg) {
-        Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
+        //Log.v("FILE_SPEED_TEST_13 ", Calendar.getInstance().getTime()+"");
+
+        boolean isGroup = false;
+        GroupMessageEntity groupMessageEntity = null;
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
         if (messageEntity == null) {
-            ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
-                    .setContentStatus(contentStatus).setReceiveStatus(CONTENT_RECEIVED);
-            contentSequenceModels.add(contentSequenceModel);
-            return;
+            groupMessageEntity = MessageSourceData.getInstance().getGroupMessageEntityByContentId(contentId);
+            if (groupMessageEntity == null) {
+                ContentSequenceModel contentSequenceModel = new ContentSequenceModel().setContentId(contentId)
+                        .setContentStatus(contentStatus).setReceiveStatus(CONTENT_RECEIVED);
+                contentSequenceModels.add(contentSequenceModel);
+                return;
+            } else {
+                isGroup = true;
+            }
         }
 
         if (!contentStatus) {
@@ -890,18 +1131,21 @@ public class ContentDataHelper extends RmDataHelper {
                 Toast.makeText(TeleMeshApplication.getContext(), msg, Toast.LENGTH_SHORT).show();
             });
         }
+
         ContentReceiveModel contentReceiveModel = contentReceiveModelHashMap.get(contentId);
         if (contentReceiveModel != null) {
 
-            if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVED){
+            if ((messageEntity != null && messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVED)
+                    || (groupMessageEntity != null && groupMessageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVED)) {
                 return;
             }
+
             ContentMetaInfo contentMetaInfo = contentReceiveModel.getContentMetaInfo();
 
             String contentPath = null, thumbPath = null;
 
             if (contentMetaInfo == null) {
-                contentMetaInfo = getContentMetaInfoByContentId(contentId);
+                contentMetaInfo = getContentMetaInfoByContentId(contentId, isGroup);
             }
 
             ContentModel contentModel = new ContentModel()
@@ -915,7 +1159,12 @@ public class ContentDataHelper extends RmDataHelper {
                     .setContentInfo(contentMetaInfo.getMetaInfo())
                     .setReceivingStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVED);
 
-            HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
+            if (isGroup) {
+                HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
+            } else {
+                HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
+            }
+
 
             return;
         }
@@ -928,7 +1177,11 @@ public class ContentDataHelper extends RmDataHelper {
                         .setMessageId(contentSendModel.messageId)
                         .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
 
-                HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+                if (isGroup) {
+                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
+                } else {
+                    HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+                }
 
             } else {
 
@@ -936,14 +1189,18 @@ public class ContentDataHelper extends RmDataHelper {
                         .setMessageId(contentSendModel.messageId)
                         .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
 
-                HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+                if (isGroup) {
+                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
+                } else {
+                    HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
+                }
 
             }
             contentSendModelHashMap.remove(contentId);
         }
     }
 
-    void pendingContents(ContentPendingModel contentPendingModel) {
+    void pendingContents(@NonNull ContentPendingModel contentPendingModel) {
         if (contentPendingModel.isIncoming()) {
 
             ContentMetaInfo contentMetaInfo = contentPendingModel.getContentMetaInfo();

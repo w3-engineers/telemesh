@@ -2,6 +2,7 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import androidx.annotation.NonNull;
 
+import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -51,8 +52,8 @@ public class BroadcastDataHelper extends RmDataHelper {
     private BroadcastDataHelper() {
         feedEntityHashMap = new HashMap<>();
         downloadFeedContentQueue = new ArrayList<>();
-        mLatitude = LocationTracker.getInstance().getLatitude();
-        mLongitude = LocationTracker.getInstance().getLongitude();
+        //mLatitude = LocationTracker.getInstance().getLatitude();
+        //mLongitude = LocationTracker.getInstance().getLongitude();
     }
 
     @NonNull
@@ -85,8 +86,15 @@ public class BroadcastDataHelper extends RmDataHelper {
 
             if (!CommonUtil.isEmulator()) {
 
-                mLatitude = LocationTracker.getInstance().getLatitude();
-                mLongitude = LocationTracker.getInstance().getLongitude();
+                //mLatitude = LocationTracker.getInstance().getLatitude();
+                //mLongitude = LocationTracker.getInstance().getLongitude();
+                Location location = getLocationFromServiceApp();
+                if(location != null){
+                    mLatitude = location.getLatitude();
+                    mLongitude = location.getLongitude();
+                }else {
+                    Log.e("location_service","Location from service is null");
+                }
             } else {
                 mLatitude = 22.8456;
                 mLongitude = 89.5403;

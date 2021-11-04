@@ -70,6 +70,23 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/text_view_image_name"
+                        android:layout_width="@dimen/width_40"
+                        android:layout_height="@dimen/height_40"
+                        android:background="@drawable/circle_background"
+                        android:gravity="center"
+                        android:maxLength="2"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="RJ" />
+
+                    <TextView
                         android:id="@+id/text_view_last_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -122,49 +139,51 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/members_rv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_70"
+                android:scrollbars="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/shadow_view"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/chat_rv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:scrollbars="vertical"
-                android:layout_marginBottom="62dp"
-                android:layout_marginTop="62dp"
                 app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shadow_view" />
+                app:layout_constraintTop_toBottomOf="@+id/members_rv" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/empty_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/chat_message_bar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shadow_view">
+                app:layout_constraintTop_toBottomOf="@+id/members_rv">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.5" />
 
                 <ImageView
                     android:id="@+id/empty_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/width_250"
                     android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginTop="@dimen/margin_10"
                     android:layout_marginRight="@dimen/margin_20"
                     android:contentDescription="@string/no_message_available"
                     android:src="@mipmap/ic_no_chat"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintVertical_chainStyle="packed"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/empty_layout_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_20"
@@ -258,6 +277,7 @@
             android:id="@+id/expanded_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:contentDescription="@string/expanded_image_holder" />
     </FrameLayout>
 </layout>

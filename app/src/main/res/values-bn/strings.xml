@@ -2,10 +2,11 @@
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">প্রোফাইল দেখুন</string>
     <string name="enter_first_name">আপনার নাম লিখুন</string>
+    <string name="enter_last_name">আপনার শেষ নাম লিখুন</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
-    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ </string>
+    <string name="myDigits"> abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890 </string>
     <string name="create_user">Create User</string>
     <string name="select_avatar">Select an avatar</string>
 
@@ -28,14 +29,14 @@
 
     <string name="no_contact_available">কাছাকাছি কাউকে পাওয়া যায়নি</string>
     <string name="no_conversation">কোনো কথোপকথন হয়নি</string>
-    <string name="no_message_available">কোনো বার্তা নেই</string>
+    <string name="no_message_available">আপনার জন্য কোনো বার্তা নেই</string>
 
     // Fixed value for getting cursor drawable from Edit text or search view
     <!--    <string name="cursordrawable">mCursorDrawableRes</string>-->
 
     // Settings title
     <string name="settings_choose_language">ভাষা নির্বাচন করুন</string>
-    <string name="settings_share_app">শেয়ার অ্যাপ্লিকেশন</string>
+    <string name="settings_share_app">পরিচিতদের সাথে এপ্লিকেশনটি শেয়ার করুন</string>
 
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -47,8 +48,8 @@
 
     <!--    <string name="id">ID</string>-->
     <!--    <string name="this_may_take_while">This may take a while…</string>-->
-    <string name="discovering_users">Discovering Users</string>
-    <string name="searching">আরো খোজা হচ্ছে…</string>
+    <string name="discovering_users">Searching Users</string>
+    <string name="searching">আরো খোজা হচ্ছে</string>
     <string name="data_plan">ডেটা প্ল্যান</string>
     <string name="no_chat_available">Type to Start a Conversation</string>
 
@@ -86,8 +87,10 @@
     <string name="copied">কপি করা হয়েছে</string>
 
     <string name="update_app">আপডেট আপ</string>
-    <string name="please_enter_your_name">আপনার নাম লিখুন</string>
-    <string name="enter_valid_name">সঠিক নাম লিখুন</string>
+    <string name="please_enter_your_first_name">নামের প্রথম অংশ দিন</string>
+    <string name="please_enter_your_last_name">শেষ নাম লিখুন</string>
+    <string name="enter_valid_first_name">সঠিক প্রথম নাম লিখুন</string>
+    <string name="enter_valid_last_name">সঠিক শেষ নাম লিখুন</string>
     <string name="feedback">মতামত</string>
     <string name="change">পরিবর্তন</string>
     <string name="cancel">বাতিল</string>
@@ -98,6 +101,7 @@
     <string name="a_new_version">একটি নতুন ভার্সন </string>
     <string name="is_available_for_telemesh">Telemesh এর জন্য পাওয়া গেছে</string>
     <string name="no_favorite">কোনও প্রিয় ব্যবহারকারী পাওয়া যায় নি</string>
+    <string name="no_groups">কোনো গ্রুপ পাওয়া যায় নাই</string>
     <string name="phone_storage_not_enough">আপনার মোবাইলে পর্যাপ্ত পরিমান জায়গা নেই</string>
 
     <!--  No need those are in bangla because those are used in before registration  -->
@@ -202,4 +206,5 @@
     <string name="only_admin_can_change_group_name">কেবল অ্যাডমিনই গ্রুপের নাম পরিবর্তন করতে পারবেন</string>
 
     <string name="broadcast_notification">আপনার কাছে %d টি নতুন সম্প্রচার বার্তা রয়েছে</string>
+    <string name="change_data_plan">Change Data plan</string>
 </resources>

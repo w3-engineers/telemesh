@@ -27,4 +27,5 @@ public abstract class BaseRxViewModel extends ViewModel {
             mCompositeDisposable.clear();
         }
     }
+
 }

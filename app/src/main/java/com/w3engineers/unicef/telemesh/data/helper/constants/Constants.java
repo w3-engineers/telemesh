@@ -46,6 +46,7 @@ public class Constants {
 
     public interface preferenceKey {
         String USER_NAME = "first_name";
+        String LAST_NAME = "last_name";
         String IMAGE_INDEX = "image_index";
         String MY_USER_ID = "my_user_id";//Constant.KEY_USER_ID; // We will change later hot fix by Azim vai.
         String IS_USER_REGISTERED = "user_registered";
@@ -76,13 +77,14 @@ public class Constants {
         String APP_UPDATE_VERSION_NAME = "app_update_version_name";
         String IS_SETTINGS_PERMISSION_DONE = "is_settings_permission_done";
         String APP_UPDATE_CHECK_TIME = "app_update_check_time";
+        String APP_POLICY_CHECKED = "app_policy_checked";
     }
 
     public interface MenuItemPosition {
         int POSITION_FOR_DISCOVER = 0;
         int POSITION_FOR_FAVORITE = 1;
         int POSITION_FOR_MESSAGE_FEED = 2;
-        int POSITION_FOR_MESSAGE_SETTINGS = 2;
+        int POSITION_FOR_MESSAGE_SETTINGS = 3;
     }
 
     public interface drawables {
@@ -319,16 +321,27 @@ public class Constants {
     }
 
     public interface ViewHolderType {
+        //one to one
         int TEXT_INCOMING = 11;
         int TEXT_OUTGOING = 12;
+        //Group
+        int GROUP_TEXT_INCOMING = 13;
+        int GROUP_TEXT_OUTGOING = 14;
 
+        //One to one
         int IMG_INCOMING = 21;
         int IMG_OUTGOING = 22;
-
+        //Group
+        int GROUP_IMG_INCOMING = 23;
+        int GROUP_IMG_OUTGOING = 24;
+        //One to one
         int VID_INCOMING = 31;
         int VID_OUTGOING = 32;
+        //Group
+        int GROUP_VID_INCOMING = 33;
+        int GROUP_VID_OUTGOING = 34;
 
-        int GROUP_INFO = 33;
+        int GROUP_INFO = 35;
     }
 
     public interface ServiceContentState {

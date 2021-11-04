@@ -40,6 +40,7 @@
     <dimen name="text_size_25">25sp</dimen>
     <dimen name="text_body">16sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
 <!--    <dimen name="text_size_11">11sp</dimen>-->
     <dimen name="text_small_body_14">14sp</dimen>
     <dimen name="text_size_10sp">10sp</dimen>
@@ -55,6 +56,9 @@
     <dimen name="width_30">30dp</dimen>
     <dimen name="width_25">25dp</dimen>
     <dimen name="width_100">100dp</dimen>
+    <dimen name="width_75">75dp</dimen>
+    <dimen name="width_70">70dp</dimen>
+    <dimen name="width_60">60dp</dimen>
 
     <dimen name="height_4">4dp</dimen>
     <dimen name="height_40">40dp</dimen>
@@ -67,6 +71,9 @@
     <dimen name="height_200">200dp</dimen>
     <dimen name="height_50">50dp</dimen>
     <dimen name="height_25">25dp</dimen>
+    <dimen name="height_75">75dp</dimen>
+    <dimen name="height_70">70dp</dimen>
+    <dimen name="height_60">60dp</dimen>
     <dimen name="height_20">20dp</dimen>
     <dimen name="height_205">205dp</dimen>
     <dimen name="height_15">15dp</dimen>

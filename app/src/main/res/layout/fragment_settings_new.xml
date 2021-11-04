@@ -175,11 +175,62 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_choose_language"
+                android:id="@+id/layout_backup_wallet"
                 style="@style/full_content_style_settings_page"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_share_app">
+
+                <ImageView
+                    android:id="@+id/image_view_backup"
+                    style="@style/image_style_settings_page"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_save_wallet"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/image_view_dot"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/circular_badge_red"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/image_view_backup"
+                    app:layout_constraintEnd_toEndOf="@+id/image_view_backup"
+                    app:layout_constraintTop_toTopOf="@+id/image_view_backup" />
+
+                <TextView
+                    android:id="@+id/title_view_backup"
+                    style="@style/text_style_settings_page"
+                    android:text="Save my wallet"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/image_view_backup"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_share_app"
+                    android:src="@mipmap/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    style="@style/divider_style_settings_page"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_choose_language"
+                style="@style/full_content_style_settings_page"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_backup_wallet">
 
                 <ImageView
                     android:id="@+id/image_view_language"
@@ -269,8 +320,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_show_log"
                 style="@style/full_content_style_settings_page"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_diagram_map">
 
@@ -395,8 +446,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_ssid"
                 style="@style/full_content_style_settings_page"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_feedback">
 

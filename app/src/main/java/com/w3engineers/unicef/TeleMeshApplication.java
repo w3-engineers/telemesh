@@ -10,10 +10,8 @@ import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsApi;
 import com.w3engineers.unicef.telemesh.data.analytics.CredentialHolder;
-import com.w3engineers.unicef.telemesh.data.di.ApplicationComponent;
 
 
-import com.w3engineers.unicef.telemesh.data.di.DaggerApplicationComponent;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
@@ -32,7 +30,7 @@ import com.w3engineers.unicef.util.helper.LanguageUtil;
 public class TeleMeshApplication extends MeshApp {
 
     // Reference to the application graph that is used across the whole app
-    public ApplicationComponent appComponent = DaggerApplicationComponent.create();
+   // public ApplicationComponent appComponent = DaggerApplicationComponent.create();
 
 
     @SuppressLint("StaticFieldLeak")

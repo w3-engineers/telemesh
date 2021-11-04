@@ -1,12 +1,17 @@
 package com.w3engineers.unicef.telemesh.ui.groupcreate;
 
 import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
 import androidx.annotation.NonNull;
-import android.text.TextUtils;
 
+import android.text.TextUtils;
+import android.widget.Toast;
+
+import com.google.android.gms.common.util.CollectionUtils;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.data.analytics.AnalyticsDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
@@ -65,9 +70,44 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         return SharedPref.read(Constants.preferenceKey.MY_USER_ID);
     }
 
-    void createGroup(List<UserEntity> userEntities) {
+    public boolean isDifferentLists(List<String> listOne, List<String> listTwo) {
+        List<String> listOneCopy = new ArrayList<>(listOne);
+        List<String> listTwoCopy = new ArrayList<>(listTwo);
+        listOneCopy.removeAll(listTwoCopy);
+
+        return CollectionUtils.isEmpty(listOneCopy);
+    }
+
+    boolean checkGroupExists(List<UserEntity> userEntities, ArrayList<GroupMembersInfo> groupMembersInfos) {
+        List<String> previousUserIds = new ArrayList<>();
+        String myUserId = getMyUserId();
+        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+            if (!groupMembersInfo.getMemberId().equals(myUserId) && groupMembersInfo.getMemberStatus() == Constants.GroupEvent.GROUP_JOINED) {
+                previousUserIds.add(groupMembersInfo.getMemberId());
+            }
+        }
+
+        List<String> newUserIds = new ArrayList<>();
+        for (UserEntity userEntity : userEntities) {
+            newUserIds.add(userEntity.getMeshId());
+        }
+        return isDifferentLists(previousUserIds, newUserIds);
+    }
+
+    GroupEntity createGroup(List<UserEntity> userEntities) {
+
+        List<GroupEntity> allGroups = groupDataSource.getAllGroup();
+        for (GroupEntity entity : allGroups) {
+            ArrayList<GroupMembersInfo> groupMembersInfos = entity.getMembersArray();
+            if (groupMembersInfos.size() == userEntities.size() + 1) {
+                if (checkGroupExists(userEntities, groupMembersInfos)) {
+                    return entity;
+                }
+            }
+        }
+
         if (userEntities == null || userEntities.isEmpty())
-            return;
+            return null;
 
         GsonBuilder gsonBuilder = GsonBuilder.getInstance();
 
@@ -76,11 +116,13 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
         String myUserId = getMyUserId();
 
         String myUserName = SharedPref.read(Constants.preferenceKey.USER_NAME);
+        String myLastName = SharedPref.read(Constants.preferenceKey.LAST_NAME);
         int avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
         GroupMembersInfo myGroupMembersInfo = new GroupMembersInfo()
                 .setMemberId(myUserId)
                 .setUserName(myUserName)
+                .setLastName(myLastName)
                 .setMemberStatus(Constants.GroupEvent.GROUP_JOINED)
                 .setAvatarPicture(avatarIndex)
                 .setIsAdmin(true);
@@ -91,6 +133,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
             GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
                     .setMemberId(userEntity.getMeshId())
                     .setUserName(userEntity.getUserName())
+                    .setLastName(userEntity.getUserLastName())
                     .setAvatarPicture(userEntity.getAvatarIndex())
                     .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
 
@@ -114,7 +157,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    if(aLong>0){
+                    if (aLong > 0) {
                         groupUserList.postValue(groupEntity);
 
                         ArrayList<GroupEntity> groupEntities = new ArrayList<>();
@@ -122,6 +165,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                         AnalyticsDataHelper.getInstance().sendGroupCount(groupEntities);
                     }
                 }));
+        return null;
     }
 
 
@@ -147,6 +191,7 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                         UserEntity userEntity = new UserEntity();
                         userEntity.setMeshId(diffElement.getMeshId());
                         userEntity.setUserName(diffElement.getUserName());
+                        userEntity.setUserLastName(diffElement.getUserLastName());
                         userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                         userEntity.setIsFavourite(diffElement.getIsFavourite());
                         userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);

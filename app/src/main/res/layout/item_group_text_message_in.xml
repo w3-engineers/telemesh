@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.w3engineers.unicef.util.helper.TimeUtil" />
+
+        <variable
+            name="avatarIndex"
+            type="Integer" />
+
+        <variable
+            name="textMessage"
+            type="com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_15"
+        android:layout_marginEnd="@dimen/margin_15">
+
+        <TextView
+            android:id="@+id/text_view_image_name"
+            android:layout_width="@dimen/width_40"
+            android:layout_height="@dimen/height_40"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_message"
+            tools:text="RJ" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintEnd_toEndOf="@id/text_view_image_name"
+            app:layout_constraintStart_toStartOf="@id/text_view_image_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_image_name" />
+
+        <TextView
+            android:id="@+id/text_view_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_50"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_50"
+            android:background="@drawable/bg_message_item_rounded_box"
+            android:fontFamily="@font/poppins_regular"
+            android:maxWidth="@dimen/width_250"
+            android:paddingStart="@dimen/padding_15"
+            android:paddingTop="@dimen/padding_10"
+            android:paddingEnd="@dimen/padding_15"
+            android:paddingBottom="@dimen/padding_10"
+            android:text="@{textMessage.message}"
+            android:textColor="@color/message_text_color"
+            android:textSize="@dimen/text_small_body_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/text_view_date_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/height_20"
+            android:layout_marginStart="@dimen/margin_3"
+            android:layout_marginTop="@dimen/margin_5"
+            android:text="@{TimeUtil.getOnlyTime(textMessage.time)}"
+            android:textColor="@color/chat_sub_item_color"
+            android:textSize="@dimen/text_size_10sp"
+            app:layout_constraintStart_toStartOf="@+id/text_view_message"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

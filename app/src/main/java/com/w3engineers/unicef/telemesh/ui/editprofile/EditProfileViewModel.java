@@ -1,9 +1,11 @@
 package com.w3engineers.unicef.telemesh.ui.editprofile;
 
 import android.app.Application;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.widget.EditText;
 
@@ -28,7 +30,8 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
     }
 
     @NonNull
-    public MutableLiveData<String> textChangeLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> firstNameChangeLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> lastNameChangeLiveData = new MutableLiveData<>();
 
     int getImageIndex() {
         return imageIndex;
@@ -38,7 +41,7 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
         this.imageIndex = imageIndex;
     }
 
-    boolean storeData(@Nullable String userName) {
+    boolean storeData(@Nullable String firstName, String lastName) {
 
         int currentImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
 
@@ -50,9 +53,9 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
             }
         }
 
-        userName = Util.convertToTitleCaseIteratingChars(userName);
 
-        SharedPref.write(Constants.preferenceKey.USER_NAME, userName);
+        SharedPref.write(Constants.preferenceKey.USER_NAME, firstName);
+        SharedPref.write(Constants.preferenceKey.LAST_NAME, lastName);
         SharedPref.write(Constants.preferenceKey.IMAGE_INDEX, imageIndex);
         SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 
@@ -62,7 +65,8 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
     void sendUserInfoToAll() {
         int currentImageIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
         String name = SharedPref.read(Constants.preferenceKey.USER_NAME);
-        RmDataHelper.getInstance().broadcastUpdateProfileInfo(name, currentImageIndex);
+        String lastName = SharedPref.read(Constants.preferenceKey.LAST_NAME);
+        RmDataHelper.getInstance().broadcastUpdateProfileInfo(name, lastName);
     }
 
     boolean isNameValid(@Nullable String name) {
@@ -71,12 +75,21 @@ public class EditProfileViewModel extends BaseRxAndroidViewModel {
                 && name.length() <= Constants.DefaultValue.MAXIMUM_TEXT_LIMIT;
     }
 
-    public void textEditControl(@NonNull EditText editText) {
+    public void firstNameEditControl(@NonNull EditText editText) {
         getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
                 .map(input -> input.editable() + "")
                 .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
-                .subscribe(text -> textChangeLiveData.postValue(text), Throwable::printStackTrace));
+                .subscribe(text -> firstNameChangeLiveData.postValue(text), Throwable::printStackTrace));
+    }
+
+    public void lastNameEditControl(@NonNull EditText editText) {
+        getCompositeDisposable().add(RxTextView.afterTextChangeEvents(editText)
+                .map(input -> input.editable() + "")
+                .debounce(100, TimeUnit.MILLISECONDS, Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe(text -> lastNameChangeLiveData.postValue(text), Throwable::printStackTrace));
     }
 }

@@ -232,7 +232,7 @@ public abstract class UserDao extends BaseDao<UserEntity> {
 
     @NonNull
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID +" FROM " + TableNames.USERS
+    @Query("SELECT " + ColumnNames.COLUMN_USER_MESH_ID + " FROM " + TableNames.USERS
             + " LEFT JOIN ( SELECT * FROM ( SELECT *, sum(CASE " + ColumnNames.COLUMN_MESSAGE_STATUS
             + " WHEN " + Constants.MessageStatus.STATUS_UNREAD + " THEN 1 ELSE 0 END) AS hasUnreadMessage, MAX("
             + ColumnNames.ID + ") AS MAXID FROM " + TableNames.MESSAGE + " GROUP BY " + ColumnNames.COLUMN_FRIENDS_ID

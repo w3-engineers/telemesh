@@ -128,6 +128,7 @@ public class MessageSourceDataTest {
                 .setMeshId(meshId)
                 .setCustomId(UUID.randomUUID().toString())
                 .setUserName(firstName)
+                .setUserLastName(lastName)
                 .setAvatarIndex(3)
                 .setLastOnlineTime(System.currentTimeMillis())
                 .setOnlineStatus(Constants.UserStatus.INTERNET_ONLINE);

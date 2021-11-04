@@ -41,11 +41,12 @@ public class EditProfileViewModelTest {
     @Test
     public void storeData_storeNameNull_getNameNull() {
         String firstName = "Daniel";
+        String lastName = "Craig";
         int imageIndex = -1;
 
         SUT.setImageIndex(imageIndex);
 
-        assertTrue(SUT.storeData(firstName));
+        assertTrue(SUT.storeData(firstName,lastName));
 
         StatusHelper.out("Test executed");
     }

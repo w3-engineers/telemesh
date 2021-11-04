@@ -7,8 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/user_avatar_background"
+        <TextView
+            android:id="@+id/text_view_image_name"
             android:layout_width="@dimen/width_50"
             android:layout_height="@dimen/height_50"
             android:layout_marginLeft="@dimen/margin_15"
@@ -16,21 +16,17 @@
             android:layout_marginRight="@dimen/margin_15"
             android:layout_marginBottom="@dimen/margin_10"
             android:background="@drawable/circle_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="@dimen/width_50"
-            android:layout_height="@dimen/height_50"
-            android:layout_marginLeft="@dimen/margin_15"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:padding="@dimen/padding_5"
+            android:gravity="center"
+            android:maxLength="2"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="RJ" />
 
         <ImageView
             android:id="@+id/button_remove"
@@ -40,10 +36,10 @@
             android:layout_marginEnd="@dimen/margin_10"
             android:contentDescription="@string/image"
             android:src="@mipmap/delete"
-            app:layout_constraintBottom_toBottomOf="@+id/user_avatar_background"
-            app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
-            app:layout_constraintStart_toEndOf="@+id/user_avatar_background"
-            app:layout_constraintTop_toTopOf="@+id/user_avatar_background" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_image_name"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintTop_toTopOf="@+id/text_view_image_name" />
 
         <TextView
             android:id="@+id/text_view_name"
@@ -53,9 +49,9 @@
             android:maxLines="1"
             android:gravity="center"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="@+id/user_avatar_background"
-            app:layout_constraintStart_toStartOf="@+id/user_avatar_background"
-            app:layout_constraintTop_toBottomOf="@+id/user_avatar_background"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_image_name"
+            app:layout_constraintStart_toStartOf="@+id/text_view_image_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_image_name"
             tools:text="John doe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

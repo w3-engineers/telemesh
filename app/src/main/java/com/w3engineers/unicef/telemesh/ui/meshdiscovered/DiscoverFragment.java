@@ -3,17 +3,23 @@ package com.w3engineers.unicef.telemesh.ui.meshdiscovered;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
@@ -24,6 +30,7 @@ import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
+import com.w3engineers.unicef.util.helper.StorageUtil;
 
 import java.util.List;
 
@@ -55,7 +62,11 @@ public class DiscoverFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
         controlEmptyLayout();
-        ((MainActivity) getActivity()).setToolbarTitle(title);
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).setToolbarTitle(title);
+        }
+
 
         init();
 
@@ -83,8 +94,10 @@ public class DiscoverFragment extends BaseFragment {
 
             discoverViewModel.nearbyUsers.observe(this, userEntities -> {
                 if (userEntities != null) {
+
                     getAdapter().submitList(userEntities);
                     userEntityList = userEntities;
+
 
                     isLoaded = false;
 
@@ -93,8 +106,12 @@ public class DiscoverFragment extends BaseFragment {
                             fragmentDiscoverBinding.emptyLayout.setVisibility(View.GONE);
                         }
                         fragmentDiscoverBinding.fabChat.show();
-                    }else{
+
+                        fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.GONE);
+                    } else {
                         fragmentDiscoverBinding.fabChat.hide();
+
+                        fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.VISIBLE);
                     }
                 }
                 if (mSearchItem != null)
@@ -110,12 +127,17 @@ public class DiscoverFragment extends BaseFragment {
 
                     fragmentDiscoverBinding.fabChat.show();
 
+                    fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.GONE);
+
                     //  getAdapter().clear();
                     meshContactAdapter.submitList(userEntities);
                     isLoaded = false;
 
                 } else {
                     fragmentDiscoverBinding.fabChat.hide();
+
+                    fragmentDiscoverBinding.buttonChangeDataPlan.setVisibility(View.VISIBLE);
+
                     if (!isLoaded) {
                         fragmentDiscoverBinding.emptyLayout.setVisibility(View.VISIBLE);
                         //enableLoading();
@@ -205,6 +227,8 @@ public class DiscoverFragment extends BaseFragment {
         super.onClick(view);
         if (view.getId() == R.id.fab_chat) {
             startActivity(new Intent(getActivity(), GroupCreateActivity.class));
+        } else if (view.getId() == R.id.button_change_data_plan) {
+            dataPlanAction();
         }
     }
 
@@ -283,18 +307,19 @@ public class DiscoverFragment extends BaseFragment {
     // General API's and initialization area
     private void init() {
 
-        setClickListener(fragmentDiscoverBinding.fabChat);
+        setClickListener(fragmentDiscoverBinding.fabChat, fragmentDiscoverBinding.buttonChangeDataPlan);
         initAllText();
         discoverViewModel = getViewModel();
 
         fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
+        //fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         //   fragmentDiscoverBinding.contactRecyclerView.setHasFixedSize(true);
         fragmentDiscoverBinding.contactRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //    ((SimpleItemAnimator)fragmentDiscoverBinding.contactRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         //    fragmentDiscoverBinding.contactRecyclerView.setItemAnimator(null);
 
-        meshContactAdapter = new DiscoverAdapter(discoverViewModel);
+        meshContactAdapter = new DiscoverAdapter(discoverViewModel, getActivity());
         fragmentDiscoverBinding.contactRecyclerView.setAdapter(meshContactAdapter);
     }
 
@@ -316,5 +341,21 @@ public class DiscoverFragment extends BaseFragment {
     private void initAllText() {
         fragmentDiscoverBinding.tvMessage.setText(LanguageUtil.getString(R.string.no_contact_available));
         fragmentDiscoverBinding.textViewSearching.setText(LanguageUtil.getString(R.string.searching));
+    }
+
+    private void dataPlanAction() {
+        if (isMeshInit()) {
+            DataManager.on().openDataPlan();
+        }
+    }
+
+    private boolean isMeshInit() {
+        boolean isMeshInit = false;
+        if (Constants.IsMeshInit) {
+            isMeshInit = true;
+        } else {
+            Toast.makeText(getActivity(), LanguageUtil.getString(R.string.mesh_not_initiated), Toast.LENGTH_SHORT).show();
+        }
+        return isMeshInit;
     }
 }

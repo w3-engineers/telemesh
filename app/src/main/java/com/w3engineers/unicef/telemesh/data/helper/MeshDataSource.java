@@ -2,8 +2,12 @@ package com.w3engineers.unicef.telemesh.data.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
+import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
@@ -13,6 +17,11 @@ import com.w3engineers.unicef.telemesh.data.broadcast.BroadcastManager;
 import com.w3engineers.unicef.telemesh.data.broadcast.SendDataTask;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
+import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashActivity;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.util.helper.BulletinTimeScheduler;
 import com.w3engineers.unicef.util.helper.TextToImageHelper;
 import com.w3engineers.unicef.util.helper.ViperUtil;
@@ -53,6 +62,7 @@ public class MeshDataSource extends ViperUtil {
 
             UserModel userModel = new UserModel()
                     .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                    .setLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME))
                     .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                     .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 
@@ -65,7 +75,7 @@ public class MeshDataSource extends ViperUtil {
         return rightMeshDataSource;
     }
 
-    public void destroyDataSource(){
+    public void destroyDataSource() {
         rightMeshDataSource = null;
     }
 
@@ -141,6 +151,7 @@ public class MeshDataSource extends ViperUtil {
     }
 
     private SendDataTask getMeshDataTask(ViperData viperData, String receiverId) {
+        Log.d("MessageSendTest", "message send " + receiverId);
         return new SendDataTask().setPeerId(receiverId).setMeshData(viperData).setBaseRmDataSource(this);
     }
 
@@ -272,8 +283,76 @@ public class MeshDataSource extends ViperUtil {
     }
 
     @Override
-    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude,  double longitude, double range,  String expiryTime) {
+    protected void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime) {
         BroadcastDataHelper.getInstance().receiveLocalBroadcast(broadcastId, metaData, contentPath, latitude, longitude, range, expiryTime);
+    }
+
+
+    @Override
+    protected void openSelectAccountActivity() {
+        Context context = TeleMeshApplication.getContext();
+        Intent intent = new Intent(context, SelectAccountActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onWalletPrepared(boolean isOldAccount, boolean isImportWallet) {
+        boolean isUserRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
+        // Start Home activity and finish current activity
+        if (isOldAccount) {
+            if (isUserRegistered) {
+                startMesh();
+            } else {
+                RmDataHelper.getInstance().onWalletPrepared(isOldAccount);
+            }
+        } else {
+
+            // Todo we have to check user has any information or not.
+            //  If User has any information we have to open user create page. Otherwise home page
+
+            if (isUserRegistered) {
+                Context context = TeleMeshApplication.getContext();
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("is_mesh_start",true);
+                intent.setAction(MainActivity.class.getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
+                if (SplashActivity.instance != null) {
+                    SplashActivity.instance.finish();
+                }
+
+                if (CreateUserActivity.sInstance != null) {
+                    CreateUserActivity.sInstance.finish();
+                }
+
+                if (SelectAccountActivity.instance != null) {
+                    SelectAccountActivity.instance.finish();
+                }
+
+                //startMesh();
+            } else {
+                Context context = TeleMeshApplication.getContext();
+                Intent intent = new Intent(context, CreateUserActivity.class);
+                intent.putExtra("import_wallet", isImportWallet);
+                intent.setAction(CreateUserActivity.class.getName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
+                if (SplashActivity.instance != null) {
+                    SplashActivity.instance.finish();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onWalletBackUp(boolean isSuccess) {
+        if (isSuccess) {
+            RmDataHelper.getInstance().onWalletBackupDone();
+        }
     }
 
     public void saveUpdateUserInfo() {
@@ -282,6 +361,7 @@ public class MeshDataSource extends ViperUtil {
 
         UserModel userModel = new UserModel()
                 .setName(SharedPref.read(Constants.preferenceKey.USER_NAME))
+                .setLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME))
                 .setImage(SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX))
                 .setTime(SharedPref.readLong(Constants.preferenceKey.MY_REGISTRATION_TIME));
 

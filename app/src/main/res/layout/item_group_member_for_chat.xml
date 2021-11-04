@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/height_60"
+        android:layout_height="wrap_content"
+        android:background="@color/chat_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_container"
+            android:layout_width="@dimen/width_60"
+            android:layout_height="@dimen/height_70"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:id="@+id/text_view_image_name"
+                android:layout_width="@dimen/width_40"
+                android:layout_height="@dimen/height_40"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
+                android:maxLength="2"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="RJ" />
+
+            <ImageView
+                android:id="@+id/user_mesh_status"
+                android:layout_width="@dimen/width_25"
+                android:layout_height="@dimen/height_25"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:contentDescription="@string/image"
+                app:layout_constraintBottom_toBottomOf="@+id/text_view_image_name"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_image_name"
+                app:layout_constraintStart_toEndOf="@+id/text_view_image_name"
+                app:layout_constraintTop_toTopOf="@+id/text_view_image_name" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_10"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_image_name"
+
+                tools:text="John Doe" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/divider_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

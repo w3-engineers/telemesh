@@ -2,8 +2,11 @@ package com.w3engineers.unicef.telemesh.data.local.usertable;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
+
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
@@ -54,7 +57,10 @@ public class UserEntity extends DbBaseEntity {
     public int configVersion;
 
     //@Ignore
-    //private String userLastName;
+    @Nullable
+    @ColumnInfo(name = ColumnNames.COLUMN_USER_LAST_NAME)
+    public String userLastName;
+
     public UserEntity() {
     }
 
@@ -151,6 +157,15 @@ public class UserEntity extends DbBaseEntity {
         return this;
     }
 
+    public String getUserLastName() {
+        return userLastName;
+    }
+
+    public UserEntity setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
+        return this;
+    }
+
     /* public boolean isUserSynced() {
         return isUserSynced;
     }
@@ -160,8 +175,6 @@ public class UserEntity extends DbBaseEntity {
         isUserSynced = userSynced;
         return this;
     }*/
-
-
 
 
     @Override
@@ -178,6 +191,7 @@ public class UserEntity extends DbBaseEntity {
         dest.writeByte((byte) (isUserSynced ? 1 : 0));
         dest.writeInt(this.hasUnreadMessage);
         dest.writeInt(this.configVersion);
+        dest.writeString(this.userLastName);
     }
 
     protected UserEntity(@NonNull Parcel in) {
@@ -193,6 +207,7 @@ public class UserEntity extends DbBaseEntity {
         this.isUserSynced = in.readByte() != 0;
         this.hasUnreadMessage = in.readInt();
         this.configVersion = in.readInt();
+        this.userLastName = in.readString();
     }
 
     public static final Creator<UserEntity> CREATOR = new Creator<UserEntity>() {
@@ -211,6 +226,7 @@ public class UserEntity extends DbBaseEntity {
     public UserModel getProtoUser() {
         return new UserModel()
                 .setName(getUserName())
+                .setLastName(getUserLastName())
                 .setImage(getAvatarIndex())
                 .setTime(getRegistrationTime());
     }
@@ -224,6 +240,7 @@ public class UserEntity extends DbBaseEntity {
     @NonNull
     public UserEntity toUserEntity(@NonNull UserModel userModel) {
         return setUserName(userModel.getName())
+                .setUserLastName(userModel.getLastName())
                 .setAvatarIndex(userModel.getImage())
                 .setRegistrationTime(userModel.getTime())
                 .setMeshId(userModel.getUserId());
@@ -232,6 +249,7 @@ public class UserEntity extends DbBaseEntity {
     @NonNull
     public UserEntity updateUserEntity(@NonNull UserModel userModel) {
         return setUserName(userModel.getName())
+                .setUserLastName(userModel.getLastName())
                 .setAvatarIndex(userModel.getImage())
                 .setMeshId(userModel.getUserId());
     }

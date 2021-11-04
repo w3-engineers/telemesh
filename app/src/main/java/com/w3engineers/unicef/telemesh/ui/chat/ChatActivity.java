@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -21,6 +21,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
@@ -37,11 +38,14 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.w3engineers.mesh.util.MeshLog;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.data.pager.LayoutManagerWithSmoothScroller;
@@ -51,14 +55,13 @@ import com.w3engineers.unicef.telemesh.ui.groupdetails.GroupDetailsActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
+import com.w3engineers.unicef.util.base.ui.ItemClickListener;
 import com.w3engineers.unicef.util.base.ui.TelemeshBaseActivity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.ContentUtil;
-import com.w3engineers.unicef.util.helper.MyGlideEngineUtil;
+import com.w3engineers.unicef.util.helper.GlideEngine;
 import com.w3engineers.unicef.util.helper.NotifyUtil;
 import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
 
 import java.io.File;
 import java.util.Calendar;
@@ -74,7 +77,7 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends TelemeshBaseActivity {
+public class ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntity> {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -90,7 +93,8 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     @Nullable
     public ChatPagedAdapterRevised mChatPagedAdapter;
-    private PagedList<ChatEntity> chatEntities;
+    private GroupMembersAdapterForChat mGroupMembersAdapterForChat;
+
     @Nullable
     public ActivityChatRevisedBinding mViewBinging;
     @Nullable
@@ -125,6 +129,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         threadId = intent.getStringExtra(UserEntity.class.getName());
         isGroup = intent.getBooleanExtra(GroupEntity.class.getName(), false);
 
+
         if (TextUtils.isEmpty(threadId)) {
             finish();
             return;
@@ -133,8 +138,20 @@ public class ChatActivity extends TelemeshBaseActivity {
         mViewBinging = (ActivityChatRevisedBinding) getViewDataBinding();
         setTitle("");
 
+
+        if (isGroup) {
+            mViewBinging.imageViewPickGalleryImage.setVisibility(View.GONE);
+        }
+
         mChatViewModel = getViewModel();
         mChatViewModel.setChatPageInfo(isGroup);
+
+        if (!isGroup) {
+            mViewBinging.membersRv.setVisibility(View.GONE);
+        } else {
+            initMembersListView();
+        }
+
         initComponent();
 
         processGroupAllUsers();
@@ -159,15 +176,25 @@ public class ChatActivity extends TelemeshBaseActivity {
 
         if (isGroup) {
             if (mGroupEntity != null) {
+
+                mViewBinging.textViewImageName.setVisibility(View.INVISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.VISIBLE);
+
                 mViewBinging.imageProfile.setBackgroundResource(R.mipmap.group_white_circle);
                 UIHelper.setGroupName(mViewBinging.textViewLastName, mGroupEntity.groupName);
                 mViewBinging.imageView.setVisibility(View.GONE);
             }
         } else {
             if (mUserEntity != null) {
+                mViewBinging.textViewImageName.setVisibility(View.VISIBLE);
+                mViewBinging.imageProfile.setVisibility(View.INVISIBLE);
 
-                UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
-                mViewBinging.textViewLastName.setText(mUserEntity.userName);
+                //UIHelper.setImageResource(mViewBinging.imageProfile, mUserEntity.avatarIndex);
+
+                UIHelper.updateImageNameField(mViewBinging.textViewImageName, mUserEntity.getUserName(), mUserEntity.getUserLastName());
+
+                String name = mUserEntity.userName + " " + mUserEntity.getUserLastName();
+                mViewBinging.textViewLastName.setText(name);
                 String subTitle = mUserEntity.isOnline > 0 ? getString(R.string.active_online) : getString(R.string.active_offline);
                 mViewBinging.textViewActiveNow.setText(subTitle);
                 mViewBinging.imageView.setBackgroundResource(activeStatusResource(mUserEntity.getOnlineStatus()));
@@ -215,6 +242,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -226,7 +254,6 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
             case R.id.menu_group_leave:
                 mChatViewModel.groupLeaveAction(mGroupEntity);
-                break;
             case R.id.menu_message_clear:
                 mChatViewModel.clearMessage(threadId, isGroup);
                 break;
@@ -234,8 +261,41 @@ public class ChatActivity extends TelemeshBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void clearChat(){
+    public void clearChat() {
         mChatViewModel.clearMessage(threadId, isGroup);
+    }
+
+    private void initMembersListView() {
+        mGroupMembersAdapterForChat = new GroupMembersAdapterForChat();
+        mGroupMembersAdapterForChat.setItemClickListener(this);
+        //mViewBinging.membersRv.setHasFixedSize(true);
+        mViewBinging.membersRv.setAdapter(mGroupMembersAdapterForChat);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mViewBinging.membersRv.setLayoutManager(layoutManager);
+
+//        mBinding.nestedScrollView.setNestedScrollingEnabled(true);
+        initGroupMembersInfoObserver();
+    }
+
+    private void initGroupMembersInfoObserver() {
+
+        mChatViewModel.groupMembersWithoutMe.observe(this, userEntities -> {
+            if (userEntities != null) {
+
+                mGroupMembersAdapterForChat.clear();
+                mGroupMembersAdapterForChat.addItem(userEntities);
+            }
+        });
+
+        /*List<UserEntity> userEntities = new ArrayList<>();
+        for (int i = 0; i <15; i++) {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+            userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
+            userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
+            userEntities.add(userEntity);
+        }
+        mGroupMembersAdapterForChat.addItem(userEntities);*/
     }
 
     /**
@@ -263,7 +323,7 @@ public class ChatActivity extends TelemeshBaseActivity {
             mViewBinging.chatRv.setAdapter(mChatPagedAdapter);
 
             setClickListener(mViewBinging.imageViewSend, mViewBinging.imageViewPickGalleryImage,
-                    mViewBinging.imageProfile, mViewBinging.textViewLastName);
+                    mViewBinging.imageProfile, mViewBinging.textViewLastName, mViewBinging.textViewImageName);
         }
 
         NotifyUtil.clearNotification(threadId);
@@ -318,6 +378,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
                         setUiComponent();
                         mChatViewModel.processGroupUser(mGroupEntity.membersInfo);
+                        mChatViewModel.startMemberObserver(mGroupEntity.getMembersArray());
                     } else {
                         finish();
                     }
@@ -333,6 +394,8 @@ public class ChatActivity extends TelemeshBaseActivity {
                         if (mChatPagedAdapter != null) {
                             mChatPagedAdapter.addAvatarIndex(userEntity);
                         }
+                    } else {
+                        finish();
                     }
                 });
             }
@@ -351,6 +414,7 @@ public class ChatActivity extends TelemeshBaseActivity {
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(@NonNull View view) {
         super.onClick(view);
@@ -359,13 +423,14 @@ public class ChatActivity extends TelemeshBaseActivity {
                 if (mViewBinging != null) {
                     String value = mViewBinging.editTextMessage.getText().toString().trim();
                     if (!TextUtils.isEmpty(value)) {
-                        mChatViewModel.sendMessage(threadId, value, true);
+                        mChatViewModel.sendMessage(threadId, value);
                         mViewBinging.editTextMessage.setText("");
                     }
                 }
                 break;
             case R.id.image_profile:
             case R.id.text_view_last_name:
+            case R.id.text_view_image_name:
                 if (isGroup) {
                     Intent intent = new Intent(this, GroupDetailsActivity.class);
                     intent.putExtra(GroupEntity.class.getName(), mGroupEntity.getGroupId());
@@ -378,9 +443,10 @@ public class ChatActivity extends TelemeshBaseActivity {
                 break;
 
             case R.id.image_view_pick_gallery_image:
-                if (mUserEntity != null /*&& mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE*/) {
+                /*if (mUserEntity != null *//*&& mUserEntity.getOnlineStatus() != Constants.UserStatus.INTERNET_ONLINE*//*) {
                     requestToOpenGallery();
-                }
+                }*/
+                requestToOpenGallery();
                 break;
 
             case R.id.image_view_message:
@@ -388,14 +454,16 @@ public class ChatActivity extends TelemeshBaseActivity {
             case R.id.hover:
             case R.id.hover_view:
 //            case R.id.shimmerUploadingImage:
-                MessageEntity messageEntity = (MessageEntity) view.getTag(R.id.image_view_message);
+
+
+                ChatEntity messageEntity = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (messageEntity != null) {
                     viewContent(view, messageEntity);
                 }
                 break;
 
             case R.id.view_failed:
-                MessageEntity failedMessage = (MessageEntity) view.getTag(R.id.image_view_message);
+                ChatEntity failedMessage = (ChatEntity) view.getTag(R.id.image_view_message);
                 if (failedMessage != null &&
                         (failedMessage.getStatus() == Constants.MessageStatus.STATUS_FAILED
                                 || failedMessage.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED)) {
@@ -411,8 +479,8 @@ public class ChatActivity extends TelemeshBaseActivity {
         sInstance = null;
     }
 
-    private void resendFailedMessage(MessageEntity failedMessage) {
-        if (mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
+    private void resendFailedMessage(ChatEntity failedMessage) {
+        if (mUserEntity != null && mUserEntity.getOnlineStatus() == Constants.UserStatus.OFFLINE) {
             Toast.makeText(this, mUserEntity.getUserName() + " is in offline.", Toast.LENGTH_SHORT).show();
             return;
         } /*else if (mUserEntity.getOnlineStatus() == Constants.UserStatus.INTERNET_ONLINE) {
@@ -447,7 +515,11 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (mViewBinging.expandedImage.getVisibility() == View.VISIBLE) {
+            mViewBinging.expandedImage.performClick();
+        } else {
+            finish();
+        }
     }
 
     private ChatViewModel getViewModel() {
@@ -487,7 +559,7 @@ public class ChatActivity extends TelemeshBaseActivity {
 
     private void openGallery() {
         int selectImageCount = 1;
-        Matisse.from(this)
+       /* Matisse.from(this)
                 .choose(MimeType.ofAll(), false)
                 .theme(R.style.Matisse_Dracula)
                 .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.height_120))
@@ -495,6 +567,14 @@ public class ChatActivity extends TelemeshBaseActivity {
                 .thumbnailScale(0.85f)
                 .maxSelectable(selectImageCount)
                 .imageEngine(new MyGlideEngineUtil())
+                .forResult(Constants.RequestCodes.GALLERY_IMAGE_REQUEST);*/
+
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofAll())
+                .isCamera(false)
+                .maxSelectNum(1)
+                .theme(R.style.Matisse_Dracula)
+                .imageEngine(GlideEngine.createGlideEngine()) // Please refer to the Demo GlideEngine.java
                 .forResult(Constants.RequestCodes.GALLERY_IMAGE_REQUEST);
     }
 
@@ -505,9 +585,11 @@ public class ChatActivity extends TelemeshBaseActivity {
         switch (requestCode) {
             case Constants.RequestCodes.GALLERY_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.v("FILE_SPEED_TEST_1 ", Calendar.getInstance().getTime() + "");
-                    List<Uri> images = Matisse.obtainResult(data);
-                    mChatViewModel.sendContentMessage(threadId, images.get(0));
+                    Timber.tag("FILE_SPEED_TEST_1 ").v("%s", Calendar.getInstance().getTime());
+                    //List<Uri> images = Matisse.obtainResult(data);
+                    List<LocalMedia> result = PictureSelector.obtainMultipleResult(data);
+                    Log.d("ImagePath", "" + result.get(0).toString());
+                    mChatViewModel.sendContentMessage2(threadId, result.get(0).getRealPath());
                 }
                 break;
         }
@@ -517,17 +599,22 @@ public class ChatActivity extends TelemeshBaseActivity {
         mChatViewModel.sendContentMessage(threadId, path);
     }
 
+    @Override
+    public void onItemClick(View view, UserEntity item) {
+
+    }
+
     class AdapterDataSetObserver extends RecyclerView.AdapterDataObserver {
 
         @Override
         public void onChanged() {
-            Log.e("ChatActivity", "onChanged");
+            Timber.tag("ChatActivity").e("onChanged");
         }
 
         // Scroll to bottom on new messages
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            Log.e("ChatActivity", "onItemRangeInserted");
+            Timber.tag("ChatActivity").e("onItemRangeInserted");
             //mViewBinging.chatRv.smoothScrollToPosition(mChatPagedAdapter.getItemCount()-1 );
             if (mLinearLayoutManager != null && mViewBinging != null && mChatPagedAdapter != null) {
                 mLinearLayoutManager.smoothScrollToPosition(mViewBinging.chatRv,
@@ -548,21 +635,33 @@ public class ChatActivity extends TelemeshBaseActivity {
     private long shortAnimationDuration = 300;
     private boolean isExpandCancel = false;
 
-    private void viewContent(View messageImage, MessageEntity messageEntity) {
+    private void viewContent(View messageImage, ChatEntity messageEntity) {
+        int contentStatus = -1;
+        String contentPath = "";
+
+        if (messageEntity instanceof GroupMessageEntity) {
+            contentStatus = ((GroupMessageEntity) messageEntity).getContentStatus();
+            contentPath = ((GroupMessageEntity) messageEntity).getContentPath();
+        } else {
+            contentStatus = ((MessageEntity) messageEntity).getContentStatus();
+            contentPath = ((MessageEntity) messageEntity).getContentPath();
+        }
+
+
         if (messageEntity.isIncoming()) {
-            if (messageEntity.getContentStatus() != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
+            if (contentStatus != Constants.ContentStatus.CONTENT_STATUS_RECEIVED
                     && messageEntity.getStatus() == Constants.MessageStatus.STATUS_FAILED) {
                 Toast.makeText(this, "Message was failed", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (messageEntity.getContentStatus() == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
+            if (contentStatus == Constants.ContentStatus.CONTENT_STATUS_RECEIVING) {
                 Toast.makeText(this, "Message is receiving", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        String contentPath = messageEntity.getContentPath();
+        //  String contentPath = messageEntity.getContentPath();
         if (TextUtils.isEmpty(contentPath)) {
             Toast.makeText(this, "Error message", Toast.LENGTH_SHORT).show();
             return;
@@ -747,4 +846,5 @@ public class ChatActivity extends TelemeshBaseActivity {
             }
         });
     }
+
 }

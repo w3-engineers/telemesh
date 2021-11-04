@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -14,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Handler;
 
@@ -25,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -50,13 +53,13 @@ import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.BroadcastDataHelper;
-import com.w3engineers.unicef.telemesh.data.helper.LocationTracker;
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.helper.inappupdate.InAppUpdate;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityMainBinding;
 import com.w3engineers.unicef.telemesh.databinding.NotificationBadgeBinding;
+import com.w3engineers.unicef.telemesh.databinding.WalletBadgeBinding;
 import com.w3engineers.unicef.telemesh.ui.groupcreate.GroupCreateActivity;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactsFragment;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverFragment;
@@ -80,6 +83,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Menu bottomMenu;
     private BottomNavigationMenuView bottomNavigationMenuView;
     NotificationBadgeBinding notificationBadgeBinding;
+    WalletBadgeBinding walletBadgeBinding;
     @SuppressLint("StaticFieldLeak")
     private static MainActivity sInstance;
 
@@ -87,7 +91,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     private Fragment mCurrentFragment;
 
     Context mContext;
-    private int latestUserCount;
     private int latestMessageCount;
 
     private int RC_APP_UPDATE = 620;
@@ -125,12 +128,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         mContext = this;
 
         super.startUI();
+
+        //RmDataHelper.getInstance().startMesh();
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
 
-        requestMultiplePermissions();
+        //requestMultiplePermissions();
 
         Constants.IS_LOADING_ENABLE = false;
         Constants.IS_APP_BLOCKER_ON = false;
@@ -163,6 +169,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         subscribeForActiveUser();
         subscribeForNewFeedMessage();
         initSearchListener();
+        subscribeForWalletBackupLiveData();
 
         InAppUpdate.getInstance(MainActivity.this).setAppUpdateProcess(false);
         StorageUtil.getFreeMemory();
@@ -176,6 +183,13 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         }
 
         checkAppBlockerAvailable();
+
+        // check that mesh need to start or not
+        Intent intent = getIntent();
+        if (intent.hasExtra("is_mesh_start")) {
+            RmDataHelper.getInstance().startMesh();
+        }
+
 
     }
 
@@ -205,6 +219,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 binding.bottomNavigation.setSelectedItemId(R.id.action_contact);
             }
         }
+
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -288,6 +303,15 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
         if (itemView != null) {
             itemView.addView(notificationBadgeBinding.getRoot());
+        }
+    }
+
+    private void addBadgeToSettings() {
+        walletBadgeBinding = WalletBadgeBinding.inflate(getLayoutInflater());
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
+        if (itemView != null) {
+            itemView.addView(walletBadgeBinding.getRoot());
         }
     }
 
@@ -393,6 +417,22 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         latestMessageCount = latestCount;
     }
 
+    private void createSettingBadge(int menuItemPosition) {
+
+        BottomNavigationItemView itemView =
+                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
+
+        if (itemView == null) {
+            return;
+        }
+
+        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+        if (constraintLayoutContainer == null) return;
+        constraintLayoutContainer.setVisibility(View.VISIBLE);
+
+        //Todo need to hide when wallet backup done
+    }
+
     private ConstraintLayout getViewByMenu(int menuItem) {
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItem);
@@ -432,10 +472,11 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         RmDataHelper.getInstance().destroy();
         sInstance = null;
-        if(!CommonUtil.isEmulator()) {
-            LocationTracker.getInstance(mContext).stopListener();
+        if (!CommonUtil.isEmulator()) {
+            //LocationTracker.getInstance(mContext).stopListener();
             unregisterReceiver(mGpsSwitchStateReceiver);
         }
     }
@@ -450,6 +491,8 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 return;
             } else if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
                 return;
             }
 
@@ -473,6 +516,18 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 runOnUiThread(() -> createFeedBadge(feedList.size(), Constants.MenuItemPosition.POSITION_FOR_MESSAGE_FEED));
             });
         }
+    }
+
+    private void subscribeForWalletBackupLiveData() {
+        mViewModel.getWalletBackupLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                CommonUtil.isWalletBackupDone = aBoolean;
+                if (!aBoolean) {
+                    addBadgeToSettings();
+                }
+            }
+        });
     }
 
     private void initSearchListener() {
@@ -519,7 +574,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 if (isGpsEnabled || isNetworkEnabled) {
                     //location is enabled
                     Log.e("gps_staus", "gps has been on");
-                    LocationTracker.getInstance(mContext).getLocation();
+                    //LocationTracker.getInstance(mContext).getLocation();
                     CommonUtil.dismissDialog();
                 } else {
                     //location is disabled
@@ -630,7 +685,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     @Override
     public void onPermissionGranted() {
-        //   locationTracker = new LocationTracker(mContext, MainActivity.this);
+       /* //   locationTracker = new LocationTracker(mContext, MainActivity.this);
 
         if (!CommonUtil.isEmulator()) {
             LocationTracker.getInstance(mContext).getLocation();
@@ -644,6 +699,28 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
             } else {
                 CommonUtil.showGpsOrLocationOffPopup(MainActivity.this);
             }
-        }
+        }*/
+    }
+
+    public void onWalletBackupDone() {
+        CommonUtil.isWalletBackupDone = true;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mCurrentFragment != null
+                        && (mCurrentFragment instanceof SettingsFragment)) {
+                    ((SettingsFragment) mCurrentFragment).removeBadgeIcon();
+                }
+
+                BottomNavigationItemView itemView =
+                        (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(Constants.MenuItemPosition.POSITION_FOR_MESSAGE_SETTINGS);
+
+                if (itemView != null) {
+                    ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
+                    constraintLayoutContainer.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

@@ -16,7 +16,6 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivity
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity
 import com.w3engineers.unicef.util.helper.CommonUtil
 import timber.log.Timber
-import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivityK: AppCompatActivity() {
 

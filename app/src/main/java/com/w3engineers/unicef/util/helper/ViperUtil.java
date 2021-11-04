@@ -15,12 +15,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 
+import android.location.Location;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -44,10 +43,10 @@ import com.w3engineers.mesh.application.data.model.ServiceDestroyed;
 import com.w3engineers.mesh.application.data.model.ServiceUpdate;
 import com.w3engineers.mesh.application.data.model.TransportInit;
 import com.w3engineers.mesh.application.data.model.UserInfoEvent;
-import com.w3engineers.mesh.application.data.model.WalletCreationEvent;
+import com.w3engineers.mesh.application.data.model.WalletBackupEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
-import com.w3engineers.mesh.util.Constant;
-import com.w3engineers.mesh.util.DialogUtil;
+import com.w3engineers.mesh.application.data.model.WalletPrepared;
+import com.w3engineers.mesh.util.MeshApp;
 import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
@@ -56,9 +55,7 @@ import com.w3engineers.models.BroadcastData;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.models.FileData;
 import com.w3engineers.unicef.TeleMeshApplication;
-import com.w3engineers.unicef.telemesh.BuildConfig;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.ContentModel;
 import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
@@ -74,9 +71,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import timber.log.Timber;
-
 public abstract class ViperUtil {
+
+    public static final int WALLET_SECURITY_ACTIVITY = 1;
+    public static final int WALLET_IMPORT_ACTIVITY = 2;
+    public static final int WALLET_BACKUP_ACTIVITY = 3;
 
     private ViperClient viperClient;
     private String myUserId;
@@ -87,16 +86,33 @@ public abstract class ViperUtil {
         try {
             context = MainActivity.getInstance() != null ? MainActivity.getInstance() : TeleMeshApplication.getContext();
 
-            String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
+            /*String AUTH_USER_NAME = AppCredentials.getInstance().getAuthUserName();
             String AUTH_PASSWORD = AppCredentials.getInstance().getAuthPassword();
-            String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();
+            String FILE_REPO_LINK = AppCredentials.getInstance().getFileRepoLink();*/
 
             initObservers();
-            viperClient = ViperClient.on(context, userModel.getName(), userModel.getImage());
+            viperClient = ViperClient.on(context, userModel.getName(), userModel.getLastName(), userModel.getImage());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void startTelemeshService() {
+        viperClient.startTelemeshService();
+    }
+
+    public void launchActivity(int activityType) {
+        viperClient.launchActivity(activityType);
+    }
+
+
+    public Location getLocationFromService() {
+        return viperClient.getLocationFromService();
+    }
+
+    public boolean isWalletBackupDone() {
+        return viperClient.isWalletBackupDone();
     }
 
     private void initObservers() {
@@ -118,6 +134,18 @@ public abstract class ViperUtil {
                 myUserId = walletLoaded.walletAddress;
                 onMeshPrepared(walletLoaded.walletAddress);
             }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_PREPARED, event -> {
+            WalletPrepared walletPrepared = (WalletPrepared) event;
+            if (walletPrepared.success) {
+                onWalletPrepared(walletPrepared.isOldAccount,walletPrepared.isImportWallet);
+            }
+        });
+
+        AppDataObserver.on().startObserver(ApiEvent.WALLET_BACKUP, event -> {
+            WalletBackupEvent walletBackupEvent = (WalletBackupEvent) event;
+            onWalletBackUp(walletBackupEvent.success);
         });
 
        /* AppDataObserver.on().startObserver(ApiEvent.PEER_ADD, event -> {
@@ -150,7 +178,9 @@ public abstract class ViperUtil {
 
             UserInfoEvent userInfoEvent = (UserInfoEvent) event;
 
-            UserModel userModel = new UserModel().setName(userInfoEvent.getUserName())
+            UserModel userModel = new UserModel()
+                    .setName(userInfoEvent.getUserName())
+                    .setLastName(userInfoEvent.getLastName())
                     .setImage(userInfoEvent.getAvatar())
                     .setTime(userInfoEvent.getRegTime());
 
@@ -182,16 +212,18 @@ public abstract class ViperUtil {
 
             PermissionInterruptionEvent permissionInterruptionEvent = (PermissionInterruptionEvent) event;
             if (permissionInterruptionEvent != null) {
-                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState, permissionInterruptionEvent.permissions, MainActivity.getInstance()));
+                HandlerUtil.postForeground(() -> showPermissionEventAlert(permissionInterruptionEvent.hardwareState,
+                        permissionInterruptionEvent.permissions, MeshApp.getCurrentActivity()));
             }
         });
 
 
         AppDataObserver.on().startObserver(ApiEvent.WALLET_CREATION_EVENT, event -> {
-            WalletCreationEvent walletCreationEvent = (WalletCreationEvent) event;
+            openSelectAccountActivity();
+            /*WalletCreationEvent walletCreationEvent = (WalletCreationEvent) event;
             if (walletCreationEvent != null) {
                 HandlerUtil.postForeground(this::openAlertForWalletCreation);
-            }
+            }*/
         });
 
         AppDataObserver.on().startObserver(ApiEvent.FILE_RECEIVED_EVENT, event -> {
@@ -355,11 +387,11 @@ public abstract class ViperUtil {
     }
 
     public void openAlertForWalletCreation() {
-        Context context = MainActivity.getInstance();
+       /* Context context = MainActivity.getInstance();
         DialogUtil.showConfirmationDialog(context, "Wallet Create",
-                "Do you want to create wallet?",
-                "No",
-                "Yes",
+                "You have to create a wallet to continue",
+                null,
+                "Got it",
                 new DialogUtil.DialogButtonListener() {
                     @Override
                     public void onClickPositive() {
@@ -375,7 +407,9 @@ public abstract class ViperUtil {
                     public void onClickNegative() {
                         DialogUtil.dismissDialog();
                     }
-                });
+                });*/
+
+        viperClient.openWalletCreationUI();
     }
 
     private void dataReceive(String senderId, byte[] frameData) {
@@ -465,6 +499,14 @@ public abstract class ViperUtil {
         }
     }
 
+    public void startMesh() {
+        try {
+            viperClient.startMesh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void restartMeshService() {
         try {
             viperClient.restartMesh();
@@ -479,7 +521,7 @@ public abstract class ViperUtil {
 
             String address = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
 
-            viperClient.updateMyInfo(userModel.getName(), userModel.getImage());
+            viperClient.updateMyInfo(userModel.getName(), userModel.getLastName(), userModel.getImage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -488,7 +530,7 @@ public abstract class ViperUtil {
     public void saveOtherUserInfo(UserModel userModel) {
 
         if (viperClient != null) {
-            viperClient.updateUserInfo(userModel.getUserId(), userModel.getName(), userModel.getImage());
+            viperClient.updateUserInfo(userModel.getUserId(), userModel.getName(), userModel.getLastName());
         }
     }
 
@@ -587,13 +629,16 @@ public abstract class ViperUtil {
             ContentModel contentModel = viperContentData.contentModel;
             ContentMetaInfo contentMetaInfo = null;
             if (!contentModel.isRequestFromReceiver()) {
+                // iugu
                 contentMetaInfo = new ContentMetaInfo()
+                        .setGroupContent(contentModel.isGroupContent())
                         .setMessageId(contentModel.getMessageId())
                         .setMessageType(contentModel.getMessageType())
                         .setMetaInfo(contentModel.getContentInfo())
                         .setThumbData(ContentUtil.getInstance().getThumbFileToByte(contentModel.getThumbPath()));
             } else {
                 contentMetaInfo = new ContentMetaInfo()
+                        .setGroupContent(contentModel.isGroupContent())
                         .setMessageId(contentModel.getMessageId())
                         .setMessageType(contentModel.getMessageType())
                         .setMetaInfo(contentModel.getContentInfo());
@@ -669,4 +714,10 @@ public abstract class ViperUtil {
     protected abstract void pendingContents(ContentPendingModel contentPendingModel);
 
     protected abstract void receiveBroadcast(String broadcastId, String metaData, String contentPath, double latitude, double longitude, double range, String expiryTime);
+
+    protected abstract void openSelectAccountActivity();
+
+    protected abstract void onWalletPrepared(boolean isOldAccount, boolean isImportWallet);
+
+    protected abstract void onWalletBackUp(boolean isSuccess);
 }

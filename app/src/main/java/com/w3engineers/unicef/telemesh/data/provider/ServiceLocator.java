@@ -1,7 +1,11 @@
 package com.w3engineers.unicef.telemesh.data.provider;
 
 import android.app.Application;
+import android.location.Location;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.local.dbsource.Source;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
@@ -19,8 +23,10 @@ import com.w3engineers.unicef.telemesh.ui.main.MainActivityViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshcontact.MeshContactViewModel;
 import com.w3engineers.unicef.telemesh.ui.meshdiscovered.DiscoverViewModel;
 import com.w3engineers.unicef.telemesh.ui.messagefeed.MessageFeedViewModel;
+import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountViewModel;
 import com.w3engineers.unicef.telemesh.ui.settings.SettingsViewModel;
 import com.w3engineers.unicef.telemesh.ui.splashscreen.SplashViewModel;
+import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseViewModel;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileViewModel;
 import com.w3engineers.unicef.util.base.ui.BaseServiceLocator;
 
@@ -100,6 +106,16 @@ public class ServiceLocator extends BaseServiceLocator {
         return new ChatViewModel(application);
     }
 
+    @NonNull
+    public TermsOfUseViewModel getTermsOfViewModel() {
+        return new TermsOfUseViewModel();
+    }
+
+
+    public SelectAccountViewModel getSelectAccountViewModel() {
+        return new SelectAccountViewModel();
+    }
+
     /*@NonNull
     public ConversationViewModel getConversationViewModel(@NonNull Application application) {
         return new ConversationViewModel(application);
@@ -170,6 +186,26 @@ public class ServiceLocator extends BaseServiceLocator {
     @Override
     public void initViper() {
         RmDataHelper.getInstance().initRM(Source.getDbSource());
+    }
+
+    //Call it only from policy page and should not call it
+    // from any other place in the project.
+    @Deprecated
+    public void startTelemeshService() {
+        RmDataHelper.getInstance().startServiceFromPolicyPage(Source.getDbSource());
+    }
+
+    public void launchActivity(int activityType) {
+        RmDataHelper.getInstance().launchActivity(activityType);
+    }
+
+    public void getLocation() {
+        Location location = RmDataHelper.getInstance().getLocationFromServiceApp();
+        if (location == null) {
+            Log.e("Location", "user location is null");
+        } else {
+            Log.e("Location", "user location is : " + location.getLatitude() + " " + location.getLongitude());
+        }
     }
 
     public void resetMesh() {

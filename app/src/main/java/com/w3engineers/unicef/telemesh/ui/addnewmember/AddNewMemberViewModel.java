@@ -86,6 +86,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                     .setMemberId(userEntity.getMeshId())
                     .setAvatarPicture(userEntity.getAvatarIndex())
                     .setUserName(userEntity.getUserName())
+                    .setLastName(userEntity.getUserLastName())
                     .setMemberStatus(Constants.GroupEvent.GROUP_JOINED);
             newMembersInfo.add(groupMembersInfo);
         }
@@ -160,6 +161,7 @@ public class AddNewMemberViewModel extends BaseRxAndroidViewModel {
                         UserEntity userEntity = new UserEntity();
                         userEntity.setMeshId(diffElement.getMeshId());
                         userEntity.setUserName(diffElement.getUserName());
+                        userEntity.setUserLastName(diffElement.getUserLastName());
                         userEntity.setAvatarIndex(diffElement.getAvatarIndex());
                         userEntity.setIsFavourite(diffElement.getIsFavourite());
                         userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);

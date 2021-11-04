@@ -1,12 +1,15 @@
+/*
 package com.w3engineers.unicef.telemesh.data.helper;
 
+*/
 /*
 ============================================================================
 Copyright (C) 2021 W3 Engineers Ltd. - All Rights Reserved.
 Unauthorized copying of this file, via any medium is strictly prohibited
 Proprietary and confidential
 ============================================================================
-*/
+*//*
+
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -113,9 +116,11 @@ public class LocationTracker extends Service {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     int requestPermissionsCode = 50;
-            /*        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            */
+/*        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
-                }*/
+                }*//*
+
 
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -134,10 +139,12 @@ public class LocationTracker extends Service {
                 // If GPS enabled, get latitude/longitude using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                       /* if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                       */
+/* if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
-                        } else {*/
+                        } else {*//*
+
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
@@ -159,10 +166,12 @@ public class LocationTracker extends Service {
 
                 if (location == null & mContext != null) {
                     fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
-          /*      if (ContextCompat.checkSelfPermission(mActiivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+          */
+/*      if (ContextCompat.checkSelfPermission(mActiivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
 
-                }*/
+                }*//*
+
                     fusedLocationClient.getLastLocation()
                             .addOnSuccessListener(new OnSuccessListener<Location>() {
                                 @Override
@@ -194,13 +203,15 @@ public class LocationTracker extends Service {
 
 
             //Age of location returned from LocationServices
-    /*        if (location != null) {
+    */
+/*        if (location != null) {
                 long locationAge = System.currentTimeMillis() - location.getTime();
                 if (locationAge <= 60 * 1000) { // not older than 60 seconds
 
                 }
             }
-*/
+*//*
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,9 +279,11 @@ public class LocationTracker extends Service {
         }
     };
 
-    /**
+    */
+/**
      * Function to get latitude
-     */
+     *//*
+
     public double getLatitude() {
         if (location != null) {
             latitude = location.getLatitude();
@@ -281,9 +294,11 @@ public class LocationTracker extends Service {
     }
 
 
-    /**
+    */
+/**
      * Function to get longitude
-     */
+     *//*
+
     public double getLongitude() {
         if (location != null) {
             longitude = location.getLongitude();
@@ -293,11 +308,13 @@ public class LocationTracker extends Service {
         return longitude;
     }
 
-    /**
+    */
+/**
      * Function to check GPS/Wi-Fi enabled
      *
      * @return boolean
-     */
+     *//*
+
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
@@ -315,3 +332,4 @@ public class LocationTracker extends Service {
     }
 }
 
+*/

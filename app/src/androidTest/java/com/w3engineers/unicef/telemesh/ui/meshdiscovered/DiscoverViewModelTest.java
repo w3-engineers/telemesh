@@ -68,6 +68,7 @@ public class DiscoverViewModelTest {
         int AVATAR_INDEX = 2;
         userEntity = new UserEntity()
                 .setUserName(FIRST_NAME)
+                .setUserLastName(LAST_NAME)
                 .setAvatarIndex(AVATAR_INDEX);
 
         mCompositeDisposable = new CompositeDisposable();

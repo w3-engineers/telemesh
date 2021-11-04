@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_8"
             android:buttonTint="@color/colorPrimary"
-            android:text="I agree of the terms of use"
+            android:text="I agree to the terms of use"
             app:layout_constraintBottom_toTopOf="@+id/button_next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

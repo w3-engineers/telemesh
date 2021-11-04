@@ -13,6 +13,7 @@ import com.w3engineers.unicef.util.base.database.BaseColumnNames;
 public interface ColumnNames extends BaseColumnNames {
     //Users table
     String COLUMN_USER_NAME = "user_name";
+    String COLUMN_USER_LAST_NAME = "last_name";
     String COLUMN_USER_AVATAR = "avatar";
     String COLUMN_USER_MESH_ID = "mesh_id";
     String COLUMN_USER_CUSTOM_ID = "custom_id";
@@ -51,6 +52,13 @@ public interface ColumnNames extends BaseColumnNames {
     String COLUMN_CONTENT_PROGRESS = "content_progress";
     String COLUMN_CONTENT_STATUS = "content_status";
     String COLUMN_CONTENT_INFO = "content_info";
+
+    String COLUMN_ORIGINAL_SENDER = "original_sender";
+    String COLUMN_RECEIVED_USERS = "received_user";
+    String COLUMN_CONTENT_MESSAGE_ID = "content_message_id";
+    String COLUMN_CONTENT__ID = "content_id";
+    String COLUMN_SENDER_ID = "sender_id";
+    String COLUMN_RECEIVER_ID = "receiver_id";
 
     /**
      * Message Feed table column

@@ -7,6 +7,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMemberChangeModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
 
 import io.reactivex.Flowable;
 
@@ -26,12 +27,16 @@ public interface DataSource {
     @NonNull
     Flowable<ChatEntity> getLastChatData();
 
+    @NonNull
+    Flowable<GroupMessageEntity> getLastGroupMessage();
     @Nullable
     String getCurrentUser();
 
     void setCurrentUser(@Nullable String currentUser);
 
     void updateMessageStatus(@NonNull String messageId, int messageStatus);
+
+    void updateGroupMessageStatus(@NonNull String messageId, int messageStatus);
 
     void reSendMessage(@NonNull ChatEntity chatEntity);
 
@@ -64,6 +69,8 @@ public interface DataSource {
     @Nullable
     Flowable<GroupMemberChangeModel> getGroupMemberRemoveEvent();
 
+    void setWalletPrepared(boolean isOldAccount);
+    Flowable<Boolean> getWalletPrepared();
 
     // TODO purpose -> didn't set any mood when user switch the user mood (This was pause during ipc attached)
     //void setMyMode(int mode);

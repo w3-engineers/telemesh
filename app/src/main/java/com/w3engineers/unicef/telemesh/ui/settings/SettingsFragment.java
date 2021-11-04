@@ -1,15 +1,23 @@
 package com.w3engineers.unicef.telemesh.ui.settings;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
+
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
@@ -31,12 +39,15 @@ import com.w3engineers.unicef.telemesh.ui.feedback.FeedbackActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.userprofile.UserProfileActivity;
 import com.w3engineers.unicef.util.base.ui.BaseFragment;
+import com.w3engineers.unicef.util.helper.CommonUtil;
+import com.w3engineers.unicef.util.helper.DexterPermissionHelper;
 import com.w3engineers.unicef.util.helper.LanguageUtil;
 import com.w3engineers.unicef.util.helper.StorageUtil;
+import com.w3engineers.unicef.util.helper.ViperUtil;
 
 import java.io.ByteArrayOutputStream;
 
-public class SettingsFragment extends BaseFragment implements View.OnClickListener {
+public class SettingsFragment extends BaseFragment implements View.OnClickListener, DexterPermissionHelper.PermissionCallback {
 
     private Context mActivity;
     private SettingsViewModel settingsViewModel;
@@ -61,6 +72,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         mBinding.setSettingsVM(settingsViewModel);
 
+
+        if (!CommonUtil.isWalletBackupDone) {
+            mBinding.imageViewDot.setVisibility(View.VISIBLE);
+        }
+
         initView();
 
         showInAppUpdateButton();
@@ -76,6 +92,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 // Showing user profile
                 UserEntity userEntity = new UserEntity();
                 userEntity.setUserName(SharedPref.read(Constants.preferenceKey.USER_NAME));
+                userEntity.setUserLastName(SharedPref.read(Constants.preferenceKey.LAST_NAME));
                 userEntity.avatarIndex = SharedPref.readInt(Constants.preferenceKey.IMAGE_INDEX);
                 userEntity.meshId = SharedPref.read(Constants.preferenceKey.MY_USER_ID);
                 Intent intent = new Intent(mActivity, UserProfileActivity.class);
@@ -88,7 +105,14 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 showLanguageChangeDialog();
                 break;
             case R.id.layout_share_app:
-                shareAppOperation();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    DexterPermissionHelper.getInstance().requestForPermission(getActivity(), this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION);
+                } else {
+                    shareAppOperation();
+                }
+
                 break;
             case R.id.layout_about_us:
                 // Show about us
@@ -116,9 +140,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), FeedbackActivity.class));
                 break;
 
-            /*case R.id.layout_ssid:
-                showAlertForSSID();
-                break;*/
+            case R.id.layout_backup_wallet:
+                walletBackUpAction();
+                break;
 
             default:
                 break;
@@ -127,6 +151,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         super.onClick(view);
 
+    }
+
+
+    public void removeBadgeIcon() {
+        mBinding.imageViewDot.setVisibility(View.GONE);
     }
 
     private void appUpdateAction() {
@@ -159,6 +188,12 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void shareAppOperation() {
         if (hasEnoughStorage()) {
             settingsViewModel.startInAppShareProcess();
+        }
+    }
+
+    private void walletBackUpAction() {
+        if (isMeshInit()) {
+            DataManager.on().launchActivity(ViperUtil.WALLET_BACKUP_ACTIVITY);
         }
     }
 
@@ -259,11 +294,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private void showInAppUpdateButton() {
         mBinding.layoutAppUpdate.setVisibility(View.GONE);
 //        if (NetworkMonitor.isOnline()) {
-            long version = SharedPref.readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
-            if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
-                mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
-                mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
-            }
+        long version = SharedPref.readLong(Constants.preferenceKey.UPDATE_APP_VERSION);
+        if (version > InAppUpdate.getInstance(mActivity).getAppVersion().getVersionCode()) {
+            mBinding.layoutAppUpdate.setVisibility(View.VISIBLE);
+            mBinding.aboutUsBottom.setVisibility(View.VISIBLE);
+        }
 //        }
     }
 
@@ -279,6 +314,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.layoutAppUpdate.setOnClickListener(this);
         mBinding.layoutFeedback.setOnClickListener(this);
         mBinding.layoutSsid.setOnClickListener(this);
+        mBinding.layoutBackupWallet.setOnClickListener(this);
 
         mBinding.titleViewProfile.setText(LanguageUtil.getString(R.string.activity_view_profile));
         mBinding.titleViewWallet.setText(LanguageUtil.getString(R.string.settings_open_wallet));
@@ -292,48 +328,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         mBinding.titleViewSsid.setText(LanguageUtil.getString(R.string.set_ssid));
     }
 
-    // TODO SSID_Change
-    /*public void showAlertForSSID() {
-        // create an alert builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final View customLayout = getLayoutInflater().inflate(R.layout.alert_change_ssid, null);
-        builder.setView(customLayout);
-
-        String networkSSID = SharedPref.getSharedPref(mActivity).read(Constants.preferenceKey.NETWORK_PREFIX);
-
-        if (TextUtils.isEmpty(networkSSID)) {
-            networkSSID = getResources().getString(R.string.def_ssid);
-        }
-
-        TextView infoText = customLayout.findViewById(R.id.info);
-        EditText ssidName = customLayout.findViewById(R.id.network_name);
-
-        ssidName.setHint(LanguageUtil.getString(R.string.set_new_network_prefix));
-
-        infoText.setText(String.format(LanguageUtil.getString(R.string.your_current_network_prefix), networkSSID));
-
-        // add a button
-        builder.setPositiveButton(LanguageUtil.getString(R.string.change), (dialog, which) -> {
-
-            String ssid = ssidName.getText().toString();
-
-            if (TextUtils.isEmpty(ssid) || ssid.length() < 3) {
-                Toaster.showShort(LanguageUtil.getString(R.string.minimu_ssid_character));
-            } else {
-                SharedPref.getSharedPref(mActivity).write(Constants.preferenceKey.NETWORK_PREFIX, ssid);
-
-                settingsViewModel.destroyMeshService();
-            }
-
-        });
-
-        builder.setNegativeButton(LanguageUtil.getString(R.string.cancel), (dialog, which) -> {
-            dialog.dismiss();
-        });
-
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.show();
-    }*/
+    @Override
+    public void onPermissionGranted() {
+        shareAppOperation();
+    }
 }

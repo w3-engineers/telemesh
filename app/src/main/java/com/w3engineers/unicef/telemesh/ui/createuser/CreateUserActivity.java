@@ -22,11 +22,9 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.w3engineers.unicef.telemesh.R;
-import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityCreateUserBinding;
-import com.w3engineers.unicef.telemesh.ui.chooseprofileimage.ProfileImageActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
@@ -206,10 +204,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         if (id == R.id.button_signup) {
             nextAction();
-        } else if (id == R.id.image_profile) {
-            Intent intent = new Intent(this, ProfileImageActivity.class);
-            intent.putExtra(CreateUserActivity.IMAGE_POSITION, mViewModel.getImageIndex());
-            startActivityForResult(intent, Constants.RequestCodes.PROFILE_IMAGE_REQUEST);
         } else if (id == R.id.image_view_back) {
             finish();
         }

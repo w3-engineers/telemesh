@@ -81,7 +81,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.chooseprofileimage.ProfileImageActivity" />
         <activity android:name=".ui.userprofile.UserProfileActivity" />
         <activity android:name=".ui.aboutus.AboutUsActivity" />
         <activity android:name=".ui.bulletindetails.BulletinDetails" />

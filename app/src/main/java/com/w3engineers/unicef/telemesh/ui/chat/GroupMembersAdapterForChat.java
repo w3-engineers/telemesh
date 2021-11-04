@@ -15,6 +15,7 @@ import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.telemesh.databinding.ItemGroupMemberForChatBinding;
 import com.w3engineers.unicef.util.base.ui.BaseAdapter;
 import com.w3engineers.unicef.util.base.ui.BaseViewHolder;
+import com.w3engineers.unicef.util.helper.uiutil.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,8 @@ public class GroupMembersAdapterForChat extends BaseAdapter<UserEntity> {
             ItemGroupMemberForChatBinding binding = (ItemGroupMemberForChatBinding) viewDataBinding;
             binding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
             binding.userName.setText(item.userName);
-            binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(item.avatarIndex));
+            //binding.userAvatar.setImageResource(TeleMeshDataHelper.getInstance().getAvatarImage(item.avatarIndex));
+            UIHelper.updateImageNameField(binding.textViewImageName, item.getUserName(), item.getUserLastName());
         }
 
         @Override

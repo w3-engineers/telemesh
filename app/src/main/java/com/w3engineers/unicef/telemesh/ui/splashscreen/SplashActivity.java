@@ -1,5 +1,6 @@
 package com.w3engineers.unicef.telemesh.ui.splashscreen;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,6 +17,7 @@ import com.w3engineers.unicef.telemesh.data.helper.RmDataHelper;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivitySplashBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
 import com.w3engineers.unicef.telemesh.ui.termofuse.TermsOfUseActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
@@ -72,6 +74,20 @@ public class SplashActivity extends BaseActivity {
 
 
         });
+
+        splashViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isOldAccount) {
+                if (isOldAccount) {
+                    Intent intent = new Intent(SplashActivity.this, CreateUserActivity.class);
+                    intent.putExtra("wallet_exists", true);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+        splashViewModel.initWalletPreparationCallback();
 
     }
 

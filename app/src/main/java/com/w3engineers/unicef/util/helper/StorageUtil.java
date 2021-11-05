@@ -27,11 +27,7 @@ public class StorageUtil {
     public static long getFreeMemory() {
         StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
         long free = 0;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            free = (statFs.getBlockCountLong() * statFs.getBlockSizeLong()) / UNIT;
-        } else {
-            free = (statFs.getAvailableBlocks() * statFs.getBlockSize()) / UNIT;
-        }
+        free = (statFs.getBlockCountLong() * statFs.getBlockSizeLong()) / UNIT;
 
         Log.d("FreeSpace", " Storage free space in MB: " + free);
 

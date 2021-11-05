@@ -888,8 +888,13 @@ public class TelemeshTest {
         onView(withId(R.id.action_search)).perform(click());
         addDelay(1000);
 
-        onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
-        addDelay(1000);
+        try {
+            onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
+            addDelay(1000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         onView(withId(R.id.image_view_back)).perform(click());
         addDelay(1000);

@@ -193,14 +193,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
     }
 
-    protected void requestMultiplePermissions() {
-        DexterPermissionHelper.getInstance().requestForPermission(this, this,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-    }
-
     public static MainActivity getInstance() {
         return sInstance;
     }

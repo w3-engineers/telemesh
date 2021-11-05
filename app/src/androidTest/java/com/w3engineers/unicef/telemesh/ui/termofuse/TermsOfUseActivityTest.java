@@ -26,6 +26,7 @@ import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.util.helper.StatusHelper;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,7 @@ public class TermsOfUseActivityTest {
     public Activity currentActivity = null;
     private Context context;
 
+    @Before
     public void setUp() {
         context = InstrumentationRegistry.getTargetContext();
     }

@@ -199,14 +199,14 @@ public class ServiceLocator extends BaseServiceLocator {
         RmDataHelper.getInstance().launchActivity(activityType);
     }
 
-    public void getLocation() {
+/*    public void getLocation() {
         Location location = RmDataHelper.getInstance().getLocationFromServiceApp();
         if (location == null) {
             Log.e("Location", "user location is null");
         } else {
             Log.e("Location", "user location is : " + location.getLatitude() + " " + location.getLongitude());
         }
-    }
+    }*/
 
     public void resetMesh() {
         RmDataHelper.getInstance().restartMesh();

@@ -41,6 +41,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.application.data.model.WalletBackupEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
@@ -283,6 +284,14 @@ public class TelemeshTest {
         mDevice.pressBack();
 
         addDelay(1000);
+
+        // Call wallet backup done api
+        WalletBackupEvent walletBackupEvent = new WalletBackupEvent();
+        walletBackupEvent.success = true;
+        AppDataObserver.on().sendObserverData(walletBackupEvent);
+
+        addDelay(3000);
+        // Do next task
 
         ViewInteraction openWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),

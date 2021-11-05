@@ -67,7 +67,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
 //        }
     }
 
-    private void updateFeedEntity(FeedEntity feedEntity) {
+/*    private void updateFeedEntity(FeedEntity feedEntity) {
         getCompositeDisposable().add(Single.fromCallable(() ->
                 mFeedDataSource.updateFeedMessageReadStatus(feedEntity.getFeedId()))
                 .subscribeOn(Schedulers.newThread())
@@ -75,7 +75,7 @@ public class MessageFeedViewModel extends BaseRxViewModel {
                 .subscribe(aLong -> {
 
                 }, Throwable::printStackTrace));
-    }
+    }*/
 
     /**
      * Get the selected feed entity.

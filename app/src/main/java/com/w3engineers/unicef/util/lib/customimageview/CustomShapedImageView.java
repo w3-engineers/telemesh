@@ -82,7 +82,7 @@ public class CustomShapedImageView extends BaseShapedImageView {
         }
     }
 
-    public Uri getImageUri() {
+   /* public Uri getImageUri() {
         return imageUri;
     }
 
@@ -112,5 +112,5 @@ public class CustomShapedImageView extends BaseShapedImageView {
 
     public void setPhTextSize(float phTextSize) {
         this.phTextSize = phTextSize;
-    }
+    }*/
 }

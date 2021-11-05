@@ -53,6 +53,10 @@ public class TermsOfUseActivityTest {
 
         addDelay(2000);
 
+        mActivityTestRule.getActivity().onActivityResult(109, -1, null);
+
+        addDelay(1000);
+
         try {
             mActivityTestRule.runOnUiThread(new Runnable() {
                 @Override
@@ -72,17 +76,10 @@ public class TermsOfUseActivityTest {
 
             addDelay(1000);
 
-            mDevice.pressBack();
-
-            addDelay(1000);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        mActivityTestRule.getActivity().onActivityResult(109, -1, null);
-
-        addDelay(1000);
 
         currentActivity = getActivityInstance();
 

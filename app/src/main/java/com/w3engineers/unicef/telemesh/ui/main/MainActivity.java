@@ -710,7 +710,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
                 if (itemView != null) {
                     ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
-                    constraintLayoutContainer.setVisibility(View.GONE);
+                    if (constraintLayoutContainer != null) {
+                        constraintLayoutContainer.setVisibility(View.GONE);
+                    }
                 }
             }
         });

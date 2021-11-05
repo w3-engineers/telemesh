@@ -4,6 +4,7 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.app.Activity;
 
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.content.Context;
@@ -523,7 +524,16 @@ public class TelemeshTest {
 
             addDelay(1000);
 
-            onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+            int count = 3;
+            if (currentActivity instanceof ChatActivity) {
+                RecyclerView recyclerView = currentActivity.findViewById(R.id.chat_rv);
+                if (recyclerView.getAdapter() != null) {
+                    count = recyclerView.getAdapter().getItemCount();
+                    count--;
+                }
+            }
+
+            onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(count, click()));
 
             addDelay(2000);
 
@@ -891,13 +901,12 @@ public class TelemeshTest {
         try {
             onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
             addDelay(1000);
-        }catch (Exception e){
+
+            onView(withId(R.id.image_view_back)).perform(click());
+            addDelay(1000);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        onView(withId(R.id.image_view_back)).perform(click());
-        addDelay(1000);
 
         ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView4.perform(actionOnItemAtPosition(0, click()));

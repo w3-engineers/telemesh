@@ -111,7 +111,7 @@ public class RandomEntityGenerator {
                 .setFriendsId(userId)
                 .setIncoming(false)
                 .setTime(TimeUtil.toCurrentTime())
-                .setStatus(Constants.MessageStatus.STATUS_SENDING)
+                .setStatus(Constants.MessageStatus.STATUS_DELIVERED)
                 .setMessageType(ContentUtil.getInstance().getContentMessageType(path));
 
         return messageEntity;

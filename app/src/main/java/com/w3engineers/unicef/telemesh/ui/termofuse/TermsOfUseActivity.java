@@ -182,7 +182,7 @@ public class TermsOfUseActivity extends BaseActivity {
         }).get(TermsOfUseViewModel.class);
     }
 
-    private void showPermissionGifForXiaomi() {
+    public void showPermissionGifForXiaomi() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_xiaomi_permission, null, false);

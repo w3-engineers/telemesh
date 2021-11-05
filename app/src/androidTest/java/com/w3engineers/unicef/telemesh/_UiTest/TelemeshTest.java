@@ -488,21 +488,27 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(2000);
+        addDelay(3000);
 
         if (currentActivity instanceof ChatActivity) {
             ((ChatActivity) currentActivity).sendContentMessage(Uri.fromFile(file));
         }
 
-        addDelay(1000);
+        addDelay(3000);
 
         MessageEntity lastIncomingContent = messageSourceData.getLastIncomingContent(userEntity.getMeshId());
 
         // Fixme whe travis CI showing this message entity null
-        if(lastIncomingContent!=null) {
-            lastIncomingContent.setContentProgress(100);
+        if (lastIncomingContent == null) {
+            // we have to insert again
+            lastIncomingContent = randomEntityGenerator.prepareImageMessage(file.getPath(), userEntity.getMeshId());
             messageSourceData.insertOrUpdateData(lastIncomingContent);
+            addDelay(3000);
         }
+
+
+        lastIncomingContent.setContentProgress(100);
+        messageSourceData.insertOrUpdateData(lastIncomingContent);
 
         try {
 

@@ -302,6 +302,55 @@ public class ContentDataHelperTest {
         addDelay(1000);
     }
 
+    @Test
+    public void test_4_content_helper_model_test() {
+        addDelay(1000);
+        byte dataType = 0x1;
+
+        ContentModel contentModel = new ContentModel()
+                .setThumbSend(true)
+                .setContentDataType(dataType)
+                .setContent(true)
+                .setGroupId("groupId")
+                .setOriginalSender("sender");
+
+
+        String originalSender = contentModel.getOriginalSender();
+        String groupId = contentModel.getGroupId();
+        boolean isContent = contentModel.isContent();
+        boolean isThumbSend = contentModel.isThumbSend();
+
+        assertTrue(isThumbSend);
+
+
+        ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
+                .setContentId("id")
+                .setContentReceiveProgress(100)
+                .setContentPath("path")
+                .setSuccessStatus(true)
+                .setContentMetaInfo(null);
+
+        ContentMetaInfo metaInfo = contentReceiveModel.getContentMetaInfo();
+        boolean isSuccess = contentReceiveModel.isSuccessStatus();
+        int progress = contentReceiveModel.getContentReceiveProgress();
+        String path = contentReceiveModel.getContentPath();
+        String id = contentReceiveModel.getContentId();
+
+        assertTrue(isSuccess);
+
+        ContentSequenceModel contentSequenceModel = new ContentSequenceModel()
+                .setContentId("Id")
+                .setContentStatus(true)
+                .setProgress(100)
+                .setReceiveStatus(1);
+
+        int receiveStatus = contentSequenceModel.getReceiveStatus();
+        int progress2 = contentSequenceModel.getProgress();
+        boolean contentStatus = contentSequenceModel.isContentStatus();
+        String contentId = contentSequenceModel.getContentId();
+        assertTrue(contentStatus);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

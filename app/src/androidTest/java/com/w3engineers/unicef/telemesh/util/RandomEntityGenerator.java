@@ -112,7 +112,7 @@ public class RandomEntityGenerator {
                 .setIncoming(false)
                 .setTime(TimeUtil.toCurrentTime())
                 .setStatus(Constants.MessageStatus.STATUS_DELIVERED)
-                .setMessageType(ContentUtil.getInstance().getContentMessageType(path));
+                .setMessageType(Constants.MessageType.IMAGE_MESSAGE);
 
         return messageEntity;
     }

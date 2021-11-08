@@ -53,11 +53,11 @@ public abstract class BaseDatabase extends RoomDatabase {
      * @param <T>
      * @return Database object
      */
-    protected static <T extends RoomDatabase> T createDb(Context context, String dbName,
+  /*  protected static <T extends RoomDatabase> T createDb(Context context, String dbName,
                                                          Class<T> dbService) {
 
         return createDb(context, dbName, dbService, -1, (BaseMigration) null);
-    }
+    }*/
 
     /**
      * Convenient method to create Room DB
@@ -69,7 +69,7 @@ public abstract class BaseDatabase extends RoomDatabase {
      * @param <T>
      * @return
      */
-    protected static <T extends RoomDatabase> T createDb(Context context, String dbName,
+   /* protected static <T extends RoomDatabase> T createDb(Context context, String dbName,
                                                          Class<T> dbService, int initialVersion,
                                                          BaseMigration... baseMigrations) {
 
@@ -103,7 +103,7 @@ public abstract class BaseDatabase extends RoomDatabase {
         });
 
         return builder.build();
-    }
+    }*/
 
     /**
      * Receive {@link BaseMigration} objects to generate corresponding {@link Migration}
@@ -111,7 +111,7 @@ public abstract class BaseDatabase extends RoomDatabase {
      * @param baseMigrations all base migration objects
      * @return list of Room migration to add
      */
-    private static List<Migration> getMigrations(int initialVersion, BaseMigration... baseMigrations) {
+    /*private static List<Migration> getMigrations(int initialVersion, BaseMigration... baseMigrations) {
 
         if(initialVersion < 1 || baseMigrations == null || baseMigrations.length < 1) {
 
@@ -150,5 +150,5 @@ public abstract class BaseDatabase extends RoomDatabase {
         }
 
         return migrationList;
-    }
+    }*/
 }

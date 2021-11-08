@@ -20,8 +20,6 @@ public class Constants {
 
     public static Uri WALLET_URI;
 
-    public static String DEFAULT_PASSWORD = "mesh_123";
-
     public static String FILE_TYPE = "application/*";
 
     public static int DEFAULT_AVATAR = 21;

@@ -75,7 +75,6 @@ public class CreateUserViewModelTest {
     public void storeData_true_setValidData() {
         String firstName = "Daniel";
         String lastName = "Craig";
-        String password = "mesh_123";
         assertTrue(SUT.storeData(firstName,lastName));
 
         StatusHelper.out("Test executed");

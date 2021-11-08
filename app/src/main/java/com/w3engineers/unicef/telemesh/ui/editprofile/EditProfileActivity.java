@@ -88,18 +88,6 @@ public class EditProfileActivity extends TelemeshBaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            mViewModel.setImageIndex(data.getIntExtra(CreateUserActivity.IMAGE_POSITION, INITIAL_IMAGE_INDEX));
-
-
-            nextButtonControl(mBinding.editTextFirstName.getText().toString());
-        }
-    }
-
     private void nextButtonControl(String nameText) {
 
         updateImageNameField();

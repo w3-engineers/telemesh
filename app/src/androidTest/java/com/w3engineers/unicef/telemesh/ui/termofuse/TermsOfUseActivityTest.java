@@ -71,7 +71,7 @@ public class TermsOfUseActivityTest {
             throwable.printStackTrace();
         }
 
-        addDelay(4000);
+        addDelay(6000);
 
         try {
             onView(withId(R.id.button_ok)).perform(click());

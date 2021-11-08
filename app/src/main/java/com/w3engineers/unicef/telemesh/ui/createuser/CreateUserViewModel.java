@@ -44,11 +44,7 @@ public class CreateUserViewModel extends BaseRxAndroidViewModel {
 
     @NonNull
     public MutableLiveData<String> lastNameChangeLiveData = new MutableLiveData<>();
-
-    int getImageIndex() {
-        return imageIndex;
-    }
-
+    
     void setImageIndex(int imageIndex) {
         this.imageIndex = imageIndex;
     }

@@ -245,23 +245,23 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @param viewId       int value
      * @param baseFragment BaseFragment object
      */
-    protected void commitFragment(int viewId, BaseFragment baseFragment) {
+   /* protected void commitFragment(int viewId, BaseFragment baseFragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(viewId, baseFragment, baseFragment.getClass().getName())
                 .commit();
 
         setCurrentFragment(baseFragment);
-    }
+    }*/
 
     /*
      * Get current running fragment
      * */
-    protected BaseFragment getCurrentFragment() {
+   /* protected BaseFragment getCurrentFragment() {
         return mBaseCurrentFragment;
     }
 
     private void setCurrentFragment(BaseFragment baseFragment) {
         this.mBaseCurrentFragment = baseFragment;
-    }
+    }*/
 }

@@ -232,9 +232,6 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
 
-        // Todo Insert message entity with content ID and test progress
-        // Todo set data in hash map for sender and receiver
-
         contentDataHelper.contentReceiveInProgress(contentId, 50);
         addDelay(1000);
 
@@ -243,6 +240,38 @@ public class ContentDataHelperTest {
 
         contentDataHelper.contentReceiveDone(contentId, true, "success");
         addDelay(1000);
+
+
+        // add a message entity for content receive test start
+        MessageEntity messageEntity = randomEntityGenerator.prepareImageMessage(randomEntityGenerator.getDummyImageLink(), userId);
+        messageEntity.setContentId(UUID.randomUUID().toString());
+        messageSourceData.insertOrUpdateData(messageEntity);
+
+        ContentReceiveModel contentReceiveModel = new ContentReceiveModel();
+
+        contentReceiveModel.setContentMetaInfo(contentMetaInfo);
+
+        contentDataHelper.addReceiveContentInMap(messageEntity.getContentId(), contentReceiveModel);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), false, "success");
+        addDelay(1000);
+
+        contentDataHelper.addReceiveContentInMap(messageEntity.getContentId(), null);
+
+        ContentSendModel contentSendModel = new ContentSendModel();
+        contentSendModel.messageId = UUID.randomUUID().toString();
+
+
+        contentDataHelper.addSendContentInMap(messageEntity.getContentId(), contentSendModel);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), true, "success");
+        addDelay(1000);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), false, "failed");
+        addDelay(1000);
+
+        // Content receive test done
+
 
         // test content progress set
         contentDataHelper.setContentProgress(contentId, 105, contentId);

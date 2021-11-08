@@ -10,7 +10,7 @@ package com.w3engineers.unicef.util.base.database;
 
 public class BaseMigration {
 
-    public BaseMigration(int targetedVersion, String queryScript) {
+   /* public BaseMigration(int targetedVersion, String queryScript) {
         mTargetedVersion = targetedVersion;
         mQueryScript = queryScript;
     }
@@ -24,6 +24,6 @@ public class BaseMigration {
     }
 
     private int mTargetedVersion;
-    private String mQueryScript;
+    private String mQueryScript;*/
 
 }

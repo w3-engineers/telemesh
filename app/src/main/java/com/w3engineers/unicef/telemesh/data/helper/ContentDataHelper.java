@@ -1295,5 +1295,13 @@ public class ContentDataHelper extends RmDataHelper {
         HandlerUtil.postBackground(() -> receiveIncomingContentInfo(contentModel));
     }
 
+    public void addReceiveContentInMap(String contentId, ContentReceiveModel receiveModel) {
+        contentReceiveModelHashMap.put(contentId, receiveModel);
+    }
+
+    public void addSendContentInMap(String contentId, ContentSendModel sendModel) {
+        contentSendModelHashMap.put(contentId, sendModel);
+    }
+
     // --------------------------------------------------------------------
 }

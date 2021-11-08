@@ -178,27 +178,19 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         IntentFilter filter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
         filter.addAction(Intent.ACTION_PROVIDER_CHANGED);
 
-        if (!CommonUtil.isEmulator()) {
+        /*if (!CommonUtil.isEmulator()) {
             registerReceiver(mGpsSwitchStateReceiver, filter);
-        }
+        }*/
 
         checkAppBlockerAvailable();
 
         // check that mesh need to start or not
         Intent intent = getIntent();
-        if (intent.hasExtra("is_mesh_start")) {
+        if (intent.hasExtra(Constants.IntentKeys.IS_MESH_START)) {
             RmDataHelper.getInstance().startMesh();
         }
 
 
-    }
-
-    protected void requestMultiplePermissions() {
-        DexterPermissionHelper.getInstance().requestForPermission(this, this,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     public static MainActivity getInstance() {
@@ -417,22 +409,6 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
         latestMessageCount = latestCount;
     }
 
-    private void createSettingBadge(int menuItemPosition) {
-
-        BottomNavigationItemView itemView =
-                (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItemPosition);
-
-        if (itemView == null) {
-            return;
-        }
-
-        ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
-        if (constraintLayoutContainer == null) return;
-        constraintLayoutContainer.setVisibility(View.VISIBLE);
-
-        //Todo need to hide when wallet backup done
-    }
-
     private ConstraintLayout getViewByMenu(int menuItem) {
         BottomNavigationItemView itemView =
                 (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(menuItem);
@@ -475,10 +451,10 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
         RmDataHelper.getInstance().destroy();
         sInstance = null;
-        if (!CommonUtil.isEmulator()) {
+       /* if (!CommonUtil.isEmulator()) {
             //LocationTracker.getInstance(mContext).stopListener();
             unregisterReceiver(mGpsSwitchStateReceiver);
-        }
+        }*/
     }
 
     @Override
@@ -563,7 +539,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
     /**
      * Following broadcast receiver is to listen the Location button toggle state in Android.
      */
-    private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
+    /*private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
@@ -583,7 +559,7 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
                 }
             }
         }
-    };
+    };*/
 
     public void checkPlayStoreAppUpdate(int type, String normalUpdateJson) {
         mAppUpdateManager = AppUpdateManagerFactory.create(this);
@@ -718,7 +694,9 @@ public class MainActivity extends TelemeshBaseActivity implements NavigationView
 
                 if (itemView != null) {
                     ConstraintLayout constraintLayoutContainer = itemView.findViewById(R.id.wallet_badge);
-                    constraintLayoutContainer.setVisibility(View.GONE);
+                    if (constraintLayoutContainer != null) {
+                        constraintLayoutContainer.setVisibility(View.GONE);
+                    }
                 }
             }
         });

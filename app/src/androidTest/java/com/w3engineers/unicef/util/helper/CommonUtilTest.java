@@ -8,6 +8,8 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupEntity;
+import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupMembersInfo;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
 import org.junit.Before;
@@ -16,6 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -47,7 +52,32 @@ public class CommonUtilTest {
     @Test
     @UiThreadTest
     public void showLocationPermissionPopupTest() {
+
         addDelay(500);
+
+        GroupEntity entity = new GroupEntity().setGroupId("gId");
+        entity.lastPersonId = "myId";
+        String name = CommonUtil.getUserName(entity, "myId");
+        entity.lastPersonId = "otherId";
+        entity.lastPersonName = "John";
+
+        name = CommonUtil.getUserName(entity, "myId");
+
+        GroupMembersInfo membersInfo = new GroupMembersInfo();
+        membersInfo.setMemberId("otherId");
+        membersInfo.setUserName("Alice");
+
+        ArrayList<GroupMembersInfo> groupMemberList = new ArrayList<>();
+        groupMemberList.add(membersInfo);
+
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+        String memberIno = gsonBuilder.getGroupMemberInfoJson(groupMemberList);
+        entity.setMembersInfo(memberIno);
+        entity.lastPersonName = "";
+        name = CommonUtil.getUserName(entity, "myId");
+
+
+        addDelay(1000);
         CommonUtil.showGpsOrLocationOffPopup(rule.getActivity());
 
         addDelay(2000);

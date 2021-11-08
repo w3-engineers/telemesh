@@ -2,6 +2,7 @@ package com.w3engineers.unicef.util.helper;
 
 import android.content.Context;
 import android.text.SpannableString;
+
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -45,15 +46,11 @@ public class WalletAddressHelperTest {
     public void defaultWalletAddressCreateTest() {
         addDelay(500);
 
-       // WalletAddressHelper.writeDefaultAddress(meshID, context);
+        // we can test Image Loader utils here
 
-//        addDelay(2000);
-
-       // SpannableString content = WalletAddressHelper.getWalletSpannableString(context);
-
-//        addDelay(2000);
-
-       // assertTrue(content.length() > 0);
+        ImageLoaderUtils.assertValidRequest(rule.getActivity());
+        addDelay(1000);
+        ImageLoaderUtils.assertValidRequest(context);
     }
 
     private void addDelay(long time) {

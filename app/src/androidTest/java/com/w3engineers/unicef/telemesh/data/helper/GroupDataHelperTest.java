@@ -80,6 +80,13 @@ public class GroupDataHelperTest {
 
         addDelay(1000);
 
+        // Send group count to internet user
+        List<GroupEntity> groupStatics = new ArrayList<>();
+        groupStatics.add(groupEntity);
+        RmDataHelper.getInstance().sendGroupCountToInternetUser(groupStatics);
+
+        addDelay(1500);
+
         String groupCreationJson = gsonBuilder.getGroupModelJson(groupModel);
 
         DataModel groupCreationModel = new DataModel();

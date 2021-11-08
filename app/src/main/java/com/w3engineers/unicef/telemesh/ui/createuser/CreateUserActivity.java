@@ -71,9 +71,9 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
 
         mBinding = (ActivityCreateUserBinding) getViewDataBinding();
 
-        isNeedToImportWallet = getIntent().getBooleanExtra("import_wallet", false);
+        isNeedToImportWallet = getIntent().getBooleanExtra(Constants.IntentKeys.IMPORT_WALLET, false);
 
-        isWalletExists = getIntent().getBooleanExtra("wallet_exists", false);
+        isWalletExists = getIntent().getBooleanExtra(Constants.IntentKeys.WALLET_EXISTS, false);
 
         setTitle(getString(R.string.create_user));
         mViewModel = getViewModel();
@@ -215,19 +215,6 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
         saveData();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (data != null && requestCode == Constants.RequestCodes.PROFILE_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            mViewModel.setImageIndex(data.getIntExtra(IMAGE_POSITION, INITIAL_IMAGE_INDEX));
-
-            int id = getResources().getIdentifier(Constants.drawables.AVATAR_IMAGE + mViewModel.getImageIndex(), Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, getPackageName());
-            mBinding.imageProfile.setImageResource(id);
-
-            nextButtonControl(mBinding.editTextFirstName.getText().toString());
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -273,7 +260,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     private void gotoHomePage() {
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("is_mesh_start",true);
+        intent.putExtra(Constants.IntentKeys.IS_MESH_START, true);
         intent.setAction(MainActivity.class.getName());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

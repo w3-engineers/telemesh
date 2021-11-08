@@ -232,9 +232,6 @@ public class ContentDataHelperTest {
         addDelay(1000);
 
 
-        // Todo Insert message entity with content ID and test progress
-        // Todo set data in hash map for sender and receiver
-
         contentDataHelper.contentReceiveInProgress(contentId, 50);
         addDelay(1000);
 
@@ -243,6 +240,38 @@ public class ContentDataHelperTest {
 
         contentDataHelper.contentReceiveDone(contentId, true, "success");
         addDelay(1000);
+
+
+        // add a message entity for content receive test start
+        MessageEntity messageEntity = randomEntityGenerator.prepareImageMessage(randomEntityGenerator.getDummyImageLink(), userId);
+        messageEntity.setContentId(UUID.randomUUID().toString());
+        messageSourceData.insertOrUpdateData(messageEntity);
+
+        ContentReceiveModel contentReceiveModel = new ContentReceiveModel();
+
+        contentReceiveModel.setContentMetaInfo(contentMetaInfo);
+
+        contentDataHelper.addReceiveContentInMap(messageEntity.getContentId(), contentReceiveModel);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), false, "success");
+        addDelay(1000);
+
+        contentDataHelper.addReceiveContentInMap(messageEntity.getContentId(), null);
+
+        ContentSendModel contentSendModel = new ContentSendModel();
+        contentSendModel.messageId = UUID.randomUUID().toString();
+
+
+        contentDataHelper.addSendContentInMap(messageEntity.getContentId(), contentSendModel);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), true, "success");
+        addDelay(1000);
+
+        contentDataHelper.contentReceiveDone(messageEntity.getContentId(), false, "failed");
+        addDelay(1000);
+
+        // Content receive test done
+
 
         // test content progress set
         contentDataHelper.setContentProgress(contentId, 105, contentId);
@@ -300,6 +329,55 @@ public class ContentDataHelperTest {
         contentModel.setProgress(70);
         contentDataHelper.receiveIncomingContentInfo(contentModel);
         addDelay(1000);
+    }
+
+    @Test
+    public void test_4_content_helper_model_test() {
+        addDelay(1000);
+        byte dataType = 0x1;
+
+        ContentModel contentModel = new ContentModel()
+                .setThumbSend(true)
+                .setContentDataType(dataType)
+                .setContent(true)
+                .setGroupId("groupId")
+                .setOriginalSender("sender");
+
+
+        String originalSender = contentModel.getOriginalSender();
+        String groupId = contentModel.getGroupId();
+        boolean isContent = contentModel.isContent();
+        boolean isThumbSend = contentModel.isThumbSend();
+
+        assertTrue(isThumbSend);
+
+
+        ContentReceiveModel contentReceiveModel = new ContentReceiveModel()
+                .setContentId("id")
+                .setContentReceiveProgress(100)
+                .setContentPath("path")
+                .setSuccessStatus(true)
+                .setContentMetaInfo(null);
+
+        ContentMetaInfo metaInfo = contentReceiveModel.getContentMetaInfo();
+        boolean isSuccess = contentReceiveModel.isSuccessStatus();
+        int progress = contentReceiveModel.getContentReceiveProgress();
+        String path = contentReceiveModel.getContentPath();
+        String id = contentReceiveModel.getContentId();
+
+        assertTrue(isSuccess);
+
+        ContentSequenceModel contentSequenceModel = new ContentSequenceModel()
+                .setContentId("Id")
+                .setContentStatus(true)
+                .setProgress(100)
+                .setReceiveStatus(1);
+
+        int receiveStatus = contentSequenceModel.getReceiveStatus();
+        int progress2 = contentSequenceModel.getProgress();
+        boolean contentStatus = contentSequenceModel.isContentStatus();
+        String contentId = contentSequenceModel.getContentId();
+        assertTrue(contentStatus);
     }
 
     private void addDelay(long time) {

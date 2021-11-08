@@ -30,6 +30,7 @@ import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.provider.ServiceLocator;
 import com.w3engineers.unicef.telemesh.databinding.ActivityTermsOfUseBinding;
+import com.w3engineers.unicef.telemesh.ui.createuser.CreateUserActivity;
 import com.w3engineers.unicef.telemesh.ui.selectaccount.SelectAccountActivity;
 import com.w3engineers.unicef.util.base.ui.BaseActivity;
 
@@ -66,18 +67,19 @@ public class TermsOfUseActivity extends BaseActivity {
 
         initView();
 
-      /*  mViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
+       mViewModel.getWalletPrepareLiveData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isOldAccount) {
                 if (isOldAccount) {
                     Intent intent = new Intent(TermsOfUseActivity.this, CreateUserActivity.class);
-                    intent.putExtra("wallet_exists", true);
+                    intent.putExtra(Constants.IntentKeys.WALLET_EXISTS, true);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
 
-        mViewModel.initWalletPreparationCallback();*/
+        mViewModel.initWalletPreparationCallback();
     }
 
 
@@ -180,7 +182,7 @@ public class TermsOfUseActivity extends BaseActivity {
         }).get(TermsOfUseViewModel.class);
     }
 
-    private void showPermissionGifForXiaomi() {
+    public void showPermissionGifForXiaomi() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_xiaomi_permission, null, false);

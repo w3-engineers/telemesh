@@ -43,11 +43,11 @@ public class UIHelper {
     @BindingAdapter("imageResource")
     public static void setImageResource(@NonNull ImageView imageView, int resourceId) {
 
-        Context context = TeleMeshApplication.getContext();
+       /* Context context = TeleMeshApplication.getContext();
         String avatarName = Constants.drawables.AVATAR_IMAGE + resourceId;
         Glide.with(context).load(context.getResources().getIdentifier(avatarName,
                 Constants.drawables.AVATAR_DRAWABLE_DIRECTORY, context.getPackageName()))
-                .into(imageView);
+                .into(imageView);*/
     }
 
     @BindingAdapter("imageStatusResource")

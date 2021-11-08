@@ -4,6 +4,7 @@ package com.w3engineers.unicef.telemesh._UiTest;
 import android.app.Activity;
 
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.content.Context;
@@ -41,6 +42,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.w3engineers.mesh.application.data.AppDataObserver;
 import com.w3engineers.mesh.application.data.local.db.SharedPref;
+import com.w3engineers.mesh.application.data.model.WalletBackupEvent;
 import com.w3engineers.mesh.application.data.model.WalletLoaded;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.MeshDataSource;
@@ -121,9 +123,7 @@ public class TelemeshTest {
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
     public String myAddress = "0x550de922bec427fc1b279944e47451a89a4f7cag";
-    public String friendAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
-    public String publicKey = "0x04647ba47589ace7e9636029e5355b9b71c1c66ccd3c1b7c127f3c21016dacea7d3aa12e41eca790d4c3eff8398fd523dc793c815da7bbdbf29c8744b761ad8e4c";
-    public String defaultPassword = "mesh_123";
+
 
     private AppDatabase appDatabase;
     private UserDataSource userDataSource;
@@ -150,7 +150,6 @@ public class TelemeshTest {
 
         mActivityTestRule.getActivity().sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-        //sharedPref = SharedPref.getSharedPref(context);
     }
 
     @After
@@ -191,7 +190,7 @@ public class TelemeshTest {
 
         currentActivity = getActivityInstance();
         Intent intent = new Intent(currentActivity, CreateUserActivity.class);
-        intent.putExtra("import_wallet", true);
+        intent.putExtra(Constants.IntentKeys.IMPORT_WALLET, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
@@ -262,10 +261,6 @@ public class TelemeshTest {
 
         addDelay(1000);
 
-       /* ViewInteraction settingsTab = onView(
-                allOf(withId(R.id.action_setting),
-                        childAtPosition(childAtPosition(withId(R.id.bottom_navigation), 0), 3), isDisplayed()));
-        settingsTab.perform(click());*/
 
         onView(withId(R.id.action_setting)).perform(click());
 
@@ -290,6 +285,14 @@ public class TelemeshTest {
         mDevice.pressBack();
 
         addDelay(1000);
+
+        // Call wallet backup done api
+        WalletBackupEvent walletBackupEvent = new WalletBackupEvent();
+        walletBackupEvent.success = true;
+        AppDataObserver.on().sendObserverData(walletBackupEvent);
+
+        addDelay(3000);
+        // Do next task
 
         ViewInteraction openWallet = onView(
                 allOf(withId(R.id.layout_open_wallet),
@@ -495,27 +498,42 @@ public class TelemeshTest {
             e.printStackTrace();
         }
 
-        addDelay(2000);
+        addDelay(3000);
 
         if (currentActivity instanceof ChatActivity) {
             ((ChatActivity) currentActivity).sendContentMessage(Uri.fromFile(file));
         }
 
-        addDelay(1000);
+        addDelay(3000);
 
         MessageEntity lastIncomingContent = messageSourceData.getLastIncomingContent(userEntity.getMeshId());
 
         // Fixme whe travis CI showing this message entity null
-        if(lastIncomingContent!=null) {
-            lastIncomingContent.setContentProgress(100);
+        if (lastIncomingContent == null) {
+            // we have to insert again
+            lastIncomingContent = randomEntityGenerator.prepareImageMessage(file.getPath(), userEntity.getMeshId());
             messageSourceData.insertOrUpdateData(lastIncomingContent);
+            addDelay(3000);
         }
+
+
+        lastIncomingContent.setContentProgress(100);
+        messageSourceData.insertOrUpdateData(lastIncomingContent);
 
         try {
 
             addDelay(1000);
 
-            onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+            int count = 3;
+            if (currentActivity instanceof ChatActivity) {
+                RecyclerView recyclerView = currentActivity.findViewById(R.id.chat_rv);
+                if (recyclerView.getAdapter() != null) {
+                    count = recyclerView.getAdapter().getItemCount();
+                    count--;
+                }
+            }
+
+            onView(withId(R.id.chat_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(count, click()));
 
             addDelay(2000);
 
@@ -880,11 +898,15 @@ public class TelemeshTest {
         onView(withId(R.id.action_search)).perform(click());
         addDelay(1000);
 
-        onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
-        addDelay(1000);
+        try {
+            onView(withId(R.id.edit_text_search)).perform(replaceText("h"), closeSoftKeyboard());
+            addDelay(1000);
 
-        onView(withId(R.id.image_view_back)).perform(click());
-        addDelay(1000);
+            onView(withId(R.id.image_view_back)).perform(click());
+            addDelay(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recycler_view_user), childAtPosition(withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")), 5)));
         recyclerView4.perform(actionOnItemAtPosition(0, click()));

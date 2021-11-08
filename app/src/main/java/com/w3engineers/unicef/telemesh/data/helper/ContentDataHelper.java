@@ -197,7 +197,7 @@ public class ContentDataHelper extends RmDataHelper {
     // -------------------------------------------------------------------------
 
     private void setGroupContentMessage(@NonNull ContentModel contentModel, boolean isNewMessage) {
-        String messageId = contentModel.getMessageId();
+/*        String messageId = contentModel.getMessageId();
         int ackStatus = contentModel.getAckStatus();
 
         try {
@@ -332,7 +332,7 @@ public class ContentDataHelper extends RmDataHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void setContentMessage(@NonNull ContentModel contentModel, boolean isNewMessage) {
@@ -781,7 +781,7 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     public void setGroupContentProgress(String messageId, int progress, String contentId) {
-        if (progress == 0 || TextUtils.isEmpty(messageId))
+/*        if (progress == 0 || TextUtils.isEmpty(messageId))
             return;
         Log.e("Group_content", "Group content progress: " + progress);
 
@@ -811,7 +811,7 @@ public class ContentDataHelper extends RmDataHelper {
                 }
 
             }
-        }
+        }*/
     }
 
     public ContentModel setContentProgressByContentIdForSender(String contentId, int progress) {
@@ -874,7 +874,7 @@ public class ContentDataHelper extends RmDataHelper {
 
 
     void onGroupContentDataSend(String contentSendInfo, ContentModel contentModel) {
-        try {
+      /*  try {
             JSONObject jsonObject = new JSONObject(contentSendInfo);
             boolean success = jsonObject.getBoolean("success");
             String msg = jsonObject.getString("msg");
@@ -889,7 +889,7 @@ public class ContentDataHelper extends RmDataHelper {
             }
         } catch (JSONException e) {
 
-        }
+        }*/
     }
 
     void contentDataSend(String contentInfo, ContentModel contentModel) {
@@ -1024,7 +1024,7 @@ public class ContentDataHelper extends RmDataHelper {
                         .setGroupContent(contentMetaInfo.isGroupContent());
 
                 if (contentModel.isGroupContent()) {
-                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
+                    //HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
                 } else {
                     HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
                 }
@@ -1071,7 +1071,7 @@ public class ContentDataHelper extends RmDataHelper {
 
             String messageId = contentMetaInfo.getMessageId();
             if (isGroup) {
-                setGroupContentProgress(messageId, progress, contentId);
+                //setGroupContentProgress(messageId, progress, contentId);
             } else {
                 setContentProgress(messageId, progress, contentId);
             }
@@ -1160,7 +1160,7 @@ public class ContentDataHelper extends RmDataHelper {
                     .setReceivingStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVED);
 
             if (isGroup) {
-                HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
+                //andlerUtil.postBackground(() -> setGroupContentMessage(contentModel, true));
             } else {
                 HandlerUtil.postBackground(() -> setContentMessage(contentModel, true));
             }
@@ -1178,7 +1178,7 @@ public class ContentDataHelper extends RmDataHelper {
                         .setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
 
                 if (isGroup) {
-                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
+                    //HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
                 } else {
                     HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
                 }
@@ -1190,7 +1190,7 @@ public class ContentDataHelper extends RmDataHelper {
                         .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
 
                 if (isGroup) {
-                    HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
+                    //HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
                 } else {
                     HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
                 }
@@ -1293,6 +1293,14 @@ public class ContentDataHelper extends RmDataHelper {
                 .setAckStatus(status);
 
         HandlerUtil.postBackground(() -> receiveIncomingContentInfo(contentModel));
+    }
+
+    public void addReceiveContentInMap(String contentId, ContentReceiveModel receiveModel) {
+        contentReceiveModelHashMap.put(contentId, receiveModel);
+    }
+
+    public void addSendContentInMap(String contentId, ContentSendModel sendModel) {
+        contentSendModelHashMap.put(contentId, sendModel);
     }
 
     // --------------------------------------------------------------------

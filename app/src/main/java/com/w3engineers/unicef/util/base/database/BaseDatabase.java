@@ -106,7 +106,7 @@ public abstract class BaseDatabase extends RoomDatabase {
     }*/
 
     /**
-     * Receive {@link BaseMigration} objects to generate corresponding {@link Migration}
+     * Receive {} objects to generate corresponding {@link Migration}
      * @param initialVersion database's initial version
      * @param baseMigrations all base migration objects
      * @return list of Room migration to add

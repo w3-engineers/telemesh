@@ -119,7 +119,7 @@ public class ChatPagedAdapterRevisedTest {
         groupImageInEntity.setFriendsId("userId");
 
         GroupMessageEntity groupImageOutEntity = new GroupMessageEntity();
-        groupImageOutEntity.setIncoming(true);
+        groupImageOutEntity.setIncoming(false);
         groupImageOutEntity.setMessageType(Constants.MessageType.IMAGE_MESSAGE);
         groupImageOutEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
         groupImageOutEntity.setFriendsId("userId");
@@ -132,7 +132,7 @@ public class ChatPagedAdapterRevisedTest {
         groupVideoInEntity.setFriendsId("userId");
 
         GroupMessageEntity groupVideoOutEntity = new GroupMessageEntity();
-        groupVideoOutEntity.setIncoming(true);
+        groupVideoOutEntity.setIncoming(false);
         groupVideoOutEntity.setMessageType(Constants.MessageType.VIDEO_MESSAGE);
         groupVideoOutEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
         groupVideoOutEntity.setFriendsId("userId");

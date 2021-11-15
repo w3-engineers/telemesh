@@ -7,10 +7,13 @@ import static org.junit.Assert.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.InstrumentationRegistry;
+import androidx.test.annotation.UiThreadTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 
@@ -78,7 +81,14 @@ public class ChatPagedAdapterRevisedTest {
         currentActivity = getActivityInstance();
 
         RecyclerView recyclerView = currentActivity.findViewById(R.id.chat_rv);
+        ConstraintLayout emptyLayout = currentActivity.findViewById(R.id.empty_layout);
         adapterRevised = (ChatPagedAdapterRevised) recyclerView.getAdapter();
+
+        currentActivity.runOnUiThread(() -> {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.GONE);
+        });
+
 
         MessageEntity messageVideoIncomingEntity = new MessageEntity();
         messageVideoIncomingEntity.setIncoming(true);
@@ -157,8 +167,8 @@ public class ChatPagedAdapterRevisedTest {
 
         adapterRevised.submitList(pagedStrings);
 
-        addDelay(2000);
-
+        addDelay(4000);
+        assertTrue(true);
         StatusHelper.out("Test message_incoming_outgoing_test executed");
     }
 

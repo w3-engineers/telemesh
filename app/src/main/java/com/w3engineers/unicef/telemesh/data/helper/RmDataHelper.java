@@ -782,6 +782,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public boolean isWalletBackupDone() {
+        prepareRightMeshDataSource();
         return rightMeshDataSource.isWalletBackupDone();
     }
 
@@ -789,6 +790,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     public void restartMesh() {
+        prepareRightMeshDataSource();
         rightMeshDataSource.restartMeshService();
     }
 

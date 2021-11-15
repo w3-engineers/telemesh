@@ -874,7 +874,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void sendFeedbackToInternetUser(FeedbackEntity entity) {
         FeedbackModel model = entity.toFeedbackModel();
         String feedbackJson = new Gson().toJson(model);
-
+        prepareRightMeshDataSource();
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_TEXT, sellersId, false);
         }

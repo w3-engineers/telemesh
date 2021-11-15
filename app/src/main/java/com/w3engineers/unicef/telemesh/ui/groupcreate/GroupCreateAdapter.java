@@ -140,7 +140,12 @@ public class GroupCreateAdapter extends PagedListAdapter<UserEntity, GroupCreate
         protected void bindView(@NonNull UserEntity item, int position) {
             itemGroupCreateUserBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
 
-            String name = item.userName + " " + item.getUserLastName();
+            String lastName = "";
+            if (item.getUserLastName() != null && !TextUtils.isEmpty(item.getUserLastName())) {
+                lastName = item.getUserLastName();
+            }
+
+            String name = item.userName + " " +lastName;
             itemGroupCreateUserBinding.userName.setText(name);
 
             UIHelper.updateImageNameField(itemGroupCreateUserBinding.textViewImageName, item.userName, item.userLastName);

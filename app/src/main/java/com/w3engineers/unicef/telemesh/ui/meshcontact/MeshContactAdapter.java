@@ -112,7 +112,12 @@ public class MeshContactAdapter extends PagedListAdapter<UserEntity, MeshContact
         protected void bindView(@NonNull UserEntity item) {
             itemMeshContactBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
 
-            String name = item.userName + " " + item.getUserLastName() + getHopIndicator(item.getOnlineStatus());
+            String lastName = "";
+            if (item.getUserLastName() != null && !TextUtils.isEmpty(item.getUserLastName())) {
+                lastName = item.getUserLastName();
+            }
+
+            String name = item.userName + " " + lastName + getHopIndicator(item.getOnlineStatus());
 
             itemMeshContactBinding.userName.setText(name);
 

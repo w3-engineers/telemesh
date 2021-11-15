@@ -110,8 +110,12 @@ public class DiscoverAdapter extends PagedListAdapter<UserEntity, DiscoverAdapte
         protected void bindView(@NonNull UserEntity item) {
             itemDiscoveredBinding.userMeshStatus.setBackgroundResource(activeStatusResource(item.getOnlineStatus()));
 
+            String lastName = "";
+            if (item.getUserLastName() != null && !TextUtils.isEmpty(item.getUserLastName())) {
+                lastName = item.getUserLastName();
+            }
 
-            String userName = item.userName + " " + item.getUserLastName() + " " + getHopIndicator(item.getOnlineStatus());
+            String userName = item.userName + " " + lastName + " " + getHopIndicator(item.getOnlineStatus());
             itemDiscoveredBinding.userName.setText(userName);
 
             itemDiscoveredBinding.textViewUnreadMessageCount.setVisibility(View.GONE);

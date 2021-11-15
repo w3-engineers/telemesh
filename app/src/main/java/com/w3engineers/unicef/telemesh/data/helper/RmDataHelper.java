@@ -82,7 +82,7 @@ import timber.log.Timber;
 public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
 
     private static RmDataHelper rmDataHelper = new RmDataHelper();
-    protected static MeshDataSource rightMeshDataSource;
+    public static MeshDataSource rightMeshDataSource;
 
     protected DataSource dataSource;
 

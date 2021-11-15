@@ -109,6 +109,10 @@ public abstract class AppDatabase extends BaseDatabase {
     private static String USER_TABLE_MIGRATION_2 = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
             + ColumnNames.COLUMN_USER_CONFIG_VERSION + " INTEGER NOT NULL DEFAULT 0";
 
+    private static String USER_TABLE_MIGRATION_LAST_NAME_ADDED = "ALTER TABLE " + TableNames.USERS + " ADD COLUMN "
+            + ColumnNames.COLUMN_USER_LAST_NAME + " TEXT DEFAULT ''";
+
+
     private static String MESSAGE_TABLE_MIGRATION_1 = "ALTER TABLE " + TableNames.MESSAGE + " ADD COLUMN "
             + ColumnNames.COLUMN_CONTENT_ID + " TEXT";
 
@@ -172,19 +176,30 @@ public abstract class AppDatabase extends BaseDatabase {
         return (AppDatabase) sInstance;
     }
 
+    /**
+     * Add new migration at below of all other migration with App version code
+     * Increase subtracted Integer value by 1 to all other existing old migration query target version
+     *
+     * @param context (required) Context obj
+     * @return Database object
+     */
     private static AppDatabase createDbWithMigration(Context context) {
 
-        return createDb(context, context.getString(R.string.app_name), AppDatabase.class,
-                initialVersion, new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
+        return createDb(context, context.getString(R.string.app_name), AppDatabase.class, initialVersion,
+                new BaseMigration(BuildConfig.VERSION_CODE - 5, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 4, ""),
+                new BaseMigration(BuildConfig.VERSION_CODE - 3, ""),
                 new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                new BaseMigration(BuildConfig.VERSION_CODE - 2, ""),
-                new BaseMigration(BuildConfig.VERSION_CODE - 1, ""),
-                new BaseMigration(BuildConfig.VERSION_CODE, MESSAGE_TABLE_MIGRATION_1,
+
+                new BaseMigration(BuildConfig.VERSION_CODE-1, MESSAGE_TABLE_MIGRATION_1,
                         MESSAGE_TABLE_MIGRATION_2, MESSAGE_TABLE_MIGRATION_3,
                         MESSAGE_TABLE_MIGRATION_4, MESSAGE_TABLE_MIGRATION_5,
                         MESSAGE_TABLE_MIGRATION_6, MESSAGE_TABLE_MIGRATION_7,
                         MESSAGE_TABLE_MIGRATION_8, GROUP_TABLE_MIGRATION,
-                        FEED_TABLE_MIGRATION_1, FEED_TABLE_MIGRATION_2));
+                        FEED_TABLE_MIGRATION_1, FEED_TABLE_MIGRATION_2),
+
+                new BaseMigration(BuildConfig.VERSION_CODE, USER_TABLE_MIGRATION_LAST_NAME_ADDED)
+                );
 
         /*return createDb(context, context.getString(R.string.app_name), AppDatabase.class
                 , 21,

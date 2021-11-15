@@ -772,6 +772,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void launchActivity(int activityType) {
+        prepareRightMeshDataSource();
         rightMeshDataSource.launchActivity(activityType);
     }
 
@@ -1062,6 +1063,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void saveMyInfo() {
+        prepareRightMeshDataSource();
         rightMeshDataSource.saveUpdateUserInfo();
     }
 

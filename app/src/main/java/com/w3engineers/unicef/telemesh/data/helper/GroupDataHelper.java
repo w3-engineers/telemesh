@@ -470,6 +470,8 @@ public class GroupDataHelper extends RmDataHelper {
 
         GroupEntity groupEntity = groupDataSource.getGroupById(groupModel.getGroupId());
 
+        if (groupEntity == null) return;
+
         GroupNameModel groupNameModel = gsonBuilder.getGroupNameModelObj(groupEntity.getGroupName());
         groupNameModel.setGroupName(groupModel.getGroupName()).setGroupNameChanged(true);
 

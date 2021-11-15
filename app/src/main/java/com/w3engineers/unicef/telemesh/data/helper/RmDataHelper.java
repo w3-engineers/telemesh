@@ -776,6 +776,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public Location getLocationFromServiceApp() {
+        prepareRightMeshDataSource();
         return rightMeshDataSource.getLocationFromService();
     }
 

@@ -76,6 +76,7 @@
                 android:textColor="@color/black"
                 android:scrollHorizontally="true"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textSize="@dimen/text_size_18"
                 android:typeface='@{user.hasUnreadMessage > 0 ? "bold" : "normal"}'
                 app:layout_constraintBottom_toBottomOf="@+id/text_view_image_name"

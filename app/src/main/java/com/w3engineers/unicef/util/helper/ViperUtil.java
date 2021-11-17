@@ -320,7 +320,7 @@ public abstract class ViperUtil {
 
             if (!TextUtils.isEmpty(event)) {
                 finalMessage = String.format(activity.getResources().getString(R.string.hardware_interruption), event);
-                finalTitle = String.format(activity.getResources().getString(R.string.interruption_title), "Hardware");
+                finalTitle = String.format(activity.getResources().getString(R.string.interruption_title), event);
             }
 
         } else {

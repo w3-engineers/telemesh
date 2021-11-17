@@ -1,8 +1,15 @@
 package com.w3engineers.unicef.telemesh.data.helper;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +19,7 @@ import com.w3engineers.mesh.util.MeshLog;
 import com.w3engineers.mesh.util.lib.mesh.HandlerUtil;
 import com.w3engineers.models.ContentMetaInfo;
 import com.w3engineers.unicef.TeleMeshApplication;
+import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupDataSource;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
@@ -924,7 +932,13 @@ public class ContentDataHelper extends RmDataHelper {
                 } else {
                     contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);
                     HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
-                    HandlerUtil.postForeground(() -> Toast.makeText(TeleMeshApplication.getContext(), msg, Toast.LENGTH_SHORT).show());
+                    HandlerUtil.postForeground(() -> {
+                        if (jsonObject.has("file_size")) {
+                            showAlertDialog(msg);
+                        }
+                    });
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -933,6 +947,28 @@ public class ContentDataHelper extends RmDataHelper {
             contentModel.setAckStatus(Constants.MessageStatus.STATUS_FAILED);
             HandlerUtil.postBackground(() -> setContentMessage(contentModel, false));
         }
+    }
+
+    private void showAlertDialog(String message) {
+        Activity activity = TeleMeshApplication.getCurrentActivity();
+        if (activity == null) return;
+        AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        @SuppressLint("InflateParams")
+        View dialogView = inflater.inflate(R.layout.alert_hardware_permission, null);
+        dialogBuilder.setView(dialogView);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        TextView title = dialogView.findViewById(R.id.interruption_title);
+        TextView messageTv = dialogView.findViewById(R.id.interruption_message);
+        Button okay = dialogView.findViewById(R.id.okay_button);
+        title.setText("File size alert");
+        messageTv.setText(message);
+
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+        okay.setOnClickListener(v -> alertDialog.dismiss());
     }
 
     private void setProgressInfoInMap(ContentModel contentModel, boolean isReceived) {

@@ -3,21 +3,21 @@
 Telemesh Deployment
 -------------------
 
-After cloning the Telemesh github repo in your local machine it is effortless to build the Telemesh app.
+After cloning the Telemesh GitHub repo in your local machine it is effortless to build the Telemesh app.
 
-Actually, The *Telemesh* app is using different ``URLs`` for different services. Preparing all those services is time-consuming as well as tedious too for outsiders.
+The *Telemesh* app is using different ``URLs`` for different services. Preparing all those services is time-consuming as well as tedious too for outsiders.
 
-Here if you want to simply deploy / build the *Telemesh* app, you don't need to worry at all about those tasks.
+Here if you want to simply deploy/build the *Telemesh* app, you don't need to worry at all about those tasks.
 
-All the ``URLs`` and other permission related information are provided in a ``.so`` file as solid package to give you a staging environment the same as production for deployment purposes.
+All the ``URLs`` and other permission related information are provided in a ``.so`` file as a solid package to give you a staging environment the same as production for deployment purposes.
 
 Just download the project and run.
 
 But, we don't give the guarantee of continuous services for the staging environment, as it's only for deployment purposes.
 
-After successful build, install the apk into any Android device (minimum android version ``Lollipop - 5.0``)
+After a successful build, install the apk into any Android device (minimum android version ``Lollipop - 5.0``)
 
-and you need to download ``TeleService`` apk from Telemesh inside which will provide multihop mesh support into Telemesh.
+and you need to download the ``TeleService`` apk from Telemesh inside which will provide multihop mesh support into Telemesh.
 
 
 Parse deployment

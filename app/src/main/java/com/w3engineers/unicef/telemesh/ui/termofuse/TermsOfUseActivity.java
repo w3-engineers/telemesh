@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -57,6 +60,13 @@ public class TermsOfUseActivity extends BaseActivity {
         return R.layout.activity_terms_of_use;
     }
 
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                }
+            });
 
     @Override
     public void startUI() {

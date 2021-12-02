@@ -95,6 +95,8 @@ public class UIHelperTest {
 
         String time = UIHelper.getSeparatorDate(entity);
         assertEquals(time, "Yesterday");
+        //assertEquals(time, "30-11-2021");
+
         addDelay(500);
 
         // test other date thats not today or yesterday

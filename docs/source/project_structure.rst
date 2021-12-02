@@ -17,7 +17,7 @@ Project’s Structure
                    |-- helper #Generic tasks like TimeUtil, NetworkUtil etc.
                    |-- lib #third party library, component etc.
                |-- Application.java #Android Application class
-       |-- viper #W3Engineers wrapper module
+       |-- viper #W3Engineers wrapper module (It can be implemented through gradle dependency)
        |-- appshare #W3Engineers in app share module
        |-- localserver #W3Engineers in app update module
        |-- build.gradle

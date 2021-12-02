@@ -9,9 +9,7 @@ Telemesh Android Application and Telemesh Service.
 It is responsible for coordinating the actions to the Telemesh Service.
 It can also perform some mappings to prepare the objects coming from the Android Application.
 
-It provides few supports on ``ui/ux`` to ease developers daily development.
-Also it provides set of api for ``mesh`` support and ``wallet`` support.
-Currently ``Telemesh`` ui design use those supports from Viper.
+It provides set of api for ``mesh`` support and ``wallet`` support.
 
 
 Dependency

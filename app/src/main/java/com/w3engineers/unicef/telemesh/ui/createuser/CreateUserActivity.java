@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     public static CreateUserActivity sInstance;
     private boolean isNeedToImportWallet;
     private boolean isWalletExists;
+    private ProgressDialog progressDialog;
 
     @NonNull
     public static String IMAGE_POSITION = "image_position";
@@ -233,7 +235,7 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
     protected void goNext() {
         if (mViewModel.storeData(mBinding.editTextFirstName.getText() + "",
                 mBinding.editTextLastName.getText() + "")) {
-
+            toggleProgressDialog(true);
             if (isWalletExists) {
 
                 // Start mesh, and goto home page
@@ -254,6 +256,20 @@ public class CreateUserActivity extends BaseActivity implements View.OnClickList
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();*/
+        }
+    }
+
+    private void toggleProgressDialog(boolean needToShow) {
+        if (needToShow) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(true);
+            progressDialog.setMessage("Please wait...");
+            progressDialog.show();
+        } else {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
         }
     }
 

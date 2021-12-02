@@ -772,6 +772,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void launchActivity(int activityType) {
+        prepareRightMeshDataSource();
         rightMeshDataSource.launchActivity(activityType);
     }
 
@@ -781,6 +782,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }
 
     public boolean isWalletBackupDone() {
+        prepareRightMeshDataSource();
         return rightMeshDataSource.isWalletBackupDone();
     }
 
@@ -788,6 +790,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
      * For ReInitiating RM service need to reset rightmesh data source instance
      */
     public void restartMesh() {
+        prepareRightMeshDataSource();
         rightMeshDataSource.restartMeshService();
     }
 
@@ -871,7 +874,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     public void sendFeedbackToInternetUser(FeedbackEntity entity) {
         FeedbackModel model = entity.toFeedbackModel();
         String feedbackJson = new Gson().toJson(model);
-
+        prepareRightMeshDataSource();
         for (String sellersId : rightMeshDataSource.getAllSellers()) {
             dataSend(feedbackJson.getBytes(), Constants.DataType.FEEDBACK_TEXT, sellersId, false);
         }
@@ -1062,6 +1065,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
     }*/
 
     public void saveMyInfo() {
+        prepareRightMeshDataSource();
         rightMeshDataSource.saveUpdateUserInfo();
     }
 

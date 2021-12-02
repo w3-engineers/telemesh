@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Telemesh</string>
     <string name="activity_view_profile">My profile</string>
-    <string name="enter_first_name">Type first name</string>
-    <string name="enter_last_name">Type last name</string>
+    <string name="enter_first_name">First name</string>
+    <string name="enter_last_name">Last name</string>
     <string name="signup">Next</string>
     <!--    <string name="no_item_found">No item found</string>-->
     <string name="done">Done</string>
@@ -178,8 +178,8 @@
     <string name="app_update_information">Telemesh has some important updates on the latest release. This app won\'t work unless you update the latest version of Telemesh.</string>
     <string name="terms_of_use_details">Terms of Use</string>
 
-    <string name="interruption_title">%s Interruption</string>
-    <string name="hardware_interruption">%s turned off. Telemesh would not work properly.</string>
+    <string name="interruption_title">Enable %s</string>
+    <string name="hardware_interruption">Please enable %s. Otherwise Telemesh would not able to work properly.</string>
     <string name="permission_interruption">%s permission is disabled. Telemesh would not work properly.</string>
 
     <string name="permission_xiomi">To deliver the best experience TeleService needs a few system permissions.\n\nPlease go to your device settings and search for Permissions.

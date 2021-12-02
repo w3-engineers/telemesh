@@ -39,7 +39,7 @@
 
     <application
         android:name="com.w3engineers.unicef.TeleMeshApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:configChanges="locale"
         android:extractNativeLibs="false"
         android:fullBackupContent="@xml/my_backup_rules"

@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.telemesh.ui.termofuse;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -60,13 +62,14 @@ public class TermsOfUseActivity extends BaseActivity {
         return R.layout.activity_terms_of_use;
     }
 
-    /*ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
+    ActivityResultLauncher<Intent> permissionActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
+                public void onActivityResult(ActivityResult result) {
+                    checkPermissionAndGoToNext();
                 }
-            });*/
+            });
 
     @Override
     public void startUI() {
@@ -215,7 +218,8 @@ public class TermsOfUseActivity extends BaseActivity {
 
             try {
                 d.dismiss();
-                startActivityForResult(intent, REQUEST_XIAOMI_PERMISSION);
+                //startActivityForResult(intent, REQUEST_XIAOMI_PERMISSION);
+                permissionActivityResultLauncher.launch(intent);
             } catch (Exception e) {
                 e.printStackTrace();
             }

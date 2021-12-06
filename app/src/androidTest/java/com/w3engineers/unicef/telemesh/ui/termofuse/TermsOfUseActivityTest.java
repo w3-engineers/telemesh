@@ -55,7 +55,8 @@ public class TermsOfUseActivityTest {
 
         addDelay(2000);
 
-        mActivityTestRule.getActivity().onActivityResult(109, -1, null);
+        //mActivityTestRule.getActivity().onActivityResult(109, -1, null);
+        mActivityTestRule.getActivity().permissionActivityResultLauncher.getContract();
 
         addDelay(1000);
 

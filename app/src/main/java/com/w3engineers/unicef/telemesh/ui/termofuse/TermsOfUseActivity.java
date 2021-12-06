@@ -60,13 +60,13 @@ public class TermsOfUseActivity extends BaseActivity {
         return R.layout.activity_terms_of_use;
     }
 
-    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+    /*ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
             new ActivityResultCallback<Uri>() {
                 @Override
                 public void onActivityResult(Uri uri) {
                     // Handle the returned Uri
                 }
-            });
+            });*/
 
     @Override
     public void startUI() {

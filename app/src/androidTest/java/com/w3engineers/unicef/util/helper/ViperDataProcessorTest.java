@@ -56,6 +56,19 @@ public class ViperDataProcessorTest {
     }
 
     @Test
+    public void processJsonFalse(){
+        addDelay(500);
+        try {
+            SUT.processUpdateAppConfigJson(null);
+            assertFalse(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Test
     public void appUpdateConfigDataTest() {
 
         addDelay(500);

@@ -114,6 +114,14 @@ public class TermsOfUseActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_XIAOMI_PERMISSION) {
+            checkPermissionAndGoToNext();
+        }
+    }
+
     private void checkPermissionAndGoToNext() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)

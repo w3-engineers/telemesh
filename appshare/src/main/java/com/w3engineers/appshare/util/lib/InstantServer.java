@@ -62,12 +62,6 @@ public class InstantServer {
 
     }
 
-    /**
-     * Initiating and starting server after calling this constructor
-     */
-//    InstantServer(int port, String filePath) {
-//        startServer();
-//    }
 
     @NonNull
     public InstantServer setPort(int port) {
@@ -452,8 +446,6 @@ public class InstantServer {
                             downloadContent--;
 
                             InAppShareUtil.getInstance().setDownloadCount(downloadContent);
-
-                            Log.v("MIMO_SAHA::", "Pending download: " + downloadContent);
 
                             InAppShareControl.AppShareCallback appShareCallback = InAppShareControl.getInstance().getAppShareCallback();
                             if (appShareCallback != null) {

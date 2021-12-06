@@ -71,26 +71,6 @@ public class InAppShareActivity extends AppCompatActivity {
         inAppShareViewModel = getViewModel();
         appShareStart();
 
-        /*boolean permission = false;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permission = Settings.System.canWrite(this);
-        }
-
-        if (!permission) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                String packageName = getPackageName();
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivityForResult(intent, 119);
-
-            } else {
-                appShareStart();
-            }
-        } else {
-            appShareStart();
-        }*/
     }
 
     private void setStatusBarColor() {

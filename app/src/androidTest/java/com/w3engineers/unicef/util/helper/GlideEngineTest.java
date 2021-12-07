@@ -42,13 +42,9 @@ public class GlideEngineTest {
     @Test
     public void glideEngineTest(){
 
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                glideEngine.loadImage(context,
-                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",imageView);
-            }
-        });
+        addDelay(500);
+        mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
+                "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",imageView));
 
     }
 

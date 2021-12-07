@@ -82,6 +82,13 @@ public class ViperDataProcessorTest {
 
     }
 
+    @Test
+    public void jsonBuildFailed(){
+        addDelay(500);
+        SUT.getDataFormatToJson(null);
+        assertFalse(false);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);
@@ -89,4 +96,9 @@ public class ViperDataProcessorTest {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 }

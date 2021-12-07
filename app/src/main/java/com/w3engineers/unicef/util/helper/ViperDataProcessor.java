@@ -47,10 +47,11 @@ public class ViperDataProcessor {
     }
 
     public byte[] getDataFormatToJson(ViperData viperData) {
-        byte type = viperData.dataType;
-        byte[] rawData = viperData.rawData;
 
         try {
+            byte type = viperData.dataType;
+            byte[] rawData = viperData.rawData;
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(TYPE, type);
             jsonObject.put(DATA, new String(rawData));
@@ -58,6 +59,8 @@ public class ViperDataProcessor {
             return jsonObject.toString().getBytes();
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
 

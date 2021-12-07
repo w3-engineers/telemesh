@@ -16,6 +16,7 @@ import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.StatusHelper;
+import com.w3engineers.unicef.util.helper.UpdateAppConfigDownloadTask;
 import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
@@ -30,6 +31,8 @@ import org.junit.runners.MethodSorters;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
+
+import java.util.concurrent.CountDownLatch;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
@@ -116,6 +119,21 @@ public class InAppUpdateTest {
 
         StatusHelper.out("Test executed");
 
+    }
+
+    @Test
+    public void testInAppUpdateAsync() throws Exception{
+        assertTrue(true);
+        UpdateAppConfigDownloadTask testTask = new UpdateAppConfigDownloadTask() {
+            @Override
+            protected void onPostExecute(String result) {
+                assertNotNull(result);
+                if (result != null) {
+                    assertTrue(result.length() > 0);
+                }
+            }
+        };
+        testTask.execute();
     }
 
     @Test

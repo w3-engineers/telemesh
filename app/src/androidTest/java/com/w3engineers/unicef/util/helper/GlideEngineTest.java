@@ -40,7 +40,7 @@ public class GlideEngineTest {
     }
 
     @Test
-    public void glideEngineTest(){
+    public void glideEngineTest() throws Exception{
 
         addDelay(500);
         mActivity.runOnUiThread(() -> glideEngine.loadImage(context,

@@ -48,6 +48,16 @@ public class GlideEngineTest {
 
     }
 
+    @Test
+    public void glideScaleImageTest() throws Exception{
+
+        addDelay(500);
+        mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
+                "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                imageView, null, null));
+
+    }
+
     private void addDelay(int i) {
         try {
             Thread.sleep(i);

@@ -122,21 +122,6 @@ public class InAppUpdateTest {
     }
 
     @Test
-    public void testInAppUpdateAsync() throws Exception{
-        assertTrue(true);
-        UpdateAppConfigDownloadTask testTask = new UpdateAppConfigDownloadTask() {
-            @Override
-            protected void onPostExecute(String result) {
-                assertNotNull(result);
-                if (result != null) {
-                    assertTrue(result.length() > 0);
-                }
-            }
-        };
-        testTask.execute();
-    }
-
-    @Test
     @UiThreadTest
     public void appBlockerDialogOpenTest() {
         addDelay(500);

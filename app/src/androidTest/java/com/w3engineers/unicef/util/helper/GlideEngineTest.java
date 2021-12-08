@@ -71,6 +71,20 @@ public class GlideEngineTest {
 
     }
 
+    @Test
+    public void glideLongImageNullTest() throws Exception{
+
+        addDelay(500);
+        mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
+                "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                imageView, null));
+
+    }
+
+
+
+
+
     private void addDelay(int i) {
         try {
             Thread.sleep(i);

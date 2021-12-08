@@ -31,8 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 /*
@@ -50,6 +48,7 @@ public class ContentUtilTest extends TestCase {
     private String sampleContentPath = "file://test.abc";
     private String videoFilePath = "file:///android_asset/sample_vide.mp4";
     private String imageFilePath = "file:///android_asset/sample_image.jpg";
+    private String documentPath = "file:///android_asset/sample_doc.jpg";
     public Activity currentActivity = null;
     private File videoFile;
 
@@ -99,6 +98,15 @@ public class ContentUtilTest extends TestCase {
         addDelay(300);
         contentUtil.getThumbnailFromVideoPath(videoFilePath);
         assertTrue(true);
+    }
+
+    @Test
+    public void testfilePathUri(){
+        // to test media content
+        addDelay(300);
+        contentUtil.getFilePathFromUri(Uri.parse(imageFilePath));
+        assertTrue(true);
+
     }
 
     @Test

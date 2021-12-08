@@ -92,7 +92,7 @@ public class GlideEngine implements ImageEngine {
                             imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
                             if (eqLongImage) {
                                 // Load long image
-                                if(longImageView!= null) {
+                                //if(longImageView!= null) {
                                     longImageView.setQuickScaleEnabled(true);
                                     longImageView.setZoomEnabled(true);
                                     longImageView.setDoubleTapZoomDuration(100);
@@ -100,7 +100,7 @@ public class GlideEngine implements ImageEngine {
                                     longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
                                     longImageView.setImage(ImageSource.cachedBitmap(resource),
                                             new ImageViewState(0, new PointF(0, 0), 0));
-                                }
+                                //}
                             } else {
                                 // Normal picture
                                 imageView.setImageBitmap(resource);

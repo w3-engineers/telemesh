@@ -9,6 +9,7 @@ import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 import com.w3engineers.unicef.telemesh.R;
 import com.w3engineers.unicef.telemesh.ui.chat.ChatActivity;
 
@@ -24,6 +25,7 @@ public class GlideEngineTest {
     private Context context;
     private Activity mActivity;
     private ImageView imageView;
+    private SubsamplingScaleImageView longImageView;
 
     GlideEngine glideEngine;
 
@@ -37,6 +39,7 @@ public class GlideEngineTest {
         mActivity = mActivityRule.getActivity();
         glideEngine = GlideEngine.createGlideEngine();
         imageView = (ImageView) mActivity.findViewById(R.id.imageView);
+
     }
 
     @Test
@@ -52,9 +55,19 @@ public class GlideEngineTest {
     public void glideScaleImageTest() throws Exception{
 
         addDelay(500);
-        mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                longImageView = new SubsamplingScaleImageView(context);
+                addDelay(200);
+                glideEngine.loadImage(context,
+                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                        imageView, longImageView, null);
+            }
+        });
+       /* mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
                 "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
-                imageView, null, null));
+                imageView, longImageView, null));*/
 
     }
 

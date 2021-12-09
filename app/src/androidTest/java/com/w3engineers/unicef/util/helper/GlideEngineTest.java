@@ -82,9 +82,6 @@ public class GlideEngineTest {
     }
 
 
-
-
-
     private void addDelay(int i) {
         try {
             Thread.sleep(i);

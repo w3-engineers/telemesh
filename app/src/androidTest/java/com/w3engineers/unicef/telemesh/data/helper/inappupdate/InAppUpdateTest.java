@@ -75,6 +75,13 @@ public class InAppUpdateTest {
     }
 
     @Test
+    public void testBaseUrlAlpha(){
+        addDelay(2500);
+        AppInstaller.downloadApkFile("http://www.dom@in.example", rule.getActivity(), null);
+        assertTrue(true);
+    }
+
+    @Test
     @UiThreadTest
     public void appUpdateDialogOpenTest() {
         addDelay(2500);

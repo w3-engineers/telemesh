@@ -139,6 +139,13 @@ public class ContentDataHelperTest {
     }
 
     @Test
+    public void testContent(){
+        addDelay(200);
+        contentDataHelper.successForMainContent(userId, "231");
+        assertTrue(true);
+    }
+
+    @Test
     public void test_2_prepare_content_and_send() {
 
         UserEntity entity = addSampleUser();

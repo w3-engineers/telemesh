@@ -196,7 +196,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void successForMainContent(String userId, String messageId) {
+    public void successForMainContent(String userId, String messageId) {
         if (!TextUtils.isEmpty(messageId)) {
             dataSend(messageId.getBytes(), Constants.DataType.SUCCESS_CONTENT_MESSAGE, userId, false);
         }

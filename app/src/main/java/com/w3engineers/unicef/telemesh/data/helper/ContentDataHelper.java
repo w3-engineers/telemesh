@@ -78,7 +78,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void resendContentAction(MessageEntity messageEntity) {
+    public void resendContentAction(MessageEntity messageEntity) {
         try {
             dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING_START);
             contentMessageResendSend(messageEntity);
@@ -87,7 +87,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void resendContentRequestAction(MessageEntity messageEntity) {
+    public void resendContentRequestAction(MessageEntity messageEntity) {
         try {
             dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_READ);
             contentMessageResendRequest(messageEntity, messageEntity.getFriendsId());

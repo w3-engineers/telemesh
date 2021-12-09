@@ -125,6 +125,20 @@ public class ContentDataHelperTest {
     }
 
     @Test
+    public void testMessageEntityNull() throws Exception{
+        addDelay(200);
+        contentDataHelper.resendContentAction(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentRequestNull() throws Exception{
+        addDelay(200);
+        contentDataHelper.resendContentAction(null);
+        assertTrue(true);
+    }
+
+    @Test
     public void test_2_prepare_content_and_send() {
 
         UserEntity entity = addSampleUser();

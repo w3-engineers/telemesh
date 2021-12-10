@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
@@ -16,7 +19,6 @@ import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.StatusHelper;
-import com.w3engineers.unicef.util.helper.UpdateAppConfigDownloadTask;
 import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
@@ -27,12 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.*;
-
-import java.util.concurrent.CountDownLatch;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)

@@ -1,6 +1,5 @@
 package com.w3engineers.unicef.util.helper;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -8,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import okhttp3.ResponseBody;
 
 
@@ -44,7 +44,8 @@ public class UpdateAppConfigDownloadTask extends AsyncTask<ResponseBody, Void, S
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-
         ViperDataProcessor.getInstance().processUpdateAppConfigJson(s);
+
+
     }
 }

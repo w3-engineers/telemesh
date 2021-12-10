@@ -949,7 +949,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void showAlertDialog(String message) {
+    public void showAlertDialog(String message) {
         Activity activity = TeleMeshApplication.getCurrentActivity();
         if (activity == null) return;
         AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(activity);
@@ -1071,7 +1071,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    void contentReceiveInProgress(String contentId, int progress) {
+    public void contentReceiveInProgress(String contentId, int progress) {
         // Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
         boolean isGroup = false;
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);

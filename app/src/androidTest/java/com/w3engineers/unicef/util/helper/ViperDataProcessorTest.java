@@ -71,7 +71,7 @@ public class ViperDataProcessorTest {
     @Test
     public void appUpdateConfigDataTest() {
 
-        addDelay(500);
+        addDelay(600);
 
         UpdateConfigModel configModel = randomEntityGenerator.generateUpdateConfigModel();
         String configData = new Gson().toJson(configModel);

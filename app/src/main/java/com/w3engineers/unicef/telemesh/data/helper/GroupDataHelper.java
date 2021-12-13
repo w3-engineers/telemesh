@@ -364,6 +364,7 @@ public class GroupDataHelper extends RmDataHelper {
                 .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
         groupMembersInfos.add(groupMembersInfo);
 
+
         String groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
         groupEntity.setMembersInfo(groupMemberInfoText);
         return groupEntity;

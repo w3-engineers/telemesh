@@ -273,6 +273,13 @@ public class GroupDataHelperTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testGroupEntity(){
+        addDelay(100);
+        groupDataHelper.formGroupEntity("groupId", "userId");
+        assertTrue(true);
+    }
+
     private ForwardGroupModel prepareForwardGroupModel() {
 
         return new ForwardGroupModel()

@@ -14,6 +14,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Collection;
@@ -23,7 +24,6 @@ public class SelectAccountActivityTest {
 
     @Rule
     public ActivityTestRule<SelectAccountActivity> mActivityTestRule = new ActivityTestRule<>(SelectAccountActivity.class);
-    public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public Activity currentActivity;
     private Context context;
 
@@ -34,6 +34,13 @@ public class SelectAccountActivityTest {
     }
 
     public void tearDown() {
+    }
+
+    @Test
+    public void backPressTest(){
+        addDelay(100);
+        UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mDevice.pressBack();
     }
 
     private void addDelay(int i) {

@@ -194,25 +194,29 @@ public class GroupDataHelper extends RmDataHelper {
 
             for (UserEntity item : availableUsers) {
 
-                ContentModel contentModel = new ContentModel()
-                        .setMessageId(entity.getMessageId())
-                        .setMessageType(entity.getMessageType())
-                        .setGroupId(entity.getGroupId())
-                        .setOriginalSender(entity.getOriginalSender())
-                        .setGroupContent(true)
-                        .setContentPath(entity.getContentPath())
-                        .setThumbPath(entity.getContentThumb())
-                        .setUserId(entity.getFriendsId())
-                        .setContentInfo(entity.getContentInfo());
+                prepareContent(entity, item);
+                //Timber.v("Group Message Test", "content start %s", item.getMeshId());
 
-
-                Timber.v("Group Message Test", "content start %s", item.getMeshId());
-                contentModel.setUserId(item.getMeshId());
-                contentMessageSend(contentModel);
             }
         }
 
 
+    }
+
+    public void prepareContent(GroupMessageEntity entity, UserEntity item){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(entity.getMessageId())
+                .setMessageType(entity.getMessageType())
+                .setGroupId(entity.getGroupId())
+                .setOriginalSender(entity.getOriginalSender())
+                .setGroupContent(true)
+                .setContentPath(entity.getContentPath())
+                .setThumbPath(entity.getContentThumb())
+                .setUserId(entity.getFriendsId())
+                .setContentInfo(entity.getContentInfo());
+
+        contentModel.setUserId(item.getMeshId());
+        contentMessageSend(contentModel);
     }
 
     private void contentMessageSend(ContentModel contentModel) {
@@ -419,6 +423,10 @@ public class GroupDataHelper extends RmDataHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void prepareGroupEntity(){
+
     }
 
     ///////////////////////////////////////////////////////////////

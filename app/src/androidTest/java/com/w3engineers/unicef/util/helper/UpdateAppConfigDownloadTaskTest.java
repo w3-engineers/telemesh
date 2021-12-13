@@ -29,17 +29,10 @@ public class UpdateAppConfigDownloadTaskTest  {
     @Test
     public void testVerifyAsync() throws Exception {
 
-        addDelay(200);
-
         /*UpdateAppConfigDownloadTask testTask = new UpdateAppConfigDownloadTask() {
-            @Override
-            protected void onPostExecute(String result) {
-
-
-            }
         };
         testTask.execute();*/
-        assertTrue(true);
+
     }
 
     private void addDelay(long time) {

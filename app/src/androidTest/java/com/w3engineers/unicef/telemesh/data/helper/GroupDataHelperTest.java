@@ -21,6 +21,7 @@ import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.GroupNameModel;
 import com.w3engineers.unicef.telemesh.data.local.grouptable.RelayGroupModel;
 import com.w3engineers.unicef.telemesh.data.local.messagetable.GroupMessageEntity;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserEntity;
 import com.w3engineers.unicef.util.helper.CommonUtil;
 import com.w3engineers.unicef.util.helper.GsonBuilder;
 import com.w3engineers.unicef.util.helper.TimeUtil;
@@ -246,6 +247,30 @@ public class GroupDataHelperTest {
         addDelay(1000);
         assertTrue(true);
 
+    }
+
+    @Test
+    public void testContent(){
+        addDelay(1000);
+
+        GroupModel model = prepareGroupModel();
+        GroupEntity groupEntity = new GroupEntity().toGroupEntity(model);
+        groupEntity.setSynced(false);
+        groupDataSource.insertOrUpdateGroup(groupEntity);
+
+        groupDataHelper.sendTextMessageToGroup(model.getGroupId(), "Hello friends");
+
+        addDelay(1000);
+
+        GroupMessageEntity groupMessageEntity = new GroupMessageEntity();
+        groupMessageEntity.setGroupId(groupEntity.getGroupId());
+        groupMessageEntity.setMessage("hello");
+
+        UserEntity entity = new UserEntity();
+        entity.setMeshId(dainelId);
+
+        groupDataHelper.prepareContent(groupMessageEntity, entity);
+        assertTrue(true);
     }
 
     private ForwardGroupModel prepareForwardGroupModel() {

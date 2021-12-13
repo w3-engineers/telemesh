@@ -38,7 +38,6 @@ public class SelectAccountActivityTest {
 
     @Test
     public void backPressTest(){
-        addDelay(100);
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
     }

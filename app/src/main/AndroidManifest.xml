@@ -38,7 +38,7 @@
         android:name="com.w3engineers.unicef.TeleMeshApplication"
         android:allowBackup="true"
         android:configChanges="locale"
-        android:extractNativeLibs="false"
+        android:extractNativeLibs="true"
         android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

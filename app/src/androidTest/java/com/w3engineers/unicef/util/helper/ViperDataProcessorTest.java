@@ -56,9 +56,22 @@ public class ViperDataProcessorTest {
     }
 
     @Test
+    public void processJsonFalse(){
+        addDelay(500);
+        try {
+            SUT.processUpdateAppConfigJson(null);
+            assertFalse(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Test
     public void appUpdateConfigDataTest() {
 
-        addDelay(500);
+        addDelay(600);
 
         UpdateConfigModel configModel = randomEntityGenerator.generateUpdateConfigModel();
         String configData = new Gson().toJson(configModel);
@@ -69,6 +82,13 @@ public class ViperDataProcessorTest {
 
     }
 
+    @Test
+    public void jsonBuildFailed(){
+        addDelay(500);
+        SUT.getDataFormatToJson(null);
+        assertFalse(false);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);
@@ -76,4 +96,9 @@ public class ViperDataProcessorTest {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 }

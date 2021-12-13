@@ -1,5 +1,8 @@
 package com.w3engineers.unicef.telemesh.data.helper.inappupdate;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
@@ -26,10 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
@@ -69,6 +68,13 @@ public class InAppUpdateTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testBaseUrlAlpha(){
+        addDelay(2500);
+        AppInstaller.downloadApkFile("http://www.dom@in.example", rule.getActivity(), null);
+        assertTrue(true);
     }
 
     @Test

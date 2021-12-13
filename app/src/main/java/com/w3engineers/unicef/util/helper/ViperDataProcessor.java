@@ -47,10 +47,11 @@ public class ViperDataProcessor {
     }
 
     public byte[] getDataFormatToJson(ViperData viperData) {
-        byte type = viperData.dataType;
-        byte[] rawData = viperData.rawData;
 
         try {
+            byte type = viperData.dataType;
+            byte[] rawData = viperData.rawData;
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(TYPE, type);
             jsonObject.put(DATA, new String(rawData));
@@ -58,6 +59,8 @@ public class ViperDataProcessor {
             return jsonObject.toString().getBytes();
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
 
@@ -137,41 +140,46 @@ public class ViperDataProcessor {
 
     public void processUpdateAppConfigJson(String configData) {
 
-        UpdateConfigModel updateConfigModel;
-        SharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
+        try{
+            UpdateConfigModel updateConfigModel;
+            SharedPref.write(Constants.preferenceKey.APP_UPDATE_CHECK_TIME, System.currentTimeMillis());
 
-        updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
+            updateConfigModel = new Gson().fromJson(configData, UpdateConfigModel.class);
 
-        //   int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
+            //   int currentUpdateType = sharedPref.readInt(Constants.preferenceKey.APP_UPDATE_TYPE);
 
-        if (updateConfigModel != null) {
-            Log.d("FileDownload", "Config file info: " + updateConfigModel.getVersionName());
+            if (updateConfigModel != null) {
+                Log.d("FileDownload", "Config file info: " + updateConfigModel.getVersionName());
 
-            String versionName = updateConfigModel.getVersionName();
-            int versionCode = updateConfigModel.getVersionCode();
-            int updateType = updateConfigModel.getUpdateType();
-            String releaseNote = updateConfigModel.getReleaseNote();
+                String versionName = updateConfigModel.getVersionName();
+                int versionCode = updateConfigModel.getVersionCode();
+                int updateType = updateConfigModel.getUpdateType();
+                String releaseNote = updateConfigModel.getReleaseNote();
 
-            if (BuildConfig.VERSION_CODE < versionCode) {
+                if (BuildConfig.VERSION_CODE < versionCode) {
 
-                SharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
-                SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
-                SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
+                    SharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+                    SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_CODE, versionCode);
+                    SharedPref.write(Constants.preferenceKey.APP_UPDATE_VERSION_NAME, versionName);
 
-                if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
-                    String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);
-                    if (MainActivity.getInstance() != null) {
-                        MainActivity.getInstance().checkPlayStoreAppUpdate(updateType, normalUpdateJson);
-                    }
-                } else if (Constants.AppUpdateType.BLOCKER == updateType) {
-                    if (MainActivity.getInstance() != null) {
-                        MainActivity.getInstance().openAppBlocker(versionName);
+                    if (Constants.AppUpdateType.NORMAL_UPDATE == updateType) {
+                        String normalUpdateJson = buildAppUpdateJson(versionName, versionCode, releaseNote);
+                        if (MainActivity.getInstance() != null) {
+                            MainActivity.getInstance().checkPlayStoreAppUpdate(updateType, normalUpdateJson);
+                        }
+                    } else if (Constants.AppUpdateType.BLOCKER == updateType) {
+                        if (MainActivity.getInstance() != null) {
+                            MainActivity.getInstance().openAppBlocker(versionName);
+                        }
                     }
                 }
-            }
 
-            //  sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+                //  sharedPref.write(Constants.preferenceKey.APP_UPDATE_TYPE, updateType);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private String buildAppUpdateJson(String versionName, int versionCode, String releaseNote) {

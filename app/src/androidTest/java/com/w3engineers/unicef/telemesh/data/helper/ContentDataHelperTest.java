@@ -48,6 +48,9 @@ public class ContentDataHelperTest {
 
     private ContentDataHelper contentDataHelper;
     private String userId = "0xaa2dd785fc60eeb8151f65b3ded59ce3c2f12ca4";
+    private String messageId = "5167e70-330d-4ec1-b45e-73d960636177";
+    private String contentId = "0x8afbc95709c1db446b14e9c3e61a0269e5863268_1640801671990";
+    private String contentPath = "/storage/emulated/0/Telemesh/content/19e40c_0411_043319.jpg";
 
     @Rule
     public ActivityTestRule<AboutUsActivity> rule = new ActivityTestRule<>(AboutUsActivity.class);
@@ -122,6 +125,27 @@ public class ContentDataHelperTest {
 
         assertTrue(true);
 
+    }
+
+    @Test
+    public void testMessageEntityNull() throws Exception{
+        addDelay(200);
+        contentDataHelper.resendContentAction(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentRequestNull() throws Exception{
+        addDelay(200);
+        contentDataHelper.resendContentAction(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContent(){
+        addDelay(200);
+        contentDataHelper.successForMainContent(userId, "231");
+        assertTrue(true);
     }
 
     @Test
@@ -378,6 +402,25 @@ public class ContentDataHelperTest {
         boolean contentStatus = contentSequenceModel.isContentStatus();
         String contentId = contentSequenceModel.getContentId();
         assertTrue(contentStatus);
+    }
+
+    @Test
+    public void contentProgressTest(){
+        addDelay(500);
+        contentDataHelper.contentReceiveInProgress(contentId, 101);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testAlertDialog(){
+        addDelay(500);
+        rule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                contentDataHelper.showAlertDialog("Unittest");
+            }
+        });
+        assertTrue(true);
     }
 
     private void addDelay(long time) {

@@ -194,25 +194,29 @@ public class GroupDataHelper extends RmDataHelper {
 
             for (UserEntity item : availableUsers) {
 
-                ContentModel contentModel = new ContentModel()
-                        .setMessageId(entity.getMessageId())
-                        .setMessageType(entity.getMessageType())
-                        .setGroupId(entity.getGroupId())
-                        .setOriginalSender(entity.getOriginalSender())
-                        .setGroupContent(true)
-                        .setContentPath(entity.getContentPath())
-                        .setThumbPath(entity.getContentThumb())
-                        .setUserId(entity.getFriendsId())
-                        .setContentInfo(entity.getContentInfo());
+                prepareContent(entity, item);
+                //Timber.v("Group Message Test", "content start %s", item.getMeshId());
 
-
-                Timber.v("Group Message Test", "content start %s", item.getMeshId());
-                contentModel.setUserId(item.getMeshId());
-                contentMessageSend(contentModel);
             }
         }
 
 
+    }
+
+    public void prepareContent(GroupMessageEntity entity, UserEntity item){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(entity.getMessageId())
+                .setMessageType(entity.getMessageType())
+                .setGroupId(entity.getGroupId())
+                .setOriginalSender(entity.getOriginalSender())
+                .setGroupContent(true)
+                .setContentPath(entity.getContentPath())
+                .setThumbPath(entity.getContentThumb())
+                .setUserId(entity.getFriendsId())
+                .setContentInfo(entity.getContentInfo());
+
+        contentModel.setUserId(item.getMeshId());
+        contentMessageSend(contentModel);
     }
 
     private void contentMessageSend(ContentModel contentModel) {
@@ -349,6 +353,23 @@ public class GroupDataHelper extends RmDataHelper {
         return true;
     }
 
+    public GroupEntity formGroupEntity(String groupId, String userId){
+
+        GroupEntity groupEntity = new GroupEntity().setGroupId(groupId);
+        GsonBuilder gsonBuilder = GsonBuilder.getInstance();
+        ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
+
+        GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
+                .setMemberId(userId)
+                .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
+        groupMembersInfos.add(groupMembersInfo);
+
+
+        String groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
+        groupEntity.setMembersInfo(groupMemberInfoText);
+        return groupEntity;
+    }
+
     private void receiveGroupUserLeaveEvent(byte[] rawData, String userId) {
         try {
             GsonBuilder gsonBuilder = GsonBuilder.getInstance();
@@ -357,21 +378,13 @@ public class GroupDataHelper extends RmDataHelper {
             GroupModel groupModel = gsonBuilder.getGroupModelObj(groupModelText);
 
             String groupId = groupModel.getGroupId();
-            ArrayList<GroupMembersInfo> groupMembersInfos;
+            ArrayList<GroupMembersInfo> groupMembersInfos = new ArrayList<>();
 
             GroupEntity groupEntity = groupDataSource.getGroupById(groupId);
 
             if (groupEntity == null) {
-                groupEntity = new GroupEntity().setGroupId(groupId);
 
-                groupMembersInfos = new ArrayList<>();
-                GroupMembersInfo groupMembersInfo = new GroupMembersInfo()
-                        .setMemberId(userId)
-                        .setMemberStatus(Constants.GroupEvent.GROUP_LEAVE);
-                groupMembersInfos.add(groupMembersInfo);
-
-                String groupMemberInfoText = gsonBuilder.getGroupMemberInfoJson(groupMembersInfos);
-                groupEntity.setMembersInfo(groupMemberInfoText);
+                groupEntity = formGroupEntity(groupId, userId);
 
             } else {
                 String groupMemberInfoText = groupEntity.getMembersInfo();

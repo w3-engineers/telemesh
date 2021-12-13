@@ -47,6 +47,8 @@ public class ContentUtilTest extends TestCase {
     private ContentUtil contentUtil;
     private String sampleContentPath = "file://test.abc";
     private String videoFilePath = "file:///android_asset/sample_vide.mp4";
+    private String imageFilePath = "file:///android_asset/sample_image.jpg";
+    private String documentPath = "file:///android_asset/sample_doc.jpg";
     public Activity currentActivity = null;
     private File videoFile;
 
@@ -60,6 +62,50 @@ public class ContentUtilTest extends TestCase {
 
     @After
     public void tearDown() throws Exception {
+
+    }
+
+    @Test
+    public void testExternalStorageFalse() {
+        addDelay(200);
+        boolean isExternal = contentUtil.isExternalStorageDocument(Uri.parse("anyString"));
+        assertFalse(isExternal);
+    }
+
+    @Test
+    public void testDownloadsDocumentFalse() {
+        addDelay(200);
+        boolean isExternal = contentUtil.isDownloadsDocument(Uri.parse("anyString"));
+        assertFalse(isExternal);
+    }
+
+    @Test
+    public void testMediaDocumentFalse() {
+        addDelay(200);
+        boolean isExternal = contentUtil.isMediaDocument(Uri.parse("anyString"));
+        assertFalse(isExternal);
+    }
+
+    @Test
+    public void testThumbGenerateFromImage(){
+        addDelay(300);
+        contentUtil.getThumbnailFromImagePath(imageFilePath);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testThumbGenerateFromVideo(){
+        addDelay(300);
+        contentUtil.getThumbnailFromVideoPath(videoFilePath);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testfilePathUri(){
+        // to test media content
+        addDelay(300);
+        contentUtil.getFilePathFromUri(Uri.parse(imageFilePath));
+        assertTrue(true);
 
     }
 

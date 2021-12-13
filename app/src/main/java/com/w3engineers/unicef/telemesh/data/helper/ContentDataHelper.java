@@ -78,7 +78,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void resendContentAction(MessageEntity messageEntity) {
+    public void resendContentAction(MessageEntity messageEntity) {
         try {
             dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_SENDING_START);
             contentMessageResendSend(messageEntity);
@@ -87,7 +87,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void resendContentRequestAction(MessageEntity messageEntity) {
+    public void resendContentRequestAction(MessageEntity messageEntity) {
         try {
             dataSource.updateMessageStatus(messageEntity.getMessageId(), Constants.MessageStatus.STATUS_READ);
             contentMessageResendRequest(messageEntity, messageEntity.getFriendsId());
@@ -196,7 +196,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void successForMainContent(String userId, String messageId) {
+    public void successForMainContent(String userId, String messageId) {
         if (!TextUtils.isEmpty(messageId)) {
             dataSend(messageId.getBytes(), Constants.DataType.SUCCESS_CONTENT_MESSAGE, userId, false);
         }
@@ -949,7 +949,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    private void showAlertDialog(String message) {
+    public void showAlertDialog(String message) {
         Activity activity = TeleMeshApplication.getCurrentActivity();
         if (activity == null) return;
         AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(activity);
@@ -1071,7 +1071,7 @@ public class ContentDataHelper extends RmDataHelper {
         }
     }
 
-    void contentReceiveInProgress(String contentId, int progress) {
+    public void contentReceiveInProgress(String contentId, int progress) {
         // Log.v("FILE_SPEED_TEST_12.5 ", Calendar.getInstance().getTime()+"");
         boolean isGroup = false;
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);

@@ -470,7 +470,7 @@ public class ContentDataHelperTest {
     public void testIsInGroup(){
         addDelay(100);
         String contentId = UUID.randomUUID().toString();
-        int progress = 65;
+        int progress = 100;
         contentDataHelper.isNotGroup(contentId, progress);
         assertTrue(true);
     }

@@ -4,6 +4,7 @@ import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
@@ -19,6 +20,7 @@ import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 import com.w3engineers.unicef.util.helper.StatusHelper;
+import com.w3engineers.unicef.util.helper.UpdateAppConfigDownloadTask;
 import com.w3engineers.unicef.util.helper.uiutil.AppBlockerUtil;
 
 import org.json.JSONException;
@@ -29,6 +31,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
@@ -103,6 +109,20 @@ public class InAppUpdateTest {
         assertTrue(true);
 
         StatusHelper.out("Test executed");
+    }
+
+    @Test
+    public void downloadConfigTest(){
+        /*addDelay(500);
+        Response<ResponseBody> response = Response.error(
+                403,
+                ResponseBody.create(
+                        MediaType.parse("application/json"),
+                        "{\"key\":[\"somestuff\"]}"
+                )
+        );
+        new UpdateAppConfigDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                response.body());*/
     }
 
     @Test

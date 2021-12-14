@@ -391,13 +391,7 @@ public class ContentDataHelper extends RmDataHelper {
 
                     if (!contentModel.getReceiveSuccessStatus()) {
                         // FAILED MAINTAINED
-
-                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                        } else {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                        }
+                        setChatStatus(chatEntity);
                     }
 
                     MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
@@ -553,12 +547,7 @@ public class ContentDataHelper extends RmDataHelper {
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
                     // FAILED MAINTAINED
-                    if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
+                    setChatStatus(chatEntity);
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
@@ -671,6 +660,15 @@ public class ContentDataHelper extends RmDataHelper {
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
             }
 
+        }
+    }
+
+    public void setChatStatus(ChatEntity chatEntity){
+        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+        } else {
+            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
         }
     }
 
@@ -1135,7 +1133,6 @@ public class ContentDataHelper extends RmDataHelper {
             contentSendModelHashMap.put(contentId, contentSendModel);
 
         } else {
-
             ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
 
             if (contentModel != null) {
@@ -1152,6 +1149,7 @@ public class ContentDataHelper extends RmDataHelper {
                     contentReceiveDone(contentId, true, "");
                 }
             }
+
         }
     }
 

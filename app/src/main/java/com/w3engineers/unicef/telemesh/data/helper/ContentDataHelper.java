@@ -157,6 +157,20 @@ public class ContentDataHelper extends RmDataHelper {
         contentMessageSend(contentModel);
     }
 
+    public void setContentMessageFromMessageEntity(MessageEntity messageEntity, String messageId){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageId)
+                //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                .setAckStatus(Constants.MessageStatus.STATUS_UNREAD); // we set it unread if it is received
+
+        setContentMessage(contentModel, false);
+
+        if (!TextUtils.isEmpty(messageEntity.getContentId())) {
+            prepareRightMeshDataSource();
+            rightMeshDataSource.removeSendContents(messageEntity.getContentId());
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     // Cross check between sender and receiver +++++++++++++++++++++++++++++++++
@@ -170,17 +184,7 @@ public class ContentDataHelper extends RmDataHelper {
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
         if (messageEntity != null) {
-            ContentModel contentModel = new ContentModel()
-                    .setMessageId(messageId)
-                    //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
-                    .setAckStatus(Constants.MessageStatus.STATUS_UNREAD); // we set it unread if it is received
-
-            setContentMessage(contentModel, false);
-
-            if (!TextUtils.isEmpty(messageEntity.getContentId())) {
-                prepareRightMeshDataSource();
-                rightMeshDataSource.removeSendContents(messageEntity.getContentId());
-            }
+            setContentMessageFromMessageEntity(messageEntity, messageId);
         } else {
 
             messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);

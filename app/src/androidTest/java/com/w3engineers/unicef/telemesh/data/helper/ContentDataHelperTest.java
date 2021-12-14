@@ -423,6 +423,13 @@ public class ContentDataHelperTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testContentNull(){
+        addDelay(100);
+        contentDataHelper.resendContentRequestAction(null);
+        assertTrue(true);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

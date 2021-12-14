@@ -848,6 +848,10 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     private ContentMetaInfo getContentMetaInfoByContentId(String contentId, boolean isGroup) {
+        return getMetaByID(contentId, isGroup);
+    }
+
+    public ContentMetaInfo getMetaByID(String contentId, boolean isGroup){
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         try {
             ChatEntity chatEntity = null;
@@ -860,7 +864,6 @@ public class ContentDataHelper extends RmDataHelper {
                 chatEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
                 contentInfo = ((MessageEntity) chatEntity).getContentInfo();
             }
-
 
             if (chatEntity != null) {
                 contentMetaInfo.setMessageId(chatEntity.getMessageId())

@@ -430,6 +430,35 @@ public class ContentDataHelperTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testContentWithMessageEntity(){
+        addDelay(100);
+        String messageId = UUID.randomUUID().toString();
+
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setMessageId(messageId);
+        contentDataHelper.setContentMessageFromMessageEntity(messageEntity, messageId);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testAsNonGroup(){
+        addDelay(100);
+        String contentId = UUID.randomUUID().toString();
+        contentDataHelper.getMetaByID(contentId, false);
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void testAsGroup(){
+        addDelay(100);
+        String contentId = UUID.randomUUID().toString();
+        contentDataHelper.getMetaByID(contentId, true);
+        assertTrue(true);
+
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

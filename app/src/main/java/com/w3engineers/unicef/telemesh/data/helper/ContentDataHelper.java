@@ -1228,9 +1228,7 @@ public class ContentDataHelper extends RmDataHelper {
 
             } else {
 
-                ContentModel contentModel = new ContentModel()
-                        .setMessageId(contentSendModel.messageId)
-                        .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+                ContentModel contentModel = prepareContentModel(contentSendModel.messageId);
 
                 if (isGroup) {
                     //HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
@@ -1241,6 +1239,13 @@ public class ContentDataHelper extends RmDataHelper {
             }
             contentSendModelHashMap.remove(contentId);
         }
+    }
+
+    public ContentModel prepareContentModel(String messageId){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageId)
+                .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+       return contentModel;
     }
 
     void pendingContents(@NonNull ContentPendingModel contentPendingModel) {

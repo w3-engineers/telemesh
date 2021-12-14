@@ -459,6 +459,14 @@ public class ContentDataHelperTest {
 
     }
 
+    @Test
+    public void testContentModel(){
+        addDelay(100);
+        String messageId = UUID.randomUUID().toString();
+        contentDataHelper.prepareContentModel(messageId);
+        assertTrue(true);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

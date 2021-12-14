@@ -149,6 +149,31 @@ public class ContentDataHelperTest {
     }
 
     @Test
+    public void testChatStatusUnread(){
+
+        UserEntity entity = addSampleUser();
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(entity.getMeshId());
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+
+        contentDataHelper.setChatStatus(chatEntity);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testChatStatusFailed(){
+        UserEntity entity = addSampleUser();
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(entity.getMeshId());
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+
+        contentDataHelper.setChatStatus(chatEntity);
+        assertTrue(true);
+    }
+
+    @Test
     public void test_2_prepare_content_and_send() {
 
         UserEntity entity = addSampleUser();

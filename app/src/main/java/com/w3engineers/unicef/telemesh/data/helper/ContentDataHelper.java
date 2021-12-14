@@ -1122,30 +1122,34 @@ public class ContentDataHelper extends RmDataHelper {
         }
 
         if (!isGroup) {
-            ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
-            if (contentSendModel != null) {
+            isNotGroup(contentId, progress);
+        }
+    }
 
-                setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
-                contentSendModel.contentReceiveProgress = progress;
+    public void isNotGroup(String contentId, int progress){
+        ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+        if (contentSendModel != null) {
+
+            setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
+            contentSendModel.contentReceiveProgress = progress;
+            contentSendModelHashMap.put(contentId, contentSendModel);
+
+        } else {
+
+            ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
+
+            if (contentModel != null) {
+                contentSendModel = new ContentSendModel();
+
+                contentSendModel.contentId = contentId;
+                contentSendModel.messageId = contentModel.getMessageId();
+                contentSendModel.userId = contentModel.getUserId();
+                contentSendModel.successStatus = true;
+
                 contentSendModelHashMap.put(contentId, contentSendModel);
 
-            } else {
-
-                ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
-
-                if (contentModel != null) {
-                    contentSendModel = new ContentSendModel();
-
-                    contentSendModel.contentId = contentId;
-                    contentSendModel.messageId = contentModel.getMessageId();
-                    contentSendModel.userId = contentModel.getUserId();
-                    contentSendModel.successStatus = true;
-
-                    contentSendModelHashMap.put(contentId, contentSendModel);
-
-                    if (progress == 100) {
-                        contentReceiveDone(contentId, true, "");
-                    }
+                if (progress == 100) {
+                    contentReceiveDone(contentId, true, "");
                 }
             }
         }

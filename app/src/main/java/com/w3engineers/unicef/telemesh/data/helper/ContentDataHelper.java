@@ -157,7 +157,7 @@ public class ContentDataHelper extends RmDataHelper {
         contentMessageSend(contentModel);
     }
 
-    public void setContentMessageFromMessageEntity(MessageEntity messageEntity, String messageId){
+    public void setContentMessageFromMessageEntity(String contentId, String messageId){
         ContentModel contentModel = new ContentModel()
                 .setMessageId(messageId)
                 //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
@@ -165,9 +165,9 @@ public class ContentDataHelper extends RmDataHelper {
 
         setContentMessage(contentModel, false);
 
-        if (!TextUtils.isEmpty(messageEntity.getContentId())) {
+        if (!TextUtils.isEmpty(contentId)) {
             prepareRightMeshDataSource();
-            rightMeshDataSource.removeSendContents(messageEntity.getContentId());
+            rightMeshDataSource.removeSendContents(contentId);
         }
     }
 
@@ -184,7 +184,7 @@ public class ContentDataHelper extends RmDataHelper {
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
         if (messageEntity != null) {
-            setContentMessageFromMessageEntity(messageEntity, messageId);
+            setContentMessageFromMessageEntity(messageEntity.getContentId(), messageId);
         } else {
 
             messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);

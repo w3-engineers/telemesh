@@ -434,10 +434,10 @@ public class ContentDataHelperTest {
     public void testContentWithMessageEntity(){
         addDelay(100);
         String messageId = UUID.randomUUID().toString();
-
+        String contentId = UUID.randomUUID().toString();
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setMessageId(messageId);
-        contentDataHelper.setContentMessageFromMessageEntity(messageEntity, messageId);
+        contentDataHelper.setContentMessageFromMessageEntity(contentId, messageId);
         assertTrue(true);
     }
 

@@ -554,7 +554,7 @@ public class RmDataHelper implements BroadcastManager.BroadcastSendCallback {
         }
     }
 
-    private void saveDummyContent(MessageModel messageModel, String senderId) {
+    public void saveDummyContent(MessageModel messageModel, String senderId) {
         ChatEntity chatEntity = new GroupMessageEntity()
                 .toChatEntity(messageModel)
                 .setFriendsId(senderId)

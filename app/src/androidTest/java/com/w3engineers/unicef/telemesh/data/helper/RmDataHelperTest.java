@@ -9,6 +9,7 @@ import com.w3engineers.unicef.telemesh.data.local.feed.FeedDataSource;
 import com.w3engineers.unicef.telemesh.data.local.feedback.FeedbackDataSource;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
 import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
+import com.w3engineers.unicef.util.helper.ViperUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,12 @@ public class RmDataHelperTest {
     public void testAppUpdateNoChange(){
         RmDataHelper.getInstance().appUpdateFromOtherServer(Constants.AppUpdateType.NO_CHANGES,
                 "");
+        assertTrue(true);
+    }
+
+    @Test
+    public void testActivityLaunch(){
+        RmDataHelper.getInstance().launchActivity(ViperUtil.WALLET_IMPORT_ACTIVITY);
         assertTrue(true);
     }
 }

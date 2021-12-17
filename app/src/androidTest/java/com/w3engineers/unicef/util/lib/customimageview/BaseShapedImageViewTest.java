@@ -6,18 +6,20 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-
 @RunWith(AndroidJUnit4.class)
 public class BaseShapedImageViewTest {
+
+    @Rule
+    public ActivityTestRule<AboutUsActivity> mActivityRule = new ActivityTestRule(AboutUsActivity.class);
 
     public class ConcreteClass extends BaseShapedImageView{
 
@@ -36,16 +38,9 @@ public class BaseShapedImageViewTest {
         }
     }
 
-    private Context mContext;
-
-    @Before
-    public void setUp() {
-        mContext = InstrumentationRegistry.getContext();
-    }
-
-    private void addDelay() {
+    private void addDelay(long time) {
         try {
-            Thread.sleep(500);
+            Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,9 +48,14 @@ public class BaseShapedImageViewTest {
 
     @Test
     public void radiusCornerTest() {
-        addDelay();
-        /*ConcreteClass conClass = new ConcreteClass(mContext);
-        conClass.setCornerRadius(5.0f, 5.0f, 5.0f,5.0f);*/
+
+        addDelay(200);
+        // activity reference is required otherwise 'android.content.res.Resources$NotFoundException' will be occurred
+        ConcreteClass conClass = new ConcreteClass(mActivityRule.getActivity());
+        conClass.setCornerRadius(BaseShapedImageView.Shape.ROUNDED_RECTANGLE,
+                1.0f, 1.0f,
+                1.0f,1.0f);
         assertTrue(true);
+
     }
 }

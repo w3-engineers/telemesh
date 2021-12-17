@@ -191,6 +191,10 @@ dependencies {
     androidTestImplementation deps.arch_core.testing // It is mandatory for live data test
     androidTestImplementation deps.uiautomator.automator
 
+    androidTestImplementation deps.mockito.core
+    androidTestImplementation deps.mockito.inline
+
+
     implementation deps.rxbinding.binding2
 
     // Glide
@@ -247,6 +251,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
+
+
 
 }
 

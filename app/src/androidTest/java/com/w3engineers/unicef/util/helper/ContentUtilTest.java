@@ -117,6 +117,13 @@ public class ContentUtilTest extends TestCase {
     }
 
     @Test
+    public void testMatrixValue(){
+        addDelay(100);
+        contentUtil.matrixPostRotate(90);
+        assertTrue(true);
+    }
+
+    @Test
     public void test_content_type_and_path_validity_check() {
 
 

@@ -281,14 +281,11 @@ public class ContentUtil {
                 Log.d("ImagePicker","orientation: "+orientation);
                 Matrix matrix = null;
                 if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                    matrix = new Matrix();
-                    matrix.postRotate(90);
+                    matrix = matrixPostRotate(90);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                    matrix = new Matrix();
-                    matrix.postRotate(180);
+                    matrix = matrixPostRotate(180);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    matrix = new Matrix();
-                    matrix.postRotate(-90);
+                    matrix = matrixPostRotate(-90);
                 } else if (orientation == ExifInterface.ORIENTATION_TRANSVERSE) {
                     matrix = new Matrix();
                     matrix.setRotate(-90);
@@ -322,6 +319,12 @@ public class ContentUtil {
         }
 
         return file.getAbsolutePath();
+    }
+
+    public Matrix matrixPostRotate(float degrees){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return matrix;
     }
 
     public String getContentFromUrl(String fileURL) {

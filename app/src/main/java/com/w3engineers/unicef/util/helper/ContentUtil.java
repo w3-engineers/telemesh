@@ -123,7 +123,13 @@ public class ContentUtil {
                 uri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
             } else if (isMediaDocument(uri)) {
-                mediaContentProcess(uri);
+                String[] split = mediaContentProcess(uri);
+                selection = "_id=?";
+                if(split.length >1){
+                    selectionArgs = new String[]{
+                            split[1]
+                    };
+                }
             }
         }
         if ("content".equalsIgnoreCase(uri.getScheme())) {
@@ -181,9 +187,8 @@ public class ContentUtil {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public void mediaContentProcess(Uri uri){
-        String selection = null;
-        String[] selectionArgs = null;
+    public String[] mediaContentProcess(Uri uri){
+
         String docId = DocumentsContract.getDocumentId(uri);
         String[] split = docId.split(":");
         String type = split[0];
@@ -195,12 +200,7 @@ public class ContentUtil {
             uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         }
 
-        selection = "_id=?";
-        if(split.length >1){
-            selectionArgs = new String[]{
-                    split[1]
-            };
-        }
+        return split;
 
     }
 

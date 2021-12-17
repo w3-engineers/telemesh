@@ -124,6 +124,13 @@ public class ContentUtilTest extends TestCase {
     }
 
     @Test
+    public void testContentUtil(){
+        addDelay(100);
+        contentUtil.prepareFile("jpg");
+        assertTrue(true);
+    }
+
+    @Test
     public void test_content_type_and_path_validity_check() {
 
 

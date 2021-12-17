@@ -397,7 +397,7 @@ public class ContentUtil {
         return null;
     }
 
-    private File prepareFile(String extension) {
+    public File prepareFile(String extension) {
         try {
             if (TextUtils.isEmpty(extension)) {
                 extension = ".jpg";

@@ -110,6 +110,13 @@ public class ContentUtilTest extends TestCase {
     }
 
     @Test
+    public void testMediaProcess(){
+        addDelay(100);
+        contentUtil.mediaContentProcess(Uri.parse("content://com.android.providers.media.documents/document/image"));
+        assertTrue(true);
+    }
+
+    @Test
     public void test_content_type_and_path_validity_check() {
 
 

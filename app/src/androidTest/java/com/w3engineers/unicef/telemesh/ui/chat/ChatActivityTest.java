@@ -25,7 +25,6 @@ import java.util.Collection;
 public class ChatActivityTest {
     @Rule
     public ActivityTestRule<ChatActivity> mActivityTestRule = new ActivityTestRule<>(ChatActivity.class);
-    public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public Activity currentActivity = null;
     private Context context;
     private String videoFilePath = "file:///android_asset/sample_vide.mp4";

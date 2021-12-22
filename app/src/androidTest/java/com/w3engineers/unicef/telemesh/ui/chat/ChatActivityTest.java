@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Activity;
 import android.content.Context;
 
@@ -14,6 +16,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Collection;
@@ -35,7 +38,11 @@ public class ChatActivityTest {
     public void tearDown() {
     }
 
-
+    @Test
+    public void testChatFinish(){
+        mActivityTestRule.getActivity().chatFinishAndStartApp();
+        assertTrue(true);
+    }
 
     public Activity getActivityInstance() {
         getInstrumentation().runOnMainSync(() -> {

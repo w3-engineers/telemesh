@@ -28,6 +28,7 @@ public class ChatActivityTest {
     public UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public Activity currentActivity = null;
     private Context context;
+    private String videoFilePath = "file:///android_asset/sample_vide.mp4";
 
     @Before
     public void setUp() {
@@ -41,6 +42,12 @@ public class ChatActivityTest {
     @Test
     public void testChatFinish(){
         mActivityTestRule.getActivity().chatFinishAndStartApp();
+        assertTrue(true);
+    }
+
+    @Test
+    public void testOpenVideo(){
+        mActivityTestRule.getActivity().openVideo(videoFilePath);
         assertTrue(true);
     }
 

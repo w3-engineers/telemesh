@@ -205,7 +205,22 @@ public class ContentUtilTest extends TestCase {
 
     @Test
     public void testCopyPath(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(videoFilePath, false);
+        assertTrue(true);
+    }
 
+    @Test
+    public void testThumbTrue(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(videoFilePath, true);
+        assertTrue(true);
+    }
+
+    public void testPathNull(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(null, false);
+        assertTrue(true);
     }
 
     private void addDelay(long time) {

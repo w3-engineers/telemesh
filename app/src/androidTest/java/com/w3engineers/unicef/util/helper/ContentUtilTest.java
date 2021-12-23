@@ -184,20 +184,28 @@ public class ContentUtilTest extends TestCase {
 
     @Test
     public void testMalformedUrl(){
+        addDelay(100);
         ContentUtil.getFileNameFromURL("htps://airbrake.io");
         assertTrue(true);
     }
 
     @Test
     public void testNullUrl(){
+        addDelay(100);
         ContentUtil.getFileNameFromURL(null);
         assertTrue(true);
     }
 
     @Test
     public void testfileNull(){
+        addDelay(100);
         contentUtil.prepareFile(null);
         assertTrue(true);
+    }
+
+    @Test
+    public void testCopyPath(){
+
     }
 
     private void addDelay(long time) {

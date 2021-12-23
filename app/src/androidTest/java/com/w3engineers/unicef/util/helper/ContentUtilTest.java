@@ -194,6 +194,12 @@ public class ContentUtilTest extends TestCase {
         assertTrue(true);
     }
 
+    @Test
+    public void testfileNull(){
+        contentUtil.prepareFile(null);
+        assertTrue(true);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

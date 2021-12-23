@@ -182,6 +182,18 @@ public class ContentUtilTest extends TestCase {
         StatusHelper.out("test case executed");
     }
 
+    @Test
+    public void testMalformedUrl(){
+        ContentUtil.getFileNameFromURL("htps://airbrake.io");
+        assertTrue(true);
+    }
+
+    @Test
+    public void testNullUrl(){
+        ContentUtil.getFileNameFromURL(null);
+        assertTrue(true);
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

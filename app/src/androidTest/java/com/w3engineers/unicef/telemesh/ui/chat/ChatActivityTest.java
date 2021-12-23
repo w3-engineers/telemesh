@@ -38,11 +38,11 @@ public class ChatActivityTest {
     public void tearDown() {
     }
 
-    @Test
+    /*@Test
     public void testChatFinish(){
         mActivityTestRule.getActivity().chatFinishAndStartApp();
         assertTrue(true);
-    }
+    }*/
 
     @Test
     public void testOpenVideo(){

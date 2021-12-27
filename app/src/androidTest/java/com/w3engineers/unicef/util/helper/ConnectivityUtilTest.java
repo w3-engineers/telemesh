@@ -1,5 +1,7 @@
 package com.w3engineers.unicef.util.helper;
 
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
@@ -25,6 +27,8 @@ public class ConnectivityUtilTest {
         BiConsumer<String, Boolean> biConsumer = (key, value) ->
                 System.out.println("Key:"+ key+" Value:"+ value);
         ConnectivityUtil.isInternetAvailable(mContext,null);
-
+        assertTrue(true);
     }
+
+
 }

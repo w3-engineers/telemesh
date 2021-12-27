@@ -1,6 +1,7 @@
 package com.w3engineers.unicef.util.helper;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.w3engineers.unicef.telemesh.data.local.feed.BroadcastMeta;
 import com.w3engineers.unicef.telemesh.data.local.feed.FeedContentModel;
@@ -37,8 +38,13 @@ public class GsonBuilder {
     }
 
     public ArrayList<GroupMembersInfo> getGroupMemberInfoObj(String memberInfoText) {
-        Type founderListType = new TypeToken<ArrayList<GroupMembersInfo>>(){}.getType();
-        return gson.fromJson(memberInfoText, founderListType);
+        try{
+            Type founderListType = new TypeToken<ArrayList<GroupMembersInfo>>(){}.getType();
+            return gson.fromJson(memberInfoText, founderListType);
+        }catch(JsonSyntaxException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getGroupCountJson(ArrayList<GroupCountModel> groupCountModels) {
@@ -79,7 +85,12 @@ public class GsonBuilder {
     }
 
     public GroupNameModel getGroupNameModelObj(String groupNameModelText) {
-        return gson.fromJson(groupNameModelText, GroupNameModel.class);
+        try{
+            return gson.fromJson(groupNameModelText, GroupNameModel.class);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getFeedContentModelJson(FeedContentModel relayGroupModel) {

@@ -110,6 +110,27 @@ public class ContentUtilTest extends TestCase {
     }
 
     @Test
+    public void testMediaProcess(){
+        addDelay(100);
+        contentUtil.mediaContentProcess(Uri.parse("content://com.android.providers.media.documents/document/image"));
+        assertTrue(true);
+    }
+
+    @Test
+    public void testMatrixValue(){
+        addDelay(100);
+        contentUtil.matrixPostRotate(90);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentUtil(){
+        addDelay(100);
+        contentUtil.prepareFile("jpg");
+        assertTrue(true);
+    }
+
+    @Test
     public void test_content_type_and_path_validity_check() {
 
 
@@ -159,6 +180,47 @@ public class ContentUtilTest extends TestCase {
         Log.d("testTag","patH: "+videoThumbPath);
 
         StatusHelper.out("test case executed");
+    }
+
+    @Test
+    public void testMalformedUrl(){
+        addDelay(100);
+        ContentUtil.getFileNameFromURL("htps://airbrake.io");
+        assertTrue(true);
+    }
+
+    @Test
+    public void testNullUrl(){
+        addDelay(100);
+        ContentUtil.getFileNameFromURL(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testfileNull(){
+        addDelay(100);
+        contentUtil.prepareFile(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testCopyPath(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(videoFilePath, false);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testThumbTrue(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(videoFilePath, true);
+        assertTrue(true);
+    }
+
+    public void testPathNull(){
+        addDelay(100);
+        contentUtil.getCopiedFilePath(null, false);
+        assertTrue(true);
     }
 
     private void addDelay(long time) {

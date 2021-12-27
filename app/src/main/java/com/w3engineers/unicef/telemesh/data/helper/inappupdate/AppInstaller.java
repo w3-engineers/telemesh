@@ -190,7 +190,7 @@ public class AppInstaller {
         }
     }
 
-    private static boolean saveToDisk(ResponseBody body) {
+    public static boolean saveToDisk(ResponseBody body) {
         try {
 
 
@@ -233,7 +233,7 @@ public class AppInstaller {
                 if (inputStream != null) inputStream.close();
                 if (outputStream != null) outputStream.close();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;

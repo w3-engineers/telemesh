@@ -357,7 +357,7 @@ public abstract class BaseShapedImageView extends AppCompatImageView {
         return mBackgroundDrawable;
     }
 
-    public void setCornerRadius(float topLeftRadius, float topRightRadius, float bottomRightRadius, float bottomLeftRadius) {
+    public void setCornerRadius(int shape, float topLeftRadius, float topRightRadius, float bottomRightRadius, float bottomLeftRadius) {
         if (shape == Shape.ROUNDED_RECTANGLE || shape == Shape.ROUNDED_SQUARE) {
             boolean changed = false;
             if (topLeftRadius >= 0 && topLeftRadius <= 1 && mTopLeftFraction != topLeftRadius) {

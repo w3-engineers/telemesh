@@ -157,6 +157,20 @@ public class ContentDataHelper extends RmDataHelper {
         contentMessageSend(contentModel);
     }
 
+    public void setContentMessageFromMessageEntity(String contentId, String messageId){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageId)
+                //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
+                .setAckStatus(Constants.MessageStatus.STATUS_UNREAD); // we set it unread if it is received
+
+        setContentMessage(contentModel, false);
+
+        if (!TextUtils.isEmpty(contentId)) {
+            prepareRightMeshDataSource();
+            rightMeshDataSource.removeSendContents(contentId);
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     // Cross check between sender and receiver +++++++++++++++++++++++++++++++++
@@ -170,17 +184,7 @@ public class ContentDataHelper extends RmDataHelper {
         MessageEntity messageEntity = MessageSourceData.getInstance().getMessageEntityFromId(messageId);
 
         if (messageEntity != null) {
-            ContentModel contentModel = new ContentModel()
-                    .setMessageId(messageId)
-                    //.setAckStatus(Constants.MessageStatus.STATUS_RECEIVED);
-                    .setAckStatus(Constants.MessageStatus.STATUS_UNREAD); // we set it unread if it is received
-
-            setContentMessage(contentModel, false);
-
-            if (!TextUtils.isEmpty(messageEntity.getContentId())) {
-                prepareRightMeshDataSource();
-                rightMeshDataSource.removeSendContents(messageEntity.getContentId());
-            }
+            setContentMessageFromMessageEntity(messageEntity.getContentId(), messageId);
         } else {
 
             messageEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(messageId);
@@ -387,13 +391,7 @@ public class ContentDataHelper extends RmDataHelper {
 
                     if (!contentModel.getReceiveSuccessStatus()) {
                         // FAILED MAINTAINED
-
-                        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                        } else {
-                            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                        }
+                        setChatStatus(chatEntity);
                     }
 
                     MessageSourceData.getInstance().insertOrUpdateData(chatEntity);
@@ -549,12 +547,7 @@ public class ContentDataHelper extends RmDataHelper {
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.FAILED) {
                     // FAILED MAINTAINED
-                    if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
-                            || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
-                    } else {
-                        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
-                    }
+                    setChatStatus(chatEntity);
                 }
 
                 if (contentModel.getAckStatus() == Constants.ServiceContentState.PROGRESS) {
@@ -667,6 +660,15 @@ public class ContentDataHelper extends RmDataHelper {
                 MessageSourceData.getInstance().insertOrUpdateData(messageEntity);
             }
 
+        }
+    }
+
+    public void setChatStatus(ChatEntity chatEntity){
+        if (chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD_FAILED
+                || chatEntity.getStatus() == Constants.MessageStatus.STATUS_UNREAD) {
+            chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD_FAILED);
+        } else {
+            chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
         }
     }
 
@@ -844,6 +846,10 @@ public class ContentDataHelper extends RmDataHelper {
     }
 
     private ContentMetaInfo getContentMetaInfoByContentId(String contentId, boolean isGroup) {
+        return getMetaByID(contentId, isGroup);
+    }
+
+    public ContentMetaInfo getMetaByID(String contentId, boolean isGroup){
         ContentMetaInfo contentMetaInfo = new ContentMetaInfo();
         try {
             ChatEntity chatEntity = null;
@@ -856,7 +862,6 @@ public class ContentDataHelper extends RmDataHelper {
                 chatEntity = MessageSourceData.getInstance().getMessageEntityFromContentId(contentId);
                 contentInfo = ((MessageEntity) chatEntity).getContentInfo();
             }
-
 
             if (chatEntity != null) {
                 contentMetaInfo.setMessageId(chatEntity.getMessageId())
@@ -1115,32 +1120,36 @@ public class ContentDataHelper extends RmDataHelper {
         }
 
         if (!isGroup) {
-            ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
-            if (contentSendModel != null) {
+            isNotGroup(contentId, progress);
+        }
+    }
 
-                setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
-                contentSendModel.contentReceiveProgress = progress;
+    public void isNotGroup(String contentId, int progress){
+        ContentSendModel contentSendModel = contentSendModelHashMap.get(contentId);
+        if (contentSendModel != null) {
+
+            setContentProgress(contentSendModel.messageId, progress, contentSendModel.contentId);
+            contentSendModel.contentReceiveProgress = progress;
+            contentSendModelHashMap.put(contentId, contentSendModel);
+
+        } else {
+            ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
+
+            if (contentModel != null) {
+                contentSendModel = new ContentSendModel();
+
+                contentSendModel.contentId = contentId;
+                contentSendModel.messageId = contentModel.getMessageId();
+                contentSendModel.userId = contentModel.getUserId();
+                contentSendModel.successStatus = true;
+
                 contentSendModelHashMap.put(contentId, contentSendModel);
 
-            } else {
-
-                ContentModel contentModel = setContentProgressByContentIdForSender(contentId, progress);
-
-                if (contentModel != null) {
-                    contentSendModel = new ContentSendModel();
-
-                    contentSendModel.contentId = contentId;
-                    contentSendModel.messageId = contentModel.getMessageId();
-                    contentSendModel.userId = contentModel.getUserId();
-                    contentSendModel.successStatus = true;
-
-                    contentSendModelHashMap.put(contentId, contentSendModel);
-
-                    if (progress == 100) {
-                        contentReceiveDone(contentId, true, "");
-                    }
+                if (progress == 100) {
+                    contentReceiveDone(contentId, true, "");
                 }
             }
+
         }
     }
 
@@ -1221,9 +1230,7 @@ public class ContentDataHelper extends RmDataHelper {
 
             } else {
 
-                ContentModel contentModel = new ContentModel()
-                        .setMessageId(contentSendModel.messageId)
-                        .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+                ContentModel contentModel = prepareContentModel(contentSendModel.messageId);
 
                 if (isGroup) {
                     //HandlerUtil.postBackground(() -> setGroupContentMessage(contentModel, false));
@@ -1234,6 +1241,13 @@ public class ContentDataHelper extends RmDataHelper {
             }
             contentSendModelHashMap.remove(contentId);
         }
+    }
+
+    public ContentModel prepareContentModel(String messageId){
+        ContentModel contentModel = new ContentModel()
+                .setMessageId(messageId)
+                .setAckStatus(Constants.MessageStatus.STATUS_FAILED);
+       return contentModel;
     }
 
     void pendingContents(@NonNull ContentPendingModel contentPendingModel) {

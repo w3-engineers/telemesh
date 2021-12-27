@@ -123,20 +123,13 @@ public class ContentUtil {
                 uri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
             } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("image".equals(type)) {
-                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
+                String[] split = mediaContentProcess(uri);
                 selection = "_id=?";
-                selectionArgs = new String[]{
-                        split[1]
-                };
+                if(split.length >1){
+                    selectionArgs = new String[]{
+                            split[1]
+                    };
+                }
             }
         }
         if ("content".equalsIgnoreCase(uri.getScheme())) {
@@ -192,6 +185,23 @@ public class ContentUtil {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public String[] mediaContentProcess(Uri uri){
+
+        String docId = DocumentsContract.getDocumentId(uri);
+        String[] split = docId.split(":");
+        String type = split[0];
+        if ("image".equals(type)) {
+            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        } else if ("video".equals(type)) {
+            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        } else if ("audio".equals(type)) {
+            uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        }
+
+        return split;
+
     }
 
     public String compressImage(String filePath) {
@@ -271,14 +281,11 @@ public class ContentUtil {
                 Log.d("ImagePicker","orientation: "+orientation);
                 Matrix matrix = null;
                 if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                    matrix = new Matrix();
-                    matrix.postRotate(90);
+                    matrix = matrixPostRotate(90);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                    matrix = new Matrix();
-                    matrix.postRotate(180);
+                    matrix = matrixPostRotate(180);
                 } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                    matrix = new Matrix();
-                    matrix.postRotate(-90);
+                    matrix = matrixPostRotate(-90);
                 } else if (orientation == ExifInterface.ORIENTATION_TRANSVERSE) {
                     matrix = new Matrix();
                     matrix.setRotate(-90);
@@ -312,6 +319,12 @@ public class ContentUtil {
         }
 
         return file.getAbsolutePath();
+    }
+
+    public Matrix matrixPostRotate(float degrees){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return matrix;
     }
 
     public String getContentFromUrl(String fileURL) {
@@ -384,7 +397,7 @@ public class ContentUtil {
         return null;
     }
 
-    private File prepareFile(String extension) {
+    public File prepareFile(String extension) {
         try {
             if (TextUtils.isEmpty(extension)) {
                 extension = ".jpg";

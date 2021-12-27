@@ -679,7 +679,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         }
     }
 
-    private void openVideo(String videoPath) {
+    public void openVideo(String videoPath) {
         try {
 
             File destinationFile = new File(videoPath);

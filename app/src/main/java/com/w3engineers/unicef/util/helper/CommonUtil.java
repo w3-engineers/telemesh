@@ -229,11 +229,15 @@ public class CommonUtil {
     }
 
     public static GroupMembersInfo getGroupMemberInfo(String groupMemberInfoText, String memberId) {
-        List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
-                .getGroupMemberInfoObj(groupMemberInfoText);
-        for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
-            if (groupMembersInfo.getMemberId().equals(memberId))
-                return groupMembersInfo;
+        try{
+            List<GroupMembersInfo> groupMembersInfos = GsonBuilder.getInstance()
+                    .getGroupMemberInfoObj(groupMemberInfoText);
+            for (GroupMembersInfo groupMembersInfo : groupMembersInfos) {
+                if (groupMembersInfo.getMemberId().equals(memberId))
+                    return groupMembersInfo;
+            }
+        }catch(NullPointerException e){
+            e.printStackTrace();
         }
         return null;
     }

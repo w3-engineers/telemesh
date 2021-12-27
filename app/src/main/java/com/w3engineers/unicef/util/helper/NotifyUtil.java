@@ -188,31 +188,35 @@ public class NotifyUtil {
         return true;
     }
 
-    private static boolean prepareNotification(NotificationCompat.Builder builder, ChatEntity chatEntity,
+    public static boolean prepareNotification(NotificationCompat.Builder builder, ChatEntity chatEntity,
                                             UserEntity userEntity, GroupEntity groupEntity) {
-        String message = "";
+        try{
+            String message = "";
 
-        Bitmap imageBitmap = ImageUtil.getResourceImageBitmap(R.mipmap.group_blue_circle);
+            Bitmap imageBitmap = ImageUtil.getResourceImageBitmap(R.mipmap.group_blue_circle);
 
-        if (chatEntity instanceof MessageEntity) {
-            message = ((MessageEntity) chatEntity).getMessage();
+            if (chatEntity instanceof MessageEntity) {
+                message = ((MessageEntity) chatEntity).getMessage();
+            }
+
+            String groupName = groupEntity.getGroupName();
+            if (TextUtils.isEmpty(groupName)) {
+                return false;
+            }
+
+            GroupMembersInfo groupMembersInfo = CommonUtil.getGroupMemberInfo(groupEntity.getMembersInfo(),
+                    userEntity.getMeshId());
+            String userName = groupMembersInfo != null ? groupMembersInfo.getUserName() : "";
+
+            GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupName);
+
+            groupName = groupNameModel.isGroupNameChanged() ? groupNameModel.getGroupName() : "a group";
+
+            String title = userName + " messaged in " + groupName;
+            setNotification(builder, message, title, imageBitmap);
+        }catch(NullPointerException e){
+            e.printStackTrace();
         }
-
-        String groupName = groupEntity.getGroupName();
-        if (TextUtils.isEmpty(groupName)) {
-            return false;
-        }
-
-        GroupMembersInfo groupMembersInfo = CommonUtil.getGroupMemberInfo(groupEntity.getMembersInfo(),
-                userEntity.getMeshId());
-        String userName = groupMembersInfo != null ? groupMembersInfo.getUserName() : "";
-
-        GroupNameModel groupNameModel = GsonBuilder.getInstance().getGroupNameModelObj(groupName);
-
-        groupName = groupNameModel.isGroupNameChanged() ? groupNameModel.getGroupName() : "a group";
-
-        String title = userName + " messaged in " + groupName;
-        setNotification(builder, message, title, imageBitmap);
         return true;
     }
 

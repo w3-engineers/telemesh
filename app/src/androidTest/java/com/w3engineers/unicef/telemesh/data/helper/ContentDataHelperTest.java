@@ -149,6 +149,31 @@ public class ContentDataHelperTest {
     }
 
     @Test
+    public void testChatStatusUnread(){
+
+        UserEntity entity = addSampleUser();
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(entity.getMeshId());
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_UNREAD);
+
+        contentDataHelper.setChatStatus(chatEntity);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testChatStatusFailed(){
+        UserEntity entity = addSampleUser();
+        addDelay(1000);
+
+        ChatEntity chatEntity = randomEntityGenerator.createOutgoingContent(entity.getMeshId());
+        chatEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+
+        contentDataHelper.setChatStatus(chatEntity);
+        assertTrue(true);
+    }
+
+    @Test
     public void test_2_prepare_content_and_send() {
 
         UserEntity entity = addSampleUser();
@@ -420,6 +445,58 @@ public class ContentDataHelperTest {
                 contentDataHelper.showAlertDialog("Unittest");
             }
         });
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentNull(){
+        addDelay(100);
+        contentDataHelper.resendContentRequestAction(null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentWithMessageEntity(){
+        addDelay(100);
+        String messageId = UUID.randomUUID().toString();
+        String contentId = UUID.randomUUID().toString();
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setMessageId(messageId);
+        contentDataHelper.setContentMessageFromMessageEntity(contentId, messageId);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testAsNonGroup(){
+        addDelay(100);
+        String contentId = UUID.randomUUID().toString();
+        contentDataHelper.getMetaByID(contentId, false);
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void testAsGroup(){
+        addDelay(100);
+        String contentId = UUID.randomUUID().toString();
+        contentDataHelper.getMetaByID(contentId, true);
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void testContentModel(){
+        addDelay(100);
+        String messageId = UUID.randomUUID().toString();
+        contentDataHelper.prepareContentModel(messageId);
+        assertTrue(true);
+    }
+
+    public void testIsInGroup(){
+        addDelay(100);
+        String contentId = UUID.randomUUID().toString();
+        int progress = 100;
+        contentDataHelper.isNotGroup(contentId, progress);
         assertTrue(true);
     }
 

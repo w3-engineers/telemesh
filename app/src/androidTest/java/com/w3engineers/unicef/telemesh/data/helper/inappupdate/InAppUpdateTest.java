@@ -4,6 +4,7 @@ import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.net.Network;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
@@ -15,6 +16,7 @@ import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import com.w3engineers.mesh.util.lib.mesh.DataManager;
 import com.w3engineers.unicef.telemesh.data.helper.AppCredentials;
 import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
 import com.w3engineers.unicef.telemesh.ui.aboutus.AboutUsActivity;
@@ -103,6 +105,21 @@ public class InAppUpdateTest {
         assertTrue(true);
 
         StatusHelper.out("Test executed");
+    }
+
+    @Test
+    public void downloadConfigTest(){
+
+        /*addDelay(500);
+        Response<ResponseBody> response = Response.error(
+                403,
+                ResponseBody.create(
+                        MediaType.parse("application/json"),
+                        "{\"key\":[\"somestuff\"]}"
+                )
+        );
+        new UpdateAppConfigDownloadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                response.body());*/
     }
 
     @Test

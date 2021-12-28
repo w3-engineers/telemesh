@@ -25,8 +25,6 @@ public class ChatViewModelTest {
     @Rule
     public ActivityTestRule<ChatActivity> rule = new ActivityTestRule<>(ChatActivity.class);
 
-
-
     private ChatViewModel SUT;
     private Context mContext;
 

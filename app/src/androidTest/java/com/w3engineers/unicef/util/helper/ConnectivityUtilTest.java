@@ -24,10 +24,19 @@ public class ConnectivityUtilTest {
 
     @Test
     public void testInternetException(){
+        addDelay(100);
         BiConsumer<String, Boolean> biConsumer = (key, value) ->
                 System.out.println("Key:"+ key+" Value:"+ value);
         ConnectivityUtil.isInternetAvailable(mContext,null);
         assertTrue(true);
+    }
+
+    private void addDelay(int i) {
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 

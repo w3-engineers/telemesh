@@ -1,13 +1,27 @@
 package com.w3engineers.unicef.telemesh.ui.chat;
 
-import androidx.paging.PagedList;
+import static org.junit.Assert.assertTrue;
+
+import android.content.Context;
+
 import androidx.room.Room;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.db.AppDatabase;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageSourceData;
+import com.w3engineers.unicef.telemesh.data.local.usertable.UserDataSource;
+import com.w3engineers.unicef.telemesh.ui.main.MainActivity;
+import com.w3engineers.unicef.telemesh.util.RandomEntityGenerator;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /*
  * ============================================================================
@@ -17,7 +31,7 @@ import static org.junit.Assert.assertThat;
  * ============================================================================
  */
 
-/*@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4.class)
 public class ChatViewModelTest {
 
     @Rule
@@ -48,70 +62,19 @@ public class ChatViewModelTest {
         userDataSource = UserDataSource.getInstance();
         messageSourceData = MessageSourceData.getInstance();
 
-        if (SharedPref.getSharedPref(mContext).read(Constants.preferenceKey.MY_USER_ID).isEmpty()) {
-            SharedPref.getSharedPref(mContext).write(Constants.preferenceKey.MY_USER_ID, userAddress);
-        }
         SUT = new ChatViewModel(rule.getActivity().getApplication());
     }
 
     @Test
-    public void testMessageSetAndGet_getMessageObject_setMessage() {
-        addDelay(5000);
-        try {
-            UserEntity userEntity = randomEntityGenerator.createUserEntityWithId();
-            userDataSource.insertOrUpdateData(userEntity);
-
-            String message = "Hi";
-
-            if (userEntity.getMeshId() != null) {
-                SUT.sendMessage(userEntity.getMeshId(), message, true);
-            }
-
-            addDelay(700);
-
-            TestObserver<List<ChatEntity>> listTestObserver = LiveDataTestUtil.testObserve(SUT.getAllMessage(userEntity.getMeshId()));
-
-            addDelay(700);
-
-            SUT.prepareDateSpecificChat(listTestObserver.observedvalues.get(0));
-
-            TestObserver<PagedList<ChatEntity>> testObserver = LiveDataTestUtil.testObserve(SUT.getChatEntityWithDate());
-
-            addDelay(700);
-
-            assertThat(testObserver.observedvalues.get(0).size(), greaterThan(listTestObserver.observedvalues.get(0).size()));
-
-            addDelay(700);
-
-            assertThat(((MessageEntity) listTestObserver.observedvalues.get(0).get(0)).getMessage(), is(message));
-
-            ChatEntity receiverChat = randomEntityGenerator.createReceiverChatEntity(userEntity.getMeshId());
-            messageSourceData.insertOrUpdateData(receiverChat);
-
-            addDelay(700);
-
-            SUT.updateAllMessageStatus(userEntity.getMeshId());
-
-            addDelay(700);
-
-            ChatEntity retrieveReceiverChat = messageSourceData.getMessageEntityById(receiverChat.getMessageId());
-            assertThat(retrieveReceiverChat.getStatus(), is(Constants.MessageStatus.STATUS_READ));
-
-            userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
-            userDataSource.insertOrUpdateData(userEntity);
-
-            //TestObserver<UserEntity> entityTestObserver = LiveDataTestUtil.testObserve(SUT.getUserById(userEntity.getMeshId()));
-
-            addDelay(2000);
-
-            assertFalse(userEntity.getOnlineStatus() > Constants.UserStatus.OFFLINE);
-
-            addDelay(1000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testContentMessageSend(){
+        addDelay(100);
+        ChatEntity messageEntity = new ChatEntity();
+        messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
+        SUT.resendContentMessage(messageEntity);
+        assertTrue(true);
     }
+
+
 
     private void addDelay(long time) {
         try {
@@ -125,4 +88,4 @@ public class ChatViewModelTest {
     public void tearDown() {
         appDatabase.close();
     }
-}*/
+}

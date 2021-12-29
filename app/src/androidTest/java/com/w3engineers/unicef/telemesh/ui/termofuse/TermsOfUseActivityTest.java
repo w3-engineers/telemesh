@@ -138,6 +138,13 @@ public class TermsOfUseActivityTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testAppDetailsSettings(){
+        addDelay(2000);
+        mActivityTestRule.getActivity().intentAppDetailsSettings();
+        assertTrue(true);
+    }
+
     private void addDelay(int i) {
         try {
             Thread.sleep(i);

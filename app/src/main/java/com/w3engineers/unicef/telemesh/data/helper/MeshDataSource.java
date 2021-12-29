@@ -313,29 +313,8 @@ public class MeshDataSource extends ViperUtil {
             //  If User has any information we have to open user create page. Otherwise home page
 
             if (isUserRegistered) {
-                Context context = TeleMeshApplication.getContext();
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra(Constants.IntentKeys.IS_MESH_START,true);
-                intent.setAction(MainActivity.class.getName());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
 
-                if (SplashActivity.instance != null) {
-                    SplashActivity.instance.finish();
-                }
-
-                if (TermsOfUseActivity.instance != null) {
-                    TermsOfUseActivity.instance.finish();
-                }
-
-                if (CreateUserActivity.sInstance != null) {
-                    CreateUserActivity.sInstance.finish();
-                }
-
-                if (SelectAccountActivity.instance != null) {
-                    SelectAccountActivity.instance.finish();
-                }
-
+                activityControllerMainActivity();
                 //startMesh();
             } else {
                 Context context = TeleMeshApplication.getContext();
@@ -350,6 +329,35 @@ public class MeshDataSource extends ViperUtil {
                 }
             }
         }
+    }
+
+    public void activityControllerMainActivity(){
+        Context context = TeleMeshApplication.getContext();
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Constants.IntentKeys.IS_MESH_START,true);
+        intent.setAction(MainActivity.class.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+
+        if (SplashActivity.instance != null) {
+            SplashActivity.instance.finish();
+        }
+
+        if (TermsOfUseActivity.instance != null) {
+            TermsOfUseActivity.instance.finish();
+        }
+
+        if (CreateUserActivity.sInstance != null) {
+            CreateUserActivity.sInstance.finish();
+        }
+
+        if (SelectAccountActivity.instance != null) {
+            SelectAccountActivity.instance.finish();
+        }
+    }
+
+    public void activityControllerCreateUser(){
+
     }
 
     @Override

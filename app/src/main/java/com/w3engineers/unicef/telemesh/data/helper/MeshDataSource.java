@@ -317,16 +317,7 @@ public class MeshDataSource extends ViperUtil {
                 activityControllerMainActivity();
                 //startMesh();
             } else {
-                Context context = TeleMeshApplication.getContext();
-                Intent intent = new Intent(context, CreateUserActivity.class);
-                intent.putExtra(Constants.IntentKeys.IMPORT_WALLET, isImportWallet);
-                intent.setAction(CreateUserActivity.class.getName());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-
-                if (SplashActivity.instance != null) {
-                    SplashActivity.instance.finish();
-                }
+                activityControllerCreateUser(isImportWallet);
             }
         }
     }
@@ -356,8 +347,17 @@ public class MeshDataSource extends ViperUtil {
         }
     }
 
-    public void activityControllerCreateUser(){
+    public void activityControllerCreateUser(boolean isImportWallet){
+        Context context = TeleMeshApplication.getContext();
+        Intent intent = new Intent(context, CreateUserActivity.class);
+        intent.putExtra(Constants.IntentKeys.IMPORT_WALLET, isImportWallet);
+        intent.setAction(CreateUserActivity.class.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
 
+        if (SplashActivity.instance != null) {
+            SplashActivity.instance.finish();
+        }
     }
 
     @Override

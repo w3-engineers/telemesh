@@ -1,12 +1,15 @@
 package com.w3engineers.unicef.util.helper;
 
 
+import static org.junit.Assert.assertTrue;
+
 import androidx.test.runner.AndroidJUnit4;
 
 import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
@@ -102,5 +105,13 @@ public class ViperUtilTest {
         protected void onWalletBackUp(boolean isSuccess) {
 
         }
+    }
+
+    @Test
+    public void testNullSellers(){
+        UserModel userModel = new UserModel();
+        CommonViper commonViper = new CommonViper(userModel);
+        commonViper.getAllSellers();
+        assertTrue(true);
     }
 }

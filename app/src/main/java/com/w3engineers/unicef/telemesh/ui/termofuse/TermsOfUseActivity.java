@@ -209,24 +209,30 @@ public class TermsOfUseActivity extends BaseActivity {
         AlertDialog d = builder.create();
 
         buttonOk.setOnClickListener(v -> {
-            SharedPref.write(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE, true);
+            buttonClickListener(d);
 
-            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-            intent.setClassName("com.miui.securitycenter",
-                    "com.miui.permcenter.permissions.PermissionsEditorActivity");
-            intent.putExtra("extra_pkgname", getPackageName());
-
-            try {
-                d.dismiss();
-                //startActivityForResult(intent, REQUEST_XIAOMI_PERMISSION);
-                permissionActivityResultLauncher.launch(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         });
 
 
         d.show();
+    }
+
+    public void buttonClickListener(AlertDialog dialog){
+        SharedPref.write(Constant.PreferenceKeys.IS_SETTINGS_PERMISSION_DONE, true);
+
+        Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+        intent.setClassName("com.miui.securitycenter",
+                "com.miui.permcenter.permissions.PermissionsEditorActivity");
+        intent.putExtra("extra_pkgname", getPackageName());
+        try {
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            permissionActivityResultLauncher.launch(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 

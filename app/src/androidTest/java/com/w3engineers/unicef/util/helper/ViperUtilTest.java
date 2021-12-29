@@ -109,9 +109,23 @@ public class ViperUtilTest {
 
     @Test
     public void testNullSellers(){
+        addDelay();
         UserModel userModel = new UserModel();
         CommonViper commonViper = new CommonViper(userModel);
         commonViper.getAllSellers();
         assertTrue(true);
+    }
+
+    @Test
+    public void testUserActiveStatusException(){
+
+    }
+
+    private void addDelay() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

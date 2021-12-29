@@ -6,6 +6,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -127,6 +129,13 @@ public class TermsOfUseActivityTest {
         mDevice.pressBack();
 
         StatusHelper.out("Terms of use activity executed executed");
+    }
+
+    @Test
+    public void testClickListener(){
+        addDelay(2000);
+        mActivityTestRule.getActivity().buttonClickListener(null);
+        assertTrue(true);
     }
 
     private void addDelay(int i) {

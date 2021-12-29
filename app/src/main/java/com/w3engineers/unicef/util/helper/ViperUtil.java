@@ -540,7 +540,7 @@ public abstract class ViperUtil {
         }
     }*/
 
-    protected void checkUserConnectionStatus(String userId) {
+    public void checkUserConnectionStatus(String userId) {
         try {
             viperClient.checkConnectionStatus(userId);
         } catch (Exception e) {

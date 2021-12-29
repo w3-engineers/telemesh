@@ -9,6 +9,8 @@ import com.w3engineers.unicef.telemesh.data.helper.ContentPendingModel;
 import com.w3engineers.unicef.telemesh.data.local.usertable.UserModel;
 import com.w3engineers.unicef.util.helper.model.ViperData;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -107,19 +109,42 @@ public class ViperUtilTest {
         }
     }
 
+    CommonViper commonViper;
+
+    @Before
+    public void setUp() throws Exception {
+        UserModel userModel = new UserModel();
+        commonViper = new CommonViper(userModel);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+    }
+
     @Test
     public void testNullSellers(){
         addDelay();
-        UserModel userModel = new UserModel();
-        CommonViper commonViper = new CommonViper(userModel);
         commonViper.getAllSellers();
         assertTrue(true);
     }
 
     @Test
     public void testUserActiveStatusException(){
+        addDelay();
+        commonViper.getUserActiveStatus(null);
+        assertTrue(true);
 
     }
+
+    @Test
+    public void testUserInfoSaveException(){
+        addDelay();
+        commonViper.saveUserInfo(null);
+        assertTrue(true);
+    }
+
+
 
     private void addDelay() {
         try {

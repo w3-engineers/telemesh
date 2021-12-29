@@ -144,7 +144,12 @@ public class ViperUtilTest {
         assertTrue(true);
     }
 
-
+    @Test
+    public void testConnectionNull(){
+        addDelay();
+        commonViper.checkUserConnectionStatus(null);
+        assertTrue(true);
+    }
 
     private void addDelay() {
         try {

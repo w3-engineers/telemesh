@@ -62,7 +62,7 @@ public class ContentUtilTest extends TestCase {
 
     @After
     public void tearDown() throws Exception {
-
+    // teardown method is needed at the last
     }
 
     @Test

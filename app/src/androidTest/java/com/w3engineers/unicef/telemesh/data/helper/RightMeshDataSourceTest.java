@@ -144,6 +144,12 @@ public class RightMeshDataSourceTest {
     }
 
     @Test
+    public void testMainActivity(){
+        SUT.activityControllerMainActivity();
+        assertTrue(true);
+    }
+
+    @Test
     public void testOnPeerAdd_checkUserFullName_setValidUser() {
 
         UserEntity userEntity = randomEntityGenerator.createUserEntity();

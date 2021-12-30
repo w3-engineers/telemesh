@@ -145,7 +145,7 @@ public class RightMeshDataSourceTest {
 
     @Test
     public void testMainActivity(){
-        addDelay(2000);
+        addDelay(500);
         SUT.activityControllerMainActivity();
         assertTrue(true);
     }

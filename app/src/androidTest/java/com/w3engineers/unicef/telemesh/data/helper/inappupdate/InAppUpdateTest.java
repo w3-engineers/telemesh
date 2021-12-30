@@ -4,7 +4,9 @@ import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.NetworkInfo;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
@@ -109,6 +111,18 @@ public class InAppUpdateTest {
 
     @Test
     public void downloadConfigTest(){
+
+        addDelay(500);
+        ConnectivityManager connMgr =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        /*boolean isWifiConn = false;
+        boolean isMobileConn = false;*/
+        //Network network = connMgr.getActiveNetwork();
+        for (Network network : connMgr.getAllNetworks()) {
+            InAppUpdate.getInstance(rule.getActivity()).downloadAppUpdateConfig(network);
+        }
+
+        assertTrue(true);
 
         /*addDelay(500);
         Response<ResponseBody> response = Response.error(

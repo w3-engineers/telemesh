@@ -585,7 +585,7 @@ public class RightMeshDataSourceTest {
 
     @Test
     public void testCreateUser(){
-        addDelay(500);
+        addDelay(200);
         SUT. activityControllerCreateUser(false);
         assertTrue(true);
     }

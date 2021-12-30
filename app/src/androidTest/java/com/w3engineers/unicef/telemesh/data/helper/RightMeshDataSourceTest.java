@@ -143,12 +143,12 @@ public class RightMeshDataSourceTest {
         appDatabase.close();
     }
 
-    @Test
+    /*@Test
     public void testMainActivity(){
         addDelay(500);
         SUT.activityControllerMainActivity();
         assertTrue(true);
-    }
+    }*/
 
     @Test
     public void testOnPeerAdd_checkUserFullName_setValidUser() {

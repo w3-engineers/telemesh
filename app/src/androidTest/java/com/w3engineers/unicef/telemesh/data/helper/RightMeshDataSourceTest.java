@@ -143,12 +143,7 @@ public class RightMeshDataSourceTest {
         appDatabase.close();
     }
 
-    /*@Test
-    public void testMainActivity(){
-        addDelay(500);
-        SUT.activityControllerMainActivity();
-        assertTrue(true);
-    }*/
+
 
     @Test
     public void testOnPeerAdd_checkUserFullName_setValidUser() {
@@ -586,6 +581,13 @@ public class RightMeshDataSourceTest {
         int status = SUT.checkUserConnectivityStatus(dainelId);
 
         assertEquals(0, status);
+    }
+
+    @Test
+    public void testCreateUser(){
+        addDelay(500);
+        SUT. activityControllerCreateUser(false);
+        assertTrue(true);
     }
 
     private BroadcastMeta prepareBroadcastMetaData() {

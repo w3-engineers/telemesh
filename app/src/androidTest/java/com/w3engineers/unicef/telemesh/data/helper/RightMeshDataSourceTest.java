@@ -590,12 +590,12 @@ public class RightMeshDataSourceTest {
         assertTrue(true);
     }
 
-    @Test
+    /*@Test
     public void testMainActivity(){
         addDelay(200);
         SUT.activityControllerMainActivity();
         assertTrue(true);
-    }
+    }*/
 
     private BroadcastMeta prepareBroadcastMetaData() {
         BroadcastMeta meta = new BroadcastMeta();

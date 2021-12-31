@@ -116,7 +116,7 @@ public class TermsOfUseActivityTest {
 
     @Test
     public void oldAccountExistsTest() {
-        addDelay(2000);
+        addDelay(3000);
 
         RmDataHelper.getInstance().onWalletPrepared(true);
 

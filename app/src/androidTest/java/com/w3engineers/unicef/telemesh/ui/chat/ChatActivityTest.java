@@ -60,13 +60,14 @@ public class ChatActivityTest {
 
     @Test
     public void testOpenVideo(){
+        addDelay(1000);
         mActivityTestRule.getActivity().openVideo(videoFilePath);
         assertTrue(true);
     }
 
     @Test
     public void testZoomImage(){
-        addDelay(100);
+        addDelay(1000);
         View view = new TMXView(context);
         mActivityTestRule.getActivity().zoomImageFromThumb(view, imagePath);
         assertTrue(true);

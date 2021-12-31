@@ -713,7 +713,10 @@ ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntit
         }
 
         // Load the high-resolution "zoomed-in" image.
-        UIHelper.setImageInGlide(mViewBinging.expandedImage, imagePath);
+        if(mViewBinging != null){
+            UIHelper.setImageInGlide(mViewBinging.expandedImage, imagePath);
+        }
+
 
         // Calculate the starting and ending bounds for the zoomed-in image.
         // This step involves lots of math. Yay, math.
@@ -758,94 +761,99 @@ ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntit
         // begins, it will position the zoomed-in view in the place of the
         // thumbnail.
         thumbView.setAlpha(1f);
-        mViewBinging.expandedImage.setVisibility(View.VISIBLE);
+        if(mViewBinging!= null){
+            mViewBinging.expandedImage.setVisibility(View.VISIBLE);
 
-        // Set the pivot point for SCALE_X and SCALE_Y transformations
-        // to the top-left corner of the zoomed-in view (the default
-        // is the center of the view).
-        mViewBinging.expandedImage.setPivotX(0f);
-        mViewBinging.expandedImage.setPivotY(0f);
+            // Set the pivot point for SCALE_X and SCALE_Y transformations
+            // to the top-left corner of the zoomed-in view (the default
+            // is the center of the view).
+            mViewBinging.expandedImage.setPivotX(0f);
+            mViewBinging.expandedImage.setPivotY(0f);
 
-        // Construct and run the parallel animation of the four translation and
-        // scale properties (X, Y, SCALE_X, and SCALE_Y).
-        AnimatorSet set = new AnimatorSet();
-        set
-                .play(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.X,
-                        startBounds.left, finalBounds.left))
-                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.Y,
-                        startBounds.top, finalBounds.top))
-                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.SCALE_X,
-                        startScale, 1f))
-                .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage,
-                        View.SCALE_Y, startScale, 1f));
-        set.setDuration(shortAnimationDuration);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (!isExpandCancel) {
-                    mViewBinging.expandImageBack.setVisibility(View.VISIBLE);
+            // Construct and run the parallel animation of the four translation and
+            // scale properties (X, Y, SCALE_X, and SCALE_Y).
+            AnimatorSet set = new AnimatorSet();
+            set
+                    .play(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.X,
+                            startBounds.left, finalBounds.left))
+                    .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.Y,
+                            startBounds.top, finalBounds.top))
+                    .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage, View.SCALE_X,
+                            startScale, 1f))
+                    .with(ObjectAnimator.ofFloat(mViewBinging.expandedImage,
+                            View.SCALE_Y, startScale, 1f));
+            set.setDuration(shortAnimationDuration);
+            set.setInterpolator(new DecelerateInterpolator());
+            set.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (!isExpandCancel) {
+                        mViewBinging.expandImageBack.setVisibility(View.VISIBLE);
+                    }
+                    isExpandCancel = false;
+                    currentAnimator = null;
                 }
-                isExpandCancel = false;
-                currentAnimator = null;
-            }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                currentAnimator = null;
-                isExpandCancel = true;
-            }
-        });
-        set.start();
-        currentAnimator = set;
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    currentAnimator = null;
+                    isExpandCancel = true;
+                }
+            });
+            set.start();
+            currentAnimator = set;
+        }
+
 
         // Upon clicking the zoomed-in image, it should zoom back down
         // to the original bounds and show the thumbnail instead of
         // the expanded image.
         final float startScaleFinal = startScale;
-        mViewBinging.expandedImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mViewBinging.expandImageBack.setVisibility(View.GONE);
-                if (currentAnimator != null) {
-                    currentAnimator.cancel();
+        if(mViewBinging!= null){
+            mViewBinging.expandedImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mViewBinging.expandImageBack.setVisibility(View.GONE);
+                    if (currentAnimator != null) {
+                        currentAnimator.cancel();
+                    }
+
+                    // Animate the four positioning/sizing properties in parallel,
+                    // back to their original values.
+                    AnimatorSet set = new AnimatorSet();
+                    set.play(ObjectAnimator
+                            .ofFloat(mViewBinging.expandedImage, View.X, startBounds.left))
+                            .with(ObjectAnimator
+                                    .ofFloat(mViewBinging.expandedImage,
+                                            View.Y, startBounds.top))
+                            .with(ObjectAnimator
+                                    .ofFloat(mViewBinging.expandedImage,
+                                            View.SCALE_X, startScaleFinal))
+                            .with(ObjectAnimator
+                                    .ofFloat(mViewBinging.expandedImage,
+                                            View.SCALE_Y, startScaleFinal));
+                    set.setDuration(shortAnimationDuration);
+                    set.setInterpolator(new DecelerateInterpolator());
+                    set.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            thumbView.setAlpha(1f);
+                            mViewBinging.expandedImage.setVisibility(View.GONE);
+                            currentAnimator = null;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            thumbView.setAlpha(1f);
+                            mViewBinging.expandedImage.setVisibility(View.GONE);
+                            currentAnimator = null;
+                        }
+                    });
+                    set.start();
+                    currentAnimator = set;
                 }
-
-                // Animate the four positioning/sizing properties in parallel,
-                // back to their original values.
-                AnimatorSet set = new AnimatorSet();
-                set.play(ObjectAnimator
-                        .ofFloat(mViewBinging.expandedImage, View.X, startBounds.left))
-                        .with(ObjectAnimator
-                                .ofFloat(mViewBinging.expandedImage,
-                                        View.Y, startBounds.top))
-                        .with(ObjectAnimator
-                                .ofFloat(mViewBinging.expandedImage,
-                                        View.SCALE_X, startScaleFinal))
-                        .with(ObjectAnimator
-                                .ofFloat(mViewBinging.expandedImage,
-                                        View.SCALE_Y, startScaleFinal));
-                set.setDuration(shortAnimationDuration);
-                set.setInterpolator(new DecelerateInterpolator());
-                set.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        thumbView.setAlpha(1f);
-                        mViewBinging.expandedImage.setVisibility(View.GONE);
-                        currentAnimator = null;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        thumbView.setAlpha(1f);
-                        mViewBinging.expandedImage.setVisibility(View.GONE);
-                        currentAnimator = null;
-                    }
-                });
-                set.start();
-                currentAnimator = set;
-            }
-        });
+            });
+        }
     }
 
 }

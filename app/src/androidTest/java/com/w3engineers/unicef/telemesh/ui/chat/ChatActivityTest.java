@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -28,6 +30,7 @@ public class ChatActivityTest {
     public Activity currentActivity = null;
     private Context context;
     private String videoFilePath = "file:///android_asset/sample_vide.mp4";
+    private String imagePath = "file:///android_asset/sample_image.jpg";
 
     @Before
     public void setUp() {
@@ -36,6 +39,17 @@ public class ChatActivityTest {
     }
 
     public void tearDown() {
+    }
+
+    public class TMXView extends View {
+        public TMXView(Context context) {
+            super(context);
+            // Load map
+        }
+
+        public void onDraw(Canvas canvas) {
+            // Draw the map on the canvas
+        }
     }
 
     /*@Test
@@ -53,7 +67,8 @@ public class ChatActivityTest {
     @Test
     public void testZoomImage(){
         addDelay(100);
-        mActivityTestRule.getActivity().zoomImageFromThumb();
+        View view = new TMXView(context);
+        mActivityTestRule.getActivity().zoomImageFromThumb(view, imagePath);
         assertTrue(true);
     }
 

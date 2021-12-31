@@ -50,6 +50,21 @@ public class ChatActivityTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testZoomImage(){
+        addDelay(100);
+        mActivityTestRule.getActivity().zoomImageFromThumb();
+        assertTrue(true);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Activity getActivityInstance() {
         getInstrumentation().runOnMainSync(() -> {
             Collection resumedActivities =

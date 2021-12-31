@@ -77,7 +77,8 @@ import timber.log.Timber;
  * ============================================================================
  */
 
-public class ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntity> {
+public class
+ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntity> {
     /**
      * <h1>Instance variable scope</h1>
      */
@@ -704,7 +705,7 @@ public class ChatActivity extends TelemeshBaseActivity implements ItemClickListe
         }
     }
 
-    private void zoomImageFromThumb(final View thumbView, String imagePath) {
+    public void zoomImageFromThumb(final View thumbView, String imagePath) {
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         if (currentAnimator != null) {

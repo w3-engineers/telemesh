@@ -1,14 +1,19 @@
 package com.w3engineers.unicef.telemesh.ui.main;
 
+import static org.junit.Assert.assertTrue;
+
 import android.content.Context;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
@@ -25,5 +30,20 @@ public class MainActivityTest {
 
     @After
     public void tearDown() {
+    }
+
+    @Test
+    public void testPlayStoreUpdate(){
+        /*addDelay(1000);
+        MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "test String");
+        assertTrue(true);*/
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

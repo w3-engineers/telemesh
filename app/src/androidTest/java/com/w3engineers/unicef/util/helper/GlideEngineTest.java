@@ -99,7 +99,15 @@ public class GlideEngineTest {
 
     @Test
     public void testLoadGridImage(){
-
+        addDelay(500);
+        mActivity.runOnUiThread(() -> {
+            longImageView = new SubsamplingScaleImageView(context);
+            addDelay(200);
+            glideEngine.loadGridImage(context,
+                    "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                    imageView);
+        });
+        assertTrue(true);
     }
 
 

@@ -636,7 +636,7 @@ ChatActivity extends TelemeshBaseActivity implements ItemClickListener<UserEntit
     private long shortAnimationDuration = 300;
     private boolean isExpandCancel = false;
 
-    private void viewContent(View messageImage, ChatEntity messageEntity) {
+    public void viewContent(View messageImage, ChatEntity messageEntity) {
         int contentStatus = -1;
         String contentPath = "";
 

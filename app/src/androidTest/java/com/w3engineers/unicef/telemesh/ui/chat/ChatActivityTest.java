@@ -16,6 +16,10 @@ import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,6 +74,13 @@ public class ChatActivityTest {
         addDelay(1000);
         View view = new TMXView(context);
         mActivityTestRule.getActivity().zoomImageFromThumb(view, imagePath);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testViewContent(){
+        addDelay(1000);
+
         assertTrue(true);
     }
 

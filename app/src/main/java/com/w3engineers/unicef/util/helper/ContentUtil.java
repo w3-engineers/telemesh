@@ -111,7 +111,10 @@ public class ContentUtil {
     public String getExternalStorageDirectory(Uri uri){
         final String docId = DocumentsContract.getDocumentId(uri);
         final String[] split = docId.split(":");
-        return Environment.getExternalStorageDirectory() + "/" + split[1];
+        if(split.length >1){
+            return Environment.getExternalStorageDirectory() + "/" + split[1];
+        }
+        return null;
     }
 
     public String getFilePathFromUri(Uri uri) {

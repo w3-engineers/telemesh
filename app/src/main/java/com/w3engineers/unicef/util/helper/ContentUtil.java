@@ -108,6 +108,12 @@ public class ContentUtil {
         }
     }*/
 
+    public String getExternalStorageDirectory(Uri uri){
+        final String docId = DocumentsContract.getDocumentId(uri);
+        final String[] split = docId.split(":");
+        return Environment.getExternalStorageDirectory() + "/" + split[1];
+    }
+
     public String getFilePathFromUri(Uri uri) {
         String selection = null;
         String[] selectionArgs = null;
@@ -115,9 +121,7 @@ public class ContentUtil {
         // Uri is different in versions after KITKAT (Android 4.4), we need to
         if (DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
             if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
+                return getExternalStorageDirectory(uri);
             } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
                 uri = ContentUris.withAppendedId(

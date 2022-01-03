@@ -84,7 +84,8 @@ public class ChatActivityTest {
         mActivityTestRule.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                View view = new TMXView(context);
+                MessageEntity messageEntity = new MessageEntity();
             }
         });
         assertTrue(true);

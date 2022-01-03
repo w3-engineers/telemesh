@@ -1,6 +1,8 @@
 package com.w3engineers.unicef.util.helper;
 
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
@@ -78,6 +80,28 @@ public class GlideEngineTest {
         mActivity.runOnUiThread(() -> glideEngine.loadImage(context,
                 "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
                 imageView, null));
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void glideFolderImageTest(){
+        addDelay(500);
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                longImageView = new SubsamplingScaleImageView(context);
+                addDelay(200);
+                glideEngine.loadFolderImage(context,
+                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                        imageView);
+            }
+        });
+        assertTrue(true);
+    }
+
+    @Test
+    public void testLoadGridImage(){
 
     }
 

@@ -86,6 +86,10 @@ public class ChatActivityTest {
             public void run() {
                 View view = new TMXView(context);
                 MessageEntity messageEntity = new MessageEntity();
+                messageEntity.setIncoming(true);
+                messageEntity.setContentPath(imagePath);
+                messageEntity.setContentStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING);
+                mActivityTestRule.getActivity().viewContent(view, messageEntity);
             }
         });
         assertTrue(true);

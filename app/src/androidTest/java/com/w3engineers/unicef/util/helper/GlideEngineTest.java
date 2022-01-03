@@ -87,15 +87,12 @@ public class GlideEngineTest {
     @Test
     public void glideFolderImageTest(){
         addDelay(500);
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                longImageView = new SubsamplingScaleImageView(context);
-                addDelay(200);
-                glideEngine.loadFolderImage(context,
-                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
-                        imageView);
-            }
+        mActivity.runOnUiThread(() -> {
+            longImageView = new SubsamplingScaleImageView(context);
+            addDelay(200);
+            glideEngine.loadFolderImage(context,
+                    "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                    imageView);
         });
         assertTrue(true);
     }

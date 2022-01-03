@@ -80,7 +80,13 @@ public class ChatActivityTest {
     @Test
     public void testViewContent(){
         addDelay(1000);
+        // task needs to be run on ui thread
+        mActivityTestRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
+            }
+        });
         assertTrue(true);
     }
 

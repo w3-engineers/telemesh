@@ -34,9 +34,7 @@ public class MainActivityTest {
 
     @Test
     public void testPlayStoreUpdate(){
-        /*addDelay(1000);
-        MainActivity.getInstance().checkPlayStoreAppUpdate(Constants.AppUpdateType.BLOCKER, "test String");
-        assertTrue(true);*/
+
     }
 
     private void addDelay(long time) {

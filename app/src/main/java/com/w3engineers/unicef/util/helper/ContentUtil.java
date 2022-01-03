@@ -108,6 +108,7 @@ public class ContentUtil {
         }
     }*/
 
+    // test case
     public String getExternalStorageDirectory(Uri uri){
         final String docId = DocumentsContract.getDocumentId(uri);
         final String[] split = docId.split(":");

@@ -70,6 +70,14 @@ public class GroupDataHelperTest {
     }
 
     @Test
+    public void testNullEntity(){
+        addDelay(100);
+        groupDataSource.insertOrUpdateGroup(null);
+        assertTrue(true);
+    }
+
+
+    @Test
     public void test_group_create_join_event() {
         GroupModel groupModel = prepareGroupModel();
 

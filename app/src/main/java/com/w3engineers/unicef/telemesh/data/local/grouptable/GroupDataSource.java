@@ -27,11 +27,11 @@ public class GroupDataSource {
     }
 
     public long insertOrUpdateGroup(GroupEntity entity) {
-        Callable<Long> insertCallable = () -> mGroupDao.insertOrUpdate(entity);
 
         try {
+            Callable<Long> insertCallable = () -> mGroupDao.insertOrUpdate(entity);
             return mIoExecutor.submit(insertCallable).get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (NullPointerException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return 0;
         }

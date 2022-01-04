@@ -6,6 +6,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -79,42 +81,42 @@ public class TermsOfUseActivityTest {
 
             addDelay(1000);
 
+            currentActivity = getActivityInstance();
+
+            if (!(currentActivity instanceof SelectAccountActivity)) {
+                currentActivity = getActivityInstance();
+                Intent intent = new Intent(currentActivity, SelectAccountActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+
+            addDelay(1000);
+
+            onView(withId(R.id.button_import_account)).perform(click());
+            addDelay(1000);
+
+
+            SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, false);
+
+            onView(withId(R.id.button_create_account)).perform(click());
+
+            addDelay(3000);
+            hideKeyboard(currentActivity = getActivityInstance());
+            addDelay(1000);
+            mDevice.pressBack();
+            addDelay(1000);
+
+            SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        currentActivity = getActivityInstance();
-
-        if (!(currentActivity instanceof SelectAccountActivity)) {
-            currentActivity = getActivityInstance();
-            Intent intent = new Intent(currentActivity, SelectAccountActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
-
-        addDelay(1000);
-
-        onView(withId(R.id.button_import_account)).perform(click());
-        addDelay(1000);
-
-
-        SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, false);
-
-        onView(withId(R.id.button_create_account)).perform(click());
-
-        addDelay(3000);
-        hideKeyboard(currentActivity = getActivityInstance());
-        addDelay(1000);
-        mDevice.pressBack();
-        addDelay(1000);
-
-        SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
     }
 
     @Test
     public void oldAccountExistsTest() {
-        addDelay(2000);
+        addDelay(3000);
 
         RmDataHelper.getInstance().onWalletPrepared(true);
 
@@ -127,6 +129,30 @@ public class TermsOfUseActivityTest {
         mDevice.pressBack();
 
         StatusHelper.out("Terms of use activity executed executed");
+    }
+
+    @Test
+    public void testClickListener(){
+        try{
+            addDelay(2000);
+            mActivityTestRule.getActivity().buttonClickListener(null);
+            assertTrue(true);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testAppDetailsSettings(){
+        try{
+            addDelay(2000);
+            mActivityTestRule.getActivity().intentAppDetailsSettings();
+            assertTrue(true);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
 
     private void addDelay(int i) {

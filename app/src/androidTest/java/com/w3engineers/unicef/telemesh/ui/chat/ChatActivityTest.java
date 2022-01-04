@@ -7,12 +7,18 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
+
+import com.w3engineers.unicef.telemesh.data.helper.constants.Constants;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.ChatEntity;
+import com.w3engineers.unicef.telemesh.data.local.messagetable.MessageEntity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,6 +34,7 @@ public class ChatActivityTest {
     public Activity currentActivity = null;
     private Context context;
     private String videoFilePath = "file:///android_asset/sample_vide.mp4";
+    private String imagePath = "file:///android_asset/sample_image.jpg";
 
     @Before
     public void setUp() {
@@ -38,6 +45,17 @@ public class ChatActivityTest {
     public void tearDown() {
     }
 
+    public class TMXView extends View {
+        public TMXView(Context context) {
+            super(context);
+            // Load map
+        }
+
+        public void onDraw(Canvas canvas) {
+            // Draw the map on the canvas
+        }
+    }
+
     /*@Test
     public void testChatFinish(){
         mActivityTestRule.getActivity().chatFinishAndStartApp();
@@ -46,8 +64,43 @@ public class ChatActivityTest {
 
     @Test
     public void testOpenVideo(){
+        addDelay(1000);
         mActivityTestRule.getActivity().openVideo(videoFilePath);
         assertTrue(true);
+    }
+
+    @Test
+    public void testZoomImage(){
+        addDelay(1000);
+        View view = new TMXView(context);
+        mActivityTestRule.getActivity().zoomImageFromThumb(view, imagePath);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testViewContent(){
+        addDelay(1000);
+        // task needs to be run on ui thread
+        mActivityTestRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                View view = new TMXView(context);
+                MessageEntity messageEntity = new MessageEntity();
+                messageEntity.setIncoming(true);
+                messageEntity.setContentPath(imagePath);
+                messageEntity.setContentStatus(Constants.ContentStatus.CONTENT_STATUS_RECEIVING);
+                mActivityTestRule.getActivity().viewContent(view, messageEntity);
+            }
+        });
+        assertTrue(true);
+    }
+
+    private void addDelay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public Activity getActivityInstance() {

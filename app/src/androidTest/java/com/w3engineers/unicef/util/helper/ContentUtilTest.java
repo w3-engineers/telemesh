@@ -62,7 +62,7 @@ public class ContentUtilTest extends TestCase {
 
     @After
     public void tearDown() throws Exception {
-
+    // teardown method is needed at the last
     }
 
     @Test
@@ -217,9 +217,17 @@ public class ContentUtilTest extends TestCase {
         assertTrue(true);
     }
 
+
     public void testPathNull(){
         addDelay(100);
         contentUtil.getCopiedFilePath(null, false);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testExternalStorage(){
+        addDelay(100);
+        contentUtil.getExternalStorageDirectory(Uri.parse("content://com.android.providers.media.documents/document/image"));
         assertTrue(true);
     }
 

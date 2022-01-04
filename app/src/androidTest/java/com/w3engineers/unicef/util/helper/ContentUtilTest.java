@@ -217,7 +217,7 @@ public class ContentUtilTest extends TestCase {
         assertTrue(true);
     }
 
-
+    @Test
     public void testPathNull(){
         addDelay(100);
         contentUtil.getCopiedFilePath(null, false);

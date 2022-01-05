@@ -87,6 +87,7 @@ public class GlideEngineTest {
     @Test
     public void glideFolderImageTest(){
         // this test class is added
+        // delay is 500 second
         addDelay(500);
         mActivity.runOnUiThread(() -> {
             longImageView = new SubsamplingScaleImageView(context);

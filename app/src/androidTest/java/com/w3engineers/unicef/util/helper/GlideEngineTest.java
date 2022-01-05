@@ -99,6 +99,20 @@ public class GlideEngineTest {
     }
 
     @Test
+    public void testGifImage(){
+        addDelay(500);
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                glideEngine.loadAsGifImage(context,
+                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                        imageView);
+            }
+        });
+        assertTrue(true);
+    }
+
+    @Test
     public void testLoadGridImage(){
         addDelay(500);
         mActivity.runOnUiThread(() -> {

@@ -104,6 +104,7 @@ public class GlideEngineTest {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                addDelay(200);
                 glideEngine.loadAsGifImage(context,
                         "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
                         imageView);

@@ -90,7 +90,6 @@ public class GlideEngineTest {
         // delay is 500 second
         addDelay(500);
         mActivity.runOnUiThread(() -> {
-            longImageView = new SubsamplingScaleImageView(context);
             addDelay(200);
             glideEngine.loadFolderImage(context,
                     "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
@@ -103,7 +102,6 @@ public class GlideEngineTest {
     public void testLoadGridImage(){
         addDelay(500);
         mActivity.runOnUiThread(() -> {
-            longImageView = new SubsamplingScaleImageView(context);
             addDelay(200);
             glideEngine.loadGridImage(context,
                     "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",

@@ -143,7 +143,9 @@ public class GlideEngine implements ImageEngine {
         if (resource != null) {
             boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
                     resource.getHeight());
-            longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
+            if(longImageView!= null){
+                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
+            }
             imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
             if (eqLongImage) {
                 // 加载长图

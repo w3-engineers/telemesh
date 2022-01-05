@@ -133,35 +133,31 @@ public class GlideEngine implements ImageEngine {
                 .into(new ImageViewTarget<Bitmap>(imageView) {
                     @Override
                     protected void setResource(@Nullable Bitmap resource) {
-                        loadResource(resource, imageView, longImageView);
+                        if (resource != null) {
+                            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
+                                    resource.getHeight());
+                            if(longImageView!= null){
+                                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
+                            }
+                            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
+                            if (eqLongImage) {
+                                // 加载长图
+                                longImageView.setQuickScaleEnabled(true);
+                                longImageView.setZoomEnabled(true);
+                                longImageView.setDoubleTapZoomDuration(100);
+                                longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+                                longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+                                longImageView.setImage(ImageSource.cachedBitmap(resource),
+                                        new ImageViewState(0, new PointF(0, 0), 0));
+                            } else {
+                                // 普通图片
+                                imageView.setImageBitmap(resource);
+                            }
+                        }
                     }
                 });
     }
 
-    public void loadResource(Bitmap resource, @NonNull ImageView imageView,
-                             SubsamplingScaleImageView longImageView){
-        if (resource != null) {
-            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
-                    resource.getHeight());
-            if(longImageView!= null){
-                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
-            }
-            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
-            if (eqLongImage) {
-                // 加载长图
-                longImageView.setQuickScaleEnabled(true);
-                longImageView.setZoomEnabled(true);
-                longImageView.setDoubleTapZoomDuration(100);
-                longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
-                longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
-                longImageView.setImage(ImageSource.cachedBitmap(resource),
-                        new ImageViewState(0, new PointF(0, 0), 0));
-            } else {
-                // 普通图片
-                imageView.setImageBitmap(resource);
-            }
-        }
-    }
 
     /**
      * 加载相册目录

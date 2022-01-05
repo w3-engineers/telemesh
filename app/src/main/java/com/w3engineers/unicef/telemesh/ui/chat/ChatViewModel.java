@@ -306,12 +306,17 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
     }
 
     public void sendContentMessage(String userId, Uri uri) {
-        getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
-                .getFilePathFromUri(uri))
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(contentPath -> {
-                    startContentMessageProcess(userId, contentPath);
-                }, Throwable::printStackTrace));
+        try{
+            getCompositeDisposable().add(Single.just(ContentUtil.getInstance()
+                    .getFilePathFromUri(uri))
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(contentPath -> {
+                        startContentMessageProcess(userId, contentPath);
+                    }, Throwable::printStackTrace));
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
 
     public void sendContentMessage2(String userId, String path) {

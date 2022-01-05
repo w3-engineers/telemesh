@@ -3,6 +3,7 @@ package com.w3engineers.unicef.telemesh.ui.chat;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -42,6 +43,13 @@ public class ChatViewModelTest {
         ChatEntity messageEntity = new ChatEntity();
         messageEntity.setStatus(Constants.MessageStatus.STATUS_FAILED);
         SUT.resendContentMessage(messageEntity);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testContentSend(){
+        addDelay(1000);
+        SUT.sendContentMessage(userAddress, Uri.parse("content://com.android.providers.media.documents/document/image"));
         assertTrue(true);
     }
 

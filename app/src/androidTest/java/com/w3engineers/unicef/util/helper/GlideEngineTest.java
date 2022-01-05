@@ -103,28 +103,6 @@ public class GlideEngineTest {
         assertTrue(true);
     }
 
-
-    @Test
-    public void testBitmapResource(){
-        addDelay(500);
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                addDelay(200);
-                longImageView = new SubsamplingScaleImageView(context);
-                Uri imageUri = Uri.parse("file:///android_asset/sample_image.jpg");
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), imageUri);
-                    glideEngine.loadResource(bitmap, imageView, longImageView);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        assertTrue(true);
-    }
-
     @Test
     public void testGifImage(){
         addDelay(500);

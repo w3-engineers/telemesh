@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import androidx.test.InstrumentationRegistry;
@@ -19,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -94,6 +99,28 @@ public class GlideEngineTest {
             glideEngine.loadFolderImage(context,
                     "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
                     imageView);
+        });
+        assertTrue(true);
+    }
+
+
+    @Test
+    public void testBitmapResource(){
+        addDelay(500);
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addDelay(200);
+                longImageView = new SubsamplingScaleImageView(context);
+                Uri imageUri = Uri.parse("file:///android_asset/sample_image.jpg");
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), imageUri);
+                    glideEngine.loadResource(bitmap, imageView, longImageView);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
         assertTrue(true);
     }

@@ -183,6 +183,13 @@ public class ContentUtilTest extends TestCase {
     }
 
     @Test
+    public void testIOException(){
+        addDelay(1000);
+        contentUtil.getContentFromUrl("htps://dashboard.telemesh.net/message/download?filename=myfile_1624623314123-467515276.jpeg");
+        assertTrue(true);
+    }
+
+    @Test
     public void testMalformedUrl(){
         addDelay(100);
         ContentUtil.getFileNameFromURL("htps://airbrake.io");

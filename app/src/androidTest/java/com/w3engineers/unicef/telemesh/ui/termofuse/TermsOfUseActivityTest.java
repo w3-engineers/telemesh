@@ -55,14 +55,13 @@ public class TermsOfUseActivityTest {
     @Test
     public void xiaomiPopupTest() {
 
-        addDelay(2000);
-
-        //mActivityTestRule.getActivity().onActivityResult(109, -1, null);
-        mActivityTestRule.getActivity().permissionActivityResultLauncher.getContract();
-
-        addDelay(1000);
-
         try {
+            addDelay(2000);
+
+            //mActivityTestRule.getActivity().onActivityResult(109, -1, null);
+            mActivityTestRule.getActivity().permissionActivityResultLauncher.getContract();
+
+            addDelay(1000);
             mActivityTestRule.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -116,19 +115,24 @@ public class TermsOfUseActivityTest {
 
     @Test
     public void oldAccountExistsTest() {
-        addDelay(3000);
+        try{
+            addDelay(3000);
 
-        RmDataHelper.getInstance().onWalletPrepared(true);
+            RmDataHelper.getInstance().onWalletPrepared(true);
 
-        addDelay(2000);
+            addDelay(2000);
 
-        hideKeyboard(getActivityInstance());
+            hideKeyboard(getActivityInstance());
 
-        addDelay(1000);
+            addDelay(1000);
 
-        mDevice.pressBack();
+            mDevice.pressBack();
 
-        StatusHelper.out("Terms of use activity executed executed");
+            StatusHelper.out("Terms of use activity executed executed");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Test

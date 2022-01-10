@@ -188,15 +188,8 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
 
                     List<UserEntity> userEntityList = new ArrayList<>();
                     for (UserEntity diffElement : userList) {
-                        UserEntity userEntity = new UserEntity();
-                        userEntity.setMeshId(diffElement.getMeshId());
-                        userEntity.setUserName(diffElement.getUserName());
-                        userEntity.setUserLastName(diffElement.getUserLastName());
-                        userEntity.setAvatarIndex(diffElement.getAvatarIndex());
-                        userEntity.setIsFavourite(diffElement.getIsFavourite());
-                        userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+                        UserEntity userEntity = getUserEntity(diffElement);
                         userEntity.hasUnreadMessage = (!TextUtils.isEmpty(selectChattedUser) && selectChattedUser.equals(userEntity.getMeshId())) ? 0 : diffElement.hasUnreadMessage;
-
                         userEntityList.add(userEntity);
                     }
 
@@ -217,6 +210,18 @@ public class GroupCreateViewModel extends BaseRxAndroidViewModel {
                     setUserData(userList);
 
                 }, Throwable::printStackTrace));
+    }
+
+    public UserEntity getUserEntity(UserEntity diffElement){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setMeshId(diffElement.getMeshId());
+        userEntity.setUserName(diffElement.getUserName());
+        userEntity.setUserLastName(diffElement.getUserLastName());
+        userEntity.setAvatarIndex(diffElement.getAvatarIndex());
+        userEntity.setIsFavourite(diffElement.getIsFavourite());
+        userEntity.setOnlineStatus(Constants.UserStatus.OFFLINE);
+
+        return userEntity;
     }
 
     public void setUserData(List<UserEntity> userEntities) {

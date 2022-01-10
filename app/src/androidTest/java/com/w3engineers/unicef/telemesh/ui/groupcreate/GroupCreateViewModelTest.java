@@ -48,6 +48,15 @@ public class GroupCreateViewModelTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testUserEntity(){
+        addDelay(1000);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setMeshId("meshId");
+
+
+    }
+
     private void addDelay(long time) {
         try {
             Thread.sleep(time);

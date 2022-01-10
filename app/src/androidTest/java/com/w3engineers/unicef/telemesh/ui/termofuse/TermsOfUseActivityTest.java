@@ -99,11 +99,11 @@ public class TermsOfUseActivityTest {
 
             onView(withId(R.id.button_create_account)).perform(click());
 
-            addDelay(3000);
+            addDelay(2000);
             hideKeyboard(currentActivity = getActivityInstance());
-            addDelay(2000);
+            addDelay(1000);
             mDevice.pressBack();
-            addDelay(2000);
+            addDelay(1000);
 
             SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, true);
 

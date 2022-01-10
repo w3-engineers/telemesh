@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -120,6 +123,26 @@ public class GlideEngineTest {
 
     @Test
     public void testLoadGridImage(){
+        addDelay(500);
+        mActivity.runOnUiThread(() -> {
+            addDelay(200);
+            longImageView = new SubsamplingScaleImageView(context);
+            AssetManager assetManager = context.getAssets();
+            InputStream istr;
+            Bitmap bitmap = null;
+            try {
+                istr = assetManager.open("file:///android_asset/sample_image.jpg");
+                bitmap = BitmapFactory.decodeStream(istr);
+            } catch (IOException e) {
+                // handle exception
+            }
+            glideEngine.setImageResource(bitmap, imageView, longImageView);
+        });
+        assertTrue(true);
+    }
+
+    @Test
+    public void testBitmapResource(){
         addDelay(500);
         mActivity.runOnUiThread(() -> {
             addDelay(200);

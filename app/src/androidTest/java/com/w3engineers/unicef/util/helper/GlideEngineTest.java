@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import androidx.test.InstrumentationRegistry;
@@ -19,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -86,9 +91,10 @@ public class GlideEngineTest {
 
     @Test
     public void glideFolderImageTest(){
+        // this test class is added
+        // delay is 500 second
         addDelay(500);
         mActivity.runOnUiThread(() -> {
-            longImageView = new SubsamplingScaleImageView(context);
             addDelay(200);
             glideEngine.loadFolderImage(context,
                     "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
@@ -98,10 +104,24 @@ public class GlideEngineTest {
     }
 
     @Test
+    public void testGifImage(){
+        addDelay(500);
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addDelay(200);
+                glideEngine.loadAsGifImage(context,
+                        "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",
+                        imageView);
+            }
+        });
+        assertTrue(true);
+    }
+
+    @Test
     public void testLoadGridImage(){
         addDelay(500);
         mActivity.runOnUiThread(() -> {
-            longImageView = new SubsamplingScaleImageView(context);
             addDelay(200);
             glideEngine.loadGridImage(context,
                     "https://github.com/w3-engineers/telemesh/blob/master/images/discovery.png",

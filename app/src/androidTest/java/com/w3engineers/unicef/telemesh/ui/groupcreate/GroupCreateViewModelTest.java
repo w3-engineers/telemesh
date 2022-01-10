@@ -53,7 +53,10 @@ public class GroupCreateViewModelTest {
         addDelay(1000);
         UserEntity userEntity = new UserEntity();
         userEntity.setMeshId("meshId");
-
+        userEntity.setUserName("meshUser");
+        userEntity.setUserLastName("meshUserLastName");
+        groupCreateViewModel.getUserEntity(userEntity);
+        assertTrue(true);
 
     }
 

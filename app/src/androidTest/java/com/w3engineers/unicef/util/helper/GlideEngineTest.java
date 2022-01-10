@@ -123,21 +123,24 @@ public class GlideEngineTest {
 
     @Test
     public void testLoadGridImage(){
-        addDelay(500);
-        mActivity.runOnUiThread(() -> {
+        addDelay(1000);
+        AssetManager assetManager = context.getAssets();
+        InputStream istr;
+        Bitmap bitmap = null;
+        try {
+            istr = assetManager.open("file:///android_asset/sample_image.jpg");
+            bitmap = BitmapFactory.decodeStream(istr);
             addDelay(200);
             longImageView = new SubsamplingScaleImageView(context);
-            AssetManager assetManager = context.getAssets();
-            InputStream istr;
-            Bitmap bitmap = null;
-            try {
-                istr = assetManager.open("file:///android_asset/sample_image.jpg");
-                bitmap = BitmapFactory.decodeStream(istr);
-            } catch (IOException e) {
-                // handle exception
-            }
             glideEngine.setImageResource(bitmap, imageView, longImageView);
-        });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       /* mActivity.runOnUiThread(() -> {
+
+
+        });*/
         assertTrue(true);
     }
 

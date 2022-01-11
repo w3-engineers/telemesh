@@ -370,7 +370,7 @@ public class ChatViewModel extends BaseRxAndroidViewModel {
         }
     }
 
-    private void prepareContentMessage(String userId, String path, String thumbPath) {
+    public void prepareContentMessage(String userId, String path, String thumbPath) {
         MessageEntity messageEntity = null;
         GroupMessageEntity groupMessageEntity = null;
         if (isGroup) {

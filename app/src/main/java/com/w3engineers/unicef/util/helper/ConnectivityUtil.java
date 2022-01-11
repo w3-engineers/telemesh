@@ -25,31 +25,32 @@ public class ConnectivityUtil {
 
     public static void isInternetAvailable(Context context, BiConsumer<String, Boolean> consumer) {
         new Thread(() -> {
-            if (isNetworkAvailable(context)) {
-                try {
+            try{
+                if (isNetworkAvailable(context)) {
+
                     HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
                     urlc.connect();
                     consumer.accept("", urlc.getResponseCode() == 200);
-                } catch (Exception e) {
-                    Log.e("InternetCheck", "Error checking internet connection " + e.getMessage());
-                    try {
-                        consumer.accept("", false);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
+
+                }else {
+                    handleException(consumer);
                 }
-            } else {
-                Log.e("InternetCheck", "No internet available ");
-                try {
-                    consumer.accept("", false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            }catch(Exception e){
+                handleException(consumer);
             }
+
         }).start();
 
+    }
+
+    public static void handleException(BiConsumer<String, Boolean> consumer){
+        try {
+            consumer.accept("", false);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

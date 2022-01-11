@@ -24,10 +24,24 @@ public class ConnectivityUtilTest {
 
     @Test
     public void testInternetException(){
-        addDelay(100);
+        addDelay(200);
+        ConnectivityUtil.isInternetAvailable(mContext,null);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testConsumer(){
         BiConsumer<String, Boolean> biConsumer = (key, value) ->
                 System.out.println("Key:"+ key+" Value:"+ value);
-        ConnectivityUtil.isInternetAvailable(mContext,null);
+        addDelay(500);
+        ConnectivityUtil.handleException(biConsumer);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testConsumerNull(){
+        addDelay(300);
+        ConnectivityUtil.handleException(null);
         assertTrue(true);
     }
 

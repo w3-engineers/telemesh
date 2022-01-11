@@ -56,12 +56,12 @@ public class TermsOfUseActivityTest {
     public void xiaomiPopupTest() {
 
         try {
-            addDelay(2000);
+            addDelay(3000);
 
             //mActivityTestRule.getActivity().onActivityResult(109, -1, null);
             mActivityTestRule.getActivity().permissionActivityResultLauncher.getContract();
 
-            addDelay(1000);
+            addDelay(2000);
             mActivityTestRule.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -73,12 +73,12 @@ public class TermsOfUseActivityTest {
             throwable.printStackTrace();
         }
 
-        addDelay(6000);
+        addDelay(8000);
 
         try {
             onView(withId(R.id.button_ok)).perform(click());
 
-            addDelay(1000);
+            addDelay(2000);
 
             currentActivity = getActivityInstance();
 
@@ -89,17 +89,17 @@ public class TermsOfUseActivityTest {
                 context.startActivity(intent);
             }
 
-            addDelay(1000);
+            addDelay(2000);
 
             onView(withId(R.id.button_import_account)).perform(click());
-            addDelay(1000);
+            addDelay(2000);
 
 
             SharedPref.write(Constants.preferenceKey.IS_USER_REGISTERED, false);
 
             onView(withId(R.id.button_create_account)).perform(click());
 
-            addDelay(3000);
+            addDelay(2000);
             hideKeyboard(currentActivity = getActivityInstance());
             addDelay(1000);
             mDevice.pressBack();

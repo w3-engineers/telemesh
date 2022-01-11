@@ -151,6 +151,13 @@ public class ViperUtilTest {
         assertTrue(true);
     }
 
+    @Test
+    public void testPermissionNullCheck(){
+        addDelay();
+        commonViper.isPermissionNeeded(null);
+        assertTrue(true);
+    }
+
     private void addDelay() {
         try {
             Thread.sleep(100);

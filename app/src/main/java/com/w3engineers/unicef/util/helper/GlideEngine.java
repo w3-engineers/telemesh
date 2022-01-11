@@ -82,30 +82,7 @@ public class GlideEngine implements ImageEngine {
                         if (callback != null) {
                             callback.onHideLoading();
                         }
-                        if (resource != null) {
-                            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
-                                    resource.getHeight());
-                            if(longImageView!= null){
-                                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
-                            }
-
-                            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
-                            if (eqLongImage) {
-                                // Load long image
-                                //if(longImageView!= null) {
-                                    longImageView.setQuickScaleEnabled(true);
-                                    longImageView.setZoomEnabled(true);
-                                    longImageView.setDoubleTapZoomDuration(100);
-                                    longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
-                                    longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
-                                    longImageView.setImage(ImageSource.cachedBitmap(resource),
-                                            new ImageViewState(0, new PointF(0, 0), 0));
-                                //}
-                            } else {
-                                // Normal picture
-                                imageView.setImageBitmap(resource);
-                            }
-                        }
+                        setImageResource(resource, imageView, longImageView);
                     }
                 });
     }
@@ -133,30 +110,36 @@ public class GlideEngine implements ImageEngine {
                 .into(new ImageViewTarget<Bitmap>(imageView) {
                     @Override
                     protected void setResource(@Nullable Bitmap resource) {
-                        if (resource != null) {
-                            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
-                                    resource.getHeight());
-                            if(longImageView!= null){
-                                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
-                            }
-                            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
-                            if (eqLongImage) {
-                                // 加载长图
-                                longImageView.setQuickScaleEnabled(true);
-                                longImageView.setZoomEnabled(true);
-                                longImageView.setDoubleTapZoomDuration(100);
-                                longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
-                                longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
-                                longImageView.setImage(ImageSource.cachedBitmap(resource),
-                                        new ImageViewState(0, new PointF(0, 0), 0));
-                            } else {
-                                // 普通图片
-                                imageView.setImageBitmap(resource);
-                            }
-                        }
+                        setImageResource(resource, imageView, longImageView);
                     }
                 });
     }
+
+    public void setImageResource(Bitmap resource, ImageView imageView,
+                                 SubsamplingScaleImageView longImageView){
+        if (resource != null) {
+            boolean eqLongImage = MediaUtils.isLongImg(resource.getWidth(),
+                    resource.getHeight());
+            if(longImageView!= null){
+                longImageView.setVisibility(eqLongImage ? View.VISIBLE : View.GONE);
+            }
+            imageView.setVisibility(eqLongImage ? View.GONE : View.VISIBLE);
+            if (eqLongImage) {
+                // 加载长图
+                longImageView.setQuickScaleEnabled(true);
+                longImageView.setZoomEnabled(true);
+                longImageView.setDoubleTapZoomDuration(100);
+                longImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+                longImageView.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+                longImageView.setImage(ImageSource.cachedBitmap(resource),
+                        new ImageViewState(0, new PointF(0, 0), 0));
+            } else {
+                // 普通图片
+                imageView.setImageBitmap(resource);
+            }
+        }
+    }
+
 
 
     /**

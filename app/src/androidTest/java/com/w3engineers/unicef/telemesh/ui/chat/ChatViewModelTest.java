@@ -30,6 +30,8 @@ public class ChatViewModelTest {
     private Context mContext;
 
     private String userAddress = "0x3b52d4e229fd5396f468522e68f17cfe471b2e03";
+    private String imageFilePath = "file:///android_asset/sample_image.jpg";
+    private String videoFilePath = "file:///android_asset/sample_vide.mp4";
 
     @Before
     public void setUp() {
@@ -50,6 +52,14 @@ public class ChatViewModelTest {
     public void testContentSend(){
         addDelay(1000);
         SUT.sendContentMessage(userAddress, Uri.parse("content://com.android.providers.media.documents/document/image"));
+        assertTrue(true);
+    }
+
+
+    @Test
+    public void testPrepareContent(){
+        addDelay(1000);
+        SUT.prepareContentMessage(userAddress, videoFilePath, imageFilePath);
         assertTrue(true);
     }
 

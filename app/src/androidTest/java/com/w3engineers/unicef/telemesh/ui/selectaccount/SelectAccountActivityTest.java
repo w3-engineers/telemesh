@@ -3,6 +3,8 @@ package com.w3engineers.unicef.telemesh.ui.selectaccount;
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 
+import static org.junit.Assert.assertTrue;
+
 import android.app.Activity;
 import android.content.Context;
 
@@ -40,6 +42,29 @@ public class SelectAccountActivityTest {
     public void backPressTest(){
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressBack();
+    }
+
+    @Test
+    public void testWalletTrue(){
+
+        addDelay(500);
+        mActivityTestRule.getActivity().launchWalletPage(true);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testWalletFalse(){
+
+        addDelay(500);
+        mActivityTestRule.getActivity().launchWalletPage(false);
+        assertTrue(true);
+    }
+
+
+    public void goToAccountTest(){
+        addDelay(500);
+        mActivityTestRule.getActivity().gotoCreateAccountPage(false);
+        assertTrue(true);
     }
 
     private void addDelay(int i) {

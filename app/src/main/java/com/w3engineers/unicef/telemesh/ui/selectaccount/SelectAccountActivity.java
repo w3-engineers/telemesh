@@ -60,7 +60,7 @@ public class SelectAccountActivity extends BaseActivity {
         }
     }
 
-    private void gotoCreateAccountPage(boolean isImportWallet) {
+    public void gotoCreateAccountPage(boolean isImportWallet) {
 
         boolean isUserAlreadyRegistered = SharedPref.readBoolean(Constants.preferenceKey.IS_USER_REGISTERED);
 

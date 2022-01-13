@@ -134,7 +134,7 @@ public class GlideEngine implements ImageEngine {
                 longImageView.setImage(ImageSource.cachedBitmap(resource),
                         new ImageViewState(0, new PointF(0, 0), 0));
             } else {
-                // 普通图片
+
                 imageView.setImageBitmap(resource);
             }
         }
